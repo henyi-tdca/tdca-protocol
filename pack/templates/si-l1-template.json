@@ -1,0 +1,42 @@
+{
+  "id92_note": "模拟态/制度约束标注（ID92）: 本模板为可复制产物，不构成真实配置权执行路径",
+  "session_index": {
+    "meta": {
+      "si_id": "TDCA-SI-{YYYYMMDD}-{SEQ}-L1-{HASH6}",
+      "timestamp": "{ISO8601 本地时间}",
+      "layer": "L1",
+      "predecessor_si": "TDCA-SI-{前序SI-ID}",
+      "constitutional_base": "TDCA-CONST-v3.1.2"
+    },
+    "constitutional_digest": {
+      "version": "TDCA-CONST-v3.1.2",
+      "delta_items": []
+    },
+    "task_digest": {
+      "fc_id": "TDCA-FC-{date}-{seq}",
+      "task_name": "{任务名称}",
+      "six_elements": {
+        "objective_function": "{目标函数（可哈希摘要）}",
+        "constraint_matrix": "{约束矩阵}",
+        "prior_distribution": "{先验分布}",
+        "config_boundary": "L2 配置权市场层",
+        "expected_allocation": "{预期分配}",
+        "audit_trail": "TDCA-NCA-{date}-{seq}"
+      }
+    },
+    "decision_points": [],
+    "review_chain": [],
+    "cross_session_deps": [],
+    "nsfl_triggers": [],
+    "performance_fingerprint": {
+      "total_tokens": 0,
+      "session_cost_cny": 0.0,
+      "requests": 0,
+      "runtime_minutes": 0.0,
+      "context_usage_peak": 0.0
+    },
+    "integrity": {
+      "sha256_full": "sha256:{内容快照哈希}"
+    }
+  }
+}

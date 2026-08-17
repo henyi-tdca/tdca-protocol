@@ -1,0 +1,21 @@
+# REV 审查记录模板（MEMO-008）
+# 模拟态/制度约束标注（ID92）: 本模板为可复制产物，不构成真实配置权执行路径
+rev_id: TDCA-FC-{date}-{seq}-REV-{n}
+status: {PASSED | PASSED_WITH_MODERATE | BLOCKING}
+reviewer: {K3 Auditor | Trea Validator | 人类}
+review_time: '{YYYY-MM-DDTHH:MM:SS+08:00}'
+focus_areas: [六要素完整性, 制度逻辑一致性, 正和博弈验证, 代码质量, 边界条件]
+issues:
+  - severity: {严重 | 中等 | 轻微}
+    type: {制度一致性 | 六要素缺失 | 代码缺陷 | 边界条件 | 负空间触发}
+    location: "{文件:行号}"
+    description: "{问题描述}"
+    suggested_fix: "{修正建议}"
+    is_implicit_constraint: {true | false}
+human_action_required: {true | false}
+resolution:
+  status: {已修正 | 待修正 | 已豁免}
+  fixed_in: "{修正版本/FC-ID}"
+  re_reviewed: {true | false}
+nca_ref: TDCA-NCA-{date}-{seq}-REV-{n}
+human_signatory: {签批人}

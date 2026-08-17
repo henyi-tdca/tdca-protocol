@@ -1,0 +1,44 @@
+# NCA 存证模板（MEMO-006 附录 C，工程型 11 字段 + Scope 扩展 + MOU-Anchor）
+# 模拟态/制度约束标注（ID92）: 本模板为存证格式，不构成真实配置权执行路径
+NCA-ID: TDCA-REASONIX-{YYYYMMDD}-{SEQ:03d}
+Function-Call-ID: TDCA-FC-{date}-{seq}
+Operation-Type: {FileCreate|FileEdit|FileMove|CodeGen|Review|Audit|ProtocolInit|...}
+Operator: Reasonix
+Timestamp: '{UTC ISO8601}'
+Scope: {操作范围描述}
+Pre-State:
+  Path: {文件路径}
+  Hash: sha256:{操作前哈希}
+  Size: {操作前大小}
+Post-State:
+  Path: {文件路径}
+  Hash: sha256:{操作后哈希}
+  Size: {操作后大小}
+Config-Right-Token:
+  Scope: {配置权范围}
+  Rollback: 回退至上一次通过版本
+  Audit-Trail: NCA 文件记录
+  Human-Signature-Required: true
+  Max-Retry: 0
+  Granted-By: TDCA-MEMO-006 + TDCA-WORKING-SPEC-001
+  Expires: null
+Audit-Trail:
+- Step: '操作执行: {Operation-Type}'
+  Time: '{UTC ISO8601}'
+  Evidence: sha256:{操作后哈希}
+Human-Signature:
+  Status: Pending
+  Signed-By: null
+  Signed-At: null
+Negative-Space-Check:
+  NSFL-Version: V0.2
+  Triggered: false
+  Trigger-Reason: null
+MOU-Anchor:
+  Status: Simulated
+  Total-Cost-CNY: {成本 CNY}
+  Tokens: {Token 数}
+  Cache-Ratio: {缓存命中率}
+  Inbound-Tax: null
+  Outbound-Tax: null
+  Note: 实证基线为成本记录非税收硬数据；真实税收锚定待 DCEP 接入（模拟态裁决）

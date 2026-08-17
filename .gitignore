@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+
+# 会话与运行时
+.tdca-session-index/
+*.log
+.DS_Store
+Thumbs.db
+
+# 存证运行时产物（模板保留，实例不入库）
+nca_runtime/
+*.tmp
