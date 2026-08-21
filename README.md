@@ -25,6 +25,10 @@
 
 运行引擎测试：`cd dual && python -m pytest tests/ -q`
 
+## 社区与参与（OPC S0）
+
+本社区是**缔约者网络**而非用户群（TDCA-OPC-COMMUNITY-001）。参与方式见 [`CONTRIBUTING.md`](CONTRIBUTING.md)：签署准入 NCA → 成为 L1 缔约者，全程由 `tools/enforce_entry.py` 自检（R1~R10 + NSFL 熔断），缔约名录见 [`ACKNOWLEDGMENTS.md`](ACKNOWLEDGMENTS.md)。发布文与立项记录见 [`docs/release/`](docs/release/) 与 [`docs/community/`](docs/community/)。
+
 ## 合规红线（必须遵守）
 
 | 红线 | 依据 |

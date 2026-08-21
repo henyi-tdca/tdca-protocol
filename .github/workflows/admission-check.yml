@@ -1,0 +1,36 @@
+# FC-ID: TDCA-ENFORCE-ENTRY-SPEC-001 §六 | OPC S0 准入门禁（只读、无密钥、无网络依赖）
+name: admission-check
+
+on:
+  pull_request:
+    paths:
+      - 'nca-archives/TDCA-ADMIT-*.yaml'
+  push:
+    branches: [main]
+    paths:
+      - 'nca-archives/TDCA-ADMIT-*.yaml'
+      - 'tools/enforce_entry.py'
+
+permissions:
+  contents: read   # 只读门禁：不写库、不评论、不调用任何 secrets
+
+jobs:
+  verify-admission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml pytest
+      - name: 规则回归（R1~R10 + 链校验 21 用例）
+        run: python -m pytest tools/tests/ -q
+      - name: 新增准入 NCA 逐份校验
+        run: |
+          set -e
+          for f in nca-archives/TDCA-ADMIT-*.yaml; do
+            [ -e "$f" ] || { echo "（无准入 NCA，跳过）"; break; }
+            python tools/enforce_entry.py --check "$f"
+          done
+      - name: 全链连续性校验
+        run: python tools/enforce_entry.py --verify
