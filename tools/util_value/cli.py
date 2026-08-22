@@ -13,6 +13,7 @@ import sys
 from .engine import UtilValueService
 from .notary import UtilValueNotary
 from .report import build_assessment_report
+from .accounting import UtilValueAccounting
 
 
 def cmd_assess(args) -> int:
@@ -31,6 +32,22 @@ def cmd_assess(args) -> int:
     return 0
 
 
+def cmd_entry(args) -> int:
+    acct = UtilValueAccounting()
+    txs = json.loads(args.tx) if args.tx else []
+    report = acct.full_entry_report(
+        asset_id=args.asset, transactions=txs,
+        period=args.period,
+        proposed_valuation=args.proposed,
+        account=args.account,
+        provenance=args.provenance,
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    if args.notarize:
+        UtilValueNotary().record(report, operation_type="UtilValueEntry")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="util_value", description="效用价值评估服务 CLI")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -43,6 +60,16 @@ def main(argv=None) -> int:
     p.add_argument("--report-id")
     p.add_argument("--notarize", action="store_true", help="评估后落 NCA 存证")
     p.set_defaults(func=cmd_assess)
+
+    p2 = sub.add_parser("entry", help="M2 入表服务（会计口径报告 + 版权链存证）")
+    p2.add_argument("--asset", required=True, help="资产标识")
+    p2.add_argument("--tx", help="交易流 JSON")
+    p2.add_argument("--period", default="2026-08", help="会计期间（YYYY-MM）")
+    p2.add_argument("--proposed", type=float, help="拟议估值（触发安全熔断检查）")
+    p2.add_argument("--account", help="会计科目（默认 无形资产-版权资产）")
+    p2.add_argument("--provenance", default="SIMULATED")
+    p2.add_argument("--notarize", action="store_true", help="评估后落 NCA 存证")
+    p2.set_defaults(func=cmd_entry)
 
     args = parser.parse_args(argv)
     return args.func(args)

@@ -14,6 +14,7 @@ import sys
 from .engine import CogAlignService
 from .notary import CogAlignNotary
 from .report import build_convergence_report, build_multi_report, build_pair_report
+from .scenarios import CogAlignScenarios
 
 
 def _load_json(raw: str) -> dict:
@@ -54,6 +55,36 @@ def cmd_convergence(args) -> int:
     return 0
 
 
+def cmd_scenario(args) -> int:
+    svc = CogAlignService()
+    scenarios = CogAlignScenarios(svc)
+    if args.scenario == "thought-virus":
+        result = scenarios.thought_virus_defense(
+            subject=args.subject,
+            state_series=[tuple(x) for x in _load_json(args.series)],
+            baseline_state=_load_json(args.baseline),
+            provenance=args.provenance,
+        )
+    elif args.scenario == "drift-monitor":
+        result = scenarios.cognitive_drift_monitor(
+            subject_a=args.a, subject_b=args.b,
+            state_series=[tuple(x) for x in _load_json(args.series)],
+            provenance=args.provenance,
+        )
+    elif args.scenario == "tiering":
+        result = scenarios.alignment_tiering(
+            args.a, _load_json(args.state_a), args.b, _load_json(args.state_b),
+            provenance=args.provenance,
+        )
+    else:
+        raise ValueError(f"[NSFL-TRIGGER] 未知场景: {args.scenario}")
+    report = result.to_dict()
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    if args.notarize:
+        CogAlignNotary().record(report, operation_type=f"CogAlignScenario-{args.scenario}")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="cog_align", description="认知对齐评测服务 CLI")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -84,6 +115,20 @@ def main(argv=None) -> int:
     p_conv.add_argument("--report-id")
     p_conv.add_argument("--notarize", action="store_true")
     p_conv.set_defaults(func=cmd_convergence)
+
+    p_scen = sub.add_parser("scenario", help="评测场景（M2 产品化）")
+    p_scen.add_argument("--scenario", required=True,
+                        choices=["thought-virus", "drift-monitor", "tiering"])
+    p_scen.add_argument("--subject", help="思想病毒防御: 被测主体")
+    p_scen.add_argument("--baseline", help="思想病毒防御: 基准认知状态 JSON")
+    p_scen.add_argument("--series", help="思想病毒防御/漂移监测: [[ts, state], ...] 或 [[ts, s_a, s_b], ...] JSON")
+    p_scen.add_argument("--a", help="漂移监测/分档: 主体 A")
+    p_scen.add_argument("--b", help="漂移监测/分档: 主体 B")
+    p_scen.add_argument("--state-a", help="分档: 主体 A 状态 JSON")
+    p_scen.add_argument("--state-b", help="分档: 主体 B 状态 JSON")
+    p_scen.add_argument("--provenance", default="SIMULATED")
+    p_scen.add_argument("--notarize", action="store_true")
+    p_scen.set_defaults(func=cmd_scenario)
 
     args = parser.parse_args(argv)
     return args.func(args)

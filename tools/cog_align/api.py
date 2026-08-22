@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 from .engine import CogAlignService
 from .notary import CogAlignNotary
 from .report import build_pair_report, build_multi_report
+from .scenarios import CogAlignScenarios
 
 
 class CogAlignAPIHandler(BaseHTTPRequestHandler):
@@ -47,6 +48,12 @@ class CogAlignAPIHandler(BaseHTTPRequestHandler):
                 result = self._handle_measure(body)
             elif path == "/api/v1/cog-align/event":
                 result = self._handle_event(body)
+            elif path == "/api/v1/cog-align/scenarios/thought-virus":
+                result = self._handle_thought_virus(body)
+            elif path == "/api/v1/cog-align/scenarios/drift-monitor":
+                result = self._handle_drift_monitor(body)
+            elif path == "/api/v1/cog-align/scenarios/tiering":
+                result = self._handle_tiering(body)
             else:
                 self._send_json(404, {"error": "not found", "path": path})
                 return
@@ -75,6 +82,43 @@ class CogAlignAPIHandler(BaseHTTPRequestHandler):
                                      provenance=body.get("provenance"))
         report_id = body.get("report_id") or f"cog-align-event-{body['event']}"
         return {"report": build_multi_report(measure, report_id)}
+
+    def _handle_thought_virus(self, body: dict) -> dict:
+        scenarios = CogAlignScenarios(self.service)
+        result = scenarios.thought_virus_defense(
+            subject=body["subject"],
+            state_series=[tuple(x) for x in body["state_series"]],
+            baseline_state=body["baseline_state"],
+            provenance=body.get("provenance", "SIMULATED"),
+        )
+        return {"report": result.to_dict()}
+
+    def _handle_drift_monitor(self, body: dict) -> dict:
+        scenarios = CogAlignScenarios(self.service)
+        result = scenarios.cognitive_drift_monitor(
+            subject_a=body["subject_a"],
+            subject_b=body["subject_b"],
+            state_series=[tuple(x) for x in body["state_series"]],
+            provenance=body.get("provenance", "SIMULATED"),
+        )
+        return {"report": result.to_dict()}
+
+    def _handle_tiering(self, body: dict) -> dict:
+        scenarios = CogAlignScenarios(self.service)
+        if "cognitive_states" in body:
+            matrix = scenarios.tier_matrix(
+                body["cognitive_states"],
+                provenance=body.get("provenance", "SIMULATED"),
+            )
+            return {"report": {"scenario": "alignment_tier_matrix",
+                               "matrix": matrix,
+                               "provenance": body.get("provenance", "SIMULATED")}}
+        tier = scenarios.alignment_tiering(
+            body["subject_a"], body["state_a"],
+            body["subject_b"], body["state_b"],
+            provenance=body.get("provenance", "SIMULATED"),
+        )
+        return {"report": tier.to_dict()}
 
     # ---- 工具 ----
 

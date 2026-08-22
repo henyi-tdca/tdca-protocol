@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from .engine import UtilValueService
 from .notary import UtilValueNotary
 from .report import build_assessment_report
+from .accounting import UtilValueAccounting
 
 
 class UtilValueAPIHandler(BaseHTTPRequestHandler):
@@ -38,6 +39,8 @@ class UtilValueAPIHandler(BaseHTTPRequestHandler):
         try:
             if path == "/api/v1/util-value/assess":
                 result = self._handle_assess(body)
+            elif path == "/api/v1/util-value/entry":
+                result = self._handle_entry(body)
             else:
                 self._send_json(404, {"error": "not found", "path": path})
                 return
@@ -63,6 +66,19 @@ class UtilValueAPIHandler(BaseHTTPRequestHandler):
         report = build_assessment_report(
             floor, tiers=tiers, safety=safety, seven_elements=seven,
             report_id=body.get("report_id") or f"util-value-{asset_id}",
+        )
+        return {"report": report}
+
+    def _handle_entry(self, body: dict) -> dict:
+        acct = UtilValueAccounting(self.service)
+        report = acct.full_entry_report(
+            asset_id=body["asset_id"],
+            transactions=body.get("transactions", []),
+            period=body.get("period", "2026-08"),
+            proposed_valuation=body.get("proposed_valuation"),
+            account=body.get("account"),
+            seven_elements_meta=body.get("seven_elements_meta"),
+            provenance=body.get("provenance", "SIMULATED"),
         )
         return {"report": report}
 

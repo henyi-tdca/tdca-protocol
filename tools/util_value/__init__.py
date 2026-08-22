@@ -17,6 +17,14 @@ from .engine import (
 )
 from .report import build_assessment_report
 from .notary import UtilValueNotary
+from .accounting import (
+    UtilValueAccounting,
+    AccountingEntry,
+    CopyrightChainRecord,
+    ACCOUNT_INTANGIBLE,
+    ACCOUNT_CWIP,
+    ACCOUNT_RD,
+)
 
 __all__ = [
     "UtilValueService",
@@ -27,4 +35,10 @@ __all__ = [
     "TIER_LABELS",
     "build_assessment_report",
     "UtilValueNotary",
+    "UtilValueAccounting",
+    "AccountingEntry",
+    "CopyrightChainRecord",
+    "ACCOUNT_INTANGIBLE",
+    "ACCOUNT_CWIP",
+    "ACCOUNT_RD",
 ]

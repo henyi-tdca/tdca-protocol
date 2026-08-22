@@ -16,6 +16,11 @@ from .engine import (
 )
 from .report import build_pair_report, build_multi_report
 from .notary import CogAlignNotary
+from .scenarios import (
+    CogAlignScenarios,
+    ScenarioResult,
+    AlignmentTier,
+)
 
 __all__ = [
     "CogAlignService",
@@ -25,4 +30,7 @@ __all__ = [
     "build_pair_report",
     "build_multi_report",
     "CogAlignNotary",
+    "CogAlignScenarios",
+    "ScenarioResult",
+    "AlignmentTier",
 ]
