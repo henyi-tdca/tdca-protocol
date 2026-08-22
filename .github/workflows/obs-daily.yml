@@ -1,0 +1,30 @@
+name: daily-obs
+on:
+  schedule:
+    - cron: '7 0 * * *'   # UTC 00:07 = 北京时间 08:07
+  workflow_dispatch: {}    # 手动触发备查
+
+jobs:
+  obs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 观察检查
+        run: |
+          echo "=== A 组：仓库信号 ==="
+          curl -s https://api.github.com/repos/henyi-tdca/tdca-protocol | \
+            jq '{star:.stargazers_count, fork:.forks_count, watchers:.subscribers_count, issues:.open_issues_count}'
+          echo "=== B 组：Issue/PR ==="
+          curl -s "https://api.github.com/repos/henyi-tdca/tdca-protocol/issues?state=all&per_page=5" | \
+            jq '[.[] | {n:.number, state:.state, title:.title}]'
+          echo "=== C-1：README 可达 ==="
+          curl -s -o /dev/null -w "readme_http=%{http_code}\n" \
+            https://raw.githubusercontent.com/henyi-tdca/tdca-protocol/main/README.md
+          echo "=== C-3：Gitee 审核 ==="
+          GITEE_HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://gitee.com/siweihanshuzhineng/tdca-protocol)
+          echo "gitee_http=$GITEE_HTTP"
+          if [ "$GITEE_HTTP" = "200" ]; then
+            echo "⚠️ Gitee 审核生效——触发闸 3b 镜像推送 + 补登记"
+            exit 1   # fail 标记以引起注意
+          fi
