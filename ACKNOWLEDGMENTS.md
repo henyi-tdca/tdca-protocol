@@ -5,7 +5,7 @@
 
 | 准入 NCA | GitHub ID | 缔约时间（UTC） | 备注 |
 |---|---|---|---|
-| （虚位以待 · 首位 L1 缔约者） | — | — | — |
+| [TDCA-ADMIT-20260822-001](nca-archives/TDCA-ADMIT-20260822-001.yaml) | [@henyi-tdca](https://github.com/henyi-tdca) | 2026-08-22T07:39:01Z | 首位缔约者 · S0-3 internal drill（仓库主账号演练，如实标注） |
 
 ---
 
