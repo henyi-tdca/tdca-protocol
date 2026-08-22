@@ -83,7 +83,7 @@ TDCA 不是用户群，是**缔约者网络**——成员以签署协议（准�
 
 ### 参与入口
 
-- 仓库：github.com/…/tdca-protocol（GitHub + Gitee 双镜像）
+- 仓库：https://github.com/henyi-tdca/tdca-protocol（GitHub 主仓已上线 ✅；Gitee 镜像筹备中）
 - 准入：Fork → 本地运行 enforce_entry.py → 签署准入 NCA → PR
 - 复现：一键沙盒复现脚本，5 分钟本地跑出 613 测试全绿
 - 沟通：GitHub Discussions（不设微信群）
@@ -168,7 +168,7 @@ Community governance itself runs on TDCA: DCD lodgment, NCA attestation, NSFL ci
 
 ### Join
 
-- Repo: github.com/…/tdca-protocol (GitHub + Gitee mirrors)
+- Repo: https://github.com/henyi-tdca/tdca-protocol (GitHub live ✅; Gitee mirror in preparation)
 - Admit: Fork → run enforce_entry.py locally → sign admission NCA → PR
 - Reproduce: one-click sandbox script — 613 tests green locally in 5 minutes
 - Talk: GitHub Discussions (no WeChat groups)
@@ -180,7 +180,7 @@ Community governance itself runs on TDCA: DCD lodgment, NCA attestation, NSFL ci
 ## 附：发布核对清单
 
 - [ ] ① 成本口径统一：全文采用「¥168 / 33.5 亿 token」（E-1 截屏实证）；如需引用 08-21 更新累计（¥203.54/36.1 亿），标注"以平台账单为准"
-- [ ] ② 仓库 URL 占位 `github.com/…/tdca-protocol` → 双镜像 push 后回填真实 URL
+- [x] ② 仓库 URL 占位 → 已回填真实 URL（GitHub 主仓 2026-08-22 上线，commit 7b0a192；Gitee 镜像待账号公开审核，见 NCA-RELEASE-003）
 - [ ] ③ ID92 纪律复核：所有截图/案例标注 [SIMULATED]/[UNVERIFIED]
 - [ ] ④ 人类确认后发布：HackerNews（英文版）/ 知乎·掘金（中文版）/ 官网（两版）
 - [ ] ⑤ 发布后 NCA 存证 + 更新 TDCA-INDEX
