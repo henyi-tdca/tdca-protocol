@@ -17,6 +17,33 @@
 | [`pack/`](pack/) | **TDCA 智能体编程协议包（PACK-001）**：30 分钟制度注入入门——7 份规范 + 5 个机器可读模板 | V1.3 ✅ 已签批（NCA-002~005） |
 | [`dual/`](dual/) | **双协议化合引擎（DUAL-PROTOCOL）**：场景协议 × 制度协议运行时化合——4 引擎模块 + 测试 + 四行业示例 | V1.1 ✅ 已签批 |
 
+## tools/ 工具货架（全部开源可跑，零第三方依赖）
+
+| 套件 | 能力 | 快速开始 |
+|---|---|---|
+| [`tools/enforce_entry.py`](tools/enforce_entry.py) | OPC S0 准入自检（R1~R10 + NSFL 熔断） | `python tools/enforce_entry.py --check <NCA文件>` |
+| [`tools/cts_l1/`](tools/cts_l1/) | CTS-L1 一致性自测套件（C-1~C-6 + 声明生成） | `cd tools && python -m pytest cts_l1 -q` |
+| [`tools/mcp_bridge/`](tools/mcp_bridge/) | TDCA ↔ MCP 协议桥（NCA 水印 / NSFL 熔断 / 挂载 / 存证查询） | `cd tools && python -m pytest mcp_bridge -q` |
+| [`tools/cog_align/`](tools/cog_align/) | 认知对齐评测：思想病毒防御 / 认知漂移 / 对齐度分档（M2 场景包） | `cd tools && python -m cog_align.cli --help` |
+| [`tools/util_value/`](tools/util_value/) | 效用价值评估：会计口径入表 / 版权链存证 / 完整报告（M2 入表服务） | `cd tools && python -m util_value.cli --help` |
+| [`tools/value_services/`](tools/value_services/) | 增值服务统一入口 V2.0-M2（双服务编排） | `cd tools && python -m pytest value_services -q` |
+
+基座模块（同层）：`tdca_cognitive_distance.py`（定义 3.36/3.37，命题 3.10）/ `tdca_cognitive_state.py`（五维状态 ID8）/ `tdca_fuzzy_distance.py`（模糊层）。全量回归：`cd tools && python -m pytest -q`（详见 [`tools/README.md`](tools/README.md)）。
+
+## 增值服务（TDCA-VALUE-PRICING-001 已确认生效）
+
+协议层永久免费（ID77，见合规红线）；以下增值服务面向需要制度化落地的团队，收益反哺协议迭代：
+
+| 档位 | 内容 | 定价 |
+|---|---|---|
+| L1 订阅 · 专业版 | tools/ 全货架使用权 + 存证链托管 + 月度对齐报告 | ¥99/月 |
+| L1 订阅 · 企业版 | 专业版全量 + 思想病毒防御专项 + 优先响应 | ¥999/月 |
+| L2 项目制 · 对齐评测 | 认知对齐评测项目（思想病毒防御 + 认知漂移治理） | ¥1–20 万/项目 |
+| L2 项目制 · 入表评估 | 认知资产入表评估（会计口径 + 版权链存证，合规审查档） | 按合规审查档报价 |
+| 年度维护 | 项目制交付物的年度维护 | 项目额 15–20%/年 |
+
+定价纪律：MOU 地板语义 + 归零规则（效用不成立不收费）/ 日抛优先（ID90）/ 人类签名权（ID71）；L1 订阅保留 ID27 校准条款（沙盒激活系数 >1.2 后校准）。双服务打包（评测 + 入表）另有组合口径，接洽见 GitHub [Discussions](https://github.com/henyi-tdca/tdca-protocol/discussions)。
+
 ## 快速开始（3 步）
 
 1. **读取** `pack/docs/01-启动清单.md` —— 制度基线 7 项检查 + 工作空间初始化 + 会话 6/6 校验
