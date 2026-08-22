@@ -137,8 +137,8 @@ def r8_signature(doc) -> list:
     return []
 
 
-def r10_nsfl_scan(path: Path, doc) -> list:
-    text = path.read_text(encoding="utf-8")
+def scan_nsfl_text(text: str) -> list:
+    """NSFL 禁词行级扫描（否定语境豁免）。供 enforce_entry R10 与 mcp_bridge 熔断复用。"""
     hits = set()
     for line in text.splitlines():
         for w in NSFL_FORBIDDEN:
@@ -150,8 +150,13 @@ def r10_nsfl_scan(path: Path, doc) -> list:
                 if not any(n in line[:i] for n in NSFL_NEGATION):
                     hits.add(w)
                 start = i + len(w)
+    return sorted(hits)
+
+
+def r10_nsfl_scan(path: Path, doc) -> list:
+    text = path.read_text(encoding="utf-8")
+    hits = scan_nsfl_text(text)
     if hits:
-        hits = sorted(hits)
         _nsfl_fuse(str(doc.get("NCA-ID", "?")), f"R10 禁止项命中: {hits}")
         return [f"R10 内容含 NSFL 禁止项 {hits}（负空间熔断已落日志）"]
     return []
