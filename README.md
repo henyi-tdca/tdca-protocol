@@ -27,6 +27,11 @@
 | [`tools/cog_align/`](tools/cog_align/) | 认知对齐评测：思想病毒防御 / 认知漂移 / 对齐度分档（M2 场景包） | `cd tools && python -m cog_align.cli --help` |
 | [`tools/util_value/`](tools/util_value/) | 效用价值评估：会计口径入表 / 版权链存证 / 完整报告（M2 入表服务） | `cd tools && python -m util_value.cli --help` |
 | [`tools/value_services/`](tools/value_services/) | 增值服务统一入口 V2.0-M2（双服务编排） | `cd tools && python -m pytest value_services -q` |
+| [`tools/maka_nca/`](tools/maka_nca/) | 五项目① Maka 对接：Event Log → NCA 存证 + 正和计量 | `cd tools && python -m pytest maka_nca -q` |
+| [`tools/paperclip_nca/`](tools/paperclip_nca/) | 五项目② Paperclip 对接：编排 → 协作编译 | `cd tools && python -m pytest paperclip_nca -q` |
+| [`tools/pi_nca/`](tools/pi_nca/) | 五项目③ Pi 对接：MIT 层制度编译 + Fair Source | `cd tools && python -m pytest pi_nca -q` |
+| [`tools/cypress_pool/`](tools/cypress_pool/) | 五项目④ Cypress 对接：配置权计量 + L2 | `cd tools && python -m pytest cypress_pool -q` |
+| [`tools/thingsboard_pool/`](tools/thingsboard_pool/) | 五项目⑤ ThingsBoard 对接：IoT 计量 + L2 | `cd tools && python -m pytest thingsboard_pool -q` |
 
 基座模块（同层）：`tdca_cognitive_distance.py`（定义 3.36/3.37，命题 3.10）/ `tdca_cognitive_state.py`（五维状态 ID8）/ `tdca_fuzzy_distance.py`（模糊层）。全量回归：`cd tools && python -m pytest -q`（详见 [`tools/README.md`](tools/README.md)）。
 
