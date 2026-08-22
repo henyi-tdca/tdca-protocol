@@ -1,0 +1,39 @@
+# TDCA 五元协作开源社区 · 准入 NCA（L1 缔约者）[SIMULATED]
+# 制度锚定: TDCA-OPC-COMMUNITY-001 + TDCA-CONST + NSFL-V0.2
+# ID92: 本准入不构成真实配置权执行路径；缔约权利为荣誉凭证，无金钱承诺、不可转让、不可交易
+NCA-ID: TDCA-ADMIT-20260822-001
+Operation-Type: AdmissionNCA
+Operator: henyi-tdca
+Timestamp: '2026-08-22T07:39:01.249657+00:00'
+Scope: 加入 TDCA 五元协作开源社区，成为 L1 缔约者；接受基协议声明；认领任务与参与讨论的权利登记
+Contractor:
+  GitHub-ID: henyi-tdca
+  Legal-Name: ''
+  Contact: ''
+  Jurisdiction: 中国境内
+  Joined-At: '2026-08-22T07:39:01.249657+00:00'
+Base-Protocol-Acceptance:
+  TDCA-CONST: true
+  NSFL-V0.2: true
+  TDCA-WORKING-SPEC-001: true
+  TDCA-OPC-COMMUNITY-001: true
+  Accepted: true
+Red-Lines-Acknowledged:
+  - 不发起/建议任何发币、公售、承诺分红或代币化（NSFL 负空间一票否决）
+  - 社区内容涉真实资金/真实税务数据前保持 simulated 标注（ID92）
+  - 不拉踩其他协议（MCP/A2A/x402 一律正交/挂载表述）
+  - 贡献确权（节点 NCA）为荣誉凭证，无交易属性与收益预期
+  - 真实态结算只走 e-CNY 法币轨道，不接稳定币
+Provenance:
+  Status: Simulated
+  Note: 准入自声明；GitHub ID 与提交行为可由仓库 git log 核验
+Commit-Ref: ''
+Human-Signature:
+  Status: Signed
+  Signed-By: henyi-tdca
+  Signed-At: '2026-08-22T07:39:01.249657+00:00'
+Negative-Space-Check:
+  NSFL-Version: V0.2
+  Triggered: false
+  Trigger-Reason: null
+  Checked-By: enforce_entry.py（准入自检）
