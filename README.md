@@ -29,7 +29,9 @@
 
 本社区是**缔约者网络**而非用户群（TDCA-OPC-COMMUNITY-001）。参与方式见 [`CONTRIBUTING.md`](CONTRIBUTING.md)：签署准入 NCA → 成为 L1 缔约者，全程由 `tools/enforce_entry.py` 自检（R1~R10 + NSFL 熔断），缔约名录见 [`ACKNOWLEDGMENTS.md`](ACKNOWLEDGMENTS.md)。发布文与立项记录见 [`docs/release/`](docs/release/) 与 [`docs/community/`](docs/community/)。
 
-**发布叙事**：[《我们花 168 块钱，跑通了 33.5 亿 Token 的智能体主权信用结算框架》](https://juejin.cn/post/7676330290206113798)（掘金，2026-08-22 首发；[知乎专栏](https://zhuanlan.zhihu.com/p/2074417591234322652)同步）
+**官网制度橱窗**：https://lku76tmluhatu.ok.kimi.link （M4a 静态演示站：四层架构制度橱窗）
+
+**发布叙事**：[《我们花 168 块钱，跑通了 33.5 亿 Token 的智能体主权信用结算框架》](https://juejin.cn/post/7676330290206113798)（掘金，2026-08-22 首发；[知乎专栏](https://zhuanlan.zhihu.com/p/2074417591234322652)同步；[English @ dev.to](https://dev.to/henyitdca/we-built-a-sovereign-credit-settlement-framework-for-agents-with-168-cny-and-335b-tokens-2m97)）
 
 ## 合规红线（必须遵守）
 
