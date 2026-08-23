@@ -5,7 +5,7 @@
 //
 // 制度锚定: DCD-CORE-GO-001 ｜ NSFL-V0.2 ｜ tdca-firmware-spec §六（物理/制度负空间）
 // 接口熵=0: 与 Python 版 nsfl 输出 JSON 100% 兼容
-// SPDX-License-Identifier: TDCA-Internal
+// SPDX-License-Identifier: Apache-2.0
 package nsfl
 
 import (

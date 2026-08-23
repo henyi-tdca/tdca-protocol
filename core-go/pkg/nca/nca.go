@@ -5,7 +5,7 @@
 //
 // 制度锚定: DCD-CORE-GO-001 ｜ tdca-firmware-spec V1.0（FactChain 同构）｜ ID35
 // 接口熵=0: 与 Python 版 NCA JSON 100% 兼容（nca_id/prev_hash/hash/ts/sign）
-// SPDX-License-Identifier: TDCA-Internal
+// SPDX-License-Identifier: Apache-2.0
 package nca
 
 import (

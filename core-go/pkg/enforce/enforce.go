@@ -5,7 +5,7 @@
 //
 // 制度锚定: DCD-CORE-GO-001 ｜ 公理 6（反函数可计算性）｜ ID35（制度-技术同构）
 // 接口熵=0: 与 Python 版 enforce_entry 输出 JSON 100% 兼容
-// SPDX-License-Identifier: TDCA-Internal
+// SPDX-License-Identifier: Apache-2.0
 package enforce
 
 import (
