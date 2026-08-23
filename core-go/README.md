@@ -12,7 +12,7 @@ Python 版（tools/）承担制度/编排/沙盒——灵活；**本 Go 引擎�
 
 | 包 | 功能 | 破坏性测试 |
 |---|---|---|
-| `pkg/enforce` | 强类型准入门禁（AgentCard 校验 + 公理 6 反函数 + 注入检测） | 注入/越权 fail-closed；未知字段；超长；无 NSFL 边界 BLOCK |
+| `pkg/enforce` | 强类型准入门禁（AgentCard 校验 + 白名单可逆校验 + 注入检测） | 注入/越权 fail-closed；未知字段；超长；无 NSFL 边界 BLOCK |
 | `pkg/nca` | 不可变哈希链（append-only + 并发安全 + SM2 验签接口） | 伪造 prev_hash 拒绝；篡改检测；签名缺失；万级并发 |
 | `pkg/nsfl` | 负空间熔断器（WARN→BLOCK→HUMAN→FUSED 分级 + 物理/制度） | 绕过 FUSED 不可逆；FUSED 后不可 HumanOverride；并发判定 |
 | `cmd/tdcad` | 守护进程 CLI（enforce/nca/nsfl 子命令） | — |
@@ -47,6 +47,17 @@ assert b.enforce_check(card)["status"] == "PASS"
 b.nca_append(record)                 # NCA 链追加
 b.nsfl_eval("t1", "key-export")      # 熔断判定
 ```
+
+## 实现边界声明（simulated / 工程检查 vs 形式化论证）
+
+> 外部审查采纳项（TDCA-EXTERNAL-REVIEW-RESPONSE-001）：对外口径厘清「工程检查」与「形式化论证」边界。
+
+| 表述 | 边界 |
+|---|---|
+| 「公理 6 反函数可计算性」 | **已实例化 + 形式化证明**（TDCA-CORE-GO-AXIOM6-001）：f=Verify / f⁻=AuditVerify / g=RightInverse，四约束（完备/可靠/可还原/复杂度）证明完成，对应附录 E 定理 E.1~E.4 |
+| 「SM2 验签接口」 | **接口预留**：当前为哈希级完整性校验（VerifySignature），未实现密码学签名；SM2 待接入（SE 侧/TCN 侧） |
+| 「万级/十万级并发」 | 本机 -race 验证 + CI 线上跑测；数值为测试规模，非生产负载承诺 |
+| 全部数据/存证 | **SIMULATED（ID92）**：e-CNY 结算/税收通道/版权链三锚未接入，演示态定位 |
 
 ## 制度纪律
 
