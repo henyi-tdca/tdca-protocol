@@ -1,9 +1,11 @@
 // Package enforce 实现 TDCA 准入门禁（DCD-CORE-GO-001 核心一）。
 //
-// 强类型准入校验：AgentCard/协议声明校验 + 公理 6 反函数可计算性（f⁻¹(f(x))=x 可验证），
-// 杜绝弱类型注入/越权调用。破坏性测试点：提示注入/越权调用 fail-closed。
+// 强类型准入校验：AgentCard/协议声明校验 + 注入检测（fail-closed）。
+// 公理 6（反函数可计算性）已实例化并完成形式化证明（TDCA-CORE-GO-AXIOM6-001）：
+//   - f  = Verify（准入函数）；f⁻ = AuditVerify（验证器，完备+可靠）；g = RightInverse（右逆）
+//   - 四约束（完备/可靠/可还原/复杂度）证明见该文档；对应附录 E 定理 E.1~E.4
 //
-// 制度锚定: DCD-CORE-GO-001 ｜ 公理 6（反函数可计算性）｜ ID35（制度-技术同构）
+// 制度锚定: DCD-CORE-GO-001 ｜ 公理 6（实例化+证明）｜ ID35（制度-技术同构）
 // 接口熵=0: 与 Python 版 enforce_entry 输出 JSON 100% 兼容
 // SPDX-License-Identifier: Apache-2.0
 package enforce
@@ -80,7 +82,8 @@ func (g *EntryGate) ParseAgentCard(raw []byte) (*AgentCard, error) {
 	return &card, nil
 }
 
-// Verify 准入校验（公理 6 反函数可计算性：声明 → 校验 → 声明还原）
+// Verify 准入校验（f：公理 6 实例化的制度函数——声明 → 校验 → 声明还原；
+// 配套 f⁻=AuditVerify / g=RightInverse，四约束证明见 TDCA-CORE-GO-AXIOM6-001）
 func (g *EntryGate) Verify(card *AgentCard) (*EnforceResult, error) {
 	result := &EnforceResult{AgentID: card.AgentID, SceneID: card.SceneID, Role: card.Role}
 	checks := []string{}

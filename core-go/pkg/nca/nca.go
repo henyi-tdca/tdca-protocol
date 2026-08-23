@@ -105,7 +105,7 @@ func (c *Chain) Len() int {
 	return len(c.records)
 }
 
-// VerifySignature 验签接口（SM2 预留——密钥材料永不落盘；当前为哈希级验签）
+// VerifySignature 完整性校验接口（SM2 验签为预留——当前为哈希级完整性校验，未实现密码学签名）
 // 破坏性测试：伪造记录 → 哈希/签名失败
 func (c *Chain) VerifySignature(rec *NcaRecord) error {
 	if rec.Signer == "" {
