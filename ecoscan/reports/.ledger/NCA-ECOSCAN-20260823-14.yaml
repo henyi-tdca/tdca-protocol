@@ -1,0 +1,14 @@
+NCA-ID: NCA-ECOSCAN-20260823-14
+Operation-Type: EcoScan-invite
+Operator: Reasonix
+Timestamp: '2026-08-23T05:05:37Z'
+Payload-Hash: sha256:f82c321888ea95d0a9d8d003831c05502fb8d1b3b345da6c74edd74d8b15851d
+Payload:
+  type: invite
+  invite_id: INV-30B26FA4DFCA
+  repo_full: openai/codex
+  mode: mount
+  nca_ref: NCA-ECOSCAN-20260823-INV-30B26FA4DFCA
+  body: '尊敬的 openai/codex 项目方：我们发现您的项目缺少可信的审计与分账协议层。TDCA 提供轻量级 MCP 适配器（不改变您的任何代码，只在外部挂载协议层），可为主权信用合规提供支持。您可以选择使用或不用——这是您的配置权。（存证:
+    NCA-ECOSCAN-20260823-INV-30B26FA4DFCA，调用即分润：动态分润，默认版权被权调用方 15%，按贵方开源授权规定执行；无明确收费约定时按开源规则合法挂载，收益默认支付
+    15% 版税给贵方或贵方社区基金会）'

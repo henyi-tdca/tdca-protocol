@@ -1,0 +1,14 @@
+NCA-ID: NCA-ECOSCAN-20260823-7
+Operation-Type: EcoScan-invite
+Operator: Reasonix
+Timestamp: '2026-08-23T05:05:15Z'
+Payload-Hash: sha256:ecd2255a38b5ad8aa6560fa7618bd4a2c08884fde5b545875775a2c99c345db7
+Payload:
+  type: invite
+  invite_id: INV-8B58F1349E8F
+  repo_full: obra/superpowers
+  mode: compound
+  nca_ref: NCA-ECOSCAN-20260823-INV-8B58F1349E8F
+  body: '尊敬的 obra/superpowers 项目方：贵项目与 TDCA 制度框架高度同构（可审计事件流 ↔ NCA 存证链）。我们诚邀化合协作——您的资产与
+    TDCA 制度函数化合生成高级 NCA，调用后您作为原创方获得分润与永久版税（Shapley 分配）。（存证: NCA-ECOSCAN-20260823-INV-8B58F1349E8F，只赋能不改码；以贵方开源授权规定为优先，无明确收费约定时按开源规则合法化合，收益默认支付
+    15% 版税给贵方或贵方社区基金会）'

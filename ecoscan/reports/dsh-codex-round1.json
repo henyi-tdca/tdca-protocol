@@ -1,0 +1,206 @@
+{
+  "doc": "TDCA-ECOSCAN-M2-DSH-CODEX-001",
+  "provenance": "GITHUB-LIVE",
+  "date": "2026-08-23",
+  "candidates": [
+    {
+      "repo_full": "obra/superpowers",
+      "stars": 276264,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": true,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 1.0,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "affaan-m/ECC",
+      "stars": 242232,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 1.0,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "deepseek-ai/deepseek-harness",
+      "stars": 185605,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 1.0,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "ultraworkers/claw-code",
+      "stars": 195112,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "ollama/ollama",
+      "stars": 179222,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "github/spec-kit",
+      "stars": 130848,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "garrytan/gstack",
+      "stars": 129226,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "browser-use/browser-use",
+      "stars": 110163,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "Graphify-Labs/graphify",
+      "stars": 109617,
+      "license_spdx": "Apache-2.0",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    },
+    {
+      "repo_full": "DietrichGebert/ponytail",
+      "stars": 108307,
+      "license_spdx": "MIT",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    }
+  ],
+  "invited": [
+    {
+      "invite_id": "INV-79149B102C22",
+      "repo_full": "obra/superpowers",
+      "mode": "compound",
+      "tier": "A",
+      "body": "尊敬的 obra/superpowers 项目方：贵项目与 TDCA 制度框架高度同构（可审计事件流 ↔ NCA 存证链）。我们诚邀化合协作——您的资产与 TDCA 制度函数化合生成高级 NCA，调用后您作为原创方获得分润与永久版税（Shapley 分配）。（存证: NCA-ECOSCAN-20260823-INV-79149B102C22，只赋能不改码；以贵方开源授权规定为优先，无明确收费约定时按开源规则合法化合，收益默认支付 15% 版税给贵方或贵方社区基金会）",
+      "nca_ref": "NCA-ECOSCAN-20260823-INV-79149B102C22",
+      "created_at": "2026-08-23T04:52:25Z",
+      "provenance": "GITHUB-LIVE"
+    },
+    {
+      "invite_id": "INV-02DABCADD277",
+      "repo_full": "affaan-m/ECC",
+      "mode": "mount",
+      "tier": "A",
+      "body": "尊敬的 affaan-m/ECC 项目方：我们发现您的项目缺少可信的审计与分账协议层。TDCA 提供轻量级 MCP 适配器（不改变您的任何代码，只在外部挂载协议层），可为主权信用合规提供支持。您可以选择使用或不用——这是您的配置权。（存证: NCA-ECOSCAN-20260823-INV-02DABCADD277，调用即分润：动态分润，默认版权被权调用方 15%，按贵方开源授权规定执行；无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给贵方或贵方社区基金会）",
+      "nca_ref": "NCA-ECOSCAN-20260823-INV-02DABCADD277",
+      "created_at": "2026-08-23T04:52:25Z",
+      "provenance": "GITHUB-LIVE"
+    },
+    {
+      "invite_id": "INV-B74834CB3B0A",
+      "repo_full": "deepseek-ai/deepseek-harness",
+      "mode": "mount",
+      "tier": "A",
+      "body": "尊敬的 deepseek-ai/deepseek-harness 项目方：我们发现您的项目缺少可信的审计与分账协议层。TDCA 提供轻量级 MCP 适配器（不改变您的任何代码，只在外部挂载协议层），可为主权信用合规提供支持。您可以选择使用或不用——这是您的配置权。（存证: NCA-ECOSCAN-20260823-INV-B74834CB3B0A，调用即分润：动态分润，默认版权被权调用方 15%，按贵方开源授权规定执行；无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给贵方或贵方社区基金会）",
+      "nca_ref": "NCA-ECOSCAN-20260823-INV-B74834CB3B0A",
+      "created_at": "2026-08-23T04:52:25Z",
+      "provenance": "GITHUB-LIVE"
+    },
+    {
+      "invite_id": "INV-1AF9D89DBD2F",
+      "repo_full": "ultraworkers/claw-code",
+      "mode": "mount",
+      "tier": "A",
+      "body": "尊敬的 ultraworkers/claw-code 项目方：我们发现您的项目缺少可信的审计与分账协议层。TDCA 提供轻量级 MCP 适配器（不改变您的任何代码，只在外部挂载协议层），可为主权信用合规提供支持。您可以选择使用或不用——这是您的配置权。（存证: NCA-ECOSCAN-20260823-INV-1AF9D89DBD2F，调用即分润：动态分润，默认版权被权调用方 15%，按贵方开源授权规定执行；无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给贵方或贵方社区基金会）",
+      "nca_ref": "NCA-ECOSCAN-20260823-INV-1AF9D89DBD2F",
+      "created_at": "2026-08-23T04:52:25Z",
+      "provenance": "GITHUB-LIVE"
+    }
+  ],
+  "skipped": [
+    {
+      "repo_full": "ollama/ollama",
+      "reason": "pipeline_max_invites_reached"
+    },
+    {
+      "repo_full": "github/spec-kit",
+      "reason": "pipeline_max_invites_reached"
+    },
+    {
+      "repo_full": "garrytan/gstack",
+      "reason": "pipeline_max_invites_reached"
+    },
+    {
+      "repo_full": "browser-use/browser-use",
+      "reason": "pipeline_max_invites_reached"
+    },
+    {
+      "repo_full": "Graphify-Labs/graphify",
+      "reason": "pipeline_max_invites_reached"
+    },
+    {
+      "repo_full": "DietrichGebert/ponytail",
+      "reason": "pipeline_max_invites_reached"
+    }
+  ],
+  "ledger": {
+    "total_records": 5,
+    "scan_count": 1,
+    "invite_count": 4,
+    "invited_repos": [
+      "affaan-m/ECC",
+      "deepseek-ai/deepseek-harness",
+      "obra/superpowers",
+      "ultraworkers/claw-code"
+    ]
+  }
+}

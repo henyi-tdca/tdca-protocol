@@ -1,0 +1,48 @@
+{
+  "doc": "TDCA-ECOSCAN-M2-CODEX-RETRY-002",
+  "provenance": "GITHUB-LIVE",
+  "date": "2026-08-23",
+  "note": "openai/codex（目标 #2）补发：Search API 关键词未命中，改用 repo 直接查询数据注入",
+  "candidates": [
+    {
+      "repo_full": "openai/codex",
+      "stars": 113851,
+      "license_spdx": "Apache-2.0",
+      "non_invasive": true,
+      "auditable": false,
+      "settlement_pain": true,
+      "license_compliant": true,
+      "fit_score": 0.8,
+      "tier": "A",
+      "rationale": "高契合：可挂载/可审计/分账痛点——优先赋能（挂载或化合双轨）"
+    }
+  ],
+  "invited": [
+    {
+      "invite_id": "INV-30B26FA4DFCA",
+      "repo_full": "openai/codex",
+      "mode": "mount",
+      "tier": "A",
+      "body": "尊敬的 openai/codex 项目方：我们发现您的项目缺少可信的审计与分账协议层。TDCA 提供轻量级 MCP 适配器（不改变您的任何代码，只在外部挂载协议层），可为主权信用合规提供支持。您可以选择使用或不用——这是您的配置权。（存证: NCA-ECOSCAN-20260823-INV-30B26FA4DFCA，调用即分润：动态分润，默认版权被权调用方 15%，按贵方开源授权规定执行；无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给贵方或贵方社区基金会）",
+      "nca_ref": "NCA-ECOSCAN-20260823-INV-30B26FA4DFCA",
+      "created_at": "2026-08-23T05:05:37Z",
+      "provenance": "GITHUB-LIVE"
+    }
+  ],
+  "skipped": [],
+  "ledger": {
+    "total_records": 14,
+    "scan_count": 3,
+    "invite_count": 11,
+    "invited_repos": [
+      "affaan-m/ECC",
+      "deepseek-ai/deepseek-harness",
+      "garrytan/gstack",
+      "github/spec-kit",
+      "obra/superpowers",
+      "openai/codex",
+      "thedotmack/claude-mem",
+      "ultraworkers/claw-code"
+    ]
+  }
+}

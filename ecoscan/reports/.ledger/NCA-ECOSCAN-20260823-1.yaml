@@ -1,0 +1,100 @@
+NCA-ID: NCA-ECOSCAN-20260823-1
+Operation-Type: EcoScan-scan
+Operator: Reasonix
+Timestamp: '2026-08-23T04:52:25Z'
+Payload-Hash: sha256:df2ed6e08d581625e98a803223e84991f7bb29c920539300e349519f23d09dee
+Payload:
+  type: scan
+  query: m2-pipeline
+  target_count: 10
+  targets:
+  - repo_full: obra/superpowers
+    stars: 276264
+    license_spdx: MIT
+    pushed_at: '2026-08-19T17:33:23Z'
+    description: An agentic skills framework & software development methodology that
+      works.
+    keywords:
+    - agent harness
+    url: https://github.com/obra/superpowers
+  - repo_full: affaan-m/ECC
+    stars: 242232
+    license_spdx: MIT
+    pushed_at: '2026-08-21T03:02:03Z'
+    description: The agent harness performance optimization system. Skills, instincts,
+      memory, security, and research-first development for Claude Code, Codex, Opencode,
+      Cursor and beyond.
+    keywords:
+    - agent harness
+    url: https://github.com/affaan-m/ECC
+  - repo_full: ultraworkers/claw-code
+    stars: 195112
+    license_spdx: MIT
+    pushed_at: '2026-08-16T06:18:45Z'
+    description: An agent-managed museum exhibit, built in Rust with Gajae-Code /
+      LazyCodex — developed and maintained with no human intervention.
+    keywords:
+    - agent harness
+    url: https://github.com/ultraworkers/claw-code
+  - repo_full: deepseek-ai/deepseek-harness
+    stars: 185605
+    license_spdx: MIT
+    pushed_at: '2026-08-21T12:35:08Z'
+    description: 'DeepSeek Harness: Everything is a Plugin.'
+    keywords:
+    - agent harness
+    url: https://github.com/deepseek-ai/deepseek-harness
+  - repo_full: ollama/ollama
+    stars: 179222
+    license_spdx: MIT
+    pushed_at: '2026-08-22T18:42:04Z'
+    description: Get up and running with Kimi-K2.6, GLM-5.2, MiniMax, DeepSeek, gpt-oss,
+      Qwen, Gemma and other models.
+    keywords:
+    - agent harness
+    url: https://github.com/ollama/ollama
+  - repo_full: github/spec-kit
+    stars: 130848
+    license_spdx: MIT
+    pushed_at: '2026-08-21T21:29:37Z'
+    description: 💫 Toolkit to help you get started with Spec-Driven Development
+    keywords:
+    - agent harness
+    url: https://github.com/github/spec-kit
+  - repo_full: garrytan/gstack
+    stars: 129226
+    license_spdx: MIT
+    pushed_at: '2026-08-22T02:22:16Z'
+    description: 'Use Garry Tan''s exact Claude Code setup: 23 opinionated tools that
+      serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA'
+    keywords:
+    - agent harness
+    url: https://github.com/garrytan/gstack
+  - repo_full: browser-use/browser-use
+    stars: 110163
+    license_spdx: MIT
+    pushed_at: '2026-08-22T23:25:03Z'
+    description: 🌐 Make websites accessible for AI agents. Automate tasks online with
+      ease.
+    keywords:
+    - agent harness
+    url: https://github.com/browser-use/browser-use
+  - repo_full: Graphify-Labs/graphify
+    stars: 109617
+    license_spdx: Apache-2.0
+    pushed_at: '2026-08-20T16:39:37Z'
+    description: 'Turn any codebase, with its docs, SQL schemas, configs, and PDFs,
+      into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor,
+      Codex, and Gemini CLI: local deterministic AST parsing, e'
+    keywords:
+    - agent harness
+    url: https://github.com/Graphify-Labs/graphify
+  - repo_full: DietrichGebert/ponytail
+    stars: 108307
+    license_spdx: MIT
+    pushed_at: '2026-08-07T21:44:01Z'
+    description: Makes your AI agent think like the laziest senior dev in the room.
+      The best code is the code you never wrote.
+    keywords:
+    - agent harness
+    url: https://github.com/DietrichGebert/ponytail

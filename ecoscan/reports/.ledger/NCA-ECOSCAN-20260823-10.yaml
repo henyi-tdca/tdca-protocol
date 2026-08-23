@@ -1,0 +1,14 @@
+NCA-ID: NCA-ECOSCAN-20260823-10
+Operation-Type: EcoScan-invite
+Operator: Reasonix
+Timestamp: '2026-08-23T05:05:16Z'
+Payload-Hash: sha256:447c46a0679db7dd913926ec628e0994bddb515b40f2f9953d43802311cde717
+Payload:
+  type: invite
+  invite_id: INV-F0D1F3EC3E2D
+  repo_full: ultraworkers/claw-code
+  mode: mount
+  nca_ref: NCA-ECOSCAN-20260823-INV-F0D1F3EC3E2D
+  body: '尊敬的 ultraworkers/claw-code 项目方：我们发现您的项目缺少可信的审计与分账协议层。TDCA 提供轻量级 MCP 适配器（不改变您的任何代码，只在外部挂载协议层），可为主权信用合规提供支持。您可以选择使用或不用——这是您的配置权。（存证:
+    NCA-ECOSCAN-20260823-INV-F0D1F3EC3E2D，调用即分润：动态分润，默认版权被权调用方 15%，按贵方开源授权规定执行；无明确收费约定时按开源规则合法挂载，收益默认支付
+    15% 版税给贵方或贵方社区基金会）'

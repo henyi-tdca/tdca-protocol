@@ -1,0 +1,170 @@
+NCA-ID: NCA-ECOSCAN-20260823-6
+Operation-Type: EcoScan-scan
+Operator: Reasonix
+Timestamp: '2026-08-23T05:05:15Z'
+Payload-Hash: sha256:58a8a406ff4955fd21cd6457ea79af3ba423bdd10d4e7e5fbafbf6764127c68d
+Payload:
+  type: scan
+  query: m2-pipeline
+  target_count: 18
+  targets:
+  - repo_full: obra/superpowers
+    stars: 276272
+    license_spdx: MIT
+    pushed_at: '2026-08-19T17:33:23Z'
+    description: An agentic skills framework & software development methodology that
+      works.
+    keywords:
+    - codex harness
+    url: https://github.com/obra/superpowers
+  - repo_full: affaan-m/ECC
+    stars: 242236
+    license_spdx: MIT
+    pushed_at: '2026-08-21T03:02:03Z'
+    description: The agent harness performance optimization system. Skills, instincts,
+      memory, security, and research-first development for Claude Code, Codex, Opencode,
+      Cursor and beyond.
+    keywords:
+    - codex harness
+    url: https://github.com/affaan-m/ECC
+  - repo_full: ultraworkers/claw-code
+    stars: 195112
+    license_spdx: MIT
+    pushed_at: '2026-08-16T06:18:45Z'
+    description: An agent-managed museum exhibit, built in Rust with Gajae-Code /
+      LazyCodex — developed and maintained with no human intervention.
+    keywords:
+    - codex harness
+    url: https://github.com/ultraworkers/claw-code
+  - repo_full: ollama/ollama
+    stars: 179222
+    license_spdx: MIT
+    pushed_at: '2026-08-22T18:42:04Z'
+    description: Get up and running with Kimi-K2.6, GLM-5.2, MiniMax, DeepSeek, gpt-oss,
+      Qwen, Gemma and other models.
+    keywords:
+    - codex harness
+    url: https://github.com/ollama/ollama
+  - repo_full: github/spec-kit
+    stars: 130850
+    license_spdx: MIT
+    pushed_at: '2026-08-21T21:29:37Z'
+    description: 💫 Toolkit to help you get started with Spec-Driven Development
+    keywords:
+    - codex harness
+    url: https://github.com/github/spec-kit
+  - repo_full: garrytan/gstack
+    stars: 129226
+    license_spdx: MIT
+    pushed_at: '2026-08-22T02:22:16Z'
+    description: 'Use Garry Tan''s exact Claude Code setup: 23 opinionated tools that
+      serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA'
+    keywords:
+    - codex harness
+    url: https://github.com/garrytan/gstack
+  - repo_full: browser-use/browser-use
+    stars: 110162
+    license_spdx: MIT
+    pushed_at: '2026-08-22T23:25:03Z'
+    description: 🌐 Make websites accessible for AI agents. Automate tasks online with
+      ease.
+    keywords:
+    - codex harness
+    url: https://github.com/browser-use/browser-use
+  - repo_full: Graphify-Labs/graphify
+    stars: 109619
+    license_spdx: Apache-2.0
+    pushed_at: '2026-08-20T16:39:37Z'
+    description: 'Turn any codebase, with its docs, SQL schemas, configs, and PDFs,
+      into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor,
+      Codex, and Gemini CLI: local deterministic AST parsing, e'
+    keywords:
+    - codex harness
+    url: https://github.com/Graphify-Labs/graphify
+  - repo_full: DietrichGebert/ponytail
+    stars: 108314
+    license_spdx: MIT
+    pushed_at: '2026-08-07T21:44:01Z'
+    description: Makes your AI agent think like the laziest senior dev in the room.
+      The best code is the code you never wrote.
+    keywords:
+    - codex harness
+    url: https://github.com/DietrichGebert/ponytail
+  - repo_full: thedotmack/claude-mem
+    stars: 91541
+    license_spdx: Apache-2.0
+    pushed_at: '2026-08-21T23:43:00Z'
+    description: Persistent Context Across Sessions for Every Agent –  Captures everything
+      your agent does during sessions, compresses it with AI, and injects relevant
+      context back into future sessions. Works with Cla
+    keywords:
+    - codex harness
+    url: https://github.com/thedotmack/claude-mem
+  - repo_full: public-apis/public-apis
+    stars: 468726
+    license_spdx: MIT
+    pushed_at: '2026-08-19T21:44:19Z'
+    description: A collective list of free APIs
+    keywords:
+    - codex agent
+    url: https://github.com/public-apis/public-apis
+  - repo_full: mattpocock/skills
+    stars: 232432
+    license_spdx: MIT
+    pushed_at: '2026-08-21T10:56:48Z'
+    description: Skills for Real Engineers. Straight from my .agents directory.
+    keywords:
+    - codex agent
+    url: https://github.com/mattpocock/skills
+  - repo_full: avelino/awesome-go
+    stars: 181989
+    license_spdx: MIT
+    pushed_at: '2026-08-21T06:27:18Z'
+    description: A curated list of awesome Go frameworks, libraries and software
+    keywords:
+    - codex agent
+    url: https://github.com/avelino/awesome-go
+  - repo_full: Snailclimb/JavaGuide
+    stars: 157960
+    license_spdx: Apache-2.0
+    pushed_at: '2026-08-22T15:51:09Z'
+    description: Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发
+    keywords:
+    - codex agent
+    url: https://github.com/Snailclimb/JavaGuide
+  - repo_full: msitarzewski/agency-agents
+    stars: 147397
+    license_spdx: MIT
+    pushed_at: '2026-08-06T13:29:47Z'
+    description: A complete AI agency at your fingertips - From frontend wizards to
+      Reddit community ninjas, from whimsy injectors to reality checkers. Each agent
+      is a specialized expert with personality, processes, a
+    keywords:
+    - codex agent
+    url: https://github.com/msitarzewski/agency-agents
+  - repo_full: Shubhamsaboo/awesome-llm-apps
+    stars: 133627
+    license_spdx: Apache-2.0
+    pushed_at: '2026-08-22T04:01:54Z'
+    description: 100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+    keywords:
+    - codex agent
+    url: https://github.com/Shubhamsaboo/awesome-llm-apps
+  - repo_full: farion1231/cc-switch
+    stars: 128875
+    license_spdx: MIT
+    pushed_at: '2026-08-21T14:55:47Z'
+    description: 'A cross-platform desktop All-in-One assistant for Claude Code, Codex,
+      OpenCode, OpenClaw, Grok Build & Hermes Agent. Only official website: ccswitch.io'
+    keywords:
+    - codex cli
+    url: https://github.com/farion1231/cc-switch
+  - repo_full: nextlevelbuilder/ui-ux-pro-max-skill
+    stars: 119935
+    license_spdx: MIT
+    pushed_at: '2026-08-20T11:49:07Z'
+    description: An AI skill that provides design intelligence for building professional
+      UI/UX across multiple platforms.
+    keywords:
+    - codex cli
+    url: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill

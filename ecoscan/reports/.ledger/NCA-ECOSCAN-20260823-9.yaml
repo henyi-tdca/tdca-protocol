@@ -1,0 +1,14 @@
+NCA-ID: NCA-ECOSCAN-20260823-9
+Operation-Type: EcoScan-invite
+Operator: Reasonix
+Timestamp: '2026-08-23T05:05:16Z'
+Payload-Hash: sha256:131c07cefcd034b751cfc96b70078f44b6ce43b50078e13d31eaf1af9b1dff68
+Payload:
+  type: invite
+  invite_id: INV-FB414FE9CB67
+  repo_full: thedotmack/claude-mem
+  mode: compound
+  nca_ref: NCA-ECOSCAN-20260823-INV-FB414FE9CB67
+  body: '尊敬的 thedotmack/claude-mem 项目方：贵项目与 TDCA 制度框架高度同构（可审计事件流 ↔ NCA 存证链）。我们诚邀化合协作——您的资产与
+    TDCA 制度函数化合生成高级 NCA，调用后您作为原创方获得分润与永久版税（Shapley 分配）。（存证: NCA-ECOSCAN-20260823-INV-FB414FE9CB67，只赋能不改码；以贵方开源授权规定为优先，无明确收费约定时按开源规则合法化合，收益默认支付
+    15% 版税给贵方或贵方社区基金会）'

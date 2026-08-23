@@ -1,0 +1,20 @@
+NCA-ID: NCA-ECOSCAN-20260823-13
+Operation-Type: EcoScan-scan
+Operator: Reasonix
+Timestamp: '2026-08-23T05:05:37Z'
+Payload-Hash: sha256:23263e75c41600c1b179bb893a073308b489089227fb7a82662e0b3f9800cb8e
+Payload:
+  type: scan
+  query: m2-pipeline
+  target_count: 1
+  targets:
+  - repo_full: openai/codex
+    stars: 113851
+    license_spdx: Apache-2.0
+    pushed_at: '2026-08-23T05:01:49Z'
+    description: Lightweight coding agent that runs in your terminal
+    keywords:
+    - codex agent
+    - coding agent
+    - terminal
+    url: https://github.com/openai/codex
