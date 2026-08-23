@@ -32,6 +32,26 @@
 
 PR 合并前，GitHub Actions（`admission-check.yml`）会对 `nca-archives/` 新增文件自动复跑全量校验 + 全链 `--verify`。
 
+## 贡献类型与流程
+
+| 类型 | 入口 | 评审 |
+|---|---|---|
+| 准入缔约（L1） | 上方七步 | admission-check 自动门禁 + 守门人核对 |
+| 证明/解答贡献（[OPEN-PROBLEMS](OPEN-PROBLEMS.md) P-1~P-9） | PR 附机器可读验证文件（Lean/Isabelle/Coq 或可执行断言验证器） | ★级走常规 PR；★★/★★★ 级触发 **DCD 门禁**（人类 + 智能体双审 + 公示期）——未附机器验证不进入评审 |
+| 工具/文档改进 | 常规 PR | 维护者评审 |
+
+### Tier 标注纪律
+
+- 证明与声称按 Tier A（已证明）/ B（部分）/ C（[proof: pending]）标注；未定稿不挂公理名
+- 任何证明附模型假设 + 适用范围；**不标"绝对安全"**
+- 对照基线：[`core-go/docs/formal-proofs/CLAIMS-MATRIX.md`](core-go/docs/formal-proofs/CLAIMS-MATRIX.md)
+
+### 署名与确权（NCA）
+
+- 贡献被接收即生成 NCA 存证（链式哈希），贡献者署名入 `ACKNOWLEDGMENTS.md`
+- 协作按开源协作宣言（TDCA-OPEN-COLLAB-001）：**动态分润 15% + 开源方优先**；无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给贡献方或其社区基金会
+- 挂载/化合双轨：外部项目可 mount（外挂协议层，不改码）或 compound（资产与制度函数化合），拒绝即止（配置权归还）
+
 ## 红线（不可绕过）
 
 不发币、不公售、不承诺分红、不代币化、不以积分/凭证变相交易；不拉踩其他协议；数据一律带 simulated/real 性质标注（ID92）。触发 NSFL 负空间条款 → 一票否决。
