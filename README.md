@@ -10,13 +10,14 @@
 
 ---
 
-## 两包导航
+## 仓库导航（两包 + 引擎 + 生态）
 
 | 目录 | 内容 | 版本/状态 |
 |---|---|---|
 | [`pack/`](pack/) | **TDCA 智能体编程协议包（PACK-001）**：30 分钟制度注入入门——7 份规范 + 5 个机器可读模板 | V1.3 ✅ 已签批（NCA-002~005） |
 | [`dual/`](dual/) | **双协议化合引擎（DUAL-PROTOCOL）**：场景协议 × 制度协议运行时化合——4 引擎模块 + 测试 + 四行业示例 | V1.1 ✅ 已签批 |
-| [`core-go/`](core-go/) | **Go 强类型生产级核心引擎**：enforce / nca / nsfl 核心三件 + tdcad 守护进程 + Python↔Go 桥接（Apache-2.0 独立许可，与根 MIT 双许可并存） | V1.0.0 ✅ 已签批（GSEQ-0377）｜ CI 在线门禁 ✅（core-go-ci：vet + race + build + smoke） |
+| [`core-go/`](core-go/) | **Go 强类型生产级核心引擎**：enforce / nca / nsfl 核心三件 + tdcad 守护进程 + MCP 桥接（AI 可调用工具）+ Python↔Go 桥接（Apache-2.0 独立许可，与根 MIT 双许可并存） | V1.0.0 ✅ 已签批（GSEQ-0377）｜ CI 在线门禁 ✅（core-go-ci：vet + race + build + smoke） |
+| [`ecoscan/`](ecoscan/) | **生态雷达 + 邀请自动化（ECOSCAN）**：扫描 → 诊断 → 邀请 → 实测回收 → NCA 台账全链流水线（Apache-2.0 独立许可） | M2 ✅ 40 用例全绿（GSEQ-0382） |
 
 ## tools/ 工具货架（全部开源可跑，零第三方依赖）
 
