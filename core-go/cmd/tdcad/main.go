@@ -18,6 +18,7 @@ import (
 	"os"
 
 	"github.com/henyi-tdca/tdca-core-go/pkg/enforce"
+	"github.com/henyi-tdca/tdca-core-go/pkg/mcp"
 	"github.com/henyi-tdca/tdca-core-go/pkg/nca"
 	"github.com/henyi-tdca/tdca-core-go/pkg/nsfl"
 )
@@ -39,6 +40,8 @@ func main() {
 		err = cmdNca(os.Args[2:])
 	case "nsfl":
 		err = cmdNsfl(os.Args[2:])
+	case "mcp":
+		err = cmdMCP(os.Args[2:])
 	default:
 		usage()
 		os.Exit(2)
@@ -56,6 +59,7 @@ Usage:
   tdcad nca append <record.json>
   tdcad nca verify
   tdcad nsfl eval <trigger> <signal>
+  tdcad mcp serve        # MCP 桥接（stdio JSON-RPC，外部 Agent 挂载）
   tdcad version`)
 }
 
@@ -65,6 +69,17 @@ func readJSON(path string, v any) error {
 		return err
 	}
 	return json.Unmarshal(raw, v)
+}
+
+// ---- mcp ----
+
+// cmdMCP 启动 MCP 桥接服务（挂载模式：外部 Agent 通过 stdio 调用核心三件）
+func cmdMCP(args []string) error {
+	if len(args) != 1 || args[0] != "serve" {
+		return fmt.Errorf("usage: tdcad mcp serve")
+	}
+	server := mcp.NewServer()
+	return server.Serve(os.Stdin, os.Stdout)
 }
 
 // ---- enforce ----
