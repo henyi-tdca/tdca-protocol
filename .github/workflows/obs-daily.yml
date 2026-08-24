@@ -28,3 +28,41 @@ jobs:
             echo "⚠️ Gitee 审核生效——触发闸 3b 镜像推送 + 补登记"
             exit 1   # fail 标记以引起注意
           fi
+      - name: 社区算力消耗（熔断观察——NCA-065）
+        if: always()
+        run: |
+          echo "=== D 组：社区算力消耗（tdca-community-playground 台账）==="
+          TODAY=$(date -u +%Y%m%d); MONTH=$(date -u +%Y%m)
+          export TODAY MONTH
+          python3 - <<'PYEOF'
+          import base64, json, os, sys, urllib.request
+          H = {"Accept": "application/vnd.github+json", "User-Agent": "tdca-daily-obs"}
+          def get(u):
+              req = urllib.request.Request(u, headers=H)
+              with urllib.request.urlopen(req, timeout=20) as r:
+                  return json.loads(r.read().decode())
+          today, month = os.environ["TODAY"], os.environ["MONTH"]
+          try:
+              tree = get("https://api.github.com/repos/henyi-tdca/tdca-community-playground/git/trees/main?recursive=1")
+          except Exception as e:
+              print("playground 台账不可达（可能尚未首跑）:", e)
+              sys.exit(0)
+          files = [t["path"] for t in tree.get("tree", []) if t["path"].startswith(".tdca-nca/services/community/NCA-COMMUNITY-")]
+          day_sum = mon_sum = 0.0
+          for p in files:
+              base = os.path.basename(p)
+              if f"NCA-COMMUNITY-{month}" not in base:
+                  continue
+              try:
+                  c = json.loads(base64.b64decode(get("https://api.github.com/repos/henyi-tdca/tdca-community-playground/contents/" + p)["content"]).decode())
+                  v = float(c.get("est_cost_cny", 0))
+                  mon_sum += v
+                  if f"NCA-COMMUNITY-{today}" in base:
+                      day_sum += v
+              except Exception:
+                  pass
+          print(f"台账文件 {len(files)} 个｜今日 ¥{day_sum:.4f}｜本月 ¥{mon_sum:.4f}（阈值: 日 ¥5 / 月 ¥20）")
+          if day_sum > 5 or mon_sum > 20:
+              print("::error::社区算力超限——请吊销换新 Key（NCA-065 熔断条款）")
+              sys.exit(1)
+          PYEOF
