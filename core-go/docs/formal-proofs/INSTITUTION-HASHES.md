@@ -10,13 +10,13 @@
 
 | 制度对象 | 版本 | 哈希（sha256） | 验证方式 |
 |---|---|---|---|
-| 宪法十六条（TDCA-CONST） | v3.1.2 | `sha256:{CONSTITUTION_HASH}`（见 tdca-firmware-spec / nm_simulator） | 与 TDID/L0-state 交叉校验 |
-| NSFL 规则（R1-R10） | V0.2 | 见 pkg/nsfl/nsfl.go（DefaultRules 源码即规范） | go test 比对 |
-| 公理 6 实例化 | TDCA-CORE-GO-AXIOM6-001 | 见 pkg/enforce/axiom6.go + axiom6_verify.go | `VerifyAxiom6()` 机验 |
-| 数学基础白皮书 | TDCA-MATH-WP-REV-001 V1.0-FROZEN | 随 docs/formal-proofs/ 发布 | 文件哈希比对 |
-| 分润规则 | 15%（动态分润） | TDCA-OPEN-COLLAB-001 §三 | 邀请函措辞比对 |
+| 宪法十六条（TDCA-CONST） | v3.1.2（KB-INST-020 权威基准） | `sha256:99A0A1136DCBD4C7…`（基准文件哈希）+ 固件 CONSTITUTION_HASH `sha256:9beb123c…` | 与 TDID/L0-state 交叉校验 |
+| NSFL 规则（R1-R10） | V0.2（pkg/nsfl/nsfl.go 源码即规范） | `sha256:91681E26389DC57E…` | go test 比对 |
+| 公理 6 实例化 | TDCA-CORE-GO-AXIOM6-001 | 实现 `sha256:2DA492D39E3D81BC…`（axiom6.go）｜ 证明文档 `sha256:654679722AA02326…` | `VerifyAxiom6()` 机验 |
+| 数学基础白皮书 | TDCA-MATH-WP-REV-001 V1.0-FROZEN | `sha256:D8271AD0135F3CC9…` | 文件哈希比对 |
+| 分润规则 | 15%（动态分润，模拟态） | 宣言 §三 `sha256:20C8BFCEE24C237F…` | 邀请函措辞比对 |
 
-> 注：SHA256 精确值随发布批次生成并回填（Kimi 推送时计算）；本清单为**验证入口规范**。
+> 注：哈希为 sha256 前 16 位（完整 64 位可在对应文件验证）；精确值于 2026-08-23 分层开源发布批次回填。本清单为**验证入口规范**。
 
 ## 二、验证方法（社区）
 

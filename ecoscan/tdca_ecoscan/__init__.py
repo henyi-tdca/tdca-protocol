@@ -17,13 +17,14 @@ M2 新增:
 
 制度锚定: DCD-ECOSCAN-001（ACCEPT）｜ AUDIT-001 ｜ BIDIR-001 ｜ TDCA-OPEN-COLLAB-001
 NSFL-Declaration: 扫描数据为公开信息标注；诊断/邀请为 SIMULATED 输出（ID92），真实发送由 Kimi 执行
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from .scanner import EcoScanner, ScanTarget
 from .diagnoser import CandidateDiagnoser, CandidateProfile, TIER_A, TIER_B, TIER_C
 from .inviter import InviteGenerator, InviteLetter
 from .ledger import EcoLedger
 from .pipeline import InvitePipeline, PipelineResult, PipelineStep, PROFIT_SHARE_DEFAULT
+from .forker import AutoForker, ForkPlan, PERMISSIVE_LICENSES
 
 __all__ = [
     "EcoScanner",
@@ -40,4 +41,7 @@ __all__ = [
     "PipelineResult",
     "PipelineStep",
     "PROFIT_SHARE_DEFAULT",
+    "AutoForker",
+    "ForkPlan",
+    "PERMISSIVE_LICENSES",
 ]
