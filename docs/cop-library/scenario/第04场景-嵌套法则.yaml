@@ -1,0 +1,115 @@
+COP-ID: SCEN-COP-20260814-04
+source_expert: scenario_subtopic
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T22:48:03.582023'
+branch: 场景·嵌套法则·七元组
+stratum: 场景·嵌套法则·七元组
+soul:
+  identity: 嵌套法则 (Nesting Law)
+  core: 以七元组 <L,M,R,ι,τ,σ,E> 形式化场景垂直结构与模块交互规则; 支持要素级/场景级/认知级三级嵌套(宏观→中观→微观); 模块独立性与高内聚低耦合,
+    嵌套冲突须有解决机制
+  role: 思维协议 (场景范式子类)
+  category: 场景 / 场景·嵌套法则·七元组
+primitives:
+- name: nesting_seven_tuple
+  method: 七元组形式化
+  signature: fn nesting_seven_tuple(L, M, R, iota, tau, sigma, E) -> formal_model
+  precond: 层级集合与模块边界可识别
+  postcond: '以七元组定义场景属性: L层级/M模块/R交互规则/ι映射/τ时序/σ状态/E涌现能量'
+  negative_space: ⊗ 元素约束不自洽致系统逻辑冲突
+  steps:
+  - 划分层级L
+  - 界定模块M
+  - 规范交互R
+  - 设映射ι/时序τ/状态σ
+  - 标定涌现E
+  nca_emit: true
+- name: element_level_nesting
+  method: 要素级嵌套(六要素层级展开)
+  signature: fn element_level_nesting(canvas) -> nested_elements
+  precond: 六要素场景蓝图已建
+  postcond: 参与者/规则等要素内部层级展开, 支持即插即用扩展
+  negative_space: ⊗ 要素边界模糊致耦合失效
+  steps:
+  - 参与者要素嵌套
+  - 规则要素嵌套
+  - 校验要素接口
+  nca_emit: true
+- name: scenario_level_nesting
+  method: 场景级嵌套(空间/时间)
+  signature: fn scenario_level_nesting(scenarios) -> nested_scenarios
+  precond: 存在多层级场景(宏观/中观/微观)
+  postcond: 空间嵌套模型+时间嵌套模型成立, 模块组合成网络场景
+  negative_space: ⊗ 嵌套结构失真致价值网络断裂
+  steps:
+  - 建空间嵌套模型
+  - 建时间嵌套模型
+  - 组场景网络
+  nca_emit: true
+- name: cognitive_level_nesting
+  method: 认知级嵌套(多主体认知层级)
+  signature: fn cognitive_level_nesting(agents) -> nested_cognition
+  precond: 多主体认知层级可识别
+  postcond: 认知层级(个体/群体/社会)嵌套成立, 支撑跨层认知演化
+  negative_space: ⊗ 认知层级错配致协调失效
+  steps:
+  - 定认知层级
+  - 建跨层影响矩阵
+  - 设嵌套认知管理
+  nca_emit: true
+- name: nesting_conflict_resolve
+  method: 嵌套冲突解决机制
+  signature: fn nesting_conflict_resolve(conflicts) -> resolved
+  precond: 存在嵌套冲突(规则/层级/认知)
+  postcond: 以冲突类型-策略表+案例机制解决嵌套冲突, 系统恢复稳定
+  negative_space: ⊗ 嵌套冲突未解决则系统失稳
+  steps:
+  - 分类冲突
+  - 匹配解决策略
+  - 验证恢复
+  - 沉淀案例
+  nca_emit: true
+dispatch:
+  main_pipeline: nesting_seven_tuple
+  graph:
+  - from: nesting_seven_tuple
+    to:
+    - element_level_nesting
+    - scenario_level_nesting
+    - cognitive_level_nesting
+  - from: element_level_nesting
+    to:
+    - nesting_conflict_resolve
+  - from: scenario_level_nesting
+    to:
+    - nesting_conflict_resolve
+  - from: cognitive_level_nesting
+    to:
+    - nesting_conflict_resolve
+  note: '场景子主题 COP 自带调度骨架: nesting_seven_tuple 为主线, 下游原语按子主题逻辑展开'
+decision:
+- if: 需形式化层级结构
+  call: nesting_seven_tuple
+- if: 需要素级嵌套
+  call: element_level_nesting
+- if: 需场景级嵌套
+  call: scenario_level_nesting
+- if: 需认知级嵌套
+  call: cognitive_level_nesting
+- if: 需解决嵌套冲突
+  call: nesting_conflict_resolve
+skills:
+- 模块接口标准化
+- 动态嵌套管理系统
+- 嵌套冲突解决机制
+- 智能嵌套推荐(未来方向)
+negative_space:
+- ⊗ 嵌套冲突须有解决机制, 否则失稳
+- ⊗ 模块须高内聚低耦合, 否则改动波及他模块
+- ⊗ 七元组元素约束须逻辑自洽, 否则系统冲突
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 5

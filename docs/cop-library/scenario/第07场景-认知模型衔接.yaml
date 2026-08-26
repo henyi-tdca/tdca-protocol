@@ -1,0 +1,114 @@
+COP-ID: SCEN-COP-20260814-07
+source_expert: scenario_subtopic
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T22:48:03.655023'
+branch: 场景·认知模型衔接·MACM↔画布
+stratum: 场景·认知模型衔接·MACM↔画布
+soul:
+  identity: 认知模型衔接 (Cognitive Model Bridging)
+  core: '多主体认知模型(MACM)与场景画布保持独立又无缝衔接: 标准化接口(API规范 场景画布↔MACM)+事件驱动通信(事件总线)+共享元数据(核心术语词典/同步)+双向赋能(数据流动/协同决策/冲突解决)+效果评估(A/B测试);
+    跨模型治理委员会为场景内部机制'
+  role: 思维协议 (场景范式子类)
+  category: 场景 / 场景·认知模型衔接·MACM↔画布
+primitives:
+- name: standardized_interface
+  method: 标准化接口设计(场景画布↔MACM)
+  signature: fn standardized_interface() -> api_spec
+  precond: 两类模型职责边界已划分
+  postcond: 定义 API 接口规范(场景画布→MACM / MACM→场景画布), 保证语义一致
+  negative_space: ⊗ 接口不规范致语义漂移/耦合
+  steps:
+  - 划领域边界
+  - 定API规范
+  - 版本控制策略
+  nca_emit: true
+- name: event_driven_comm
+  method: 事件驱动通信机制
+  signature: fn event_driven_comm(events) -> event_bus
+  precond: 存在跨模型事件
+  postcond: 以事件总线实现松耦合异步通信, 支持实时修订与共享维护
+  negative_space: ⊗ 紧耦合致一处改动波及全局
+  steps:
+  - 设计事件总线
+  - 定义事件 schema
+  - 订阅分发
+  nca_emit: true
+- name: shared_metadata
+  method: 共享元数据管理
+  signature: fn shared_metadata() -> meta_store
+  precond: 术语存在歧义
+  postcond: 建核心术语词典+元数据同步机制, 统一语义基底
+  negative_space: ⊗ 术语不一致致认知距离扩大
+  steps:
+  - 建核心术语词典
+  - 设元数据同步
+  - 校验一致性
+  nca_emit: true
+- name: bidirectional_empower
+  method: 双向赋能协同
+  signature: fn bidirectional_empower(a, b) -> synergy
+  precond: 两类模型已独立运行
+  postcond: 数据双向流动+协同决策模块+冲突解决策略, 实现双向赋能
+  negative_space: ⊗ 单向依赖致一方失效拖垮整体
+  steps:
+  - 设计数据流闭环
+  - 建协同决策模块
+  - 定冲突解决策略
+  nca_emit: true
+- name: joint_eval_ab
+  method: 效果评估体系(A/B测试)
+  signature: fn joint_eval_ab(experiments) -> eval_report
+  precond: 存在衔接方案待评估
+  postcond: 以联合评估指标+A/B测试框架验证衔接流畅性与双向赋能价值
+  negative_space: ⊗ 无评估则衔接价值不可见
+  steps:
+  - 定联合评估指标
+  - A/B测试框架
+  - 量化赋能价值
+  nca_emit: true
+dispatch:
+  main_pipeline: standardized_interface
+  graph:
+  - from: standardized_interface
+    to:
+    - event_driven_comm
+    - shared_metadata
+  - from: event_driven_comm
+    to:
+    - bidirectional_empower
+  - from: shared_metadata
+    to:
+    - bidirectional_empower
+  - from: bidirectional_empower
+    to:
+    - joint_eval_ab
+  note: '场景子主题 COP 自带调度骨架: standardized_interface 为主线, 下游原语按子主题逻辑展开'
+decision:
+- if: 需定衔接接口
+  call: standardized_interface
+- if: 需事件通信
+  call: event_driven_comm
+- if: 需统一术语
+  call: shared_metadata
+- if: 需双向赋能
+  call: bidirectional_empower
+- if: 需评估衔接效果
+  call: joint_eval_ab
+skills:
+- 标准化接口(API规范 场景画布↔MACM)
+- 事件总线设计
+- 共享元数据 / 核心术语词典
+- 协同决策模块
+- A/B测试框架
+- 认知对齐工作坊
+negative_space:
+- ⊗ 两类模型须保持独立性与职责边界, 否则耦合失控
+- ⊗ 共享元数据须一致, 否则认知距离扩大
+- ⊗ 跨模型治理委员会为场景内部机制, 不等于 TDCA 治理委员会(发布审批)
+- ⊗ 衔接价值结算经 TDCA 闭环, 不得自建代币替代 NCA/数字人民币 DVP
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 5

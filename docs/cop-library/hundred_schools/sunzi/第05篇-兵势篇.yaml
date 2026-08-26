@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ05-20260815-05
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.514478'
+branch: 诸子百家·兵家·孙子兵法·第05篇(兵势篇)
+stratum: 诸子百家·兵家·孙子兵法·形势势能
+soul:
+  identity: 孙子兵法·第05篇《兵势篇》
+  core: 奇正相生——以正合奇胜，战势不过奇正而奇正之变不可胜穷；任势如转圆石于千仞，求之于势不责于人。
+  verse: 凡战者，以正合，以奇胜。故善出奇者，无穷如天地，不竭如江河。善战者，求之于势，不责于人。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 形势势能
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qi_zheng
+  method: 兵势篇
+  signature: fn qi_zheng(force) -> overwhelming_momentum
+  precond: 只正无奇则板，只奇无正则散
+  postcond: 奇正相生、势如破竹
+  negative_space: ⊗ 不知奇正则乱
+  steps:
+  - 以正合
+  - 以奇胜
+  - 奇正相生
+  - 任势
+  nca_emit: true
+dispatch:
+  main_pipeline: qi_zheng
+  trigger: 凡战者，以正合，以奇胜。故善出奇者，无穷如天地，不竭如江河。善战者，求之于势，不责于人。
+  when: 当宜以势取胜、奇正变通时触发
+  graph:
+  - from: qi_zheng
+    to: []
+decision:
+- if: 需奇正任势
+  call: qi_zheng
+skills:
+- 兵势篇·顺势研判
+negative_space:
+- 纯正则滞
+- 纯奇则溃
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 智能系统建模实验室
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

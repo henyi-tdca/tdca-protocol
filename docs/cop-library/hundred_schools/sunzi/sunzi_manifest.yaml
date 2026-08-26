@@ -1,0 +1,140 @@
+library: sunzi_bingfa
+role: 兵家系统思维库 (Chinese cultural compound operand source, 篇级)
+note: 《孙子兵法》十三篇逐篇编译为独立可调用的思维协议(COP)，按四谱系归类(战略筹划/形势势能/地形机变/奇法用间)。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: sunzi/compile_sunzi.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 13
+strata_taxonomy:
+  战略筹划: 计篇/作战篇/谋攻篇/军争篇/九地篇 (庙算·速胜·全胜·迂直·深浅, 战略决策层)
+  形势势能: 军形篇/兵势篇/虚实篇/火攻篇 (不可胜·奇正·避实击虚·慎动, 作战势能层)
+  地形机变: 行军篇/地形篇/九变篇 (处军相敌·六地·变通, 处地应变层)
+  奇法用间: 用间篇 (五间先知, 情报语义层)
+strata_count:
+  战略筹划: 3
+  形势势能: 3
+  地形机变: 5
+  奇法用间: 2
+items:
+- n: 1
+  title: 计篇
+  cop_id: HS-BI-SZ01-20260815-01
+  stratum: 战略筹划
+  verse: 兵者，国之大事，死生之地，存亡之道，不可不察也。故经之以五事，校之以计，而索其情：一曰道，二曰天，三曰地，四曰将，五曰法。
+  primitive: miao_suan
+  lead_dim: 战略
+  file: 第01篇-计篇.yaml
+- n: 2
+  title: 作战篇
+  cop_id: HS-BI-SZ02-20260815-02
+  stratum: 战略筹划
+  verse: 兵贵胜，不贵久。久则钝兵挫锐，攻城则力屈，久暴师则国用不足。故智将务食于敌，因粮于敌。
+  primitive: gui_sheng
+  lead_dim: 战略
+  file: 第02篇-作战篇.yaml
+- n: 3
+  title: 谋攻篇
+  cop_id: HS-BI-SZ03-20260815-03
+  stratum: 战略筹划
+  verse: 不战而屈人之兵，善之善者也。上兵伐谋，其次伐交，其次伐兵，其下攻城。知己知彼，百战不殆。
+  primitive: fa_mou
+  lead_dim: 战略
+  file: 第03篇-谋攻篇.yaml
+- n: 4
+  title: 军形篇
+  cop_id: HS-BI-SZ04-20260815-04
+  stratum: 形势势能
+  verse: 昔之善战者，先为不可胜，以待敌之可胜。不可胜在己，可胜在敌。修道而保法，故能为胜败之政。
+  primitive: xian_wei_bu_ke_sheng
+  lead_dim: 建模
+  file: 第04篇-军形篇.yaml
+- n: 5
+  title: 兵势篇
+  cop_id: HS-BI-SZ05-20260815-05
+  stratum: 形势势能
+  verse: 凡战者，以正合，以奇胜。故善出奇者，无穷如天地，不竭如江河。善战者，求之于势，不责于人。
+  primitive: qi_zheng
+  lead_dim: 建模
+  file: 第05篇-兵势篇.yaml
+- n: 6
+  title: 虚实篇
+  cop_id: HS-BI-SZ06-20260815-06
+  stratum: 形势势能
+  verse: 夫兵形象水，水之形避高而趋下，兵之形避实而击虚。故善战者，致人而不致于人。兵无常势，水无常形。
+  primitive: bi_shi_ji_xu
+  lead_dim: 建模
+  file: 第06篇-虚实篇.yaml
+- n: 7
+  title: 军争篇
+  cop_id: HS-BI-SZ07-20260815-07
+  stratum: 地形机变
+  verse: 凡用兵之法，将受命于君，合军聚众，交和而舍，莫难于军争。军争之难者，以迂为直，以患为利。
+  primitive: yi_yu_wei_zhi
+  lead_dim: 战略
+  file: 第07篇-军争篇.yaml
+- n: 8
+  title: 九变篇
+  cop_id: HS-BI-SZ08-20260815-08
+  stratum: 地形机变
+  verse: 涂有所不由，军有所不击，城有所不攻，地有所不争，君命有所不受。是故智者之虑，必杂于利害。
+  primitive: jun_ming_suo_bu_shou
+  lead_dim: 合规
+  file: 第08篇-九变篇.yaml
+- n: 9
+  title: 行军篇
+  cop_id: HS-BI-SZ09-20260815-09
+  stratum: 地形机变
+  verse: 凡处军相敌：绝山依谷，视生处高，战隆无登。兵非贵益多也，惟无武进。令之以文，齐之以武。
+  primitive: chu_jun_xiang_di
+  lead_dim: 图谱
+  file: 第09篇-行军篇.yaml
+- n: 10
+  title: 地形篇
+  cop_id: HS-BI-SZ10-20260815-10
+  stratum: 地形机变
+  verse: 地形者，兵之助也。知彼知己，胜乃不殆；知天知地，胜乃可全。视卒如婴儿，故可与之赴深溪。
+  primitive: liu_di
+  lead_dim: 图谱
+  file: 第10篇-地形篇.yaml
+- n: 11
+  title: 九地篇
+  cop_id: HS-BI-SZ11-20260815-11
+  stratum: 地形机变
+  verse: 用兵之法，有散地、轻地、争地、交地、衢地、重地、泛地、围地、死地。投之亡地然后存，陷之死地然后生。
+  primitive: jiu_di
+  lead_dim: 战略
+  file: 第11篇-九地篇.yaml
+- n: 12
+  title: 火攻篇
+  cop_id: HS-BI-SZ12-20260815-12
+  stratum: 奇法用间
+  verse: 凡火攻，必因五火之变而应之：火发于内，则早应之于外。非利不动，非得不用，非危不战。
+  primitive: huo_gong
+  lead_dim: 建模
+  file: 第12篇-火攻篇.yaml
+- n: 13
+  title: 用间篇
+  cop_id: HS-BI-SZ13-20260815-13
+  stratum: 奇法用间
+  verse: 明君贤将，所以动而胜人，成功出于众者，先知也。故明君贤将，所以动而胜人者，先知也。无所不用间。
+  primitive: yong_jian
+  lead_dim: NLP
+  file: 第13篇-用间篇.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家(道德经)
+  - 儒家(论语/大学/孟子/中庸/荀子)
+  - 墨家
+  - 法家
+  - 名家
+  - 阴阳家
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 马克思主义库
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  collab_demo: simulations/multilateral_search_match/run_sunzi_collab.py (连接器比配+TDCA机制协作编译)

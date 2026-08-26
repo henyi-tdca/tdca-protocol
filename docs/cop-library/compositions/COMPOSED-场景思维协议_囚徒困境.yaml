@@ -1,0 +1,78 @@
+COP-ID: SCEN-COP-20260814-01+01
+type: COMPOSED-COP
+source_expert: scenario_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T22:38:28.572890'
+composition:
+  parent: SCEN-COP-20260814-01
+  interpretants:
+  - cop_id: GAME-COP-20260814-01
+    relation: 解释项
+    bind_step: 规划价值流
+    effect: '价值流规划在单次博弈困境中须借囚徒困境的纳什/帕累托诊断: 场景价值流须规避 (背叛,背叛) 帕累托劣解, 用重复博弈/以牙还牙/可信承诺把
+      (合作,合作) 固化为场景正和基底; 场景涌现的协作结构须经博弈论诊断确保均衡合作, 否则''价值流''只是空想——场景思维协议借囚徒困境COP判定''哪些价值流在理性下可自持'',
+      使场景价值网络落在正和可行域'
+soul:
+  identity: 场景思维协议 (Scenario Protocol) ⟂ 囚徒困境 (Prisoner's Dilemma)
+  core: '思维协议具有场景依存效用 —— 场景不是给定的封闭空间, 而是可涌现的价值网络(场景即协议); 通过画布六要素/认知四阶段涌现/嵌套七元组/生命周期适配/多主体认知对齐,
+    使分散认知质变为协同场景; 其效用随场景而定, 故须与其他思维协议组合(互为解释项)方能落地 —— 场景COP是其他COP的必备组合；⟂解释项《囚徒困境 (Prisoner''s
+    Dilemma)》(核心: 个体理性导致集体非理性; 破解之道在重复博弈与可信承诺)：价值流规划在单次博弈困境中须借囚徒困境的纳什/帕累托诊断: 场景价值流须规避
+    (背叛,背叛) 帕累托劣解, 用重复博弈/以牙还牙/可信承诺把 (合作,合作) 固化为场景正和基底; 场景涌现的协作结构须经博弈论诊断确保均衡合作, 否则''价值流''只是空想——场景思维协议借囚徒困境COP判定''哪些价值流在理性下可自持'',
+    使场景价值网络落在正和可行域'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 场景 / 场景·场景即协议·认知涌现 + 博弈论 / 非合作博弈·同时行动
+primitives:
+- name: scenario_canvas_model
+  method: 场景思维协议 (Scenario Protocol) (经 囚徒困境 (Prisoner's Dilemma) 解释)
+  signature: fn scenario_canvas_model(theme, participants, resources, rules, tech,
+    valueflow) -> scenario_blueprint
+  precond: 明确场景主题意义与边界
+  postcond: '思维协议具有场景依存效用 —— 场景不是给定的封闭空间, 而是可涌现的价值网络(场景即协议); 通过画布六要素/认知四阶段涌现/嵌套七元组/生命周期适配/多主体认知对齐,
+    使分散认知质变为协同场景; 其效用随场景而定, 故须与其他思维协议组合(互为解释项)方能落地 —— 场景COP是其他COP的必备组合；⟂解释项《囚徒困境 (Prisoner''s
+    Dilemma)》(核心: 个体理性导致集体非理性; 破解之道在重复博弈与可信承诺)：价值流规划在单次博弈困境中须借囚徒困境的纳什/帕累托诊断: 场景价值流须规避
+    (背叛,背叛) 帕累托劣解, 用重复博弈/以牙还牙/可信承诺把 (合作,合作) 固化为场景正和基底; 场景涌现的协作结构须经博弈论诊断确保均衡合作, 否则''价值流''只是空想——场景思维协议借囚徒困境COP判定''哪些价值流在理性下可自持'',
+    使场景价值网络落在正和可行域 (目标达成)'
+  negative_space: ⊗ 缺任一要素则场景不可自持/易崩；⊗ 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真
+  steps:
+  - 界定主题意义
+  - 刻画参与者网络
+  - 设计资源流动
+  - 订立规则体系
+  - 选型技术架构
+  - 规划价值流 ⟂【囚徒困境 (Prisoner's Dilemma)】列出双方策略空间 {合作, 背叛} → 标定 T/R/P/S 四类收益 → 校验 T>R>P>S
+    排序
+  nca_emit: true
+dispatch:
+  main_pipeline: scenario_canvas_model
+  graph:
+  - from: scenario_canvas_model
+    to:
+    - pd_payoff_build
+    bind: 规划价值流
+    note: scenario_canvas_model 在 [规划价值流] 嵌套调用 pd_payoff_build (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需建场景蓝图
+  call: scenario_canvas_model
+- if: 需推动认知涌现
+  call: cognition_emergence
+- if: 需多层嵌套
+  call: nesting_design
+- if: 需按阶段调认知
+  call: lifecycle_adapt
+- if: 需多主体对齐/治理
+  call: multiagent_align
+- if: 需设计价值流
+  call: valueflow_design
+- if: 需守认知安全/冲突
+  call: cognitive_safety_bound
+skills: []
+negative_space:
+- ⊗ 场景须六要素齐备, 否则不可自持
+- ⊗ 认知涌现须按阶段推进, 跳跃致崩
+- ⊗ 嵌套冲突须有解决机制, 否则失稳
+- ⊗ 价值流须正和且经 TDCA 闭环结算, 不得自建代币替代 NCA/数字人民币 DVP
+- ⊗ 多主体治理(DAO/委员会)为场景内部机制, 不等于 TDCA 治理委员会(发布审批)
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真'
+nsfl_version: V0.1

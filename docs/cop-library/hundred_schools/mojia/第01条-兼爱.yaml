@@ -1,0 +1,47 @@
+COP-ID: HS-MO-01-20260815-01
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.999218'
+branch: 诸子百家·墨家·第01条(兼爱)
+stratum: 诸子百家·墨家·兼爱本原
+soul:
+  identity: 墨家·第01条《兼爱》
+  core: 兼相爱交相利、视人犹己；以去别立兼，根除攻夺之患。
+  verse: 兼相爱，交相利。视人之国若视其国，视人之家若视其家，视人之身若视其身。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 兼爱本原
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jian_ai
+  method: 兼爱
+  signature: fn jian_ai(relate) -> universal_love
+  precond: 别相恶、交贼
+  postcond: 兼相爱，交相利
+  negative_space: ⊗ 别则相攻
+  steps:
+  - 去别
+  - 兼
+  - 视犹己
+  - 交利
+  nca_emit: true
+dispatch:
+  main_pipeline: jian_ai
+  trigger: 兼相爱，交相利。视人之国若视其国，视人之家若视其家，视人之身若视其身。
+  when: 当群体相争、宜视人犹己时触发
+  graph:
+  - from: jian_ai
+    to: []
+decision:
+- if: 需兼爱
+  call: jian_ai
+skills:
+- 兼爱·顺势研判
+negative_space:
+- 别爱则相攻
+- 兼而不交利则虚
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

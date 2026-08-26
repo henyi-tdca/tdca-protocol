@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-23
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.175984'
+stratum: 混战计
+soul:
+  identity: 远交近攻
+  core: 交远制近, 分化削邻
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 混战计
+primitives:
+- name: yuan_jiao_jin_gong
+  method: 远交近攻
+  signature: 'fn yuan_jiao_jin_gong(context: Situation) -> Outcome'
+  precond: 多敌环伺需逐个破
+  postcond: 交远制近, 分化削邻 (目标达成)
+  negative_space: ⊗ 远敌亦图近则反被夹
+  steps:
+  - 交好远敌使其不援
+  - 专攻近敌
+  - 破一近再移
+  nca_emit: true
+dispatch:
+  main_pipeline: yuan_jiao_jin_gong
+  graph:
+  - from: yuan_jiao_jin_gong
+    to: []
+  note: 单计独立协议, 主原语 yuan_jiao_jin_gong 即该计执行体
+decision:
+- if: 多敌环伺需逐个破
+  call: yuan_jiao_jin_gong
+skills: []
+negative_space:
+- ⊗ 远敌亦图近则反被夹
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

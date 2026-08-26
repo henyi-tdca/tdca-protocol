@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH16-20260815-16
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.310136'
+branch: 诸子百家·道家·道德经·第16章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第16章《致虚极守静笃》
+  core: 极虚静以观复，知常曰明；以归根知常破妄动。
+  verse: 致虚极，守静笃；夫物芸芸，各复归其根。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_xu_shou_jing_guan_fu
+  method: 致虚极守静笃
+  signature: fn zhi_xu_shou_jing_guan_fu(action) -> return_to_root
+  precond: 纷扰妄动、不见根本
+  postcond: 虚静观复，知常不妄
+  negative_space: ⊗ 妄动则凶
+  steps:
+  - 致虚
+  - 守静
+  - 观复
+  - 知常
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_xu_shou_jing_guan_fu
+  trigger: 致虚极，守静笃；夫物芸芸，各复归其根。
+  when: 当环境纷扰、需看清循环根本时触发
+  graph:
+  - from: zhi_xu_shou_jing_guan_fu
+    to: []
+decision:
+- if: 需观复知常以定静
+  call: zhi_xu_shou_jing_guan_fu
+skills:
+- 致虚极守静笃·顺势研判
+negative_space:
+- 不静则不见复
+- 妄动则凶
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

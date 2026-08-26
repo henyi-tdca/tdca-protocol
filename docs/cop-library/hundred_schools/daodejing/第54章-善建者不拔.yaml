@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH54-20260815-54
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.742482'
+branch: 诸子百家·道家·道德经·第54章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第54章《善建者不拔》
+  core: 建德不拔、以身观身；以修己及家邦天下。
+  verse: 善建者不拔，善抱者不脱；修之于身，其德乃真。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shan_jian_zhe_bu_ba
+  method: 善建者不拔
+  signature: fn shan_jian_zhe_bu_ba(build) -> unshakable_build
+  precond: 外在强建、易拔
+  postcond: 善建不拔，修己及物
+  negative_space: ⊗ 强建则拔
+  steps:
+  - 善建
+  - 善抱
+  - 修身
+  - 观天下
+  nca_emit: true
+dispatch:
+  main_pipeline: shan_jian_zhe_bu_ba
+  trigger: 善建者不拔，善抱者不脱；修之于身，其德乃真。
+  when: 当外在强建易毁、宜修本时触发
+  graph:
+  - from: shan_jian_zhe_bu_ba
+    to: []
+decision:
+- if: 需善建不拔
+  call: shan_jian_zhe_bu_ba
+skills:
+- 善建者不拔·顺势研判
+negative_space:
+- 强建则拔
+- 外求则脱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

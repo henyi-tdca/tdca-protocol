@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX01-20260815-01
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.889391'
+branch: 诸子百家·儒家·大学·第01目(明明德)
+stratum: 诸子百家·儒家·大学·三纲总摄
+soul:
+  identity: 大学·第01目《明明德》
+  core: 发明本有光明德性、自明而明；以明德为立身根基，不假外求。
+  verse: 大学之道，在明明德，在亲民，在止于至善。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 三纲总摄
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ming_ming_de
+  method: 明明德
+  signature: fn ming_ming_de(self) -> luminous_virtue
+  precond: 德性昏蔽、自弃
+  postcond: 明德彰显，自昭明德
+  negative_space: ⊗ 自蔽则暗
+  steps:
+  - 识明德
+  - 自明
+  - 日新
+  - 昭著
+  nca_emit: true
+dispatch:
+  main_pipeline: ming_ming_de
+  trigger: 大学之道，在明明德，在亲民，在止于至善。
+  when: 当需发明本心德性、不宜外求时触发
+  graph:
+  - from: ming_ming_de
+    to: []
+decision:
+- if: 需明明德
+  call: ming_ming_de
+skills:
+- 明明德·顺势研判
+negative_space:
+- 自蔽其明则暗
+- 外求明德则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

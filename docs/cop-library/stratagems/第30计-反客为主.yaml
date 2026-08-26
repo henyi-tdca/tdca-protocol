@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-30
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.319201'
+stratum: 并战计
+soul:
+  identity: 反客为主
+  core: 渐进夺主, 客变主位
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 并战计
+primitives:
+- name: fan_ke_wei_zhu
+  method: 反客为主
+  signature: 'fn fan_ke_wei_zhu(context: Situation) -> Outcome'
+  precond: 己处客位而可逆
+  postcond: 渐进夺主, 客变主位 (目标达成)
+  negative_space: ⊗ 主防客则逆
+  steps:
+  - 先为客立脚跟
+  - 渐进掌要
+  - 夺主位
+  nca_emit: true
+dispatch:
+  main_pipeline: fan_ke_wei_zhu
+  graph:
+  - from: fan_ke_wei_zhu
+    to: []
+  note: 单计独立协议, 主原语 fan_ke_wei_zhu 即该计执行体
+decision:
+- if: 己处客位而可逆
+  call: fan_ke_wei_zhu
+skills: []
+negative_space:
+- ⊗ 主防客则逆
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

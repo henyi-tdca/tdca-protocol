@@ -1,0 +1,47 @@
+COP-ID: HS-MO-03-20260815-03
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.020698'
+branch: 诸子百家·墨家·第03条(天志)
+stratum: 诸子百家·墨家·兼爱本原
+soul:
+  identity: 墨家·第03条《天志》
+  core: 天有志、欲义恶不义；以天志为法仪，立兼爱之宗教根据。
+  verse: 天之志者，义之经也。顺天之意何若？曰：兼相爱交相利。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 兼爱本原
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_zhi
+  method: 天志
+  signature: fn tian_zhi(rule) -> heavenly_will
+  precond: 背天志、行不义
+  postcond: 顺天志，义行
+  negative_space: ⊗ 背天则凶
+  steps:
+  - 识天志
+  - 法天
+  - 欲义
+  - 恶不义
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_zhi
+  trigger: 天之志者，义之经也。顺天之意何若？曰：兼相爱交相利。
+  when: 当宜立价值法仪、不宜私是时触发
+  graph:
+  - from: tian_zhi
+    to: []
+decision:
+- if: 需立天志
+  call: tian_zhi
+skills:
+- 天志·顺势研判
+negative_space:
+- 背天志则失法
+- 以私僭天则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

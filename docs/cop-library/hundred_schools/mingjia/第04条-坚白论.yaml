@@ -1,0 +1,47 @@
+COP-ID: HS-MG-04-20260815-04
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.068858'
+branch: 诸子百家·名家·第04条(坚白论)
+stratum: 诸子百家·名家·离坚白
+soul:
+  identity: 名家·第04条《坚白论》
+  core: 坚白石二、感官各得一端；以属性相离、认识有界，立分析之严。
+  verse: 坚白石二。视不得其所坚，拊不得其所白。坚白离焉，不相盈也。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 离坚白
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jian_bai_lun
+  method: 坚白论
+  signature: fn jian_bai_lun(perceive) -> separate_attrs
+  precond: 混属性、笼统
+  postcond: 坚白离，分析明
+  negative_space: ⊗ 笼统则昧
+  steps:
+  - 分坚
+  - 分白
+  - 识相离
+  - 明限
+  nca_emit: true
+dispatch:
+  main_pipeline: jian_bai_lun
+  trigger: 坚白石二。视不得其所坚，拊不得其所白。坚白离焉，不相盈也。
+  when: 当宜分属性析认识、不宜笼统时触发
+  graph:
+  - from: jian_bai_lun
+    to: []
+decision:
+- if: 需坚白论
+  call: jian_bai_lun
+skills:
+- 坚白论·顺势研判
+negative_space:
+- 混属性则昧
+- 离过则散
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

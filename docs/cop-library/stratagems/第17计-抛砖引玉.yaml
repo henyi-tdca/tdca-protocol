@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-17
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.049159'
+stratum: 攻战计
+soul:
+  identity: 抛砖引玉
+  core: 以小引大, 示劣诱优
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 攻战计
+primitives:
+- name: pao_zhuan_yin_yu
+  method: 抛砖引玉
+  signature: 'fn pao_zhuan_yin_yu(context: Situation) -> Outcome'
+  precond: 欲获高价值反馈或资源
+  postcond: 以小引大, 示劣诱优 (目标达成)
+  negative_space: ⊗ 砖不真则引不出玉
+  steps:
+  - 示小利或粗品
+  - 诱对方出大招
+  - 取其精
+  nca_emit: true
+dispatch:
+  main_pipeline: pao_zhuan_yin_yu
+  graph:
+  - from: pao_zhuan_yin_yu
+    to: []
+  note: 单计独立协议, 主原语 pao_zhuan_yin_yu 即该计执行体
+decision:
+- if: 欲获高价值反馈或资源
+  call: pao_zhuan_yin_yu
+skills: []
+negative_space:
+- ⊗ 砖不真则引不出玉
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,68 @@
+COP-ID: TDCA-CORE-20260815-02+03
+type: COMPOSED-COP
+source_expert: tdca_core_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-15T13:24:35.140184'
+composition:
+  parent: TDCA-CORE-20260815-02
+  interpretants:
+  - cop_id: HS-RU-DX03-20260815-03
+    relation: 解释项
+    bind_step: 判进/退/待
+    effect: '可审计自主决策门在''判进/退/待''处, 注入大学第03目''止于至善·知止有定''的知止: 决策不只求全程可审计留痕, 更须先''知止''——明确不可为的边界(恰合
+      NSFL 负空间)与至善目标, 再沿''止→定→静→安→虑→得''阶梯可审计推进。自主决策因而既全程可审计, 又以边界框范不为妄动, emergent=''知止有界的可审计自主决策''。'
+soul:
+  identity: 可审计自主决策协议 (Auditable Autonomous Decision Protocol) ⟂ 大学·第03目《止于至善》
+  core: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。；⟂解释项《大学·第03目《止于至善》》(核心: 知止有定、确立至善目标；以止→定→静→安→虑→得成事（先明不可为边界，再可审计推进）。)：可审计自主决策门在''判进/退/待''处,
+    注入大学第03目''止于至善·知止有定''的知止: 决策不只求全程可审计留痕, 更须先''知止''——明确不可为的边界(恰合 NSFL 负空间)与至善目标,
+    再沿''止→定→静→安→虑→得''阶梯可审计推进。自主决策因而既全程可审计, 又以边界框范不为妄动, emergent=''知止有界的可审计自主决策''。'
+  role: 组合思维协议 (跨范式嵌套)
+  category: TDCA核心 / TDCA核心·可审计自主决策 + 诸子百家 / 儒家 / 大学 / 三纲总摄
+primitives:
+- name: decision_gate
+  method: 可审计自主决策协议 (Auditable Autonomous Decision Protocol) (经 大学·第03目《止于至善》 解释)
+  signature: fn decision_gate(context) -> gate_verdict
+  precond: 情境与决策门条件已知
+  postcond: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。；⟂解释项《大学·第03目《止于至善》》(核心: 知止有定、确立至善目标；以止→定→静→安→虑→得成事（先明不可为边界，再可审计推进）。)：可审计自主决策门在''判进/退/待''处,
+    注入大学第03目''止于至善·知止有定''的知止: 决策不只求全程可审计留痕, 更须先''知止''——明确不可为的边界(恰合 NSFL 负空间)与至善目标,
+    再沿''止→定→静→安→虑→得''阶梯可审计推进。自主决策因而既全程可审计, 又以边界框范不为妄动, emergent=''知止有界的可审计自主决策''。
+    (目标达成)'
+  negative_space: ⊗ 门条件缺失则误判；⊗ 无止则荡
+  steps:
+  - 取情境
+  - 对门
+  - 判进/退/待 ⟂【大学·第03目《止于至善》】知止 → 有定 → 静 → 安 → 虑 → 得
+  nca_emit: true
+dispatch:
+  main_pipeline: decision_gate
+  graph:
+  - from: decision_gate
+    to:
+    - zhi_yu_zhi_shan
+    bind: 判进/退/待
+    note: decision_gate 在 [判进/退/待] 嵌套调用 zhi_yu_zhi_shan (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需门控判定
+  call: decision_gate
+- if: 需生成方案
+  call: primitive_state_machine
+- if: 需执行
+  call: skill_dispatch
+- if: 需确权
+  call: nca_attest
+- if: 需守红线
+  call: nsfl_fuse
+- if: 需回滚
+  call: rollback
+skills: []
+negative_space:
+- ⊗ 决策必须经门控, 黑箱决策不可信
+- ⊗ 状态机跃迁须合法, 非法跃迁致崩
+- ⊗ 调度 skill 不得越权
+- ⊗ 每步须 NCA 确权, 否则不可审计
+- ⊗ 越 NSFL 即熔断, 不可放行
+- '⊗ 解释项负空间继承: 无止则荡'
+nsfl_version: V0.1

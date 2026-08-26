@@ -1,0 +1,49 @@
+COP-ID: HS-RU-DX03-20260815-03
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.905236'
+branch: 诸子百家·儒家·大学·第03目(止于至善)
+stratum: 诸子百家·儒家·大学·三纲总摄
+soul:
+  identity: 大学·第03目《止于至善》
+  core: 知止有定、确立至善目标；以止→定→静→安→虑→得成事（先明不可为边界，再可审计推进）。
+  verse: 在止于至善。知止而后有定，定而后能静，静而后能安，安而后能虑，虑而后能得。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 三纲总摄
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_yu_zhi_shan
+  method: 止于至善
+  signature: fn zhi_yu_zhi_shan(goal) -> supreme_good_rest
+  precond: 无定止、逐物飘移
+  postcond: 知止有定，虑得安成
+  negative_space: ⊗ 无止则荡
+  steps:
+  - 知止
+  - 有定
+  - 静
+  - 安
+  - 虑
+  - 得
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_yu_zhi_shan
+  trigger: 在止于至善。知止而后有定，定而后能静，静而后能安，安而后能虑，虑而后能得。
+  when: 当目标飘移、宜立止境（明不可为界）时触发
+  graph:
+  - from: zhi_yu_zhi_shan
+    to: []
+decision:
+- if: 需止于至善
+  call: zhi_yu_zhi_shan
+skills:
+- 止于至善·顺势研判
+negative_space:
+- 无定止则逐物荡
+- 止非至善则偏
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

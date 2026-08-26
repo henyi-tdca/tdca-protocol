@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-03
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.673504'
+stratum: 胜战计
+soul:
+  identity: 借刀杀人
+  core: 假手他人除患, 己不亲沾
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 胜战计
+primitives:
+- name: jie_dao_sha_ren
+  method: 借刀杀人
+  signature: 'fn jie_dao_sha_ren(context: Situation) -> Outcome'
+  precond: 需除去对手但不宜亲为
+  postcond: 假手他人除患, 己不亲沾 (目标达成)
+  negative_space: ⊗ 借力对象反噬或识破则反噬己; 忌无第三方矛盾强行借
+  steps:
+  - 识别可借之力(第三方矛盾)
+  - 诱发其动手
+  - 坐收其利控风险
+  nca_emit: true
+dispatch:
+  main_pipeline: jie_dao_sha_ren
+  graph:
+  - from: jie_dao_sha_ren
+    to: []
+  note: 单计独立协议, 主原语 jie_dao_sha_ren 即该计执行体
+decision:
+- if: 需除去对手但不宜亲为
+  call: jie_dao_sha_ren
+skills: []
+negative_space:
+- ⊗ 借力对象反噬或识破则反噬己; 忌无第三方矛盾强行借
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

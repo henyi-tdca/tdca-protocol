@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH80-20260815-80
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:04.067461'
+branch: 诸子百家·道家·道德经·第80章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第80章《小国寡民》
+  core: 小国寡民、甘其食安其居；以简朴自足远纷。
+  verse: 小国寡民，使民复结绳而用之；邻国相望，鸡犬之声相闻。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xiao_guo_gua_min
+  method: 小国寡民
+  signature: fn xiao_guo_gua_min(govern) -> simple_autarky
+  precond: 繁复交往、生乱
+  postcond: 寡民自足，老死不相往来
+  negative_space: ⊗ 繁交则争
+  steps:
+  - 小国
+  - 寡民
+  - 甘食
+  - 安居
+  nca_emit: true
+dispatch:
+  main_pipeline: xiao_guo_gua_min
+  trigger: 小国寡民，使民复结绳而用之；邻国相望，鸡犬之声相闻。
+  when: 当交往繁复致乱、宜简自足时触发
+  graph:
+  - from: xiao_guo_gua_min
+    to: []
+decision:
+- if: 需小国寡民
+  call: xiao_guo_gua_min
+skills:
+- 小国寡民·顺势研判
+negative_space:
+- 繁交则争
+- 远徙则离
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

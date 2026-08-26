@@ -1,0 +1,136 @@
+COP-ID: MECH-COP-20260814-01
+source_expert: mechanism_design_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T21:56:40.262870'
+branch: 机制设计·反向博弈论
+stratum: 机制设计·反向博弈论
+soul:
+  identity: 机制设计 (Mechanism Design)
+  core: 给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容); 是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身
+  role: 思维协议 (机制设计范式类)
+  category: 机制设计 / 机制设计·反向博弈论
+primitives:
+- name: social_choice_target
+  method: 社会选择目标标定
+  signature: fn social_choice_target(agents, objective) -> social_choice_function
+  precond: 明确期望实现的集体目标(社会福利最大化/资源有效配置/公平分配)与参与人集合及其私有类型空间
+  postcond: 定义社会选择函数 f(θ) -> 期望配置, 作为机制设计的逆推终点(目标)
+  negative_space: ⊗ 目标不可量化/参与人异质偏好未建模则机制无从设计
+  steps:
+  - 列出参与人与其私有信息(类型空间)
+  - 定义社会目标(效率/公平/收入)
+  - 形式化为社会选择函数 f
+  nca_emit: true
+- name: ic_check
+  method: 激励相容检验
+  signature: fn ic_check(mechanism, type_space) -> {dsic, bic}
+  precond: 候选机制(信息规则+分配+支付)已给出
+  postcond: 验证'如实申报/按目标行动'为占优策略(DSIC)或贝叶斯纳什均衡(BIC)
+  negative_space: ⊗ 若机制使说谎/背离更优则激励不相容, 目标落空
+  steps:
+  - 取候选机制
+  - 比较说谎 vs 诚实的期望收益
+  - 判定 DSIC/BIC 成立
+  nca_emit: true
+- name: ir_check
+  method: 参与约束检验(个体理性)
+  signature: fn ir_check(mechanism, batna) -> participation_feasible
+  precond: 各参与人外部期权(保留效用 BATNA)已知
+  postcond: 参与机制的期望效用 >= 其 BATNA, 否则无人自愿参与
+  negative_space: ⊗ 若机制剥削某方致其效用 < 保留效用, 该方退出, 机制失效
+  steps:
+  - 取各参与人 BATNA
+  - 计算参与期望效用
+  - 判定 >= BATNA
+  nca_emit: true
+- name: revelation_principle
+  method: 显示原理化简
+  signature: fn revelation_principle(mechanism) -> direct_truthful_mechanism
+  precond: 任一在均衡下实现目标的机制已存在
+  postcond: 等价于一个直接显示机制(参与人直接申报类型, 诚实为均衡), 化简为可验证设计
+  negative_space: ⊗ 显示原理不增福利, 仅化简分析; 真实环境须考虑不可承诺/计算成本
+  steps:
+  - 取原机制均衡策略
+  - 令申报=均衡类型构造直示机制
+  - 化简为诚实申报可验证设计
+  nca_emit: true
+- name: payment_rule_design
+  method: 支付/转移支付规则设计
+  signature: fn payment_rule_design(outcome, externality) -> transfer_scheme
+  precond: 社会目标与参与人边际贡献/外部性可量化
+  postcond: 设计转移支付(如 VCG/Clarke 税)使个人支付=对他人的外部性, 激励相容且趋近社会最优
+  negative_space: ⊗ 若外部性不可测或预算无法平衡, VCG 类失效, 须近似/取舍
+  steps:
+  - 计算各人边际贡献/外部性
+  - 设计 Clark 税=对他人造成的福利损失
+  - 校验激励相容
+  nca_emit: true
+- name: impossibility_aware
+  method: 不可能性定理认知与取舍
+  signature: fn impossibility_aware(constraints) -> feasible_frontier
+  precond: 机制须满足 DSIC/非独裁/多值域等约束
+  postcond: 识别 Gibbard-Satterthwaite/Myerson 边界, 在(确定性/随机/近似/放宽某约束)间取舍
+  negative_space: ⊗ 不存在同时满足 DSIC+非独裁+值域>=3 的确定性机制, 须明确放弃哪项
+  steps:
+  - 列约束集
+  - 定位不可能性边界
+  - 选定放宽维度(随机化/近似)
+  nca_emit: true
+- name: implementation_verify
+  method: 执行/实现检验
+  signature: fn implementation_verify(mechanism, equilibrium) -> achieved_outcome
+  precond: 机制已设计且 IC/IR 通过
+  postcond: 验证机制在(贝叶斯)纳什均衡下的实际产出=社会选择目标, 且可被第三方可执行(兼容 NSFL)
+  negative_space: ⊗ 若均衡产出偏离目标或不可执行, 机制未真正实现目标
+  steps:
+  - 求解机制均衡
+  - 比对均衡产出与社会目标
+  - 校验可执行性(NSFL 兼容)
+  nca_emit: true
+dispatch:
+  main_pipeline: social_choice_target
+  graph:
+  - from: social_choice_target
+    to:
+    - ic_check
+    - ir_check
+    - impossibility_aware
+  - from: ic_check
+    to:
+    - revelation_principle
+    - payment_rule_design
+  - from: impossibility_aware
+    to:
+    - payment_rule_design
+  - from: payment_rule_design
+    to:
+    - implementation_verify
+  note: '机制设计自带调度骨架: 标定社会目标为主线, 下游原语按 IC/IR/支付/取舍展开'
+decision:
+- if: 需标定社会目标
+  call: social_choice_target
+- if: 需验证激励相容
+  call: ic_check
+- if: 需验证参与可行
+  call: ir_check
+- if: 需化简为诚实申报
+  call: revelation_principle
+- if: 需设计转移支付
+  call: payment_rule_design
+- if: 遇不可能性边界
+  call: impossibility_aware
+- if: 需最终执行检验
+  call: implementation_verify
+skills: []
+negative_space:
+- ⊗ 参与人须有私有信息且自利, 否则机制无设计对象
+- ⊗ 社会目标须可量化形式化, 否则无逆推终点
+- ⊗ 支付/外部性不可测则 VCG 类机制失效
+- '⊗ 不可能性边界: 不存在 DSIC+非独裁+值域>=3 的确定性机制, 须取舍'
+- ⊗ 机制须可被第三方可执行, 否则空设(不可信)
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 7

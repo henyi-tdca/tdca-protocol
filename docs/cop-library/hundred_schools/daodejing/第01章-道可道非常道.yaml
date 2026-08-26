@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH01-20260815-01
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.160391'
+branch: 诸子百家·道家·道德经·第01章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第01章《道可道非常道》
+  core: 道不可名状，概念化即失真；以无名之本御万有。
+  verse: 道可道，非常道；名可名，非常名。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dao_ke_dao
+  method: 道可道非常道
+  signature: fn dao_ke_dao(context) -> ineffable_guide
+  precond: 面临被既有概念框死、概念化反失真的复杂情境
+  postcond: 放下固化名相，循无名之本顺势而为
+  negative_space: ⊗ 执着名相则离道
+  steps:
+  - 破名相
+  - 观无名
+  - 顺本然
+  - 不强名
+  nca_emit: true
+dispatch:
+  main_pipeline: dao_ke_dao
+  trigger: 道可道，非常道；名可名，非常名。
+  when: 当问题被既有概念框架限制、概念化反而失真时触发
+  graph:
+  - from: dao_ke_dao
+    to: []
+decision:
+- if: 需超越概念框架把握根本规律
+  call: dao_ke_dao
+skills:
+- 道可道非常道·顺势研判
+negative_space:
+- 以概念名相替代实在则失道
+- 强为命名则失真
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,67 @@
+COP-ID: TDCA-CORE-20260815-02+12
+type: COMPOSED-COP
+source_expert: tdca_core_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-15T13:13:39.890201'
+composition:
+  parent: TDCA-CORE-20260815-02
+  interpretants:
+  - cop_id: HS-RU-P12-20260815-12
+    relation: 解释项
+    bind_step: 判进/退/待
+    effect: '可审计自主决策门在''判进/退/待''处, 注入论语第12篇''克己复礼为仁''的克己守礼: 决策不只求全程可审计留痕, 更须以''克己''(节制私欲)与''复礼''(归正规范)为前置约束——自主决策因而既全程可审计,
+      又受仁礼框范、不为私利逾矩,  emergent=''克己守礼的可审计自主决策''。'
+soul:
+  identity: 可审计自主决策协议 (Auditable Autonomous Decision Protocol) ⟂ 论语·第12篇《颜渊》
+  core: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。；⟂解释项《论语·第12篇《颜渊》》(核心: 克己复礼、为仁由己，视听言动归礼；以克己成仁。)：可审计自主决策门在''判进/退/待''处,
+    注入论语第12篇''克己复礼为仁''的克己守礼: 决策不只求全程可审计留痕, 更须以''克己''(节制私欲)与''复礼''(归正规范)为前置约束——自主决策因而既全程可审计,
+    又受仁礼框范、不为私利逾矩,  emergent=''克己守礼的可审计自主决策''。'
+  role: 组合思维协议 (跨范式嵌套)
+  category: TDCA核心 / TDCA核心·可审计自主决策 + 诸子百家 / 儒家 / 论语 / 仁本忠恕
+primitives:
+- name: decision_gate
+  method: 可审计自主决策协议 (Auditable Autonomous Decision Protocol) (经 论语·第12篇《颜渊》 解释)
+  signature: fn decision_gate(context) -> gate_verdict
+  precond: 情境与决策门条件已知
+  postcond: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。；⟂解释项《论语·第12篇《颜渊》》(核心: 克己复礼、为仁由己，视听言动归礼；以克己成仁。)：可审计自主决策门在''判进/退/待''处,
+    注入论语第12篇''克己复礼为仁''的克己守礼: 决策不只求全程可审计留痕, 更须以''克己''(节制私欲)与''复礼''(归正规范)为前置约束——自主决策因而既全程可审计,
+    又受仁礼框范、不为私利逾矩,  emergent=''克己守礼的可审计自主决策''。 (目标达成)'
+  negative_space: ⊗ 门条件缺失则误判；⊗ 纵己则失礼
+  steps:
+  - 取情境
+  - 对门
+  - 判进/退/待 ⟂【论语·第12篇《颜渊》】克己 → 复礼 → 四勿 → 归仁
+  nca_emit: true
+dispatch:
+  main_pipeline: decision_gate
+  graph:
+  - from: decision_gate
+    to:
+    - ke_ji_fu_li
+    bind: 判进/退/待
+    note: decision_gate 在 [判进/退/待] 嵌套调用 ke_ji_fu_li (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需门控判定
+  call: decision_gate
+- if: 需生成方案
+  call: primitive_state_machine
+- if: 需执行
+  call: skill_dispatch
+- if: 需确权
+  call: nca_attest
+- if: 需守红线
+  call: nsfl_fuse
+- if: 需回滚
+  call: rollback
+skills: []
+negative_space:
+- ⊗ 决策必须经门控, 黑箱决策不可信
+- ⊗ 状态机跃迁须合法, 非法跃迁致崩
+- ⊗ 调度 skill 不得越权
+- ⊗ 每步须 NCA 确权, 否则不可审计
+- ⊗ 越 NSFL 即熔断, 不可放行
+- '⊗ 解释项负空间继承: 纵己则失礼'
+nsfl_version: V0.1

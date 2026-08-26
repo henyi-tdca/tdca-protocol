@@ -1,0 +1,47 @@
+COP-ID: HS-MO-10-20260815-10
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.082875'
+branch: 诸子百家·墨家·第10条(非命)
+stratum: 诸子百家·墨家·节用三表
+soul:
+  identity: 墨家·第10条《非命》
+  core: 非命、立强力而为；以人力胜命定，立人定胜天之志。
+  verse: 命者，暴王所作，穷人所述也。强力而为，则生；怠倦则死。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 节用三表
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fei_ming
+  method: 非命
+  signature: fn fei_ming(act) -> anti_fatalism
+  precond: 信命、怠
+  postcond: 非命，强力成
+  negative_space: ⊗ 信命则怠
+  steps:
+  - 破命
+  - 强力
+  - 疾作
+  - 有成
+  nca_emit: true
+dispatch:
+  main_pipeline: fei_ming
+  trigger: 命者，暴王所作，穷人所述也。强力而为，则生；怠倦则死。
+  when: 当宜奋起力行、不宜诿命时触发
+  graph:
+  - from: fei_ming
+    to: []
+decision:
+- if: 需非命
+  call: fei_ming
+skills:
+- 非命·顺势研判
+negative_space:
+- 信命则怠废
+- 强为而无度则竭
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

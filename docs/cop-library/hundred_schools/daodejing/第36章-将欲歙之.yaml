@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH36-20260815-36
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.538351'
+branch: 诸子百家·道家·道德经·第36章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第36章《将欲歙之》
+  core: 欲弱敌先助其张，微明(察几)而柔弱胜刚；以几(先兆)制势。
+  verse: 将欲歙之，必固张之；柔弱胜刚强。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jiang_yu_xi_zhi
+  method: 将欲歙之
+  signature: fn jiang_yu_xi_zhi(rival) -> subtle_win
+  precond: 与对手相持、需制势
+  postcond: 察几助张，柔弱胜刚
+  negative_space: ⊗ 早露则败
+  steps:
+  - 察几
+  - 固张
+  - 待歙
+  - 柔胜
+  nca_emit: true
+dispatch:
+  main_pipeline: jiang_yu_xi_zhi
+  trigger: 将欲歙之，必固张之；柔弱胜刚强。
+  when: 当需以柔克刚、察先兆制势时触发
+  graph:
+  - from: jiang_yu_xi_zhi
+    to: []
+decision:
+- if: 需微明柔胜
+  call: jiang_yu_xi_zhi
+skills:
+- 将欲歙之·顺势研判
+negative_space:
+- 早露形则败
+- 刚则折
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH31-20260815-31
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.482787'
+branch: 诸子百家·道家·道德经·第31章
+stratum: 诸子百家·道家·道德经·用兵戒刚
+soul:
+  identity: 道德经·第31章《夫兵者不祥之器》
+  core: 兵为凶器，不得已而用、恬淡处之；以悲悯用兵。
+  verse: 兵者不祥之器，非君子之器。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 用兵戒刚
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fu_bing_zhe_bu_xiang
+  method: 夫兵者不祥之器
+  signature: fn fu_bing_zhe_bu_xiang(war) -> reluctant_war
+  precond: 轻易用兵、乐杀
+  postcond: 不得已而用，胜不美
+  negative_space: ⊗ 乐杀则亡
+  steps:
+  - 识凶器
+  - 不得已
+  - 恬淡
+  - 悲悯
+  nca_emit: true
+dispatch:
+  main_pipeline: fu_bing_zhe_bu_xiang
+  trigger: 兵者不祥之器，非君子之器。
+  when: 当轻启战端、需慎兵时触发
+  graph:
+  - from: fu_bing_zhe_bu_xiang
+    to: []
+decision:
+- if: 需不得已而用兵
+  call: fu_bing_zhe_bu_xiang
+skills:
+- 夫兵者不祥之器·顺势研判
+negative_space:
+- 乐兵则凶
+- 胜而美则丧
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

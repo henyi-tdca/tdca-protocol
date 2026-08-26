@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH19-20260815-19
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.349111'
+branch: 诸子百家·道家·道德经·第19章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第19章《绝圣弃智》
+  core: 弃巧智伪文，见素抱朴；以归朴减人为造作。
+  verse: 见素抱朴，少私寡欲。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jue_sheng_qi_zhi
+  method: 绝圣弃智
+  signature: fn jue_sheng_qi_zhi(culture) -> return_plain
+  precond: 巧智伪文泛滥、民诡
+  postcond: 绝圣弃智，见素抱朴
+  negative_space: ⊗ 智巧则伪
+  steps:
+  - 绝圣
+  - 弃智
+  - 抱朴
+  - 少私
+  nca_emit: true
+dispatch:
+  main_pipeline: jue_sheng_qi_zhi
+  trigger: 见素抱朴，少私寡欲。
+  when: 当制度巧智致民诡、需归朴时触发
+  graph:
+  - from: jue_sheng_qi_zhi
+    to: []
+decision:
+- if: 需弃巧归朴
+  call: jue_sheng_qi_zhi
+skills:
+- 绝圣弃智·顺势研判
+negative_space:
+- 崇智巧则生伪
+- 文胜则质丧
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH76-20260815-76
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:04.018078'
+branch: 诸子百家·道家·道德经·第76章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第76章《人之生也柔弱》
+  core: 生柔死坚，柔弱生之徒；以柔弱守生。
+  verse: 人之生也柔弱，其死也坚强；柔弱者生之徒。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ren_zhi_sheng_ye_rou_ruo
+  method: 人之生也柔弱
+  signature: fn ren_zhi_sheng_ye_rou_ruo(life) -> soft_life
+  precond: 坚强(刚)趋死
+  postcond: 守柔弱，生之徒
+  negative_space: ⊗ 坚强则死
+  steps:
+  - 生柔
+  - 死坚
+  - 守弱
+  - 生徒
+  nca_emit: true
+dispatch:
+  main_pipeline: ren_zhi_sheng_ye_rou_ruo
+  trigger: 人之生也柔弱，其死也坚强；柔弱者生之徒。
+  when: 当刚硬趋败、宜守柔生时触发
+  graph:
+  - from: ren_zhi_sheng_ye_rou_ruo
+    to: []
+decision:
+- if: 需柔弱守生
+  call: ren_zhi_sheng_ye_rou_ruo
+skills:
+- 人之生也柔弱·顺势研判
+negative_space:
+- 坚强则死
+- 刚则折
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

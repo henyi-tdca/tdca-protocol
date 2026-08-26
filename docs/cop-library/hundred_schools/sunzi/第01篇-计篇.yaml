@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ01-20260815-01
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.487215'
+branch: 诸子百家·兵家·孙子兵法·第01篇(计篇)
+stratum: 诸子百家·兵家·孙子兵法·战略筹划
+soul:
+  identity: 孙子兵法·第01篇《计篇》
+  core: 庙算决胜——以五事(道天地将法)七计系统性评估胜负前提，先算后战，多算胜少算不胜。
+  verse: 兵者，国之大事，死生之地，存亡之道，不可不察也。故经之以五事，校之以计，而索其情：一曰道，二曰天，三曰地，四曰将，五曰法。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 战略筹划
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: miao_suan
+  method: 计篇
+  signature: fn miao_suan(situation) -> victory_assessment
+  precond: 战端未启、情势不明
+  postcond: 五事七计既明，胜算可计
+  negative_space: ⊗ 不计而战则盲
+  steps:
+  - 经五事
+  - 校七计
+  - 索其情
+  - 庙算
+  nca_emit: true
+dispatch:
+  main_pipeline: miao_suan
+  trigger: 兵者，国之大事，死生之地，存亡之道，不可不察也。故经之以五事，校之以计，而索其情：一曰道，二曰天，三曰地，四曰将，五曰法。
+  when: 当重大决策前宜先系统评估胜负前提时触发
+  graph:
+  - from: miao_suan
+    to: []
+decision:
+- if: 需庙算决胜
+  call: miao_suan
+skills:
+- 计篇·顺势研判
+negative_space:
+- 不计而战则盲
+- 恃力而轻算则殆
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 兵学战略研究院
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

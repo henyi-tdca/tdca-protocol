@@ -1,0 +1,47 @@
+COP-ID: HS-YY-06-20260815-06
+source_expert: yinyangjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.467185'
+branch: 诸子百家·阴阳家·第06条(大九州)
+stratum: 诸子百家·阴阳家·德运终始
+soul:
+  identity: 阴阳家·第06条《大九州》
+  core: 大九州、天下广远；以宏阔空间观破中国中心，立世界系统之格局。
+  verse: 儒者所谓中国者，于天下乃八十一分居其一分耳。赤县神州内自有九州。
+  role: 思维协议 (诸子百家 / 阴阳家 / 五行)
+  category: 诸子百家 / 阴阳家 / 德运终始
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: da_jiu_zhou
+  method: 大九州
+  signature: fn da_jiu_zhou(space) -> greater_nine
+  precond: 囿于一隅
+  postcond: 眼界阔，格局立
+  negative_space: ⊗ 囿则狭
+  steps:
+  - 破中心
+  - 识大九
+  - 宏观
+  - 格局
+  nca_emit: true
+dispatch:
+  main_pipeline: da_jiu_zhou
+  trigger: 儒者所谓中国者，于天下乃八十一分居其一分耳。赤县神州内自有九州。
+  when: 当宜拓空间格局、不宜囿一隅时触发
+  graph:
+  - from: da_jiu_zhou
+    to: []
+decision:
+- if: 需大九州观
+  call: da_jiu_zhou
+skills:
+- 大九州·顺势研判
+negative_space:
+- 囿一隅则狭
+- 虚夸则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

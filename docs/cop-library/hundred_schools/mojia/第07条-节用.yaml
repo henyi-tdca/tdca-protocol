@@ -1,0 +1,47 @@
+COP-ID: HS-MO-07-20260815-07
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.060838'
+branch: 诸子百家·墨家·第07条(节用)
+stratum: 诸子百家·墨家·节用三表
+soul:
+  identity: 墨家·第07条《节用》
+  core: 节用爱人、费必利于民；以功利节度，立生财足用之本。
+  verse: 节用而爱人，使民以时。诸加费不加利于民者，弗为。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 节用三表
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jie_yong
+  method: 节用
+  signature: fn jie_yong(spend) -> frugal
+  precond: 奢费、民困
+  postcond: 节用，民足
+  negative_space: ⊗ 奢则竭
+  steps:
+  - 核利
+  - 去浮费
+  - 节用
+  - 爱人
+  nca_emit: true
+dispatch:
+  main_pipeline: jie_yong
+  trigger: 节用而爱人，使民以时。诸加费不加利于民者，弗为。
+  when: 当宜节用足民、不宜奢费时触发
+  graph:
+  - from: jie_yong
+    to: []
+decision:
+- if: 需节用
+  call: jie_yong
+skills:
+- 节用·顺势研判
+negative_space:
+- 奢费则民竭
+- 苛节则伤
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

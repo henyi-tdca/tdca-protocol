@@ -1,0 +1,112 @@
+library: mojia_jianai
+role: 诸子百家系统思维·墨翟十事库 (Chinese cultural compound operand source, 义理条目级)
+note: 《墨子》主兼爱交利、非攻节用, 以天志为法仪、三表为认识准的, 与儒并号显学。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化
+  ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: mojia/compile_mojia.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 11
+strata_taxonomy:
+  兼爱本原: 兼爱/非攻/天志/明鬼 (去别立兼, 天志为法仪, 反侵略爱交利)
+  尚贤尚同: 尚贤/尚同 (唯才是举, 政令壹义归一)
+  节用三表: 节用/节葬/非乐/非命/三表法 (功利节度, 强力非命, 本原用立言准)
+strata_count:
+  兼爱本原: 4
+  尚贤尚同: 2
+  节用三表: 5
+items:
+- n: 1
+  title: 兼爱
+  cop_id: HS-MO-01-20260815-01
+  stratum: 兼爱本原
+  verse: 兼相爱，交相利。视人之国若视其国，视人之家若视其家，视人之身若视其身。
+  primitive: jian_ai
+  file: 第01条-兼爱.yaml
+- n: 2
+  title: 非攻
+  cop_id: HS-MO-02-20260815-02
+  stratum: 兼爱本原
+  verse: 今攻伐并兼，则不可。杀所不足而争所有余，不可谓智。
+  primitive: fei_gong
+  file: 第02条-非攻.yaml
+- n: 3
+  title: 天志
+  cop_id: HS-MO-03-20260815-03
+  stratum: 兼爱本原
+  verse: 天之志者，义之经也。顺天之意何若？曰：兼相爱交相利。
+  primitive: tian_zhi
+  file: 第03条-天志.yaml
+- n: 4
+  title: 明鬼
+  cop_id: HS-MO-04-20260815-04
+  stratum: 兼爱本原
+  verse: 鬼神之能，赏贤而罚暴也。使天下之人皆恐惧振动。
+  primitive: ming_gui
+  file: 第04条-明鬼.yaml
+- n: 5
+  title: 尚贤
+  cop_id: HS-MO-05-20260815-05
+  stratum: 尚贤尚同
+  verse: 官无常贵，而民无终贱。有能则举之，无能则下之。
+  primitive: shang_xian
+  file: 第05条-尚贤.yaml
+- n: 6
+  title: 尚同
+  cop_id: HS-MO-06-20260815-06
+  stratum: 尚贤尚同
+  verse: 上同而不下比，一同天下之义。天子唯能壹同天下之义。
+  primitive: shang_tong
+  file: 第06条-尚同.yaml
+- n: 7
+  title: 节用
+  cop_id: HS-MO-07-20260815-07
+  stratum: 节用三表
+  verse: 节用而爱人，使民以时。诸加费不加利于民者，弗为。
+  primitive: jie_yong
+  file: 第07条-节用.yaml
+- n: 8
+  title: 节葬
+  cop_id: HS-MO-08-20260815-08
+  stratum: 节用三表
+  verse: 节葬短丧，反厚葬久丧。衣衾三领，足以朽肉；棺椁三寸，足以朽骨。
+  primitive: jie_zang
+  file: 第08条-节葬.yaml
+- n: 9
+  title: 非乐
+  cop_id: HS-MO-09-20260815-09
+  stratum: 节用三表
+  verse: 为乐非所以治天下也。夺民衣食之财以拊乐，废民之从事。
+  primitive: fei_yue
+  file: 第09条-非乐.yaml
+- n: 10
+  title: 非命
+  cop_id: HS-MO-10-20260815-10
+  stratum: 节用三表
+  verse: 命者，暴王所作，穷人所述也。强力而为，则生；怠倦则死。
+  primitive: fei_ming
+  file: 第10条-非命.yaml
+- n: 11
+  title: 三表法
+  cop_id: HS-MO-11-20260815-11
+  stratum: 节用三表
+  verse: 言必立仪：本之（上本之于古者圣王之事）；原之（下原察百姓耳目之实）；用之（发以为刑政，观其中国家百姓人民之利）。
+  primitive: san_biao_fa
+  file: 第11条-三表法.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家
+  - 儒(论孟学庸)
+  - 法家
+  - 名家
+  - 阴阳家
+  - 马克思主义
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: 撰写中 (墨家兼爱交利 ⟂ 马克思主义统一战线/群众路线)

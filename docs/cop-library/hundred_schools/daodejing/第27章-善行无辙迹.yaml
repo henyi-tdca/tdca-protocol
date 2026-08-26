@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH27-20260815-27
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.438972'
+branch: 诸子百家·道家·道德经·第27章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第27章《善行无辙迹》
+  core: 善行无迹、贵师弃资；以袭明(因顺)成不露之治。
+  verse: 善行无辙迹，善言无瑕谪；袭明。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shan_xing_wu_zhe_ji
+  method: 善行无辙迹
+  signature: fn shan_xing_wu_zhe_ji(method) -> traceless_effect
+  precond: 行事留痕、费而拙
+  postcond: 无迹善成，贵师不弃
+  negative_space: ⊗ 露迹则拙
+  steps:
+  - 善行
+  - 无迹
+  - 贵师
+  - 袭明
+  nca_emit: true
+dispatch:
+  main_pipeline: shan_xing_wu_zhe_ji
+  trigger: 善行无辙迹，善言无瑕谪；袭明。
+  when: 当行事笨重留患、需无迹善成时触发
+  graph:
+  - from: shan_xing_wu_zhe_ji
+    to: []
+decision:
+- if: 需以袭明成不露之治
+  call: shan_xing_wu_zhe_ji
+skills:
+- 善行无辙迹·顺势研判
+negative_space:
+- 强为则留患
+- 弃师则孤
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

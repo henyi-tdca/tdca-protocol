@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ02-20260815-02
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.565129'
+branch: 诸子百家·儒家·荀子·第02条(化性起伪)
+stratum: 诸子百家·儒家·荀子·性伪之辨
+soul:
+  identity: 荀子·第02条《化性起伪》
+  core: 性恶如枸木钝金、待师法礼义矫化；以伪（人为教化）胜自然，立矫治之功。
+  verse: 枸木必将待檃栝烝矫然后直……人之性恶，必将待师法之化，礼义之道，然后出于治。
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 性伪之辨
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: hua_xing_qi_wei
+  method: 化性起伪
+  signature: fn hua_xing_qi_wei(cultivate) -> remade_nature
+  precond: 不矫、任其暴
+  postcond: 师法化，出于治
+  negative_space: ⊗ 不化则暴
+  steps:
+  - 识待矫
+  - 师法化
+  - 礼义道
+  - 出于治
+  nca_emit: true
+dispatch:
+  main_pipeline: hua_xing_qi_wei
+  trigger: 枸木必将待檃栝烝矫然后直……人之性恶，必将待师法之化，礼义之道，然后出于治。
+  when: 当人性待矫治、宜立师法时触发
+  graph:
+  - from: hua_xing_qi_wei
+    to: []
+decision:
+- if: 需化性起伪
+  call: hua_xing_qi_wei
+skills:
+- 化性起伪·顺势研判
+negative_space:
+- 废师法则纵恶
+- 矫过则戕
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

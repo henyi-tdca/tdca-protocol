@@ -1,0 +1,47 @@
+COP-ID: HS-MO-05-20260815-05
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.041266'
+branch: 诸子百家·墨家·第05条(尚贤)
+stratum: 诸子百家·墨家·尚贤尚同
+soul:
+  identity: 墨家·第05条《尚贤》
+  core: 尚贤使能、不党父兄；以能举下，立公天下之选。
+  verse: 官无常贵，而民无终贱。有能则举之，无能则下之。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 尚贤尚同
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shang_xian
+  method: 尚贤
+  signature: fn shang_xian(select) -> meritocracy
+  precond: 亲贵、贤壅
+  postcond: 尚贤，能举
+  negative_space: ⊗ 党亲则壅
+  steps:
+  - 破常贵
+  - 察能
+  - 举贤
+  - 下不肖
+  nca_emit: true
+dispatch:
+  main_pipeline: shang_xian
+  trigger: 官无常贵，而民无终贱。有能则举之，无能则下之。
+  when: 当宜唯才是举、不宜任亲时触发
+  graph:
+  - from: shang_xian
+    to: []
+decision:
+- if: 需尚贤
+  call: shang_xian
+skills:
+- 尚贤·顺势研判
+negative_space:
+- 任亲则壅贤
+- 举非其能则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,94 @@
+COP-ID: SCEN-COP-20260814-05
+source_expert: scenario_subtopic
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T22:48:03.611672'
+branch: 场景·生命周期·认知不对称阈值
+stratum: 场景·生命周期·认知不对称阈值
+soul:
+  identity: 生命周期适配 (Lifecycle Adaptation)
+  core: '认知不对称不可消除而是动态之源; 按生命周期阶段动态调整认知策略: 形成期容忍最高80%不对称/成长期降至50%以下/成熟期非核心不超40%/转型期主动引入;
+    认知透明度阈值管理+认知模块化+迭代节奏匹配'
+  role: 思维协议 (场景范式子类)
+  category: 场景 / 场景·生命周期·认知不对称阈值
+primitives:
+- name: lifecycle_stage_detect
+  method: 生命周期阶段判定
+  signature: fn lifecycle_stage_detect(scene) -> stage
+  precond: 场景运行数据可观测
+  postcond: 判定所处阶段(形成/成长/成熟/转型或衰退)
+  negative_space: ⊗ 阶段误判致策略错配
+  steps:
+  - 采运行数据
+  - 判阶段特征
+  - 定当前阶段
+  nca_emit: true
+- name: cognition_asym_threshold
+  method: 认知不对称阈值设定
+  signature: fn cognition_asym_threshold(stage) -> threshold
+  precond: 阶段已判定
+  postcond: 设认知不对称阈值(形成80%/成长<50%/成熟<40%/转型主动引入)
+  negative_space: ⊗ 阈值错位(成长期仍80%)致共识难产/失控
+  steps:
+  - 查阶段阈值表
+  - 设核心要素透明度≥60%
+  - 设非核心不对称上限
+  nca_emit: true
+- name: adaptive_cognition_policy
+  method: 认知策略动态调整
+  signature: fn adaptive_cognition_policy(threshold) -> policy
+  precond: 阈值已设
+  postcond: 按阈值调认知策略(探索/对齐/共识/引入)
+  negative_space: ⊗ 策略与阈值脱节致认知失衡
+  steps:
+  - 配认知策略
+  - 调迭代节奏
+  - 设认知缓冲机制
+  nca_emit: true
+- name: cognition_maturity_monitor
+  method: 认知成熟度监测
+  signature: fn cognition_maturity_monitor(scene) -> maturity
+  precond: 场景已运行
+  postcond: 监测认知成熟度, 验证阈值管理有效性
+  negative_space: ⊗ 无监测则不对称失控不可见
+  steps:
+  - 测认知成熟度
+  - 比对阈值
+  - 预警与干预
+  nca_emit: true
+dispatch:
+  main_pipeline: lifecycle_stage_detect
+  graph:
+  - from: lifecycle_stage_detect
+    to:
+    - cognition_asym_threshold
+  - from: cognition_asym_threshold
+    to:
+    - adaptive_cognition_policy
+  - from: adaptive_cognition_policy
+    to:
+    - cognition_maturity_monitor
+  note: '场景子主题 COP 自带调度骨架: lifecycle_stage_detect 为主线, 下游原语按子主题逻辑展开'
+decision:
+- if: 需判生命周期阶段
+  call: lifecycle_stage_detect
+- if: 需设认知不对称阈值
+  call: cognition_asym_threshold
+- if: 需调认知策略
+  call: adaptive_cognition_policy
+- if: 需监测认知成熟度
+  call: cognition_maturity_monitor
+skills:
+- 认知透明度阈值管理
+- 认知模块化设计
+- 认知迭代节奏匹配
+- 认知缓冲机制设计
+negative_space:
+- ⊗ 阈值须与阶段匹配, 错位致共识难产/失控
+- ⊗ 核心场景要素认知透明度不得低于60%
+- ⊗ 转型期须主动引入认知不对称, 否则僵化
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 4

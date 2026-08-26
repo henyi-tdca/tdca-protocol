@@ -1,0 +1,67 @@
+COP-ID: TDCA-CORE-20260815-02+36
+type: COMPOSED-COP
+source_expert: tdca_core_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-15T13:04:23.372303'
+composition:
+  parent: TDCA-CORE-20260815-02
+  interpretants:
+  - cop_id: HS-DAO-CH36-20260815-36
+    relation: 解释项
+    bind_step: 判进/退/待
+    effect: '可审计自主决策门在''判进/退/待''处, 注入道德经第36章''将欲歙之必固张之''的微明顺势: 决策不只判当下强弱, 更察对手''将歙''之几于未萌,
+      以柔弱守势待其自反——自主决策因而既全程可审计留痕, 又合''道之顺势'',  emergent=''可审计微明顺势决策''。'
+soul:
+  identity: 可审计自主决策协议 (Auditable Autonomous Decision Protocol) ⟂ 道德经·第36章《将欲歙之》
+  core: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。；⟂解释项《道德经·第36章《将欲歙之》》(核心: 欲弱敌先助其张，微明(察几)而柔弱胜刚；以几(先兆)制势。)：可审计自主决策门在''判进/退/待''处,
+    注入道德经第36章''将欲歙之必固张之''的微明顺势: 决策不只判当下强弱, 更察对手''将歙''之几于未萌, 以柔弱守势待其自反——自主决策因而既全程可审计留痕,
+    又合''道之顺势'',  emergent=''可审计微明顺势决策''。'
+  role: 组合思维协议 (跨范式嵌套)
+  category: TDCA核心 / TDCA核心·可审计自主决策 + 诸子百家 / 道家 / 道德经 / 辩证转化
+primitives:
+- name: decision_gate
+  method: 可审计自主决策协议 (Auditable Autonomous Decision Protocol) (经 道德经·第36章《将欲歙之》 解释)
+  signature: fn decision_gate(context) -> gate_verdict
+  precond: 情境与决策门条件已知
+  postcond: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。；⟂解释项《道德经·第36章《将欲歙之》》(核心: 欲弱敌先助其张，微明(察几)而柔弱胜刚；以几(先兆)制势。)：可审计自主决策门在''判进/退/待''处,
+    注入道德经第36章''将欲歙之必固张之''的微明顺势: 决策不只判当下强弱, 更察对手''将歙''之几于未萌, 以柔弱守势待其自反——自主决策因而既全程可审计留痕,
+    又合''道之顺势'',  emergent=''可审计微明顺势决策''。 (目标达成)'
+  negative_space: ⊗ 门条件缺失则误判；⊗ 早露则败
+  steps:
+  - 取情境
+  - 对门
+  - 判进/退/待 ⟂【道德经·第36章《将欲歙之》】察几 → 固张 → 待歙 → 柔胜
+  nca_emit: true
+dispatch:
+  main_pipeline: decision_gate
+  graph:
+  - from: decision_gate
+    to:
+    - jiang_yu_xi_zhi
+    bind: 判进/退/待
+    note: decision_gate 在 [判进/退/待] 嵌套调用 jiang_yu_xi_zhi (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需门控判定
+  call: decision_gate
+- if: 需生成方案
+  call: primitive_state_machine
+- if: 需执行
+  call: skill_dispatch
+- if: 需确权
+  call: nca_attest
+- if: 需守红线
+  call: nsfl_fuse
+- if: 需回滚
+  call: rollback
+skills: []
+negative_space:
+- ⊗ 决策必须经门控, 黑箱决策不可信
+- ⊗ 状态机跃迁须合法, 非法跃迁致崩
+- ⊗ 调度 skill 不得越权
+- ⊗ 每步须 NCA 确权, 否则不可审计
+- ⊗ 越 NSFL 即熔断, 不可放行
+- '⊗ 解释项负空间继承: 早露则败'
+nsfl_version: V0.1

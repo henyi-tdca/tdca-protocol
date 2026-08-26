@@ -1,0 +1,74 @@
+COP-ID: MECH-COP-20260814-01+01
+type: COMPOSED-COP
+source_expert: mechanism_design_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T22:38:28.520513'
+composition:
+  parent: MECH-COP-20260814-01
+  interpretants:
+  - cop_id: SCEN-COP-20260814-01
+    relation: 解释项
+    bind_step: 定义社会目标(效率/公平/收入)
+    effect: '社会目标 f 不是抽象最优, 而是场景依存效用的产物: 机制设计的目标函数须嵌入具体涌现场景——经场景画布六要素与认知四阶段涌现(分散→协同),
+      目标被多主体在场景内共创共识; 机制设计的激励相容(IC)须与场景认知对齐同频, 否则规则无认知载体、参与约束(IR)缺场景归属; 你设计的不是悬空机制,
+      而是''在已涌现场景中可被共创实现''的机制(场景即协议)'
+soul:
+  identity: 机制设计 (Mechanism Design) ⟂ 场景思维协议 (Scenario Protocol)
+  core: '给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容); 是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身；⟂解释项《场景思维协议
+    (Scenario Protocol)》(核心: 思维协议具有场景依存效用 —— 场景不是给定的封闭空间, 而是可涌现的价值网络(场景即协议); 通过画布六要素/认知四阶段涌现/嵌套七元组/生命周期适配/多主体认知对齐,
+    使分散认知质变为协同场景; 其效用随场景而定, 故须与其他思维协议组合(互为解释项)方能落地 —— 场景COP是其他COP的必备组合)：社会目标 f 不是抽象最优,
+    而是场景依存效用的产物: 机制设计的目标函数须嵌入具体涌现场景——经场景画布六要素与认知四阶段涌现(分散→协同), 目标被多主体在场景内共创共识; 机制设计的激励相容(IC)须与场景认知对齐同频,
+    否则规则无认知载体、参与约束(IR)缺场景归属; 你设计的不是悬空机制, 而是''在已涌现场景中可被共创实现''的机制(场景即协议)'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 机制设计 / 机制设计·反向博弈论 + 场景 / 场景·场景即协议·认知涌现
+primitives:
+- name: social_choice_target
+  method: 机制设计 (Mechanism Design) (经 场景思维协议 (Scenario Protocol) 解释)
+  signature: fn social_choice_target(agents, objective) -> social_choice_function
+  precond: 明确期望实现的集体目标(社会福利最大化/资源有效配置/公平分配)与参与人集合及其私有类型空间
+  postcond: '给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容); 是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身；⟂解释项《场景思维协议
+    (Scenario Protocol)》(核心: 思维协议具有场景依存效用 —— 场景不是给定的封闭空间, 而是可涌现的价值网络(场景即协议); 通过画布六要素/认知四阶段涌现/嵌套七元组/生命周期适配/多主体认知对齐,
+    使分散认知质变为协同场景; 其效用随场景而定, 故须与其他思维协议组合(互为解释项)方能落地 —— 场景COP是其他COP的必备组合)：社会目标 f 不是抽象最优,
+    而是场景依存效用的产物: 机制设计的目标函数须嵌入具体涌现场景——经场景画布六要素与认知四阶段涌现(分散→协同), 目标被多主体在场景内共创共识; 机制设计的激励相容(IC)须与场景认知对齐同频,
+    否则规则无认知载体、参与约束(IR)缺场景归属; 你设计的不是悬空机制, 而是''在已涌现场景中可被共创实现''的机制(场景即协议) (目标达成)'
+  negative_space: ⊗ 目标不可量化/参与人异质偏好未建模则机制无从设计；⊗ 缺任一要素则场景不可自持/易崩
+  steps:
+  - 列出参与人与其私有信息(类型空间)
+  - 定义社会目标(效率/公平/收入) ⟂【场景思维协议 (Scenario Protocol)】界定主题意义 → 刻画参与者网络 → 设计资源流动 → 订立规则体系
+    → 选型技术架构 → 规划价值流
+  - 形式化为社会选择函数 f
+  nca_emit: true
+dispatch:
+  main_pipeline: social_choice_target
+  graph:
+  - from: social_choice_target
+    to:
+    - scenario_canvas_model
+    bind: 定义社会目标(效率/公平/收入)
+    note: social_choice_target 在 [定义社会目标(效率/公平/收入)] 嵌套调用 scenario_canvas_model (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需标定社会目标
+  call: social_choice_target
+- if: 需验证激励相容
+  call: ic_check
+- if: 需验证参与可行
+  call: ir_check
+- if: 需化简为诚实申报
+  call: revelation_principle
+- if: 需设计转移支付
+  call: payment_rule_design
+- if: 遇不可能性边界
+  call: impossibility_aware
+- if: 需最终执行检验
+  call: implementation_verify
+skills: []
+negative_space:
+- ⊗ 参与人须有私有信息且自利, 否则机制无设计对象
+- ⊗ 社会目标须可量化形式化, 否则无逆推终点
+- ⊗ 支付/外部性不可测则 VCG 类机制失效
+- '⊗ 不可能性边界: 不存在 DSIC+非独裁+值域>=3 的确定性机制, 须取舍'
+- ⊗ 机制须可被第三方可执行, 否则空设(不可信)
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 缺任一要素则场景不可自持/易崩'
+nsfl_version: V0.1

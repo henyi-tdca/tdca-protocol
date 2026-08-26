@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-24
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.197210'
+stratum: 混战计
+soul:
+  identity: 假道伐虢
+  core: 借路实取, 假途灭虢
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 混战计
+primitives:
+- name: jia_dao_fa_guo
+  method: 假道伐虢
+  signature: 'fn jia_dao_fa_guo(context: Situation) -> Outcome'
+  precond: 需过第三国境以攻敌
+  postcond: 借路实取, 假途灭虢 (目标达成)
+  negative_space: ⊗ 道主识破则拒或反
+  steps:
+  - 请借道(示不害)
+  - 过道即取道主
+  - 再攻原敌
+  nca_emit: true
+dispatch:
+  main_pipeline: jia_dao_fa_guo
+  graph:
+  - from: jia_dao_fa_guo
+    to: []
+  note: 单计独立协议, 主原语 jia_dao_fa_guo 即该计执行体
+decision:
+- if: 需过第三国境以攻敌
+  call: jia_dao_fa_guo
+skills: []
+negative_space:
+- ⊗ 道主识破则拒或反
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

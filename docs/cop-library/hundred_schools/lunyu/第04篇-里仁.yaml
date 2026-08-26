@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P04-20260815-04
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.783399'
+branch: 诸子百家·儒家·论语·第04篇(里仁)
+stratum: 诸子百家·儒家·论语·仁本忠恕
+soul:
+  identity: 论语·第04篇《里仁》
+  core: 居仁处义、喻义不喻利；以仁安身、以义决疑。
+  verse: 里仁为美；君子喻于义，小人喻于利。朝闻道，夕死可矣。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 仁本忠恕
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: li_ren_wei_mei
+  method: 里仁
+  signature: fn li_ren_wei_mei(choose) -> dwell_in_ren
+  precond: 趋利弃义、失安
+  postcond: 里仁安仁，喻义决行
+  negative_space: ⊗ 喻利则失仁
+  steps:
+  - 择仁里
+  - 安仁
+  - 喻义
+  - 闻道
+  nca_emit: true
+dispatch:
+  main_pipeline: li_ren_wei_mei
+  trigger: 里仁为美；君子喻于义，小人喻于利。朝闻道，夕死可矣。
+  when: 当取舍在义利之间、宜居仁由义时触发
+  graph:
+  - from: li_ren_wei_mei
+    to: []
+decision:
+- if: 需里仁喻义
+  call: li_ren_wei_mei
+skills:
+- 里仁·顺势研判
+negative_space:
+- 喻利则溺
+- 不仁则罔
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-FA-05-20260815-05
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.543406'
+branch: 诸子百家·法家·第05条(刑名参同)
+stratum: 诸子百家·法家·刑名权柄
+soul:
+  identity: 法家·第05条《刑名参同》
+  core: 刑名参同、综核名实；以名课实、以实正名，立考核之准。
+  verse: 循名责实，综核名实。言事者必以其名效其实，功当其事，事当其言。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 刑名权柄
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xing_ming_can_tong
+  method: 刑名参同
+  signature: fn xing_ming_can_tong(audit) -> name_reality
+  precond: 名实乖、言浮
+  postcond: 名实参同，功当
+  negative_space: ⊗ 名实乖则乱
+  steps:
+  - 立名
+  - 课实
+  - 参同
+  - 正名
+  nca_emit: true
+dispatch:
+  main_pipeline: xing_ming_can_tong
+  trigger: 循名责实，综核名实。言事者必以其名效其实，功当其事，事当其言。
+  when: 当宜核名实、不宜言过其时触发
+  graph:
+  - from: xing_ming_can_tong
+    to: []
+decision:
+- if: 需刑名参同
+  call: xing_ming_can_tong
+skills:
+- 刑名参同·顺势研判
+negative_space:
+- 名实乖则赏罚滥
+- 言浮则事乖
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

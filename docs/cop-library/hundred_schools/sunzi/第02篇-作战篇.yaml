@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ02-20260815-02
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.494141'
+branch: 诸子百家·兵家·孙子兵法·第02篇(作战篇)
+stratum: 诸子百家·兵家·孙子兵法·战略筹划
+soul:
+  identity: 孙子兵法·第02篇《作战篇》
+  core: 兵贵胜不贵久——速战速决、以战养战，因粮于敌，胜敌而益强；忌钝兵挫锐、国用不足。
+  verse: 兵贵胜，不贵久。久则钝兵挫锐，攻城则力屈，久暴师则国用不足。故智将务食于敌，因粮于敌。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 战略筹划
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gui_sheng
+  method: 作战篇
+  signature: fn gui_sheng(campaign) -> swift_victory
+  precond: 久暴师则国用不足
+  postcond: 速胜且胜敌益强
+  negative_space: ⊗ 久战则钝兵挫锐
+  steps:
+  - 贵胜
+  - 因粮于敌
+  - 胜敌益强
+  - 务食于敌
+  nca_emit: true
+dispatch:
+  main_pipeline: gui_sheng
+  trigger: 兵贵胜，不贵久。久则钝兵挫锐，攻城则力屈，久暴师则国用不足。故智将务食于敌，因粮于敌。
+  when: 当宜速决、以战养战时触发
+  graph:
+  - from: gui_sheng
+    to: []
+decision:
+- if: 需速战速决
+  call: gui_sheng
+skills:
+- 作战篇·顺势研判
+negative_space:
+- 久战则国用不足
+- 钝兵挫锐则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 兵学战略研究院
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

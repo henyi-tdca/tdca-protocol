@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH68-20260815-68
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.908605'
+branch: 诸子百家·道家·道德经·第68章
+stratum: 诸子百家·道家·道德经·用兵戒刚
+soul:
+  identity: 道德经·第68章《善为士者不武》
+  core: 善战不怒不武，以不争之德用人之力；以静用人。
+  verse: 善为士者不武，善战者不怒；不争之德。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 用兵戒刚
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shan_wei_shi_zhe_bu_wu
+  method: 善为士者不武
+  signature: fn shan_wei_shi_zhe_bu_wu(war) -> calm_command
+  precond: 怒武妄动、失力
+  postcond: 不武不怒，用人之力
+  negative_space: ⊗ 怒则失谋
+  steps:
+  - 不武
+  - 不怒
+  - 不争
+  - 用人力
+  nca_emit: true
+dispatch:
+  main_pipeline: shan_wei_shi_zhe_bu_wu
+  trigger: 善为士者不武，善战者不怒；不争之德。
+  when: 当临战易怒、宜静用人力时触发
+  graph:
+  - from: shan_wei_shi_zhe_bu_wu
+    to: []
+decision:
+- if: 需不争用人力
+  call: shan_wei_shi_zhe_bu_wu
+skills:
+- 善为士者不武·顺势研判
+negative_space:
+- 怒则失谋
+- 武则耗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

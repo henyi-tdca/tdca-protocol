@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY02-20260815-02
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.146512'
+branch: 诸子百家·儒家·中庸·第02条(致中和)
+stratum: 诸子百家·儒家·中庸·中和本体
+soul:
+  identity: 中庸·第02条《致中和》
+  core: 未发之中、发而中节之和；致中和则天地位、万物育，立境域圆融之体。
+  verse: 喜怒哀乐之未发谓之中，发而皆中节谓之和。致中和，天地位焉，万物育焉。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 中和本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_zhong_he
+  method: 致中和
+  signature: fn zhi_zhong_he(state) -> harmonized
+  precond: 失中、发不中节
+  postcond: 致中和，天地位
+  negative_space: ⊗ 过不及则乖
+  steps:
+  - 守未发
+  - 中节
+  - 致和
+  - 位育
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_zhong_he
+  trigger: 喜怒哀乐之未发谓之中，发而皆中节谓之和。致中和，天地位焉，万物育焉。
+  when: 当情绪/举措偏颇、宜求中节时触发
+  graph:
+  - from: zhi_zhong_he
+    to: []
+decision:
+- if: 需致中和
+  call: zhi_zhong_he
+skills:
+- 致中和·顺势研判
+negative_space:
+- 过犹不及
+- 拂性则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

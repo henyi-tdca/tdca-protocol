@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH42-20260815-42
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.600289'
+branch: 诸子百家·道家·道德经·第42章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第42章《道生一》
+  core: 一生二、阴抱阳、冲气和；以调和生万物。
+  verse: 道生一，一生二，二生三，三生万物；万物负阴而抱阳。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dao_sheng_yi
+  method: 道生一
+  signature: fn dao_sheng_yi(generation) -> harmonic_birth
+  precond: 生硬对立、失和
+  postcond: 负阴抱阳，冲气为和
+  negative_space: ⊗ 强阳则亢
+  steps:
+  - 生一
+  - 生二
+  - 抱阳
+  - 冲和
+  nca_emit: true
+dispatch:
+  main_pipeline: dao_sheng_yi
+  trigger: 道生一，一生二，二生三，三生万物；万物负阴而抱阳。
+  when: 当系统对立失和、需调和生新时触发
+  graph:
+  - from: dao_sheng_yi
+    to: []
+decision:
+- if: 需冲气和以生
+  call: dao_sheng_yi
+skills:
+- 道生一·顺势研判
+negative_space:
+- 强阳则亢
+- 弃阴则孤
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

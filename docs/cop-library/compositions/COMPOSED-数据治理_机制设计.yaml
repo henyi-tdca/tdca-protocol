@@ -1,0 +1,68 @@
+COP-ID: SCEN-COP-20260814-06+01
+type: COMPOSED-COP
+source_expert: scenario_subtopic
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T22:49:21.042035'
+composition:
+  parent: SCEN-COP-20260814-06
+  interpretants:
+  - cop_id: MECH-COP-20260814-01
+    relation: 解释项
+    bind_step: 校验覆盖
+    effect: '数据治理覆盖校验须借机制设计的激励相容(IC)/参与约束(IR)检验——把''数据要素是否纳入治理''建模为机制设计问题: 设计支付/权属规则使多主体如实贡献数据成为占优均衡(IC),
+      且参与治理收益≥不参与(IR); 价值经 TDCA 闭环结算(NCA确权/数字人民币DVP), 场景内DAO治理≠TDCA治理委员会'
+soul:
+  identity: 数据治理 (Scenario Data Governance) ⟂ 机制设计 (Mechanism Design)
+  core: '场景数据治理以画布扩展模型+认知驱动机制+DAO决策+并行试错为核心; 用数据认知对齐四步法使多主体对数据语义达成共识, 五阶段成熟度评估驱动演进;
+    价值结算经 TDCA 闭环, 不得自建代币；⟂解释项《机制设计 (Mechanism Design)》(核心: 给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容);
+    是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身)：数据治理覆盖校验须借机制设计的激励相容(IC)/参与约束(IR)检验——把''数据要素是否纳入治理''建模为机制设计问题:
+    设计支付/权属规则使多主体如实贡献数据成为占优均衡(IC), 且参与治理收益≥不参与(IR); 价值经 TDCA 闭环结算(NCA确权/数字人民币DVP),
+    场景内DAO治理≠TDCA治理委员会'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 场景 / 场景·数据治理·MET方法论 + 机制设计 / 机制设计·反向博弈论
+primitives:
+- name: data_canvas_extend
+  method: 数据治理 (Scenario Data Governance) (经 机制设计 (Mechanism Design) 解释)
+  signature: fn data_canvas_extend(canvas) -> data_canvas
+  precond: 六要素场景蓝图已建
+  postcond: '场景数据治理以画布扩展模型+认知驱动机制+DAO决策+并行试错为核心; 用数据认知对齐四步法使多主体对数据语义达成共识, 五阶段成熟度评估驱动演进;
+    价值结算经 TDCA 闭环, 不得自建代币；⟂解释项《机制设计 (Mechanism Design)》(核心: 给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容);
+    是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身)：数据治理覆盖校验须借机制设计的激励相容(IC)/参与约束(IR)检验——把''数据要素是否纳入治理''建模为机制设计问题:
+    设计支付/权属规则使多主体如实贡献数据成为占优均衡(IC), 且参与治理收益≥不参与(IR); 价值经 TDCA 闭环结算(NCA确权/数字人民币DVP),
+    场景内DAO治理≠TDCA治理委员会 (目标达成)'
+  negative_space: ⊗ 数据要素未纳入画布致治理盲区；⊗ 目标不可量化/参与人异质偏好未建模则机制无从设计
+  steps:
+  - 扩展六要素数据维度
+  - 建数据治理场景画布模板
+  - 校验覆盖 ⟂【机制设计 (Mechanism Design)】列出参与人与其私有信息(类型空间) → 定义社会目标(效率/公平/收入) → 形式化为社会选择函数
+    f
+  nca_emit: true
+dispatch:
+  main_pipeline: data_canvas_extend
+  graph:
+  - from: data_canvas_extend
+    to:
+    - social_choice_target
+    bind: 校验覆盖
+    note: data_canvas_extend 在 [校验覆盖] 嵌套调用 social_choice_target (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需扩展数据治理画布
+  call: data_canvas_extend
+- if: 需数据语义对齐
+  call: data_cognition_align4
+- if: 需DAO数据决策
+  call: dao_data_decision
+- if: 需并行试错优化
+  call: parallel_trial_data
+- if: 需成熟度评估
+  call: data_maturity_assess
+skills: []
+negative_space:
+- ⊗ 数据要素须纳入画布, 否则治理盲区
+- ⊗ 数据语义须对齐, 否则误用/协作失效
+- ⊗ 数据治理价值结算经 TDCA 闭环, 不得自建代币替代 NCA/数字人民币 DVP
+- ⊗ 场景内DAO/治理委员会≠TDCA治理委员会(发布审批)
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 目标不可量化/参与人异质偏好未建模则机制无从设计'
+nsfl_version: V0.1

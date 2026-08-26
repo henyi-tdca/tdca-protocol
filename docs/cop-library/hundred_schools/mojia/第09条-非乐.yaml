@@ -1,0 +1,47 @@
+COP-ID: HS-MO-09-20260815-09
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.075650'
+branch: 诸子百家·墨家·第09条(非乐)
+stratum: 诸子百家·墨家·节用三表
+soul:
+  identity: 墨家·第09条《非乐》
+  core: 非大钟鸣鼓之侈乐、劳民费财；以实务为先，立黜奢之戒。
+  verse: 为乐非所以治天下也。夺民衣食之财以拊乐，废民之从事。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 节用三表
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fei_yue
+  method: 非乐
+  signature: fn fei_yue(amuse) -> anti_luxury
+  precond: 侈乐、夺财
+  postcond: 非乐，务本
+  negative_space: ⊗ 乐则废
+  steps:
+  - 辨奢
+  - 去侈乐
+  - 务本
+  - 足财
+  nca_emit: true
+dispatch:
+  main_pipeline: fei_yue
+  trigger: 为乐非所以治天下也。夺民衣食之财以拊乐，废民之从事。
+  when: 当宜务本黜奢、不宜耽乐时触发
+  graph:
+  - from: fei_yue
+    to: []
+decision:
+- if: 需非乐
+  call: fei_yue
+skills:
+- 非乐·顺势研判
+negative_space:
+- 侈乐则夺财
+- 全废乐则枯
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

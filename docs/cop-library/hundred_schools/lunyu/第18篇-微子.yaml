@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P18-20260815-18
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.890129'
+branch: 诸子百家·儒家·论语·第18篇(微子)
+stratum: 诸子百家·儒家·论语·出处大节
+soul:
+  identity: 论语·第18篇《微子》
+  core: 出处有义、道不行则洁身；以义决去留。
+  verse: 殷有三仁焉：微子去之，箕子为之奴，比干谏而死；道之不行，已知之矣。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 出处大节
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chu_chu_zhi_yi
+  method: 微子
+  signature: fn chu_chu_zhi_yi(exit) -> principled_exit
+  precond: 道不行、宜去留两难
+  postcond: 出处以义，洁身存道
+  negative_space: ⊗ 枉道则辱
+  steps:
+  - 察道行
+  - 量去留
+  - 守义
+  - 洁身
+  nca_emit: true
+dispatch:
+  main_pipeline: chu_chu_zhi_yi
+  trigger: 殷有三仁焉：微子去之，箕子为之奴，比干谏而死；道之不行，已知之矣。
+  when: 当道不行、宜决出处去留时触发
+  graph:
+  - from: chu_chu_zhi_yi
+    to: []
+decision:
+- if: 需出处以义
+  call: chu_chu_zhi_yi
+skills:
+- 微子·顺势研判
+negative_space:
+- 枉道苟容则辱
+- 弃义则失节
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

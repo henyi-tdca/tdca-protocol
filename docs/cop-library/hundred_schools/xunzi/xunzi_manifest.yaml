@@ -1,0 +1,120 @@
+library: xunzi_lifa
+role: 儒家系统思维·礼法大宗库 (Chinese cultural compound operand source, 义理条目级)
+note: 《荀子》宗孔子、主性恶, 以'化性起伪'立工夫、'隆礼重法'立政术, 开儒法过渡之枢。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化
+  ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: xunzi/compile_xunzi.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 12
+strata_taxonomy:
+  性伪之辨: 性恶论/化性起伪/解蔽 (立人性待矫、认知求全, 与孟学并立)
+  劝学积德: 劝学/积善成德/锲而不舍 (积渐胜自然, 德性养成之序)
+  礼法政术: 隆礼/礼法并施/隆礼重法/制天命而用之/正名/群分 (儒法合一, 礼法秩序)
+strata_count:
+  性伪之辨: 3
+  劝学积德: 3
+  礼法政术: 6
+items:
+- n: 1
+  title: 性恶论
+  cop_id: HS-RU-XZ01-20260815-01
+  stratum: 性伪之辨
+  verse: 人之性恶，其善者伪也。今人之性，生而有好利焉……
+  primitive: xing_e_lun
+  file: 第01条-性恶论.yaml
+- n: 2
+  title: 化性起伪
+  cop_id: HS-RU-XZ02-20260815-02
+  stratum: 性伪之辨
+  verse: 枸木必将待檃栝烝矫然后直……人之性恶，必将待师法之化，礼义之道，然后出于治。
+  primitive: hua_xing_qi_wei
+  file: 第02条-化性起伪.yaml
+- n: 3
+  title: 解蔽
+  cop_id: HS-RU-XZ03-20260815-03
+  stratum: 性伪之辨
+  verse: 凡人之患，蔽于一曲而暗于大理。蔽公者末得也。
+  primitive: jie_bi
+  file: 第03条-解蔽.yaml
+- n: 4
+  title: 劝学
+  cop_id: HS-RU-XZ04-20260815-04
+  stratum: 劝学积德
+  verse: 学不可以已。青，取之于蓝，而青于蓝；冰，水为之，而寒于水。
+  primitive: quan_xue
+  file: 第04条-劝学.yaml
+- n: 5
+  title: 积善成德
+  cop_id: HS-RU-XZ05-20260815-05
+  stratum: 劝学积德
+  verse: 积土成山，风雨兴焉……积善成德，而神明自得，圣心备焉。
+  primitive: ji_shan_cheng_de
+  file: 第05条-积善成德.yaml
+- n: 6
+  title: 锲而不舍
+  cop_id: HS-RU-XZ06-20260815-06
+  stratum: 劝学积德
+  verse: 锲而舍之，朽木不折；锲而不舍，金石可镂。
+  primitive: qie_er_bu_she
+  file: 第06条-锲而不舍.yaml
+- n: 7
+  title: 隆礼
+  cop_id: HS-RU-XZ07-20260815-07
+  stratum: 礼法政术
+  verse: 礼者，法之大分，类之纲纪也。故学至乎礼而止矣。
+  primitive: long_li
+  file: 第07条-隆礼.yaml
+- n: 8
+  title: 礼法并施
+  cop_id: HS-RU-XZ08-20260815-08
+  stratum: 礼法政术
+  verse: 治之经，礼与刑，君子以修百姓宁。明德慎罚，节威反文。
+  primitive: li_fa_bing_shi
+  file: 第08条-礼法并施.yaml
+- n: 9
+  title: 隆礼重法
+  cop_id: HS-RU-XZ09-20260815-09
+  stratum: 礼法政术
+  verse: 明礼义而壹法度，立公天下。由士以上则必以礼乐节之，众庶则必以法数制之。
+  primitive: long_li_zhong_fa
+  file: 第09条-隆礼重法.yaml
+- n: 10
+  title: 制天命而用之
+  cop_id: HS-RU-XZ10-20260815-10
+  stratum: 礼法政术
+  verse: 大天而思之，孰与物畜而制之？从天而颂之，孰与制天命而用之？
+  primitive: zhi_tian_ming_er_yong_zhi
+  file: 第10条-制天命而用之.yaml
+- n: 11
+  title: 正名
+  cop_id: HS-RU-XZ11-20260815-11
+  stratum: 礼法政术
+  verse: 名定而实辨，制名以指实也。王者之制名，名定而实辨，道行而志通。
+  primitive: zheng_ming
+  file: 第11条-正名.yaml
+- n: 12
+  title: 群分
+  cop_id: HS-RU-XZ12-20260815-12
+  stratum: 礼法政术
+  verse: 人能群，彼不能群也……分何以能行？曰：义。故义以分则和。
+  primitive: qun_fen
+  file: 第12条-群分.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家(道德经)
+  - 论语
+  - 大学
+  - 孟子
+  - 中庸
+  - 墨法名阴阳
+  - 马克思主义
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: 撰写中 (荀子礼法 ⟂ 法家/马克思主义唯物史观)

@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-05
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.725526'
+stratum: 胜战计
+soul:
+  identity: 趁火打劫
+  core: 乘敌之危, 速取可图之利
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 胜战计
+primitives:
+- name: chen_huo_da_jie
+  method: 趁火打劫
+  signature: 'fn chen_huo_da_jie(context: Situation) -> Outcome'
+  precond: 敌内部生乱或受损
+  postcond: 乘敌之危, 速取可图之利 (目标达成)
+  negative_space: ⊗ 敌危为假象(诱敌)则中伏
+  steps:
+  - 监视敌危
+  - 速取可图之利
+  - 控制反噬风险
+  nca_emit: true
+dispatch:
+  main_pipeline: chen_huo_da_jie
+  graph:
+  - from: chen_huo_da_jie
+    to: []
+  note: 单计独立协议, 主原语 chen_huo_da_jie 即该计执行体
+decision:
+- if: 敌内部生乱或受损
+  call: chen_huo_da_jie
+skills: []
+negative_space:
+- ⊗ 敌危为假象(诱敌)则中伏
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

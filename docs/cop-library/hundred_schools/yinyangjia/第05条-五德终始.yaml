@@ -1,0 +1,47 @@
+COP-ID: HS-YY-05-20260815-05
+source_expert: yinyangjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.456633'
+branch: 诸子百家·阴阳家·第05条(五德终始)
+stratum: 诸子百家·阴阳家·德运终始
+soul:
+  identity: 阴阳家·第05条《五德终始》
+  core: 五德终始、各以所胜代兴；以德运循环论王朝更替，立历史系统之序。
+  verse: 五德之运，各以所胜为行。虞土、夏木、殷金、周火，代各乘其德而王。
+  role: 思维协议 (诸子百家 / 阴阳家 / 五行)
+  category: 诸子百家 / 阴阳家 / 德运终始
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wu_de_zhong_shi
+  method: 五德终始
+  signature: fn wu_de_zhong_shi(history) -> dynastic_cycle
+  precond: 昧运、代无序
+  postcond: 德运明，代有常
+  negative_space: ⊗ 昧运则乱
+  steps:
+  - 识五德
+  - 明所胜
+  - 察代兴
+  - 立序
+  nca_emit: true
+dispatch:
+  main_pipeline: wu_de_zhong_shi
+  trigger: 五德之运，各以所胜为行。虞土、夏木、殷金、周火，代各乘其德而王。
+  when: 当宜以系统循环观历史更替、不宜线性时触发
+  graph:
+  - from: wu_de_zhong_shi
+    to: []
+decision:
+- if: 需五德终始
+  call: wu_de_zhong_shi
+skills:
+- 五德终始·顺势研判
+negative_space:
+- 昧运则失序
+- 泥循环则蔽
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

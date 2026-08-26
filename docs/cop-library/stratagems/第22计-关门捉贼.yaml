@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-22
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.156802'
+stratum: 混战计
+soul:
+  identity: 关门捉贼
+  core: 围闭聚歼, 不使逸走
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 混战计
+primitives:
+- name: guan_men_zhuo_zei
+  method: 关门捉贼
+  signature: 'fn guan_men_zhuo_zei(context: Situation) -> Outcome'
+  precond: 小股之敌可围
+  postcond: 围闭聚歼, 不使逸走 (目标达成)
+  negative_space: ⊗ 门不密则贼逸; 对大敌不宜
+  steps:
+  - 设围(门)
+  - 诱入
+  - 闭门歼之
+  nca_emit: true
+dispatch:
+  main_pipeline: guan_men_zhuo_zei
+  graph:
+  - from: guan_men_zhuo_zei
+    to: []
+  note: 单计独立协议, 主原语 guan_men_zhuo_zei 即该计执行体
+decision:
+- if: 小股之敌可围
+  call: guan_men_zhuo_zei
+skills: []
+negative_space:
+- ⊗ 门不密则贼逸; 对大敌不宜
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

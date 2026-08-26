@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX10-20260815-10
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.976081'
+branch: 诸子百家·儒家·大学·第10目(治国)
+stratum: 诸子百家·儒家·大学·外王阶梯
+soul:
+  identity: 大学·第10目《治国》
+  core: 德治其国、絜矩之道推己及人；以治国平天下，德风自上。
+  verse: 欲平天下者，先治其国。君子不出家而成教于国。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 外王阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_guo
+  method: 治国
+  signature: fn zhi_guo(govern) -> ordered_state
+  precond: 国不治、民不安
+  postcond: 国治天下平，德风
+  negative_space: ⊗ 聚敛则怨
+  steps:
+  - 絜矩
+  - 推己
+  - 德治
+  - 国治
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_guo
+  trigger: 欲平天下者，先治其国。君子不出家而成教于国。
+  when: 当宜以德治国、推絜矩时触发
+  graph:
+  - from: zhi_guo
+    to: []
+decision:
+- if: 需治国以德
+  call: zhi_guo
+skills:
+- 治国·顺势研判
+negative_space:
+- 聚敛则民怨
+- 恶于下则反
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

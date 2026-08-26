@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ12-20260815-12
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.567530'
+branch: 诸子百家·兵家·孙子兵法·第12篇(火攻篇)
+stratum: 诸子百家·兵家·孙子兵法·奇法用间
+soul:
+  identity: 孙子兵法·第12篇《火攻篇》
+  core: 火攻慎动——火人/积/辎/库/队五火各有发法，必因五火之变应之；明主慎之、良将警之，非利不动、非危不战(NSFL 底线：不可轻启战端)。
+  verse: 凡火攻，必因五火之变而应之：火发于内，则早应之于外。非利不动，非得不用，非危不战。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 奇法用间
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: huo_gong
+  method: 火攻篇
+  signature: fn huo_gong(arson) -> controlled_escalation
+  precond: 妄动火则自焚
+  postcond: 因变应火、慎动全胜
+  negative_space: ⊗ 轻战则国危
+  steps:
+  - 明五火
+  - 因变应之
+  - 非利不动
+  - 慎战
+  nca_emit: true
+dispatch:
+  main_pipeline: huo_gong
+  trigger: 凡火攻，必因五火之变而应之：火发于内，则早应之于外。非利不动，非得不用，非危不战。
+  when: 当宜用非常手段、但须守'非危不战'底线时触发
+  graph:
+  - from: huo_gong
+    to: []
+decision:
+- if: 需火攻慎动
+  call: huo_gong
+skills:
+- 火攻篇·顺势研判
+negative_space:
+- 轻启战端则危
+- 不因变则应败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 智能系统建模实验室
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

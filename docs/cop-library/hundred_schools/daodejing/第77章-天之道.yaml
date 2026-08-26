@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH77-20260815-77
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:04.028455'
+branch: 诸子百家·道家·道德经·第77章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第77章《天之道》
+  core: 天损盈补谦，人反损弱奉强；以法天均(损补)制不公。
+  verse: 天之道损有余补不足；人之道则不然，损不足以奉有余。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_zhi_dao
+  method: 天之道
+  signature: fn tian_zhi_dao(justice) -> heaven_redistribute
+  precond: 人道损弱奉强、失均
+  postcond: 法天损补，圣人(为而不恃)
+  negative_space: ⊗ 奉有余则乱
+  steps:
+  - 观天
+  - 损有余
+  - 补不足
+  - 不恃
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_zhi_dao
+  trigger: 天之道损有余补不足；人之道则不然，损不足以奉有余。
+  when: 当贫富悬殊、宜法天均调时触发
+  graph:
+  - from: tian_zhi_dao
+    to: []
+decision:
+- if: 需法天损补
+  call: tian_zhi_dao
+skills:
+- 天之道·顺势研判
+negative_space:
+- 奉有余则乱
+- 执盈则损
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

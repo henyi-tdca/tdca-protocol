@@ -1,0 +1,116 @@
+COP-ID: SCEN-COP-20260814-02
+source_expert: scenario_subtopic
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T22:48:03.533494'
+branch: 场景·场景画布·六要素建模
+stratum: 场景·场景画布·六要素建模
+soul:
+  identity: 场景画布 (Scenario Canvas)
+  core: 场景不是封闭商业空间而是开放价值网络(场景即协议); 以六要素(主题意义/参与者网络/资源流动/规则体系/技术架构/价值流)全要素设计工具, 把抽象场景要素转化为可共建的蓝图;
+    主题意义不随构件改变而改变, 因场景演绎逻辑变化而变化
+  role: 思维协议 (场景范式子类)
+  category: 场景 / 场景·场景画布·六要素建模
+primitives:
+- name: canvas_six_elements
+  method: 六要素建模(场景蓝图)
+  signature: fn canvas_six_elements(theme, participants, resources, rules, tech, valueflow)
+    -> scenario_blueprint
+  precond: 明确场景主题意义与边界
+  postcond: 六要素齐备的场景蓝图(主题/参与者网络/资源流动/规则体系/技术架构/价值流)
+  negative_space: ⊗ 缺任一要素则场景不可自持/易崩
+  steps:
+  - 界定主题意义
+  - 刻画参与者网络
+  - 设计资源流动
+  - 订立规则体系
+  - 选型技术架构
+  - 规划价值流
+  nca_emit: true
+- name: theme_meaning_define
+  method: 主题意义界定
+  signature: fn theme_meaning_define(scene) -> theme_anchor
+  precond: 场景演绎逻辑可识别
+  postcond: 锚定不随构件改变的主题意义, 作为场景同一性判据
+  negative_space: ⊗ 主题漂移致场景失焦/被重构
+  steps:
+  - 提炼主题意义
+  - 校验不随构件漂移
+  - 固化为同一性判据
+  nca_emit: true
+- name: participant_network_map
+  method: 参与者网络刻画
+  signature: fn participant_network_map(agents) -> participant_graph
+  precond: 潜在参与者集合已知
+  postcond: 描绘参与者角色/关系/权属网络, 支撑交互介质设计
+  negative_space: ⊗ 参与者边界不清致交互失效
+  steps:
+  - 列参与者角色
+  - 绘关系网络
+  - 定权属与交互介质
+  nca_emit: true
+- name: resource_flow_design
+  method: 资源流动设计
+  signature: fn resource_flow_design(resources) -> flow_topology
+  precond: 场景资源(信息/物质/能量)可枚举
+  postcond: 设计资源流动拓扑, 维持场景主题意义的常态体现(经济性原则)
+  negative_space: ⊗ 无经济价值的交互致场景被淘汰/重构
+  steps:
+  - 列资源维度
+  - 设计流动路径
+  - 校验交互水平
+  nca_emit: true
+- name: valueflow_close_loop
+  method: 价值流闭环设计
+  signature: fn valueflow_close_loop(value_network) -> closed_loop
+  precond: 价值网络与贡献可量化
+  postcond: 设计正和协同的价值流, 经 TDCA-MOU 正和底线与 NCA 确权结算
+  negative_space: ⊗ 价值流须正和且经 TDCA 闭环结算; 不得自建代币替代 NCA/数字人民币 DVP
+  steps:
+  - 绘价值网络
+  - 定协同增益
+  - 校验正和(MOU底线)
+  - 经TDCA闭环结算(NCA确权)
+  nca_emit: true
+dispatch:
+  main_pipeline: canvas_six_elements
+  graph:
+  - from: canvas_six_elements
+    to:
+    - theme_meaning_define
+    - participant_network_map
+    - resource_flow_design
+    - valueflow_close_loop
+  - from: theme_meaning_define
+    to:
+    - valueflow_close_loop
+  - from: participant_network_map
+    to:
+    - resource_flow_design
+  note: '场景子主题 COP 自带调度骨架: canvas_six_elements 为主线, 下游原语按子主题逻辑展开'
+decision:
+- if: 需建场景蓝图
+  call: canvas_six_elements
+- if: 需锚定主题意义
+  call: theme_meaning_define
+- if: 需刻画参与者
+  call: participant_network_map
+- if: 需设计资源流动
+  call: resource_flow_design
+- if: 需设计价值流
+  call: valueflow_close_loop
+skills:
+- 场景画布模板(六要素可视化工具)
+- 场景机会扫描矩阵(价值/可行性/认知缺口三维评估)
+- 最小可行场景 MVS
+- 秋季文旅场景画布应用工具包
+negative_space:
+- ⊗ 场景须六要素齐备, 否则不可自持
+- ⊗ 主题意义须不随构件漂移, 否则场景失焦
+- ⊗ 价值流须正和且经 TDCA 闭环结算, 不得自建代币替代 NCA/数字人民币 DVP
+- ⊗ 无经济价值的交互致场景淘汰/重构
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 5

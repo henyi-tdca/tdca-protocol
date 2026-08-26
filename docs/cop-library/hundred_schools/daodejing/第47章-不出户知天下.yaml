@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH47-20260815-47
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.664183'
+branch: 诸子百家·道家·道德经·第47章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第47章《不出户知天下》
+  core: 以内在观(道)知天下，不行而知；以根本直觉抵外求。
+  verse: 不出户，知天下；不行而知，不见而名。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bu_chu_hu_zhi_tian_xia
+  method: 不出户知天下
+  signature: fn bu_chu_hu_zhi_tian_xia(know) -> intrinsic_know
+  precond: 外求繁累、不得要
+  postcond: 观其妙，不行而知
+  negative_space: ⊗ 外逐则迷
+  steps:
+  - 收视
+  - 观妙
+  - 知天下
+  - 不行
+  nca_emit: true
+dispatch:
+  main_pipeline: bu_chu_hu_zhi_tian_xia
+  trigger: 不出户，知天下；不行而知，不见而名。
+  when: 当外求繁琐、宜内观知本时触发
+  graph:
+  - from: bu_chu_hu_zhi_tian_xia
+    to: []
+decision:
+- if: 需内观知天下
+  call: bu_chu_hu_zhi_tian_xia
+skills:
+- 不出户知天下·顺势研判
+negative_space:
+- 外逐则迷
+- 多见则惑
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

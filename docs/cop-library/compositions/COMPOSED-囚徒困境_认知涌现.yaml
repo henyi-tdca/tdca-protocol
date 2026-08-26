@@ -1,0 +1,66 @@
+COP-ID: GAME-COP-20260814-01+03
+type: COMPOSED-COP
+source_expert: game_theory_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T22:49:21.117786'
+composition:
+  parent: GAME-COP-20260814-01
+  interpretants:
+  - cop_id: SCEN-COP-20260814-03
+    relation: 解释项
+    bind_step: 校验 T>R>P>S 排序
+    effect: 收益排序校验须借认知涌现四阶段——多主体须先经认知发现→对齐→共识→固化, 才能就收益排序(含社会偏好/公平观)形成共同知识; 未经认知对齐各持己见,
+      则 T>R>P>S 排序失真、矩阵不可信; 认知涌现使'排序'从个体主观升为场景共识, 囚徒困境诊断方成立
+soul:
+  identity: 囚徒困境 (Prisoner's Dilemma) ⟂ 认知涌现 (Cognitive Emergence)
+  core: '个体理性导致集体非理性; 破解之道在重复博弈与可信承诺；⟂解释项《认知涌现 (Cognitive Emergence)》(核心: 场景涌现本质是参与者认知状态从分散到协同的质变(非技术堆砌);
+    以四阶段模型(认知发现→认知对齐→认知共识→认知固化)系统化推动场景从模糊原型质变为共识场景; 认知安全边界内渐进式创新)：收益排序校验须借认知涌现四阶段——多主体须先经认知发现→对齐→共识→固化,
+    才能就收益排序(含社会偏好/公平观)形成共同知识; 未经认知对齐各持己见, 则 T>R>P>S 排序失真、矩阵不可信; 认知涌现使''排序''从个体主观升为场景共识,
+    囚徒困境诊断方成立'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 博弈论 / 非合作博弈·同时行动 + 场景 / 场景·认知涌现·四阶段
+primitives:
+- name: pd_payoff_build
+  method: 囚徒困境 (Prisoner's Dilemma) (经 认知涌现 (Cognitive Emergence) 解释)
+  signature: fn pd_payoff_build(T, R, P, S) -> payoff_matrix
+  precond: 已知双方策略空间 {合作, 背叛} 及四类收益 (T 背叛诱惑/R 互合作/P 互背叛/S 被卖)
+  postcond: '个体理性导致集体非理性; 破解之道在重复博弈与可信承诺；⟂解释项《认知涌现 (Cognitive Emergence)》(核心: 场景涌现本质是参与者认知状态从分散到协同的质变(非技术堆砌);
+    以四阶段模型(认知发现→认知对齐→认知共识→认知固化)系统化推动场景从模糊原型质变为共识场景; 认知安全边界内渐进式创新)：收益排序校验须借认知涌现四阶段——多主体须先经认知发现→对齐→共识→固化,
+    才能就收益排序(含社会偏好/公平观)形成共同知识; 未经认知对齐各持己见, 则 T>R>P>S 排序失真、矩阵不可信; 认知涌现使''排序''从个体主观升为场景共识,
+    囚徒困境诊断方成立 (目标达成)'
+  negative_space: ⊗ 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真；⊗ 未验证机会真实性即扩张致认知混乱
+  steps:
+  - 列出双方策略空间 {合作, 背叛}
+  - 标定 T/R/P/S 四类收益
+  - 校验 T>R>P>S 排序 ⟂【认知涌现 (Cognitive Emergence)】场景机会扫描 → 验证机会真实性 → 个人洞察转化为可传播知识
+  nca_emit: true
+dispatch:
+  main_pipeline: pd_payoff_build
+  graph:
+  - from: pd_payoff_build
+    to:
+    - cognitive_discovery
+    bind: 校验 T>R>P>S 排序
+    note: pd_payoff_build 在 [校验 T>R>P>S 排序] 嵌套调用 cognitive_discovery (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需构建收益矩阵
+  call: pd_payoff_build
+- if: 单次且不可承诺
+  call: nash_solve
+- if: 需解释效率损失
+  call: pareto_check
+- if: 重复或可信承诺可行
+  call: tit_for_tat
+- if: 需跳出单次困境
+  call: credible_commit
+skills: []
+negative_space:
+- ⊗ 参与人须为自利理性人, 否则占优/均衡结论失效
+- ⊗ 收益须可量化排序, 否则矩阵失真
+- ⊗ 重复博弈须足够长且贴现率不过高, 否则合作崩溃
+- ⊗ 可信承诺须有第三方可执行, 否则空诺
+- '⊗ 禁止机械套用: 须先判定博弈结构 (是否同时/序贯/重复) 再选原语'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 未验证机会真实性即扩张致认知混乱'
+nsfl_version: V0.1

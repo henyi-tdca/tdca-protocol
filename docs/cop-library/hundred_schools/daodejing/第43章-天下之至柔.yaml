@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH43-20260815-43
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.611717'
+branch: 诸子百家·道家·道德经·第43章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第43章《天下之至柔》
+  core: 至柔驰坚、无有入无间；以柔无形克刚。
+  verse: 天下之至柔，驰骋天下之至坚。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_xia_zhi_zhi_rou
+  method: 天下之至柔
+  signature: fn zhi_rou_chi_jian(force) -> soft_pierce
+  precond: 刚硬相抗、损
+  postcond: 至柔驰坚，不言教
+  negative_space: ⊗ 刚抗则损
+  steps:
+  - 至柔
+  - 驰坚
+  - 无有入
+  - 不言教
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_xia_zhi_zhi_rou
+  trigger: 天下之至柔，驰骋天下之至坚。
+  when: 当硬抗无功、宜以柔无形克时触发
+  graph:
+  - from: tian_xia_zhi_zhi_rou
+    to: []
+decision:
+- if: 需以柔克刚
+  call: tian_xia_zhi_zhi_rou
+skills:
+- 天下之至柔·顺势研判
+negative_space:
+- 刚抗则两损
+- 言教则烦
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

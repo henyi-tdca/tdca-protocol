@@ -1,0 +1,47 @@
+COP-ID: HS-MO-04-20260815-04
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.031681'
+branch: 诸子百家·墨家·第04条(明鬼)
+stratum: 诸子百家·墨家·兼爱本原
+soul:
+  identity: 墨家·第04条《明鬼》
+  core: 鬼神赏贤罚暴、彰善瘅恶；以明鬼辅天志，立威慑劝善之教。
+  verse: 鬼神之能，赏贤而罚暴也。使天下之人皆恐惧振动。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 兼爱本原
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ming_gui
+  method: 明鬼
+  signature: fn ming_gui(teach) -> visible_ghosts
+  precond: 无惧、恶不惩
+  postcond: 明鬼，善彰
+  negative_space: ⊗ 废鬼则纵
+  steps:
+  - 立鬼神
+  - 赏贤
+  - 罚暴
+  - 劝善
+  nca_emit: true
+dispatch:
+  main_pipeline: ming_gui
+  trigger: 鬼神之能，赏贤而罚暴也。使天下之人皆恐惧振动。
+  when: 当宜立劝善威慑、不宜纵恶时触发
+  graph:
+  - from: ming_gui
+    to: []
+decision:
+- if: 需明鬼
+  call: ming_gui
+skills:
+- 明鬼·顺势研判
+negative_space:
+- 废鬼则纵恶
+- 滥罚则失民
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

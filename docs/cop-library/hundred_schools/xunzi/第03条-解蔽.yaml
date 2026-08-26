@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ03-20260815-03
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.571983'
+branch: 诸子百家·儒家·荀子·第03条(解蔽)
+stratum: 诸子百家·儒家·荀子·性伪之辨
+soul:
+  identity: 荀子·第03条《解蔽》
+  core: 患在蔽于一曲、暗于大理；以兼陈中衡、解蔽见全，立认知之公。
+  verse: 凡人之患，蔽于一曲而暗于大理。蔽公者末得也。
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 性伪之辨
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jie_bi
+  method: 解蔽
+  signature: fn jie_bi(think) -> unbiased
+  precond: 蔽一曲、暗大理
+  postcond: 兼陈中衡，见全
+  negative_space: ⊗ 蔽则暗
+  steps:
+  - 识蔽
+  - 陈众
+  - 中衡
+  - 见大理
+  nca_emit: true
+dispatch:
+  main_pipeline: jie_bi
+  trigger: 凡人之患，蔽于一曲而暗于大理。蔽公者末得也。
+  when: 当认知偏蔽、宜求全见时触发
+  graph:
+  - from: jie_bi
+    to: []
+decision:
+- if: 需解蔽
+  call: jie_bi
+skills:
+- 解蔽·顺势研判
+negative_space:
+- 蔽一曲则暗
+- 私则失公
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

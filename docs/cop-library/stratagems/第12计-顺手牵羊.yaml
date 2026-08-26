@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-12
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.952600'
+stratum: 敌战计
+soul:
+  identity: 顺手牵羊
+  core: 微利必得, 伺隙取小
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 敌战计
+primitives:
+- name: shun_shou_qian_yang
+  method: 顺手牵羊
+  signature: 'fn shun_shou_qian_yang(context: Situation) -> Outcome'
+  precond: 行军或行动中见小利可图且无险
+  postcond: 微利必得, 伺隙取小 (目标达成)
+  negative_space: ⊗ 小利诱深陷则因小失大
+  steps:
+  - 保持侦察
+  - 见隙即取小利
+  - 不恋战
+  nca_emit: true
+dispatch:
+  main_pipeline: shun_shou_qian_yang
+  graph:
+  - from: shun_shou_qian_yang
+    to: []
+  note: 单计独立协议, 主原语 shun_shou_qian_yang 即该计执行体
+decision:
+- if: 行军或行动中见小利可图且无险
+  call: shun_shou_qian_yang
+skills: []
+negative_space:
+- ⊗ 小利诱深陷则因小失大
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

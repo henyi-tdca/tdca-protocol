@@ -1,0 +1,86 @@
+COP-ID: HS-DAO-20260815-01+02
+type: COMPOSED-COP
+source_expert: hundred_schools_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-15T08:29:16.064483'
+composition:
+  parent: HS-DAO-20260815-01
+  interpretants:
+  - cop_id: TDCA-CORE-20260815-02
+    relation: 解释项
+    bind_step: 顺因循理
+    effect: '自主决策须以''道法自然''为元准则: 决策门不只判进/退/待, 更须顺因循理、不强为——在必败/不可逆情境主动''不退而待''转为顺势蓄势;
+      原语状态机调度下游 skill 时遵循无为而治:定方向放权、不代庖, 让 skill 自组织执行; NSFL 护栏即''道''之红线(逆道妄为即熔断)。可审计顺势自主决策:
+      人类审计的是''是否顺道 + 是否留痕 + 是否守底线'', 而非逐条指令。'
+soul:
+  identity: 道德经 (道家根本经典) (Tao Te Ching (Daoist Foundational Canon)) ⟂ 可审计自主决策协议 (Auditable
+    Autonomous Decision Protocol)
+  core: '《道德经》是人类''顺势·辩证·守弱·不争''智慧的范式化: 以''道''为万物根源与运行规律, 提炼八大纲维思维——道法自然(顺应规律)、无为而治(不妄为/让系统自组织)、反者道之动(物极必反/对立转化)、柔弱胜刚强(守弱蓄势)、祸福相依(辩证损益)、上善若水(处下不争利他)、治大国若烹小鲜(轻扰动稳序)、见素抱朴(删繁归本)。它是''中文化合基库''首个
+    operand, 后续可作''中国文化 ⊕ 马克思主义''化合的中方基协议; 本协议须以 TDCA-CORE-20260815-01 (生态准入基协议) 为可信底座,
+    经 NCA 确权、受 NSFL 护栏、依 MOU 正和底线运行。；⟂解释项《可审计自主决策协议 (Auditable Autonomous Decision
+    Protocol)》(核心: 把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚;
+    全程可追溯, 人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。)：自主决策须以''道法自然''为元准则: 决策门不只判进/退/待,
+    更须顺因循理、不强为——在必败/不可逆情境主动''不退而待''转为顺势蓄势; 原语状态机调度下游 skill 时遵循无为而治:定方向放权、不代庖, 让 skill
+    自组织执行; NSFL 护栏即''道''之红线(逆道妄为即熔断)。可审计顺势自主决策: 人类审计的是''是否顺道 + 是否留痕 + 是否守底线'', 而非逐条指令。'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 诸子百家 / 诸子百家·道家·道德经 + TDCA核心 / TDCA核心·可审计自主决策
+primitives:
+- name: dao_fa_zi_ran
+  method: 道德经 (道家根本经典) (Tao Te Ching (Daoist Foundational Canon)) (经 可审计自主决策协议 (Auditable
+    Autonomous Decision Protocol) 解释)
+  signature: fn dao_fa_zi_ran(context) -> aligned_action
+  precond: 情境与系统根本规律可观察
+  postcond: '《道德经》是人类''顺势·辩证·守弱·不争''智慧的范式化: 以''道''为万物根源与运行规律, 提炼八大纲维思维——道法自然(顺应规律)、无为而治(不妄为/让系统自组织)、反者道之动(物极必反/对立转化)、柔弱胜刚强(守弱蓄势)、祸福相依(辩证损益)、上善若水(处下不争利他)、治大国若烹小鲜(轻扰动稳序)、见素抱朴(删繁归本)。它是''中文化合基库''首个
+    operand, 后续可作''中国文化 ⊕ 马克思主义''化合的中方基协议; 本协议须以 TDCA-CORE-20260815-01 (生态准入基协议) 为可信底座,
+    经 NCA 确权、受 NSFL 护栏、依 MOU 正和底线运行。；⟂解释项《可审计自主决策协议 (Auditable Autonomous Decision
+    Protocol)》(核心: 把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚;
+    全程可追溯, 人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。)：自主决策须以''道法自然''为元准则: 决策门不只判进/退/待,
+    更须顺因循理、不强为——在必败/不可逆情境主动''不退而待''转为顺势蓄势; 原语状态机调度下游 skill 时遵循无为而治:定方向放权、不代庖, 让 skill
+    自组织执行; NSFL 护栏即''道''之红线(逆道妄为即熔断)。可审计顺势自主决策: 人类审计的是''是否顺道 + 是否留痕 + 是否守底线'', 而非逐条指令。
+    (目标达成)'
+  negative_space: ⊗ 逆规律妄为则败；⊗ 门条件缺失则误判
+  steps:
+  - 观大势
+  - 识道律
+  - 顺因循理 ⟂【可审计自主决策协议 (Auditable Autonomous Decision Protocol)】取情境 → 对门 → 判进/退/待
+  - 不强为
+  nca_emit: true
+dispatch:
+  main_pipeline: dao_fa_zi_ran
+  graph:
+  - from: dao_fa_zi_ran
+    to:
+    - decision_gate
+    bind: 顺因循理
+    note: dao_fa_zi_ran 在 [顺因循理] 嵌套调用 decision_gate (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需顺应规律
+  call: dao_fa_zi_ran
+- if: 系统可自组织
+  call: wu_wei
+- if: 趋势将极
+  call: fan_zhe_dao_zhi_dong
+- if: 对抗逞强
+  call: rou_ruo_sheng_gang_qiang
+- if: 事件定性
+  call: huo_fu_xiang_yi
+- if: 协作不争
+  call: shang_shan_ruo_shui
+- if: 治理维稳
+  call: zhi_da_guo
+- if: 删冗归本
+  call: jian_su_bao_pu
+skills: []
+negative_space:
+- ⊗ 逆'道'规律妄为(违道法自然)则败
+- ⊗ 过度干预扰动系统自组织(违无为)
+- ⊗ 忽视物极必反/对立转化则临危
+- ⊗ 逞强冒进则折(违守弱)
+- ⊗ 偏执祸福一端则盲(违辩证)
+- ⊗ 争利两损(违不争)
+- ⊗ 频繁翻动致乱(违烹小鲜)
+- ⊗ 繁冗惑本(违归朴)
+- '⊗ 本协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+- '⊗ 解释项负空间继承: 门条件缺失则误判'
+nsfl_version: V0.1

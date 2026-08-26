@@ -1,0 +1,47 @@
+COP-ID: HS-FA-06-20260815-06
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.554133'
+branch: 诸子百家·法家·第06条(二柄)
+stratum: 诸子百家·法家·刑名权柄
+soul:
+  identity: 法家·第06条《二柄》
+  core: 二柄刑德、赏罚为君；以庆赏驱利、杀戮慑畏，立驭臣双刃。
+  verse: 二柄者，刑德也。杀戮之谓刑，庆赏之谓德。为人臣者畏诛罚而利庆赏。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 刑名权柄
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: er_bing
+  method: 二柄
+  signature: fn er_bing(reward_punish) -> two_handles
+  precond: 赏罚不明、柄移
+  postcond: 刑德立，臣畏利
+  negative_space: ⊗ 柄移则危
+  steps:
+  - 执赏
+  - 执罚
+  - 明二柄
+  - 臣服
+  nca_emit: true
+dispatch:
+  main_pipeline: er_bing
+  trigger: 二柄者，刑德也。杀戮之谓刑，庆赏之谓德。为人臣者畏诛罚而利庆赏。
+  when: 当宜明赏罚二柄、不宜柄下移时触发
+  graph:
+  - from: er_bing
+    to: []
+decision:
+- if: 需用二柄
+  call: er_bing
+skills:
+- 二柄·顺势研判
+negative_space:
+- 柄移臣则篡
+- 赏罚滥则怨
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

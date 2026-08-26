@@ -1,0 +1,73 @@
+COP-ID: SCEN-COP-20260814-02+01
+type: COMPOSED-COP
+source_expert: scenario_subtopic
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T22:49:20.998567'
+composition:
+  parent: SCEN-COP-20260814-02
+  interpretants:
+  - cop_id: GAME-COP-20260814-01
+    relation: 解释项
+    bind_step: 规划价值流
+    effect: 价值流设计须借囚徒困境的收益矩阵/纳什诊断规避(背叛,背叛)帕累托劣解——先以 pd_payoff_build 标定各参与人收益, 再经 nash_solve/pareto_check
+      揭示单边自私致集体非理性, 从而把价值流设计锚定在(cooperation,cooperation)可行均衡上; 最终价值流经 TDCA-MOU 正和底线与
+      NCA 确权结算, 不得自建代币
+soul:
+  identity: 场景画布 (Scenario Canvas) ⟂ 囚徒困境 (Prisoner's Dilemma)
+  core: '场景不是封闭商业空间而是开放价值网络(场景即协议); 以六要素(主题意义/参与者网络/资源流动/规则体系/技术架构/价值流)全要素设计工具, 把抽象场景要素转化为可共建的蓝图;
+    主题意义不随构件改变而改变, 因场景演绎逻辑变化而变化；⟂解释项《囚徒困境 (Prisoner''s Dilemma)》(核心: 个体理性导致集体非理性;
+    破解之道在重复博弈与可信承诺)：价值流设计须借囚徒困境的收益矩阵/纳什诊断规避(背叛,背叛)帕累托劣解——先以 pd_payoff_build 标定各参与人收益,
+    再经 nash_solve/pareto_check 揭示单边自私致集体非理性, 从而把价值流设计锚定在(cooperation,cooperation)可行均衡上;
+    最终价值流经 TDCA-MOU 正和底线与 NCA 确权结算, 不得自建代币'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 场景 / 场景·场景画布·六要素建模 + 博弈论 / 非合作博弈·同时行动
+primitives:
+- name: canvas_six_elements
+  method: 场景画布 (Scenario Canvas) (经 囚徒困境 (Prisoner's Dilemma) 解释)
+  signature: fn canvas_six_elements(theme, participants, resources, rules, tech, valueflow)
+    -> scenario_blueprint
+  precond: 明确场景主题意义与边界
+  postcond: '场景不是封闭商业空间而是开放价值网络(场景即协议); 以六要素(主题意义/参与者网络/资源流动/规则体系/技术架构/价值流)全要素设计工具,
+    把抽象场景要素转化为可共建的蓝图; 主题意义不随构件改变而改变, 因场景演绎逻辑变化而变化；⟂解释项《囚徒困境 (Prisoner''s Dilemma)》(核心:
+    个体理性导致集体非理性; 破解之道在重复博弈与可信承诺)：价值流设计须借囚徒困境的收益矩阵/纳什诊断规避(背叛,背叛)帕累托劣解——先以 pd_payoff_build
+    标定各参与人收益, 再经 nash_solve/pareto_check 揭示单边自私致集体非理性, 从而把价值流设计锚定在(cooperation,cooperation)可行均衡上;
+    最终价值流经 TDCA-MOU 正和底线与 NCA 确权结算, 不得自建代币 (目标达成)'
+  negative_space: ⊗ 缺任一要素则场景不可自持/易崩；⊗ 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真
+  steps:
+  - 界定主题意义
+  - 刻画参与者网络
+  - 设计资源流动
+  - 订立规则体系
+  - 选型技术架构
+  - 规划价值流 ⟂【囚徒困境 (Prisoner's Dilemma)】列出双方策略空间 {合作, 背叛} → 标定 T/R/P/S 四类收益 → 校验 T>R>P>S
+    排序
+  nca_emit: true
+dispatch:
+  main_pipeline: canvas_six_elements
+  graph:
+  - from: canvas_six_elements
+    to:
+    - pd_payoff_build
+    bind: 规划价值流
+    note: canvas_six_elements 在 [规划价值流] 嵌套调用 pd_payoff_build (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需建场景蓝图
+  call: canvas_six_elements
+- if: 需锚定主题意义
+  call: theme_meaning_define
+- if: 需刻画参与者
+  call: participant_network_map
+- if: 需设计资源流动
+  call: resource_flow_design
+- if: 需设计价值流
+  call: valueflow_close_loop
+skills: []
+negative_space:
+- ⊗ 场景须六要素齐备, 否则不可自持
+- ⊗ 主题意义须不随构件漂移, 否则场景失焦
+- ⊗ 价值流须正和且经 TDCA 闭环结算, 不得自建代币替代 NCA/数字人民币 DVP
+- ⊗ 无经济价值的交互致场景淘汰/重构
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真'
+nsfl_version: V0.1

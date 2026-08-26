@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH08-20260815-08
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.228021'
+branch: 诸子百家·道家·道德经·第08章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第08章《上善若水》
+  core: 处下不争、善利万物，以不争成共赢。
+  verse: 上善若水，水善利万物而不争。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shang_shan_ruo_shui
+  method: 上善若水
+  signature: fn shang_shan_ruo_shui(collab) -> non_compete_gain
+  precond: 协作/竞争场景含争夺
+  postcond: 处下不争、利他，以不争成共赢
+  negative_space: ⊗ 争则两损
+  steps:
+  - 处下
+  - 不争
+  - 利万物
+  - 共赢
+  nca_emit: true
+dispatch:
+  main_pipeline: shang_shan_ruo_shui
+  trigger: 上善若水，水善利万物而不争。
+  when: 当协作因争利陷入零和时触发
+  graph:
+  - from: shang_shan_ruo_shui
+    to: []
+decision:
+- if: 需以不争成共赢
+  call: shang_shan_ruo_shui
+skills:
+- 上善若水·顺势研判
+negative_space:
+- 争利则两损
+- 居高则失下
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

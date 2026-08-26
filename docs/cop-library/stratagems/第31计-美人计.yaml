@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-31
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.339504'
+stratum: 败战计
+soul:
+  identity: 美人计
+  core: 以欲诱心, 乱其志断
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 败战计
+primitives:
+- name: mei_ren_ji
+  method: 美人计
+  signature: 'fn mei_ren_ji(context: Situation) -> Outcome'
+  precond: 敌将刚而好色或有明显之欲
+  postcond: 以欲诱心, 乱其志断 (目标达成)
+  negative_space: ⊗ 敌无此欲或识破则反制
+  steps:
+  - 投其所好(美人)
+  - 乱其断
+  - 乘隙取
+  nca_emit: true
+dispatch:
+  main_pipeline: mei_ren_ji
+  graph:
+  - from: mei_ren_ji
+    to: []
+  note: 单计独立协议, 主原语 mei_ren_ji 即该计执行体
+decision:
+- if: 敌将刚而好色或有明显之欲
+  call: mei_ren_ji
+skills: []
+negative_space:
+- ⊗ 敌无此欲或识破则反制
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-MO-02-20260815-02
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.009352'
+branch: 诸子百家·墨家·第02条(非攻)
+stratum: 诸子百家·墨家·兼爱本原
+soul:
+  identity: 墨家·第02条《非攻》
+  core: 非不义之战、攻伐夺生；以义利辨战，立反侵略之则。
+  verse: 今攻伐并兼，则不可。杀所不足而争所有余，不可谓智。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 兼爱本原
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fei_gong
+  method: 非攻
+  signature: fn fei_gong(war) -> anti_aggression
+  precond: 攻伐、夺生
+  postcond: 非攻，义立
+  negative_space: ⊗ 攻则失义
+  steps:
+  - 辨义
+  - 察攻非
+  - 非不义
+  - 保生
+  nca_emit: true
+dispatch:
+  main_pipeline: fei_gong
+  trigger: 今攻伐并兼，则不可。杀所不足而争所有余，不可谓智。
+  when: 当宜止不义之战、不宜攻伐时触发
+  graph:
+  - from: fei_gong
+    to: []
+decision:
+- if: 需非攻
+  call: fei_gong
+skills:
+- 非攻·顺势研判
+negative_space:
+- 攻伐则失义
+- 以战济私则暴
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

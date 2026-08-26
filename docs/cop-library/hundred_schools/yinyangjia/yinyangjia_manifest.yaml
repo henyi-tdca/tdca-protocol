@@ -1,0 +1,86 @@
+library: yinyangjia_wuxing
+role: 诸子百家系统思维·五行库 (Chinese cultural compound operand source, 义理条目级)
+note: 阴阳家以阴阳消息、五行相生克、五德终始为宇宙与历史之序, 开中国气化学说与系统循环论。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化
+  ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: yinyangjia/compile_yinyangjia.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 7
+strata_taxonomy:
+  五行本体: 五行/相生相克/阴阳消息/四时 (元素归类, 生克循环, 对待转化, 时令节律)
+  德运终始: 五德终始/大九州 (德运代兴论史, 宏阔空间破中心)
+  天人感应: 天人感应 (类固相召, 气类感通与灾异自省)
+strata_count:
+  五行本体: 4
+  德运终始: 2
+  天人感应: 1
+items:
+- n: 1
+  title: 五行
+  cop_id: HS-YY-01-20260815-01
+  stratum: 五行本体
+  verse: 水火木金土，五材欢用。五行：一曰水，二曰火，三曰木，四曰金，五曰土。
+  primitive: wu_xing
+  file: 第01条-五行.yaml
+- n: 2
+  title: 相生相克
+  cop_id: HS-YY-02-20260815-02
+  stratum: 五行本体
+  verse: 水生木，木生火，火生土，土生金，金生水。克者：水克火，火克金，金克木，木克土，土克水。
+  primitive: xiang_sheng_xiang_ke
+  file: 第02条-相生相克.yaml
+- n: 3
+  title: 阴阳消息
+  cop_id: HS-YY-03-20260815-03
+  stratum: 五行本体
+  verse: 阴阳之化，寒暑推移。阳极生阴，阴极生阳，消息盈虚，与时偕行。
+  primitive: yin_yang_xiao_xi
+  file: 第03条-阴阳消息.yaml
+- n: 4
+  title: 四时
+  cop_id: HS-YY-04-20260815-04
+  stratum: 五行本体
+  verse: 四时行焉，百物生焉。春生夏长秋收冬藏，时使然也。
+  primitive: si_shi
+  file: 第04条-四时.yaml
+- n: 5
+  title: 五德终始
+  cop_id: HS-YY-05-20260815-05
+  stratum: 德运终始
+  verse: 五德之运，各以所胜为行。虞土、夏木、殷金、周火，代各乘其德而王。
+  primitive: wu_de_zhong_shi
+  file: 第05条-五德终始.yaml
+- n: 6
+  title: 大九州
+  cop_id: HS-YY-06-20260815-06
+  stratum: 德运终始
+  verse: 儒者所谓中国者，于天下乃八十一分居其一分耳。赤县神州内自有九州。
+  primitive: da_jiu_zhou
+  file: 第06条-大九州.yaml
+- n: 7
+  title: 天人感应
+  cop_id: HS-YY-07-20260815-07
+  stratum: 天人感应
+  verse: 类固相召，气同则合。灾异祯祥，皆类之所感，天人之际未有不相酬者。
+  primitive: tian_ren_gan_ying
+  file: 第07条-天人感应.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家
+  - 儒
+  - 墨家
+  - 法家
+  - 名家
+  - 马克思主义
+  - 控制论
+  - 数学
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: 撰写中 (阴阳家五行相生克/阴阳消息 ⟂ 马克思主义质量互变/对立统一)

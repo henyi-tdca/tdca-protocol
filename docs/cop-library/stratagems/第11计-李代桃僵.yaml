@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-11
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.930684'
+stratum: 敌战计
+soul:
+  identity: 李代桃僵
+  core: 舍次保主, 以代价换大局
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 敌战计
+primitives:
+- name: li_dai_tao_jiang
+  method: 李代桃僵
+  signature: 'fn li_dai_tao_jiang(context: Situation) -> Outcome'
+  precond: 两害须择其一
+  postcond: 舍次保主, 以代价换大局 (目标达成)
+  negative_space: ⊗ 主次误判则舍主保次
+  steps:
+  - 评估主次
+  - 弃次要保关键
+  - 控制损失
+  nca_emit: true
+dispatch:
+  main_pipeline: li_dai_tao_jiang
+  graph:
+  - from: li_dai_tao_jiang
+    to: []
+  note: 单计独立协议, 主原语 li_dai_tao_jiang 即该计执行体
+decision:
+- if: 两害须择其一
+  call: li_dai_tao_jiang
+skills: []
+negative_space:
+- ⊗ 主次误判则舍主保次
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,120 @@
+library: mengzi_yishan
+role: 儒家系统思维·亚圣义理库 (Chinese cultural compound operand source, 义理条目级)
+note: 《孟子》承孔子、启道统, 以'性善'立本体、'养气'立工夫、'王道'立政术, 构成儒家内圣外王第二座纲领。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化
+  ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: mengzi/compile_mengzi.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 12
+strata_taxonomy:
+  性善本体: 性善论/四端说/良知良能/不忍人之心 (立人性本善根基, 为教化政术之源)
+  养气工夫: 浩然之气/养气知言/大丈夫人格 (以直养无害、集义成刚, 立独立人格)
+  王道政术: 王道仁政/民贵君轻/义利之辨/与民同乐/仁政井田 (保民而王, 推不忍之心于政)
+strata_count:
+  性善本体: 4
+  养气工夫: 3
+  王道政术: 5
+items:
+- n: 1
+  title: 性善论
+  cop_id: HS-RU-MZ01-20260815-01
+  stratum: 性善本体
+  verse: 人性之善也，犹水之就下也。人无有不善，水无有不下。
+  primitive: xing_shan_lun
+  file: 第01条-性善论.yaml
+- n: 2
+  title: 四端说
+  cop_id: HS-RU-MZ02-20260815-02
+  stratum: 性善本体
+  verse: 恻隐之心，仁之端也；羞恶之心，义之端也；辞让之心，礼之端也；是非之心，智之端也。
+  primitive: si_duan_shuo
+  file: 第02条-四端说.yaml
+- n: 3
+  title: 良知良能
+  cop_id: HS-RU-MZ03-20260815-03
+  stratum: 性善本体
+  verse: 人之所不学而能者，其良能也；所不虑而知者，其良知也。
+  primitive: liang_zhi_neng
+  file: 第03条-良知良能.yaml
+- n: 4
+  title: 不忍人之心
+  cop_id: HS-RU-MZ04-20260815-04
+  stratum: 性善本体
+  verse: 先王有不忍人之心，斯有不忍人之政矣。以不忍人之心，行不忍人之政。
+  primitive: bu_ren_zhi_xin
+  file: 第04条-不忍人之心.yaml
+- n: 5
+  title: 浩然之气
+  cop_id: HS-RU-MZ05-20260815-05
+  stratum: 养气工夫
+  verse: 我善养吾浩然之气……其为气也，至大至刚，以直养而无害，则塞于天地之间。
+  primitive: hao_ran_zhi_qi
+  file: 第05条-浩然之气.yaml
+- n: 6
+  title: 养气知言
+  cop_id: HS-RU-MZ06-20260815-06
+  stratum: 养气工夫
+  verse: 我知言，我善养吾浩然之气。何谓知言？曰：诐辞知其所蔽……
+  primitive: yang_qi_zhi_yan
+  file: 第06条-养气知言.yaml
+- n: 7
+  title: 大丈夫人格
+  cop_id: HS-RU-MZ07-20260815-07
+  stratum: 养气工夫
+  verse: 富贵不能淫，贫贱不能移，威武不能屈，此之谓大丈夫。
+  primitive: da_zhang_fu
+  file: 第07条-大丈夫人格.yaml
+- n: 8
+  title: 王道仁政
+  cop_id: HS-RU-MZ08-20260815-08
+  stratum: 王道政术
+  verse: 保民而王，莫之能御也。老吾老以及人之老，幼吾幼以及人之幼。
+  primitive: wang_dao_ren_zheng
+  file: 第08条-王道仁政.yaml
+- n: 9
+  title: 民贵君轻
+  cop_id: HS-RU-MZ09-20260815-09
+  stratum: 王道政术
+  verse: 民为贵，社稷次之，君为轻。是故得乎丘民而为天子。
+  primitive: min_gui_jun_qing
+  file: 第09条-民贵君轻.yaml
+- n: 10
+  title: 义利之辨
+  cop_id: HS-RU-MZ10-20260815-10
+  stratum: 王道政术
+  verse: 王何必曰利？亦有仁义而已矣。上下交征利而国危矣。
+  primitive: yi_li_zhi_bian
+  file: 第10条-义利之辨.yaml
+- n: 11
+  title: 与民同乐
+  cop_id: HS-RU-MZ11-20260815-11
+  stratum: 王道政术
+  verse: 乐民之乐者，民亦乐其乐；忧民之忧者，民亦忧其忧。
+  primitive: yu_min_tong_le
+  file: 第11条-与民同乐.yaml
+- n: 12
+  title: 仁政井田
+  cop_id: HS-RU-MZ12-20260815-12
+  stratum: 王道政术
+  verse: 明君制民之产，必使仰足以事父母，俯足以畜妻子……恒产者有恒心。
+  primitive: ren_zheng_jing_tian
+  file: 第12条-仁政井田.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家(道德经)
+  - 论语
+  - 大学
+  - 中庸
+  - 荀子
+  - 墨法名阴阳
+  - 马克思主义
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: 撰写中 (孟子性善/养气 ⟂ 马克思主义实践论/矛盾论)
