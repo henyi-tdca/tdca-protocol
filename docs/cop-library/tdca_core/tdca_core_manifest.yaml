@@ -1,0 +1,44 @@
+# TDCA 核心思维协议库 · 生态准入清单 (Manifest)
+# 用户规则: 凡是加入 TDCA 生态的主体, 必须加载 TDCA 思维协议。
+ecosystem: TDCA
+rule: 凡是加入 TDCA 生态的主体, 必须加载 TDCA 思维协议 (基协议 TDCA-CORE-20260815-01)
+load_policy: 加入即加载基协议; 未加载则拒绝协作/组合/比配
+mandatory_core: TDCA-CORE-20260815-01
+
+core_protocols:
+  - id: TDCA-CORE-20260815-01
+    name: 生态准入与可信协作基协议
+    en: Ecosystem Entry & Trusted Collaboration Base Protocol
+    mandatory: true
+    role: 生态宪法/准入门 (NCA + NSFL + MOU + 可审计决策 + 可信协作 + 准入门)
+  - id: TDCA-CORE-20260815-02
+    name: 可审计自主决策协议
+    en: Auditable Autonomous Decision Protocol
+    mandatory: false
+    role: COP 作为自主决策源泉层的方法本体 (决策门→状态机→调度→确权→熔断→回滚)
+  - id: TDCA-CORE-20260815-03
+    name: 正和协作涌现协议
+    en: Positive-Sum Collaboration Emergence Protocol
+    mandatory: false
+    role: 搜索比配引擎的协作方法论本体 (互补→缺口→增益→联盟→夏普利→DVP)
+
+# 强制加载门的工程实现
+enforcement:
+  module: enforce_entry.py
+  mandatory_id: TDCA-CORE-20260815-01
+  gate: require_core_loaded(loaded_ids)  # 未含基协议 -> AdmissionDenied
+  admit: ecosystem_admit(entity, loaded_ids)  # 通过则发射准入 NCA
+  integration_points:
+    - 组合解析 compose_general (组合前校验双方均已加载基协议)
+    - 搜索比配引擎 providers (加载候选前校验连接器侧已加载基协议)
+    - 连接器/MCP 入口 (主体接入生态即加载基协议)
+
+# 与既有五库的关系: TDCA 核心库是"生态地基", 学科/文明库(兵法/博弈论/机制设计/场景/诸子百家/毛/经济/统计/控制论...)在其上化合
+composition_space:
+  base: TDCA-CORE-20260815-01
+  combinable_with:
+    - 兵法36计 (STRATAGEM-COP)
+    - 博弈论 (GAME-COP)
+    - 机制设计 (MECH-COP)
+    - 场景 (SCEN-COP)
+    - 待编译: 诸子百家 / 毛泽东思想 / 微观经济学 / 统计学 / 控制论 / 逻辑学 / 数学

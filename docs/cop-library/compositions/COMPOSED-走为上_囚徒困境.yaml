@@ -1,0 +1,54 @@
+COP-ID: STRATAGEM-COP-20260814-36+01
+type: COMPOSED-COP
+source_expert: thirty_six_stratagems
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T18:00:04.226013'
+composition:
+  parent: STRATAGEM-COP-20260814-36
+  interpretants:
+  - cop_id: GAME-COP-20260814-01
+    relation: 解释项
+    bind_step: 保根本待机
+    effect: '撤退≠懦弱背叛: 在必败单次博弈中''全师而退''是理性 defect (避开互耗的帕累托劣解); 而''保根本待机''=保全重复博弈的合作关系与可信承诺机制——退是跳出单次困境、保留未来
+      cooperative equilibrium 的 substrate, 待机即重开合作 (以牙还牙/可信承诺)'
+soul:
+  identity: 走为上 ⟂ 囚徒困境 (Prisoner's Dilemma)
+  core: '势不可为则退, 存为根本；⟂解释项《囚徒困境 (Prisoner''s Dilemma)》(核心: 个体理性导致集体非理性; 破解之道在重复博弈与可信承诺)：撤退≠懦弱背叛:
+    在必败单次博弈中''全师而退''是理性 defect (避开互耗的帕累托劣解); 而''保根本待机''=保全重复博弈的合作关系与可信承诺机制——退是跳出单次困境、保留未来
+    cooperative equilibrium 的 substrate, 待机即重开合作 (以牙还牙/可信承诺)'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 三十六计 / 败战计 + 博弈论 / 非合作博弈·同时行动
+primitives:
+- name: zou_wei_shang
+  method: 走为上 (经 囚徒困境 (Prisoner's Dilemma) 解释)
+  signature: 'fn zou_wei_shang(context: Situation) -> Outcome'
+  precond: 必败不可战
+  postcond: '势不可为则退, 存为根本；⟂解释项《囚徒困境 (Prisoner''s Dilemma)》(核心: 个体理性导致集体非理性; 破解之道在重复博弈与可信承诺)：撤退≠懦弱背叛:
+    在必败单次博弈中''全师而退''是理性 defect (避开互耗的帕累托劣解); 而''保根本待机''=保全重复博弈的合作关系与可信承诺机制——退是跳出单次困境、保留未来
+    cooperative equilibrium 的 substrate, 待机即重开合作 (以牙还牙/可信承诺) (目标达成)'
+  negative_space: ⊗ 可战而走则失机; 非怯战是知止；⊗ 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真
+  steps:
+  - 识不可为
+  - 全师而退
+  - 保根本待机 ⟂【囚徒困境 (Prisoner's Dilemma)】列出双方策略空间 {合作, 背叛} → 标定 T/R/P/S 四类收益 → 校验 T>R>P>S
+    排序
+  nca_emit: true
+dispatch:
+  main_pipeline: zou_wei_shang
+  graph:
+  - from: zou_wei_shang
+    to:
+    - pd_payoff_build
+    bind: 保根本待机
+    note: zou_wei_shang 在 [保根本待机] 嵌套调用 pd_payoff_build (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 必败不可战
+  call: zou_wei_shang
+skills: []
+negative_space:
+- ⊗ 可战而走则失机; 非怯战是知止
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真'
+nsfl_version: V0.1

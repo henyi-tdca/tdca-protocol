@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH12-20260815-12
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.273056'
+branch: 诸子百家·道家·道德经·第12章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第12章《五色令人目盲》
+  core: 感官过度则盲聋，去奢寡欲以全真。
+  verse: 五色令人目盲，五音令人耳聋。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wu_se_ling_ren_mu_mang
+  method: 五色令人目盲
+  signature: fn qu_she_gua_yu(self) -> unclouded
+  precond: 沉溺感官刺激、心神外驰
+  postcond: 去奢寡欲，守内全真
+  negative_space: ⊗ 逐欲则盲
+  steps:
+  - 识奢
+  - 去外逐
+  - 寡欲
+  - 守内
+  nca_emit: true
+dispatch:
+  main_pipeline: wu_se_ling_ren_mu_mang
+  trigger: 五色令人目盲，五音令人耳聋。
+  when: 当因感官/物质过载致判断力下降时触发
+  graph:
+  - from: wu_se_ling_ren_mu_mang
+    to: []
+decision:
+- if: 需去奢守内
+  call: wu_se_ling_ren_mu_mang
+skills:
+- 五色令人目盲·顺势研判
+negative_space:
+- 逐外欲则盲聋
+- 奢则惑
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX02-20260815-02
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.897106'
+branch: 诸子百家·儒家·大学·第02目(亲民)
+stratum: 诸子百家·儒家·大学·三纲总摄
+soul:
+  identity: 大学·第02目《亲民》
+  core: 新民教化、日新又新；以教化使民自新，不假强制。
+  verse: 在亲民（程朱本作新民）。君子日新其德，新民教化。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 三纲总摄
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qin_min_xin_min
+  method: 亲民
+  signature: fn qin_min_xin_min(educate) -> renewed_people
+  precond: 民德旧染、不新
+  postcond: 日新其德，民自新
+  negative_space: ⊗ 因循则旧
+  steps:
+  - 识旧染
+  - 新民
+  - 日新
+  - 化成
+  nca_emit: true
+dispatch:
+  main_pipeline: qin_min_xin_min
+  trigger: 在亲民（程朱本作新民）。君子日新其德，新民教化。
+  when: 当宜教化更新、不宜因循强制时触发
+  graph:
+  - from: qin_min_xin_min
+    to: []
+decision:
+- if: 需新民教化
+  call: qin_min_xin_min
+skills:
+- 亲民·顺势研判
+negative_space:
+- 因循则旧
+- 强制改则怨
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

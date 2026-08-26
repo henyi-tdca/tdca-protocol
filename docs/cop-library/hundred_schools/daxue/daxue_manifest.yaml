@@ -1,0 +1,108 @@
+library: daxue_gangmu
+role: 儒家系统思维纲领库 (Chinese cultural compound operand source, 纲目级)
+note: 《大学》文字虽少，却是儒家'修齐治平·内圣外王'系统思维的纲领体现；以三纲(明明德/亲民/止于至善) + 八目(格物/致知/诚意/正心/修身/齐家/治国/平天下)
+  共 11 目逐目编译为独立可调用的思维协议(COP)，按三谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: daxue/compile_daxue.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 11
+strata_taxonomy:
+  三纲总摄: 明明德/亲民/止于至善 (立道方向·本体与目标·知止有定)
+  内圣阶梯: 格物/致知/诚意/正心/修身 (即物穷理→推极知识→不自欺→去偏→为本, 自我修养递进)
+  外王阶梯: 齐家/治国/平天下 (孝悌及国→絜矩德治→均平协和, 推己及人达用)
+strata_count:
+  三纲总摄: 3
+  内圣阶梯: 4
+  外王阶梯: 4
+items:
+- n: 1
+  title: 明明德
+  cop_id: HS-RU-DX01-20260815-01
+  stratum: 三纲总摄
+  verse: 大学之道，在明明德，在亲民，在止于至善。
+  primitive: ming_ming_de
+  file: 第01目-明明德.yaml
+- n: 2
+  title: 亲民
+  cop_id: HS-RU-DX02-20260815-02
+  stratum: 三纲总摄
+  verse: 在亲民（程朱本作新民）。君子日新其德，新民教化。
+  primitive: qin_min_xin_min
+  file: 第02目-亲民.yaml
+- n: 3
+  title: 止于至善
+  cop_id: HS-RU-DX03-20260815-03
+  stratum: 三纲总摄
+  verse: 在止于至善。知止而后有定，定而后能静，静而后能安，安而后能虑，虑而后能得。
+  primitive: zhi_yu_zhi_shan
+  file: 第03目-止于至善.yaml
+- n: 4
+  title: 格物
+  cop_id: HS-RU-DX04-20260815-04
+  stratum: 内圣阶梯
+  verse: 欲诚其意者，先致其知；致知在格物。物格而后知至。
+  primitive: ge_wu
+  file: 第04目-格物.yaml
+- n: 5
+  title: 致知
+  cop_id: HS-RU-DX05-20260815-05
+  stratum: 内圣阶梯
+  verse: 致知在格物。知至而后意诚。
+  primitive: zhi_zhi
+  file: 第05目-致知.yaml
+- n: 6
+  title: 诚意
+  cop_id: HS-RU-DX06-20260815-06
+  stratum: 内圣阶梯
+  verse: 欲正其心者，先诚其意。毋自欺也；如恶恶臭，如好好色。
+  primitive: cheng_yi
+  file: 第06目-诚意.yaml
+- n: 7
+  title: 正心
+  cop_id: HS-RU-DX07-20260815-07
+  stratum: 内圣阶梯
+  verse: 欲修其身者，先正其心。身有所忿懥，则不得其正。
+  primitive: zheng_xin
+  file: 第07目-正心.yaml
+- n: 8
+  title: 修身
+  cop_id: HS-RU-DX08-20260815-08
+  stratum: 外王阶梯
+  verse: 自天子以至于庶人，壹是皆以修身为本。
+  primitive: xiu_shen
+  file: 第08目-修身.yaml
+- n: 9
+  title: 齐家
+  cop_id: HS-RU-DX09-20260815-09
+  stratum: 外王阶梯
+  verse: 欲治其国者，先齐其家。
+  primitive: qi_jia
+  file: 第09目-齐家.yaml
+- n: 10
+  title: 治国
+  cop_id: HS-RU-DX10-20260815-10
+  stratum: 外王阶梯
+  verse: 欲平天下者，先治其国。君子不出家而成教于国。
+  primitive: zhi_guo
+  file: 第10目-治国.yaml
+- n: 11
+  title: 平天下
+  cop_id: HS-RU-DX11-20260815-11
+  stratum: 外王阶梯
+  verse: 国治而后天下平。君子有絜矩之道。
+  primitive: ping_tian_xia
+  file: 第11目-平天下.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家(道德经)
+  - 论语
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: compose_demo_dx.py (第03目 止于至善·知止有定 ⟂ TDCA核心-02 → 知止有界的可审计自主决策)

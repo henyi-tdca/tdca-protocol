@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH41-20260815-41
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.590899'
+branch: 诸子百家·道家·道德经·第41章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第41章《上士闻道》
+  core: 闻道勤行、大器晚成；以质实耐晚成御浮浅。
+  verse: 上士闻道，勤而行之；大象无形，大器晚成。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shang_shi_wen_dao
+  method: 上士闻道
+  signature: fn shang_shi_wen_dao(learning) -> patient_greatness
+  precond: 求速成、中道废
+  postcond: 勤行不辍，大器晚成
+  negative_space: ⊗ 求速则废
+  steps:
+  - 闻道
+  - 勤行
+  - 耐晚
+  - 成器
+  nca_emit: true
+dispatch:
+  main_pipeline: shang_shi_wen_dao
+  trigger: 上士闻道，勤而行之；大象无形，大器晚成。
+  when: 当求速成反废、宜耐久时触发
+  graph:
+  - from: shang_shi_wen_dao
+    to: []
+decision:
+- if: 需勤行耐晚
+  call: shang_shi_wen_dao
+skills:
+- 上士闻道·顺势研判
+negative_space:
+- 求速则中废
+- 笑道则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

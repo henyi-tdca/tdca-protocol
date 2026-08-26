@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX11-20260815-11
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.983988'
+branch: 诸子百家·儒家·大学·第11目(平天下)
+stratum: 诸子百家·儒家·大学·外王阶梯
+soul:
+  identity: 大学·第11目《平天下》
+  core: 协和天下、絜矩均平；以平天下为至用，万物各得其所。
+  verse: 国治而后天下平。君子有絜矩之道。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 外王阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ping_tian_xia
+  method: 平天下
+  signature: fn ping_tian_xia(world) -> pacified_world
+  precond: 天下不平、倾
+  postcond: 天下平，万物得所
+  negative_space: ⊗ 不均则倾
+  steps:
+  - 絜矩
+  - 均平
+  - 协和
+  - 天下平
+  nca_emit: true
+dispatch:
+  main_pipeline: ping_tian_xia
+  trigger: 国治而后天下平。君子有絜矩之道。
+  when: 当宜均平协和、推絜矩于天下时触发
+  graph:
+  - from: ping_tian_xia
+    to: []
+decision:
+- if: 需平天下
+  call: ping_tian_xia
+skills:
+- 平天下·顺势研判
+negative_space:
+- 不均则倾
+- 私天下则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

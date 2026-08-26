@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH05-20260815-05
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.195809'
+branch: 诸子百家·道家·道德经·第05章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第05章《天地不仁》
+  core: 天地无私偏爱，以自然律平等待物；治理当去私仁、行公律。
+  verse: 天地不仁，以万物为刍狗。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_di_bu_ren
+  method: 天地不仁
+  signature: fn tian_di_bu_ren(govern) -> impartial_law
+  precond: 治理含偏私仁爱，致不公
+  postcond: 去私仁、行公律，万物自化
+  negative_space: ⊗ 偏私则失公
+  steps:
+  - 去私仁
+  - 立公律
+  - 任自化
+  - 齐物
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_di_bu_ren
+  trigger: 天地不仁，以万物为刍狗。
+  when: 当治理因偏爱/人情扰动公平底限时触发
+  graph:
+  - from: tian_di_bu_ren
+    to: []
+decision:
+- if: 需以公律替代私仁
+  call: tian_di_bu_ren
+skills:
+- 天地不仁·顺势研判
+negative_space:
+- 以私仁代公律则失公
+- 偏袒则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

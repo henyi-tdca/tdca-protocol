@@ -1,0 +1,127 @@
+library: zhongyong_xinfa
+role: 儒家系统思维·孔门心法库 (Chinese cultural compound operand source, 心法条目级)
+note: 《中庸》为孔门心法, 以'中和'立体用、以'诚'立天道人道合一, 是儒家心性论中枢。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化
+  ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: zhongyong/compile_zhongyong.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_items: 13
+strata_taxonomy:
+  中和本体: 天命之谓性/致中和/中庸 (立体用、立常道, 性道教一贯)
+  诚体工夫: 慎独/诚者天之道/诚明/诚则形/择善固执 (诚为天道人道合一, 心性开显)
+  时中达道: 时中/素位而行/至诚如神/中庸不可能/三重 (权变守中, 经权合一, 制度化成)
+strata_count:
+  中和本体: 3
+  诚体工夫: 5
+  时中达道: 5
+items:
+- n: 1
+  title: 天命之谓性
+  cop_id: HS-RU-ZY01-20260815-01
+  stratum: 中和本体
+  verse: 天命之谓性，率性之谓道，修道之谓教。
+  primitive: tian_ming_zhi_xing
+  file: 第01条-天命之谓性.yaml
+- n: 2
+  title: 致中和
+  cop_id: HS-RU-ZY02-20260815-02
+  stratum: 中和本体
+  verse: 喜怒哀乐之未发谓之中，发而皆中节谓之和。致中和，天地位焉，万物育焉。
+  primitive: zhi_zhong_he
+  file: 第02条-致中和.yaml
+- n: 3
+  title: 中庸
+  cop_id: HS-RU-ZY03-20260815-03
+  stratum: 中和本体
+  verse: 中庸其至矣乎！民鲜能久矣。不偏之谓中，不易之谓庸。
+  primitive: zhong_yong
+  file: 第03条-中庸.yaml
+- n: 4
+  title: 慎独
+  cop_id: HS-RU-ZY04-20260815-04
+  stratum: 诚体工夫
+  verse: 莫见乎隐，莫显乎微，故君子慎其独也。
+  primitive: shen_du
+  file: 第04条-慎独.yaml
+- n: 5
+  title: 诚者天之道
+  cop_id: HS-RU-ZY05-20260815-05
+  stratum: 诚体工夫
+  verse: 诚者，天之道也；诚之者，人之道也。诚者不勉而中，不思而得。
+  primitive: cheng_zhe_tian_zhi_dao
+  file: 第05条-诚者天之道.yaml
+- n: 6
+  title: 诚明
+  cop_id: HS-RU-ZY06-20260815-06
+  stratum: 诚体工夫
+  verse: 自诚明，谓之性；自明诚，谓之教。诚则明矣，明则诚矣。
+  primitive: cheng_ming
+  file: 第06条-诚明.yaml
+- n: 7
+  title: 择善固执
+  cop_id: HS-RU-ZY07-20260815-07
+  stratum: 诚体工夫
+  verse: 博学之，审问之，慎思之，明辨之，笃行之……诚之者，择善而固执之者也。
+  primitive: ze_shan_gu_zhi
+  file: 第07条-择善固执.yaml
+- n: 8
+  title: 诚则形
+  cop_id: HS-RU-ZY08-20260815-08
+  stratum: 诚体工夫
+  verse: 诚则形，形则著，著则明，明则动，动则变，变则化，唯天下至诚为能化。
+  primitive: cheng_ze_xing
+  file: 第08条-诚则形.yaml
+- n: 9
+  title: 时中
+  cop_id: HS-RU-ZY09-20260815-09
+  stratum: 时中达道
+  verse: 君子之中庸也，君子而时中；小人之中庸也，小人而无忌惮也。
+  primitive: shi_zhong
+  file: 第09条-时中.yaml
+- n: 10
+  title: 素位而行
+  cop_id: HS-RU-ZY10-20260815-10
+  stratum: 时中达道
+  verse: 君子素其位而行，不愿乎其外。在上位不陵下，在下位不援上。
+  primitive: su_wei_er_xing
+  file: 第10条-素位而行.yaml
+- n: 11
+  title: 至诚如神
+  cop_id: HS-RU-ZY11-20260815-11
+  stratum: 时中达道
+  verse: 至诚之道，可以前知。国家将兴，必有祯祥；见乎蓍龟，动乎四体。
+  primitive: zhi_cheng_ru_shen
+  file: 第11条-至诚如神.yaml
+- n: 12
+  title: 中庸不可能
+  cop_id: HS-RU-ZY12-20260815-12
+  stratum: 时中达道
+  verse: 天下国家可均也，爵禄可辞也，白刃可蹈也，中庸不可能也。
+  primitive: zhong_yong_bu_ke_neng
+  file: 第12条-中庸不可能.yaml
+- n: 13
+  title: 三重
+  cop_id: HS-RU-ZY13-20260815-13
+  stratum: 时中达道
+  verse: 王天下有三重焉：议礼、制度、考文。故君子笃恭而天下平。
+  primitive: san_zhong
+  file: 第13条-三重.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家(道德经)
+  - 论语
+  - 大学
+  - 孟子
+  - 荀子
+  - 墨法名阴阳
+  - 马克思主义
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: compose_mao.py (马克思主义·实践论 经 中庸·中和/诚 解释 → 实事求是·两结合的活的灵魂)

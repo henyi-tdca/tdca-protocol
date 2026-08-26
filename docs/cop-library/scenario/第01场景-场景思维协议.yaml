@@ -1,0 +1,163 @@
+COP-ID: SCEN-COP-20260814-01
+source_expert: scenario_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T22:38:00.047942'
+branch: 场景·场景即协议·认知涌现
+stratum: 场景·场景即协议·认知涌现
+soul:
+  identity: 场景思维协议 (Scenario Protocol)
+  core: 思维协议具有场景依存效用 —— 场景不是给定的封闭空间, 而是可涌现的价值网络(场景即协议); 通过画布六要素/认知四阶段涌现/嵌套七元组/生命周期适配/多主体认知对齐,
+    使分散认知质变为协同场景; 其效用随场景而定, 故须与其他思维协议组合(互为解释项)方能落地 —— 场景COP是其他COP的必备组合
+  role: 思维协议 (场景范式类)
+  category: 场景 / 场景·场景即协议·认知涌现
+primitives:
+- name: scenario_canvas_model
+  method: 场景画布建模(六要素)
+  signature: fn scenario_canvas_model(theme, participants, resources, rules, tech,
+    valueflow) -> scenario_blueprint
+  precond: 明确场景主题意义与边界
+  postcond: 六要素(主题/参与者网络/资源流动/规则体系/技术架构/价值流)齐备的场景蓝图
+  negative_space: ⊗ 缺任一要素则场景不可自持/易崩
+  steps:
+  - 界定主题意义
+  - 刻画参与者网络
+  - 设计资源流动
+  - 订立规则体系
+  - 选型技术架构
+  - 规划价值流
+  nca_emit: true
+- name: cognition_emergence
+  method: 认知驱动场景涌现(四阶段)
+  signature: fn cognition_emergence(agents, knowledge) -> emerging_scenario
+  precond: 多主体认知状态已知(共同无知/独家知识/部分共享/共识)
+  postcond: 推动认知从分散→协同, 场景由模糊原型质变为共识场景(认知发现→认知对齐→认知共识→认知固化)
+  negative_space: ⊗ 跳跃阶段(未共识即扩规模)致认知混乱/崩塌
+  steps:
+  - 认知发现(共同无知→独家知识)
+  - 认知对齐(独家→部分共享)
+  - 认知共识(部分共享→共识)
+  - 认知固化(共识→主导版本)
+  nca_emit: true
+- name: nesting_design
+  method: 嵌套结构设计(七元组/层级)
+  signature: fn nesting_design(L, M, R, iota, tau, sigma, E) -> nested_scenario
+  precond: 场景存在多层级(个体L1/群体L2/社会L3)与模块边界
+  postcond: 以七元组 <L,M,R,ι,τ,σ,E> 形式化层级与模块交互规则, 要素级/场景级/认知级嵌套成立
+  negative_space: ⊗ 嵌套冲突未解决则系统失稳(须冲突解决机制)
+  steps:
+  - 划分层级L
+  - 界定模块M
+  - 规范交互规则R
+  - 设定映射ι/时序τ/状态σ
+  - 标定能量E
+  - 解决嵌套冲突
+  nca_emit: true
+- name: lifecycle_adapt
+  method: 生命周期适配(认知不对称阈值)
+  signature: fn lifecycle_adapt(stage, cognition) -> adaptive_policy
+  precond: 场景所处生命周期阶段已知(形成/成长/成熟/转型)
+  postcond: 按阶段设认知不对称阈值(形成80%/成长<50%/成熟<40%/转型主动引入)动态调整认知策略
+  negative_space: ⊗ 阈值错位(成长期仍80%不对称)致共识难产/失控
+  steps:
+  - 判定生命周期阶段
+  - 设认知不对称阈值
+  - 调认知策略
+  - 监测认知成熟度
+  nca_emit: true
+- name: multiagent_align
+  method: 多主体认知对齐(DAO/治理)
+  signature: fn multiagent_align(agents, consensus_rule) -> aligned_governance
+  precond: 多主体参与且存在认知差异
+  postcond: 通过认知对齐工作坊/DAO/事件驱动通信达成认知共识与权责分层(社区大会→治理委员会→专业委员会)
+  negative_space: ⊗ 未对齐则认知摩擦/精英俘获; 须情境化优先级权重避免俘获
+  steps:
+  - 识别认知差异
+  - 认知对齐工作坊
+  - 建DAO/治理架构
+  - 设情境化优先级权重
+  - 冲突解决
+  nca_emit: true
+- name: valueflow_design
+  method: 价值流设计(正和/协同)
+  signature: fn valueflow_design(value_network) -> positive_sum_flow
+  precond: 场景价值网络与参与者贡献可量化
+  postcond: 设计正和协同的价值流(价值网络/协同效应), 经 TDCA-MOU 正和底线与 NCA 确权结算
+  negative_space: ⊗ 价值流须正和且经 TDCA 闭环结算; 不得自建代币替代 NCA/数字人民币 DVP
+  steps:
+  - 绘价值网络
+  - 定协同增益
+  - 校验正和(MOU底线)
+  - 经TDCA闭环结算(NCA确权)
+  nca_emit: true
+- name: cognitive_safety_bound
+  method: 冲突与认知安全边界(NSFL对齐)
+  signature: fn cognitive_safety_bound(scenario, redlines) -> safety_enforced
+  precond: 场景认知创新边界与伦理/法律红线已知
+  postcond: 明确不可突破的认知安全底线(NSFL负空间), 渐进式创新在边界内; 冲突解决机制就位
+  negative_space: ⊗ 越认知安全底线/NSFL则熔断; 冲突无机制则场景崩
+  steps:
+  - 定认知安全底线(NSFL)
+  - 渐进式创新边界内
+  - 建冲突解决机制
+  - 应急恢复预案
+  nca_emit: true
+dispatch:
+  main_pipeline: scenario_canvas_model
+  graph:
+  - from: scenario_canvas_model
+    to:
+    - cognition_emergence
+    - nesting_design
+    - lifecycle_adapt
+  - from: cognition_emergence
+    to:
+    - multiagent_align
+  - from: nesting_design
+    to:
+    - valueflow_design
+  - from: lifecycle_adapt
+    to:
+    - cognitive_safety_bound
+  - from: multiagent_align
+    to:
+    - valueflow_design
+    - cognitive_safety_bound
+  - from: valueflow_design
+    to:
+    - cognitive_safety_bound
+  note: '场景思维协议自带调度骨架: 画布建模为主线, 下游原语按认知涌现/嵌套/生命周期/对齐展开'
+decision:
+- if: 需建场景蓝图
+  call: scenario_canvas_model
+- if: 需推动认知涌现
+  call: cognition_emergence
+- if: 需多层嵌套
+  call: nesting_design
+- if: 需按阶段调认知
+  call: lifecycle_adapt
+- if: 需多主体对齐/治理
+  call: multiagent_align
+- if: 需设计价值流
+  call: valueflow_design
+- if: 需守认知安全/冲突
+  call: cognitive_safety_bound
+skills:
+- 场景机会扫描矩阵(价值/可行性/认知缺口三维评估)
+- 最小可行场景 MVS
+- 认知对齐工作坊
+- 数据认知对齐四步法
+- 场景画布模板
+- 认知成熟度雷达图
+- 并行试错 / A-B测试
+negative_space:
+- ⊗ 场景须六要素齐备, 否则不可自持
+- ⊗ 认知涌现须按阶段推进, 跳跃致崩
+- ⊗ 嵌套冲突须有解决机制, 否则失稳
+- ⊗ 价值流须正和且经 TDCA 闭环结算, 不得自建代币替代 NCA/数字人民币 DVP
+- ⊗ 多主体治理(DAO/委员会)为场景内部机制, 不等于 TDCA 治理委员会(发布审批)
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 7

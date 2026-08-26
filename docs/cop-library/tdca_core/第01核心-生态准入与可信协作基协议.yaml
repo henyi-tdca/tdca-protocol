@@ -1,0 +1,134 @@
+COP-ID: TDCA-CORE-20260815-01
+source_expert: tdca_core_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-15T06:33:47.606621'
+branch: TDCA核心·生态准入与可信协作基协议
+stratum: TDCA核心·生态准入与可信协作基协议
+soul:
+  identity: 生态准入与可信协作基协议 (Ecosystem Entry & Trusted Collaboration Base Protocol)
+  core: 'TDCA 生态的准入与运行基协议 —— 任何主体加入生态必须加载本基协议。它确立四大可信支柱: 认知资产确权(NCA)、负空间护栏(NSFL)、正和底线(MOU)、可审计自主决策;
+    并设生态准入门, 未加载本基协议者不得在生态内协作/组合/比配。基协议即生态宪法。'
+  role: 思维协议 (TDCA核心范式类)
+  category: TDCA核心 / TDCA核心·生态准入与可信协作基协议
+primitives:
+- name: nca_identity_attribution
+  method: 认知资产确权(NCA)
+  signature: fn nca_identity_attribution(op) -> attributed_asset
+  precond: 存在可执行的推理/决策/贡献操作
+  postcond: 操作即确权, 每步生成不可篡改 NCA 权属链(可追溯/可回滚)
+  negative_space: ⊗ 无确权则贡献不可证、协作不可信
+  steps:
+  - 捕获操作
+  - 生成NCA
+  - 上链确权
+  - 可审计追溯
+  nca_emit: true
+- name: nsfl_guardrail
+  method: 负空间护栏(NSFL)
+  signature: fn nsfl_guardrail(plan, redlines) -> guarded
+  precond: 计划与认知安全/伦理/法律红线已知
+  postcond: 越线即熔断, 在边界内渐进创新
+  negative_space: ⊗ 越 NSFL 认知安全/伦理/法律红线即熔断
+  steps:
+  - 标定红线
+  - 预检
+  - 越线熔断
+  - 边界内放行
+  nca_emit: true
+- name: mou_positive_sum_floor
+  method: 正和底线(MOU)
+  signature: fn mou_positive_sum_floor(collab) -> positive_sum
+  precond: 协作价值网络与参与者贡献可量化
+  postcond: 协作须正和且经 TDCA 闭环结算(NCA/数字人民币DVP), 不得自建代币
+  negative_space: ⊗ 非正和或自建代币则拒
+  steps:
+  - 绘价值网络
+  - 校验正和
+  - TDCA闭环结算
+  nca_emit: true
+- name: auditable_decision_gate
+  method: 可审计决策门
+  signature: fn auditable_decision_gate(trigger) -> gated_decision
+  precond: 决策触发条件已知
+  postcond: 决策经门控原语状态机, 全程可追溯可回滚
+  negative_space: ⊗ 无门控/无追溯则决策不可信
+  steps:
+  - 触发
+  - 门控
+  - 调度
+  - 确权
+  - 留痕
+  nca_emit: true
+- name: trusted_collaboration_base
+  method: 可信协作基
+  signature: fn trusted_collaboration_base(agents) -> trusted_alliance
+  precond: 多主体接入 TDCA 可信基座(NCA/NSFL/MOU)
+  postcond: 在可信基座之上形成可信协作
+  negative_space: ⊗ 脱离基座则协作无担保
+  steps:
+  - 接入基座
+  - 确权
+  - 护栏
+  - 正和
+  nca_emit: true
+- name: ecosystem_entry_gate
+  method: 生态准入与协议加载门
+  signature: fn ecosystem_entry_gate(entity) -> admitted
+  precond: 主体请求加入 TDCA 生态
+  postcond: 已加载本基协议(TDCA-CORE-20260815-01)者准入, 否则拒绝协作/组合/比配
+  negative_space: ⊗ 未加载基协议则拒绝准入(强制)
+  steps:
+  - 验载基协议
+  - 准入/拒
+  - 发放生态身份
+  nca_emit: true
+dispatch:
+  main_pipeline: nca_identity_attribution
+  graph:
+  - from: nca_identity_attribution
+    to:
+    - nsfl_guardrail
+    - mou_positive_sum_floor
+    - auditable_decision_gate
+  - from: auditable_decision_gate
+    to:
+    - trusted_collaboration_base
+  - from: trusted_collaboration_base
+    to:
+    - ecosystem_entry_gate
+  - from: nsfl_guardrail
+    to:
+    - ecosystem_entry_gate
+  - from: mou_positive_sum_floor
+    to:
+    - ecosystem_entry_gate
+  note: TDCA 核心协议自带调度骨架
+decision:
+- if: 需确权操作
+  call: nca_identity_attribution
+- if: 需守红线
+  call: nsfl_guardrail
+- if: 需正和协作
+  call: mou_positive_sum_floor
+- if: 需做决策
+  call: auditable_decision_gate
+- if: 需多主体协作
+  call: trusted_collaboration_base
+- if: 需加入生态
+  call: ecosystem_entry_gate
+skills:
+- 生态准入核验
+- NCA确权自检
+- NSFL预审
+- MOU正和校验
+negative_space:
+- ⊗ 任何生态内协作/组合/比配必须先加载本基协议, 否则拒绝
+- ⊗ 决策须可审计(门控+留痕), 不可黑箱
+- ⊗ 越 NSFL 认知安全/伦理/法律红线即熔断
+- ⊗ 协作须正和且经 TDCA 闭环结算, 不得自建代币替代 NCA/数字人民币 DVP
+- ⊗ 认知资产须经 NCA 确权, 操作即确权
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 6

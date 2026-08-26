@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P11-20260815-11
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.838208'
+branch: 诸子百家·儒家·论语·第11篇(先进)
+stratum: 诸子百家·儒家·论语·礼乐文质
+soul:
+  identity: 论语·第11篇《先进》
+  core: 过犹不及、取中允当；以无过不及行礼乐。
+  verse: 过犹不及；先进于礼乐，野人也。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 礼乐文质
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: guo_you_bu_ji
+  method: 先进
+  signature: fn guo_you_bu_ji(act) -> gold_mean
+  precond: 过或不及、失中
+  postcond: 过犹不及，各得其中
+  negative_space: ⊗ 偏颇则失宜
+  steps:
+  - 察过
+  - 察不及
+  - 取中
+  - 允当
+  nca_emit: true
+dispatch:
+  main_pipeline: guo_you_bu_ji
+  trigger: 过犹不及；先进于礼乐，野人也。
+  when: 当行事过或不及、宜守中庸时触发
+  graph:
+  - from: guo_you_bu_ji
+    to: []
+decision:
+- if: 需过犹不及
+  call: guo_you_bu_ji
+skills:
+- 先进·顺势研判
+negative_space:
+- 过则失中
+- 不及则废
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

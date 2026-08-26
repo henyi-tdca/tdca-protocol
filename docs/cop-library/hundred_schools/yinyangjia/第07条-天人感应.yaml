@@ -1,0 +1,47 @@
+COP-ID: HS-YY-07-20260815-07
+source_expert: yinyangjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.475640'
+branch: 诸子百家·阴阳家·第07条(天人感应)
+stratum: 诸子百家·阴阳家·天人感应
+soul:
+  identity: 阴阳家·第07条《天人感应》
+  core: 类固相召、天人相酬；以气类感通立天人相应之论（及其灾异戒惧）。
+  verse: 类固相召，气同则合。灾异祯祥，皆类之所感，天人之际未有不相酬者。
+  role: 思维协议 (诸子百家 / 阴阳家 / 五行)
+  category: 诸子百家 / 阴阳家 / 天人感应
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_ren_gan_ying
+  method: 天人感应
+  signature: fn tian_ren_gan_ying(resonate) -> cosmic_resonance
+  precond: 天人隔、不省
+  postcond: 感通明，戒惧立
+  negative_space: ⊗ 隔绝则昧
+  steps:
+  - 识类召
+  - 察气同
+  - 观灾祥
+  - 自省
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_ren_gan_ying
+  trigger: 类固相召，气同则合。灾异祯祥，皆类之所感，天人之际未有不相酬者。
+  when: 当宜察天人相应、以灾异自省时触发
+  graph:
+  - from: tian_ren_gan_ying
+    to: []
+decision:
+- if: 需天人感应
+  call: tian_ren_gan_ying
+skills:
+- 天人感应·顺势研判
+negative_space:
+- 天人隔则昧
+- 附会灾异则诬
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

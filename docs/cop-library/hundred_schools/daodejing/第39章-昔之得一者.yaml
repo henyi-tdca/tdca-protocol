@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH39-20260815-39
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.571313'
+branch: 诸子百家·道家·道德经·第39章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第39章《昔之得一者》
+  core: 得一(抱本)乃清宁，贵以贱为本；以抱一本万殊。
+  verse: 昔之得一者，天得一以清；侯王得一以为天下贞。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xi_zhi_de_yi_zhe
+  method: 昔之得一者
+  signature: fn xi_zhi_de_yi_zhe(unity) -> rooted_unity
+  precond: 散裂失本、不安
+  postcond: 得一守本，贱为本
+  negative_space: ⊗ 离一则裂
+  steps:
+  - 得一
+  - 守本
+  - 贵贱本
+  - 安定
+  nca_emit: true
+dispatch:
+  main_pipeline: xi_zhi_de_yi_zhe
+  trigger: 昔之得一者，天得一以清；侯王得一以为天下贞。
+  when: 当系统散裂、需归一守本时触发
+  graph:
+  - from: xi_zhi_de_yi_zhe
+    to: []
+decision:
+- if: 需抱一本万
+  call: xi_zhi_de_yi_zhe
+skills:
+- 昔之得一者·顺势研判
+negative_space:
+- 离一则裂
+- 贵而无本则蹶
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

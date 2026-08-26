@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ08-20260815-08
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.859182'
+branch: 诸子百家·儒家·孟子·第08条(王道仁政)
+stratum: 诸子百家·儒家·孟子·王道政术
+soul:
+  identity: 孟子·第08条《王道仁政》
+  core: 王道以保民为本、推不忍之心于政；以德服人、不恃力假仁。
+  verse: 保民而王，莫之能御也。老吾老以及人之老，幼吾幼以及人之幼。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 王道政术
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wang_dao_ren_zheng
+  method: 王道仁政
+  signature: fn wang_dao_ren_zheng(govern) -> true_kingdom
+  precond: 力假仁、民不保
+  postcond: 保民而王，莫御
+  negative_space: ⊗ 霸术则暂
+  steps:
+  - 保民
+  - 推恩
+  - 以德服
+  - 王天下
+  nca_emit: true
+dispatch:
+  main_pipeline: wang_dao_ren_zheng
+  trigger: 保民而王，莫之能御也。老吾老以及人之老，幼吾幼以及人之幼。
+  when: 当宜行仁政王道、不宜霸术时触发
+  graph:
+  - from: wang_dao_ren_zheng
+    to: []
+decision:
+- if: 需行王道仁政
+  call: wang_dao_ren_zheng
+skills:
+- 王道仁政·顺势研判
+negative_space:
+- 以力假仁则暂
+- 虐民则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

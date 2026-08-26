@@ -1,0 +1,175 @@
+library: lunyu_books
+role: 儒家系统思维篇目库 (Chinese cultural compound operand source, 篇目级)
+note: 《论语》20 篇每篇是儒家系统思维单元，逐篇编译为独立可调用的思维协议(COP)，共同构成儒家系统思维基库，按六谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。
+base_protocol: TDCA-CORE-20260815-01
+compiler: lunyu/compile_lunyu.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+total_books: 20
+strata_taxonomy:
+  为学教育: 学而时习/述而不作/性近习远/君子不器 (为学·教化·人性·通才)
+  仁本忠恕: 里仁为美/克己复礼 (仁本体·忠恕·为仁由己)
+  为政德治: 为政以德/正名/均安/工利其器/允执厥中 (德治·正名·均平·天命)
+  礼乐文质: 礼以仁本/文质彬彬/过犹不及/容止中礼 (礼·文质·中庸践行)
+  知人评士: 听言观行/耻言过行/执德弘道 (知人·士节·言行)
+  出处大节: 三让天下/道之不行则洁身 (谦让·出处·守义)
+strata_count:
+  为学教育: 4
+  为政德治: 5
+  礼乐文质: 4
+  仁本忠恕: 2
+  知人评士: 3
+  出处大节: 2
+books:
+- n: 1
+  title: 学而
+  cop_id: HS-RU-P01-20260815-01
+  stratum: 为学教育
+  verse: 学而时习之，不亦说乎？巧言令色，鲜矣仁。
+  primitive: xue_er_shi_xi
+  file: 第01篇-学而.yaml
+- n: 2
+  title: 为政
+  cop_id: HS-RU-P02-20260815-02
+  stratum: 为政德治
+  verse: 为政以德，譬如北辰，居其所而众星共之。
+  primitive: wei_zheng_yi_de
+  file: 第02篇-为政.yaml
+- n: 3
+  title: 八佾
+  cop_id: HS-RU-P03-20260815-03
+  stratum: 礼乐文质
+  verse: 人而不仁，如礼何？人而不仁，如乐何？
+  primitive: ba_yi_li_ben
+  file: 第03篇-八佾.yaml
+- n: 4
+  title: 里仁
+  cop_id: HS-RU-P04-20260815-04
+  stratum: 仁本忠恕
+  verse: 里仁为美；君子喻于义，小人喻于利。朝闻道，夕死可矣。
+  primitive: li_ren_wei_mei
+  file: 第04篇-里仁.yaml
+- n: 5
+  title: 公冶长
+  cop_id: HS-RU-P05-20260815-05
+  stratum: 知人评士
+  verse: 始吾于人也，听其言而信其行；今吾于人也，听其言而观其行。
+  primitive: ting_yan_guan_xing
+  file: 第05篇-公冶长.yaml
+- n: 6
+  title: 雍也
+  cop_id: HS-RU-P06-20260815-06
+  stratum: 礼乐文质
+  verse: 质胜文则野，文胜质则史；文质彬彬，然后君子。
+  primitive: wen_zhi_bin_bin
+  file: 第06篇-雍也.yaml
+- n: 7
+  title: 述而
+  cop_id: HS-RU-P07-20260815-07
+  stratum: 为学教育
+  verse: 述而不作，信而好古；学而不厌，诲人不倦。
+  primitive: shu_er_bu_zuo
+  file: 第07篇-述而.yaml
+- n: 8
+  title: 泰伯
+  cop_id: HS-RU-P08-20260815-08
+  stratum: 出处大节
+  verse: 泰伯，其可谓至德也已矣；三以天下让，民无得而称焉。
+  primitive: san_rang_tian_xia
+  file: 第08篇-泰伯.yaml
+- n: 9
+  title: 子罕
+  cop_id: HS-RU-P09-20260815-09
+  stratum: 为学教育
+  verse: 子罕言利，与命与仁；君子不器。
+  primitive: jun_zi_bu_qi
+  file: 第09篇-子罕.yaml
+- n: 10
+  title: 乡党
+  cop_id: HS-RU-P10-20260815-10
+  stratum: 礼乐文质
+  verse: 孔子于乡党，恂恂如也；其在宗庙朝廷，便便言。
+  primitive: rong_zhi_zhong_li
+  file: 第10篇-乡党.yaml
+- n: 11
+  title: 先进
+  cop_id: HS-RU-P11-20260815-11
+  stratum: 礼乐文质
+  verse: 过犹不及；先进于礼乐，野人也。
+  primitive: guo_you_bu_ji
+  file: 第11篇-先进.yaml
+- n: 12
+  title: 颜渊
+  cop_id: HS-RU-P12-20260815-12
+  stratum: 仁本忠恕
+  verse: 克己复礼为仁；非礼勿视，非礼勿听，非礼勿言，非礼勿动。
+  primitive: ke_ji_fu_li
+  file: 第12篇-颜渊.yaml
+- n: 13
+  title: 子路
+  cop_id: HS-RU-P13-20260815-13
+  stratum: 为政德治
+  verse: 必也正名乎！名不正则言不顺，言不顺则事不成。
+  primitive: zheng_ming_xian_xing
+  file: 第13篇-子路.yaml
+- n: 14
+  title: 宪问
+  cop_id: HS-RU-P14-20260815-14
+  stratum: 知人评士
+  verse: 君子耻其言而过其行；邦有道，谷；邦无道，谷，耻也。
+  primitive: chi_guo_qi_xing
+  file: 第14篇-宪问.yaml
+- n: 15
+  title: 卫灵公
+  cop_id: HS-RU-P15-20260815-15
+  stratum: 为政德治
+  verse: 工欲善其事，必先利其器；无为而治者，其舜也与？
+  primitive: gong_yu_shan_shi
+  file: 第15篇-卫灵公.yaml
+- n: 16
+  title: 季氏
+  cop_id: HS-RU-P16-20260815-16
+  stratum: 为政德治
+  verse: 不患寡而患不均，不患贫而患不安；均无贫，和无寡，安无倾。
+  primitive: bu_huan_bu_jun
+  file: 第16篇-季氏.yaml
+- n: 17
+  title: 阳货
+  cop_id: HS-RU-P17-20260815-17
+  stratum: 为学教育
+  verse: 性相近也，习相远也；唯上知与下愚不移。
+  primitive: xing_jin_xi_yuan
+  file: 第17篇-阳货.yaml
+- n: 18
+  title: 微子
+  cop_id: HS-RU-P18-20260815-18
+  stratum: 出处大节
+  verse: 殷有三仁焉：微子去之，箕子为之奴，比干谏而死；道之不行，已知之矣。
+  primitive: chu_chu_zhi_yi
+  file: 第18篇-微子.yaml
+- n: 19
+  title: 子张
+  cop_id: HS-RU-P19-20260815-19
+  stratum: 知人评士
+  verse: 士见危致命，见得思义；执德不弘，信道不笃，焉能为有，焉能为亡。
+  primitive: zhi_de_hong_dao
+  file: 第19篇-子张.yaml
+- n: 20
+  title: 尧曰
+  cop_id: HS-RU-P20-20260815-20
+  stratum: 为政德治
+  verse: 尧曰：咨！尔舜，天之历数在尔躬，允执厥中；四海困穷，天禄永终。
+  primitive: yun_zhi_jue_zhong
+  file: 第20篇-尧曰.yaml
+composition:
+  composer: ../../compositions/compose_general.py
+  compatible_with:
+  - TDCA核心
+  - 道家(道德经)
+  - 兵法
+  - 博弈论
+  - 机制设计
+  - 场景
+  - 现代学科库
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  verified_demo: compose_demo_ly.py (第12篇 颜渊·克己复礼 ⟂ TDCA核心-02 → 克己守礼的可审计自主决策)

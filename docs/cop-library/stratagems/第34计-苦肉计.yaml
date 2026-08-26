@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-34
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.398986'
+stratum: 败战计
+soul:
+  identity: 苦肉计
+  core: 自伤取信, 间入敌腹
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 败战计
+primitives:
+- name: ku_rou_ji
+  method: 苦肉计
+  signature: 'fn ku_rou_ji(context: Situation) -> Outcome'
+  precond: 需深入敌内
+  postcond: 自伤取信, 间入敌腹 (目标达成)
+  negative_space: ⊗ 伤不真或敌不信则败露
+  steps:
+  - 自伤(苦)取敌信
+  - 入敌
+  - 为内应
+  nca_emit: true
+dispatch:
+  main_pipeline: ku_rou_ji
+  graph:
+  - from: ku_rou_ji
+    to: []
+  note: 单计独立协议, 主原语 ku_rou_ji 即该计执行体
+decision:
+- if: 需深入敌内
+  call: ku_rou_ji
+skills: []
+negative_space:
+- ⊗ 伤不真或敌不信则败露
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

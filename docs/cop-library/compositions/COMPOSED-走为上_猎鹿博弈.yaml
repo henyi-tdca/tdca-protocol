@@ -1,0 +1,53 @@
+COP-ID: STRATAGEM-COP-20260814-36+02
+type: COMPOSED-COP
+source_expert: thirty_six_stratagems
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T21:43:43.912021'
+composition:
+  parent: STRATAGEM-COP-20260814-36
+  interpretants:
+  - cop_id: GAME-COP-20260814-02
+    relation: 解释项
+    bind_step: 全师而退
+    effect: '退≠怯懦孤立: 在必败战场''全师而退''是保全根本, 更是猎鹿式协作的前提——''保根本待机''=与可靠伙伴建立协调信任(猎鹿博弈的帕累托均衡);
+      退是退出必败单次博弈、保留与伙伴重复协作的 substrate, 待机即重开高收益联合行动(而非单飞猎兔)'
+soul:
+  identity: 走为上 ⟂ 猎鹿博弈 (Stag Hunt)
+  core: '势不可为则退, 存为根本；⟂解释项《猎鹿博弈 (Stag Hunt)》(核心: 高收益需双方信任协作(猎鹿), 低收益但安全(猎兔); 帕累托高效均衡依赖相互信任与协调,
+    而非强制)：退≠怯懦孤立: 在必败战场''全师而退''是保全根本, 更是猎鹿式协作的前提——''保根本待机''=与可靠伙伴建立协调信任(猎鹿博弈的帕累托均衡);
+    退是退出必败单次博弈、保留与伙伴重复协作的 substrate, 待机即重开高收益联合行动(而非单飞猎兔)'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 三十六计 / 败战计 + 博弈论 / 协调博弈·同时行动
+primitives:
+- name: zou_wei_shang
+  method: 走为上 (经 猎鹿博弈 (Stag Hunt) 解释)
+  signature: 'fn zou_wei_shang(context: Situation) -> Outcome'
+  precond: 必败不可战
+  postcond: '势不可为则退, 存为根本；⟂解释项《猎鹿博弈 (Stag Hunt)》(核心: 高收益需双方信任协作(猎鹿), 低收益但安全(猎兔); 帕累托高效均衡依赖相互信任与协调,
+    而非强制)：退≠怯懦孤立: 在必败战场''全师而退''是保全根本, 更是猎鹿式协作的前提——''保根本待机''=与可靠伙伴建立协调信任(猎鹿博弈的帕累托均衡);
+    退是退出必败单次博弈、保留与伙伴重复协作的 substrate, 待机即重开高收益联合行动(而非单飞猎兔) (目标达成)'
+  negative_space: ⊗ 可战而走则失机; 非怯战是知止；⊗ 收益不可量化或排序不严谨 (R>P>T>S 不成立) 则矩阵失真
+  steps:
+  - 识不可为
+  - 全师而退 ⟂【猎鹿博弈 (Stag Hunt)】列出双方策略空间 {猎鹿, 猎兔} → 标定 R/P/T/S 四类收益 → 校验 R>P>T>S 排序
+  - 保根本待机
+  nca_emit: true
+dispatch:
+  main_pipeline: zou_wei_shang
+  graph:
+  - from: zou_wei_shang
+    to:
+    - sh_payoff_build
+    bind: 全师而退
+    note: zou_wei_shang 在 [全师而退] 嵌套调用 sh_payoff_build (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 必败不可战
+  call: zou_wei_shang
+skills: []
+negative_space:
+- ⊗ 可战而走则失机; 非怯战是知止
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 收益不可量化或排序不严谨 (R>P>T>S 不成立) 则矩阵失真'
+nsfl_version: V0.1

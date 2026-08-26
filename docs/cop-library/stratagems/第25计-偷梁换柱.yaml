@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-25
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.220909'
+stratum: 并战计
+soul:
+  identity: 偷梁换柱
+  core: 暗易其构, 夺其主控
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 并战计
+primitives:
+- name: tou_liang_huan_zhu
+  method: 偷梁换柱
+  signature: 'fn tou_liang_huan_zhu(context: Situation) -> Outcome'
+  precond: 敌结构可依
+  postcond: 暗易其构, 夺其主控 (目标达成)
+  negative_space: ⊗ 换显则敌觉复
+  steps:
+  - 识梁(关键结构)
+  - 暗换
+  - 敌构变己控
+  nca_emit: true
+dispatch:
+  main_pipeline: tou_liang_huan_zhu
+  graph:
+  - from: tou_liang_huan_zhu
+    to: []
+  note: 单计独立协议, 主原语 tou_liang_huan_zhu 即该计执行体
+decision:
+- if: 敌结构可依
+  call: tou_liang_huan_zhu
+skills: []
+negative_space:
+- ⊗ 换显则敌觉复
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

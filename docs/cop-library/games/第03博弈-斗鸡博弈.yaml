@@ -1,0 +1,114 @@
+COP-ID: GAME-COP-20260814-03
+source_expert: game_theory_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T21:42:41.799353'
+branch: 抗衡博弈·同时行动
+stratum: 抗衡博弈·同时行动
+soul:
+  identity: 斗鸡博弈 (Chicken (Hawk-Dove))
+  core: 两强相争, 纳什均衡为'一进一退'; 胜负取决于谁更可信地承诺不退, 与'走为上'同构(谁先撤不丢面子)
+  role: 思维协议 (博弈推理范式类)
+  category: 博弈论 / 抗衡博弈·同时行动
+primitives:
+- name: ch_payoff_build
+  method: 构建收益矩阵
+  signature: fn ch_payoff_build(W, T, L, S) -> payoff_matrix
+  precond: 已知双方策略空间 {进, 退} 及四类收益 (W 胜/T 平/L 撞/S 懦)
+  postcond: 标准型收益矩阵满足 W>T>L>S
+  negative_space: ⊗ 收益不可量化或排序不严谨 (W>T>L>S 不成立) 则矩阵失真
+  steps:
+  - 列出双方策略空间 {进, 退}
+  - 标定 W/T/L/S 四类收益
+  - 校验 W>T>L>S 排序
+  nca_emit: true
+- name: nash_solve_ch
+  method: 纳什均衡求解
+  signature: fn nash_solve_ch(matrix) -> {equilibria, mixed}
+  precond: 收益矩阵已构建
+  postcond: '两个不对称纯策略 NE: (进,退) 与 (退,进); 混合 NE = 双方均以 p=(W-T)/(W-L) 进'
+  negative_space: ⊗ 混合概率依赖精确收益标定, 漂移则失真
+  steps:
+  - 枚举四组组合
+  - 检验单方偏离无改进
+  - 锁定两不对称 NE 与混合概率
+  nca_emit: true
+- name: brinksmanship
+  method: 边缘政策(不可逆承诺)
+  signature: fn brinksmanship(side, irreversible) -> committed_advance
+  precond: 需逼迫对方先退
+  postcond: 通过不可逆承诺(烧毁桥梁/公开宣言)使'进'成占优, 逼对方退
+  negative_space: ⊗ 若对方同样不可逆承诺则双输(撞车), 须评估对方底线
+  steps:
+  - 制造不可逆承诺
+  - 使退路消失
+  - 逼对方退
+  nca_emit: true
+- name: credible_threat
+  method: 可信威胁构建
+  signature: fn credible_threat(side, cost) -> threat
+  precond: 需施压但不真撞
+  postcond: 威胁须成本对称可信(对方信你真会进), 否则诱使对方进
+  negative_space: ⊗ 虚张声势被识破则失效
+  steps:
+  - 设计可信威胁
+  - 使成本对称
+  - 传递决心
+  nca_emit: true
+- name: preemption
+  method: 抢先/先动优势
+  signature: fn preemption(side) -> first_mover_gain
+  precond: 序贯博弈
+  postcond: 先动方公开'进'获利(对方退), 抢得先动优势
+  negative_space: ⊗ 先动暴露意图也可能被反制
+  steps:
+  - 抢先公开承诺进
+  - 夺取先动优势
+  nca_emit: true
+- name: mutual_avoid
+  method: 相互避让协调
+  signature: fn mutual_avoid(rule) -> avoid_double_loss
+  precond: 需避免双输(撞)
+  postcond: 通过约定规则(如右行/轮流)使双方各退一次, 平局收场
+  negative_space: ⊗ 无规则则仍可能双进
+  steps:
+  - 建立避让规则
+  - 双方依规则各退
+  - 避免撞车
+  nca_emit: true
+dispatch:
+  main_pipeline: ch_payoff_build
+  graph:
+  - from: ch_payoff_build
+    to:
+    - nash_solve_ch
+    - credible_threat
+  - from: nash_solve_ch
+    to:
+    - brinksmanship
+    - preemption
+  - from: brinksmanship
+    to:
+    - mutual_avoid
+  note: '各博弈自带调度骨架: 构建收益结构为主线, 下游原语按博弈特性展开'
+decision:
+- if: 需构建收益矩阵
+  call: ch_payoff_build
+- if: 需找均衡
+  call: nash_solve_ch
+- if: 需施压逼退
+  call: brinksmanship
+- if: 需构建威胁
+  call: credible_threat
+- if: 需避免双输
+  call: mutual_avoid
+skills: []
+negative_space:
+- ⊗ 双方皆不退则双输(撞车), 须有避让机制
+- ⊗ 威胁须可信否则诱使对方进
+- ⊗ 与'走为上'组合时须防两者都退(平局收场)
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 6

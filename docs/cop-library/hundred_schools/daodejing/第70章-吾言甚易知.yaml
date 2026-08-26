@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH70-20260815-70
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.942931'
+branch: 诸子百家·道家·道德经·第70章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第70章《吾言甚易知》
+  core: 至道易知行而人莫知，被褐怀玉；以朴内不炫外。
+  verse: 吾言甚易知甚易行，而天下莫能知；被褐怀玉。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wu_yan_shen_yi_zhi
+  method: 吾言甚易知
+  signature: fn wu_yan_shen_yi_zhi(teach) -> plain_jade
+  precond: 外炫失朴、不被解
+  postcond: 被褐怀玉，易知不行
+  negative_space: ⊗ 炫则失朴
+  steps:
+  - 易知
+  - 莫知
+  - 被褐
+  - 怀玉
+  nca_emit: true
+dispatch:
+  main_pipeline: wu_yan_shen_yi_zhi
+  trigger: 吾言甚易知甚易行，而天下莫能知；被褐怀玉。
+  when: 当真理朴内不显、宜藏玉时触发
+  graph:
+  - from: wu_yan_shen_yi_zhi
+    to: []
+decision:
+- if: 需被褐怀玉
+  call: wu_yan_shen_yi_zhi
+skills:
+- 吾言甚易知·顺势研判
+negative_space:
+- 外炫则失朴
+- 求知于末
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

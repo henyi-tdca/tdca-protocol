@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH44-20260815-44
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.628021'
+branch: 诸子百家·道家·道德经·第44章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第44章《名与身孰亲》
+  core: 身贵于名货，知足知止；以知足避辱殆。
+  verse: 名与身孰亲？知足不辱，知止不殆。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ming_yu_shen_shu_qin
+  method: 名与身孰亲
+  signature: fn ming_yu_shen_shu_qin(self) -> contentment
+  precond: 逐名货、累辱殆
+  postcond: 知足知止，不辱不殆
+  negative_space: ⊗ 贪则辱
+  steps:
+  - 较名身
+  - 知足
+  - 知止
+  - 不殆
+  nca_emit: true
+dispatch:
+  main_pipeline: ming_yu_shen_shu_qin
+  trigger: 名与身孰亲？知足不辱，知止不殆。
+  when: 当为名利过度、宜知足时触发
+  graph:
+  - from: ming_yu_shen_shu_qin
+    to: []
+decision:
+- if: 需知足知止
+  call: ming_yu_shen_shu_qin
+skills:
+- 名与身孰亲·顺势研判
+negative_space:
+- 贪得则辱
+- 不知止则殆
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

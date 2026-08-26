@@ -1,0 +1,65 @@
+COP-ID: GAME-COP-20260814-01+04
+type: COMPOSED-COP
+source_expert: game_theory_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T21:43:43.963682'
+composition:
+  parent: GAME-COP-20260814-01
+  interpretants:
+  - cop_id: GAME-COP-20260814-04
+    relation: 解释项
+    bind_step: 校验 T>R>P>S 排序
+    effect: '排序校验=设立公平/否决阈值: 跳出单次困境不能只靠抵押, 更须赋予对方''拒绝权''(最后通牒否决机制)——当分配偏离公平阈值(≈S/2)时对方以拒绝触发双零,
+      使背叛/剥削成本>收益; 公平偏好(Fehr-Schmidt)使小额报价被拒, 把''可信承诺''从单方抵押升级为双向制衡的正和分配结构'
+soul:
+  identity: 囚徒困境 (Prisoner's Dilemma) ⟂ 最后通牒博弈 (Ultimatum Game)
+  core: '个体理性导致集体非理性; 破解之道在重复博弈与可信承诺；⟂解释项《最后通牒博弈 (Ultimatum Game)》(核心: 提议者分配, 响应者否决权(拒绝则双零);
+    公平偏好使小额报价被拒, 均衡偏离纯自利; 议价权与拒绝门槛决定分配)：排序校验=设立公平/否决阈值: 跳出单次困境不能只靠抵押, 更须赋予对方''拒绝权''(最后通牒否决机制)——当分配偏离公平阈值(≈S/2)时对方以拒绝触发双零,
+    使背叛/剥削成本>收益; 公平偏好(Fehr-Schmidt)使小额报价被拒, 把''可信承诺''从单方抵押升级为双向制衡的正和分配结构'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 博弈论 / 非合作博弈·同时行动 + 博弈论 / 议价博弈·序贯
+primitives:
+- name: pd_payoff_build
+  method: 囚徒困境 (Prisoner's Dilemma) (经 最后通牒博弈 (Ultimatum Game) 解释)
+  signature: fn pd_payoff_build(T, R, P, S) -> payoff_matrix
+  precond: 已知双方策略空间 {合作, 背叛} 及四类收益 (T 背叛诱惑/R 互合作/P 互背叛/S 被卖)
+  postcond: '个体理性导致集体非理性; 破解之道在重复博弈与可信承诺；⟂解释项《最后通牒博弈 (Ultimatum Game)》(核心: 提议者分配,
+    响应者否决权(拒绝则双零); 公平偏好使小额报价被拒, 均衡偏离纯自利; 议价权与拒绝门槛决定分配)：排序校验=设立公平/否决阈值: 跳出单次困境不能只靠抵押,
+    更须赋予对方''拒绝权''(最后通牒否决机制)——当分配偏离公平阈值(≈S/2)时对方以拒绝触发双零, 使背叛/剥削成本>收益; 公平偏好(Fehr-Schmidt)使小额报价被拒,
+    把''可信承诺''从单方抵押升级为双向制衡的正和分配结构 (目标达成)'
+  negative_space: ⊗ 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真；⊗ 总盘须正且可分割, 否则无博弈意义
+  steps:
+  - 列出双方策略空间 {合作, 背叛}
+  - 标定 T/R/P/S 四类收益
+  - 校验 T>R>P>S 排序 ⟂【最后通牒博弈 (Ultimatum Game)】设定总盘 S → 标定响应者保留效用 reserve → 建立报价空间 x∈[0,S]
+  nca_emit: true
+dispatch:
+  main_pipeline: pd_payoff_build
+  graph:
+  - from: pd_payoff_build
+    to:
+    - ult_payoff_build
+    bind: 校验 T>R>P>S 排序
+    note: pd_payoff_build 在 [校验 T>R>P>S 排序] 嵌套调用 ult_payoff_build (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需构建收益矩阵
+  call: pd_payoff_build
+- if: 单次且不可承诺
+  call: nash_solve
+- if: 需解释效率损失
+  call: pareto_check
+- if: 重复或可信承诺可行
+  call: tit_for_tat
+- if: 需跳出单次困境
+  call: credible_commit
+skills: []
+negative_space:
+- ⊗ 参与人须为自利理性人, 否则占优/均衡结论失效
+- ⊗ 收益须可量化排序, 否则矩阵失真
+- ⊗ 重复博弈须足够长且贴现率不过高, 否则合作崩溃
+- ⊗ 可信承诺须有第三方可执行, 否则空诺
+- '⊗ 禁止机械套用: 须先判定博弈结构 (是否同时/序贯/重复) 再选原语'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 总盘须正且可分割, 否则无博弈意义'
+nsfl_version: V0.1

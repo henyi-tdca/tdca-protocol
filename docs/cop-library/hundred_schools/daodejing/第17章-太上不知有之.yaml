@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH17-20260815-17
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.322621'
+branch: 诸子百家·道家·道德经·第17章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第17章《太上不知有之》
+  core: 上善之治，民不知有君；以无感赋能成自然。
+  verse: 太上，不知有之；功成事遂，百姓皆谓我自然。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tai_shang_bu_zhi_you_zhi
+  method: 太上不知有之
+  signature: fn tai_shang_bu_zhi_you_zhi(govern) -> invisible_enable
+  precond: 治理过度显形、扰民
+  postcond: 无为而治，民谓自然
+  negative_space: ⊗ 显形则扰
+  steps:
+  - 隐治
+  - 赋能
+  - 不居功
+  - 民自然
+  nca_emit: true
+dispatch:
+  main_pipeline: tai_shang_bu_zhi_you_zhi
+  trigger: 太上，不知有之；功成事遂，百姓皆谓我自然。
+  when: 当治理过度介入、民众失自主时触发
+  graph:
+  - from: tai_shang_bu_zhi_you_zhi
+    to: []
+decision:
+- if: 需无形赋能
+  call: tai_shang_bu_zhi_you_zhi
+skills:
+- 太上不知有之·顺势研判
+negative_space:
+- 显形则扰民
+- 居功则失民
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

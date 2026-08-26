@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ03-20260815-03
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.500765'
+branch: 诸子百家·兵家·孙子兵法·第03篇(谋攻篇)
+stratum: 诸子百家·兵家·孙子兵法·战略筹划
+soul:
+  identity: 孙子兵法·第03篇《谋攻篇》
+  core: 上兵伐谋——以谋略全胜，不战屈人；伐交伐兵攻城递次，全国全军为上；知己知彼为制胜总纲。
+  verse: 不战而屈人之兵，善之善者也。上兵伐谋，其次伐交，其次伐兵，其下攻城。知己知彼，百战不殆。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 战略筹划
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fa_mou
+  method: 谋攻篇
+  signature: fn fa_mou(conflict) -> bloodless_win
+  precond: 力攻则伤、拙战则败
+  postcond: 全胜而非破胜
+  negative_space: ⊗ 硬攻则损
+  steps:
+  - 上兵伐谋
+  - 其次伐交
+  - 再次伐兵
+  - 知己知彼
+  nca_emit: true
+dispatch:
+  main_pipeline: fa_mou
+  trigger: 不战而屈人之兵，善之善者也。上兵伐谋，其次伐交，其次伐兵，其下攻城。知己知彼，百战不殆。
+  when: 当可谋全胜、不宜力攻时触发
+  graph:
+  - from: fa_mou
+    to: []
+decision:
+- if: 需谋攻全胜
+  call: fa_mou
+skills:
+- 谋攻篇·顺势研判
+negative_space:
+- 恃力硬攻则破
+- 不知彼己则殆
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 兵学战略研究院
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-29
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.295957'
+stratum: 并战计
+soul:
+  identity: 树上开花
+  core: 虚张声势, 借势壮己
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 并战计
+primitives:
+- name: shu_shang_kai_hua
+  method: 树上开花
+  signature: 'fn shu_shang_kai_hua(context: Situation) -> Outcome'
+  precond: 力弱需威慑
+  postcond: 虚张声势, 借势壮己 (目标达成)
+  negative_space: ⊗ 势虚被戳则崩
+  steps:
+  - 借他物(盟/势)饰己
+  - 张声势
+  - 敌疑不敢动
+  nca_emit: true
+dispatch:
+  main_pipeline: shu_shang_kai_hua
+  graph:
+  - from: shu_shang_kai_hua
+    to: []
+  note: 单计独立协议, 主原语 shu_shang_kai_hua 即该计执行体
+decision:
+- if: 力弱需威慑
+  call: shu_shang_kai_hua
+skills: []
+negative_space:
+- ⊗ 势虚被戳则崩
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

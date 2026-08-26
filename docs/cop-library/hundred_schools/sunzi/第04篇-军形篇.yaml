@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ04-20260815-04
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.507160'
+branch: 诸子百家·兵家·孙子兵法·第04篇(军形篇)
+stratum: 诸子百家·兵家·孙子兵法·形势势能
+soul:
+  identity: 孙子兵法·第04篇《军形篇》
+  core: 先为不可胜——先立不可被胜之形(修道保法、藏于九地)，待敌可胜之机；胜可知而不可为，无恃其不来。
+  verse: 昔之善战者，先为不可胜，以待敌之可胜。不可胜在己，可胜在敌。修道而保法，故能为胜败之政。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 形势势能
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xian_wei_bu_ke_sheng
+  method: 军形篇
+  signature: fn xian_wei_bu_ke_sheng(defense) -> invincible_posture
+  precond: 形未立则易受攻
+  postcond: 立于不败且待敌之败
+  negative_space: ⊗ 恃敌不来则危
+  steps:
+  - 修攻守
+  - 藏于九地
+  - 修道保法
+  - 待敌之可胜
+  nca_emit: true
+dispatch:
+  main_pipeline: xian_wei_bu_ke_sheng
+  trigger: 昔之善战者，先为不可胜，以待敌之可胜。不可胜在己，可胜在敌。修道而保法，故能为胜败之政。
+  when: 当宜先固本待机、立不可胜之形时触发
+  graph:
+  - from: xian_wei_bu_ke_sheng
+    to: []
+decision:
+- if: 需先为不可胜
+  call: xian_wei_bu_ke_sheng
+skills:
+- 军形篇·顺势研判
+negative_space:
+- 恃敌之不来
+- 形弱则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 智能系统建模实验室
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

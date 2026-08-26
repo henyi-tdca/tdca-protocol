@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P20-20260815-20
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.903883'
+branch: 诸子百家·儒家·论语·第20篇(尧曰)
+stratum: 诸子百家·儒家·论语·为政德治
+soul:
+  identity: 论语·第20篇《尧曰》
+  core: 允执厥中、天命所归在允中；以中道承天命。
+  verse: 尧曰：咨！尔舜，天之历数在尔躬，允执厥中；四海困穷，天禄永终。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 为政德治
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yun_zhi_jue_zhong
+  method: 尧曰
+  signature: fn yun_zhi_jue_zhong(rule) -> hold_the_mean
+  precond: 偏倚失中、天命去
+  postcond: 允执厥中，安民永终
+  negative_space: ⊗ 失中则倾
+  steps:
+  - 受命
+  - 执中
+  - 安民
+  - 永终
+  nca_emit: true
+dispatch:
+  main_pipeline: yun_zhi_jue_zhong
+  trigger: 尧曰：咨！尔舜，天之历数在尔躬，允执厥中；四海困穷，天禄永终。
+  when: 当执政宜守中、不可偏倚时触发
+  graph:
+  - from: yun_zhi_jue_zhong
+    to: []
+decision:
+- if: 需允执厥中
+  call: yun_zhi_jue_zhong
+skills:
+- 尧曰·顺势研判
+negative_space:
+- 失中则天命去
+- 偏则倾
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

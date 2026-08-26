@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH57-20260815-57
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.777738'
+branch: 诸子百家·道家·道德经·第57章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第57章《以正治国》
+  core: 正(静)治国、奇用兵、无事取天下；以不多事成治。
+  verse: 以正治国，以奇用兵，以无事取天下。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yi_zheng_zhi_guo
+  method: 以正治国
+  signature: fn yi_zheng_zhi_guo(govern) -> quiet_govern
+  precond: 政令繁苛、民缺
+  postcond: 正奇分施，无事取天下
+  negative_space: ⊗ 多事则缺
+  steps:
+  - 以正
+  - 以奇
+  - 无事
+  - 取天下
+  nca_emit: true
+dispatch:
+  main_pipeline: yi_zheng_zhi_guo
+  trigger: 以正治国，以奇用兵，以无事取天下。
+  when: 当政苛事繁、宜简静时触发
+  graph:
+  - from: yi_zheng_zhi_guo
+    to: []
+decision:
+- if: 需以无事取天下
+  call: yi_zheng_zhi_guo
+skills:
+- 以正治国·顺势研判
+negative_space:
+- 多事则民缺
+- 奇正则紊
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

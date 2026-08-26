@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY11-20260815-11
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.207572'
+branch: 诸子百家·儒家·中庸·第11条(至诚如神)
+stratum: 诸子百家·儒家·中庸·时中达道
+soul:
+  identity: 中庸·第11条《至诚如神》
+  core: 至诚能前知、于几微见祯祥；以诚通几，立先知先觉之境。
+  verse: 至诚之道，可以前知。国家将兴，必有祯祥；见乎蓍龟，动乎四体。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 时中达道
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_cheng_ru_shen
+  method: 至诚如神
+  signature: fn zhi_cheng_ru_shen(omen) -> foreknow
+  precond: 昧几、诚不至
+  postcond: 至诚前知，几先
+  negative_space: ⊗ 昧则失几
+  steps:
+  - 至诚
+  - 察几
+  - 见祥
+  - 前知
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_cheng_ru_shen
+  trigger: 至诚之道，可以前知。国家将兴，必有祯祥；见乎蓍龟，动乎四体。
+  when: 当宜察几先、不宜昧于征兆时触发
+  graph:
+  - from: zhi_cheng_ru_shen
+    to: []
+decision:
+- if: 需至诚如神
+  call: zhi_cheng_ru_shen
+skills:
+- 至诚如神·顺势研判
+negative_space:
+- 昧几则失机
+- 穿凿则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

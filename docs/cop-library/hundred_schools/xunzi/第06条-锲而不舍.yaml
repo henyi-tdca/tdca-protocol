@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ06-20260815-06
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.594600'
+branch: 诸子百家·儒家·荀子·第06条(锲而不舍)
+stratum: 诸子百家·儒家·荀子·劝学积德
+soul:
+  identity: 荀子·第06条《锲而不舍》
+  core: 持之以恒、不舍则金石镂；以恒心胜难，立坚毅之功。
+  verse: 锲而舍之，朽木不折；锲而不舍，金石可镂。
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 劝学积德
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qie_er_bu_she
+  method: 锲而不舍
+  signature: fn qie_er_bu_she(persist) -> carved
+  precond: 舍之、中辍
+  postcond: 不舍，金石镂
+  negative_space: ⊗ 舍则废
+  steps:
+  - 持
+  - 锲
+  - 不舍
+  - 功成
+  nca_emit: true
+dispatch:
+  main_pipeline: qie_er_bu_she
+  trigger: 锲而舍之，朽木不折；锲而不舍，金石可镂。
+  when: 当宜持恒克难、不宜中辍时触发
+  graph:
+  - from: qie_er_bu_she
+    to: []
+decision:
+- if: 需锲而不舍
+  call: qie_er_bu_she
+skills:
+- 锲而不舍·顺势研判
+negative_space:
+- 一舍则前功弃
+- 躁则不成
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

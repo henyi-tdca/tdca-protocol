@@ -1,0 +1,111 @@
+COP-ID: SCEN-COP-20260814-03
+source_expert: scenario_subtopic
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T22:48:03.561002'
+branch: 场景·认知涌现·四阶段
+stratum: 场景·认知涌现·四阶段
+soul:
+  identity: 认知涌现 (Cognitive Emergence)
+  core: 场景涌现本质是参与者认知状态从分散到协同的质变(非技术堆砌); 以四阶段模型(认知发现→认知对齐→认知共识→认知固化)系统化推动场景从模糊原型质变为共识场景;
+    认知安全边界内渐进式创新
+  role: 思维协议 (场景范式子类)
+  category: 场景 / 场景·认知涌现·四阶段
+primitives:
+- name: cognitive_discovery
+  method: 认知发现(共同无知→独家知识)
+  signature: fn cognitive_discovery(agents) -> exclusive_knowledge
+  precond: 场景机会处于共同无知状态
+  postcond: 个别发起者通过探索将个人洞察转化为可传播知识
+  negative_space: ⊗ 未验证机会真实性即扩张致认知混乱
+  steps:
+  - 场景机会扫描
+  - 验证机会真实性
+  - 个人洞察转化为可传播知识
+  nca_emit: true
+- name: cognitive_alignment
+  method: 认知对齐(独家→部分共享)
+  signature: fn cognitive_alignment(agents) -> partial_shared
+  precond: 已存在独家知识
+  postcond: 通过认知对齐工作坊使知识部分共享
+  negative_space: ⊗ 跳过对齐致大规模认知摩擦
+  steps:
+  - 识别认知差异
+  - 认知对齐工作坊
+  - 可视化认知差异映射
+  nca_emit: true
+- name: cognitive_consensus
+  method: 认知共识(部分共享→共识)
+  signature: fn cognitive_consensus(agents) -> shared_core
+  precond: 知识已部分共享
+  postcond: 关键要素形成共识, 出现主导性场景版本
+  negative_space: ⊗ 未共识即固化致场景崩
+  steps:
+  - 协调减少认知摩擦
+  - 定义场景核心要素
+  - 形成核心规则共识
+  nca_emit: true
+- name: cognitive_solidify
+  method: 认知固化(共识→主导版本)
+  signature: fn cognitive_solidify(consensus) -> dominant_version
+  precond: 核心规则已共识
+  postcond: 共识固化为主导版本与共同知识
+  negative_space: ⊗ 固化过早致创新窒息/过晚致失稳
+  steps:
+  - 固化主导版本
+  - 建立共同知识
+  - 设版本演化机制
+  nca_emit: true
+- name: cognitive_health_monitor
+  method: 认知-场景健康度监测
+  signature: fn cognitive_health_monitor(scene) -> health_alert
+  precond: 场景已运行
+  postcond: 以核心监测指标+预警干预机制维持认知-场景健康度
+  negative_space: ⊗ 无监测则认知失衡不可见致崩
+  steps:
+  - 定核心监测指标
+  - 设预警阈值
+  - 触发干预机制
+  nca_emit: true
+dispatch:
+  main_pipeline: cognitive_discovery
+  graph:
+  - from: cognitive_discovery
+    to:
+    - cognitive_alignment
+  - from: cognitive_alignment
+    to:
+    - cognitive_consensus
+  - from: cognitive_consensus
+    to:
+    - cognitive_solidify
+  - from: cognitive_solidify
+    to:
+    - cognitive_health_monitor
+  note: '场景子主题 COP 自带调度骨架: cognitive_discovery 为主线, 下游原语按子主题逻辑展开'
+decision:
+- if: 需推动认知发现
+  call: cognitive_discovery
+- if: 需认知对齐
+  call: cognitive_alignment
+- if: 需达成认知共识
+  call: cognitive_consensus
+- if: 需固化主导版本
+  call: cognitive_solidify
+- if: 需监测认知健康
+  call: cognitive_health_monitor
+skills:
+- 认知对齐工作坊
+- 认知成熟度雷达图
+- 场景认知热力图
+- 认知瓶颈优先级矩阵
+- 四阶段认知跃迁实施流程
+negative_space:
+- ⊗ 认知涌现须按阶段推进, 跳跃(未共识即扩规模)致崩
+- ⊗ 认知固化须适时, 过早窒息创新/过晚失稳
+- ⊗ 须在认知安全边界内渐进式创新, 越界熔断(NSFL)
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 5

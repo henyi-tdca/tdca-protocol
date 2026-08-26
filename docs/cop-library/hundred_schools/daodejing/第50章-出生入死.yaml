@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH50-20260815-50
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.697255'
+branch: 诸子百家·道家·道德经·第50章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第50章《出生入死》
+  core: 善养生命者无死地，以不陷险全生；以虚静避死地。
+  verse: 善摄生者，陆行不遇兕虎，入军不被甲兵。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chu_sheng_ru_si
+  method: 出生入死
+  signature: fn chu_sheng_ru_si(life) -> death_free
+  precond: 妄动陷险、近死
+  postcond: 不陷死地，善摄生
+  negative_space: ⊗ 犯凶则亡
+  steps:
+  - 察死地
+  - 不陷
+  - 虚静
+  - 全生
+  nca_emit: true
+dispatch:
+  main_pipeline: chu_sheng_ru_si
+  trigger: 善摄生者，陆行不遇兕虎，入军不被甲兵。
+  when: 当行为频陷险境、宜避死地时触发
+  graph:
+  - from: chu_sheng_ru_si
+    to: []
+decision:
+- if: 需善摄生避险
+  call: chu_sheng_ru_si
+skills:
+- 出生入死·顺势研判
+negative_space:
+- 犯凶地则亡
+- 妄动则危
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

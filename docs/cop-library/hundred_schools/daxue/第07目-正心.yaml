@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX07-20260815-07
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.946419'
+branch: 诸子百家·儒家·大学·第07目(正心)
+stratum: 诸子百家·儒家·大学·内圣阶梯
+soul:
+  identity: 大学·第07目《正心》
+  core: 端正心思、去好恶偏私；以正心修身，中节不为情蔽。
+  verse: 欲修其身者，先正其心。身有所忿懥，则不得其正。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 内圣阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zheng_xin
+  method: 正心
+  signature: fn zheng_xin(self) -> rectified_mind
+  precond: 忿懥恐惧好乐忧患偏
+  postcond: 心正身修，中节
+  negative_space: ⊗ 偏私则失
+  steps:
+  - 察偏
+  - 去好恶
+  - 正心
+  - 中节
+  nca_emit: true
+dispatch:
+  main_pipeline: zheng_xin
+  trigger: 欲修其身者，先正其心。身有所忿懥，则不得其正。
+  when: 当心为情绪偏蔽、宜正时触发
+  graph:
+  - from: zheng_xin
+    to: []
+decision:
+- if: 需正心去偏
+  call: zheng_xin
+skills:
+- 正心·顺势研判
+negative_space:
+- 忿懥则偏
+- 好乐则溺
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

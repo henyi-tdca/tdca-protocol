@@ -1,0 +1,47 @@
+COP-ID: HS-FA-03-20260815-03
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.517056'
+branch: 诸子百家·法家·第03条(势)
+stratum: 诸子百家·法家·法度三器
+soul:
+  identity: 法家·第03条《势》
+  core: 势位足恃、不专赖贤；以位设威，立必然之柄。
+  verse: 贤未可必，而势位足以屈贤者也。尧为匹夫不能治三人，而桀为天子能乱天下。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 法度三器
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shi_wei
+  method: 势
+  signature: fn shi_wei(power) -> positional_power
+  precond: 无位、威不立
+  postcond: 乘势位，令行
+  negative_space: ⊗ 失势则痿
+  steps:
+  - 识势
+  - 设位
+  - 乘威
+  - 令行
+  nca_emit: true
+dispatch:
+  main_pipeline: shi_wei
+  trigger: 贤未可必，而势位足以屈贤者也。尧为匹夫不能治三人，而桀为天子能乱天下。
+  when: 当宜立威设位、不宜恃贤孤时触发
+  graph:
+  - from: shi_wei
+    to: []
+decision:
+- if: 需立势
+  call: shi_wei
+skills:
+- 势·顺势研判
+negative_space:
+- 弃势则痿
+- 专恃贤则危
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

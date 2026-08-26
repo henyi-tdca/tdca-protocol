@@ -1,0 +1,129 @@
+COP-ID: GAME-COP-20260814-01
+source_expert: game_theory_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:56:47.917026'
+branch: 非合作博弈·同时行动
+stratum: 非合作博弈·同时行动
+soul:
+  identity: 囚徒困境 (Prisoner's Dilemma)
+  core: 个体理性导致集体非理性; 破解之道在重复博弈与可信承诺
+  role: 思维协议 (博弈推理范式类)
+  category: 博弈论 / 非合作博弈·同时行动
+primitives:
+- name: pd_payoff_build
+  method: 构建收益矩阵
+  signature: fn pd_payoff_build(T, R, P, S) -> payoff_matrix
+  precond: 已知双方策略空间 {合作, 背叛} 及四类收益 (T 背叛诱惑/R 互合作/P 互背叛/S 被卖)
+  postcond: 标准型收益矩阵满足 T>R>P>S
+  negative_space: ⊗ 收益不可量化或排序不严谨 (T>R>P>S 不成立) 则矩阵失真
+  steps:
+  - 列出双方策略空间 {合作, 背叛}
+  - 标定 T/R/P/S 四类收益
+  - 校验 T>R>P>S 排序
+  nca_emit: true
+- name: dominant_strategy_check
+  method: 占优策略检验
+  signature: fn dominant_strategy_check(matrix) -> dominant_strategy
+  precond: 收益矩阵已构建
+  postcond: 对各参与人, 背叛是严格占优策略
+  negative_space: ⊗ 若参与人非自利 (利他/报复偏好) 则占优失效
+  steps:
+  - 固定对方策略
+  - 比较己方合作/背叛两收益
+  - 确认背叛严格占优
+  nca_emit: true
+- name: nash_solve
+  method: 纳什均衡求解
+  signature: fn nash_solve(matrix) -> {equilibria, type}
+  precond: 收益矩阵已构建
+  postcond: 唯一纯策略纳什均衡 = (背叛, 背叛)
+  negative_space: ⊗ 混合策略均衡不改变帕累托劣结论
+  steps:
+  - 枚举四组策略组合
+  - 检验单方偏离无改进
+  - 锁定 (背叛, 背叛)
+  nca_emit: true
+- name: pareto_check
+  method: 帕累托效率检验
+  signature: 'fn pareto_check(outcome) -> {pareto_optimal: bool}'
+  precond: 给定均衡结果
+  postcond: (背叛, 背叛) 帕累托劣于 (合作, 合作)
+  negative_space: ⊗ 仅看个体理性会忽略集体效率损失
+  steps:
+  - 取均衡结果
+  - 寻找帕累托改进
+  - 判定 (背叛,背叛) 劣于 (合作,合作)
+  nca_emit: true
+- name: repetition_transform
+  method: 重复博弈转化
+  signature: fn repetition_transform(game, discount_δ) -> repeated_game
+  precond: 基础博弈已知
+  postcond: 无限次重复下合作可成子博弈完美均衡
+  negative_space: ⊗ 有限次/贴现率过高 (δ 偏低) 则末次背叛可递推, 合作崩溃
+  steps:
+  - 设重复次数/贴现率 δ
+  - 引入未来收益现值
+  - 判定合作可维持条件
+  nca_emit: true
+- name: tit_for_tat
+  method: 以牙还牙策略
+  signature: fn tit_for_tat(history) -> action
+  precond: 重复博弈进行中
+  postcond: 首轮合作, 之后复制对手上轮动作; 背叛即报复, 合作即宽恕
+  negative_space: ⊗ 对手为永不合作型则 TFT 持续受损, 需设止损
+  steps:
+  - 首轮合作
+  - 记录对手上轮动作
+  - 复制该动作 (报复/宽恕)
+  nca_emit: true
+- name: credible_commit
+  method: 可信承诺构建
+  signature: fn credible_commit(side, instrument) -> binding_commitment
+  precond: 需跳出单次困境
+  postcond: 通过抵押/契约/声誉使背叛成本 > 背叛收益, 承诺可信
+  negative_space: ⊗ 无第三方可执行机制则空诺, 不可信
+  steps:
+  - 识别背叛诱因
+  - 设计抵押/契约/声誉
+  - 使背叛成本>背叛收益
+  nca_emit: true
+dispatch:
+  main_pipeline: pd_payoff_build
+  graph:
+  - from: pd_payoff_build
+    to:
+    - dominant_strategy_check
+    - nash_solve
+    - pareto_check
+  - from: nash_solve
+    to:
+    - repetition_transform
+  - from: repetition_transform
+    to:
+    - tit_for_tat
+    - credible_commit
+  note: 构建矩阵为主线, 占优/纳什/帕累托为同步检验, 重复博弈下游导出以牙还牙与可信承诺
+decision:
+- if: 需构建收益矩阵
+  call: pd_payoff_build
+- if: 单次且不可承诺
+  call: nash_solve
+- if: 需解释效率损失
+  call: pareto_check
+- if: 重复或可信承诺可行
+  call: tit_for_tat
+- if: 需跳出单次困境
+  call: credible_commit
+skills: []
+negative_space:
+- ⊗ 参与人须为自利理性人, 否则占优/均衡结论失效
+- ⊗ 收益须可量化排序, 否则矩阵失真
+- ⊗ 重复博弈须足够长且贴现率不过高, 否则合作崩溃
+- ⊗ 可信承诺须有第三方可执行, 否则空诺
+- '⊗ 禁止机械套用: 须先判定博弈结构 (是否同时/序贯/重复) 再选原语'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 7

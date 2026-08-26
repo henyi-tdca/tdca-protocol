@@ -1,0 +1,47 @@
+COP-ID: HS-MG-05-20260815-05
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.077576'
+branch: 诸子百家·名家·第05条(通变论)
+stratum: 诸子百家·名家·离坚白
+soul:
+  identity: 名家·第05条《通变论》
+  core: 二无一、数术非直加；以名数相生、变中有常，立概念数量之变。
+  verse: 二无一，左与右可谓二。鸡足一，数足二，二而一。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 离坚白
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tong_bian_lun
+  method: 通变论
+  signature: fn tong_bian_lun(vary) -> change_logic
+  precond: 混加、昧变
+  postcond: 通变明，数当
+  negative_space: ⊗ 混加则误
+  steps:
+  - 识二无
+  - 析左右
+  - 明数变
+  - 得常
+  nca_emit: true
+dispatch:
+  main_pipeline: tong_bian_lun
+  trigger: 二无一，左与右可谓二。鸡足一，数足二，二而一。
+  when: 当宜明数量概念之变、不宜直加时触发
+  graph:
+  - from: tong_bian_lun
+    to: []
+decision:
+- if: 需通变论
+  call: tong_bian_lun
+skills:
+- 通变论·顺势研判
+negative_space:
+- 混加则数误
+- 变而无常则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

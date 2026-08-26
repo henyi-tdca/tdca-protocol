@@ -1,0 +1,60 @@
+COP-ID: SCEN-COP-20260814-05+36
+type: COMPOSED-COP
+source_expert: scenario_subtopic
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T22:49:21.069671'
+composition:
+  parent: SCEN-COP-20260814-05
+  interpretants:
+  - cop_id: STRATAGEM-COP-20260814-36
+    relation: 解释项
+    bind_step: 定当前阶段
+    effect: 生命周期阶段判定借走为上'全师而退'原则——在必败阶段(认知不对称失控/共识难产)主动收缩认知投入、保全根本(核心认知资产), 不硬撑致崩;
+      待机转型期主动引入认知不对称以重启探索; 认知不对称阈值随阶段动态适配(形成80%/成长<50%/成熟<40%/转型主动引入)
+soul:
+  identity: 生命周期适配 (Lifecycle Adaptation) ⟂ 走为上
+  core: '认知不对称不可消除而是动态之源; 按生命周期阶段动态调整认知策略: 形成期容忍最高80%不对称/成长期降至50%以下/成熟期非核心不超40%/转型期主动引入;
+    认知透明度阈值管理+认知模块化+迭代节奏匹配；⟂解释项《走为上》(核心: 势不可为则退, 存为根本)：生命周期阶段判定借走为上''全师而退''原则——在必败阶段(认知不对称失控/共识难产)主动收缩认知投入、保全根本(核心认知资产),
+    不硬撑致崩; 待机转型期主动引入认知不对称以重启探索; 认知不对称阈值随阶段动态适配(形成80%/成长<50%/成熟<40%/转型主动引入)'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 场景 / 场景·生命周期·认知不对称阈值 + 三十六计 / 败战计
+primitives:
+- name: lifecycle_stage_detect
+  method: 生命周期适配 (Lifecycle Adaptation) (经 走为上 解释)
+  signature: fn lifecycle_stage_detect(scene) -> stage
+  precond: 场景运行数据可观测
+  postcond: '认知不对称不可消除而是动态之源; 按生命周期阶段动态调整认知策略: 形成期容忍最高80%不对称/成长期降至50%以下/成熟期非核心不超40%/转型期主动引入;
+    认知透明度阈值管理+认知模块化+迭代节奏匹配；⟂解释项《走为上》(核心: 势不可为则退, 存为根本)：生命周期阶段判定借走为上''全师而退''原则——在必败阶段(认知不对称失控/共识难产)主动收缩认知投入、保全根本(核心认知资产),
+    不硬撑致崩; 待机转型期主动引入认知不对称以重启探索; 认知不对称阈值随阶段动态适配(形成80%/成长<50%/成熟<40%/转型主动引入) (目标达成)'
+  negative_space: ⊗ 阶段误判致策略错配；⊗ 可战而走则失机; 非怯战是知止
+  steps:
+  - 采运行数据
+  - 判阶段特征
+  - 定当前阶段 ⟂【走为上】识不可为 → 全师而退 → 保根本待机
+  nca_emit: true
+dispatch:
+  main_pipeline: lifecycle_stage_detect
+  graph:
+  - from: lifecycle_stage_detect
+    to:
+    - zou_wei_shang
+    bind: 定当前阶段
+    note: lifecycle_stage_detect 在 [定当前阶段] 嵌套调用 zou_wei_shang (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需判生命周期阶段
+  call: lifecycle_stage_detect
+- if: 需设认知不对称阈值
+  call: cognition_asym_threshold
+- if: 需调认知策略
+  call: adaptive_cognition_policy
+- if: 需监测认知成熟度
+  call: cognition_maturity_monitor
+skills: []
+negative_space:
+- ⊗ 阈值须与阶段匹配, 错位致共识难产/失控
+- ⊗ 核心场景要素认知透明度不得低于60%
+- ⊗ 转型期须主动引入认知不对称, 否则僵化
+- '⊗ 禁止违反 NSFL: 认知安全底线/伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 可战而走则失机; 非怯战是知止'
+nsfl_version: V0.1

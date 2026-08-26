@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P19-20260815-19
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.897343'
+branch: 诸子百家·儒家·论语·第19篇(子张)
+stratum: 诸子百家·儒家·论语·知人评士
+soul:
+  identity: 论语·第19篇《子张》
+  core: 执德弘道、见危致命、见得思义；以弘道守士节。
+  verse: 士见危致命，见得思义；执德不弘，信道不笃，焉能为有，焉能为亡。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 知人评士
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_de_hong_dao
+  method: 子张
+  signature: fn zhi_de_hong_dao(scholar) -> broad_virtue
+  precond: 执德不弘、信道不笃
+  postcond: 执德弘、信道笃，士之节
+  negative_space: ⊗ 不弘则亡
+  steps:
+  - 见危
+  - 致命
+  - 见得
+  - 思义
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_de_hong_dao
+  trigger: 士见危致命，见得思义；执德不弘，信道不笃，焉能为有，焉能为亡。
+  when: 当士临危得、宜守节思义时触发
+  graph:
+  - from: zhi_de_hong_dao
+    to: []
+decision:
+- if: 需执德弘道
+  call: zhi_de_hong_dao
+skills:
+- 子张·顺势研判
+negative_space:
+- 执德不弘则若无
+- 见得忘义则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

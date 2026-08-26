@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX06-20260815-06
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.933259'
+branch: 诸子百家·儒家·大学·第06目(诚意)
+stratum: 诸子百家·儒家·大学·内圣阶梯
+soul:
+  identity: 大学·第06目《诚意》
+  core: 意念真诚、不自欺；以诚意正心，慎独为基。
+  verse: 欲正其心者，先诚其意。毋自欺也；如恶恶臭，如好好色。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 内圣阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: cheng_yi
+  method: 诚意
+  signature: fn cheng_yi(self) -> sincere_will
+  precond: 自欺、意不实
+  postcond: 意诚心正，慎独
+  negative_space: ⊗ 自欺则伪
+  steps:
+  - 慎独
+  - 不自欺
+  - 诚意
+  - 如好好色
+  nca_emit: true
+dispatch:
+  main_pipeline: cheng_yi
+  trigger: 欲正其心者，先诚其意。毋自欺也；如恶恶臭，如好好色。
+  when: 当意有欺瞒、宜慎独时触发
+  graph:
+  - from: cheng_yi
+    to: []
+decision:
+- if: 需诚意不自欺
+  call: cheng_yi
+skills:
+- 诚意·顺势研判
+negative_space:
+- 自欺则伪
+- 掩恶则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH63-20260815-63
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.853261'
+branch: 诸子百家·道家·道德经·第63章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第63章《为无为》
+  core: 为于无为、图难于易、大生于细；以早易防难。
+  verse: 为无为，事无事，味无味；图难于其易。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wei_wu_wei_shi_wu_shi
+  method: 为无为
+  signature: fn wei_wu_wei_shi_wu_shi(handle) -> easy_first
+  precond: 临难始为、巨费
+  postcond: 图易大小，为于未有
+  negative_space: ⊗ 待难则费
+  steps:
+  - 为无为
+  - 图易
+  - 大小
+  - 早备
+  nca_emit: true
+dispatch:
+  main_pipeline: wei_wu_wei_shi_wu_shi
+  trigger: 为无为，事无事，味无味；图难于其易。
+  when: 当难题临头、宜早图易时触发
+  graph:
+  - from: wei_wu_wei_shi_wu_shi
+    to: []
+decision:
+- if: 需图难于易
+  call: wei_wu_wei_shi_wu_shi
+skills:
+- 为无为·顺势研判
+negative_space:
+- 待难则费
+- 轻诺则寡信
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

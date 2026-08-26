@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH69-20260815-69
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.924482'
+branch: 诸子百家·道家·道德经·第69章
+stratum: 诸子百家·道家·道德经·用兵戒刚
+soul:
+  identity: 道德经·第69章《用兵有言》
+  core: 不敢为主为客、退尺，哀兵(慎)胜；以退慎取胜。
+  verse: 吾不敢为主而为客，不敢进寸而退尺；哀者胜矣。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 用兵戒刚
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yong_bing_you_yan
+  method: 用兵有言
+  signature: fn yong_bing_you_yan(war) -> cautious_defense
+  precond: 主进逞强、败
+  postcond: 为客退尺，哀者胜
+  negative_space: ⊗ 主进则败
+  steps:
+  - 不敢主
+  - 为客
+  - 退尺
+  - 哀胜
+  nca_emit: true
+dispatch:
+  main_pipeline: yong_bing_you_yan
+  trigger: 吾不敢为主而为客，不敢进寸而退尺；哀者胜矣。
+  when: 当宜守慎退、不宜主攻时触发
+  graph:
+  - from: yong_bing_you_yan
+    to: []
+decision:
+- if: 需退慎取胜
+  call: yong_bing_you_yan
+skills:
+- 用兵有言·顺势研判
+negative_space:
+- 为主则败
+- 轻进则亡
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,55 @@
+COP-ID: STRATAGEM-COP-20260814-02+03
+type: COMPOSED-COP
+source_expert: thirty_six_stratagems
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-14T21:43:43.937599'
+composition:
+  parent: STRATAGEM-COP-20260814-02
+  interpretants:
+  - cop_id: GAME-COP-20260814-03
+    relation: 解释项
+    bind_step: 攻其必救迫使敌回援
+    effect: '攻敌必救=边缘政策(brinksmanship): 不直接在敌强势点(围城)硬抗, 而是攻击其''必救之处''制造不可逆承诺——使''进(攻坚)''对敌成为双输(撞车)风险,
+      逼其在纳什均衡中''退(回援)'', 你以''进''的不可逆承诺夺取先动优势; ''围''是抬高敌撞车成本, ''救''是其在新矩阵下的理性回退'
+soul:
+  identity: 围魏救赵 ⟂ 斗鸡博弈 (Chicken (Hawk-Dove))
+  core: '攻敌必救, 避实击虚以解困；⟂解释项《斗鸡博弈 (Chicken (Hawk-Dove))》(核心: 两强相争, 纳什均衡为''一进一退''; 胜负取决于谁更可信地承诺不退,
+    与''走为上''同构(谁先撤不丢面子))：攻敌必救=边缘政策(brinksmanship): 不直接在敌强势点(围城)硬抗, 而是攻击其''必救之处''制造不可逆承诺——使''进(攻坚)''对敌成为双输(撞车)风险,
+    逼其在纳什均衡中''退(回援)'', 你以''进''的不可逆承诺夺取先动优势; ''围''是抬高敌撞车成本, ''救''是其在新矩阵下的理性回退'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 三十六计 / 胜战计 + 博弈论 / 抗衡博弈·同时行动
+primitives:
+- name: wei_wei_jiu_zhao
+  method: 围魏救赵 (经 斗鸡博弈 (Chicken (Hawk-Dove)) 解释)
+  signature: 'fn wei_wei_jiu_zhao(context: Situation) -> Outcome'
+  precond: 盟友或己方被围, 正面难以直解
+  postcond: '攻敌必救, 避实击虚以解困；⟂解释项《斗鸡博弈 (Chicken (Hawk-Dove))》(核心: 两强相争, 纳什均衡为''一进一退'';
+    胜负取决于谁更可信地承诺不退, 与''走为上''同构(谁先撤不丢面子))：攻敌必救=边缘政策(brinksmanship): 不直接在敌强势点(围城)硬抗,
+    而是攻击其''必救之处''制造不可逆承诺——使''进(攻坚)''对敌成为双输(撞车)风险, 逼其在纳什均衡中''退(回援)'', 你以''进''的不可逆承诺夺取先动优势;
+    ''围''是抬高敌撞车成本, ''救''是其在新矩阵下的理性回退 (目标达成)'
+  negative_space: ⊗ 敌无必救之处或无回援动机则失效；⊗ 收益不可量化或排序不严谨 (W>T>L>S 不成立) 则矩阵失真
+  steps:
+  - 识别敌之要害与必救之处
+  - 攻其必救迫使敌回援 ⟂【斗鸡博弈 (Chicken (Hawk-Dove))】列出双方策略空间 {进, 退} → 标定 W/T/L/S 四类收益 → 校验
+    W>T>L>S 排序
+  - 于敌回援途中设伏歼之
+  nca_emit: true
+dispatch:
+  main_pipeline: wei_wei_jiu_zhao
+  graph:
+  - from: wei_wei_jiu_zhao
+    to:
+    - ch_payoff_build
+    bind: 攻其必救迫使敌回援
+    note: wei_wei_jiu_zhao 在 [攻其必救迫使敌回援] 嵌套调用 ch_payoff_build (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 盟友或己方被围, 正面难以直解
+  call: wei_wei_jiu_zhao
+skills: []
+negative_space:
+- ⊗ 敌无必救之处或无回援动机则失效
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 解释项负空间继承: 收益不可量化或排序不严谨 (W>T>L>S 不成立) 则矩阵失真'
+nsfl_version: V0.1

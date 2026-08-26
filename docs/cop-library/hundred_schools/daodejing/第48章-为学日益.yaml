@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH48-20260815-48
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.675563'
+branch: 诸子百家·道家·道德经·第48章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第48章《为学日益》
+  core: 为道日损(去执)，损至无为；以减法达无不为。
+  verse: 为学日益，为道日损；损之又损，以至于无为。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wei_xue_ri_sun
+  method: 为学日益
+  signature: fn wei_xue_ri_sun(self) -> subtractive_way
+  precond: 累加执障、益繁
+  postcond: 日损去执，无为无不为
+  negative_space: ⊗ 益则障
+  steps:
+  - 为学益
+  - 为道损
+  - 损又损
+  - 无为
+  nca_emit: true
+dispatch:
+  main_pipeline: wei_xue_ri_sun
+  trigger: 为学日益，为道日损；损之又损，以至于无为。
+  when: 当累加反障、宜做减法时触发
+  graph:
+  - from: wei_xue_ri_sun
+    to: []
+decision:
+- if: 需日损去执
+  call: wei_xue_ri_sun
+skills:
+- 为学日益·顺势研判
+negative_space:
+- 为学益则障
+- 不损则繁
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

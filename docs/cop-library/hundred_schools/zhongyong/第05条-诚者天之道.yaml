@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY05-20260815-05
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.167732'
+branch: 诸子百家·儒家·中庸·第05条(诚者天之道)
+stratum: 诸子百家·儒家·中庸·诚体工夫
+soul:
+  identity: 中庸·第05条《诚者天之道》
+  core: 诚为天道本体、不勉中不思得；诚之（人之道）择善固执以合天。
+  verse: 诚者，天之道也；诚之者，人之道也。诚者不勉而中，不思而得。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 诚体工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: cheng_zhe_tian_zhi_dao
+  method: 诚者天之道
+  signature: fn cheng_zhe_tian_zhi_dao(self) -> heavenly_cheng
+  precond: 伪妄、不合天
+  postcond: 诚合天，不勉中
+  negative_space: ⊗ 伪则失天
+  steps:
+  - 识天道
+  - 体诚
+  - 诚之
+  - 合天
+  nca_emit: true
+dispatch:
+  main_pipeline: cheng_zhe_tian_zhi_dao
+  trigger: 诚者，天之道也；诚之者，人之道也。诚者不勉而中，不思而得。
+  when: 当宜立诚合天、不宜伪妄时触发
+  graph:
+  - from: cheng_zhe_tian_zhi_dao
+    to: []
+decision:
+- if: 需立诚者天之道
+  call: cheng_zhe_tian_zhi_dao
+skills:
+- 诚者天之道·顺势研判
+negative_space:
+- 伪妄则背天
+- 诚之不至则浮
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

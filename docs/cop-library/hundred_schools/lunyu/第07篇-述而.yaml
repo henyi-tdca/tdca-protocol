@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P07-20260815-07
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.806036'
+branch: 诸子百家·儒家·论语·第07篇(述而)
+stratum: 诸子百家·儒家·论语·为学教育
+soul:
+  identity: 论语·第07篇《述而》
+  core: 述而不作、传述非创制、信古好学；以述承道。
+  verse: 述而不作，信而好古；学而不厌，诲人不倦。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 为学教育
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shu_er_bu_zuo
+  method: 述而
+  signature: fn shu_er_bu_zuo(transmit) -> faithful_transmit
+  precond: 好妄作、失传承
+  postcond: 述而不作，信古传道
+  negative_space: ⊗ 妄作则失本
+  steps:
+  - 信古
+  - 述承
+  - 不厌
+  - 不倦
+  nca_emit: true
+dispatch:
+  main_pipeline: shu_er_bu_zuo
+  trigger: 述而不作，信而好古；学而不厌，诲人不倦。
+  when: 当宜传述守统、不宜标新妄作时触发
+  graph:
+  - from: shu_er_bu_zuo
+    to: []
+decision:
+- if: 需述而不作
+  call: shu_er_bu_zuo
+skills:
+- 述而·顺势研判
+negative_space:
+- 妄作则失统
+- 好古不化则泥
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

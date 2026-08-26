@@ -1,0 +1,153 @@
+# 诸子百家思维协议库清单 (中文化合基库 / Hundred Schools of Chinese Thought)
+# 定位: TDCA 思维协议库中 "中国文化" 分支 —— 后续 "中国文化 ⊕ 马克思主义" 化合的中方 operand 源。
+# 强制底座: 凡入 TDCA 生态须先加载 TDCA-CORE-20260815-01 (生态准入基协议, enforce_entry.py 强制门);
+#          本库各 COP 在基协议之上化合, 自身亦声明 base_protocol: TDCA-CORE-20260815-01。
+
+library: hundred_schools
+role: 中文化合基库 (Chinese cultural compound operand source)
+compound_target: "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)"
+base_protocol: TDCA-CORE-20260815-01   # 强制可信底座
+compiler: compile_hundred_schools.py
+schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
+
+# —— 已编 COP ——
+compiled:
+  - cop_id: HS-DAO-20260815-01
+    school: 道家
+    zh: 道德经 (道家根本经典·概览)
+    file: 第01百家-道德经 (道家根本经典).yaml
+    primitives: 8
+    core: 道法自然/无为而治/反者道之动/柔弱胜刚强/祸福相依/上善若水/治大国若烹小鲜/见素抱朴
+    operand_role: 中方化合基协议 (顺·辩证·守弱·不争 思维范式)
+    note: 概览版; 章句级系统编译见 daodejing/ 子库 (81 章独立 COP)
+  - cop_id: HS-DAO-CH01~CH81-20260815
+    school: 道家
+    zh: 道德经 81 章思维协议 (道家系统思维章句库)
+    dir: daodejing/
+    manifest: daodejing/daodejing_manifest.yaml
+    chapters: 81
+    compiler: daodejing/compile_daodejing.py
+    strata: 道体论16/辩证转化13/守柔不争10/无为治国16/用兵戒刚4/修身认知22
+    operand_role: 中方化合基协议 (章句级, 可作 中国文化⊕马克思主义 化合素材)
+    verified: 第36章⟂TDCA核心-02 化合实证通过 (compose_demo_ddj.py)
+  - cop_id: HS-RU-P01~P20-20260815
+    school: 儒家
+    zh: 论语 20 篇思维协议 (儒家系统思维篇目库)
+    dir: lunyu/
+    manifest: lunyu/lunyu_manifest.yaml
+    books: 20
+    compiler: lunyu/compile_lunyu.py
+    strata: 为学教育4/仁本忠恕2/为政德治5/礼乐文质4/知人评士3/出处大节2
+    operand_role: 中文化合基协议 (篇目级, 仁·礼·中庸·教化·出处, 可作 中国文化⊕马克思主义 化合素材)
+    verified: 第12篇 颜渊(克己复礼)⟂TDCA核心-02 化合实证通过 (compose_demo_ly.py)
+  - cop_id: HS-RU-DX01~DX11-20260815
+    school: 儒家
+    zh: 大学 三纲八目思维协议 (儒家系统思维纲领库)
+    dir: daxue/
+    manifest: daxue/daxue_manifest.yaml
+    items: 11
+    compiler: daxue/compile_daxue.py
+    strata: 三纲总摄3/内圣阶梯5/外王阶梯3
+    operand_role: 中文化合基协议 (纲目级, 明明德·新民·止于至善·格致诚正修齐治平, 可作 中国文化⊕马克思主义 化合素材)
+    verified: 第03目 止于至善(知止有定)⟂TDCA核心-02 化合实证通过 (compose_demo_dx.py)
+  - cop_id: HS-RU-MZ01~MZ12-20260815
+    school: 儒家
+    zh: 孟子 12 条思维协议 (儒家·亚圣·性善养气王道)
+    dir: mengzi/
+    manifest: mengzi/mengzi_manifest.yaml
+    items: 12
+    compiler: mengzi/compile_mengzi.py
+    strata: 性善本体4/养气工夫3/王道政术5
+    operand_role: 中文化合基协议 (性善·四端·浩然之气·王道仁政·民贵君轻, 可作 中国文化⊕马克思主义 化合素材)
+  - cop_id: HS-RU-ZY01~ZY13-20260815
+    school: 儒家
+    zh: 中庸 13 条思维协议 (儒家·孔门心法·中和诚)
+    dir: zhongyong/
+    manifest: zhongyong/zhongyong_manifest.yaml
+    items: 13
+    compiler: zhongyong/compile_zhongyong.py
+    strata: 中和本体3/诚体工夫5/时中达道5
+    operand_role: 中文化合基协议 (中和·诚·时中·慎独, 旗舰化合"中国文化⊕马克思主义"的中方方法论核心)
+    verified: compose_mao.py (中庸·致中和 ⟂ 马克思主义·实事求是 → 毛泽东思想思维协议 旗舰实证)
+  - cop_id: HS-RU-XZ01~XZ12-20260815
+    school: 儒家
+    zh: 荀子 12 条思维协议 (儒家·礼法大宗·性恶礼法劝学)
+    dir: xunzi/
+    manifest: xunzi/xunzi_manifest.yaml
+    items: 12
+    compiler: xunzi/compile_xunzi.py
+    strata: 性伪之辨3/劝学积德3/礼法政术6
+    operand_role: 中文化合基协议 (性恶·化性起伪·隆礼重法·制天命而用之, 儒法过渡枢纽)
+  - cop_id: HS-MO01~MO11-20260815
+    school: 墨家
+    zh: 墨家 11 条思维协议 (墨翟十事·兼爱非攻)
+    dir: mojia/
+    manifest: mojia/mojia_manifest.yaml
+    items: 11
+    compiler: mojia/compile_mojia.py
+    strata: 兼爱本原4/尚贤尚同2/节用三表5
+    operand_role: 中文化合基协议 (兼爱交利·非攻·尚贤·节用·三表法)
+  - cop_id: HS-FA01~FA10-20260815
+    school: 法家
+    zh: 法家 10 条思维协议 (法术势)
+    dir: fajia/
+    manifest: fajia/fajia_manifest.yaml
+    items: 10
+    compiler: fajia/compile_fajia.py
+    strata: 法度三器4/刑名权柄3/时变耕战3
+    operand_role: 中文化合基协议 (法·术·势·刑名·耕战·自利人性)
+  - cop_id: HS-MG01~MG07-20260815
+    school: 名家
+    zh: 名家 7 条思维协议 (名实之辨)
+    dir: mingjia/
+    manifest: mingjia/mingjia_manifest.yaml
+    items: 7
+    compiler: mingjia/compile_mingjia.py
+    strata: 名实本体2/离坚白3/合同异2
+    operand_role: 中文化合基协议 (名实·白马非马·坚白·合同异, 中国名辩逻辑)
+  - cop_id: HS-YY01~YY07-20260815
+    school: 阴阳家
+    zh: 阴阳家 7 条思维协议 (五行)
+    dir: yinyangjia/
+    manifest: yinyangjia/yinyangjia_manifest.yaml
+    items: 7
+    compiler: yinyangjia/compile_yinyangjia.py
+    strata: 五行本体4/德运终始2/天人感应1
+    operand_role: 中文化合基协议 (五行·相生克·阴阳消息·五德终始·天人感应, 气化学说与系统循环论)
+  - cop_id: HS-BI-SZ01~SZ13-20260815
+    school: 兵家
+    zh: 孙子兵法 13 篇思维协议 (兵家系统思维篇目库)
+    dir: sunzi/
+    manifest: sunzi/sunzi_manifest.yaml
+    books: 13
+    compiler: sunzi/compile_sunzi.py
+    collab_runner: ../simulations/multilateral_search_match/run_sunzi_collab.py
+    strata: 战略筹划5/形势势能4/地形机变4/奇法用间1
+    operand_role: 中文化合基协议 (庙算·速胜·全胜·奇正·避实击虚·任势·用间先知, 兵家战略势能范式, 可作 中国文化⊕马克思主义 化合素材)
+    verified: "连接器比配+TDCA机制协作编译实证 (run_sunzi_collab.py: 7方联盟准入, MOU正和达成, 13篇携带协作溯源)"
+
+# —— 化合连通性 (含马克思主义方 operand) ——
+composition:
+  composer: ../compositions/compose_general.py   # NIA-MACM 3.0 嵌套推理层
+  marxist_operand: ../marxism/   # 马克思主义方 operand 源 (唯物辩证法/矛盾论/实践论, 15 条 COP)
+  compatible_with: [TDCA核心, 马克思主义, 兵法, 博弈论, 机制设计, 场景, 现代学科库]
+  compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
+  note: |
+    中国文化方 (道家·儒·墨·法·名·阴阳) 与 马克思主义方 (marxism/) 均已就位;
+    旗舰化合 compose_mao.py 已验证: 马克思主义·实践论(实事求是) ⟂ 中庸·中和(致中和)
+    = 毛泽东思想思维协议 (MACM-14-20260815-14+02), 即"两个结合"方法论涌现。
+
+# —— 预留 slot (同构扩展, 待编译) ——
+slots:
+  - cop_id: HS-RU-BB-20260815   # 待续: 儒家·孟子已完成, 余 四书 齐备; 后续可补 易/诗/书/礼/春秋 等
+    school: 儒家经部
+    zh: 五经 (易/诗/书/礼/春秋) 等
+    status: pending
+    operand_role: 中文化合基协议 (待补)
+  - cop_id: HS-BING-20260815    # 兵家(孙子兵法)已完成; 余 农家/医家/杂家 等同构扩展
+    school: 其他诸子
+    zh: 农家/医家/杂家/小说家 (兵家·孙子兵法已编, 见 HS-BI-SZ01~SZ13)
+    status: pending
+    operand_role: 中文化合基协议 (待补)
+
+# (化合连通性已并入上方 composition 块, 此处不再重复定义, 以免 YAML 重复键覆盖 marxist_operand)

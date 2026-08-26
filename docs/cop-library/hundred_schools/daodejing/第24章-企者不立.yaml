@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH24-20260815-24
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.400608'
+branch: 诸子百家·道家·道德经·第24章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第24章《企者不立》
+  core: 踮脚难立、自见者暗；以去自彰显守本。
+  verse: 自见者不明，自是者不彰。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qi_zhe_bu_li
+  method: 企者不立
+  signature: fn qi_zhe_bu_li(ego) -> no_brag
+  precond: 自见自伐、反失彰
+  postcond: 去自显，反得彰
+  negative_space: ⊗ 自伐则无功
+  steps:
+  - 察自见
+  - 去显
+  - 守本
+  - 自彰
+  nca_emit: true
+dispatch:
+  main_pipeline: qi_zhe_bu_li
+  trigger: 自见者不明，自是者不彰。
+  when: 当自夸自是反损信誉时触发
+  graph:
+  - from: qi_zhe_bu_li
+    to: []
+decision:
+- if: 需去自显守本
+  call: qi_zhe_bu_li
+skills:
+- 企者不立·顺势研判
+negative_space:
+- 自见则暗
+- 自伐则无功
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

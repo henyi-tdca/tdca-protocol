@@ -1,0 +1,47 @@
+COP-ID: HS-MO-06-20260815-06
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.051346'
+branch: 诸子百家·墨家·第06条(尚同)
+stratum: 诸子百家·墨家·尚贤尚同
+soul:
+  identity: 墨家·第06条《尚同》
+  core: 尚同壹义、上同不下比；以一同天下义，立政令归一之纲。
+  verse: 上同而不下比，一同天下之义。天子唯能壹同天下之义。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 尚贤尚同
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shang_tong
+  method: 尚同
+  signature: fn shang_tong(unify) -> unified_will
+  precond: 义歧、下比
+  postcond: 一同天下义
+  negative_space: ⊗ 下比则乱
+  steps:
+  - 立通
+  - 上同
+  - 壹义
+  - 不比
+  nca_emit: true
+dispatch:
+  main_pipeline: shang_tong
+  trigger: 上同而不下比，一同天下之义。天子唯能壹同天下之义。
+  when: 当宜政令归一、不宜歧义时触发
+  graph:
+  - from: shang_tong
+    to: []
+decision:
+- if: 需尚同
+  call: shang_tong
+skills:
+- 尚同·顺势研判
+negative_space:
+- 下比则乖
+- 同而失兼则暴
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

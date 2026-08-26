@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-06
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.755447'
+stratum: 胜战计
+soul:
+  identity: 声东击西
+  core: 佯攻一侧, 实取另一侧
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 胜战计
+primitives:
+- name: sheng_dong_ji_xi
+  method: 声东击西
+  signature: 'fn sheng_dong_ji_xi(context: Situation) -> Outcome'
+  precond: 敌注意力集中于某一处
+  postcond: 佯攻一侧, 实取另一侧 (目标达成)
+  negative_space: ⊗ 敌方将多谋识破则反被调
+  steps:
+  - 示攻东面
+  - 实备西面
+  - 敌移则西取
+  nca_emit: true
+dispatch:
+  main_pipeline: sheng_dong_ji_xi
+  graph:
+  - from: sheng_dong_ji_xi
+    to: []
+  note: 单计独立协议, 主原语 sheng_dong_ji_xi 即该计执行体
+decision:
+- if: 敌注意力集中于某一处
+  call: sheng_dong_ji_xi
+skills: []
+negative_space:
+- ⊗ 敌方将多谋识破则反被调
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

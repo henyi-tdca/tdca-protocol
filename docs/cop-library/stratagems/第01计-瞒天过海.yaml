@@ -1,0 +1,41 @@
+COP-ID: STRATAGEM-COP-20260814-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.610523'
+stratum: 胜战计
+soul:
+  identity: 瞒天过海
+  core: 示假隐真, 于常态中隐蔽异动
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 胜战计
+primitives:
+- name: man_tian_guo_hai
+  method: 瞒天过海
+  signature: 'fn man_tian_guo_hai(context: Situation) -> Outcome'
+  precond: 己方关键行动需隐蔽, 敌方习以为常而放松警惕
+  postcond: 示假隐真, 于常态中隐蔽异动 (目标达成)
+  negative_space: ⊗ 敌方高度戒备或已识破伪装则失效; 忌重复同一伪装
+  steps:
+  - 制造日常假象使敌不疑
+  - 将关键行动嵌入常规流程
+  - 待敌懈怠则突发
+  nca_emit: true
+dispatch:
+  main_pipeline: man_tian_guo_hai
+  graph:
+  - from: man_tian_guo_hai
+    to: []
+  note: 单计独立协议, 主原语 man_tian_guo_hai 即该计执行体
+decision:
+- if: 己方关键行动需隐蔽, 敌方习以为常而放松警惕
+  call: man_tian_guo_hai
+skills: []
+negative_space:
+- ⊗ 敌方高度戒备或已识破伪装则失效; 忌重复同一伪装
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

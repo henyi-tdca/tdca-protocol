@@ -1,0 +1,115 @@
+COP-ID: GAME-COP-20260814-02
+source_expert: game_theory_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T21:42:41.772650'
+branch: 协调博弈·同时行动
+stratum: 协调博弈·同时行动
+soul:
+  identity: 猎鹿博弈 (Stag Hunt)
+  core: 高收益需双方信任协作(猎鹿), 低收益但安全(猎兔); 帕累托高效均衡依赖相互信任与协调, 而非强制
+  role: 思维协议 (博弈推理范式类)
+  category: 博弈论 / 协调博弈·同时行动
+primitives:
+- name: sh_payoff_build
+  method: 构建收益矩阵
+  signature: fn sh_payoff_build(R, P, T, S) -> payoff_matrix
+  precond: 已知双方策略空间 {猎鹿, 猎兔} 及四类收益 (R 双方猎鹿/P 双方猎兔/T 单方猎兔得逞/S 被放鸽子)
+  postcond: 标准型收益矩阵满足 R>P>T>S
+  negative_space: ⊗ 收益不可量化或排序不严谨 (R>P>T>S 不成立) 则矩阵失真
+  steps:
+  - 列出双方策略空间 {猎鹿, 猎兔}
+  - 标定 R/P/T/S 四类收益
+  - 校验 R>P>T>S 排序
+  nca_emit: true
+- name: risk_dominance_check
+  method: 风险占优检验
+  signature: fn risk_dominance_check(matrix) -> risk_dominant_eq
+  precond: 收益矩阵已构建
+  postcond: (猎兔, 猎兔) 风险占优 —— 对单方扰动(对方突然猎兔)更稳健
+  negative_space: ⊗ 若双方高度互信则该均衡不被采纳, 转向帕累托均衡
+  steps:
+  - 固定对方策略
+  - 计算单方偏离(被放鸽子)损失
+  - 判定 (猎兔,猎兔) 为风险占优
+  nca_emit: true
+- name: pareto_opt_check
+  method: 帕累托最优检验
+  signature: fn pareto_opt_check(matrix) -> pareto_optimal_eq
+  precond: 收益矩阵已构建
+  postcond: (猎鹿, 猎鹿) 帕累托最优 (联合收益最大 R+R)
+  negative_space: ⊗ 帕累托最优不等于可自持, 仍需信任基础
+  steps:
+  - 取两纯策略均衡
+  - 比较联合收益 R+R vs P+P
+  - 判定 (猎鹿,猎鹿) 帕累托优
+  nca_emit: true
+- name: trust_signal
+  method: 信任信号构建
+  signature: fn trust_signal(sender, channel) -> cheap_talk_commitment
+  precond: 需建立合作意图 (欲达帕累托均衡)
+  postcond: 通过廉价谈话/可验证信号发出'猎鹿'意图, 提升对方信任概率
+  negative_space: ⊗ 廉价谈话不可强制, 无后续惩罚机制则可信度低
+  steps:
+  - 发出合作信号
+  - 选择可验证渠道(如抵押/声誉)
+  - 使意图可信
+  nca_emit: true
+- name: coordination_mechanism
+  method: 协调机制锁定
+  signature: fn coordination_mechanism(game, focal) -> coordinated_eq
+  precond: 存在多个均衡需收敛其一
+  postcond: 通过焦点(历史/文化)/重复互动/声誉锁定 (猎鹿, 猎鹿)
+  negative_space: ⊗ 无协调基础(匿名单次博弈)则退化为风险占优(猎兔)
+  steps:
+  - 确立焦点(如共同目标)
+  - 建立重复互动
+  - 用声誉强化猎鹿
+  nca_emit: true
+- name: payoff_risk_assess
+  method: 收益-风险评估
+  signature: fn payoff_risk_assess(R, S) -> {coop_gain, fail_loss}
+  precond: 收益矩阵已构建
+  postcond: 量化合作增益 R 与信任失败损失 (R-S)
+  negative_space: ⊗ 失败损失过大且无保险则理性选择猎兔
+  steps:
+  - 计算合作增益 R
+  - 计算落空损失 (R-S)
+  - 评估风险承受阈值
+  nca_emit: true
+dispatch:
+  main_pipeline: sh_payoff_build
+  graph:
+  - from: sh_payoff_build
+    to:
+    - risk_dominance_check
+    - pareto_opt_check
+    - payoff_risk_assess
+  - from: pareto_opt_check
+    to:
+    - trust_signal
+  - from: trust_signal
+    to:
+    - coordination_mechanism
+  note: '各博弈自带调度骨架: 构建收益结构为主线, 下游原语按博弈特性展开'
+decision:
+- if: 需构建收益矩阵
+  call: sh_payoff_build
+- if: 需识别风险占优
+  call: risk_dominance_check
+- if: 需解释帕累托损失
+  call: pareto_opt_check
+- if: 需建立信任
+  call: trust_signal
+- if: 需协调至帕累托均衡
+  call: coordination_mechanism
+skills: []
+negative_space:
+- ⊗ 信任不可强制, 单次匿名博弈无协调基础则退化为风险占优(猎兔)
+- ⊗ 收益须可量化排序, 否则矩阵失真
+- ⊗ 信任失败损失过大(无保险)则理性选择猎兔
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 6

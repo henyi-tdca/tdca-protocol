@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P06-20260815-06
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.799072'
+branch: 诸子百家·儒家·论语·第06篇(雍也)
+stratum: 诸子百家·儒家·论语·礼乐文质
+soul:
+  identity: 论语·第06篇《雍也》
+  core: 文质相济、中庸得中；以彬彬成君子之度。
+  verse: 质胜文则野，文胜质则史；文质彬彬，然后君子。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 礼乐文质
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wen_zhi_bin_bin
+  method: 雍也
+  signature: fn wen_zhi_bin_bin(self) -> balanced_culture
+  precond: 偏质野或偏文史
+  postcond: 文质彬彬，得中成君子
+  negative_space: ⊗ 偏一则失中
+  steps:
+  - 识质
+  - 饰文
+  - 彬彬
+  - 得中
+  nca_emit: true
+dispatch:
+  main_pipeline: wen_zhi_bin_bin
+  trigger: 质胜文则野，文胜质则史；文质彬彬，然后君子。
+  when: 当质文偏胜、宜取中时触发
+  graph:
+  - from: wen_zhi_bin_bin
+    to: []
+decision:
+- if: 需文质彬彬
+  call: wen_zhi_bin_bin
+skills:
+- 雍也·顺势研判
+negative_space:
+- 质胜则野
+- 文胜则史
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
