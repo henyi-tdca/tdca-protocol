@@ -1,0 +1,38 @@
+NCA-ID: TDCA-REASONIX-20260827-159
+Generated-By: nca_generator.generate_nca
+Function-Call-ID: TDCA-FC-NCA-NUMBERING-PATCH
+Operation-Type: CodePatch
+Operator: Reasonix-Executor
+Timestamp: '2026-08-27T17:47:06.395556'
+Scope: .tdca-protocol/nca-generator/nca_generator.py (NCA 编号机制补丁 B+C, GSEQ-0544)
+Pre-State:
+  Path: nca_generator.py
+  Hash: null
+  Size: 0
+  Exists: true
+  Backup: null
+Post-State:
+  Path: nca_generator.py
+  Hash: null
+  Size: 0
+  Exists: true
+  Backup: null
+Config-Right-Token:
+  Scope: .tdca-protocol/nca-generator/nca_generator.py (NCA 编号机制补丁 B+C, GSEQ-0544)
+  Granted-By: TDCA-Executor-Self-Declare
+  Expires: null
+Audit-Trail:
+- Step: CodePatch
+  Time: '2026-08-27T17:47:06.395556'
+  Evidence: null
+Human-Signature:
+  Status: Pending
+  Signed-By: null
+  Signed-At: null
+Negative-Space-Check:
+  NSFL-Version: V0.1
+  Triggered: false
+  Trigger-Reason: null
+Notes: 'NCA 编号机制补丁(GSEQ-0544 选项 B+C): B=落盘前扫盘+首个空闲位顺延(O_EXCL 原子预约, 并发安全, 不覆盖已有文件);
+  C=禁止手动预分配(explicit_seq 传值即 ValueError + Generated-By 标记 + verify_numbering_discipline
+  lint)。根因=旧 _seq_file 仅增计数器不扫盘, 导致 155 撞号事故。测试 7 用例全绿。'
