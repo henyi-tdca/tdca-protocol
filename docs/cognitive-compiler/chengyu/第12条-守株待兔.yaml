@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-12-20260827-12
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.911763'
+branch: 中国成语·认知与辩证·第12条(守株待兔)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第12条《守株待兔》
+  core: 把单次偶然当可重复规律，是归纳谬误；须区分'偶然事件'与'可复用机制'，不可因一例成功固守等待。
+  verse: 兔触株死，农废耕守，以偶为常，终无所获。
+  origin: 《韩非子·五蠹》：宋人见兔走触株死，因释其耒守株，冀复得兔，兔不可复得而身为宋国笑。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shouzhu_daitu
+  method: 守株待兔
+  signature: fn shouzhu_daitu(warn) -> mechanism_not_chance
+  precond: 以偶然为常
+  postcond: 辨机制，不空等
+  negative_space: ⊗ 以偶代律则妄
+  steps:
+  - 记事件
+  - 分偶然
+  - 查机制
+  - 不固守
+  nca_emit: true
+dispatch:
+  main_pipeline: shouzhu_daitu
+  trigger: 兔触株死，农废耕守，以偶为常，终无所获。
+  when: 当有人把单次成功当可复制规律、不再作为时触发(作警示)
+  graph:
+  - from: shouzhu_daitu
+    to: []
+decision:
+- if: 需区分偶然与机制
+  call: shouzhu_daitu
+skills:
+- 守株待兔·思维研判
+negative_space:
+- 以偶然为常则废
+- 不查机制则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

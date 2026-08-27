@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-07-20260827-07
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.837933'
+branch: 中国成语·战略与决断·第07条(暗度陈仓)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第07条《暗度陈仓》
+  core: 以显式动作掩护真实意图，在对手注意力盲区达成目标；是'声东击西'的部署版(史实战例，与三十六计区分：此为真实战史而非计目)。须以情报优势支撑盲区选择。
+  verse: 明修其栈，暗度陈仓，敌顾其表，我袭其里。
+  origin: 《史记·淮阴侯列传》：刘邦烧绝栈道示无东归意；韩信明修栈道，暗度陈仓，袭定三秦。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: andu_chencang
+  method: 暗度陈仓
+  signature: fn andu_chencang(feint) -> objective_taken
+  precond: 需隐蔽真实意图
+  postcond: 表动而里取
+  negative_space: ⊗ 虚张无实则露
+  steps:
+  - 立幌
+  - 诱注意
+  - 潜行
+  - 袭要
+  nca_emit: true
+dispatch:
+  main_pipeline: andu_chencang
+  trigger: 明修其栈，暗度陈仓，敌顾其表，我袭其里。
+  when: 当需以显式动作掩护真实行动、打信息差时触发
+  graph:
+  - from: andu_chencang
+    to: []
+decision:
+- if: 需隐蔽意图部署
+  call: andu_chencang
+skills:
+- 暗度陈仓·思维研判
+negative_space:
+- 虚张无实则计露
+- 盲打盲区则落空
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

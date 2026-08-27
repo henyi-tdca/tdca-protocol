@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-42-20260827-42
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.244722'
+branch: 中国成语·认知与辩证·第42条(物极必反)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第42条《物极必反》
+  core: 事物发展到极端必向反面转化，是螺旋式上升的一环；否定之否定以扬弃式的否定走上升(保留积极因素而非全抛)，故'极'非直线终点而是转化的关节。须以辩证眼光看'盛衰往复'。
+  verse: 极则必反，盛极而衰；月盈则亏，否极泰来。
+  origin: 《吕氏春秋·博志》/ 程颐'物极必反，其理须如是'：极者至极也，至极则反。老子'反者道之动'同此。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wuji_bifan
+  method: 物极必反
+  signature: fn wuji_bifan(reframe) -> reversal_turn
+  precond: 直线观
+  postcond: 识转化，备反
+  negative_space: ⊗ 直线则失
+  steps:
+  - 察极
+  - 识反
+  - 扬弃
+  - 备转
+  nca_emit: true
+dispatch:
+  main_pipeline: wuji_bifan
+  trigger: 极则必反，盛极而衰；月盈则亏，否极泰来。
+  when: 当事物至盛/至衰、宜看转化而非直线外推时触发
+  graph:
+  - from: wuji_bifan
+    to: []
+decision:
+- if: 需辩证转化研判
+  call: wuji_bifan
+skills:
+- 物极必反·思维研判
+negative_space:
+- 直线外推则误
+- 全抛积极则断
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

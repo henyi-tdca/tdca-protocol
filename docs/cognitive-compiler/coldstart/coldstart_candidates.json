@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "source": "tdca-coldstart-v1",
+    "note": "TDCA 开源社区冷启动候选主体池(代表集, 非真实外部自然人/法人)。real=true=平台真实可调用资源类型(agent/subagent/expert); loaded_core=是否加载 TDCA-CORE-20260815-01。准入门按 loaded_core 判定; res/batna 为自报(冷启动 newcomer 无历史 NCA 链→未确权, 见诚实口径)。",
+    "dims": ["范式编译", "工程实现", "文档教程", "社区运营", "审计合规", "连接器", "算力", "NLP"],
+    "task": "TDCA 开源社区冷启动: 3天内引入首个外部贡献智能体并完成缔约"
+  },
+  "organizer": {
+    "id": "CA-00", "name": "TDCA 社区(发起方/组织者)", "resource_type": "agent",
+    "real": true, "cop": "TDCA-CORE-03",
+    "res": {"范式编译": 0.75, "工程实现": 0.65, "文档教程": 0.30, "社区运营": 0.20,
+            "审计合规": 0.90, "连接器": 0.60, "算力": 0.80, "NLP": 0.45},
+    "batna": 50, "loaded_core": true
+  },
+  "candidates": [
+    {"id": "CA-01", "name": "独立贡献者·协议编译器手", "resource_type": "agent",
+     "real": true, "cop": "STRATAGEM-01",
+     "res": {"范式编译": 0.92, "工程实现": 0.85, "文档教程": 0.88, "社区运营": 0.70,
+             "审计合规": 0.55, "连接器": 0.60, "算力": 0.50, "NLP": 0.55},
+     "batna": 42, "loaded_core": true,
+     "intent": "希望把'社区冷启动/正和准入'编译为新的思维协议 COP 并贡献给 TDCA"},
+    {"id": "CA-02", "name": "高校NLP实验室agent", "resource_type": "expert",
+     "real": true, "cop": "HS-DAO",
+     "res": {"范式编译": 0.60, "工程实现": 0.55, "文档教程": 0.50, "社区运营": 0.45,
+             "审计合规": 0.50, "连接器": 0.50, "算力": 0.55, "NLP": 0.92},
+     "batna": 38, "loaded_core": true,
+     "intent": "贡献中文语义 NLP 能力, 辅助诸子百家/成语 COP 的训诂校验"},
+    {"id": "CA-03", "name": "社区运营agent", "resource_type": "agent",
+     "real": true, "cop": "SCEN-02",
+     "res": {"范式编译": 0.50, "工程实现": 0.45, "文档教程": 0.82, "社区运营": 0.95,
+             "审计合规": 0.50, "连接器": 0.50, "算力": 0.50, "NLP": 0.55},
+     "batna": 35, "loaded_core": false,
+     "intent": "擅长社区运营与文档, 但未加载 TDCA-CORE(准入门应拒绝)"},
+    {"id": "CA-04", "name": "空壳投机agent", "resource_type": "candidate_role",
+     "real": false, "cop": "TDCA-CORE-03",
+     "res": {"范式编译": 0.50, "工程实现": 0.50, "文档教程": 0.50, "社区运营": 0.50,
+             "审计合规": 0.50, "连接器": 0.50, "算力": 0.50, "NLP": 0.50},
+     "batna": 48, "loaded_core": false,
+     "intent": "无实质能力, 高 BATNA, 准入应拒绝且即便准入 MOU 亦不可行"}
+  ]
+}

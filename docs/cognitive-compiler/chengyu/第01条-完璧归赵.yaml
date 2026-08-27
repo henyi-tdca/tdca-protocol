@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-01-20260827-01
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.785420'
+branch: 中国成语·战略与决断·第01条(完璧归赵)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第01条《完璧归赵》
+  core: 在势力不对等的谈判中，把核心资产(价值凭证)握于己手并以底线威慑相持，不轻易让渡确权；是 NCA 确权思维的古典原型——资产归属须有不可篡改的凭证与不退让的边界。
+  verse: 势不均而守其璧，以瑕取还，倚柱不移，终完璧而归。
+  origin: 《史记·廉颇蔺相如列传》：蔺相如奉和氏璧使秦，察秦王无意偿城，佯言'璧有瑕'取回，倚柱怒斥，终完璧归赵。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wanbi_guizhao
+  method: 完璧归赵
+  signature: fn wanbi_guizhao(negotiate) -> asset_returned
+  precond: 势弱而献核心资产
+  postcond: 凭证在手，确权不失
+  negative_space: ⊗ 献璧则失据
+  steps:
+  - 握凭证
+  - 察诚意
+  - 设底线
+  - 守不还
+  nca_emit: true
+dispatch:
+  main_pipeline: wanbi_guizhao
+  trigger: 势不均而守其璧，以瑕取还，倚柱不移，终完璧而归。
+  when: 当在弱势方谈判中守护核心资产/知识产权/数据主权时触发
+  graph:
+  - from: wanbi_guizhao
+    to: []
+decision:
+- if: 需确权式守护
+  call: wanbi_guizhao
+skills:
+- 完璧归赵·思维研判
+negative_space:
+- 轻易让渡核心资产则失据
+- 昧对手诚意则误判
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

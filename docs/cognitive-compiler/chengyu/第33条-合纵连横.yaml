@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-33-20260827-33
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.153466'
+branch: 中国成语·战略与决断·第33条(合纵连横)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第33条《合纵连横》
+  core: 多弱方联合(合纵)以抗一强，或一强拉拢弱方(连横)以破联盟；是联盟形成/协调机制——通过协调多方预期锁定帕累托优均衡(猎鹿式协作)，或以分化瓦解对手协调。机制设计在此=设计联盟激励使自利方愿协作。
+  verse: 纵合则抗强，横连则弱敌；连与破，在势之向背。
+  origin: 《战国策》/《史记·苏秦列传》：苏秦合纵六国抗秦，张仪连横破之；纵横之术即联盟与分化博弈。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: hezong_lianheng
+  method: 合纵连横
+  signature: fn hezong_lianheng(alliance) -> coalition_built
+  precond: 多弱涣散
+  postcond: 联则强，分则破
+  negative_space: ⊗ 盟散则弱
+  steps:
+  - 识各方
+  - 设激励
+  - 锁协调
+  - 固联盟
+  nca_emit: true
+dispatch:
+  main_pipeline: hezong_lianheng
+  trigger: 纵合则抗强，横连则弱敌；连与破，在势之向背。
+  when: 当需联合多方抗强或分化敌盟时触发
+  graph:
+  - from: hezong_lianheng
+    to: []
+decision:
+- if: 需联盟形成
+  call: hezong_lianheng
+skills:
+- 合纵连横·思维研判
+negative_space:
+- 盟无激励则散
+- 分化不慎则反噬
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

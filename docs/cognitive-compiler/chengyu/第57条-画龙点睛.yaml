@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-57-20260827-57
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.394210'
+branch: 中国成语·认知与辩证·第57条(画龙点睛)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第57条《画龙点睛》
+  core: 画龙成而点睛则破壁飞去，是'关键一笔'使整体活化；在已备的系统中注入决定性要素(如机制设计关键杠杆)，使潜质转为现实。须辨'睛'之所在——点错则龙不飞(类纲举目张但重在'激活'而非'统御')。
+  verse: 龙成而未睛，一点乃飞；要害既点，全体皆活。
+  origin: 唐·张彦远《历代名画记》：张僧繇于金陵安乐寺画四龙不点睛，云'点睛即飞去'，人以为妄，固请点之，须臾雷电破壁，二龙乘云去。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: hualong_dianjing
+  method: 画龙点睛
+  signature: fn hualong_dianjing(activate) -> vitalize_whole
+  precond: 备而未活
+  postcond: 点其睛，全体活
+  negative_space: ⊗ 点错则不飞
+  steps:
+  - 备其体
+  - 识睛
+  - 一点
+  - 活化
+  nca_emit: true
+dispatch:
+  main_pipeline: hualong_dianjing
+  trigger: 龙成而未睛，一点乃飞；要害既点，全体皆活。
+  when: 当系统已备、宜注入关键要素激活整体时触发
+  graph:
+  - from: hualong_dianjing
+    to: []
+decision:
+- if: 需关键激活
+  call: hualong_dianjing
+skills:
+- 画龙点睛·思维研判
+negative_space:
+- 点错则不飞
+- 昧睛则徒劳
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

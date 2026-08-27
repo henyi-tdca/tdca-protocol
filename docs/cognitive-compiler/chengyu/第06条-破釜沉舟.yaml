@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-06-20260827-06
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.828033'
+branch: 中国成语·战略与决断·第06条(破釜沉舟)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第06条《破釜沉舟》
+  core: 通过消除退路(自设不可逆约束)把'可退'变为'必进'，以承诺机制提升凝聚力与必胜信念；是可信承诺/承诺陷阱的主动运用。
+  verse: 渡河而沉舟，破釜而示必，士无退心，乃破秦军。
+  origin: 《史记·项羽本纪》：项羽渡河击秦，皆沉船、破釜甑、烧庐舍，持三日粮，示士卒必死无还心，遂破秦军。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: pofu_chenzhou
+  method: 破釜沉舟
+  signature: fn pofu_chenzhou(commit) -> irreversible_resolve
+  precond: 需聚死战之心
+  postcond: 无退路，志必坚
+  negative_space: ⊗ 留退路则心散
+  steps:
+  - 断退
+  - 明志
+  - 聚气
+  - 死战
+  nca_emit: true
+dispatch:
+  main_pipeline: pofu_chenzhou
+  trigger: 渡河而沉舟，破釜而示必，士无退心，乃破秦军。
+  when: 当需以自断退路凝聚团队、表必胜承诺时触发
+  graph:
+  - from: pofu_chenzhou
+    to: []
+decision:
+- if: 需可信承诺固化
+  call: pofu_chenzhou
+skills:
+- 破釜沉舟·思维研判
+negative_space:
+- 留退路则心不齐
+- 滥断退路则孤注一掷
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
