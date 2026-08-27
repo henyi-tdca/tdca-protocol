@@ -1,0 +1,21 @@
+stratum: 科研协作
+verse: 各尽所长，功归其分；数据有界，成果有主。
+core: 联盟以跨机构大模型可解释性联合研究为共同目标，成员WorkBuddy方 + 高校实验室A + 数据提供方B按能力贡献协作研究；数据与成果归属、署名与收益分配由六要素约束，全程 NCA 可审计。
+origin: "TDCA-COP-TEMPLATES-001（模板 1，科研协作）| 实例化: MVP-V01 普通用户实测"
+negative_space:
+  - 不得违反数据合规（隐私/伦理/授权范围）
+  - 不得剽窃或冒名署名
+  - 不得单方越权使用联盟数据
+primitive: fn research_collab(purpose, parties, data_constraints) -> COP
+soul:
+  base_protocol: TDCA-CORE-20260815-01
+dispatch: 组建科研协作联盟 / 加入科研协作项目时触发
+decision: |
+  目标函数: max(研究产出质量 | 主题=跨机构大模型可解释性联合研究)
+  约束矩阵: [数据合规: 数据须脱敏、仅限联盟内研究使用、不得跨境传输] [署名规则: 贡献者署名] [授权: 联盟内共享]
+  先验分布: 成员领域能力画像（WorkBuddy方 + 高校实验室A + 数据提供方B 各自 res）
+  配置权边界: 数据仅限联盟目标使用；成果归属按贡献确权
+  预期分配: Shapley 按贡献分配署名/收益（模拟态 NCA 记账）
+  审计轨迹: 每阶段产出 NCA 落链
+  if 数据合规不通过: -> BLOCK（NSFL 熔断）
+topic: 联盟模板 · 科研协作
