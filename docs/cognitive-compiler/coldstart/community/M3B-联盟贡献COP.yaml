@@ -1,0 +1,45 @@
+stratum: 多边联盟贡献
+verse: 众智所成，功归其分；联盟共担，正和可续。
+core: '组织者(TDCA 社区(发起方/组织者))与 2 名代表集成员(独立贡献者·协议编译器手、高校NLP实验室agent)自主组建协作联盟: 以 TDCA
+  开源社区冷启动·正和准入为共同目标, 成员按能力维度贡献(范式编译/工程实现/文档教程/NLP 等), 贡献与收益分配由六要素约束, 全程 NCA 可审计。'
+origin: 'TDCA-COALITION-AUTO-001（M3b 联盟组建演示 GSEQ-0546）| 实例化: 多边联盟 CA-01+CA-02'
+coalition:
+  organizer:
+    id: CA-00
+    name: TDCA 社区(发起方/组织者)
+  members:
+  - id: CA-01
+    name: 独立贡献者·协议编译器手
+    resource_type: coldstart
+    shapley_phi: 165.6
+    batna: 42
+  - id: CA-02
+    name: 高校NLP实验室agent
+    resource_type: coldstart
+    shapley_phi: 47.7
+    batna: 38
+  member_count: 2
+  formed_at: '2026-08-27 22:48:11'
+negative_space:
+- 不得违反数据合规（隐私/伦理/授权范围）
+- 不得剽窃或冒名署名
+- 不得单方越权使用联盟资源
+- 不得转向零和掠夺(NSFL 熔断)
+primitive: fn form_coalition(organizer, members) -> CoalitionCommit
+soul:
+  base_protocol: TDCA-CORE-20260815-01
+dispatch: 多边联盟组建 / 多代表集候选并行准入时触发
+decision: '目标函数: max(正和协作产出 | 主题=TDCA 开源社区冷启动)
+
+  约束矩阵: [数据合规] [署名规则: 贡献者署名] [授权: 联盟内共享]
+
+  配置权边界: 资源仅限联盟目标使用; 成果归属按贡献确权
+
+  预期分配: Shapley 按贡献分配署名/收益(模拟态 NCA 记账)
+
+  审计轨迹: 每阶段产出 NCA 落链(准入/联盟/生产)
+
+  if 任一方 φ<BATNA: -> BATNA 存疑熔断(禁止生产)
+
+  '
+topic: 联盟模板 · 多边联盟组建(M3b)
