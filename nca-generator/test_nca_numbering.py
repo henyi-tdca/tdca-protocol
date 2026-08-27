@@ -2,8 +2,8 @@
 """NCA 编号机制补丁测试（GSEQ-0544 · 选项 B+C）
 
 覆盖:
-  T1 占用顺延      —— 目标编号被手动占用 → 自动顺延空闲位，且不覆盖原文件
-  T2 空闲位选取    —— 中间断号（含 gap）后取首个空闲位
+  T1 占用顺延      —— 目标编号被手动占用 → 顺延到 max+1，且不覆盖原文件
+  T2 编号选取      —— GSEQ-0551 口径：中间断号（含 gap）后取 max+1（保留缺口，不回填）
   T3 链连续性      —— 连续生成 N 条，编号连续、无重叠、无缺口
   T4 手动分配拒绝  —— 传入 explicit_seq 触发 ValueError（禁止手动预分配）
   T5 并发模拟      —— 多线程同时生成，编号全部唯一（O_EXCL 原子预约）
@@ -76,7 +76,7 @@ class NcaNumberingTest(unittest.TestCase):
         with open(manual_path, "r", encoding="utf-8") as f:
             original = f.read()
         nid, npath, _ = self._gen()
-        # 落盘前扫盘：001 被占 → 顺延到首个空闲位 002（首空闲语义，见需求④）
+        # 落盘前扫盘：001 被占 → max+1 口径顺延到 002（保留缺口语义，见 GSEQ-0551）
         self.assertTrue(nid.endswith("-002"), f"占用 001 后应顺延到首个空闲位 002，实际 {nid}")
         self.assertNotEqual(npath, manual_path)
         # 手动预分配文件绝不被覆盖
@@ -84,23 +84,23 @@ class NcaNumberingTest(unittest.TestCase):
             self.assertEqual(f.read(), original)
         self.assertTrue(os.path.isfile(manual_path))
 
-    # ---- T1b 高位手动占用也不被覆盖（原事故 155 复现） ----
+    # ---- T1b 高位手动占用也不被覆盖（原事故 155 复现，max+1 口径） ----
     def test_T1b_high_manual_occupied_not_overwritten(self):
         manual_path = _mk_manual(self.tmp, 155, "NCA-ID: TDCA-REASONIX-%s-155\nOperation-Type: ManualPreAlloc\n" % _today())
         with open(manual_path, "r", encoding="utf-8") as f:
             original = f.read()
         nid, _, _ = self._gen()
         self.assertFalse(nid.endswith("-155"), "不得复用被手动占用的 155")
-        self.assertEqual(nid, "TDCA-REASONIX-%s-001" % _today(), "首个空闲位应为 001")
+        self.assertEqual(nid, "TDCA-REASONIX-%s-156" % _today(), "max+1 口径下高位占用 155 后应顺延到 156")
         with open(manual_path, "r", encoding="utf-8") as f:
             self.assertEqual(f.read(), original)
 
-    # ---- T2 空闲位选取（中间断号 001..003 缺 002 → 取 002） ----
+    # ---- T2 编号选取（GSEQ-0551 口径：中间断号 001..003 缺 002 → 取 max+1 = 004，保留缺口） ----
     def test_T2_first_free_slot_mid_gap(self):
         _mk_manual(self.tmp, 1)
         _mk_manual(self.tmp, 3)
         nid, _, _ = self._gen()
-        self.assertTrue(nid.endswith("-002"), f"中间断号应取首个空闲位 002，实际 {nid}")
+        self.assertTrue(nid.endswith("-004"), f"max+1 口径下中间断号应取 004（保留缺口），实际 {nid}")
 
     # ---- T3 链连续性（生成 50 条，编号恰好 {1..50} 连续无重叠） ----
     def test_T3_chain_continuity(self):
