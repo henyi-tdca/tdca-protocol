@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-22-20260827-22
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.008608'
+branch: 中国成语·修身与治理·第22条(滥竽充数)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第22条《滥竽充数》
+  core: 在缺乏个体校验的集体中，无实者得以寄生；须设个体可验证机制(独奏/考核)，使'充数'无处遁形。是机制设计中'个体可验证'的古典反例。
+  verse: 南郭处士，混于齐竽，宣王死而湣王好独，乃逃。
+  origin: 《韩非子·内储说上》：齐宣王使人吹竽必三百人，南郭处士请为王吹竽，廪食如众；湣王立好一一听之，处士逃。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: lanyu_chongshu
+  method: 滥竽充数
+  signature: fn lanyu_chongshu(warn) -> individual_verifiable
+  precond: 混于众
+  postcond: 设校验，伪不显
+  negative_space: ⊗ 以众掩伪
+  steps:
+  - 识寄生
+  - 设独验
+  - 排虚
+  - 留实
+  nca_emit: true
+dispatch:
+  main_pipeline: lanyu_chongshu
+  trigger: 南郭处士，混于齐竽，宣王死而湣王好独，乃逃。
+  when: 当集体缺乏个体考核、有人'混'其中时触发(作机制警示)
+  graph:
+  - from: lanyu_chongshu
+    to: []
+decision:
+- if: 需个体可验证
+  call: lanyu_chongshu
+skills:
+- 滥竽充数·思维研判
+negative_space:
+- 以众掩伪则滥
+- 无校验则充数
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

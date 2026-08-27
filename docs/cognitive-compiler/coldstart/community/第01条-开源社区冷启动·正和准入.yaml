@@ -1,0 +1,27 @@
+```yaml
+stratum: 社区治理
+verse: 冷炉初燃，不拒星火；门开正和，众木成林。
+core: 在开源社区冷启动阶段，准入决策应以“正和”为唯一判据，即新成员的加入必须为社区总价值带来净增益，而非零和博弈。协议要求评估贡献潜力与协作意愿，而非仅看既有声望或代码量。准入过程应透明、可逆，并鼓励早期贡献者参与共同决策。
+origin: 源自 MCP-EXT-01 经 tdca-external-agent 连接器真实贡献的社区治理实践观察，结合开放源代码促进会（OSI）的开放协作原则与博弈论中的正和博弈模型。
+negative_space:
+  - 不得将“正和”曲解为无门槛开放，导致社区被低质量或恶意贡献淹没。
+  - 不得以“正和”为名，对潜在贡献者进行歧视性筛选，违背开源精神。
+  - 不得在准入决策中引入个人偏好或外部政治因素，破坏协议中立性。
+primitive: fn admit(contribution_proof) -> Decision
+soul:
+  base_protocol: TDCA-CORE-20260815-01
+dispatch: 当收到新成员加入申请或贡献提案，且社区当前处于冷启动阶段（活跃贡献者少于阈值）时触发。
+decision: |
+  if contribution_proof 显示正和潜力（如可复用代码、文档、设计、社区运营计划）:
+    if 协作意愿明确（如响应沟通、接受反馈）:
+      -> 准入，并分配 mentor
+    else:
+      -> 暂缓，要求补充协作声明
+  else:
+    if 贡献为负和（如破坏性代码、恶意行为）:
+      -> 拒绝并记录
+    else:
+      -> 提供改进建议，邀请重新提交
+topic: 开源社区冷启动·正和准入
+```
+# provenance: deepseek-chat response_hash=16e685ae9a94875ae734e017a8733c246e40a5fbca8b8d17e8f9d91d55f485f1 | deepseek-chat response_hash=16e685ae9a94875ae734e017a8733c246e40a5fbca8b8d17e8f9d91d55f485f1 | 累计cost≈¥0.0011 tokens=641

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-35-20260827-35
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.170531'
+branch: 中国成语·战略与决断·第35条(假道伐虢)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第35条《假道伐虢》
+  core: 借道第三国(虞)以攻敌(虢)，过道即取道主，再攻原敌；是'借路实取'——以短期示好换取通道，通道到手即扩展控制。与三十六计同目，此处以历史原型(晋假道灭虢)锚定其抽象计目。
+  verse: 借道以攻虞，过虞而取虢；一假再取，连锁而并。
+  origin: 《左传·僖公二年/五年》：晋荀息请以屈产之乘与垂棘之璧假道于虞以伐虢，虞公许之；晋灭虢还，遂袭虞灭之。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jiadao_faguo
+  method: 假道伐虢
+  signature: fn jiadao_faguo(borrow) -> real_annex
+  precond: 需过第三国境
+  postcond: 借路实取，连锁并
+  negative_space: ⊗ 道主识破则拒
+  steps:
+  - 请借道
+  - 示不害
+  - 过即取
+  - 再攻敌
+  nca_emit: true
+dispatch:
+  main_pipeline: jiadao_faguo
+  trigger: 借道以攻虞，过虞而取虢；一假再取，连锁而并。
+  when: 当需借第三国通道达成目标、须防识破时触发
+  graph:
+  - from: jiadao_faguo
+    to: []
+decision:
+- if: 需借路实取
+  call: jiadao_faguo
+skills:
+- 假道伐虢·思维研判
+negative_space:
+- 道主识破则拒或反
+- 借而不还则失信
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

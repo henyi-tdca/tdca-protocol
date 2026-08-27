@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-31-20260827-31
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.118582'
+branch: 中国成语·战略与决断·第31条(田忌赛马)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第31条《田忌赛马》
+  core: 在双方资源总量相近但结构不同(上中下三等马)时，通过错配出场次序使己方每级以优对劣，把总体劣势扭转为多数胜；是策略性资源配置/最优反应——在已知对手策略下选择匹配以改变均衡结果(纳什均衡中占优应对的古典战例)。
+  verse: 以下对上，以上对下，错位而布，劣可胜优。
+  origin: 《史记·孙子吴起列传》：齐威王与田忌赛马，忌以下驷对上驷、上驷对中驷、中驷对下驷，一负二胜，卒得金。孙膑之策。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tianji_saima
+  method: 田忌赛马
+  signature: fn tianji_saima(allocate) -> favored_outcome
+  precond: 资源劣而结构异
+  postcond: 错配序，劣胜优
+  negative_space: ⊗ 同序硬拼则负
+  steps:
+  - 察结构
+  - 错匹配
+  - 布次序
+  - 转胜势
+  nca_emit: true
+dispatch:
+  main_pipeline: tianji_saima
+  trigger: 以下对上，以上对下，错位而布，劣可胜优。
+  when: 当双方总量相若、宜以错配次序/资源配置改变胜负结构时触发
+  graph:
+  - from: tianji_saima
+    to: []
+decision:
+- if: 需策略性资源配置
+  call: tianji_saima
+skills:
+- 田忌赛马·思维研判
+negative_space:
+- 同序硬拼则负
+- 昧对手次序则失配
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

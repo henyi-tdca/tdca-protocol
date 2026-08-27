@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-32-20260827-32
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.141585'
+branch: 中国成语·战略与决断·第32条(鹬蚌相争)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第32条《鹬蚌相争》
+  core: 两方相持不下、互不相让，第三方(渔翁)坐收其利；是囚徒困境的古典形态——个体理性(不肯退)导致集体非理性(同被擒)，破解在协调/可信承诺跳出单次零和相持。
+  verse: 鹬啄蚌肉，蚌钳鹬喙，渔翁持笱，二者俱得。
+  origin: 《战国策·燕策》：赵且伐燕，苏代以鹬蚌相争、渔翁得利谏止，言两者不肯相舍则渔者得而并擒之。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yubo_xiangzheng
+  method: 鹬蚌相争
+  signature: fn yubo_xiangzheng(warn) -> coordination_risk
+  precond: 两持不肯舍
+  postcond: 识第三方，谋协调
+  negative_space: ⊗ 相持则俱损
+  steps:
+  - 识相持
+  - 察第三方
+  - 谋协调
+  - 免俱擒
+  nca_emit: true
+dispatch:
+  main_pipeline: yubo_xiangzheng
+  trigger: 鹬啄蚌肉，蚌钳鹬喙，渔翁持笱，二者俱得。
+  when: 当两方僵持、有第三方获利风险时触发(作协调警示)
+  graph:
+  - from: yubo_xiangzheng
+    to: []
+decision:
+- if: 需识别第三方获利
+  call: yubo_xiangzheng
+skills:
+- 鹬蚌相争·思维研判
+negative_space:
+- 相持不肯舍则俱损
+- 无协调则入困境
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-09-20260827-09
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.854751'
+branch: 中国成语·战略与决断·第09条(一鸣惊人)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第09条《一鸣惊人》
+  core: 在局势未明时蓄势不发，待条件成熟一举确立态势；时机选择优于频繁动作，以沉默换信息、以爆发定格局。
+  verse: 三年不鸣，鸣则惊人，蓄势于暗，发于一朝。
+  origin: 《史记·滑稽列传》/《韩非子·喻老》：楚庄王即位三年无令，伍举以鸟谏，王曰'不飞则已，一飞冲天；不鸣则已，一鸣惊人'，后霸诸侯。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yiming_jingren
+  method: 一鸣惊人
+  signature: fn yiming_jingren(time) -> stance_set
+  precond: 势未明
+  postcond: 蓄足，一举定
+  negative_space: ⊗ 频动则泄
+  steps:
+  - 察势
+  - 蓄力
+  - 择机
+  - 爆发
+  nca_emit: true
+dispatch:
+  main_pipeline: yiming_jingren
+  trigger: 三年不鸣，鸣则惊人，蓄势于暗，发于一朝。
+  when: 当局势未明、宜静观蓄势待机而动时触发
+  graph:
+  - from: yiming_jingren
+    to: []
+decision:
+- if: 需时机选择
+  call: yiming_jingren
+skills:
+- 一鸣惊人·思维研判
+negative_space:
+- 过早暴露则失机
+- 久蛰不鸣则废
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

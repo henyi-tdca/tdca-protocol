@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-05-20260827-05
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.819391'
+branch: 中国成语·战略与决断·第05条(草木皆兵)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第05条《草木皆兵》
+  core: 败军心态下感知被恐惧放大，须严格区分'信号'与'噪声'，避免把幻影当威胁而自溃；是决策中'情绪放大误判'的负空间。
+  verse: 一败而慑，风声鹤唳，疑草为兵，自乱其阵。
+  origin: 《晋书·苻坚载记》：淝水之战苻坚兵败退走，望八公山上草木以为晋兵，闻风声鹤唳皆以为追兵。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: caomu_jiebing
+  method: 草木皆兵
+  signature: fn caomu_jiebing(discriminate) -> signal_noise_split
+  precond: 败后惊惧
+  postcond: 辨信号，不乱阵
+  negative_space: ⊗ 以恐惧代侦察
+  steps:
+  - 察实
+  - 分信号
+  - 抑惊
+  - 稳阵
+  nca_emit: true
+dispatch:
+  main_pipeline: caomu_jiebing
+  trigger: 一败而慑，风声鹤唳，疑草为兵，自乱其阵。
+  when: 当失利后团队风声鹤唳、易把噪声当威胁时触发(作辨伪)
+  graph:
+  - from: caomu_jiebing
+    to: []
+decision:
+- if: 需信号噪声判别
+  call: caomu_jiebing
+skills:
+- 草木皆兵·思维研判
+negative_space:
+- 以恐惧代侦察则自溃
+- 疑神疑鬼则乱谋
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

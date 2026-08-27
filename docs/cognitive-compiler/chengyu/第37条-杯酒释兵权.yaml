@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-37-20260827-37
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.194722'
+branch: 中国成语·战略与决断·第37条(杯酒释兵权)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第37条《杯酒释兵权》
+  core: 以一场宴饮和平收束开国功臣兵权，以制度设计(厚赏+释权)使自利方自愿交权，避免流血清算；是可信承诺/权力平稳转移的机制设计——用利益置换取代强制，使'交权'成为占优策略。
+  verse: 杯酒之间，兵权尽释；不以血刃，而收重器。
+  origin: 《宋史·太祖本纪》：宋太祖既位，召石守信等饮，言'人生如白驹过隙'，劝以积金帛田宅为子孙计，罢典禁军；皆称病请解兵权。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: beijiu_shibingquan
+  method: 杯酒释兵权
+  signature: fn beijiu_shibingquan(transfer) -> power_peaceful
+  precond: 功高权重
+  postcond: 厚赏换，权平稳
+  negative_space: ⊗ 强夺则乱
+  steps:
+  - 设宴
+  - 明利害
+  - 厚赏替
+  - 收兵权
+  nca_emit: true
+dispatch:
+  main_pipeline: beijiu_shibingquan
+  trigger: 杯酒之间，兵权尽释；不以血刃，而收重器。
+  when: 当需平稳收束重权、忌流血清算时触发
+  graph:
+  - from: beijiu_shibingquan
+    to: []
+decision:
+- if: 需权力平稳转移
+  call: beijiu_shibingquan
+skills:
+- 杯酒释兵权·思维研判
+negative_space:
+- 强夺则激变
+- 赏不足则拒交
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

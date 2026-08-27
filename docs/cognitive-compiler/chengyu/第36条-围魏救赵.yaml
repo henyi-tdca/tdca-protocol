@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-36-20260827-36
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.182690'
+branch: 中国成语·战略与决断·第36条(围魏救赵)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第36条《围魏救赵》
+  core: 不直接救赵，而攻魏之必救(首都大梁)，迫使魏军回援、赵围自解；是避实击虚、致人而不致于人——以调动敌(攻其所必趋)取代正面硬撼，以最小代价解局。
+  verse: 攻其必救，形人无形；魏解而赵存，避实击虚。
+  origin: 《史记·孙子吴起列传》：桂陵之战，齐田忌用孙膑计，引兵疾走大梁，魏军去赵自救，齐邀击大梁途中的魏军于桂陵。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: weiwei_jiuzhao
+  method: 围魏救赵
+  signature: fn weiwei_jiuzhao(feint_core) -> relief_by_diversion
+  precond: 正面难解
+  postcond: 攻必救，敌自回
+  negative_space: ⊗ 攻坚则损
+  steps:
+  - 察必救
+  - 攻其巢
+  - 致敌回
+  - 击归途
+  nca_emit: true
+dispatch:
+  main_pipeline: weiwei_jiuzhao
+  trigger: 攻其必救，形人无形；魏解而赵存，避实击虚。
+  when: 当正面救援难成、宜攻敌必救以调动时触发
+  graph:
+  - from: weiwei_jiuzhao
+    to: []
+decision:
+- if: 需避实击虚解局
+  call: weiwei_jiuzhao
+skills:
+- 围魏救赵·思维研判
+negative_space:
+- 正面硬撼则损
+- 攻非必救则无效
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

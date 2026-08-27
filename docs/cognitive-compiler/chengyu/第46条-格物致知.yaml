@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-46-20260827-46
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.283184'
+branch: 中国成语·认知与辩证·第46条(格物致知)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第46条《格物致知》
+  core: 穷究事物之理以达致知，即物而穷其理，不凭臆度；是认知方法论——以经验/观察究理(格物)为知的前提(致知)，与'实事求是''实践第一'同构：真知来自对客观事物的穷究。
+  verse: 致知在格物，物格而后知至；即物穷理，不臆度。
+  origin: 《礼记·大学》：'欲诚其意者先致其知，致知在格物。' 宋儒(二程/朱子)以'即物穷理'发挥之。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gewu_zhizhi
+  method: 格物致知
+  signature: fn gewu_zhizhi(inquire) -> things_investigated
+  precond: 理未穷
+  postcond: 物格知至
+  negative_space: ⊗ 臆度则妄
+  steps:
+  - 即物
+  - 穷理
+  - 格其理
+  - 知至
+  nca_emit: true
+dispatch:
+  main_pipeline: gewu_zhizhi
+  trigger: 致知在格物，物格而后知至；即物穷理，不臆度。
+  when: 当需究理明事、不宜臆断时触发
+  graph:
+  - from: gewu_zhizhi
+    to: []
+decision:
+- if: 需格物穷理
+  call: gewu_zhizhi
+skills:
+- 格物致知·思维研判
+negative_space:
+- 臆度则妄
+- 逐物丧志则迷
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
