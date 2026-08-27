@@ -8,7 +8,8 @@
 ## 编号纪律（GSEQ-0544 补丁 · 选项 B+C 固化）
 编号仅由 generate_nca 统一生成，禁止手动预分配编号。人工获取 NCA 必须通过
 调用 generate_nca（API）触发，不得手工指定编号。落盘前扫描 .tdca-nca 目录，
-目标编号若被占用则自动顺延到首个空闲位（O_EXCL 原子预约，并发安全）。
+目标编号若被占用则自动顺延；GSEQ-0551 口径：追加至 max+1 保留缺口（编号=
+事实存证时间序，缺口=历史事故/并发痕迹，不可回填，O_EXCL 原子预约，并发安全）。
 """
 import os
 import re
@@ -64,16 +65,15 @@ def _existing_seqs(today):
 
 
 def _reserve_free_nca_slot(today):
-    """扫描目录，原子预约首个空闲编号（选项 B：占用顺延 + 空闲位选取）
+    """扫描目录，原子预约下一编号（选项 B：占用顺延；GSEQ-0551 口径：max+1 保留缺口）
 
-    先扫描当天已存在的编号，定位首个未占用整数；再用 os.open(O_CREAT|O_EXCL)
-    原子创建占位文件。若并发下该位被其他进程抢先占用（FileExistsError），
-    则顺延到下一空闲位。返回 (today, seq, nca_path)。
+    扫描当天已存在的编号，取 max(existing)+1 作为候选（缺口保留，不回填——
+    编号=事实存证时间序，缺口=历史事故/并发痕迹，属审计线索）。再用
+    os.open(O_CREAT|O_EXCL) 原子创建占位文件。若并发下该位被其他进程抢先占用
+    （FileExistsError），则顺延到下一个编号。返回 (today, seq, nca_path)。
     """
     existing = _existing_seqs(today)
-    candidate = 1
-    while candidate in existing:
-        candidate += 1
+    candidate = (max(existing) if existing else 0) + 1
     while True:
         nca_id = _nca_id(today, candidate)
         path = os.path.join(NCA_DIR, f"{nca_id}.yaml")
