@@ -223,7 +223,7 @@ def write_manifest():
         "role": "儒家系统思维·亚圣义理库 (Chinese cultural compound operand source, 义理条目级)",
         "note": "《孟子》承孔子、启道统, 以'性善'立本体、'养气'立工夫、'王道'立政术, "
                 "构成儒家内圣外王第二座纲领。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。"
-                "后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。",
+                "后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。",
         "base_protocol": "TDCA-CORE-20260815-01",
         "compiler": "mengzi/compile_mengzi.py",
         "schema": "同构麦肯锡 COP (stratum+steps, 兼容 compose_general)",
@@ -233,10 +233,10 @@ def write_manifest():
         "items": items,
         "composition": {
             "composer": "../../compositions/compose_general.py",
-            "compatible_with": ["TDCA核心", "道家(道德经)", "论语", "大学", "中庸", "荀子", "墨法名阴阳", "马克思主义", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
+            "compatible_with": ["TDCA核心", "道家(道德经)", "论语", "大学", "中庸", "荀子", "墨法名阴阳", "辩证实践方法论", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
             "compound_first_principle": "化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)",
-            "compound_target": "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)",
-            "verified_demo": "撰写中 (孟子性善/养气 ⟂ 马克思主义实践论/矛盾论)",
+            "compound_target": "中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)",
+            "verified_demo": "撰写中 (孟子性善/养气 ⟂ 辩证实践方法论实践论/矛盾论)",
         },
     }
     mp = os.path.join(MZ_DIR, "mengzi_manifest.yaml")

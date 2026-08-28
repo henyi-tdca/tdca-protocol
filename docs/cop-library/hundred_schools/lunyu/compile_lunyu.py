@@ -284,7 +284,7 @@ def write_manifest():
         "library": "lunyu_books",
         "role": "儒家系统思维篇目库 (Chinese cultural compound operand source, 篇目级)",
         "note": "《论语》20 篇每篇是儒家系统思维单元，逐篇编译为独立可调用的思维协议(COP)，"
-                "共同构成儒家系统思维基库，按六谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。",
+                "共同构成儒家系统思维基库，按六谱系归类。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。",
         "base_protocol": "TDCA-CORE-20260815-01",  # 强制可信底座
         "compiler": "lunyu/compile_lunyu.py",
         "schema": "同构麦肯锡 COP (stratum+steps, 兼容 compose_general)",
@@ -296,7 +296,7 @@ def write_manifest():
             "composer": "../../compositions/compose_general.py",
             "compatible_with": ["TDCA核心", "道家(道德经)", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
             "compound_first_principle": "化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)",
-            "compound_target": "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)",
+            "compound_target": "中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)",
             "verified_demo": "compose_demo_ly.py (第12篇 颜渊·克己复礼 ⟂ TDCA核心-02 → 克己守礼的可审计自主决策)",
         },
     }

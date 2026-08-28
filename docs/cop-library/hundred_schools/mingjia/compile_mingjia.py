@@ -183,7 +183,7 @@ def write_manifest():
         "library": "mingjia_mingshi",
         "role": "诸子百家系统思维·名实之辨库 (Chinese cultural compound operand source, 义理条目级)",
         "note": "名家专攻名实关系与概念辨析, 以逻辑析取开中国名辩之学(公孙龙离坚白、惠施合同异)。"
-                "逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。",
+                "逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。",
         "base_protocol": "TDCA-CORE-20260815-01",
         "compiler": "mingjia/compile_mingjia.py",
         "schema": "同构麦肯锡 COP (stratum+steps, 兼容 compose_general)",
@@ -193,10 +193,10 @@ def write_manifest():
         "items": items,
         "composition": {
             "composer": "../../compositions/compose_general.py",
-            "compatible_with": ["TDCA核心", "道家", "儒", "墨家", "法家", "阴阳家", "马克思主义", "逻辑学", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
+            "compatible_with": ["TDCA核心", "道家", "儒", "墨家", "法家", "阴阳家", "辩证实践方法论", "逻辑学", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
             "compound_first_principle": "化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)",
-            "compound_target": "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)",
-            "verified_demo": "撰写中 (名家名实/合同异 ⟂ 马克思主义矛盾特殊性/逻辑学)",
+            "compound_target": "中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)",
+            "verified_demo": "撰写中 (名家名实/合同异 ⟂ 辩证实践方法论矛盾特殊性/逻辑学)",
         },
     }
     mp = os.path.join(MG_DIR, "mingjia_manifest.yaml")
