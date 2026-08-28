@@ -226,7 +226,7 @@ def write_manifest():
         "library": "zhongyong_xinfa",
         "role": "儒家系统思维·孔门心法库 (Chinese cultural compound operand source, 心法条目级)",
         "note": "《中庸》为孔门心法, 以'中和'立体用、以'诚'立天道人道合一, 是儒家心性论中枢。"
-                "逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。",
+                "逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。",
         "base_protocol": "TDCA-CORE-20260815-01",
         "compiler": "zhongyong/compile_zhongyong.py",
         "schema": "同构麦肯锡 COP (stratum+steps, 兼容 compose_general)",
@@ -236,10 +236,10 @@ def write_manifest():
         "items": items,
         "composition": {
             "composer": "../../compositions/compose_general.py",
-            "compatible_with": ["TDCA核心", "道家(道德经)", "论语", "大学", "孟子", "荀子", "墨法名阴阳", "马克思主义", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
+            "compatible_with": ["TDCA核心", "道家(道德经)", "论语", "大学", "孟子", "荀子", "墨法名阴阳", "辩证实践方法论", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
             "compound_first_principle": "化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)",
-            "compound_target": "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)",
-            "verified_demo": "compose_mao.py (马克思主义·实践论 经 中庸·中和/诚 解释 → 实事求是·两结合的活的灵魂)",
+            "compound_target": "中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)",
+            "verified_demo": "compose_mao.py (辩证实践方法论·实践论 经 中庸·中和/诚 解释 → 实事求是·两结合的活的灵魂)",
         },
     }
     mp = os.path.join(ZY_DIR, "zhongyong_manifest.yaml")

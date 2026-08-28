@@ -183,7 +183,7 @@ def write_manifest():
         "library": "yinyangjia_wuxing",
         "role": "诸子百家系统思维·五行库 (Chinese cultural compound operand source, 义理条目级)",
         "note": "阴阳家以阴阳消息、五行相生克、五德终始为宇宙与历史之序, 开中国气化学说与系统循环论。"
-                "逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。",
+                "逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。",
         "base_protocol": "TDCA-CORE-20260815-01",
         "compiler": "yinyangjia/compile_yinyangjia.py",
         "schema": "同构麦肯锡 COP (stratum+steps, 兼容 compose_general)",
@@ -193,10 +193,10 @@ def write_manifest():
         "items": items,
         "composition": {
             "composer": "../../compositions/compose_general.py",
-            "compatible_with": ["TDCA核心", "道家", "儒", "墨家", "法家", "名家", "马克思主义", "控制论", "数学", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
+            "compatible_with": ["TDCA核心", "道家", "儒", "墨家", "法家", "名家", "辩证实践方法论", "控制论", "数学", "兵法", "博弈论", "机制设计", "场景", "现代学科库"],
             "compound_first_principle": "化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)",
-            "compound_target": "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)",
-            "verified_demo": "撰写中 (阴阳家五行相生克/阴阳消息 ⟂ 马克思主义质量互变/对立统一)",
+            "compound_target": "中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)",
+            "verified_demo": "撰写中 (阴阳家五行相生克/阴阳消息 ⟂ 辩证实践方法论质量互变/对立统一)",
         },
     }
     mp = os.path.join(YY_DIR, "yinyangjia_manifest.yaml")
