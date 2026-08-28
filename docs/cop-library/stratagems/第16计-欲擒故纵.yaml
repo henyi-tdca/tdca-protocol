@@ -1,4 +1,5 @@
 COP-ID: STRATAGEM-COP-20260814-16
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:32.031130'
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 yu_qin_gu_zong 即该计执行体
 decision:
-- if: 敌可擒但擒而易叛或逃
+- if: 对方可擒但擒而易叛或逃
   call: yu_qin_gu_zong
 skills: []
 negative_space:

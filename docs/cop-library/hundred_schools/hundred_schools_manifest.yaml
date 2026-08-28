@@ -1,11 +1,11 @@
 # 诸子百家思维协议库清单 (中文化合基库 / Hundred Schools of Chinese Thought)
-# 定位: TDCA 思维协议库中 "中国文化" 分支 —— 后续 "中国文化 ⊕ 马克思主义" 化合的中方 operand 源。
+# 定位: TDCA 思维协议库中 "中国文化" 分支 —— 后续 "中国文化 ⊕ 辩证实践方法论" 化合的中方 operand 源。
 # 强制底座: 凡入 TDCA 生态须先加载 TDCA-CORE-20260815-01 (生态准入基协议, enforce_entry.py 强制门);
 #          本库各 COP 在基协议之上化合, 自身亦声明 base_protocol: TDCA-CORE-20260815-01。
 
 library: hundred_schools
 role: 中文化合基库 (Chinese cultural compound operand source)
-compound_target: "中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)"
+compound_target: "中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)"
 base_protocol: TDCA-CORE-20260815-01   # 强制可信底座
 compiler: compile_hundred_schools.py
 schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
@@ -28,7 +28,7 @@ compiled:
     chapters: 81
     compiler: daodejing/compile_daodejing.py
     strata: 道体论16/辩证转化13/守柔不争10/无为治国16/用兵戒刚4/修身认知22
-    operand_role: 中方化合基协议 (章句级, 可作 中国文化⊕马克思主义 化合素材)
+    operand_role: 中方化合基协议 (章句级, 可作 中国文化⊕辩证实践方法论 化合素材)
     verified: 第36章⟂TDCA核心-02 化合实证通过 (compose_demo_ddj.py)
   - cop_id: HS-RU-P01~P20-20260815
     school: 儒家
@@ -38,7 +38,7 @@ compiled:
     books: 20
     compiler: lunyu/compile_lunyu.py
     strata: 为学教育4/仁本忠恕2/为政德治5/礼乐文质4/知人评士3/出处大节2
-    operand_role: 中文化合基协议 (篇目级, 仁·礼·中庸·教化·出处, 可作 中国文化⊕马克思主义 化合素材)
+    operand_role: 中文化合基协议 (篇目级, 仁·礼·中庸·教化·出处, 可作 中国文化⊕辩证实践方法论 化合素材)
     verified: 第12篇 颜渊(克己复礼)⟂TDCA核心-02 化合实证通过 (compose_demo_ly.py)
   - cop_id: HS-RU-DX01~DX11-20260815
     school: 儒家
@@ -48,7 +48,7 @@ compiled:
     items: 11
     compiler: daxue/compile_daxue.py
     strata: 三纲总摄3/内圣阶梯5/外王阶梯3
-    operand_role: 中文化合基协议 (纲目级, 明明德·新民·止于至善·格致诚正修齐治平, 可作 中国文化⊕马克思主义 化合素材)
+    operand_role: 中文化合基协议 (纲目级, 明明德·新民·止于至善·格致诚正修齐治平, 可作 中国文化⊕辩证实践方法论 化合素材)
     verified: 第03目 止于至善(知止有定)⟂TDCA核心-02 化合实证通过 (compose_demo_dx.py)
   - cop_id: HS-RU-MZ01~MZ12-20260815
     school: 儒家
@@ -58,7 +58,7 @@ compiled:
     items: 12
     compiler: mengzi/compile_mengzi.py
     strata: 性善本体4/养气工夫3/王道政术5
-    operand_role: 中文化合基协议 (性善·四端·浩然之气·王道仁政·民贵君轻, 可作 中国文化⊕马克思主义 化合素材)
+    operand_role: 中文化合基协议 (性善·四端·浩然之气·王道仁政·民贵君轻, 可作 中国文化⊕辩证实践方法论 化合素材)
   - cop_id: HS-RU-ZY01~ZY13-20260815
     school: 儒家
     zh: 中庸 13 条思维协议 (儒家·孔门心法·中和诚)
@@ -67,8 +67,8 @@ compiled:
     items: 13
     compiler: zhongyong/compile_zhongyong.py
     strata: 中和本体3/诚体工夫5/时中达道5
-    operand_role: 中文化合基协议 (中和·诚·时中·慎独, 旗舰化合"中国文化⊕马克思主义"的中方方法论核心)
-    verified: compose_mao.py (中庸·致中和 ⟂ 马克思主义·实事求是 → 毛泽东思想思维协议 旗舰实证)
+    operand_role: 中文化合基协议 (中和·诚·时中·慎独, 旗舰化合"中国文化⊕辩证实践方法论"的中方方法论核心)
+    verified: compose_mao.py (中庸·致中和 ⟂ 辩证实践方法论·实事求是 → 辩证实践思维协议 旗舰实证)
   - cop_id: HS-RU-XZ01~XZ12-20260815
     school: 儒家
     zh: 荀子 12 条思维协议 (儒家·礼法大宗·性恶礼法劝学)
@@ -123,19 +123,19 @@ compiled:
     compiler: sunzi/compile_sunzi.py
     collab_runner: ../simulations/multilateral_search_match/run_sunzi_collab.py
     strata: 战略筹划5/形势势能4/地形机变4/奇法用间1
-    operand_role: 中文化合基协议 (庙算·速胜·全胜·奇正·避实击虚·任势·用间先知, 兵家战略势能范式, 可作 中国文化⊕马克思主义 化合素材)
+    operand_role: 中文化合基协议 (庙算·速胜·全胜·奇正·避实击虚·任势·用间先知, 兵家战略势能范式, 可作 中国文化⊕辩证实践方法论 化合素材)
     verified: "连接器比配+TDCA机制协作编译实证 (run_sunzi_collab.py: 7方联盟准入, MOU正和达成, 13篇携带协作溯源)"
 
-# —— 化合连通性 (含马克思主义方 operand) ——
+# —— 化合连通性 (含辩证实践方法论方 operand) ——
 composition:
   composer: ../compositions/compose_general.py   # NIA-MACM 3.0 嵌套推理层
-  marxist_operand: ../marxism/   # 马克思主义方 operand 源 (唯物辩证法/矛盾论/实践论, 15 条 COP)
-  compatible_with: [TDCA核心, 马克思主义, 兵法, 博弈论, 机制设计, 场景, 现代学科库]
+  dialectic_operand: （私有 operand 库，不入仓）   # 辩证实践方法论方 operand 源 (唯物辩证法/矛盾论/实践论, 15 条 COP)
+  compatible_with: [TDCA核心, 辩证实践方法论, 兵法, 博弈论, 机制设计, 场景, 现代学科库]
   compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
   note: |
-    中国文化方 (道家·儒·墨·法·名·阴阳) 与 马克思主义方 (marxism/) 均已就位;
-    旗舰化合 compose_mao.py 已验证: 马克思主义·实践论(实事求是) ⟂ 中庸·中和(致中和)
-    = 毛泽东思想思维协议 (MACM-14-20260815-14+02), 即"两个结合"方法论涌现。
+    中国文化方 (道家·儒·墨·法·名·阴阳) 与 辩证实践方法论方 (marxism/) 均已就位;
+    旗舰化合 compose_mao.py 已验证: 辩证实践方法论·实践论(实事求是) ⟂ 中庸·中和(致中和)
+    = 辩证实践思维协议 (MACM-14-20260815-14+02), 即"两个结合"方法论涌现。
 
 # —— 预留 slot (同构扩展, 待编译) ——
 slots:
@@ -150,4 +150,4 @@ slots:
     status: pending
     operand_role: 中文化合基协议 (待补)
 
-# (化合连通性已并入上方 composition 块, 此处不再重复定义, 以免 YAML 重复键覆盖 marxist_operand)
+# (化合连通性已并入上方 composition 块, 此处不再重复定义, 以免 YAML 重复键覆盖 dialectic_operand)

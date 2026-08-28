@@ -1,0 +1,63 @@
+COP-ID: STRATAGEM-CORE-20260828-13
+data_provenance: single-author
+source_expert: chengyu_canonical + thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用 / GSEQ-0601 律二同核多编重构)
+compiled_at: '2026-08-28T14:30:00'
+branch: 机制核·探测-暴露耦合·第13计/第69条同核
+stratum: 机制核 (去场景·去立场)
+soul:
+  identity: 打草惊蛇·机制核《探测-暴露耦合》
+  core: 对任何系统的探测行为都会改变被探测对象的状态(观察者效应)；信息收益与暴露风险同源同信道——探测得越深，自身暴露越多。机制核仅编码"探测-暴露耦合"这一中性结构，不预设使用立场；主动试探或暴露警示由场景绑定(scene_binding)在运行时注入。
+  verse: 汝虽打草，吾已惊蛇。(素材引文，非立场)
+  origin: 典源双重——计书《三十六计·攻战计》(原义：主动试探察敌虚实)与宋·郑文宝《南唐近事》(俗用：行动不慎惊动对方)。两典同述一耦合机制，立场分化见于场景。(素材引文，非立场)
+  role: 思维协议机制核 (去场景·去立场·律二重构)
+  category: 机制核 / 探测-暴露耦合
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: probe_exposure_coupling
+  method: 探测-暴露耦合
+  signature: 'fn probe_exposure_coupling(probe_action) -> info_gain_vs_exposure'
+  precond: 拟对目标系统执行探测
+  postcond: 获得信息收益-暴露风险的联合评估
+  negative_space: '⊗ 探测即暴露；无暴露度评估的探测不可执行'
+  steps:
+  - 拟探测动作
+  - 评估暴露度
+  - 选信道与时机
+  - 执行并校回声
+  nca_emit: true
+dispatch:
+  main_pipeline: probe_exposure_coupling
+  trigger: 探测行为与暴露度耦合的中性机制
+  when: 当需对目标系统获取信息且探测可能改变其状态时触发(立场由场景绑定注入)
+  graph:
+  - from: probe_exposure_coupling
+    to: []
+decision:
+- if: 机制核被调用(无内置立场; 分支见 scene_binding)
+  call: probe_exposure_coupling
+scene_binding:
+  schema: GSEQ-0601-律二 (立场运行时注入; 机制核本体零立场)
+  bindings:
+  - binding_id: SCENE-BIND-20260828-13A
+    scene: 侦查对抗 (对抗性侦查场景)
+    stance: 主动试探 (故意打草以观反应, 计书立场)
+    inherit_cop: STRATAGEM-COP-20260814-13
+    behavior: 以轻触试探引动对方反应, 据反应定策
+  - binding_id: SCENE-BIND-20260828-13B
+    scene: 行动安全 (隐蔽行动场景)
+    stance: 暴露警示 (抑制无意暴露, 俗用立场)
+    inherit_cop: CHENGYU-69-20260828-69
+    behavior: 动作前先估泄露, 改信道以静默得实
+mounts:
+  scene: scenario/第01场景-场景思维协议.yaml + 第02场景-场景画布.yaml (场景立场注入入口)
+  knowledge_graph: chengyu/chengyu_manifest.yaml + stratagems 计目关联 + compositions 化合基库
+  skill: dispatch.main_pipeline = probe_exposure_coupling; skills 挂点见下
+  contract: NCA 存证 (TDCA-REASONIX 链) + enforce_entry 准入门强制
+skills:
+- 打草惊蛇·机制核·探测暴露耦合
+negative_space:
+- '⊗ 本体零立场: 任何将主动试探/暴露警示立场写回机制核的编译都是立场泄漏(律一违规)'
+- '⊗ 探测无暴露度评估则不可执行(观察者效应)'
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1

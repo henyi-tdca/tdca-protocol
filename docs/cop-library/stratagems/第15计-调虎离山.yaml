@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-15
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:32.008876'
 stratum: 攻战计
 soul:
   identity: 调虎离山
-  core: 诱敌离其有利地形
+  core: 诱引对方离其有利地形
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 攻战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 diao_hu_li_shan 即该计执行体
 decision:
-- if: 敌凭险固守
+- if: 对方凭险固守
   call: diao_hu_li_shan
 skills: []
 negative_space:

@@ -1,6 +1,3 @@
-# 本 COP 由真实多 agent 协作编译:
-#   兵学战略研究院(蒸馏主agent) + 古籍训诂与文本校勘院(校勘) + 中文语义与情报NLP所(zh-nlp 连接器 jieba 实算) + 编译推理算力云(校验确权)
-#   内容取自 sunzi_real/ 上游真实产出, 非说明文档。
 COP-ID: SUNZI-REAL-20260815-01
 source_expert: sunzi_canonical
 compiler: 编译推理算力云 (TDCA 编译推理算力云 · 真实校验执行)
@@ -36,13 +33,13 @@ dispatch:
   - from: jing_xiao_wu_shi_qi_ji
     to: []
 decision:
-- if: 我方得算 > 敌方
+- if: 行动方得算 > 对方
   call: jing_xiao_wu_shi_qi_ji
   action: 可战（先胜后战）
 - if: 势均
   call: jing_xiao_wu_shi_qi_ji
   action: 伐谋/伐交优先，慎战
-- if: 我方得算 < 敌方
+- if: 行动方得算 < 对方
   call: jing_xiao_wu_shi_qi_ji
   action: 不战，先为不可胜（蓄势待变）
 skills:
@@ -83,7 +80,14 @@ attribution:
   sandbox_rounds: 3
   sandbox_vb_final: 242.0
   production_nca: TDCA-REASONIX-20260816-009
-  admission_ncas: [TDCA-REASONIX-20260815-286, TDCA-REASONIX-20260815-287, TDCA-REASONIX-20260815-288, TDCA-REASONIX-20260815-289, TDCA-REASONIX-20260815-290, TDCA-REASONIX-20260815-291, TDCA-REASONIX-20260815-292]
+  admission_ncas:
+  - TDCA-REASONIX-20260815-286
+  - TDCA-REASONIX-20260815-287
+  - TDCA-REASONIX-20260815-288
+  - TDCA-REASONIX-20260815-289
+  - TDCA-REASONIX-20260815-290
+  - TDCA-REASONIX-20260815-291
+  - TDCA-REASONIX-20260815-292
   admission_core: TDCA-CORE-20260815-01
 nlp:
   proper:

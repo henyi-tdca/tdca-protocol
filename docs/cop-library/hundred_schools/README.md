@@ -1,6 +1,6 @@
 # 诸子百家思维协议库 (Hundred Schools / 中文化合基库)
 
-本库是 TDCA 思维协议库中 **中国文化** 分支，定位为后续 **"中国文化 ⊕ 马克思主义" 化合**
+本库是 TDCA 思维协议库中 **中国文化** 分支，定位为后续 **"中国文化 ⊕ 辩证实践方法论" 化合**
 的中方 operand 源。首个编译成果为 **《道德经》(道家)** —— `HS-DAO-20260815-01`。
 
 ## 强制底座
@@ -27,16 +27,16 @@ python mingjia/compile_mingjia.py    # 名家
 python yinyangjia/compile_yinyangjia.py # 阴阳家
 ```
 
-## 马克思主义方 operand 源（../marxism/）
+## 辩证实践方法论方 operand 源（（私有 operand 库，不入仓））
 `compile_marxism.py` 编译唯物辩证法(6)/矛盾论(5)/实践论(4) 共 15 条 COP。
 
-## 旗舰化合示例（中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议）
+## 旗舰化合示例（中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议）
 ```bash
-python ../marxism/compose_mao.py
+python （私有 operand 库，不入仓）compose_mao.py
 ```
-演示：`马克思主义·实践论(实事求是) ⟂ 中庸·中和(致中和)` → 组合 COP
-`MACM-14-20260815-14+02`，语义涌现 **"实事求是·两个结合的活的灵魂"**（中国化时代化马克思主义、
-毛泽东思想方法论内核）。证明中方 operand 与马克思主义方 operand 已在 `compose_general` 跨范式空间
+演示：`辩证实践方法论·实践论(实事求是) ⟂ 中庸·中和(致中和)` → 组合 COP
+`MACM-14-20260815-14+02`，语义涌现 **"实事求是·两个结合的活的灵魂"**（中国化时代化辩证实践方法论、
+辩证实践方法论内核）。证明中方 operand 与辩证实践方法论方 operand 已在 `compose_general` 跨范式空间
 完成旗舰化合。
 
 ## 预留 slot（同构扩展）
@@ -46,4 +46,4 @@ python ../marxism/compose_mao.py
 ## 化合第一性原则
 本库 COP 的组合 **以化合为第一性模态**：A ⊕ B 涌现父原单独不具备的新内涵
 （`interpretant[{cop_id, relation, bind_step, effect}]` + `reframe_text` 语义涌现），
-物理叠加只是子集。毛泽东思想思维协议 = 中国文化 ⊕ 马克思主义 的化合，将作为旗舰范式示范。
+物理叠加只是子集。辩证实践思维协议 = 中国文化 ⊕ 辩证实践方法论 的化合，将作为旗舰范式示范。

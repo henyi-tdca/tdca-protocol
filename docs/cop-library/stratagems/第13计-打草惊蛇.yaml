@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-13
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:31.969344'
 stratum: 攻战计
 soul:
   identity: 打草惊蛇
-  core: 试探引动, 察敌虚实
+  core: 试探引动, 察对方虚实
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 攻战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 da_cao_jing_she 即该计执行体
 decision:
-- if: 敌情不明
+- if: 对方态势不明
   call: da_cao_jing_she
 skills: []
 negative_space:

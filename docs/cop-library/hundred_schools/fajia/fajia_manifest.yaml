@@ -1,6 +1,6 @@
 library: fajia_fashushi
 role: 诸子百家系统思维·法术势库 (Chinese cultural compound operand source, 义理条目级)
-note: 法家以明法任势、循名责实为治术枢纽, 立君主南面之术与富强之基。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。
+note: 法家以明法任势、循名责实为治术枢纽, 立君主南面之术与富强之基。逐条编译为独立可调用的思维协议(COP), 按三谱系归类。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。
 base_protocol: TDCA-CORE-20260815-01
 compiler: fajia/compile_fajia.py
 schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
@@ -93,12 +93,12 @@ composition:
   - 墨家
   - 名家
   - 阴阳家
-  - 马克思主义
+  - 辩证实践方法论
   - 兵法
   - 博弈论
   - 机制设计
   - 场景
   - 现代学科库
   compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
-  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
-  verified_demo: 撰写中 (法家法术势/自利人性 ⟂ 马克思主义唯物史观/国家学说)
+  compound_target: 中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)
+  verified_demo: 撰写中 (法家法术势/自利人性 ⟂ 辩证实践方法论唯物史观/国家学说)

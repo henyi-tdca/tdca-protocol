@@ -1,7 +1,7 @@
 library: daodejing_chapters
 role: 道家系统思维章句库 (Chinese cultural compound operand source, 章句级)
 note: 《道德经》文字虽少，却是道家系统思维的完整体现；81 章逐章编译为独立可调用的思维协议(COP)，共同构成道家系统思维基库，按六谱系归类。后续作'中国文化
-  ⊕ 马克思主义'化合的中方基协议素材。
+  ⊕ 辩证实践方法论'化合的中方基协议素材。
 base_protocol: TDCA-CORE-20260815-01
 compiler: daodejing/compile_daodejing.py
 schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
@@ -598,5 +598,5 @@ composition:
   - 场景
   - 现代学科库
   compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
-  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  compound_target: 中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)
   verified_demo: compose_demo_ddj.py (第36章 ⟂ TDCA核心-02 → 可审计微明顺势决策)
