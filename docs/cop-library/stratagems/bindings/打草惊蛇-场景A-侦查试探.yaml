@@ -18,4 +18,12 @@ mounts:
   knowledge_graph: stratagems 计目关联 (第13计)
   skill: dispatch 挂点 probe_exposure_coupling
   contract: NCA 存证 + enforce_entry 准入门
+  data_feed:  # 律三v2 动态状态通道 (绑定级细化)
+    source: "对方行为事件流 (工业现场: SCADA/MQTT 对侧负载/状态遥测)"
+    variables:
+    - name: 对方反应信号
+      role: 试探后回声观测, 供'据反应定策'分支求值
+    freshness_sla:
+      max_staleness_s: 5
+      on_breach: freeze
 nsfl_version: V0.1

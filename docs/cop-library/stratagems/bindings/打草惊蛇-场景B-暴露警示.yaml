@@ -18,4 +18,14 @@ mounts:
   knowledge_graph: chengyu/chengyu_manifest.yaml (第69条)
   skill: dispatch 挂点 probe_exposure_coupling
   contract: NCA 存证 + enforce_entry 准入门
+  data_feed:  # 律三v2 动态状态通道 (绑定级细化)
+    source: "自身暴露与信道状态流 (工业现场: 本侧操作日志/信道心跳)"
+    variables:
+    - name: 自身暴露度事件
+      role: 泄露量化, 供'改信道/静默行'分支求值
+    - name: 信道连通状态
+      role: 静默可行性判定
+    freshness_sla:
+      max_staleness_s: 15
+      on_breach: freeze
 nsfl_version: V0.1
