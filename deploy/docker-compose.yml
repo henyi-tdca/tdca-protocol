@@ -16,6 +16,15 @@ services:
     volumes:
       - mcp-evidence:/evidence
     restart: always
+  nl:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.nl
+    environment:
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
+    volumes:
+      - nl-evidence:/evidence-nl
+    restart: always
   nginx:
     image: nginx:alpine
     ports:
@@ -26,6 +35,8 @@ services:
     depends_on:
       - gateway
       - mcp-bridge
+      - nl
     restart: always
 volumes:
   mcp-evidence:
+  nl-evidence:
