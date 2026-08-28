@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-04
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:31.699447'
 stratum: 胜战计
 soul:
   identity: 以逸待劳
-  core: 养精蓄锐, 待敌疲而击之
+  core: 养精蓄锐, 待对方疲而击之
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 胜战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 yi_yi_dai_lao 即该计执行体
 decision:
-- if: 敌远来或躁动, 己方可守
+- if: 对方远来或躁动, 行动方可守
   call: yi_yi_dai_lao
 skills: []
 negative_space:

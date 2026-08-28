@@ -1,4 +1,5 @@
 COP-ID: STRATAGEM-COP-20260814-03
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:31.673504'
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 jie_dao_sha_ren 即该计执行体
 decision:
-- if: 需除去对手但不宜亲为
+- if: 需除去另一参与方但不宜亲为
   call: jie_dao_sha_ren
 skills: []
 negative_space:

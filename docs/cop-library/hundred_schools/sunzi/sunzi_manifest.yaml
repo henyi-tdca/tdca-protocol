@@ -1,6 +1,6 @@
 library: sunzi_bingfa
 role: 兵家系统思维库 (Chinese cultural compound operand source, 篇级)
-note: 《孙子兵法》十三篇逐篇编译为独立可调用的思维协议(COP)，按四谱系归类(战略筹划/形势势能/地形机变/奇法用间)。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。
+note: 《孙子兵法》十三篇逐篇编译为独立可调用的思维协议(COP)，按四谱系归类(战略筹划/形势势能/地形机变/奇法用间)。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。
 base_protocol: TDCA-CORE-20260815-01
 compiler: sunzi/compile_sunzi.py
 schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
@@ -133,8 +133,8 @@ composition:
   - 博弈论
   - 机制设计
   - 场景
-  - 马克思主义库
+  - 辩证实践方法论库
   - 现代学科库
   compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
-  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  compound_target: 中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)
   collab_demo: simulations/multilateral_search_match/run_sunzi_collab.py (连接器比配+TDCA机制协作编译)

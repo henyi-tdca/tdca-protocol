@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-02
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:31.647685'
 stratum: 胜战计
 soul:
   identity: 围魏救赵
-  core: 攻敌必救, 避实击虚以解困
+  core: 攻其必救, 避实击虚以解困
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 胜战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 wei_wei_jiu_zhao 即该计执行体
 decision:
-- if: 盟友或己方被围, 正面难以直解
+- if: 盟友或行动方被围, 正面难以直解
   call: wei_wei_jiu_zhao
 skills: []
 negative_space:

@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-05
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:31.725526'
 stratum: 胜战计
 soul:
   identity: 趁火打劫
-  core: 乘敌之危, 速取可图之利
+  core: 乘对方之危, 速取可图之利
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 胜战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 chen_huo_da_jie 即该计执行体
 decision:
-- if: 敌内部生乱或受损
+- if: 对方内部生乱或受损
   call: chen_huo_da_jie
 skills: []
 negative_space:

@@ -1,0 +1,21 @@
+binding_id: SCENE-BIND-20260828-13B
+schema: GSEQ-0601-律二 场景绑定 (立场运行时注入)
+core_cop: STRATAGEM-CORE-20260828-13
+scene:
+  id: 行动安全
+  entry: scenario/第01场景-场景思维协议.yaml
+stance: 暴露警示
+stance_note: 探测的暴露副作用须被抑制——观察即暴露，动作前先估泄露
+inherit_cop: CHENGYU-69-20260828-69
+behavior: 拟动作 → 估泄露 → 改信道 → 静默行
+decision_override:
+- if: 需获取信息且暴露本身即损失
+  call: probe_exposure_coupling
+negative_space:
+- '⊗ 因惧暴露而完全放弃探测则陷入全盲'
+mounts:
+  scene: scenario/第01场景-场景思维协议.yaml
+  knowledge_graph: chengyu/chengyu_manifest.yaml (第69条)
+  skill: dispatch 挂点 probe_exposure_coupling
+  contract: NCA 存证 + enforce_entry 准入门
+nsfl_version: V0.1

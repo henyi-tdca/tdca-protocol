@@ -1,4 +1,5 @@
 COP-ID: STRATAGEM-COP-20260814-10
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:31.901802'
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 xiao_li_cang_dao 即该计执行体
 decision:
-- if: 需近敌而备攻
+- if: 需近对方而备攻
   call: xiao_li_cang_dao
 skills: []
 negative_space:

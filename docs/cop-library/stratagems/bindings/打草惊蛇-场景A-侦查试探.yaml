@@ -1,0 +1,21 @@
+binding_id: SCENE-BIND-20260828-13A
+schema: GSEQ-0601-律二 场景绑定 (立场运行时注入)
+core_cop: STRATAGEM-CORE-20260828-13
+scene:
+  id: 侦查对抗
+  entry: scenario/第01场景-场景思维协议.yaml
+stance: 主动试探
+stance_note: 故意打草以观反应——探测被用作信息获取手段，暴露可接受甚至为刻意
+inherit_cop: STRATAGEM-COP-20260814-13
+behavior: 轻触试探 → 观察反应 → 据反应定策
+decision_override:
+- if: 对方态势不明且可承受暴露
+  call: probe_exposure_coupling
+negative_space:
+- '⊗ 无暴露承受度评估不得启用本绑定'
+mounts:
+  scene: scenario/第01场景-场景思维协议.yaml
+  knowledge_graph: stratagems 计目关联 (第13计)
+  skill: dispatch 挂点 probe_exposure_coupling
+  contract: NCA 存证 + enforce_entry 准入门
+nsfl_version: V0.1

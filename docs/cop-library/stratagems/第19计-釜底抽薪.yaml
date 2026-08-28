@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-19
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:32.086742'
 stratum: 混战计
 soul:
   identity: 釜底抽薪
-  core: 断根绝源, 消敌势能
+  core: 断根绝源, 消对方势能
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 混战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 fu_di_chou_xin 即该计执行体
 decision:
-- if: 敌势盛但其根基有隙
+- if: 对方势盛但其根基有隙
   call: fu_di_chou_xin
 skills: []
 negative_space:

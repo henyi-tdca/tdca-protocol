@@ -32,7 +32,7 @@ dispatch:
   - from: liu_di
     to: []
 decision:
-- if: 需地形制敌
+- if: 需地形制对方
   call: liu_di
 skills:
 - 地形篇·顺势研判

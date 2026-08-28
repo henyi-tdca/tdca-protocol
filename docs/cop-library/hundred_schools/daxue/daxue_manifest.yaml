@@ -1,7 +1,7 @@
 library: daxue_gangmu
 role: 儒家系统思维纲领库 (Chinese cultural compound operand source, 纲目级)
 note: 《大学》文字虽少，却是儒家'修齐治平·内圣外王'系统思维的纲领体现；以三纲(明明德/亲民/止于至善) + 八目(格物/致知/诚意/正心/修身/齐家/治国/平天下)
-  共 11 目逐目编译为独立可调用的思维协议(COP)，按三谱系归类。后续作'中国文化 ⊕ 马克思主义'化合的中方基协议素材。
+  共 11 目逐目编译为独立可调用的思维协议(COP)，按三谱系归类。后续作'中国文化 ⊕ 辩证实践方法论'化合的中方基协议素材。
 base_protocol: TDCA-CORE-20260815-01
 compiler: daxue/compile_daxue.py
 schema: 同构麦肯锡 COP (stratum+steps, 兼容 compose_general)
@@ -104,5 +104,5 @@ composition:
   - 场景
   - 现代学科库
   compound_first_principle: 化合 > 物理叠加 (interpretant 注入语义涌现, 非内禀)
-  compound_target: 中国文化 ⊕ 马克思主义 = 毛泽东思想思维协议 (化合旗舰范式)
+  compound_target: 中国文化 ⊕ 辩证实践方法论 = 辩证实践思维协议 (化合旗舰范式)
   verified_demo: compose_demo_dx.py (第03目 止于至善·知止有定 ⟂ TDCA核心-02 → 知止有界的可审计自主决策)

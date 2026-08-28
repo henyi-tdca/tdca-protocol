@@ -1,4 +1,5 @@
 COP-ID: STRATAGEM-COP-20260814-36
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:32.445992'

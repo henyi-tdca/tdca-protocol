@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-32
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:32.359509'
 stratum: 败战计
 soul:
   identity: 空城计
-  core: 虚而示虚, 疑兵退敌
+  core: 虚而示虚, 疑兵退对方
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 败战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 kong_cheng_ji 即该计执行体
 decision:
-- if: 兵少敌众, 不可战
+- if: 兵少对方众, 不可战
   call: kong_cheng_ji
 skills: []
 negative_space:

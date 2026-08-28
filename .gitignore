@@ -16,3 +16,6 @@ Thumbs.db
 # 存证运行时产物（模板保留，实例不入库）
 nca_runtime/
 *.tmp
+
+# WorkBuddy 自动化运行时（2026-08-27 创始人签批补入，防误提交外泄）
+.workbuddy/

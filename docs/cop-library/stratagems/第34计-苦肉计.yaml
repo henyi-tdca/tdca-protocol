@@ -1,11 +1,12 @@
 COP-ID: STRATAGEM-COP-20260814-34
+base_protocol: TDCA-CORE-20260815-01
 source_expert: thirty_six_stratagems
 compiler: cognitive_compiler (T1+T2 规范复用)
 compiled_at: '2026-08-14T17:15:32.398986'
 stratum: 败战计
 soul:
   identity: 苦肉计
-  core: 自伤取信, 间入敌腹
+  core: 自伤取信, 间入对方腹
   role: 思维协议 (兵法策略类)
   category: 三十六计 / 败战计
 primitives:
@@ -27,7 +28,7 @@ dispatch:
     to: []
   note: 单计独立协议, 主原语 ku_rou_ji 即该计执行体
 decision:
-- if: 需深入敌内
+- if: 需深入对方内
   call: ku_rou_ji
 skills: []
 negative_space:
