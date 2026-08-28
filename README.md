@@ -1,6 +1,12 @@
 # TDCA Protocol · 可信数字协作架构协议包
 
+[![core-go-ci](https://github.com/henyi-tdca/tdca-protocol/actions/workflows/core-go-ci.yml/badge.svg)](https://github.com/henyi-tdca/tdca-protocol/actions/workflows/core-go-ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Discussions](https://img.shields.io/badge/GitHub-Discussions-blue?logo=github)](https://github.com/henyi-tdca/tdca-protocol/discussions)
+
 > **TDCA 是锚定主权信用的智能体协作制度协议：结算只走数字人民币（法偿性），协作价值以税收为最低可见效用锚（财政事实），认知资产经国家可信版权链/天平链获得法律赋予（司法事实）。当前为制度演示态（simulated），全部数据带性质标注（ID92）。**
+>
+> **显影论（一句话）**：TDCA 对智能体做「显影」而非「白箱化」——不拆解黑箱内部，只在制度层让每一次协作可确权、可计量、可问责（[认知论定位 →](docs/papers/TDCA-MONOGRAPH-COP-001.md)）。
 
 | 结算锚 | 效用锚 | 权利锚 |
 |---|---|---|
@@ -34,8 +40,34 @@
 | [`tools/pi_nca/`](tools/pi_nca/) | 五项目③ Pi 对接：MIT 层制度编译 + Fair Source | `cd tools && python -m pytest pi_nca -q` |
 | [`tools/cypress_pool/`](tools/cypress_pool/) | 五项目④ Cypress 对接：配置权计量 + L2 | `cd tools && python -m pytest cypress_pool -q` |
 | [`tools/thingsboard_pool/`](tools/thingsboard_pool/) | 五项目⑤ ThingsBoard 对接：IoT 计量 + L2 | `cd tools && python -m pytest thingsboard_pool -q` |
+| [`tools/context_provider.py`](tools/context_provider.py) | **COP 动态数据流 M1**：context provider 抽象层 + ProviderRegistry 注册机制（未注册 fail-closed）+ ThingsBoard 适配 | `cd tools && python -m pytest tests/test_context_provider.py -q` |
+| [`tools/data_feed_gate.py`](tools/data_feed_gate.py) | **律三 v2 运行时门控**：数据流准入 + 新鲜度 SLA（陈旧/断流冻结，联动 NSFL 熔断） | `cd tools && python -m pytest tests -q` |
+| [`tools/stance_neutrality.py`](tools/stance_neutrality.py) + [`tools/stance_separation_check.py`](tools/stance_separation_check.py) | **三律守门**：机制核零立场静态检查（律一/律二 CI 化） | `cd tools && python stance_separation_check.py` |
 
 基座模块（同层）：`tdca_cognitive_distance.py`（定义 3.36/3.37，命题 3.10）/ `tdca_cognitive_state.py`（五维状态 ID8）/ `tdca_fuzzy_distance.py`（模糊层）。全量回归：`cd tools && python -m pytest -q`（详见 [`tools/README.md`](tools/README.md)）。
+
+## 思维协议（COP）认知资产板块
+
+思维协议（Cognitive Protocol, COP）是把人类默会知识编译为**可确权、可计价、可分润**的制度协议资产——「显影而非白箱化」的工程载体（[开源说明与调用规则 →](docs/cop-library/OPENING.md)）。
+
+**三律（硬约束，CI 化守门）**
+
+| 律 | 内容 | 守门 |
+|---|---|---|
+| 律一 | 机制核零立场：协议原语不携带任何立场文本 | `tools/stance_neutrality.py` |
+| 律二 | 立场只经 scene_binding 场景注入，与机制核分离 | `tools/stance_separation_check.py` |
+| 律三 v2 | 静态配置 × 动态状态**双通道**挂载：协议不在真空中显影，曝光条件写进 schema（新鲜度 SLA 5s/15s，陈旧/断流即冻结） | `tools/data_feed_gate.py` + `tools/context_provider.py` |
+
+**示范**：三十六计之「打草惊蛇」双文件对照——[`第13计-打草惊蛇-机制核.yaml`](docs/cop-library/stratagems/第13计-打草惊蛇-机制核.yaml)（零立场机制核）× [`第13计-打草惊蛇.yaml`](docs/cop-library/stratagems/第13计-打草惊蛇.yaml)（场景立场注入），直观演示律一/律二分离。
+
+**认知资产与文献导航**
+
+| 目录 | 内容 | 规模 |
+|---|---|---|
+| [`docs/cop-library/`](docs/cop-library/) | 思维协议库（8 类范式子库：诸子百家 / 三十六计 / 博弈 / 机制设计 / 场景 / 化合等） | 原生 COP 336 + 化合 COP 44（[编译清单](docs/cognitive-compiler/思维协议编译清单_2026-08-25.md)口径，仓内可核验） |
+| [`docs/cognitive-compiler/chengyu/`](docs/cognitive-compiler/chengyu/) | 成语 COP 库（中文化合基库） | 60 条 + manifest + 编译脚本 |
+| [`docs/papers/`](docs/papers/) | 论丛：《制度大模型：从"机器证明"到"制度主义"》V3.0 / 《显影而非白箱化：思维协议的认知论定位》 | 2 篇 |
+| [`docs/whitepapers/`](docs/whitepapers/) | 白皮书：《AI 泛滥下的开源治理》/《思维协议基础设施》V0.1.1-DRAFT | 2 篇 |
 
 ## 增值服务（TDCA-VALUE-PRICING-001 已确认生效）
 
@@ -74,6 +106,8 @@
 **官网制度橱窗**：https://lku76tmluhatu.ok.kimi.link （M4a 静态演示站：四层架构制度橱窗）
 
 **发布叙事**：[《我们花 168 块钱，跑通了 33.5 亿 Token 的智能体主权信用结算框架》](https://juejin.cn/post/7676330290206113798)（掘金，2026-08-22 首发；[知乎专栏](https://zhuanlan.zhihu.com/p/2074417591234322652)同步；[English @ dev.to](https://dev.to/henyitdca/we-built-a-sovereign-credit-settlement-framework-for-agents-with-168-cny-and-335b-tokens-2m97)）
+
+**社区发布（2026-08-28 批次）**：[COP-002《思维协议库认知资产调用规则》](https://github.com/henyi-tdca/tdca-protocol/discussions/35)（¥0.01 调用 / 15% 嵌套分润 / 双边界严选）｜[TDCA Weekly 首期：GitHub 基建反哺公示 + 观察报告首篇](https://github.com/henyi-tdca/tdca-protocol/discussions/36)｜[Weekly 特刊：制度诊断 10 篇论丛摘要合集](https://github.com/henyi-tdca/tdca-protocol/discussions/37)（AI 审计 / Skill / 思维协议 / 许可 / 溯源 / 安全 / 框架 / ACPs / 算力 / Token）
 
 ## 合规红线（必须遵守）
 
