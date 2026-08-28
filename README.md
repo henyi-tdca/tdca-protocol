@@ -103,7 +103,9 @@
 - **形式化研究入口**：[`OPEN-PROBLEMS.md`](OPEN-PROBLEMS.md)（9 项开放问题：★ 入门 / ★★ 中等 / ★★★ 挑战）——证明贡献附机器可读验证，走 DCD 门禁评审
 - **分层标注**：声称-证明对照见 [`core-go/docs/formal-proofs/CLAIMS-MATRIX.md`](core-go/docs/formal-proofs/CLAIMS-MATRIX.md)；安全披露见 [`core-go/SECURITY.md`](core-go/SECURITY.md)（48h 确认 / 90 天修复）
 
-**官网门户**：https://henyi-tdca.github.io/tdca-protocol/ （M2 三栏人机共治：人类 NL 入口 × 大模型 agent.json 规格 × 小模型轻量规格 + 哨兵视图 + MCP 实测）
+**官网门户（测试体验环境）**：http://47.76.42.139:8080/ （M2 三栏人机共治 · 真实后端：人类 NL 入口 real × 大模型 MCP 实测 × 小模型轻量规格 + 哨兵实时链尾；未备案测试实例，不对外正式宣称——按量停机时暂时不可达属正常）
+
+**静态门面（离线备用）**：https://henyi-tdca.github.io/tdca-protocol/ （gh-pages 静态版，测试实例停机时仍可达）
 
 **四层架构深览**：https://lku76tmluhatu.ok.kimi.link （M4a 静态演示站）
 
