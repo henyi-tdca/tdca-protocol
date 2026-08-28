@@ -1,0 +1,9 @@
+FROM python:3.12-slim
+# TDCA MCP Bridge + HTTP shim（stdio 桥外挂门面，门户实测用；GSEQ-0642）
+RUN pip install --no-cache-dir fastapi "uvicorn>=0.52"
+COPY tools/mcp_bridge /app/mcp_bridge
+COPY deploy/mcp/shim.py /app/shim.py
+WORKDIR /app
+ENV PYTHONPATH=/app
+EXPOSE 8001
+CMD ["uvicorn", "shim:app", "--host", "0.0.0.0", "--port", "8001"]

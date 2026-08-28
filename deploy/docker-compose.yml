@@ -1,0 +1,31 @@
+services:
+  gateway:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.gateway
+    environment:
+      TDCA_GATEWAY_AUTH: "1"
+      TDCA_GATEWAY_TOKEN: "${TDCA_GATEWAY_TOKEN:?token required}"
+      MOONSHOT_API_KEY: "${MOONSHOT_API_KEY:-}"
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
+    restart: always
+  mcp-bridge:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.mcp
+    volumes:
+      - mcp-evidence:/evidence
+    restart: always
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./portal:/usr/share/nginx/html:ro
+    depends_on:
+      - gateway
+      - mcp-bridge
+    restart: always
+volumes:
+  mcp-evidence:

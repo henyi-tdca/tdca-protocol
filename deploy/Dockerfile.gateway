@@ -1,0 +1,9 @@
+FROM python:3.12-slim
+# TDCA Gateway 镜像：FROZEN 封板包原样入镜像（零代码改动，GSEQ-0642）
+RUN pip install --no-cache-dir fastapi "uvicorn>=0.52" sqlalchemy alembic httpx
+COPY deploy/tdca-web-deploy.zip /tmp/pkg.zip
+RUN python -c "import zipfile; zipfile.ZipFile('/tmp/pkg.zip').extractall('/app')" && rm /tmp/pkg.zip
+WORKDIR /app/tdca-web/gateway
+ENV TDCA_HOST=0.0.0.0 TDCA_PORT=8000
+EXPOSE 8000
+CMD ["python", "scripts/serve.py"]

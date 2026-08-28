@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TDCA 三栏门户 · 人类 / 大模型 / 小模型（测试云 · 真实后端）</title>
+<style>
+  :root { --bg:#0f1216; --card:#171c22; --line:#2a323c; --fg:#e8edf2; --dim:#9aa7b4;
+          --human:#4dabf7; --llm:#69db7c; --slm:#ffd43b; --warn:#ff8787; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--fg); font-family:"Segoe UI","Microsoft YaHei",sans-serif; line-height:1.6; }
+  header { padding:18px 24px; border-bottom:1px solid var(--line); }
+  header h1 { font-size:20px; }
+  header .anchors { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; font-size:13px; color:var(--dim); }
+  header .anchors b { color:var(--fg); font-weight:600; }
+  .tag { display:inline-block; font-size:11px; padding:1px 8px; border:1px solid var(--line);
+         border-radius:10px; color:var(--dim); margin-left:8px; vertical-align:middle; }
+  .toolbar { display:flex; gap:10px; padding:12px 24px; border-bottom:1px solid var(--line);
+             flex-wrap:wrap; align-items:center; font-size:13px; color:var(--dim); }
+  .toolbar button { background:var(--card); color:var(--fg); border:1px solid var(--line);
+                    border-radius:6px; padding:4px 12px; cursor:pointer; font-size:13px; }
+  .toolbar button:hover { border-color:var(--human); }
+  main { display:flex; gap:14px; padding:16px 24px; align-items:stretch; }
+  .col { flex:1; background:var(--card); border:1px solid var(--line); border-radius:10px;
+         padding:16px; min-width:0; display:flex; flex-direction:column; }
+  .col.hidden-col { display:none; }
+  .col.full-col { flex:1 1 100%; }
+  .col h2 { font-size:16px; padding-bottom:10px; border-bottom:2px solid; margin-bottom:12px; }
+  #col-human h2 { border-color:var(--human); color:var(--human); }
+  #col-llm   h2 { border-color:var(--llm);   color:var(--llm); }
+  #col-slm   h2 { border-color:var(--slm);   color:var(--slm); }
+  .col .ops { margin-left:auto; }
+  .col .ops button { background:transparent; border:1px solid var(--line); color:var(--dim);
+                     border-radius:5px; font-size:11px; padding:1px 7px; margin-left:4px; cursor:pointer; }
+  .col .ops button:hover { color:var(--fg); border-color:var(--dim); }
+  h2 .ops { float:right; }
+  pre { background:#0b0e12; border:1px solid var(--line); border-radius:8px; padding:10px;
+        font-size:12px; overflow-x:auto; white-space:pre-wrap; word-break:break-all; color:#c9d4de; }
+  .demo-io { margin-top:10px; }
+  .demo-io input { width:100%; background:#0b0e12; border:1px solid var(--line); color:var(--fg);
+                   border-radius:6px; padding:8px 10px; font-size:13px; }
+  .demo-io .out { margin-top:8px; font-size:13px; color:var(--dim); min-height:40px; }
+  .intent-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .intent-chips button { background:#0b0e12; border:1px solid var(--line); color:var(--dim);
+                         border-radius:12px; font-size:12px; padding:2px 10px; cursor:pointer; }
+  .intent-chips button:hover { color:var(--human); border-color:var(--human); }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px; }
+  th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; vertical-align:top; }
+  th { color:var(--dim); font-weight:600; }
+  .sentinel { margin-top:14px; border:1px dashed var(--llm); border-radius:8px; padding:10px; }
+  .sentinel h3 { font-size:13px; color:var(--llm); margin-bottom:6px; }
+  .ok { color:var(--llm); } .sim { color:var(--slm); }
+  footer { padding:14px 24px; border-top:1px solid var(--line); font-size:12px; color:var(--dim); }
+  footer a { color:var(--human); text-decoration:none; }
+  @media (max-width:900px) { main { flex-direction:column; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>TDCA 三栏门户 <span class="tag">测试云 · 真实后端（NL real / MCP 实测 / 哨兵实时）</span><span class="tag">ID92 数据性质标注在位</span></h1>
+  <div class="anchors">
+    <span>结算锚 <b>数字人民币 e-CNY</b>（法偿性）</span>
+    <span>效用锚 <b>税收 MOU</b>（财政事实）</span>
+    <span>权利锚 <b>国家可信版权链/天平链</b>（司法事实）</span>
+    <span>显影论 <b>显影而非白箱化</b></span>
+  </div>
+</header>
+
+<div class="toolbar">
+  <span>视图控制：</span>
+  <button onclick="showAll()">[三栏共见]</button>
+  <button onclick="hideCol('col-human')">[隐藏] 人类栏</button>
+  <button onclick="hideCol('col-llm')">[隐藏] 大模型栏</button>
+  <button onclick="hideCol('col-slm')">[隐藏] 小模型栏</button>
+  <button onclick="fullCol('col-human')">[全屏] 人类栏</button>
+  <button onclick="fullCol('col-llm')">[全屏] 大模型栏</button>
+  <button onclick="fullCol('col-slm')">[全屏] 小模型栏</button>
+  <span style="margin-left:auto"></span>
+  <span>参与：</span>
+  <a href="https://github.com/henyi-tdca/tdca-protocol/issues/new/choose" target="_blank"><button style="border-color:var(--llm);color:var(--llm)">[我要缔约]</button></a>
+  <a href="https://github.com/henyi-tdca/tdca-protocol/fork" target="_blank"><button style="border-color:var(--human);color:var(--human)">[我要 Fork]</button></a>
+</div>
+
+<main>
+  <!-- 人类栏：自然语言意图导航演示（simulated） -->
+  <section class="col" id="col-human">
+    <h2>人类 · 自然语言入口 <span class="ops">
+      <button onclick="hideCol('col-human')">隐藏</button><button onclick="fullCol('col-human')">全屏</button></span></h2>
+    <p style="font-size:13px;color:var(--dim)">用一句话说明意图，系统按意图进入对应功能（查询 / 创建 / 签批）。<b class="ok">本栏接真实后端</b>：意图导航走 <code>/api/v1/intent</code>（确定性规则表，零模型调用，行为可审计，real 水印）。</p>
+    <div class="demo-io">
+      <input id="nl-input" placeholder="例如：帮我查一下最近一条存证" onkeydown="if(event.key==='Enter')nlDemo()">
+      <div class="intent-chips">
+        <button onclick="tryIntent(this)">查询存证链尾</button>
+        <button onclick="tryIntent(this)">创建一条新存证</button>
+        <button onclick="tryIntent(this)">签批当前待办</button>
+        <button onclick="tryIntent(this)">查看熔断记录</button>
+      </div>
+      <div class="out" id="nl-out">→ 等待输入…</div>
+    </div>
+    <table>
+      <tr><th>意图</th><th>进入功能</th><th>门禁</th></tr>
+      <tr><td>查询</td><td>存证链 / 熔断记录只读视图</td><td>免签批</td></tr>
+      <tr><td>创建</td><td>NCA 存证起草</td><td>六要素校验</td></tr>
+      <tr><td>签批</td><td>DCD 待办裁决</td><td>人类签名权（ID71）</td></tr>
+    </table>
+  </section>
+
+  <!-- 大模型栏：agent.json 端点规格 + 哨兵视图 -->
+  <section class="col" id="col-llm">
+    <h2>大模型 · agent.json 端点规格 <span class="ops">
+      <button onclick="hideCol('col-llm')">隐藏</button><button onclick="fullCol('col-llm')">全屏</button></span></h2>
+    <p style="font-size:13px;color:var(--dim)">面向大模型智能体的机器可读接入规格：MCP 协议外部调用（只赋能不改码），全量调用自动落 NCA 存证 + NSFL 熔断预检。</p>
+<pre>{
+  "agent_card": "必填（缺失 → fail-closed 拒绝）",
+  "transport": "MCP stdio / JSON-RPC 2.0（protocolVersion 2025-06-18）",
+  "tools": [
+    "tdca:echo   — 演示业务调用（落存证+熔断预检）[SIMULATED]",
+    "nca:get     — 按 NCA-ID 查询存证全文",
+    "nca:chain   — 存证链尾查询",
+    "tdca:core   — TDCA_CORE 基协议声明（接入即加载）"
+  ],
+  "disclosure": {
+    "model_family": "必填",
+    "model_detail": "必填",
+    "generated_by": "智能体生成内容必须披露（生成披露三要素）"
+  },
+  "data_provenance": "real / simulated 强制标注（ID92，非法值 NSFL 拒绝）",
+  "profit_sharing": "15% 嵌套分润 · 开源方优先（模拟态记账，凭账本转实际结算）",
+  "contact": "tdca-dev — 机器可读对接通道：github.com/henyi-tdca/tdca-protocol/discussions（Hello Agent 首呼请附 agent_card）"
+}</pre>
+
+    <div style="margin-top:12px">
+      <button onclick="mcpLive()" style="background:#0b0e12;border:1px solid var(--llm);color:var(--llm);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">▶ MCP 实测（tdca:echo，真实桥调用）</button>
+      <button onclick="mcpChain()" style="background:#0b0e12;border:1px solid var(--line);color:var(--dim);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px;margin-left:6px">查链尾（nca:chain）</button>
+      <pre id="mcp-out" style="margin-top:8px;min-height:56px">→ 点击按钮发起一次真实 MCP 端到端调用（自动落 NCA 存证 + NSFL 预检）</pre>
+    </div>
+
+    <div class="sentinel" id="sentinel">
+      <h3>🛡 哨兵视图 · 存证链尾与熔断（M2-2，实时装载）</h3>
+      <table>
+        <tr><th>项</th><th>值</th></tr>
+        <tr><td>最新存证</td><td class="ok">NCA-KIMIWEB-087（GSEQ-0617，.gitignore 处置交付）</td></tr>
+        <tr><td>链状态</td><td class="ok">080→087 全闭环（prev 哈希链式引用，无存证=未发生）</td></tr>
+        <tr><td>今日 GSEQ</td><td>0601 / 0610 / 0612 / 0615 / 0617 / 0625（本页施工令）</td></tr>
+        <tr><td>NSFL 熔断</td><td class="ok">预检在线：M2-3 实测 1 次端到端调用通过预检，存证 NCA-MCP-20260828-001（哈希 sha256:aad951d7…，0 熔断，成本 ¥0）</td></tr>
+        <tr><td>合规红线</td><td>协议层永久免费（ID77）｜法律禁止领域=绝对负空间（ID86）｜人类签名权（ID71）</td></tr>
+        <tr><td>刷新节奏</td><td>链尾快照每周随 Weekly 刷新；<b class="ok">本页哨兵已接真实后端实时刷新</b>（/api/v1/tax/nca-history，30s 轮询）</td></tr>
+      </table>
+      <div id="live-tail" style="margin-top:8px;font-size:12px;color:var(--dim)">实时账本事件装载中…</div>
+    </div>
+  </section>
+
+  <!-- 小模型栏：轻量规格 -->
+  <section class="col" id="col-slm">
+    <h2>小模型 · 轻量规格 <span class="ops">
+      <button onclick="hideCol('col-slm')">隐藏</button><button onclick="fullCol('col-slm')">全屏</button></span></h2>
+    <p style="font-size:13px;color:var(--dim)">面向资源受限小模型的最小接入面：只做两件事——<b>存证</b>与<b>过闸</b>。</p>
+<pre>{
+  "profile": "tdca-lite",
+  "must": [
+    "每次动作落一条 NCA 存证（五字段最小集）",
+    "动作前过 NSFL 负空间预检（命中即熔断）"
+  ],
+  "optional": ["nca:chain 只读查询"],
+  "free": "协议层永久免费（ID77），轻量接入零成本",
+  "constraint": "无 agent_card 完整披露能力 → 仅开放只读工具"
+}</pre>
+    <table>
+      <tr><th>能力</th><th>大模型</th><th>小模型</th></tr>
+      <tr><td>业务调用（tdca:echo 等）</td><td class="ok">✅</td><td>—</td></tr>
+      <tr><td>存证写入</td><td class="ok">✅</td><td class="ok">✅（最小集）</td></tr>
+      <tr><td>NSFL 预检</td><td class="ok">✅</td><td class="ok">✅（强制）</td></tr>
+      <tr><td>只读查询</td><td class="ok">✅</td><td class="ok">✅</td></tr>
+    </table>
+  </section>
+</main>
+
+<footer>
+  TDCA Protocol · 三锚：e-CNY 结算 × 税收效用 × 版权链权利 ｜ 本页为<b>测试云真实后端版</b>：NL 意图导航 / MCP 调用 / 账本事件为 real（水印在响应内），业务演示数据仍为 simulated（ID92）｜未备案测试实例，不对外正式宣称｜
+  <a href="https://github.com/henyi-tdca/tdca-protocol">GitHub 仓库</a> ·
+  <a href="https://github.com/henyi-tdca/tdca-protocol/discussions">Discussions</a> ·
+  <a href="https://gitee.com/siweihanshuzhineng_0/tdca-protocol">Gitee 镜像</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）
+</footer>
+
+<script>
+const INTENTS = [
+  ["查询存证链尾", "→ 意图识别：查询。进入【存证链尾只读视图】。（本地降级响应）"],
+  ["创建一条新存证", "→ 意图识别：创建。进入【NCA 起草】——六要素声明 + 人类签批。（本地降级响应）"],
+  ["签批当前待办", "→ 意图识别：签批。进入【DCD 待办】——签批权为人类专属（ID71）。（本地降级响应）"],
+  ["查看熔断记录", "→ 意图识别：查询。进入【NSFL 熔断记录】。（本地降级响应）"]
+];
+async function nlDemo(){
+  const v = document.getElementById('nl-input').value.trim();
+  const out = document.getElementById('nl-out');
+  if(!v){ out.textContent = "→ 请先输入一句话意图。"; return; }
+  out.textContent = "→ 请求真实后端 /api/v1/intent …";
+  try {
+    const r = await fetch('/api/v1/intent?q=' + encodeURIComponent(v));
+    const d = await r.json();
+    const data = d.data || d;
+    const guide = (data.guide || []).map((g,i) => `${i+1}. ${g}`).join('；');
+    out.textContent = `→ [real] 意图：${data.action || '—'}｜进入【${data.title}】（路由 ${data.route}）。${guide ? '操作指引：' + guide : ''}${data.matched === false ? '（未精确识别，已给总览）' : ''}`;
+  } catch(e) {
+    let hit = INTENTS[0];
+    if(/创|建|新|写/.test(v)) hit = INTENTS[1];
+    if(/签|批|裁决/.test(v)) hit = INTENTS[2];
+    if(/熔断|负空间|拒/.test(v)) hit = INTENTS[3];
+    out.textContent = hit[1] + "（后端暂不可达，降级本地映射）";
+  }
+}
+function tryIntent(btn){
+  document.getElementById('nl-input').value = btn.textContent;
+  nlDemo();
+}
+function hideCol(id){ document.getElementById(id).classList.add('hidden-col'); }
+function fullCol(id){
+  ['col-human','col-llm','col-slm'].forEach(c => {
+    const el = document.getElementById(c);
+    el.classList.remove('hidden-col','full-col');
+    if(c !== id) el.classList.add('hidden-col'); else el.classList.add('full-col');
+  });
+}
+function showAll(){ ['col-human','col-llm','col-slm'].forEach(c =>
+  document.getElementById(c).classList.remove('hidden-col','full-col')); }
+
+// ---- M2 测试云：真实后端接线（GSEQ-0640） ----
+async function mcpLive(){
+  const out = document.getElementById('mcp-out');
+  out.textContent = "→ 调用 MCP 桥 tdca:echo …";
+  try {
+    const r = await fetch('/mcp/call', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name:'tdca:echo', arguments:{text:'门户 MCP 实测（测试云，GSEQ-0640）'}})});
+    const d = await r.json();
+    const content = d.result && d.result.content ? d.result.content.map(c=>c.text).join('\n') : JSON.stringify(d);
+    out.textContent = content;
+  } catch(e){ out.textContent = "→ MCP 桥暂不可达：" + e; }
+}
+async function mcpChain(){
+  const out = document.getElementById('mcp-out');
+  out.textContent = "→ 查询 MCP 存证链尾 …";
+  try {
+    const r = await fetch('/mcp/call', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name:'nca:chain', arguments:{limit:5}})});
+    const d = await r.json();
+    const content = d.result && d.result.content ? d.result.content.map(c=>c.text).join('\n') : JSON.stringify(d);
+    out.textContent = content;
+  } catch(e){ out.textContent = "→ MCP 桥暂不可达：" + e; }
+}
+async function sentinelLive(){
+  const el = document.getElementById('live-tail');
+  try {
+    const r = await fetch('/api/v1/tax/nca-history');
+    const d = await r.json();
+    const data = d.data || d;
+    const evs = (data.events || []).slice(0, 5);
+    el.innerHTML = evs.length
+      ? "实时账本事件（real，最近 " + evs.length + " 条）：<br>" +
+        evs.map(e => `· ${e.ts} — ${e.type}（${e.event_id}）`).join('<br>')
+      : "实时账本事件：暂无记录（种子库，等待首笔真实事件）";
+  } catch(e){ el.textContent = "实时接口暂不可达：" + e; }
+}
+sentinelLive(); setInterval(sentinelLive, 30000);
+</script>
+</body>
+</html>
