@@ -6,6 +6,9 @@ __pycache__/
 dist/
 build/
 .venv/
+.env
+deploy/.env
+*.env.local
 
 # 会话与运行时
 .tdca-session-index/
