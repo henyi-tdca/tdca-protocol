@@ -103,7 +103,9 @@
 - **形式化研究入口**：[`OPEN-PROBLEMS.md`](OPEN-PROBLEMS.md)（9 项开放问题：★ 入门 / ★★ 中等 / ★★★ 挑战）——证明贡献附机器可读验证，走 DCD 门禁评审
 - **分层标注**：声称-证明对照见 [`core-go/docs/formal-proofs/CLAIMS-MATRIX.md`](core-go/docs/formal-proofs/CLAIMS-MATRIX.md)；安全披露见 [`core-go/SECURITY.md`](core-go/SECURITY.md)（48h 确认 / 90 天修复）
 
-**官网制度橱窗**：https://lku76tmluhatu.ok.kimi.link （M4a 静态演示站：四层架构制度橱窗）
+**官网门户**：https://henyi-tdca.github.io/tdca-protocol/ （M2 三栏人机共治：人类 NL 入口 × 大模型 agent.json 规格 × 小模型轻量规格 + 哨兵视图 + MCP 实测）
+
+**四层架构深览**：https://lku76tmluhatu.ok.kimi.link （M4a 静态演示站）
 
 **发布叙事**：[《我们花 168 块钱，跑通了 33.5 亿 Token 的智能体主权信用结算框架》](https://juejin.cn/post/7676330290206113798)（掘金，2026-08-22 首发；[知乎专栏](https://zhuanlan.zhihu.com/p/2074417591234322652)同步；[English @ dev.to](https://dev.to/henyitdca/we-built-a-sovereign-credit-settlement-framework-for-agents-with-168-cny-and-335b-tokens-2m97)）
 
