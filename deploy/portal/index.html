@@ -86,7 +86,7 @@
   <section class="col" id="col-human">
     <h2>人类 · 自然语言入口 <span class="ops">
       <button onclick="hideCol('col-human')">隐藏</button><button onclick="fullCol('col-human')">全屏</button></span></h2>
-    <p style="font-size:13px;color:var(--dim)">用一句话说明意图，系统按意图进入对应功能（查询 / 创建 / 签批）。<b class="ok">本栏接真实后端</b>：意图导航走 <code>/api/v1/intent</code>（确定性规则表，零模型调用，行为可审计，real 水印）。</p>
+    <p style="font-size:13px;color:var(--dim)">用一句话说明意图，系统按意图进入对应功能（查询 / 创建 / 签批）。<b class="ok">本栏接真实后端</b>：意图导航走 <code>/api/v1/intent</code>——DeepSeek 真实算力（real 水印，费用回执）；LLM 不可用或触发算力熔断（日¥2/月¥8）时自动降级确定性规则表，行为可审计。</p>
     <div class="demo-io">
       <input id="nl-input" placeholder="例如：帮我查一下最近一条存证" onkeydown="if(event.key==='Enter')nlDemo()">
       <div class="intent-chips">
