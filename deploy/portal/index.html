@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TDCA 三栏门户 · 人类 / 大模型 / 小模型（测试云 · 真实后端）</title>
+<title>TDCA 三栏门户 · 人类 / 大模型 / 小模型（双端同源 · 测试云实时）</title>
 <style>
   :root { --bg:#0f1216; --card:#171c22; --line:#2a323c; --fg:#e8edf2; --dim:#9aa7b4;
           --human:#4dabf7; --llm:#69db7c; --slm:#ffd43b; --warn:#ff8787; }
@@ -50,6 +50,25 @@
   .sentinel { margin-top:14px; border:1px dashed var(--llm); border-radius:8px; padding:10px; }
   .sentinel h3 { font-size:13px; color:var(--llm); margin-bottom:6px; }
   .ok { color:var(--llm); } .sim { color:var(--slm); }
+  /* M1.1 起草沙盒 + M1.2 资产导航区（GSEQ-0650/0651） */
+  .draft { margin-top:14px; border:1px solid var(--slm); border-radius:8px; padding:12px; }
+  .draft h3 { font-size:13px; color:var(--slm); margin-bottom:8px; }
+  .draft label { display:block; font-size:12px; color:var(--dim); margin-top:8px; }
+  .draft input, .draft select { width:100%; background:#0b0e12; border:1px solid var(--line); color:var(--fg);
+                   border-radius:6px; padding:6px 9px; font-size:12.5px; margin-top:3px; }
+  .draft .chk { font-size:12px; margin-top:8px; }
+  .draft .chk .pass { color:var(--llm); } .draft .chk .fail { color:var(--warn); }
+  .assets { padding:16px 24px; }
+  .assets h2 { font-size:16px; margin-bottom:4px; }
+  .assets .sub { font-size:12px; color:var(--dim); margin-bottom:12px; }
+  .asset-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
+  .asset-card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; font-size:12.5px; }
+  .asset-card h3 { font-size:13.5px; margin-bottom:6px; color:var(--human); }
+  .asset-card ul { list-style:none; }
+  .asset-card li { margin:3px 0; color:var(--dim); }
+  .asset-card a { color:var(--human); text-decoration:none; }
+  .asset-card a:hover { text-decoration:underline; }
+  .soon { color:var(--slm); font-size:11px; border:1px dashed var(--slm); border-radius:8px; padding:0 6px; }
   footer { padding:14px 24px; border-top:1px solid var(--line); font-size:12px; color:var(--dim); }
   footer a { color:var(--human); text-decoration:none; }
   @media (max-width:900px) { main { flex-direction:column; } }
@@ -57,7 +76,7 @@
 </head>
 <body>
 <header>
-  <h1>TDCA 三栏门户 <span class="tag">测试云 · 真实后端（NL real / MCP 实测 / 哨兵实时）</span><span class="tag">ID92 数据性质标注在位</span></h1>
+  <h1>TDCA 三栏门户 <span class="tag">测试云=主入口（NL real / MCP 实测 / 哨兵实时）· gh-pages=静态门面（离线备用）</span><span class="tag">ID92 数据性质标注在位</span></h1>
   <div class="anchors">
     <span>结算锚 <b>数字人民币 e-CNY</b>（法偿性）</span>
     <span>效用锚 <b>税收 MOU</b>（财政事实）</span>
@@ -103,6 +122,34 @@
       <tr><td>创建</td><td>NCA 存证起草</td><td>六要素校验</td></tr>
       <tr><td>签批</td><td>DCD 待办裁决</td><td>人类签名权（ID71）</td></tr>
     </table>
+
+    <!-- M1.1 P0：存证起草沙盒（匿名可用，六要素校验，SIMULATED 草稿不落链） -->
+    <div class="draft" id="draft-box">
+      <h3>🧪 存证起草沙盒 <span class="tag">匿名可用 · 六要素校验</span><span class="tag sim">SIMULATED 草稿 · 不落链</span></h3>
+      <p style="font-size:12px;color:var(--dim)">创建类意图的可达闭环：在此起草 NCA 存证草稿并通过六要素校验。<b class="sim">草稿为 simulated 演示态</b>；正式落链需完整 Web 应用登录态（随 M4 应用侧发布）。</p>
+      <label>① 目标函数（这条存证要证明什么动作发生了）</label>
+      <input id="d-obj" placeholder="例：记录一次工具调用的输入输出哈希">
+      <label>② 约束矩阵（边界与禁项）</label>
+      <input id="d-con" placeholder="例：只读存证，不代执行业务；NSFL 预检全程">
+      <label>③ 先验分布（前置依据/上下文）</label>
+      <input id="d-pri" placeholder="例：prev=链尾哈希；调用方为门户访客">
+      <label>④ 配置权边界</label>
+      <select id="d-cfg">
+        <option value="">— 请选择 —</option>
+        <option>只读存证（不代执行业务）</option>
+        <option>工具调用（限白名单工具）</option>
+        <option>签批申请（须人类签署，AI 无权代行 ID71）</option>
+      </select>
+      <label>⑤ 预期分配（产出与归属）</label>
+      <input id="d-all" placeholder="例：草稿哈希归起草人；正式落链后入公共账本">
+      <label>⑥ 审计轨迹</label>
+      <input value="NCA 链式存证（prev 哈希引用，无存证=未发生）" disabled>
+      <div style="margin-top:10px">
+        <button onclick="draftCheck()" style="background:#0b0e12;border:1px solid var(--slm);color:var(--slm);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">▶ 六要素校验 + 生成草稿</button>
+      </div>
+      <div class="chk" id="d-chk"></div>
+      <pre id="d-out" style="margin-top:8px;min-height:30px;display:none"></pre>
+    </div>
   </section>
 
   <!-- 大模型栏：agent.json 端点规格 + 哨兵视图 -->
@@ -147,6 +194,7 @@
         <tr><td>刷新节奏</td><td>链尾快照每周随 Weekly 刷新；<b class="ok">本页哨兵已接真实后端实时刷新</b>（/api/v1/tax/nca-history，30s 轮询）</td></tr>
       </table>
       <div id="live-tail" style="margin-top:8px;font-size:12px;color:var(--dim)">实时账本事件装载中…</div>
+      <div id="mcp-tail" style="margin-top:8px;font-size:12px;color:var(--dim);border-top:1px dashed var(--line);padding-top:8px">MCP 桥存证链尾装载中…</div>
     </div>
   </section>
 
@@ -175,14 +223,80 @@
   </section>
 </main>
 
+<!-- M1.2 资产导航区（GSEQ-0650）：6 类权威资产卡片网格，链接真实直达 -->
+<section class="assets">
+  <h2>📦 资产导航 <span class="tag">TDCA 权威资产总入口</span></h2>
+  <p class="sub">链接宁缺毋假——未公开项如实标注 <span class="soon">即将开放</span>；全部卡片指向真实可核验地址。</p>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <h3>① 工具发布包</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools" target="_blank">tools/ 发布包总目录</a></li>
+        <li>cog_align / util_value / value_services</li>
+        <li>五项目 NCA 包（cypress / maka / paperclip / pi / thingsboard）</li>
+        <li>191 用例全绿入仓</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>② 开源组件</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/core-go" target="_blank">core-go 核心协议库</a>（Apache-2.0）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/mcp_bridge" target="_blank">mcp-bridge</a>（stdio 桥 + 存证水印）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/cts_l1" target="_blank">CTS-L1 认证</a></li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/cop-library" target="_blank">cop-library</a>（353 COP，¥0.01 调用 + 15% 嵌套分润）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>③ 白皮书与论丛</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/whitepapers" target="_blank">白皮书区</a>（AI 治理 WP-001 / 认知 WP-001）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/papers" target="_blank">论文区</a>（MONOGRAPH-COP / IT）</li>
+        <li>函数 V2.1 / 数学基础 FROZEN <span class="soon">指针版·即将开放</span></li>
+        <li>思维协议 / 论丛 V3.0 <span class="soon">指针版·即将开放</span></li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>④ 教材与培训</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/dual/examples/education" target="_blank">教育场景示例</a>（宪法/约束/负空间/评审四件套）</li>
+        <li>E-EDU 教材 <span class="soon">即将开放</span></li>
+        <li>教学模拟器 V1.0 <span class="soon">即将开放</span></li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>⑤ 认证与社区</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/CONTRIBUTING.md" target="_blank">缔约准入（CONTRIBUTING）</a></li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/fork-template" target="_blank">Fork 模板</a></li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/discussions/36" target="_blank">反哺公示 × Weekly 首期</a></li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/discussions/35" target="_blank">COP-002 调用规则</a> · <a href="https://github.com/henyi-tdca/tdca-protocol/discussions" target="_blank">论坛入口</a></li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>⑥ 门户闭环</h3>
+      <ul>
+        <li><a href="http://47.76.42.139:8080/" target="_blank">测试云主入口</a>（NL real / MCP 实测 / 哨兵实时）</li>
+        <li><a href="https://henyi-tdca.github.io/tdca-protocol/" target="_blank">静态门面（离线备用）</a>（gh-pages，停机时可达）</li>
+        <li>双端同源构建，互链互备</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <footer>
   TDCA Protocol · 三锚：e-CNY 结算 × 税收效用 × 版权链权利 ｜ 本页为<b>测试云真实后端版</b>：NL 意图导航 / MCP 调用 / 账本事件为 real（水印在响应内），业务演示数据仍为 simulated（ID92）｜未备案测试实例，不对外正式宣称｜
   <a href="https://github.com/henyi-tdca/tdca-protocol">GitHub 仓库</a> ·
   <a href="https://github.com/henyi-tdca/tdca-protocol/discussions">Discussions</a> ·
-  <a href="https://gitee.com/siweihanshuzhineng_0/tdca-protocol">Gitee 镜像</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）
+  <a href="https://gitee.com/siweihanshuzhineng_0/tdca-protocol">Gitee 镜像</a> ·
+  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651
 </footer>
 
 <script>
+// 双端同源（GSEQ-0650）：测试云=实时态；gh-pages 静态门面=提示跳转（跨端直连受 CORS 与停机约束）
+const LIVE = (location.hostname === '47.76.42.139');
+const CLOUD_URL = 'http://47.76.42.139:8080/';
+const STATIC_HINT = '本端为静态门面（离线备用）。实时演示（NL 真实算力 / MCP 实测 / 哨兵实时）请至测试云主入口：' + CLOUD_URL;
+
 const INTENTS = [
   ["查询存证链尾", "→ 意图识别：查询。进入【存证链尾只读视图】。（本地降级响应）"],
   ["创建一条新存证", "→ 意图识别：创建。进入【NCA 起草】——六要素声明 + 人类签批。（本地降级响应）"],
@@ -193,13 +307,23 @@ async function nlDemo(){
   const v = document.getElementById('nl-input').value.trim();
   const out = document.getElementById('nl-out');
   if(!v){ out.textContent = "→ 请先输入一句话意图。"; return; }
+  if(!LIVE){ out.textContent = "→ " + STATIC_HINT; return; }
   out.textContent = "→ 请求真实后端 /api/v1/intent …";
   try {
     const r = await fetch('/api/v1/intent?q=' + encodeURIComponent(v));
     const d = await r.json();
     const data = d.data || d;
     const guide = (data.guide || []).map((g,i) => `${i+1}. ${g}`).join('；');
-    out.textContent = `→ [real] 意图：${data.action || '—'}｜进入【${data.title}】（路由 ${data.route}）。${guide ? '操作指引：' + guide : ''}${data.matched === false ? '（未精确识别，已给总览）' : ''}`;
+    let boundary = '';
+    if(data.matched && data.route && data.route !== '/'){
+      boundary = '｜注：该功能页属完整 Web 应用（M4 应用侧发布后可达）';
+      if(data.action === '创建' || data.action === '签批'){
+        boundary += '；可先使用下方「存证起草沙盒」完成六要素起草校验';
+        document.getElementById('draft-box').scrollIntoView({behavior:'smooth'});
+      }
+    }
+    const reply = data.reply ? `「${data.reply}」` : '';
+    out.textContent = `→ [real] ${reply}意图：${data.action || '—'}｜进入【${data.title}】（路由 ${data.route}）。${guide ? '操作指引：' + guide : ''}${data.matched === false ? '（未精确识别，已给总览）' : ''}${boundary}`;
   } catch(e) {
     let hit = INTENTS[0];
     if(/创|建|新|写/.test(v)) hit = INTENTS[1];
@@ -226,6 +350,7 @@ function showAll(){ ['col-human','col-llm','col-slm'].forEach(c =>
 // ---- M2 测试云：真实后端接线（GSEQ-0640） ----
 async function mcpLive(){
   const out = document.getElementById('mcp-out');
+  if(!LIVE){ out.textContent = "→ " + STATIC_HINT; return; }
   out.textContent = "→ 调用 MCP 桥 tdca:echo …";
   try {
     const r = await fetch('/mcp/call', {method:'POST', headers:{'Content-Type':'application/json'},
@@ -233,10 +358,12 @@ async function mcpLive(){
     const d = await r.json();
     const content = d.result && d.result.content ? d.result.content.map(c=>c.text).join('\n') : JSON.stringify(d);
     out.textContent = content;
+    mcpTailLive();  // P1-1：写后即刻回显（哨兵双链）
   } catch(e){ out.textContent = "→ MCP 桥暂不可达：" + e; }
 }
 async function mcpChain(){
   const out = document.getElementById('mcp-out');
+  if(!LIVE){ out.textContent = "→ " + STATIC_HINT; return; }
   out.textContent = "→ 查询 MCP 存证链尾 …";
   try {
     const r = await fetch('/mcp/call', {method:'POST', headers:{'Content-Type':'application/json'},
@@ -248,18 +375,107 @@ async function mcpChain(){
 }
 async function sentinelLive(){
   const el = document.getElementById('live-tail');
+  if(!LIVE){ el.textContent = STATIC_HINT; return; }
   try {
     const r = await fetch('/api/v1/tax/nca-history');
     const d = await r.json();
     const data = d.data || d;
     const evs = (data.events || []).slice(0, 5);
     el.innerHTML = evs.length
-      ? "实时账本事件（real，最近 " + evs.length + " 条）：<br>" +
+      ? "网关业务链（real，最近 " + evs.length + " 条）：<br>" +
         evs.map(e => `· ${e.ts} — ${e.type}（${e.event_id}）`).join('<br>')
-      : "实时账本事件：暂无记录（种子库，等待首笔真实事件）";
+      : "网关业务链：暂无记录（种子库，等待首笔真实事件）";
   } catch(e){ el.textContent = "实时接口暂不可达：" + e; }
 }
-sentinelLive(); setInterval(sentinelLive, 30000);
+// P1-1 哨兵写回显：MCP 桥存证链尾（与网关业务链双链共见，30s 轮询）
+async function mcpTailLive(){
+  const el = document.getElementById('mcp-tail');
+  if(!el) return;
+  if(!LIVE){ el.textContent = STATIC_HINT; return; }
+  try {
+    const r = await fetch('/mcp/call', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name:'nca:chain', arguments:{limit:3}})});
+    const d = await r.json();
+    const txt = d.result && d.result.content ? d.result.content.map(c=>c.text).join('') : '[]';
+    const chain = JSON.parse(txt);
+    el.innerHTML = chain.length
+      ? "MCP 桥存证链（real，最近 " + chain.length + " 条，门户实测自动落链）：<br>" +
+        chain.map(e => `· ${e['Timestamp'] || ''} — ${e['NCA-ID']}（${e['Operation-Type']}，${String(e['Hash']).slice(0,20)}…）`).join('<br>')
+      : "MCP 桥存证链：暂无记录（点上方「MCP 实测」生成首条）";
+  } catch(e){ el.textContent = "MCP 桥链尾暂不可达：" + e; }
+}
+
+// ---- M1.1 存证起草沙盒：六要素校验 + SIMULATED 草稿（匿名可用，不落链） ----
+async function sha256hex(text){
+  const bytes = new TextEncoder().encode(text);
+  if(window.crypto && crypto.subtle){
+    const buf = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  return _sha256Fallback(bytes);  // http 非安全上下文兜底（同算法纯 JS 实现）
+}
+function _sha256Fallback(data){  // 紧凑 SHA-256（与 crypto.subtle 同结果）
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  let H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const l=data.length, bitLen=l*8;
+  const arr=Array.from(data); arr.push(0x80);
+  while(arr.length%64!==56) arr.push(0);
+  for(let i=7;i>=0;i--) arr.push((bitLen/Math.pow(256,i))&0xff);
+  const rr=(x,n)=>((x>>>n)|(x<<(32-n)))>>>0;
+  for(let off=0;off<arr.length;off+=64){
+    const w=new Array(64);
+    for(let t=0;t<16;t++) w[t]=((arr[off+t*4]<<24)|(arr[off+t*4+1]<<16)|(arr[off+t*4+2]<<8)|arr[off+t*4+3])>>>0;
+    for(let t=16;t<64;t++){
+      const s0=(rr(w[t-15],7)^rr(w[t-15],18)^(w[t-15]>>>3))>>>0;
+      const s1=(rr(w[t-2],17)^rr(w[t-2],19)^(w[t-2]>>>10))>>>0;
+      w[t]=(w[t-16]+s0+w[t-7]+s1)>>>0;
+    }
+    let[a,b,c,d,e,f,g,h]=H;
+    for(let t=0;t<64;t++){
+      const S1=(rr(e,6)^rr(e,11)^rr(e,25))>>>0, ch=((e&f)^(~e&g))>>>0;
+      const t1=(h+S1+ch+K[t]+w[t])>>>0;
+      const S0=(rr(a,2)^rr(a,13)^rr(a,22))>>>0, maj=((a&b)^(a&c)^(b&c))>>>0;
+      const t2=(S0+maj)>>>0;
+      h=g; g=f; f=e; e=(d+t1)>>>0; d=c; c=b; b=a; a=(t1+t2)>>>0;
+    }
+    H=[(H[0]+a)>>>0,(H[1]+b)>>>0,(H[2]+c)>>>0,(H[3]+d)>>>0,(H[4]+e)>>>0,(H[5]+f)>>>0,(H[6]+g)>>>0,(H[7]+h)>>>0];
+  }
+  return H.map(x=>x.toString(16).padStart(8,'0')).join('');
+}
+async function draftCheck(){
+  const f = {
+    '① 目标函数': document.getElementById('d-obj').value.trim(),
+    '② 约束矩阵': document.getElementById('d-con').value.trim(),
+    '③ 先验分布': document.getElementById('d-pri').value.trim(),
+    '④ 配置权边界': document.getElementById('d-cfg').value,
+    '⑤ 预期分配': document.getElementById('d-all').value.trim(),
+    '⑥ 审计轨迹': 'NCA 链式存证（prev 哈希引用）',
+  };
+  const chk = document.getElementById('d-chk');
+  const out = document.getElementById('d-out');
+  const rows = Object.entries(f).map(([k,v]) =>
+    v ? `<div class="pass">✓ ${k}：已声明</div>` : `<div class="fail">✗ ${k}：缺失（六要素 6/6 才可通过）</div>`);
+  const passed = Object.values(f).every(v => v);
+  chk.innerHTML = rows.join('') + `<div style="margin-top:6px" class="${passed?'pass':'fail'}">${passed ? '✅ 六要素校验通过（6/6）' : '❌ 校验未通过——六要素不全，草稿不予生成'}</div>`;
+  if(!passed){ out.style.display='none'; return; }
+  const now = new Date().toISOString();
+  const draft = [
+    '# [SIMULATED] NCA 存证草稿（门户起草沙盒，未落链）',
+    'NCA-ID: DRAFT-' + now.slice(0,10).replace(/-/g,'') + '-PORTAL（草稿编号，正式落链时重编）',
+    'Operation-Type: Draft', 'Operator: anonymous-portal（匿名起草）', 'Timestamp: ' + now,
+    '六要素:', '  目标函数: ' + f['① 目标函数'], '  约束矩阵: ' + f['② 约束矩阵'],
+    '  先验分布: ' + f['③ 先验分布'], '  配置权边界: ' + f['④ 配置权边界'],
+    '  预期分配: ' + f['⑤ 预期分配'], '  审计轨迹: ' + f['⑥ 审计轨迹'],
+    'data_provenance: simulated（ID92 标注：演示草稿，非链上存证）',
+    'Human-Signature: 正式落链须人类签署（ID71，AI 无权代行）',
+  ].join('\n');
+  const h = await sha256hex(draft);
+  out.style.display = 'block';
+  out.textContent = draft + '\n草稿哈希: sha256:' + h +
+    '\n\n注：本草稿为 simulated 演示态，不落任何链；正式落链需完整 Web 应用登录态（随 M4 应用侧发布）。';
+}
+
+sentinelLive(); mcpTailLive(); setInterval(sentinelLive, 30000); setInterval(mcpTailLive, 30000);
 </script>
 </body>
 </html>
