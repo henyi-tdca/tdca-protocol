@@ -1,0 +1,90 @@
+{
+  "doc": "TDCA-DATAFLOW-M2-PILOT-001",
+  "date": "2026-08-29T15:00:56Z",
+  "provenance": "real",
+  "source": {
+    "url": "https://wttr.in/Beijing?format=j1",
+    "kind": "free-public-no-key",
+    "note": "wttr.in 实时气象（免费 API 纪律内）；声明源 demo.thingsboard.io 需租户凭证 / test.mosquitto.org 为 MQTT / open-meteo 本网络超时，均不适用，如实记录"
+  },
+  "source_time": "01:32 PM",
+  "events": [
+    {
+      "type": "telemetry",
+      "key": "wttr.temp_C",
+      "value": 25.0,
+      "ts": "01:32 PM"
+    },
+    {
+      "type": "telemetry",
+      "key": "wttr.FeelsLikeC",
+      "value": 24.0,
+      "ts": "01:32 PM"
+    },
+    {
+      "type": "telemetry",
+      "key": "wttr.humidity",
+      "value": 45.0,
+      "ts": "01:32 PM"
+    },
+    {
+      "type": "telemetry",
+      "key": "wttr.windspeedKmph",
+      "value": 9.0,
+      "ts": "01:32 PM"
+    },
+    {
+      "type": "telemetry",
+      "key": "wttr.pressure",
+      "value": 1009.0,
+      "ts": "01:32 PM"
+    }
+  ],
+  "context": {
+    "context": {
+      "devices_online": 0,
+      "alarm_count": 0,
+      "critical_alarm": false,
+      "telemetry_latest": {
+        "wttr.temp_C": 25.0,
+        "wttr.FeelsLikeC": 24.0,
+        "wttr.humidity": 45.0,
+        "wttr.windspeedKmph": 9.0,
+        "wttr.pressure": 1009.0
+      },
+      "event_count": 5
+    },
+    "provenance": "real",
+    "source": "thingsboard",
+    "gate": "pass",
+    "staleness_s": 0.0
+  },
+  "nsfl_fuse": {
+    "decision": "pass"
+  },
+  "cop_decision": "proceed",
+  "metering": {
+    "stream_id": "m2-pilot-openmeteo-20260829",
+    "devices_joined": 0,
+    "telemetry_count": 5,
+    "alarms": 0,
+    "metered_value": 0.5,
+    "schedule_tax": 0.01
+  },
+  "nca": {
+    "NCA-ID": "NCA-THINGSBOARD-20260829-001",
+    "Operation-Type": "IoT-Gateway-Metering",
+    "Timestamp": "2026-08-29T15:00:56Z",
+    "Scope": "ThingsBoard 设备流配置权计量存证（m2-pilot-openmeteo-20260829）",
+    "Events-Hash": "6fea02ee3218d7b0263dcbf7eb6f23f03cf98a0c9a1f771c85c85a13f326784a",
+    "Metering": {
+      "stream_id": "m2-pilot-openmeteo-20260829",
+      "devices_joined": 0,
+      "telemetry_count": 5,
+      "alarms": 0,
+      "metered_value": 0.5,
+      "schedule_tax": 0.01
+    },
+    "Provenance": "real"
+  }
+}
