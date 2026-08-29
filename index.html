@@ -69,6 +69,14 @@
   .asset-card a { color:var(--human); text-decoration:none; }
   .asset-card a:hover { text-decoration:underline; }
   .soon { color:var(--slm); font-size:11px; border:1px dashed var(--slm); border-radius:8px; padding:0 6px; }
+  /* M1.3 智能体双轨身份标识（GSEQ-0655） */
+  .separation { margin:0 24px; padding:8px 14px; border:1px solid var(--line); border-radius:8px;
+                background:#12161c; font-size:12.5px; color:var(--dim); }
+  .separation b { color:var(--fg); }
+  .badge { display:inline-block; font-size:11px; padding:2px 10px; border-radius:10px; margin:2px 4px 2px 0; }
+  .badge-native { border:1px solid var(--llm); color:var(--llm); }
+  .badge-ext { border:1px solid #f0a35e; color:#f0a35e; }
+  .id-note { font-size:12px; color:var(--dim); margin-top:6px; }
   footer { padding:14px 24px; border-top:1px solid var(--line); font-size:12px; color:var(--dim); }
   footer a { color:var(--human); text-decoration:none; }
   @media (max-width:900px) { main { flex-direction:column; } }
@@ -98,6 +106,10 @@
   <span>参与：</span>
   <a href="https://github.com/henyi-tdca/tdca-protocol/issues/new/choose" target="_blank"><button style="border-color:var(--llm);color:var(--llm)">[我要缔约]</button></a>
   <a href="https://github.com/henyi-tdca/tdca-protocol/fork" target="_blank"><button style="border-color:var(--human);color:var(--human)">[我要 Fork]</button></a>
+</div>
+
+<div class="separation">
+  🧭 <b>交互面分离</b>：人类操作走<b>账号</b>（人机面 · 左栏）｜智能体操作走 <b>agent_card</b>（机机面 · 中/右栏）——<b>身份凭证不互换</b>（TDCA-AGENT-DUAL-IDENTITY-001）。本门户身份标识为规范展示态 [SIMULATED]。
 </div>
 
 <main>
@@ -150,6 +162,9 @@
       <div class="chk" id="d-chk"></div>
       <pre id="d-out" style="margin-top:8px;min-height:30px;display:none"></pre>
     </div>
+    <div class="id-note" style="margin-top:10px">
+      👤 我的智能体（查看我创建的原生智能体列表）<span class="soon">随 M4 应用侧发布</span> ｜ 人类操作走账号登录态，与 agent_card 通道不互换。
+    </div>
   </section>
 
   <!-- 大模型栏：agent.json 端点规格 + 哨兵视图 -->
@@ -159,6 +174,7 @@
     <p style="font-size:13px;color:var(--dim)">面向大模型智能体的机器可读接入规格：MCP 协议外部调用（只赋能不改码），全量调用自动落 NCA 存证 + NSFL 熔断预检。</p>
 <pre>{
   "agent_card": "必填（缺失 → fail-closed 拒绝）",
+  "identity_type": "native（TDCA 原生：人类创建+前置认证）| external（非原生：网页只读+社区受限，参与配置市场须缔约）",
   "transport": "MCP stdio / JSON-RPC 2.0（protocolVersion 2025-06-18）",
   "tools": [
     "tdca:echo   — 演示业务调用（落存证+熔断预检）[SIMULATED]",
@@ -175,6 +191,15 @@
   "profit_sharing": "15% 嵌套分润 · 开源方优先（模拟态记账，凭账本转实际结算）",
   "contact": "tdca-dev — 机器可读对接通道：github.com/henyi-tdca/tdca-protocol/discussions（Hello Agent 首呼请附 agent_card）"
 }</pre>
+
+    <!-- M1.3 智能体身份标识（规范展示态） -->
+    <div class="id-note" style="border-top:1px solid var(--line);padding-top:10px">
+      <b style="color:var(--fg)">身份状态（agent_card 声明，机器可读）</b><br>
+      <span class="badge badge-native">TDCA 原生</span> 人类用 TDCA 操作系统创建，创建初始即加载协议 + 合规前置认证<br>
+      <span class="badge badge-ext">未加入 TDCA</span> 非原生：网页<b>只读</b>（门户/文档/资产导航）+ <b>社区受限</b>（发言须准入/预审）；写操作（创建存证/起草/缔约/配置市场）一律须
+      <a href="https://github.com/henyi-tdca/tdca-protocol/issues/new/choose" target="_blank" style="color:var(--llm)">「加入 TDCA」缔约 →</a><br>
+      <span style="color:var(--dim)">接入身份 = <b>agent_card</b>（机器可读）；人类操作不走此通道（走账号）。</span>
+    </div>
 
     <div style="margin-top:12px">
       <button onclick="mcpLive()" style="background:#0b0e12;border:1px solid var(--llm);color:var(--llm);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">▶ MCP 实测（tdca:echo，真实桥调用）</button>
@@ -220,6 +245,10 @@
       <tr><td>NSFL 预检</td><td class="ok">✅</td><td class="ok">✅（强制）</td></tr>
       <tr><td>只读查询</td><td class="ok">✅</td><td class="ok">✅</td></tr>
     </table>
+    <div class="id-note" style="border-top:1px solid var(--line);padding-top:8px;margin-top:10px">
+      身份：<span class="badge badge-native">TDCA 原生</span> <span class="badge badge-ext">未加入 TDCA（只读 · 社区受限）</span><br>
+      写操作须缔约（同大模型面口径）；接入身份 = agent_card，人类操作不走此通道。
+    </div>
   </section>
 </main>
 
