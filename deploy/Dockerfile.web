@@ -1,0 +1,14 @@
+# M4-1 应用侧（SPA）镜像：从 FROZEN 封板 zip 提取预构建 dist（零 npm 构建、零代码改动，GSEQ-0659）
+FROM python:3.12-slim AS extract
+COPY deploy/tdca-web-deploy.zip /tmp/pkg.zip
+RUN python -c "\
+import zipfile; \
+z = zipfile.ZipFile('/tmp/pkg.zip'); \
+ns = [n for n in z.namelist() if n.startswith('tdca-web/tdca-frontend/dist/') and not n.endswith('/')]; \
+[z.extract(n, '/out') for n in ns]; \
+print('extracted', len(ns), 'files')"
+
+FROM nginx:alpine
+COPY --from=extract /out/tdca-web/tdca-frontend/dist /usr/share/nginx/web
+COPY deploy/web/web.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

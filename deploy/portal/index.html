@@ -163,7 +163,7 @@
       <pre id="d-out" style="margin-top:8px;min-height:30px;display:none"></pre>
     </div>
     <div class="id-note" style="margin-top:10px">
-      👤 我的智能体（查看我创建的原生智能体列表）<span class="soon">随 M4 应用侧发布</span> ｜ 人类操作走账号登录态，与 agent_card 通道不互换。
+      👤 <a href="/me" id="my-agents-link" style="color:var(--human)">我的智能体</a>（M4 已上线：登录后查看我创建的原生智能体——名称/创建时间/身份 badge；未登录自动引导登录页）｜ 人类操作走账号登录态，与 agent_card 通道不互换。
     </div>
   </section>
 
@@ -211,7 +211,7 @@
       <h3>🛡 哨兵视图 · 存证链尾与熔断（M2-2，实时装载）</h3>
       <table>
         <tr><th>项</th><th>值</th></tr>
-        <tr><td>最新存证</td><td class="ok">NCA-KIMIWEB-087（GSEQ-0617，.gitignore 处置交付）</td></tr>
+        <tr><td>最新存证</td><td class="ok" id="latest-nca">NCA-KIMIWEB-096（GSEQ-0655，门户 M1.3 身份标识交付）｜MCP 桥链尾装载中…</td></tr>
         <tr><td>链状态</td><td class="ok">080→087 全闭环（prev 哈希链式引用，无存证=未发生）</td></tr>
         <tr><td>今日 GSEQ</td><td>0601 / 0610 / 0612 / 0615 / 0617 / 0625（本页施工令）</td></tr>
         <tr><td>NSFL 熔断</td><td class="ok">预检在线：M2-3 实测 1 次端到端调用通过预检，存证 NCA-MCP-20260828-001（哈希 sha256:aad951d7…，0 熔断，成本 ¥0）</td></tr>
@@ -345,10 +345,11 @@ async function nlDemo(){
     const guide = (data.guide || []).map((g,i) => `${i+1}. ${g}`).join('；');
     let boundary = '';
     if(data.matched && data.route && data.route !== '/'){
-      boundary = '｜注：该功能页属完整 Web 应用（M4 应用侧发布后可达）';
       if(data.action === '创建' || data.action === '签批'){
-        boundary += '；可先使用下方「存证起草沙盒」完成六要素起草校验';
+        boundary = `｜功能页已上线（${data.route}，写操作需登录）；匿名体验当前走内联沙盒（下方「存证起草沙盒」）`;
         document.getElementById('draft-box').scrollIntoView({behavior:'smooth'});
+      } else {
+        boundary = `｜功能页已上线（${data.route}，直达可查）`;
       }
     }
     const reply = data.reply ? `「${data.reply}」` : '';
@@ -431,6 +432,12 @@ async function mcpTailLive(){
       ? "MCP 桥存证链（real，最近 " + chain.length + " 条，门户实测自动落链）：<br>" +
         chain.map(e => `· ${e['Timestamp'] || ''} — ${e['NCA-ID']}（${e['Operation-Type']}，${String(e['Hash']).slice(0,20)}…）`).join('<br>')
       : "MCP 桥存证链：暂无记录（点上方「MCP 实测」生成首条）";
+    // M4-3 A：哨兵「最新存证」格联动 MCP 系列
+    const cell = document.getElementById('latest-nca');
+    if(cell && chain.length){
+      const last = chain[chain.length-1];
+      cell.innerHTML = `NCA-KIMIWEB-096（GSEQ-0655，门户 M1.3 身份标识交付）｜MCP 桥最新：<b>${last['NCA-ID']}</b>（${last['Operation-Type']}，real）`;
+    }
   } catch(e){ el.textContent = "MCP 桥链尾暂不可达：" + e; }
 }
 
@@ -487,6 +494,8 @@ async function draftCheck(){
   const passed = Object.values(f).every(v => v);
   chk.innerHTML = rows.join('') + `<div style="margin-top:6px" class="${passed?'pass':'fail'}">${passed ? '✅ 六要素校验通过（6/6）' : '❌ 校验未通过——六要素不全，草稿不予生成'}</div>`;
   if(!passed){ out.style.display='none'; return; }
+  out.style.display = 'block';
+  out.textContent = '⏳ 六要素通过，草稿哈希计算中（SHA-256，异步）…';  // M4-3 C：loading 态
   const now = new Date().toISOString();
   const draft = [
     '# [SIMULATED] NCA 存证草稿（门户起草沙盒，未落链）',
@@ -503,6 +512,9 @@ async function draftCheck(){
   out.textContent = draft + '\n草稿哈希: sha256:' + h +
     '\n\n注：本草稿为 simulated 演示态，不落任何链；正式落链需完整 Web 应用登录态（随 M4 应用侧发布）。';
 }
+
+// gh-pages 静态门面：应用页链接指向测试云主入口（M4 应用侧在测试云）
+if(!LIVE){ const a = document.getElementById('my-agents-link'); if(a) a.href = CLOUD_URL + 'me'; }
 
 sentinelLive(); mcpTailLive(); setInterval(sentinelLive, 30000); setInterval(mcpTailLive, 30000);
 </script>

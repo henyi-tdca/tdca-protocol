@@ -25,6 +25,11 @@ services:
     volumes:
       - nl-evidence:/evidence-nl
     restart: always
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.web
+    restart: always
   nginx:
     image: nginx:alpine
     ports:
@@ -36,6 +41,7 @@ services:
       - gateway
       - mcp-bridge
       - nl
+      - web
     restart: always
 volumes:
   mcp-evidence:
