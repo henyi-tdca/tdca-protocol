@@ -1,0 +1,32 @@
+NCA-ID: NCA-ECOSCAN-20260829-15
+Operation-Type: EcoScan-comment
+Operator: Kimi
+Timestamp: '2026-08-29T15:07:34Z'
+Payload-Hash: sha256:e2dadc045ea087cd67f2e04ce053d5c26bb1517769004f1fd129280a35931146
+Payload:
+  type: comment
+  comment_id: CMT-A1D7DAB555FA
+  repo_full: browser-use/browser-use
+  issue_n: 5592
+  url: https://github.com/browser-use/browser-use/issues/5592#issuecomment-5463150171
+  ecoact_nca: NCA-ECOSCAN-20260829-CMT-5592
+  response_status: pending
+  body: '[Diagnosis]
+
+    Beyond the collision fix, this issue illustrates a structural gap: agents hold
+    real credentials, yet secrecy here is procedural (best-effort redaction), not
+    structural. Silent overwrite means a secret reaches LLM-visible text with no evidence
+    trail of when or how.
+
+
+    [TDCA angle]
+
+    TDCA''s complementary angle: NSFL negative-space rules make ''secrets never enter
+    LLM context'' a fail-closed boundary (violation halts, not logs); NCA attestation
+    gives each sensitive-data access a tamper-evident, machine-readable record. Mounted
+    outside your code - zero changes, full control stays with you.
+
+
+    [Invitation]
+
+    Welcome to compare notes in the TDCA repo Discussions - an invitation, not a request.'
