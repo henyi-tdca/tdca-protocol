@@ -1,0 +1,101 @@
+{
+  "contract_id": "TDCA-REGISTER-CONTRACT-001",
+  "version": "V1.0",
+  "status": "DRAFT-待审",
+  "effective": "2026-08-29",
+  "drafted_by": "Reasonix (TDCA-REGULATION-DRAFTING-001)",
+  "language": "zh-CN / en (human), machine-readable envelope",
+  "human_text_authoritative": true,
+  "human_versions": {
+    "zh": {
+      "file": "TDCA-REGISTER-CONTRACT-001-zh.md",
+      "sha256": "ee33e2c86735249e01bf32f0fe563c9ad5f511e55e78acf5611b6ceb518ddbf9"
+    },
+    "en": {
+      "file": "TDCA-REGISTER-CONTRACT-001-en.md",
+      "sha256": "7018e356acbb9b62fe52e7ee19b660ca3e1d0db62f79565c276d8aea4be0c101"
+    }
+  },
+  "consent": {
+    "mode": "registration-is-contract",
+    "checkbox_required": true,
+    "action_on_register": "user_register_contract",
+    "recorded_fields": [
+      "contract_id",
+      "version",
+      "zh_sha256",
+      "en_sha256",
+      "machine_sha256",
+      "consent_ts"
+    ],
+    "default_role": "viewer",
+    "role_upgrade": "operator via upgrade flow; founder seed-only"
+  },
+  "guest_mode": {
+    "allowed": [
+      "browse portal/docs/asset-navigation",
+      "simulated sandbox demo"
+    ],
+    "denied": [
+      "write",
+      "attestation",
+      "agent creation",
+      "contracting",
+      "config-right market"
+    ],
+    "enforcement": "fail-closed (gateway 401 on unauthenticated writes; route guard redirects to /auth)"
+  },
+  "identity_credentials": {
+    "human": "account (username+password, PBKDF2 salted hash, plaintext never stored)",
+    "agent": "agent_card (disclosure trio + data_provenance + identity_type native/external)",
+    "non_interchangeable": true
+  },
+  "clauses": [
+    {
+      "id": "1",
+      "topic": "缔约范围与效力",
+      "key": "registration constitutes contracting; dual-version equal force; guests have no base permissions"
+    },
+    {
+      "id": "2",
+      "topic": "身份与凭证",
+      "key": "credentials non-interchangeable; native agents created by contracted humans with compliance pre-auth"
+    },
+    {
+      "id": "3",
+      "topic": "数据性质 ID92",
+      "key": "REAL/SIMULATED labelling mandatory; no impersonation"
+    },
+    {
+      "id": "4",
+      "topic": "存证与审计",
+      "key": "every action appends NCA chain evidence; no evidence = not happened"
+    },
+    {
+      "id": "5",
+      "topic": "负空间与熔断 ID86/NSFL",
+      "key": "legal negative space absolute; fail-closed on hit"
+    },
+    {
+      "id": "6",
+      "topic": "人类签名权 ID71",
+      "key": "human-only signing; agent contracting requires owner authorization"
+    },
+    {
+      "id": "7",
+      "topic": "协议层免费 ID77",
+      "key": "protocol layer permanently free; value-added services separately priced"
+    },
+    {
+      "id": "8",
+      "topic": "配置权市场",
+      "key": "market participation requires contracting; guests excluded"
+    },
+    {
+      "id": "9",
+      "topic": "合规与终止",
+      "key": "violations suspend/terminate; evidence retained; test instance (unfiled), no formal public claim"
+    }
+  ],
+  "notes": "Machine envelope authored by Kimi per REGISTER-002 M3 (Reasonix source JSON absent from sync); human texts authoritative. Published hash supersedes pending c5ea6270 per instruction fallback clause."
+}
