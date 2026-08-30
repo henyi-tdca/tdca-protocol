@@ -1,0 +1,82 @@
+COP-ID: CHENGYU-39-20260827-39+01
+type: COMPOSED-COP
+source_expert: chengyu_canonical
+compiler: cop_composer_general (NIA-MACM 3.0 嵌套推理层)
+compiled_at: '2026-08-27T12:07:25.810183'
+composition:
+  parent: CHENGYU-39-20260827-39
+  interpretants:
+  - cop_id: MECH-COP-20260814-01
+    relation: 解释项
+    bind_step: 抓杠杆
+    effect: '纲举目张是机制设计的关键杠杆点: 识别''牵一发而动全身''的结构节点(纲), 在要害设机制,使全局自组织趋向目标(万目皆张), 以最小干预撬动整体。成语的''抓杠杆''嵌入机制设计: 于系统关键处布激励, 激活全局而非处处发力, 是 leverage over exhaustive control 的古典注脚。'
+soul:
+  identity: 中国成语·第39条《纲举目张》 ⟂ 机制设计 (Mechanism Design)
+  core: '提起网纲则全网眼自张，喻抓住关键枢纽/系统杠杆，以最小干预撬动整体；是机制设计的关键杠杆点——识别''牵一发而动全身''的结构节点，在要害设机制，使全局自组织趋向目标。；⟂解释项《机制设计 (Mechanism Design)》(核心: 给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容); 是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身)：纲举目张是机制设计的关键杠杆点:
+    识别''牵一发而动全身''的结构节点(纲), 在要害设机制,使全局自组织趋向目标(万目皆张), 以最小干预撬动整体。成语的''抓杠杆''嵌入机制设计: 于系统关键处布激励, 激活全局而非处处发力, 是 leverage over exhaustive control 的古典注脚。'
+  role: 组合思维协议 (跨范式嵌套)
+  category: 中方文明 / 成语 / 战略与决断 + 机制设计 / 机制设计·反向博弈论
+primitives:
+- name: gangju_muzhang
+  method: 中国成语·第39条《纲举目张》 (经 机制设计 (Mechanism Design) 解释)
+  signature: fn gangju_muzhang(leverage) -> system_align
+  precond: 逐末则乱
+  postcond: '提起网纲则全网眼自张，喻抓住关键枢纽/系统杠杆，以最小干预撬动整体；是机制设计的关键杠杆点——识别''牵一发而动全身''的结构节点，在要害设机制，使全局自组织趋向目标。；⟂解释项《机制设计 (Mechanism Design)》(核心: 给定期望社会目标, 设计规则/制度使自利理性人在均衡下的行为恰好实现该目标(激励相容); 是博弈论的反向工程 —— 不分析给定博弈, 而设计博弈本身)：纲举目张是机制设计的关键杠杆点:
+    识别''牵一发而动全身''的结构节点(纲), 在要害设机制,使全局自组织趋向目标(万目皆张), 以最小干预撬动整体。成语的''抓杠杆''嵌入机制设计: 于系统关键处布激励, 激活全局而非处处发力, 是 leverage over exhaustive control 的古典注脚。 (目标达成)'
+  negative_space: ⊗ 逐末则劳；⊗ 目标不可量化/参与人异质偏好未建模则机制无从设计
+  steps:
+  - 识纲
+  - 执其要
+  - 设杠杆
+  - 众自张
+  nca_emit: true
+dispatch:
+  main_pipeline: gangju_muzhang
+  graph:
+  - from: gangju_muzhang
+    to:
+    - social_choice_target
+    bind: 抓杠杆
+    note: gangju_muzhang 在 [抓杠杆] 嵌套调用 social_choice_target (解释项机制)
+  note: 父计主原语在绑定步嵌套调用解释项主原语, 组合语义涌现 (跨范式)
+decision:
+- if: 需关键杠杆治理
+  call: gangju_muzhang
+skills: []
+negative_space:
+- 逐末则劳而寡功
+- 纲错则全盘乖
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+- '⊗ 解释项负空间继承: 目标不可量化/参与人异质偏好未建模则机制无从设计'
+- '⊗ 禁止叠加冒充化合: 组合后若无属性改变、无新思维涌现, 须降级标注为两个独立思维的合作 (化合判据, 用户裁定 2026-08-30 20:52)'
+- '⊗ 禁止 NSFL 否决权被推翻: NSFL 预检未过的事件, 禁止以其余判据全部通过、多数决、场景豁免、上级指令等任何理由放行 (F1.5 宪法条款, Fail-Closed, 不可配置关闭)'
+- '⊗ 禁止把否决当终审: 否决只封锁当下过门资格, 不判处永恒身份——触犯实体须进入四态动态处置 (休眠/禁止/重塑/出清), 禁止悬置不处置; 负空间版本演化时, 休眠/重塑态实体须重新评估 (TDCA 动态管理, 用户裁定 2026-08-30 21:19)'
+nsfl_version: V0.1
+composition_policy:
+  standalone: false
+  tdca_native: true
+  mandatory_base: TDCA-CORE (TDCA 体系内强制遵守, 不可配置关闭)
+  detachable: 剥离 TDCA 治理层后协议语义保持独立自洽, 可移植至其他治理体系 (设计目标)
+  bind_policy: 解释项绑定关系为运用层配置, 运行期允许换绑 (dispatch.graph 可扩展)
+  note: 思维协议不是独立发挥作用的, 须与系列内其他 COP 组合调用 (用户裁定 2026-08-30)
+  constitution: 'NSFL 否决权 (F1.5, 用户裁定 2026-08-30 21:07): 对于任何无法通过 NSFL 预检的事件 (负空间触碰), 即使其他四判据全部通过, 亦视为整体拒绝 (Fail-Closed); NSFL 预检的优先级永远高于其他四判据——负空间是安全宪法的宪法, 不可配置关闭, 不可被多数判据推翻。四态动态处置 (F1.5b, 用户裁定 2026-08-30
+    21:19): TDCA 是动态管理, 负空间本质保守不轻易变化但仍会演化——现在触犯不等于永远触犯; 否决权的不可推翻性仅指即时门控裁决, 不指永恒身份; sandbox 检验触犯负空间的实体走四态处置: 休眠/禁止/重塑/出清 (裁定 NCA 存证, 禁悬置), 负空间版本更新时休眠/重塑态强制重评。'
+base_protocol: TDCA-CORE
+fusion_spec:
+  attribute_changes:
+  - attribute: 父原语决策语义
+    before: 『CHENGYU-39-20260827-39』按原范式独立运作
+    after: '绑定步『抓杠杆』注入解释项『MECH-COP-20260814-01』后: 纲举目张是机制设计的关键杠杆点: 识别''牵一发而动全身''的结构节点(纲), 在要害设机制,使全局自组织趋向目标(万目皆张), 以最小干预撬动整体。成语的''抓杠杆''嵌入机制设计: 于系统关键处布激励, 激活全局而非处处发力, 是 levera…'
+  - attribute: 解的空间与结果属性
+    before: 父范式原生 Outcome 语义
+    after: 涌现语义——解释项效应改写结果属性, 非两个原语的并集
+  emergence: '纲举目张是机制设计的关键杠杆点: 识别''牵一发而动全身''的结构节点(纲), 在要害设机制,使全局自组织趋向目标(万目皆张), 以最小干预撬动整体。成语的''抓杠杆''嵌入机制设计: 于系统关键处布激励, 激活全局而非处处发力, 是 leverage over exhaustive control 的古典注脚。'
+  provenance: 由本 COP 既有 interpretant 效应文本归档生成 (2026-08-30 回审修订)——该文本创作时即按属性改变语义撰写, 未新增虚构语义
+retro_revision:
+  date: '2026-08-30'
+  basis: 用户 2026-08-30 编译原则回审 (组合性/化合判据/F1.5/F1.5b)
+  prior_base_protocol: TDCA-CORE
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

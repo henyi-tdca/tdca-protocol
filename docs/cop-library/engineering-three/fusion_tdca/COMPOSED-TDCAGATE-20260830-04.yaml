@@ -1,0 +1,80 @@
+COP-ID: COMPOSED-TDCAGATE-20260830-04
+type: COMPOUND-COP
+source_expert: 'engineering-three (双层化合: 工程三⊗场景⊗TDCA)'
+compiler: 'cognitive_compiler (T1+T2 规范复用, 化合模式: 属性改变+涌现判据)'
+compiled_at: '2026-08-30T21:25:01.261750'
+composition:
+  parent:
+  - COMPOSED-SCENESAFETY-20260830-06
+  - COMPOSED-TDCAGATE-20260830-01
+  interpretants:
+  - cop_id: TDCA-CORE::TDCA NCA/链式水印/NSFL
+    relation: 反应物 (解释项, 属性被改变)
+    bind_step: 全程
+    effect: 安全事件的不可篡改性由存证保证, 非靠存储介质可信
+  bind_policy: 绑定关系为运用层配置, 运行期允许换绑 (用户裁定 2026-08-30)
+fusion_spec:
+  fusion_type: 化合
+  verdict_rule: 化合=改变属性、产生新思维; 叠加不改变属性、只产生两个独立思维的合作。本 COP 声明 fusion_type=化合, 以 attribute_changes 为证; 无属性改变的组合须降级标注为合作。
+  attribute_changes:
+  - attribute: 安全事件的可信性来源
+    before: 存储介质/系统可信 (假设)
+    after: 链式水印 prev_hash 可检 (证明)——可信从假设变为可验证性质
+  - attribute: NSFL 的位置
+    before: 内容审查工具 (旁路)
+    after: admission 门禁组件 (主路, 不可配置关闭)——NSFL 从工具变为门的一部分
+  emergence: '新思维: 不可抵赖安全——每一次熔断/放行/归因都留下不可篡改且可验证的痕迹, 安全历史不可重写'
+base_protocol: TDCA-CORE
+composition_policy:
+  standalone: false
+  tdca_native: true
+  mandatory_base: TDCA-CORE (TDCA 体系内强制遵守, 不可配置关闭)
+  detachable: 剥离 TDCA 治理层后协议语义保持独立自洽, 可移植至其他治理体系
+  note: 思维协议不是独立发挥作用的, 须与系列内其他 COP 组合调用 (用户裁定 2026-08-30)
+  constitution: 'NSFL 否决权 (F1.5, 用户裁定 2026-08-30 21:07): 对于任何无法通过 NSFL 预检的事件 (负空间触碰), 即使其他四判据全部通过, 亦视为整体拒绝 (Fail-Closed); NSFL 预检的优先级永远高于其他四判据——负空间是安全宪法的宪法, 不可配置关闭, 不可被多数判据推翻。四态动态处置 (F1.5b, 用户裁定 2026-08-30
+    21:19): TDCA 是动态管理, 负空间本质保守不轻易变化但仍会演化——现在触犯不等于永远触犯; 否决权的不可推翻性仅指即时门控裁决, 不指永恒身份; sandbox 检验触犯负空间的实体走四态处置: 休眠/禁止/重塑/出清 (裁定 NCA 存证, 禁悬置), 负空间版本更新时休眠/重塑态强制重评。'
+  bind_policy: 解释项绑定关系为运用层配置, 运行期允许换绑 (dispatch.graph 可扩展)
+soul:
+  identity: 全链存证
+  core: 门控行为/熔断恢复/归因裁定/失效录入四类事件强制 NCA 存证+prev_hash 衔接+NSFL 门禁
+  role: TDCA 原生系列思维协议 (化合层, 新思维)
+  category: 工程三协议化合 / 全链存证
+primitives:
+- name: chain_evidence_watermark
+  method: '全链存证 (化合产物, 属性已改变: 安全事件的可信性来源: 存储介质/系统可信 (假设)→链式水印 prev_hash 可检 (证明)——可信从假设变为可验证性质; NSFL 的位置: 内容审查工具 (旁路)→admission 门禁组件 (主路, 不可配置关闭)——NSFL 从工具变为门的一部分)'
+  signature: 'fn chain_evidence_watermark(fused: CompoundContext) -> EmergentOutcome'
+  precond: '化合前置: 安全事件需不可抵赖留痕 (反应物 COP 已就位且组合性强制成立)'
+  postcond: '门控行为/熔断恢复/归因裁定/失效录入四类事件强制 NCA 存证+prev_hash 衔接+NSFL 门禁 (涌现达成: 新思维: 不可抵赖安全——每一次熔断/放行/归因都留下不可篡改且可验证的痕迹, 安全历史不可重写)'
+  negative_space: ⊗ 禁存证缺失的熔断; 禁 NSFL 预检绕行 (不可配置关闭); 禁否决触发不留痕
+  steps:
+  - 四类事件 (门控/熔断/归因/失效录入) 强制 NCA 存证
+  - F1.5 否决权触发 (NSFL 拒绝) 同为门控行为, 强制存证并标注 veto 原因码
+  - 事件链 prev_hash 衔接可检篡改
+  - NSFL 扫描作为 admission 门禁组件 (单一事实源, 受 F1.5 否决权管辖)
+  nca_emit: true
+dispatch:
+  main_pipeline: chain_evidence_watermark
+  graph:
+  - from: chain_evidence_watermark
+    to:
+    - TDCA-CORE::TDCA NCA/链式水印/NSFL
+    - tdca_gating_assembly
+    - governed_fracas
+    note: 父原语在绑定步与反应物化合——反应物属性被改变, 涌现出反应物各自不具备的新思维 (非叠加合作)
+  note: '化合≠叠加: 叠加不改变属性只是两个独立思维的合作; 本 COP 的组合语义以 fusion_spec.attribute_changes 为证'
+decision:
+- if: 安全事件需不可抵赖留痕
+  call: chain_evidence_watermark
+skills: []
+negative_space:
+- ⊗ 禁存证缺失的熔断; 禁 NSFL 预检绕行 (不可配置关闭); 禁否决触发不留痕
+- '⊗ 禁止叠加冒充化合: 组合后若无属性改变、无新思维涌现, 须降级标注为''合作''而非''化合'''
+- '⊗ 禁止脱离组合单独调用: 本协议非独立发挥作用, 须与系列内其他 COP 组合'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 禁止 NSFL 否决权被推翻: NSFL 预检未过的事件, 禁止以其余判据全部通过、多数决、场景豁免、上级指令等任何理由放行 (F1.5 宪法条款, Fail-Closed, 不可配置关闭)'
+- '⊗ 禁止把否决当终审: 否决只封锁当下过门资格, 不判处永恒身份——触犯实体须进入四态动态处置 (休眠/禁止/重塑/出清), 禁止悬置不处置; 负空间版本演化时, 休眠/重塑态实体须重新评估 (TDCA 动态管理, 用户裁定 2026-08-30 21:19)'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

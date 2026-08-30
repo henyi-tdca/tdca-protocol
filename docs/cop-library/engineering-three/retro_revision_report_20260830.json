@@ -1,0 +1,244 @@
+{
+  "A_旧化合修订": [
+    {
+      "file": "compositions\\COMPOSED-一诺千金_学而.yaml",
+      "cop_id": "CHENGYU-21-20260827-21+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-买椟还珠_消费者选择.yaml",
+      "cop_id": "CHENGYU-47-20260827-47+03",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-假道伐虢_三十六计.yaml",
+      "cop_id": "CHENGYU-35-20260827-35+24",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-合纵连横_机制设计.yaml",
+      "cop_id": "CHENGYU-33-20260827-33+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-囚徒困境_最后通牒博弈.yaml",
+      "cop_id": "GAME-COP-20260814-01+04",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-囚徒困境_机制设计.yaml",
+      "cop_id": "GAME-COP-20260814-01+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-囚徒困境_认知涌现.yaml",
+      "cop_id": "GAME-COP-20260814-01+03",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-因地制宜_实事求是.yaml",
+      "cop_id": "CHENGYU-49-20260827-49+14",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-围魏救赵_囚徒困境.yaml",
+      "cop_id": "STRATAGEM-COP-20260814-02+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-围魏救赵_斗鸡博弈.yaml",
+      "cop_id": "STRATAGEM-COP-20260814-02+03",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-围魏救赵_虚实篇.yaml",
+      "cop_id": "CHENGYU-36-20260827-36+06",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-场景思维协议_囚徒困境.yaml",
+      "cop_id": "SCEN-COP-20260814-01+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-场景画布_囚徒困境.yaml",
+      "cop_id": "SCEN-COP-20260814-02+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-塞翁失马_对立统一规律.yaml",
+      "cop_id": "CHENGYU-11-20260827-11+02",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-奇货可居_供给需求均衡.yaml",
+      "cop_id": "CHENGYU-48-20260827-48+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-居安思危_军形篇.yaml",
+      "cop_id": "CHENGYU-40-20260827-40+04",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-庖丁解牛_道常无为.yaml",
+      "cop_id": "CHENGYU-18-20260827-18+37",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-开源节流_生产者成本.yaml",
+      "cop_id": "CHENGYU-50-20260827-50+05",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-徙木立信_机制设计.yaml",
+      "cop_id": "CHENGYU-38-20260827-38+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-愚公移山_质量互变规律.yaml",
+      "cop_id": "CHENGYU-23-20260827-23+03",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-掩耳盗铃_诚意.yaml",
+      "cop_id": "CHENGYU-14-20260827-14+06",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-数据治理_机制设计.yaml",
+      "cop_id": "SCEN-COP-20260814-06+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-机制设计_场景思维协议.yaml",
+      "cop_id": "MECH-COP-20260814-01+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-杯酒释兵权_机制设计.yaml",
+      "cop_id": "CHENGYU-37-20260827-37+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-格物致知_格物.yaml",
+      "cop_id": "CHENGYU-46-20260827-46+04",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-物极必反_否定之否定.yaml",
+      "cop_id": "CHENGYU-42-20260827-42+04",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-生命周期适配_走为上.yaml",
+      "cop_id": "SCEN-COP-20260814-05+36",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-田忌赛马_猎鹿博弈.yaml",
+      "cop_id": "CHENGYU-31-20260827-31+02",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-画蛇添足_持而盈之.yaml",
+      "cop_id": "CHENGYU-15-20260827-15+09",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-相反相成_同一性与斗争性.yaml",
+      "cop_id": "CHENGYU-43-20260827-43+10",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-知己知彼_谋攻篇.yaml",
+      "cop_id": "CHENGYU-41-20260827-41+03",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-纲举目张_机制设计.yaml",
+      "cop_id": "CHENGYU-39-20260827-39+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-纸上谈兵_实践第一.yaml",
+      "cop_id": "CHENGYU-03-20260827-03+12",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-走为上_囚徒困境.yaml",
+      "cop_id": "STRATAGEM-COP-20260814-36+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-走为上_围魏救赵.yaml",
+      "cop_id": "STRATAGEM-COP-20260814-36+02",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-走为上_猎鹿博弈.yaml",
+      "cop_id": "STRATAGEM-COP-20260814-36+02",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-远交近攻_三十六计.yaml",
+      "cop_id": "CHENGYU-34-20260827-34+23",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-防微杜渐_其安易持.yaml",
+      "cop_id": "CHENGYU-30-20260827-30+64",
+      "fusion_spec": true
+    },
+    {
+      "file": "compositions\\COMPOSED-鹬蚌相争_囚徒困境.yaml",
+      "cop_id": "CHENGYU-32-20260827-32+01",
+      "fusion_spec": true
+    },
+    {
+      "file": "hundred_schools\\COMPOSED-道德经_可审计决策.yaml",
+      "cop_id": "HS-DAO-20260815-01+02",
+      "fusion_spec": true
+    },
+    {
+      "file": "hundred_schools\\daodejing\\COMPOSED-第36章_可审计顺势决策.yaml",
+      "cop_id": "TDCA-CORE-20260815-02+36",
+      "fusion_spec": true
+    },
+    {
+      "file": "hundred_schools\\daxue\\COMPOSED-第03目_知止决策.yaml",
+      "cop_id": "TDCA-CORE-20260815-02+03",
+      "fusion_spec": true
+    },
+    {
+      "file": "hundred_schools\\lunyu\\COMPOSED-第12篇_克己守礼决策.yaml",
+      "cop_id": "TDCA-CORE-20260815-02+12",
+      "fusion_spec": true
+    },
+    {
+      "file": "marxism\\COMPOSED-毛泽东思想_实事求是两结合.yaml",
+      "cop_id": "MACM-14-20260815-14+02",
+      "fusion_spec": true
+    }
+  ],
+  "A_校验失败_未写入": [],
+  "B_补丁": [
+    "engineering-three\\fusion\\COMPOSED-AGENTSAFETY-20260830-01.yaml",
+    "engineering-three\\fusion\\COMPOSED-AGENTSAFETY-20260830-02.yaml",
+    "engineering-three\\fusion\\COMPOSED-AGENTSAFETY-20260830-03.yaml",
+    "engineering-three\\fusion\\COMPOSED-AGENTSAFETY-20260830-04.yaml",
+    "engineering-three\\fusion\\COMPOSED-AGENTSAFETY-20260830-05.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-01.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-02.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-03.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-04.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-05.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-06.yaml",
+    "engineering-three\\fusion_scene\\COMPOSED-SCENESAFETY-20260830-07.yaml",
+    "engineering-three\\fusion_tdca\\COMPOSED-TDCAGATE-20260830-01.yaml",
+    "engineering-three\\fusion_tdca\\COMPOSED-TDCAGATE-20260830-02.yaml",
+    "engineering-three\\fusion_tdca\\COMPOSED-TDCAGATE-20260830-03.yaml",
+    "engineering-three\\fusion_tdca\\COMPOSED-TDCAGATE-20260830-04.yaml"
+  ],
+  "ts": "2026-08-30T21:36:20.869420"
+}

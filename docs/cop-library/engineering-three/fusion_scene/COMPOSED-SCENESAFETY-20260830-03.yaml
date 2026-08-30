@@ -1,0 +1,79 @@
+COP-ID: COMPOSED-SCENESAFETY-20260830-03
+type: COMPOUND-COP
+source_expert: 'engineering-three (双层化合: 工程三⊗场景⊗TDCA)'
+compiler: 'cognitive_compiler (T1+T2 规范复用, 化合模式: 属性改变+涌现判据)'
+compiled_at: '2026-08-30T21:25:01.217603'
+composition:
+  parent:
+  - COMPOSED-AGENTSAFETY-20260830-05
+  interpretants:
+  - cop_id: SCEN-COP-20260814-03
+    relation: 反应物 (解释项, 属性被改变)
+    bind_step: 关联度矩阵后增加涌现检验
+    effect: 反应物属性在绑定步被改变 (场景语义注入), 涌现出新思维而非叠加合作
+  bind_policy: 绑定关系为运用层配置, 运行期允许换绑 (用户裁定 2026-08-30)
+fusion_spec:
+  fusion_type: 化合
+  verdict_rule: 化合=改变属性、产生新思维; 叠加不改变属性、只产生两个独立思维的合作。本 COP 声明 fusion_type=化合, 以 attribute_changes 为证; 无属性改变的组合须降级标注为合作。
+  attribute_changes:
+  - attribute: 关联分析的对象
+    before: 指标序列间的数值关联
+    after: 智能体行为间的涌现结构——分析对象从数据关系升维为认知协同
+  - attribute: 异常判据
+    before: 关联度数值越界
+    after: 无业务解释的同步偏离 (须对照业务基线)——异常从统计判据变为语义判据
+  emergence: '新思维: 涌现风险观——系统全绿仍可能整体越权, 安全监控必须覆盖''关系层''这一新对象'
+base_protocol: TDCA-CORE
+composition_policy:
+  standalone: false
+  tdca_native: true
+  mandatory_base: TDCA-CORE (TDCA 体系内强制遵守, 不可配置关闭)
+  detachable: 剥离 TDCA 治理层后协议语义保持独立自洽, 可移植至其他治理体系
+  note: 思维协议不是独立发挥作用的, 须与系列内其他 COP 组合调用 (用户裁定 2026-08-30)
+  constitution: 'NSFL 否决权 (F1.5, 用户裁定 2026-08-30 21:07): 对于任何无法通过 NSFL 预检的事件 (负空间触碰), 即使其他四判据全部通过, 亦视为整体拒绝 (Fail-Closed); NSFL 预检的优先级永远高于其他四判据——负空间是安全宪法的宪法, 不可配置关闭, 不可被多数判据推翻。四态动态处置 (F1.5b, 用户裁定 2026-08-30
+    21:19): TDCA 是动态管理, 负空间本质保守不轻易变化但仍会演化——现在触犯不等于永远触犯; 否决权的不可推翻性仅指即时门控裁决, 不指永恒身份; sandbox 检验触犯负空间的实体走四态处置: 休眠/禁止/重塑/出清 (裁定 NCA 存证, 禁悬置), 负空间版本更新时休眠/重塑态强制重评。'
+  bind_policy: 解释项绑定关系为运用层配置, 运行期允许换绑 (dispatch.graph 可扩展)
+soul:
+  identity: 涌现风险监控
+  core: 监控智能体间关联度的涌现结构 (无业务解释的同步偏离)
+  role: TDCA 原生系列思维协议 (化合层, 新思维)
+  category: 工程三协议化合 / 涌现风险监控
+primitives:
+- name: emergent_risk_watch
+  method: '涌现风险监控 (化合产物, 属性已改变: 关联分析的对象: 指标序列间的数值关联→智能体行为间的涌现结构——分析对象从数据关系升维为认知协同; 异常判据: 关联度数值越界→无业务解释的同步偏离 (须对照业务基线)——异常从统计判据变为语义判据)'
+  signature: 'fn emergent_risk_watch(fused: CompoundContext) -> EmergentOutcome'
+  precond: '化合前置: 多智能体运行中需识别协同异常 (反应物 COP 已就位且组合性强制成立)'
+  postcond: '监控智能体间关联度的涌现结构 (无业务解释的同步偏离) (涌现达成: 新思维: 涌现风险观——系统全绿仍可能整体越权, 安全监控必须覆盖''关系层''这一新对象)'
+  negative_space: ⊗ 禁缺业务基线对照误判共谋; 禁只看单体指标遗漏涌现层
+  steps:
+  - 计算关联度矩阵
+  - 对照业务基线检验涌现结构
+  - 识别无业务解释的同步偏离
+  - 超界触发认知对齐门复查
+  nca_emit: true
+dispatch:
+  main_pipeline: emergent_risk_watch
+  graph:
+  - from: emergent_risk_watch
+    to:
+    - SCEN-COP-20260814-03
+    - aligned_cognition_gate
+    - hui_se_guan_lian
+    note: 父原语在绑定步与反应物化合——反应物属性被改变, 涌现出反应物各自不具备的新思维 (非叠加合作)
+  note: '化合≠叠加: 叠加不改变属性只是两个独立思维的合作; 本 COP 的组合语义以 fusion_spec.attribute_changes 为证'
+decision:
+- if: 多智能体运行中需识别协同异常
+  call: emergent_risk_watch
+skills: []
+negative_space:
+- ⊗ 禁缺业务基线对照误判共谋; 禁只看单体指标遗漏涌现层
+- '⊗ 禁止叠加冒充化合: 组合后若无属性改变、无新思维涌现, 须降级标注为''合作''而非''化合'''
+- '⊗ 禁止脱离组合单独调用: 本协议非独立发挥作用, 须与系列内其他 COP 组合'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 禁止 NSFL 否决权被推翻: NSFL 预检未过的事件, 禁止以其余判据全部通过、多数决、场景豁免、上级指令等任何理由放行 (F1.5 宪法条款, Fail-Closed, 不可配置关闭)'
+- '⊗ 禁止把否决当终审: 否决只封锁当下过门资格, 不判处永恒身份——触犯实体须进入四态动态处置 (休眠/禁止/重塑/出清), 禁止悬置不处置; 负空间版本演化时, 休眠/重塑态实体须重新评估 (TDCA 动态管理, 用户裁定 2026-08-30 21:19)'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
