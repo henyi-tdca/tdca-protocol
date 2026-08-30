@@ -506,6 +506,60 @@
   </div>
 </section>
 
+<!-- INFRA-B6（GSEQ-0723）：结算中心区（全批 SIMULATED 演示态硬约束：不产生真实资金/税收操作） -->
+<section class="assets" id="settle-zone">
+  <h2>💳 结算中心 <span class="tag sim">全批 SIMULATED 演示态（ID92）</span><span class="tag">充值不实收款 · 结算/计费/计税模拟 · 不产生真实资金操作</span></h2>
+  <p class="sub">结算体系六卡全览。<b class="sim">全部为演示/模拟态</b>：充值入口不实收款，结算/计费/计税规则为模拟态记账（凭账本转实际结算）；仅计税卡链账事件为真实后端实读（REAL 数据 + 模拟态规则，ID92 双标）。</p>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <h3>① 充值 <span class="soon">演示态 · 不实收款</span></h3>
+      <ul>
+        <li>e-CNY 充值入口（结算锚：数字人民币法偿性）</li>
+        <li>演示态：<b class="sim">不产生任何真实扣款/收款</b>，正式通道随应用侧发布开放</li>
+      </ul>
+      <button class="gate-btn" onclick="alert('演示态入口：不产生真实资金操作（ID92）。正式 e-CNY 充值通道随应用侧发布开放。')">▶ 充值入口（演示态）</button>
+    </div>
+    <div class="asset-card">
+      <h3>② 结算 <span class="soon">模拟态</span></h3>
+      <ul>
+        <li>tdca-cls 结算：环销 / 净额 / 定向支付</li>
+        <li>模拟态记账，凭账本转实际结算 <span class="soon">即将开放</span></li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>③ 计费 <span class="soon">模拟态</span></h3>
+      <ul>
+        <li>算力熔断：日 ¥2 / 月 ¥8（超限自动降级规则表，行为可审计）</li>
+        <li>COP 调用 ¥0.01/次 + 15% 嵌套分润（开源方优先）</li>
+        <li>社区算力池计价 <span class="soon">即将开放</span></li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>④ 计税 <span class="soon">模拟态规则</span></h3>
+      <ul>
+        <li>MOU 税收锚定：进项 + 出项（ID79 硬下限）</li>
+        <li>链账事件接线：<b class="ok">实时实读</b> /api/v1/tax/mou · /api/v1/tax/nca-history</li>
+        <li>哨兵联动 → <a href="#sentinel">哨兵视图</a>（网关业务链 30s 轮询）</li>
+      </ul>
+      <div class="zone-note" id="tax-live">税收链账实读装载中…</div>
+    </div>
+    <div class="asset-card">
+      <h3>⑤ 金融保险 <span class="soon">模拟态</span></h3>
+      <ul>
+        <li>tdca-insurance-officer：理赔 / 追偿 / 保险金池</li>
+        <li>模拟态规则演示 <span class="soon">即将开放</span></li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>⑥ 维权仲裁 <span class="soon">模拟态</span></h3>
+      <ul>
+        <li>维权 / 仲裁机制入口（显影而非白箱化：过程可审计）</li>
+        <li>机制文档 <span class="soon">即将开放</span>；治理事件真实件 → <a href="https://github.com/henyi-tdca/tdca-protocol/discussions" target="_blank">Discussions 公示区</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- M1.2 资产导航区（GSEQ-0650）：6 类权威资产卡片网格，链接真实直达 -->
 <section class="assets">
   <h2>📦 资产导航 <span class="tag">TDCA 权威资产总入口</span></h2>
@@ -571,7 +625,7 @@
   <a href="https://github.com/henyi-tdca/tdca-protocol">GitHub 仓库</a> ·
   <a href="https://github.com/henyi-tdca/tdca-protocol/discussions">Discussions</a> ·
   <a href="https://gitee.com/siweihanshuzhineng_0/tdca-protocol">Gitee 镜像</a> ·
-  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651 ｜ 分层市场/沙盒实验室/公告资讯 INFRA-B1 批次1 GSEQ-0706 ｜ 工具链区 INFRA-B2 GSEQ-0708 ｜ 模拟与接入区 INFRA-B3 GSEQ-0715 ｜ 模板与智能体区 INFRA-B4 GSEQ-0719 ｜ 商学院区 INFRA-B5 GSEQ-0721
+  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651 ｜ 分层市场/沙盒实验室/公告资讯 INFRA-B1 批次1 GSEQ-0706 ｜ 工具链区 INFRA-B2 GSEQ-0708 ｜ 模拟与接入区 INFRA-B3 GSEQ-0715 ｜ 模板与智能体区 INFRA-B4 GSEQ-0719 ｜ 商学院区 INFRA-B5 GSEQ-0721 ｜ 结算中心区 INFRA-B6 GSEQ-0723（全批 SIMULATED 演示态，不实收款）
 </footer>
 
 <script>
@@ -813,9 +867,26 @@ function gatedWrite(feature){
   else { alert(msg + '\n\n' + STATIC_HINT); }
 }
 
-sentinelLive(); mcpTailLive(); fiveOrdersLive(); seaStatusLive();
+// ---- INFRA-B6（GSEQ-0723）：计税卡链账事件实读（REAL 数据 + 模拟态规则，ID92 双标） ----
+async function taxLive(){
+  const el = document.getElementById('tax-live');
+  if(!el) return;
+  if(!LIVE){ el.textContent = STATIC_HINT; return; }
+  try {
+    const r = await fetch('/api/v1/tax/nca-history');
+    const d = await r.json();
+    const data = d.data || d;
+    const evs = data.events || [];
+    el.innerHTML = `链账事件实读（real）：<b>${evs.length}</b> 条在册` +
+      (evs.length ? `｜最近：${evs[0].ts} — ${evs[0].type}` : '（种子库，等待首笔真实事件）') +
+      `｜水印 ${d.nca_watermark || '—'}`;
+  } catch(e){ el.textContent = "税收链账接口暂不可达：" + e; }
+}
+
+sentinelLive(); mcpTailLive(); fiveOrdersLive(); seaStatusLive(); taxLive();
 setInterval(sentinelLive, 30000); setInterval(mcpTailLive, 30000);
 setInterval(fiveOrdersLive, 30000); setInterval(seaStatusLive, 30000);
+setInterval(taxLive, 30000);
 </script>
 </body>
 </html>
