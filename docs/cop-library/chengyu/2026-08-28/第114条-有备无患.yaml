@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-114-20260828-114
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.481115'
+branch: 中国成语·修身与治理·第114条(有备无患)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第114条《有备无患》
+  core: 风险的事前行动化——意识须转化为预案才产生抗性；备的成本与患的期望损失权衡，备而不用是保险不是浪费。与居安思危成对（彼意识层，此行动层）。
+  verse: 思则备，备则无患；备而不用，非弃之也。
+  origin: 《左传·襄公十一年》魏绛引《书》：'居安思危，思则有备，有备无患。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: youbei_wuhuan
+  method: 有备无患
+  signature: fn youbei_wuhuan(prepare) -> contingency_ready
+  precond: 存在可预见风险
+  postcond: 案备患减，抗性成型
+  negative_space: ⊗ 备而不演则案成故纸
+  steps:
+  - 列其患
+  - 定其备
+  - 演其案
+  - 述其新
+  nca_emit: true
+dispatch:
+  main_pipeline: youbei_wuhuan
+  trigger: 思则备，备则无患；备而不用，非弃之也。
+  when: 当可预见风险尚无预案或预案未演练时触发
+  graph:
+  - from: youbei_wuhuan
+    to: []
+decision:
+- if: 需预案治理
+  call: youbei_wuhuan
+skills:
+- 有备无患·思维研判
+negative_space:
+- 备而不演则失效
+- 过度备灾则挤占当下
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

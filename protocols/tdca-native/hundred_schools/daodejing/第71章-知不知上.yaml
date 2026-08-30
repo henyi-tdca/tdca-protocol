@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH71-20260815-71
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.958310'
+branch: 诸子百家·道家·道德经·第71章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第71章《知不知上》
+  core: 知不知为上，病病(认病)则不病；以认无知成知。
+  verse: 知不知，上；不知知，病；圣人不病，以其病病。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_bu_zhi_shang
+  method: 知不知上
+  signature: fn zhi_bu_zhi_shang(self) -> know_ignorance
+  precond: 不知而自以为知、病
+  postcond: 知不知，病病不病
+  negative_space: ⊗ 不知知则病
+  steps:
+  - 知不知
+  - 病病
+  - 不病
+  - 真知
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_bu_zhi_shang
+  trigger: 知不知，上；不知知，病；圣人不病，以其病病。
+  when: 当自以为知、宜认无知时触发
+  graph:
+  - from: zhi_bu_zhi_shang
+    to: []
+decision:
+- if: 需知不知
+  call: zhi_bu_zhi_shang
+skills:
+- 知不知上·顺势研判
+negative_space:
+- 不知知则病
+- 讳病则深
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

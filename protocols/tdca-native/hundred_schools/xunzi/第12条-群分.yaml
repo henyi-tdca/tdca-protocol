@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ12-20260815-12
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.641539'
+branch: 诸子百家·儒家·荀子·第12条(群分)
+stratum: 诸子百家·儒家·荀子·礼法政术
+soul:
+  identity: 荀子·第12条《群分》
+  core: 人能群、以义分而和；以明分使群、义胜则和，立群居和一之理。
+  verse: 人能群，彼不能群也……分何以能行？曰：义。故义以分则和。
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 礼法政术
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qun_fen
+  method: 群分
+  signature: fn qun_fen(society) -> harmonious_group
+  precond: 无分、争乱
+  postcond: 义分，群和
+  negative_space: ⊗ 无分则争
+  steps:
+  - 识能群
+  - 明分
+  - 以义
+  - 群和
+  nca_emit: true
+dispatch:
+  main_pipeline: qun_fen
+  trigger: 人能群，彼不能群也……分何以能行？曰：义。故义以分则和。
+  when: 当群体待组织、宜以义明分时触发
+  graph:
+  - from: qun_fen
+    to: []
+decision:
+- if: 需群分
+  call: qun_fen
+skills:
+- 群分·顺势研判
+negative_space:
+- 无分则争乱
+- 分不公则离
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH03-20260815-03
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.179202'
+branch: 诸子百家·道家·道德经·第03章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第03章《不尚贤》
+  core: 不标榜稀缺标杆，则无攀竞之乱；以不干涉消内生冲突。
+  verse: 不尚贤，使民不争。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bu_shang_xian
+  method: 不尚贤
+  signature: fn bu_shang_xian(govern) -> no_competition
+  precond: 治理对象存在因标杆激励而生的攀竞
+  postcond: 去标榜、弱激励，系统自稳不争
+  negative_space: ⊗ 过度标榜则生乱
+  steps:
+  - 去标榜
+  - 弱稀缺激励
+  - 虚其心
+  - 自稳
+  nca_emit: true
+dispatch:
+  main_pipeline: bu_shang_xian
+  trigger: 不尚贤，使民不争。
+  when: 当组织因标杆/排名激励引发内耗时触发
+  graph:
+  - from: bu_shang_xian
+    to: []
+decision:
+- if: 需消解内生攀竞
+  call: bu_shang_xian
+skills:
+- 不尚贤·顺势研判
+negative_space:
+- 以稀缺标杆激励则生争
+- 强干预则扰序
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

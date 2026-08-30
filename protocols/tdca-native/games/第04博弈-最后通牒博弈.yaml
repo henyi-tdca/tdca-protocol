@@ -1,0 +1,114 @@
+COP-ID: GAME-COP-20260814-04
+base_protocol: TDCA-CORE-20260815-01
+source_expert: game_theory_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T21:42:41.831952'
+branch: 议价博弈·序贯
+stratum: 议价博弈·序贯
+soul:
+  identity: 最后通牒博弈 (Ultimatum Game)
+  core: 提议者分配, 响应者否决权(拒绝则双零); 公平偏好使小额报价被拒, 均衡偏离纯自利; 议价权与拒绝门槛决定分配
+  role: 思维协议 (博弈推理范式类)
+  category: 博弈论 / 议价博弈·序贯
+primitives:
+- name: ult_payoff_build
+  method: 构建收益结构
+  signature: fn ult_payoff_build(S, reserve) -> payoff_structure
+  precond: 总盘 S>0 可分割, 响应者保留效用 reserve(外部期权 BATNA)
+  postcond: 提议 x∈[0,S], 响应者 accept→(S-x, x), reject→(reserve, reserve)
+  negative_space: ⊗ 总盘须正且可分割, 否则无博弈意义
+  steps:
+  - 设定总盘 S
+  - 标定响应者保留效用 reserve
+  - 建立报价空间 x∈[0,S]
+  nca_emit: true
+- name: subgame_solve
+  method: 子博弈完美均衡求解
+  signature: fn subgame_solve(structure) -> spne
+  precond: 收益结构已建
+  postcond: 纯自利下子博弈完美均衡 = 提议者给 x=max(0,reserve), 响应者接受
+  negative_space: ⊗ 该均衡忽略公平偏好, 与实证偏离
+  steps:
+  - 逆向归纳
+  - 响应者接受任何 x≥reserve
+  - 提议者给最小 x
+  nca_emit: true
+- name: fairness_pref
+  method: 公平偏好检验
+  signature: fn fairness_pref(responder, alpha) -> accept_rule
+  precond: 响应者有公平偏好(Fehr-Schmidt 型)
+  postcond: 响应者拒小额(x<公平阈值≈S/2) 以惩罚不公, 即使损失自己
+  negative_space: ⊗ 公平阈值主观, 不可精确标定
+  steps:
+  - 建模公平偏好
+  - 设定拒绝阈值
+  - 判定小额报价被拒
+  nca_emit: true
+- name: reject_threshold
+  method: 拒绝门槛标定
+  signature: fn reject_threshold(responder) -> min_acceptable
+  precond: 响应者效用结构已知
+  postcond: 最低可接受报价 = reserve + 公平溢价
+  negative_space: ⊗ 阈值随情绪/文化漂移
+  steps:
+  - 计算保留效用
+  - 加公平溢价
+  - 得最低可接受报价
+  nca_emit: true
+- name: batna_inject
+  method: 外部期权注入(议价权)
+  signature: fn batna_inject(responder, outside) -> leverage
+  precond: 响应者有真实外部期权
+  postcond: 注入 BATNA 抬高拒绝门槛, 增强议价权
+  negative_space: ⊗ 虚假 BATNA 被识破则信用破产
+  steps:
+  - 识别外部期权
+  - 量化其价值
+  - 注入报价博弈抬门槛
+  nca_emit: true
+- name: multi_round
+  method: 多轮议价转化
+  signature: fn multi_round(rounds) -> converging_split
+  precond: 可多轮议价
+  postcond: 轮次增加趋向公平分割(≈S/2), 减少拒绝损耗
+  negative_space: ⊗ 轮次成本过高则单次快达
+  steps:
+  - 设多轮
+  - 逐轮逼近公平
+  - 收敛到≈S/2
+  nca_emit: true
+dispatch:
+  main_pipeline: ult_payoff_build
+  graph:
+  - from: ult_payoff_build
+    to:
+    - subgame_solve
+    - fairness_pref
+    - reject_threshold
+  - from: fairness_pref
+    to:
+    - batna_inject
+    - multi_round
+  note: '各博弈自带调度骨架: 构建收益结构为主线, 下游原语按博弈特性展开'
+decision:
+- if: 需建模
+  call: ult_payoff_build
+- if: 需找自利均衡
+  call: subgame_solve
+- if: 需评估公平
+  call: fairness_pref
+- if: 需标定门槛
+  call: reject_threshold
+- if: 需增强议价权
+  call: batna_inject
+skills: []
+negative_space:
+- ⊗ 响应者须有否决权, 否则纯被剥削(非博弈)
+- ⊗ 公平阈值主观不可精确标定
+- ⊗ 总盘 S 须正且可分割, 否则无解
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 6

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY03-20260815-03
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.153725'
+branch: 诸子百家·儒家·中庸·第03条(中庸)
+stratum: 诸子百家·儒家·中庸·中和本体
+soul:
+  identity: 中庸·第03条《中庸》
+  core: 中庸为至德、不偏不倚不易；以中为正、以庸为常，立常道不移之则。
+  verse: 中庸其至矣乎！民鲜能久矣。不偏之谓中，不易之谓庸。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 中和本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhong_yong
+  method: 中庸
+  signature: fn zhong_yong(act) -> golden_mean
+  precond: 偏倚、逐奇
+  postcond: 中行常道，民鲜能
+  negative_space: ⊗ 偏则失中
+  steps:
+  - 识中
+  - 去偏
+  - 守庸
+  - 常行
+  nca_emit: true
+dispatch:
+  main_pipeline: zhong_yong
+  trigger: 中庸其至矣乎！民鲜能久矣。不偏之谓中，不易之谓庸。
+  when: 当宜执中守常、不宜偏奇时触发
+  graph:
+  - from: zhong_yong
+    to: []
+decision:
+- if: 需行中庸
+  call: zhong_yong
+skills:
+- 中庸·顺势研判
+negative_space:
+- 执一偏则失中
+- 务奇则倾
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

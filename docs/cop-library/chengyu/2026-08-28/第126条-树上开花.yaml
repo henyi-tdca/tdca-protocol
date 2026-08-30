@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-126-20260828-126
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.590808'
+branch: 中国成语·战略与决断·第126条(树上开花)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第126条《树上开花》
+  core: 借局布势——在既有结构上附加声势要素，使观测方按放大后的势能估值行动；虚势须有真实结构承载，张而不收则成本失控。
+  verse: 树上本无花，剪彩为花；势已成于形，威自虚张。
+  origin: 三十六计·并战计第二十九计：'借局布势，力小势大；鸿渐于陆，其羽可用为仪。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shushang_kaihua
+  method: 树上开花
+  signature: fn shushang_kaihua(amplify) -> posture_borrowed
+  precond: 力小而须势大
+  postcond: 形张势显，应对从容
+  negative_space: ⊗ 无局可借则纯虚
+  steps:
+  - 借其局
+  - 布其势
+  - 张其形
+  - 验其应
+  nca_emit: true
+dispatch:
+  main_pipeline: shushang_kaihua
+  trigger: 树上本无花，剪彩为花；势已成于形，威自虚张。
+  when: 当须在不增实力下放大威慑姿态时触发
+  graph:
+  - from: shushang_kaihua
+    to: []
+decision:
+- if: 需借势放大
+  call: shushang_kaihua
+skills:
+- 树上开花·思维研判
+negative_space:
+- 虚势被戳则信用清零
+- 张而不收则成本失控
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

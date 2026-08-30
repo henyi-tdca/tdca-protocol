@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-82-20260828-82
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.499548'
+branch: 中国成语·修身与治理·第82条(论功行赏)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第82条《论功行赏》
+  core: 联盟稳定的关键是分配规则的公信力——按可验证贡献定价而非按亲疏/声望；Shapley 联盟定价的古典形态：论功(边际贡献)行赏(分润)，赏当其功则盟自固。
+  verse: 运筹帷幄之功居首，以功次定封，群臣乃服。
+  origin: 《史记·萧相国世家》：汉定天下，论功行封，群臣争功岁余不决；鄂君以萧何功居第一，高祖以功次定封，上下乃服。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: lungong_xingshang
+  method: 论功行赏
+  signature: fn lungong_xingshang(allocate) -> contribution_priced
+  precond: 功过并见
+  postcond: 赏当其功，盟自固
+  negative_space: ⊗ 以亲疏定赏则盟裂
+  steps:
+  - 记其功
+  - 度其量
+  - 定其赏
+  - 昭其公
+  nca_emit: true
+dispatch:
+  main_pipeline: lungong_xingshang
+  trigger: 运筹帷幄之功居首，以功次定封，群臣乃服。
+  when: 当联盟/团队须按贡献分配收益、确立分配公信力时触发
+  graph:
+  - from: lungong_xingshang
+    to: []
+decision:
+- if: 需贡献定价
+  call: lungong_xingshang
+skills:
+- 论功行赏·思维研判
+negative_space:
+- 按身份定价则贤者去
+- 功不可量则赏必失公
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

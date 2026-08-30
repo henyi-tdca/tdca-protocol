@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-93-20260828-93
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.332398'
+branch: 中国成语·战略与决断·第93条(调虎离山)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第93条《调虎离山》
+  core: 不与占据优势位置者正面相争，而以真实诱因使其离开优势位再图之；争取的是位置优势的转移而非力量对比的改变。
+  verse: 虎踞其山，莫与争锋；诱之以利，离山而图。
+  origin: 三十六计·攻战计第十五计；东汉虞诩增灶示强惑羌、诱其分散，为'调离优势位'之注脚。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: diaohu_lishan
+  method: 调虎离山
+  signature: fn diaohu_lishan(lure) -> positional_shift
+  precond: 对方据优势位且存在可识别诱因
+  postcond: 位失势衰
+  negative_space: ⊗ 诱而不动则己先露
+  steps:
+  - 识其据
+  - 设其诱
+  - 引其离
+  - 图其虚
+  nca_emit: true
+dispatch:
+  main_pipeline: diaohu_lishan
+  trigger: 虎踞其山，莫与争锋；诱之以利，离山而图。
+  when: 当正面相争必败、宜转移对方位置优势时触发
+  graph:
+  - from: diaohu_lishan
+    to: []
+decision:
+- if: 需位置优势转移
+  call: diaohu_lishan
+skills:
+- 调虎离山·思维研判
+negative_space:
+- 诱饵无实则对方不动
+- 己先离山则反受其制
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

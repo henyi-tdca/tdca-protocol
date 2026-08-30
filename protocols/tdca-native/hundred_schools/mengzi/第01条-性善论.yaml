@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ01-20260815-01
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.791490'
+branch: 诸子百家·儒家·孟子·第01条(性善论)
+stratum: 诸子百家·儒家·孟子·性善本体
+soul:
+  identity: 孟子·第01条《性善论》
+  core: 人性本善、向善如水流下；以性善为教化与政治的根基，不信性恶而信可教。
+  verse: 人性之善也，犹水之就下也。人无有不善，水无有不下。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 性善本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xing_shan_lun
+  method: 性善论
+  signature: fn xing_shan_lun(human) -> good_nature
+  precond: 疑人性、以恶设防
+  postcond: 信性善，立教可成
+  negative_space: ⊗ 以恶设防则失本
+  steps:
+  - 观性善
+  - 顺其下
+  - 立教
+  - 扩充
+  nca_emit: true
+dispatch:
+  main_pipeline: xing_shan_lun
+  trigger: 人性之善也，犹水之就下也。人无有不善，水无有不下。
+  when: 当论人性根基、宜立性善为教本时触发
+  graph:
+  - from: xing_shan_lun
+    to: []
+decision:
+- if: 需立性善本体
+  call: xing_shan_lun
+skills:
+- 性善论·顺势研判
+negative_space:
+- 以性恶立法则背教化
+- 放其心而不知求则陷
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

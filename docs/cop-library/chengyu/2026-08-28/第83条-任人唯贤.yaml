@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-83-20260828-83
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.507602'
+branch: 中国成语·修身与治理·第83条(任人唯贤)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第83条《任人唯贤》
+  core: 授权半径决定组织能力上限——以亲疏代胜任则逆向淘汰；唯贤的关键是'贤'的可验证标准先行(祁黄羊外举不避仇：亲仇皆按同一标准过门)。
+  verse: 外举不避仇，内举不避亲——贤能者，标准同过。
+  origin: 《吕氏春秋·去私》：晋平公问祁黄羊，解狐/午皆可尉，'外举不避仇，内举不避亲'；孔子闻之曰善。语本《尚书·咸有一德》'任官惟贤材'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: renren_weixian
+  method: 任人唯贤
+  signature: fn renren_weixian(select) -> merit_based
+  precond: 有位待授
+  postcond: 贤者在位，能者在职
+  negative_space: ⊗ 唯亲则逆淘汰
+  steps:
+  - 立贤标
+  - 排亲疏
+  - 验胜任
+  - 授以权
+  nca_emit: true
+dispatch:
+  main_pipeline: renren_weixian
+  trigger: 外举不避仇，内举不避亲——贤能者，标准同过。
+  when: 当选拔/授权须摆脱亲疏干扰、建立可验证标准时触发
+  graph:
+  - from: renren_weixian
+    to: []
+decision:
+- if: 需贤能选拔
+  call: renren_weixian
+skills:
+- 任人唯贤·思维研判
+negative_space:
+- 无标准之贤则人言人殊
+- 唯贤而不用则虚设
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

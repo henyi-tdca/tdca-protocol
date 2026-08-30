@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH60-20260815-60
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.812827'
+branch: 诸子百家·道家·道德经·第60章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第60章《治大国若烹小鲜》
+  core: 治大国轻扰动(烹小鲜)，以道莅之；以不折腾稳序。
+  verse: 治大国若烹小鲜；以道莅天下，其鬼不神。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_da_guo_ruo_peng_xiao_xian
+  method: 治大国若烹小鲜
+  signature: fn zhi_da_guo_ruo_peng_xiao_xian(govern) -> stable_order
+  precond: 频繁翻动、序乱
+  postcond: 少扰动，徐清静，其鬼不神
+  negative_space: ⊗ 频翻则碎
+  steps:
+  - 定纲
+  - 少翻动
+  - 徐清静
+  - 稳序
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_da_guo_ruo_peng_xiao_xian
+  trigger: 治大国若烹小鲜；以道莅天下，其鬼不神。
+  when: 当治理频繁折腾、宜轻扰动时触发
+  graph:
+  - from: zhi_da_guo_ruo_peng_xiao_xian
+    to: []
+decision:
+- if: 需烹小鲜稳序
+  call: zhi_da_guo_ruo_peng_xiao_xian
+skills:
+- 治大国若烹小鲜·顺势研判
+negative_space:
+- 频翻则碎
+- 扰则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

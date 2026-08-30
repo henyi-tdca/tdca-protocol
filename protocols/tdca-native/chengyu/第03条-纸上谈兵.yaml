@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-03-20260827-03
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.803187'
+branch: 中国成语·战略与决断·第03条(纸上谈兵)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第03条《纸上谈兵》
+  core: 脱离场景约束的理论推演不可直接作决策依据；须以真实反馈闭环校准，否则书生之见反成大患。是'理论须接场景'的负空间警示，亦呼应 TDCA 场景效用可持续。
+  verse: 读兵万卷，临阵一无，长平一败，徒以空文。
+  origin: 《史记·廉颇蔺相如列传》：赵括熟读兵书，代廉颇御秦，空言兵事而不知合变，长平之败四十万降卒被坑。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhishang_tanbing
+  method: 纸上谈兵
+  signature: fn zhishang_tanbing(warn) -> theory_grounded
+  precond: 以空论代实战
+  postcond: 理论落地，闭环校
+  negative_space: ⊗ 空谈则不落地
+  steps:
+  - 辨场景
+  - 验实据
+  - 闭循环
+  - 校偏差
+  nca_emit: true
+dispatch:
+  main_pipeline: zhishang_tanbing
+  trigger: 读兵万卷，临阵一无，长平一败，徒以空文。
+  when: 当以书本/模型结论直接决策、缺实战反馈时触发(作警示)
+  graph:
+  - from: zhishang_tanbing
+    to: []
+decision:
+- if: 需理论落地校验
+  call: zhishang_tanbing
+skills:
+- 纸上谈兵·思维研判
+negative_space:
+- 以空论为决断则败
+- 昧场景约束则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX08-20260815-08
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.958011'
+branch: 诸子百家·儒家·大学·第08目(修身)
+stratum: 诸子百家·儒家·大学·外王阶梯
+soul:
+  identity: 大学·第08目《修身》
+  core: 修养自身为一切根本、本立道生；以修身贯内外，为内圣外王枢纽。
+  verse: 自天子以至于庶人，壹是皆以修身为本。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 外王阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xiu_shen
+  method: 修身
+  signature: fn xiu_shen(self) -> cultivated_self
+  precond: 身不修、本不立
+  postcond: 身修家齐国治天下平
+  negative_space: ⊗ 本不立则溃
+  steps:
+  - 格致
+  - 诚正
+  - 修身
+  - 为本
+  nca_emit: true
+dispatch:
+  main_pipeline: xiu_shen
+  trigger: 自天子以至于庶人，壹是皆以修身为本。
+  when: 当万事待举、宜先修身为本时触发
+  graph:
+  - from: xiu_shen
+    to: []
+decision:
+- if: 需修身为本
+  call: xiu_shen
+skills:
+- 修身·顺势研判
+negative_space:
+- 舍本逐末则溃
+- 身不修则家不齐
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

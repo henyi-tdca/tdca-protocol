@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-44-20260827-44
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.263857'
+branch: 中国成语·认知与辩证·第44条(否极泰来)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第44条《否极泰来》
+  core: 坏运到极点则好运转来，是矛盾双方的相互转化(对立统一)；在'否'(闭塞)与'泰'(通达)之间，条件成熟则相互转化，故困境非永恒，须以动态条件性视角待之(塞翁失马之延伸)。
+  verse: 否之匪人，泰则来；困极而通，剥极而复。
+  origin: 《周易·否卦》'否极泰来'；否闭也，泰通也，物极则反，闭极则通。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fouji_tailai
+  method: 否极泰来
+  signature: fn fouji_tailai(reframe) -> dynamic_outcome
+  precond: 静态定否泰
+  postcond: 看转化，待通
+  negative_space: ⊗ 以一时定终身
+  steps:
+  - 不急判
+  - 察条件
+  - 看转化
+  - 待泰来
+  nca_emit: true
+dispatch:
+  main_pipeline: fouji_tailai
+  trigger: 否之匪人，泰则来；困极而通，剥极而复。
+  when: 当处困境、宜以动态辩证视角待转机时触发
+  graph:
+  - from: fouji_tailai
+    to: []
+decision:
+- if: 需辩证重估
+  call: fouji_tailai
+skills:
+- 否极泰来·思维研判
+negative_space:
+- 静态定否则盲
+- 忽视转化则失机
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

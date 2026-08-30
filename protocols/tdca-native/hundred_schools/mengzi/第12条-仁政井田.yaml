@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ12-20260815-12
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.889538'
+branch: 诸子百家·儒家·孟子·第12条(仁政井田)
+stratum: 诸子百家·儒家·孟子·王道政术
+soul:
+  identity: 孟子·第12条《仁政井田》
+  core: 制民之产、使有恒产恒心；以井田均产、教以人伦，养教相成。
+  verse: 明君制民之产，必使仰足以事父母，俯足以畜妻子……恒产者有恒心。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 王道政术
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ren_zheng_jing_tian
+  method: 仁政井田
+  signature: fn ren_zheng_jing_tian(plan) -> settled_people
+  precond: 无恒产、心放
+  postcond: 有恒产恒心，教成
+  negative_space: ⊗ 无产则放
+  steps:
+  - 制产
+  - 均田
+  - 立恒心
+  - 施教
+  nca_emit: true
+dispatch:
+  main_pipeline: ren_zheng_jing_tian
+  trigger: 明君制民之产，必使仰足以事父母，俯足以畜妻子……恒产者有恒心。
+  when: 当宜富民教民、不宜聚敛时触发
+  graph:
+  - from: ren_zheng_jing_tian
+    to: []
+decision:
+- if: 需制民之产
+  call: ren_zheng_jing_tian
+skills:
+- 仁政井田·顺势研判
+negative_space:
+- 聚敛则民散
+- 无教则野
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

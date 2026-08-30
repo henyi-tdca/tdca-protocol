@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-111-20260828-111
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.461070'
+branch: 中国成语·修身与治理·第111条(赏罚分明)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第111条《赏罚分明》
+  core: 激励机制的边界清晰——奖所当奖、罚所当罚，且标准先于个案公布并稳定执行；激励失效多因标准模糊或事后移动，而非强度不足。
+  verse: 当赏虽仇必加，当罚虽亲必施；信立而后令行。
+  origin: 《韩非子·守道》：'赏莫如厚而信，使民利之；罚莫如重而必，使民畏之'；诸葛亮治蜀赏罚分明为通行注脚。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shangfa_fenming
+  method: 赏罚分明
+  signature: fn shangfa_fenming(govern) -> incentive_boundary_set
+  precond: 治理须立激励边界
+  postcond: 标准先立，令行禁止
+  negative_space: ⊗ 事后移标则信崩
+  steps:
+  - 立其标
+  - 昭其信
+  - 施必当
+  - 勿朝改
+  nca_emit: true
+dispatch:
+  main_pipeline: shangfa_fenming
+  trigger: 当赏虽仇必加，当罚虽亲必施；信立而后令行。
+  when: 当须建立/修复激励与约束的公信力时触发
+  graph:
+  - from: shangfa_fenming
+    to: []
+decision:
+- if: 需激励边界治理
+  call: shangfa_fenming
+skills:
+- 赏罚分明·思维研判
+negative_space:
+- 标准朝令夕改则信崩
+- 罚不及亲则令废
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

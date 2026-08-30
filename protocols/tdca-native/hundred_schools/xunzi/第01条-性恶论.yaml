@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ01-20260815-01
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.558498'
+branch: 诸子百家·儒家·荀子·第01条(性恶论)
+stratum: 诸子百家·儒家·荀子·性伪之辨
+soul:
+  identity: 荀子·第01条《性恶论》
+  core: 人性本恶、其善在伪（人为）；以性恶立师法礼义之需，不信自然向善。
+  verse: 人之性恶，其善者伪也。今人之性，生而有好利焉……
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 性伪之辨
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xing_e_lun
+  method: 性恶论
+  signature: fn xing_e_lun(human) -> evil_nature
+  precond: 信性善、废师法
+  postcond: 知性恶，立礼义
+  negative_space: ⊗ 纵性则乱
+  steps:
+  - 识性恶
+  - 知伪
+  - 立师法
+  - 兴礼义
+  nca_emit: true
+dispatch:
+  main_pipeline: xing_e_lun
+  trigger: 人之性恶，其善者伪也。今人之性，生而有好利焉……
+  when: 当论人性根基、宜立礼法矫治时触发
+  graph:
+  - from: xing_e_lun
+    to: []
+decision:
+- if: 需立性恶论
+  call: xing_e_lun
+skills:
+- 性恶论·顺势研判
+negative_space:
+- 纵性废法则乱
+- 全信性善则弛
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH52-20260815-52
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.720520'
+branch: 诸子百家·道家·道德经·第52章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第52章《天下有始》
+  core: 守母(本)知子(末)，塞兑闭门；以归本杜耗。
+  verse: 既得其母，以知其子；塞其兑，闭其门。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_xia_you_shi
+  method: 天下有始
+  signature: fn tian_xia_you_shi(root) -> root_govern
+  precond: 逐末耗散、危
+  postcond: 守母知子，没身不殆
+  negative_space: ⊗ 逐末则殆
+  steps:
+  - 得其母
+  - 知其子
+  - 塞兑
+  - 守柔
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_xia_you_shi
+  trigger: 既得其母，以知其子；塞其兑，闭其门。
+  when: 当逐末耗散、宜守本杜耗时触发
+  graph:
+  - from: tian_xia_you_shi
+    to: []
+decision:
+- if: 需守母杜耗
+  call: tian_xia_you_shi
+skills:
+- 天下有始·顺势研判
+negative_space:
+- 逐末则殆
+- 开门则耗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-118-20260828-118
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.508043'
+branch: 中国成语·修身与治理·第118条(令行禁止)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第118条《令行禁止》
+  core: 执行纪律的完备性——规则的实际约束力=宣布×执行率；有令不行比无令更损制度信用，故令宜简、行必核、禁必止。
+  verse: 令之而行，禁之而止；法之所用，如四时之信。
+  origin: 《管子·立政》：'令则行，禁则止，宪之所及，俗之所被，如百体之从心。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: lingxing_jinzhi
+  method: 令行禁止
+  signature: fn lingxing_jinzhi(enforce) -> execution_rate_governed
+  precond: 规则体系待落地
+  postcond: 行止有度，信用成
+  negative_space: ⊗ 令而不行则信损
+  steps:
+  - 简其令
+  - 信其行
+  - 必其止
+  - 核其率
+  nca_emit: true
+dispatch:
+  main_pipeline: lingxing_jinzhi
+  trigger: 令之而行，禁之而止；法之所用，如四时之信。
+  when: 当规则宣布与实际执行脱节、须治理执行率时触发
+  graph:
+  - from: lingxing_jinzhi
+    to: []
+decision:
+- if: 需执行率治理
+  call: lingxing_jinzhi
+skills:
+- 令行禁止·思维研判
+negative_space:
+- 令繁不行则自损信用
+- 禁过严则活力抑
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

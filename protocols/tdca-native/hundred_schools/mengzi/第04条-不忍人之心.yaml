@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ04-20260815-04
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.817324'
+branch: 诸子百家·儒家·孟子·第04条(不忍人之心)
+stratum: 诸子百家·儒家·孟子·性善本体
+soul:
+  identity: 孟子·第04条《不忍人之心》
+  core: 不忍人之心（恻隐）推而为政即仁政；以推恩及物，由一体之仁达于天下。
+  verse: 先王有不忍人之心，斯有不忍人之政矣。以不忍人之心，行不忍人之政。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 性善本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bu_ren_zhi_xin
+  method: 不忍人之心
+  signature: fn bu_ren_zhi_xin(extend) -> humane_govern
+  precond: 忍心残忍、不推
+  postcond: 推恩保四海
+  negative_space: ⊗ 忍则失其端
+  steps:
+  - 识不忍
+  - 推恩
+  - 及物
+  - 保四海
+  nca_emit: true
+dispatch:
+  main_pipeline: bu_ren_zhi_xin
+  trigger: 先王有不忍人之心，斯有不忍人之政矣。以不忍人之心，行不忍人之政。
+  when: 当宜以仁心推政、不宜苛酷时触发
+  graph:
+  - from: bu_ren_zhi_xin
+    to: []
+decision:
+- if: 需行不忍人之政
+  call: bu_ren_zhi_xin
+skills:
+- 不忍人之心·顺势研判
+negative_space:
+- 忍心行虐则失位
+- 推而不遍则狭
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

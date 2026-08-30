@@ -1,0 +1,47 @@
+COP-ID: MACM-06-20260815-06
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.672960'
+branch: 马克思主义·第06条(永恒发展)
+stratum: 马克思主义·唯物辩证法
+soul:
+  identity: 马克思主义·第06条《永恒发展》
+  core: 永恒发展、过程思维；以运动变化为常态, 不把现状凝固。
+  verse: 世界不是既成事物的集合体，而是过程的集合体。运动是一切物质的存在方式。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 唯物辩证法
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yong_heng_fa_zhan
+  method: 永恒发展
+  signature: fn yong_heng_fa_zhan(flow) -> perpetual_develop
+  precond: 凝固现状、静止观
+  postcond: 以过程看事物
+  negative_space: ⊗ 凝固则失时
+  steps:
+  - 识过程
+  - 看运动
+  - 防固化
+  - 随发展
+  nca_emit: true
+dispatch:
+  main_pipeline: yong_heng_fa_zhan
+  trigger: 世界不是既成事物的集合体，而是过程的集合体。运动是一切物质的存在方式。
+  when: 当宜以过程观待事物、不宜凝固时触发
+  graph:
+  - from: yong_heng_fa_zhan
+    to: []
+decision:
+- if: 需永恒发展
+  call: yong_heng_fa_zhan
+skills:
+- 永恒发展·顺势研判
+negative_space:
+- 静止观则落后于势
+- 虚变则浮
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

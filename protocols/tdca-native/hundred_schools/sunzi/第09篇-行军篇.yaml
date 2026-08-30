@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ09-20260815-09
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.547349'
+branch: 诸子百家·兵家·孙子兵法·第09篇(行军篇)
+stratum: 诸子百家·兵家·孙子兵法·地形机变
+soul:
+  identity: 孙子兵法·第09篇《行军篇》
+  core: 处军相对方——依地形处置军队(好高恶下、养生处实)，相对方三十二法观形察意；令文齐武、教戒素行，兵非贵多惟无武进。
+  verse: 凡处军相敌：绝山依谷，视生处高，战隆无登。兵非贵益多也，惟无武进。令之以文，齐之以武。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 地形机变
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chu_jun_xiang_di
+  method: 行军篇
+  signature: fn chu_jun_xiang_di(terrain) -> situational_posture
+  precond: 处军失地则病，不察敌则盲
+  postcond: 处军得地、相敌知情
+  negative_space: ⊗ 处下湿则病
+  steps:
+  - 处军
+  - 相敌
+  - 令文齐武
+  - 不武进
+  nca_emit: true
+dispatch:
+  main_pipeline: chu_jun_xiang_di
+  trigger: 凡处军相敌：绝山依谷，视生处高，战隆无登。兵非贵益多也，惟无武进。令之以文，齐之以武。
+  when: 当宜依地处置、观敌形察意时触发
+  graph:
+  - from: chu_jun_xiang_di
+    to: []
+decision:
+- if: 需处军相对方
+  call: chu_jun_xiang_di
+skills:
+- 行军篇·顺势研判
+negative_space:
+- 处军失地则败
+- 不察敌情则盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 知识图谱与态势感知中心
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

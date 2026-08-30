@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-77-20260828-77
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.464705'
+branch: 中国成语·认知与辩证·第77条(郑人买履)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第77条《郑人买履》
+  core: 制度/度量本是降低不确定性的工具，但工具异化后'宁信度不信足'——合规形式压倒事实实质。治理须保留'以足试履'的实质校验通道，度为之使而非为主。
+  verse: 宁信度，无自信也；度在而足不在，履不可得。
+  origin: 《韩非子·外储说左上》：郑人有且置履者，先自度其足而置之其坐，至之市而忘操之；已得履，乃曰'吾忘持度'，反归取之。及反，市罢，遂不得履。人曰'何不试之以足？'曰'宁信度，无自信也'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhengren_mailv
+  method: 郑人买履
+  signature: fn zhengren_mailv(warn) -> substance_over_form
+  precond: 度在而足不在
+  postcond: 归于实，度得其所
+  negative_space: ⊗ 宁信度则失履
+  steps:
+  - 明度之本
+  - 察其异化
+  - 试之以足
+  - 正其用
+  nca_emit: true
+dispatch:
+  main_pipeline: zhengren_mailv
+  trigger: 宁信度，无自信也；度在而足不在，履不可得。
+  when: 当流程/指标/合规形式与实质事实冲突、须裁断时触发(作警示)
+  graph:
+  - from: zhengren_mailv
+    to: []
+decision:
+- if: 需实质校验
+  call: zhengren_mailv
+skills:
+- 郑人买履·思维研判
+negative_space:
+- 废度则乱
+- 拘度则失实
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

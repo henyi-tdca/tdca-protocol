@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-94-20260828-94
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.347784'
+branch: 中国成语·战略与决断·第94条(借刀杀人)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第94条《借刀杀人》
+  core: 目标与力量分离——自身不出力，而使既有力量依其自身动因作用于目标；借的是动因结构，不是器物本身。伦理负空间：所借之力不得滥伤无辜。
+  verse: 力在他人，动因自生；引而不发，其锋自向。
+  origin: 三十六计·胜战计第三计；明·汪廷讷《三祝记》借蔡京之手陷害事为通行典源。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jiedao_sharen
+  method: 借刀杀人
+  signature: fn jiedao_sharen(leverage) -> force_via_motive
+  precond: 目标与可用力量之间自有张力
+  postcond: 力出于人，事成于势
+  negative_space: ⊗ 强驱则反噬
+  steps:
+  - 察其怨
+  - 顺其势
+  - 引其锋
+  - 收其功
+  nca_emit: true
+dispatch:
+  main_pipeline: jiedao_sharen
+  trigger: 力在他人，动因自生；引而不发，其锋自向。
+  when: 当自身直接行动代价高、存在可借用的既有动因结构时触发
+  graph:
+  - from: jiedao_sharen
+    to: []
+decision:
+- if: 需借力式达成
+  call: jiedao_sharen
+skills:
+- 借刀杀人·思维研判
+negative_space:
+- 强驱人刀则反噬
+- 所借滥伤无辜则失德违约
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

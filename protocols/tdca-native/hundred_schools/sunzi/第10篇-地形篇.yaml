@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ10-20260815-10
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.554172'
+branch: 诸子百家·兵家·孙子兵法·第10篇(地形篇)
+stratum: 诸子百家·兵家·孙子兵法·地形机变
+soul:
+  identity: 孙子兵法·第10篇《地形篇》
+  core: 六地之用——通/挂/支/隘/险/远六地形各有战法，将须知地；视卒如婴儿、如爱子，厚养而严律；知天知地则胜乃可全。
+  verse: 地形者，兵之助也。知彼知己，胜乃不殆；知天知地，胜乃可全。视卒如婴儿，故可与之赴深溪。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 地形机变
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: liu_di
+  method: 地形篇
+  signature: fn liu_di(landform) -> terrain_tactics
+  precond: 不知地形则陷
+  postcond: 因地制敌、胜乃不殆
+  negative_space: ⊗ 迷于地形则亡
+  steps:
+  - 辨六地
+  - 因地制敌
+  - 视卒如子
+  - 知天知地
+  nca_emit: true
+dispatch:
+  main_pipeline: liu_di
+  trigger: 地形者，兵之助也。知彼知己，胜乃不殆；知天知地，胜乃可全。视卒如婴儿，故可与之赴深溪。
+  when: 当宜据地形定战法、知天知地时触发
+  graph:
+  - from: liu_di
+    to: []
+decision:
+- if: 需地形制对方
+  call: liu_di
+skills:
+- 地形篇·顺势研判
+negative_space:
+- 迷地形则陷
+- 不知天地的不全
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 知识图谱与态势感知中心
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

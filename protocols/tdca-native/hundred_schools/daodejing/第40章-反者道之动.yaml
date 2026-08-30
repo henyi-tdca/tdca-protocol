@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH40-20260815-40
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.580919'
+branch: 诸子百家·道家·道德经·第40章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第40章《反者道之动》
+  core: 道运在反(循环往复)、用在弱、生于无；以反向弱用御有。
+  verse: 反者道之动，弱者道之用；天下万物生于有，有生于无。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fan_zhe_dao_zhi_dong
+  method: 反者道之动
+  signature: fn fan_zhe_dao_zhi_dong(trend) -> reverse_use
+  precond: 顺势极盛、将反
+  postcond: 见反、用弱、知无生有
+  negative_space: ⊗ 不见反则危
+  steps:
+  - 察反
+  - 用弱
+  - 知无
+  - 御有
+  nca_emit: true
+dispatch:
+  main_pipeline: fan_zhe_dao_zhi_dong
+  trigger: 反者道之动，弱者道之用；天下万物生于有，有生于无。
+  when: 当趋势极盛将反、需弱用待变时触发
+  graph:
+  - from: fan_zhe_dao_zhi_dong
+    to: []
+decision:
+- if: 需反弱御变
+  call: fan_zhe_dao_zhi_dong
+skills:
+- 反者道之动·顺势研判
+negative_space:
+- 不见反则危
+- 执有则蔽
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

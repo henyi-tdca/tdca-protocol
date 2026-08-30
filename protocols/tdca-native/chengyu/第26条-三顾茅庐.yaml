@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-26-20260827-26
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.048510'
+branch: 中国成语·修身与治理·第26条(三顾茅庐)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第26条《三顾茅庐》
+  core: 以诚意与耐心求取关键稀缺人才，尊重对方价值门槛；真人才不轻出，须以'三顾'的礼贤换得其全心投入。
+  verse: 先主三往，乃见卧龙，倾心相托，三分天下。
+  origin: 《三国志·诸葛亮传》注引《襄阳记》：刘备凡三往乃见诸葛亮，屏人语曰'汉室倾颓，孤不度德量力，欲信大义'，后鼎足三分。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: sangu_maolu
+  method: 三顾茅庐
+  signature: fn sangu_maolu(seek) -> talent_committed
+  precond: 轻慢求才
+  postcond: 诚三顾，得全心
+  negative_space: ⊗ 轻慢则才不至
+  steps:
+  - 识才
+  - 尊其价
+  - 诚相邀
+  - 托以心
+  nca_emit: true
+dispatch:
+  main_pipeline: sangu_maolu
+  trigger: 先主三往，乃见卧龙，倾心相托，三分天下。
+  when: 当需延揽关键稀缺人才、宜以诚意耐心破其门槛时触发
+  graph:
+  - from: sangu_maolu
+    to: []
+decision:
+- if: 需礼贤求才
+  call: sangu_maolu
+skills:
+- 三顾茅庐·思维研判
+negative_space:
+- 轻慢则才不至
+- 无诚则难得心
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

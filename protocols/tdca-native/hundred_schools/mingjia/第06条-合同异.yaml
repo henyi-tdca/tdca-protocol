@@ -1,0 +1,47 @@
+COP-ID: HS-MG-06-20260815-06
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.086494'
+branch: 诸子百家·名家·第06条(合同异)
+stratum: 诸子百家·名家·合同异
+soul:
+  identity: 名家·第06条《合同异》
+  core: 合同异、毕同毕异；以同异相对、类聚有阶，立分类之辨。
+  verse: 大同而与小同异，此之谓小同异；万物毕同毕异，此之谓大同异。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 合同异
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: he_tong_yi
+  method: 合同异
+  signature: fn he_tong_yi(classify) -> same_diff
+  precond: 执同或执异
+  postcond: 同异明，类分
+  negative_space: ⊗ 执一则蔽
+  steps:
+  - 识小同
+  - 识大同
+  - 毕同异
+  - 分类
+  nca_emit: true
+dispatch:
+  main_pipeline: he_tong_yi
+  trigger: 大同而与小同异，此之谓小同异；万物毕同毕异，此之谓大同异。
+  when: 当宜辨同异层级、不宜执一边时触发
+  graph:
+  - from: he_tong_yi
+    to: []
+decision:
+- if: 需合同异
+  call: he_tong_yi
+skills:
+- 合同异·顺势研判
+negative_space:
+- 执同则混
+- 执异则裂
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

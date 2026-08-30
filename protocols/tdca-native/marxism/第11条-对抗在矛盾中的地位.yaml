@@ -1,0 +1,47 @@
+COP-ID: MACM-11-20260815-11
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.720174'
+branch: 马克思主义·第11条(对抗在矛盾中的地位)
+stratum: 马克思主义·矛盾论
+soul:
+  identity: 马克思主义·第11条《对抗在矛盾中的地位》
+  core: 对抗只是斗争的一种形式; 以矛盾性质定对抗与否, 可转化则和平解决。
+  verse: 对抗是矛盾斗争的一种形式，而不是它的一切形式。矛盾有对抗与非对抗之分，依性质而转化。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 矛盾论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dui_kang_di_wei
+  method: 对抗在矛盾中的地位
+  signature: fn dui_kang_di_wei(resolve) -> role_of_antagonism
+  precond: 凡事皆对抗
+  postcond: 依质定对抗
+  negative_space: ⊗ 滥对抗则裂
+  steps:
+  - 辨性质
+  - 定对抗否
+  - 促转化
+  - 善解决
+  nca_emit: true
+dispatch:
+  main_pipeline: dui_kang_di_wei
+  trigger: 对抗是矛盾斗争的一种形式，而不是它的一切形式。矛盾有对抗与非对抗之分，依性质而转化。
+  when: 当宜区分对抗/非对抗、不宜凡事剑拔时触发
+  graph:
+  - from: dui_kang_di_wei
+    to: []
+decision:
+- if: 需辨对抗地位
+  call: dui_kang_di_wei
+skills:
+- 对抗在矛盾中的地位·顺势研判
+negative_space:
+- 滥对抗则破裂
+- 该对抗不抗则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

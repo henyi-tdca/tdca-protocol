@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-122-20260828-122
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:41:37.598106'
+branch: 中国成语·战略与决断·第122条(关门捉贼)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第122条《关门捉贼》
+  core: 对弱小分散者先封闭逃逸通道再收网——先封边界后行动，防围而不歼；对强势方反用（围师必阙），边界封控须量另一参与方之强弱。
+  verse: 贼弱而散，闭门而捕；恐其逸去，先阖其户。
+  origin: 三十六计·混战计第二十二计：'小敌困之。剥，不利有攸往。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: guanmen_zhuozei
+  method: 关门捉贼
+  signature: fn guanmen_zhuozei(seal) -> perimeter_sealed
+  precond: 对方弱小且可围
+  postcond: 门户既闭，收网而尽
+  negative_space: ⊗ 围而有阙则纵逸
+  steps:
+  - 察其弱
+  - 封其逸
+  - 合其围
+  - 尽其收
+  nca_emit: true
+dispatch:
+  main_pipeline: guanmen_zhuozei
+  trigger: 贼弱而散，闭门而捕；恐其逸去，先阖其户。
+  when: 当弱小分散目标须围捕、宜先封边界时触发
+  graph:
+  - from: guanmen_zhuozei
+    to: []
+decision:
+- if: 需边界封控
+  call: guanmen_zhuozei
+skills:
+- 关门捉贼·思维研判
+negative_space:
+- 对强敌用之则困兽犹斗
+- 封而不收则师老兵疲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

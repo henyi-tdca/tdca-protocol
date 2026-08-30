@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH26-20260815-26
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.429301'
+branch: 诸子百家·道家·道德经·第26章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第26章《重为轻根》
+  core: 重静为轻躁之主；以持重守静御轻躁。
+  verse: 重为轻根，静为躁君。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhong_wei_qing_gen
+  method: 重为轻根
+  signature: fn zhong_wei_qing_gen(self) -> steadiness
+  precond: 轻浮躁动、失根
+  postcond: 持重守静，为主不随
+  negative_space: ⊗ 轻躁则失君
+  steps:
+  - 重
+  - 静
+  - 御轻
+  - 制躁
+  nca_emit: true
+dispatch:
+  main_pipeline: zhong_wei_qing_gen
+  trigger: 重为轻根，静为躁君。
+  when: 当轻率躁动、需持重镇定时触发
+  graph:
+  - from: zhong_wei_qing_gen
+    to: []
+decision:
+- if: 需以重静御轻躁
+  call: zhong_wei_qing_gen
+skills:
+- 重为轻根·顺势研判
+negative_space:
+- 轻躁则失主
+- 逐末则忘本
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

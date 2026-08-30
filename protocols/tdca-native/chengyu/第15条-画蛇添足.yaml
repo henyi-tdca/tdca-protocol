@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-15-20260827-15
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.937963'
+branch: 中国成语·认知与辩证·第15条(画蛇添足)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第15条《画蛇添足》
+  core: 在已达成目标后追加多余动作反损结果；知止为要，过犹不及——'完成'即应止，多余修饰常毁已成之功。
+  verse: 蛇成而酒得，复为蛇足，足成而酒失。
+  origin: 《战国策·齐策》：祠者赐酒，人相谓画蛇先成者饮；一人蛇成，左手持酒右手画足曰'吾能为之足'，未成而他人蛇成夺酒。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: huashe_tianzu
+  method: 画蛇添足
+  signature: fn huashe_tianzu(warn) -> know_when_stop
+  precond: 已成就添
+  postcond: 知止，保成果
+  negative_space: ⊗ 过犹不及
+  steps:
+  - 判已成
+  - 知止
+  - 不赘
+  - 守果
+  nca_emit: true
+dispatch:
+  main_pipeline: huashe_tianzu
+  trigger: 蛇成而酒得，复为蛇足，足成而酒失。
+  when: 当目标已达、有人仍要'锦上添花'致风险时触发(作警示)
+  graph:
+  - from: huashe_tianzu
+    to: []
+decision:
+- if: 需知止
+  call: huashe_tianzu
+skills:
+- 画蛇添足·思维研判
+negative_space:
+- 过犹不及则损
+- 成后多事则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

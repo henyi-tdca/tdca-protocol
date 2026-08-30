@@ -1,0 +1,47 @@
+COP-ID: HS-FA-08-20260815-08
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.575908'
+branch: 诸子百家·法家·第08条(耕战)
+stratum: 诸子百家·法家·时变耕战
+soul:
+  identity: 法家·第08条《耕战》
+  core: 耕战为本、利出一孔；以农战聚国力，立富强之基。
+  verse: 国之所以兴者，农战也。利出于一孔，则国多物；出十孔，则国少物。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 时变耕战
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: geng_zhan
+  method: 耕战
+  signature: fn geng_zhan(state) -> agro_war
+  precond: 利孔杂、国弱
+  postcond: 一孔利，国富兵强
+  negative_space: ⊗ 多孔则弱
+  steps:
+  - 重农
+  - 励战
+  - 一孔
+  - 国强
+  nca_emit: true
+dispatch:
+  main_pipeline: geng_zhan
+  trigger: 国之所以兴者，农战也。利出于一孔，则国多物；出十孔，则国少物。
+  when: 当宜聚国力于本、不宜分利时触发
+  graph:
+  - from: geng_zhan
+    to: []
+decision:
+- if: 需耕战为本
+  call: geng_zhan
+skills:
+- 耕战·顺势研判
+negative_space:
+- 利出多孔则弱
+- 弃农战则危
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

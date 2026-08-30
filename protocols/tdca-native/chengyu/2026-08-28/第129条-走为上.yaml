@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-129-20260828-129
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.611200'
+branch: 中国成语·战略与决断·第129条(走为上)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第129条《走为上》
+  core: 保存有生力量优先于面子与阵地——败局不可逆时撤退是最优策略而非失败；可持续存在是一切后续策略的前提。
+  verse: 全师避敌，左次无咎；未失常也，走乃上计。
+  origin: 三十六计·败战计第三十六计：'全师避敌，左次无咎'；语本《周易》'左次'之象。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zouweishang
+  method: 走为上
+  signature: fn zouweishang(retreat) -> force_preserved
+  precond: 对抗态势不可逆转劣
+  postcond: 力量保全，再起有基
+  negative_space: ⊗ 走而无序则溃散
+  steps:
+  - 判其局
+  - 定其撤
+  - 全其师
+  - 图其再
+  nca_emit: true
+dispatch:
+  main_pipeline: zouweishang
+  trigger: 全师避敌，左次无咎；未失常也，走乃上计。
+  when: 当对抗已成不可逆劣势、宜止损撤退时触发
+  graph:
+  - from: zouweishang
+    to: []
+decision:
+- if: 需止损撤退
+  call: zouweishang
+skills:
+- 走为上·思维研判
+negative_space:
+- 乱走则溃散
+- 恋战则全灭
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

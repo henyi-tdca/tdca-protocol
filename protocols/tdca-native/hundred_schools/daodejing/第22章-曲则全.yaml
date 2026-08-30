@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH22-20260815-22
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.381105'
+branch: 诸子百家·道家·道德经·第22章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第22章《曲则全》
+  core: 委曲反得全，洼下反盈；以退屈收全功。
+  verse: 曲则全，枉则直；洼则盈，敝则新。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qu_ze_quan
+  method: 曲则全
+  signature: fn qu_ze_quan(conflict) -> gain_by_yield
+  precond: 争直而损全
+  postcond: 委曲得全，抱一不争
+  negative_space: ⊗ 直争则缺
+  steps:
+  - 曲
+  - 全
+  - 洼
+  - 盈
+  nca_emit: true
+dispatch:
+  main_pipeline: qu_ze_quan
+  trigger: 曲则全，枉则直；洼则盈，敝则新。
+  when: 当硬争致损、宜退屈收全时触发
+  graph:
+  - from: qu_ze_quan
+    to: []
+decision:
+- if: 需以曲致全
+  call: qu_ze_quan
+skills:
+- 曲则全·顺势研判
+negative_space:
+- 直争则缺
+- 自见则暗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

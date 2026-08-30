@@ -1,0 +1,123 @@
+COP-ID: TDCA-CORE-20260815-03
+source_expert: tdca_core_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-15T06:33:47.671584'
+branch: TDCA核心·正和协作涌现
+stratum: TDCA核心·正和协作涌现
+soul:
+  identity: 正和协作涌现协议 (Positive-Sum Collaboration Emergence Protocol)
+  core: '把多主体正和协作编译为可计算涌现协议: 互补识别→缺口量化→正和增益→稳定联盟→夏普利分成→MOU校验→DVP结算; 经 TDCA 闭环使共赢为可审计默认解。这是搜索比配引擎的协作方法论本体。'
+  role: 思维协议 (TDCA核心范式类)
+  category: TDCA核心 / TDCA核心·正和协作涌现
+primitives:
+- name: complement_identify
+  method: 互补识别
+  signature: fn complement_identify(agents, need) -> complements
+  precond: 主体能力与需求已知
+  postcond: 识别互补缺口
+  negative_space: ⊗ 误判互补则错配
+  steps:
+  - 列能力
+  - 对需求
+  - 标互补
+  nca_emit: true
+- name: gap_quantify
+  method: 缺口量化
+  signature: fn gap_quantify(need, cover) -> gaps
+  precond: 需求与覆盖
+  postcond: 量化每维缺口与覆盖强度
+  negative_space: ⊗ 量错则比配失真
+  steps:
+  - 量化覆盖
+  - 标缺口
+  nca_emit: true
+- name: positive_gain
+  method: 正和增益
+  signature: fn positive_gain(alliance) -> gain
+  precond: 联盟互补
+  postcond: 算协同正和增益
+  negative_space: ⊗ 非正和则弃
+  steps:
+  - 算协同
+  - 验正和
+  nca_emit: true
+- name: stable_coalition
+  method: 稳定联盟撮合
+  signature: fn stable_coalition(cands) -> coalition
+  precond: 候选与缺口
+  postcond: 撮合稳定联盟(各方≥BATNA)
+  negative_space: ⊗ 不稳则散
+  steps:
+  - 枚举
+  - 稳检
+  - 成盟
+  nca_emit: true
+- name: shapley_share
+  method: 夏普利分成
+  signature: fn shapley_share(coalition) -> shares
+  precond: 联盟价值
+  postcond: 按边际贡献公平分成(满足效率/对称/加法公理)
+  negative_space: ⊗ 不公则叛
+  steps:
+  - 算边际
+  - 分
+  nca_emit: true
+- name: mou_dvp_settle
+  method: MOU校验与DVP结算
+  signature: fn mou_dvp_settle(shares) -> settled
+  precond: 分成
+  postcond: 经 MOU 正和校验 + 数字人民币 DVP 闭环结算(NCA确权)
+  negative_space: ⊗ 非正和或绕开DVP则拒
+  steps:
+  - MOU校验
+  - DVP
+  - NCA确权
+  nca_emit: true
+dispatch:
+  main_pipeline: complement_identify
+  graph:
+  - from: complement_identify
+    to:
+    - gap_quantify
+  - from: gap_quantify
+    to:
+    - positive_gain
+  - from: positive_gain
+    to:
+    - stable_coalition
+  - from: stable_coalition
+    to:
+    - shapley_share
+  - from: shapley_share
+    to:
+    - mou_dvp_settle
+  note: TDCA 核心协议自带调度骨架
+decision:
+- if: 需识别互补
+  call: complement_identify
+- if: 需量化缺口
+  call: gap_quantify
+- if: 需算增益
+  call: positive_gain
+- if: 需撮合联盟
+  call: stable_coalition
+- if: 需公平分成
+  call: shapley_share
+- if: 需结算
+  call: mou_dvp_settle
+skills:
+- 互补扫描矩阵
+- 缺口量化器
+- 稳定联盟撮合器
+- 夏普利分成器
+negative_space:
+- ⊗ 比配须基于真实互补, 误判则错配
+- ⊗ 增益须正和, 非正和联盟弃
+- ⊗ 联盟须稳定(各方≥BATNA), 否则散
+- ⊗ 分成须满足夏普利公理, 不公则叛
+- ⊗ 结算须经 MOU 校验 + 数字人民币 DVP, 不得绕开
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 6

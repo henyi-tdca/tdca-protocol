@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-105-20260828-105
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.421325'
+branch: 中国成语·认知与辩证·第105条(触类旁通)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第105条《触类旁通》
+  core: 知识按结构相似性迁移——掌握一类之理可推及同构之类；迁移有效的前提是结构同构而非表面相似，否则成东施效颦。
+  verse: 一隅既得，三隅反焉；类同其构，通不假外。
+  origin: 《周易·系辞上》：'引而伸之，触类而长之，天下之能事毕矣。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chulei_pangtong
+  method: 触类旁通
+  signature: fn chulei_pangtong(transfer) -> structural_transfer
+  precond: 已深握一类之理
+  postcond: 同构可推，旁通不悖
+  negative_space: ⊗ 表面类推则谬
+  steps:
+  - 明其理
+  - 辨其构
+  - 验其同
+  - 推其通
+  nca_emit: true
+dispatch:
+  main_pipeline: chulei_pangtong
+  trigger: 一隅既得，三隅反焉；类同其构，通不假外。
+  when: 当需将已验证之理迁移到新域、须先验结构同构时触发
+  graph:
+  - from: chulei_pangtong
+    to: []
+decision:
+- if: 需结构迁移
+  call: chulei_pangtong
+skills:
+- 触类旁通·思维研判
+negative_space:
+- 貌同构异而强推则谬
+- 拒一切迁移则重复造轮
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

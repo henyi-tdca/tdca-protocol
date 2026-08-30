@@ -1,0 +1,47 @@
+COP-ID: MACM-03-20260815-03
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.647066'
+branch: 马克思主义·第03条(质量互变规律)
+stratum: 马克思主义·唯物辩证法
+soul:
+  identity: 马克思主义·第03条《质量互变规律》
+  core: 量变为质变的必要准备、质变是量变的必然结果；以'度'为临界, 把握关节点。
+  verse: 量变引起质变，质变又为新的量变开辟道路。度是质与量的统一。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 唯物辩证法
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_liang_hu_bian
+  method: 质量互变规律
+  signature: fn zhi_liang_hu_bian(change) -> quantitative_qualitative
+  precond: 忽视积累、躐等
+  postcond: 量变到质变，把握度
+  negative_space: ⊗ 不及则退
+  steps:
+  - 识量
+  - 积量
+  - 临界度
+  - 促质变
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_liang_hu_bian
+  trigger: 量变引起质变，质变又为新的量变开辟道路。度是质与量的统一。
+  when: 当宜积累待变、不宜躐等或错失关节时触发
+  graph:
+  - from: zhi_liang_hu_bian
+    to: []
+decision:
+- if: 需质量互变规律
+  call: zhi_liang_hu_bian
+skills:
+- 质量互变规律·顺势研判
+negative_space:
+- 不积则无变
+- 过度则溃
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

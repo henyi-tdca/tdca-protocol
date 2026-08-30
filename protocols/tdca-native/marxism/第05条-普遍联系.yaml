@@ -1,0 +1,47 @@
+COP-ID: MACM-05-20260815-05
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.665478'
+branch: 马克思主义·第05条(普遍联系)
+stratum: 马克思主义·唯物辩证法
+soul:
+  identity: 马克思主义·第05条《普遍联系》
+  core: 事物普遍联系、相互作用；以系统之网看对象, 不孤立看问题。
+  verse: 当我们深思时，要把握整个世界的总联系。一切事物都处在普遍联系之中。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 唯物辩证法
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: pu_bian_lian_xi
+  method: 普遍联系
+  signature: fn pu_bian_lian_xi(see) -> universal_connection
+  precond: 孤立、割裂
+  postcond: 在联系中把握对象
+  negative_space: ⊗ 孤立则盲
+  steps:
+  - 找关联
+  - 看系统
+  - 识中介
+  - 防割裂
+  nca_emit: true
+dispatch:
+  main_pipeline: pu_bian_lian_xi
+  trigger: 当我们深思时，要把握整个世界的总联系。一切事物都处在普遍联系之中。
+  when: 当问题孤立化、宜看系统关联时触发
+  graph:
+  - from: pu_bian_lian_xi
+    to: []
+decision:
+- if: 需普遍联系
+  call: pu_bian_lian_xi
+skills:
+- 普遍联系·顺势研判
+negative_space:
+- 孤立看则盲人摸象
+- 滥联则牵强
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

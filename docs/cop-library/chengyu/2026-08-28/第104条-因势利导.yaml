@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-104-20260828-104
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.414818'
+branch: 中国成语·认知与辩证·第104条(因势利导)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第104条《因势利导》
+  core: 顺已有趋势方向施加最小干预，以趋势自身动能达成目标；干预功率最小化而非不干预。与拔苗助长反义成对。
+  verse: 水既有趋，导之则行；逆而强堵，溃必更凶。
+  origin: 《史记·孙子吴起列传》：孙膑谓田忌'善战者因其势而利导之'。减灶诱庞涓即其用。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yinshi_lidao
+  method: 因势利导
+  signature: fn yinshi_lidao(guide) -> minimal_intervention
+  precond: 存在可辨识趋势
+  postcond: 顺势而行，力省功倍
+  negative_space: ⊗ 误判势向则助澜
+  steps:
+  - 察其势
+  - 顺其向
+  - 施其导
+  - 借其能
+  nca_emit: true
+dispatch:
+  main_pipeline: yinshi_lidao
+  trigger: 水既有趋，导之则行；逆而强堵，溃必更凶。
+  when: 当存在明确趋势、宜顺势施加最小干预时触发
+  graph:
+  - from: yinshi_lidao
+    to: []
+decision:
+- if: 需最小干预引导
+  call: yinshi_lidao
+skills:
+- 因势利导·思维研判
+negative_space:
+- 误判势向则助澜成灾
+- 纯顺不导则失主体
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

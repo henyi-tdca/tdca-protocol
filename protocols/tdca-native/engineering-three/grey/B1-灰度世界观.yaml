@@ -1,0 +1,54 @@
+COP-ID: GREY-COP-20260830-01
+source_expert: engineering-three (试验×灰度×可靠性)
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-30T21:25:01.125870'
+group: GREY
+base_protocol: TDCA-CORE
+composition_policy:
+  standalone: false
+  tdca_native: true
+  mandatory_base: TDCA-CORE (TDCA 体系内强制遵守, 不可配置关闭)
+  detachable: 剥离 TDCA 治理层后协议语义保持独立自洽, 可移植至其他治理体系
+  note: 思维协议不是独立发挥作用的, 须与系列内其他 COP 组合调用 (用户裁定 2026-08-30)
+  constitution: 'NSFL 否决权 (F1.5, 用户裁定 2026-08-30 21:07): 对于任何无法通过 NSFL 预检的事件 (负空间触碰), 即使其他四判据全部通过, 亦视为整体拒绝 (Fail-Closed); NSFL 预检的优先级永远高于其他四判据——负空间是安全宪法的宪法, 不可配置关闭, 不可被多数判据推翻。四态动态处置 (F1.5b, 用户裁定 2026-08-30
+    21:19): TDCA 是动态管理, 负空间本质保守不轻易变化但仍会演化——现在触犯不等于永远触犯; 否决权的不可推翻性仅指即时门控裁决, 不指永恒身份; sandbox 检验触犯负空间的实体走四态处置: 休眠/禁止/重塑/出清 (裁定 NCA 存证, 禁悬置), 负空间版本更新时休眠/重塑态强制重评。'
+soul:
+  identity: 灰度世界观
+  core: 承认贫信息是常态, 白/灰/黑三态定策
+  role: TDCA 原生系列思维协议 (工程三部曲)
+  category: 工程三协议 / GREY
+primitives:
+- name: hui_du_shi_jie_guan
+  method: 灰度世界观
+  signature: 'fn hui_du_shi_jie_guan(context: Situation) -> Outcome'
+  precond: 面对信息不完全的决策局面
+  postcond: 承认贫信息是常态, 白/灰/黑三态定策 (目标达成)
+  negative_space: '⊗ 禁数据洁癖: 等数据完美即错失窗口'
+  steps:
+  - 评估信息灰度等级
+  - 白/灰/黑三态归类
+  - 按态选策
+  nca_emit: true
+dispatch:
+  main_pipeline: hui_du_shi_jie_guan
+  graph:
+  - from: hui_du_shi_jie_guan
+    to:
+    - bai_hua_shou_lian
+    - hui_ba_jue_ce
+  note: 主原语 hui_du_shi_jie_guan 即该细分思维执行体; to=系列内组合调用项 (组合性强制)
+decision:
+- if: 面对信息不完全的决策局面
+  call: hui_du_shi_jie_guan
+skills: []
+negative_space:
+- '⊗ 禁数据洁癖: 等数据完美即错失窗口'
+- '⊗ 禁止脱离组合单独调用: 本协议非独立发挥作用, 须与系列内其他 COP 组合'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+- '⊗ 禁止 NSFL 否决权被推翻: NSFL 预检未过的事件, 禁止以其余判据全部通过、多数决、场景豁免、上级指令等任何理由放行 (F1.5 宪法条款, Fail-Closed, 不可配置关闭)'
+- '⊗ 禁止把否决当终审: 否决只封锁当下过门资格, 不判处永恒身份——触犯实体须进入四态动态处置 (休眠/禁止/重塑/出清), 禁止悬置不处置; 负空间版本演化时, 休眠/重塑态实体须重新评估 (TDCA 动态管理, 用户裁定 2026-08-30 21:19)'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P12-20260815-12
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.847311'
+branch: 诸子百家·儒家·论语·第12篇(颜渊)
+stratum: 诸子百家·儒家·论语·仁本忠恕
+soul:
+  identity: 论语·第12篇《颜渊》
+  core: 克己复礼、为仁由己，视听言动归礼；以克己成仁。
+  verse: 克己复礼为仁；非礼勿视，非礼勿听，非礼勿言，非礼勿动。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 仁本忠恕
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ke_ji_fu_li
+  method: 颜渊
+  signature: fn ke_ji_fu_li(self) -> self_restraint_ren
+  precond: 纵己逾礼、失仁
+  postcond: 克己复礼，天下归仁
+  negative_space: ⊗ 纵己则失礼
+  steps:
+  - 克己
+  - 复礼
+  - 四勿
+  - 归仁
+  nca_emit: true
+dispatch:
+  main_pipeline: ke_ji_fu_li
+  trigger: 克己复礼为仁；非礼勿视，非礼勿听，非礼勿言，非礼勿动。
+  when: 当需自律归礼、不宜放任时触发
+  graph:
+  - from: ke_ji_fu_li
+    to: []
+decision:
+- if: 需克己复礼
+  call: ke_ji_fu_li
+skills:
+- 颜渊·顺势研判
+negative_space:
+- 纵己则逾礼
+- 外求仁则远
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

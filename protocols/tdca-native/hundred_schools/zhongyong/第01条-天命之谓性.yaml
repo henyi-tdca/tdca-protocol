@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY01-20260815-01
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.136449'
+branch: 诸子百家·儒家·中庸·第01条(天命之谓性)
+stratum: 诸子百家·儒家·中庸·中和本体
+soul:
+  identity: 中庸·第01条《天命之谓性》
+  core: 性自天授、率性为道、修道为教；以性—道—教一贯，立人文化成之根。
+  verse: 天命之谓性，率性之谓道，修道之谓教。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 中和本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_ming_zhi_xing
+  method: 天命之谓性
+  signature: fn tian_ming_zhi_xing(self) -> heaven_given_nature
+  precond: 性蔽、教弛
+  postcond: 率性成道，教立
+  negative_space: ⊗ 悖性则失道
+  steps:
+  - 识天命
+  - 率性
+  - 修道
+  - 设教
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_ming_zhi_xing
+  trigger: 天命之谓性，率性之谓道，修道之谓教。
+  when: 当论心性本源、宜立性道教一贯时触发
+  graph:
+  - from: tian_ming_zhi_xing
+    to: []
+decision:
+- if: 需明天命之谓性
+  call: tian_ming_zhi_xing
+skills:
+- 天命之谓性·顺势研判
+negative_space:
+- 悖性立教则伪
+- 率非其性则乖
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,151 @@
+COP-ID: SUNZI-REAL-20260815-01
+source_expert: sunzi_canonical
+compiler: 编译推理算力云 (TDCA 编译推理算力云 · 真实校验执行)
+compiled_at: '2026-08-15T21:33:03.843117'
+branch: 诸子百家·兵家·孙子兵法·第01篇(计篇)
+stratum: 诸子百家·兵家·孙子兵法·战略筹划
+soul:
+  identity: 孙子兵法·第01篇《计篇》
+  core: 庙算决胜——以五事(道天地将法)七计系统性评估胜负前提，先算后战，多算胜少算不胜。
+  verse: 兵者，国之大事，死生之地，存亡之道，不可不察也。故经之以五事，校之以计，而索其情：一曰道，二曰天，三曰地，四曰将，五曰法。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 战略筹划
+  base_protocol: TDCA-CORE-20260815-01
+  nca_id: TDCA-REASONIX-20260815-285
+primitives:
+- name: jing_xiao_wu_shi_qi_ji
+  method: 计篇·经校五事七计(庙算)
+  signature: fn jing_xiao_wu_shi_qi_ji(我方态势, 敌方态势) -> 胜负情实 -> 战/不战
+  precond: 文本确证（训诂院定本 + 校记）、战端未启、情势不明
+  postcond: 五事七计既明，导出作战企图；若庙算不胜，转入'先为不可胜'蓄势
+  negative_space: ⊗ 不察而战则盲
+  steps:
+  - 经之以五事
+  - 校之以七计
+  - 而索其情
+  - 庙算胜则战，不胜则不战
+  nca_emit: true
+dispatch:
+  main_pipeline: jing_xiao_wu_shi_qi_ji
+  trigger: 兵者，国之大事，死生之地，存亡之道，不可不察也。故经之以五事，校之以计，而索其情：一曰道，二曰天，三曰地，四曰将，五曰法。
+  when: 当重大决策前宜先系统评估胜负前提时触发
+  graph:
+  - from: jing_xiao_wu_shi_qi_ji
+    to: []
+decision:
+- if: 行动方得算 > 对方
+  call: jing_xiao_wu_shi_qi_ji
+  action: 可战（先胜后战）
+- if: 势均
+  call: jing_xiao_wu_shi_qi_ji
+  action: 伐谋/伐交优先，慎战
+- if: 行动方得算 < 对方
+  call: jing_xiao_wu_shi_qi_ji
+  action: 不战，先为不可胜（蓄势待变）
+skills:
+- 计篇·顺势研判
+negative_space:
+- ⊗ 不察而战：未行五事七计庙算即开战，违'不可不察'
+- ⊗ 以诡道为正道：混淆'政治正道(令民与上同意)'与'用兵权道(诡道)'，二道不可互替
+- ⊗ 庙算未胜而浪战：得算少/无算仍决战，直接否定篇旨
+- ⊗ 五事七计失真：比较所依信息(道/将/法等)造假或被欺，庙算前提崩塌
+- ⊗ 诡道溢出：权变用于政治正道领域(欺民/违盟)，越出战术负空间
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+attribution:
+  lead_compiler: 兵学战略研究院
+  contributors:
+  - name: 古籍训诂与文本校勘院
+    resource_type: expert
+    expert_id: guji-philology
+    output: 计篇_训诂校勘.md
+  - name: 中文语义与情报NLP所
+    resource_type: mcp_connector
+    server: zh-nlp
+    output: proper/classical_tokens/keywords (jieba 实算)
+  - name: 编译推理算力云
+    resource_type: subagent
+    output: 本 yaml 编译校验
+  - name: 智能系统建模实验室
+    resource_type: candidate_role
+    note: 联盟互补方，未独立产出本篇内容
+  - name: 知识图谱与态势感知中心
+    resource_type: candidate_role
+    note: 联盟互补方，未独立产出本篇内容
+  - name: 合规与可信决策审计院
+    resource_type: candidate_role
+    note: 联盟互补方，未独立产出本篇内容
+  coalition_nca: TDCA-REASONIX-20260816-008
+  mou_ok: true
+  sandbox_rounds: 3
+  sandbox_vb_final: 242.0
+  production_nca: TDCA-REASONIX-20260816-009
+  admission_ncas:
+  - TDCA-REASONIX-20260815-286
+  - TDCA-REASONIX-20260815-287
+  - TDCA-REASONIX-20260815-288
+  - TDCA-REASONIX-20260815-289
+  - TDCA-REASONIX-20260815-290
+  - TDCA-REASONIX-20260815-291
+  - TDCA-REASONIX-20260815-292
+  admission_core: TDCA-CORE-20260815-01
+nlp:
+  proper:
+  - 孙子
+  - 兵者
+  - 大事
+  - 死生
+  - 道者
+  - 令民
+  - 天者
+  - 阴阳
+  - 寒暑
+  - 时制
+  - 地者
+  - 将者
+  - 智信仁
+  - 法者
+  - 曲制
+  - 官道
+  - 主用
+  - 诡道
+  - 故能
+  classical_tokens:
+  - 孙子
+  - 兵者
+  - 国
+  - 大事
+  - 死生
+  - 事
+  - 校
+  - 情
+  - 道者
+  - 令民
+  - 天者
+  - 阴阳
+  - 寒暑
+  - 时制
+  - 地者
+  - 将者
+  - 智信仁
+  - 法者
+  - 曲制
+  - 官道
+  - 主用
+  - 诡道
+  - 故能
+  keywords:
+  - 兵者
+  - 国之
+  - 故经
+  - 以五事
+  - 校之以计
+  - 而索
+  - 其情
+  - 五曰法
+  - 道者
+  - 令民
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

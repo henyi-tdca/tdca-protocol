@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH28-20260815-28
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.450231'
+branch: 诸子百家·道家·道德经·第28章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第28章《知其雄守其雌》
+  core: 明知刚强而守柔弱，复归于朴；以守雌归大制不割。
+  verse: 知其雄，守其雌，复归于婴儿。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_qi_xiong_shou_qi_ci
+  method: 知其雄守其雌
+  signature: fn zhi_qi_xiong_shou_qi_ci(power) -> returned_plain
+  precond: 逞雄失柔、散朴
+  postcond: 守雌归朴，大制不割
+  negative_space: ⊗ 逞强则裂
+  steps:
+  - 知雄
+  - 守雌
+  - 归朴
+  - 不割
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_qi_xiong_shou_qi_ci
+  trigger: 知其雄，守其雌，复归于婴儿。
+  when: 当强权失柔、宜守雌归朴时触发
+  graph:
+  - from: zhi_qi_xiong_shou_qi_ci
+    to: []
+decision:
+- if: 需守雌归朴
+  call: zhi_qi_xiong_shou_qi_ci
+skills:
+- 知其雄守其雌·顺势研判
+negative_space:
+- 逞雄则裂
+- 割则失全
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH58-20260815-58
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.788883'
+branch: 诸子百家·道家·道德经·第58章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第58章《其政闷闷》
+  core: 祸福相倚伏，政闷闷(宽)民淳；以宽方(不割)待转化。
+  verse: 祸兮福之所倚，福兮祸之所伏；方而不割。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qi_zheng_men_men
+  method: 其政闷闷
+  signature: fn qi_zheng_men_men(policy) -> tolerant_reversal
+  precond: 政苛察、民缺
+  postcond: 闷闷宽政，祸福待转
+  negative_space: ⊗ 苛则民诈
+  steps:
+  - 闷闷
+  - 祸福倚
+  - 方不割
+  - 待转
+  nca_emit: true
+dispatch:
+  main_pipeline: qi_zheng_men_men
+  trigger: 祸兮福之所倚，福兮祸之所伏；方而不割。
+  when: 当需以宽待祸福转化时触发
+  graph:
+  - from: qi_zheng_men_men
+    to: []
+decision:
+- if: 需宽政待转
+  call: qi_zheng_men_men
+skills:
+- 其政闷闷·顺势研判
+negative_space:
+- 苛察则民诈
+- 割则伤
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -5,7 +5,7 @@ compiler: cognitive_compiler (T1+T2 规范复用 / GSEQ-0601 律二同核多编�
 compiled_at: '2026-08-28T14:30:00'
 branch: 机制核·探测-暴露耦合·第13计/第69条同核
 stratum: 机制核 (去场景·去立场)
-state_dependent: true  # 律三v2: 决策依赖实时状态, 须经 data_feed 供变量并过新鲜度门 (data_feed_gate.freshness_gate)
+state_dependent: true
 soul:
   identity: 打草惊蛇·机制核《探测-暴露耦合》
   core: 对任何系统的探测行为都会改变被探测对象的状态(观察者效应)；信息收益与暴露风险同源同信道——探测得越深，自身暴露越多。机制核仅编码"探测-暴露耦合"这一中性结构，不预设使用立场；主动试探或暴露警示由场景绑定(scene_binding)在运行时注入。
@@ -17,10 +17,10 @@ soul:
 primitives:
 - name: probe_exposure_coupling
   method: 探测-暴露耦合
-  signature: 'fn probe_exposure_coupling(probe_action) -> info_gain_vs_exposure'
+  signature: fn probe_exposure_coupling(probe_action) -> info_gain_vs_exposure
   precond: 拟对目标系统执行探测
   postcond: 获得信息收益-暴露风险的联合评估
-  negative_space: '⊗ 探测即暴露；无暴露度评估的探测不可执行'
+  negative_space: ⊗ 探测即暴露；无暴露度评估的探测不可执行
   steps:
   - 拟探测动作
   - 评估暴露度
@@ -52,10 +52,11 @@ scene_binding:
     behavior: 动作前先估泄露, 改信道以静默得实
 mounts:
   scene: scenario/第01场景-场景思维协议.yaml + 第02场景-场景画布.yaml (场景立场注入入口)
-  knowledge_graph: chengyu/chengyu_manifest.yaml + stratagems 计目关联 + compositions 化合基库
+  knowledge_graph: chengyu/chengyu_manifest.yaml + stratagems 计目关联 + compositions
+    化合基库
   skill: dispatch.main_pipeline = probe_exposure_coupling; skills 挂点见下
   contract: NCA 存证 (TDCA-REASONIX 链) + enforce_entry 准入门强制
-  data_feed:  # 律三v2 动态状态通道 (第五挂载): 无新鲜状态则决策冻结
+  data_feed:
     source: 场景绑定级供给 (侦查场景=对方行为事件流; 安全场景=自身暴露/信道状态流; 工业现场=SCADA/MQTT 对侧负载流)
     variables:
     - name: 对方反应信号
@@ -64,11 +65,15 @@ mounts:
       role: 观察者效应量化, 供'暴露风险'分支求值
     freshness_sla:
       max_staleness_s: 10
-      on_breach: freeze  # fail-closed: 冻结动态决策, 降级仅静态推理并标 unverified
+      on_breach: freeze
 skills:
 - 打草惊蛇·机制核·探测暴露耦合
 negative_space:
 - '⊗ 本体零立场: 任何将主动试探/暴露警示立场写回机制核的编译都是立场泄漏(律一违规)'
-- '⊗ 探测无暴露度评估则不可执行(观察者效应)'
+- ⊗ 探测无暴露度评估则不可执行(观察者效应)
 - '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
 nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

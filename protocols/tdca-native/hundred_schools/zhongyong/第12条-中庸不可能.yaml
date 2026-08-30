@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY12-20260815-12
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.214922'
+branch: 诸子百家·儒家·中庸·第12条(中庸不可能)
+stratum: 诸子百家·儒家·中庸·时中达道
+soul:
+  identity: 中庸·第12条《中庸不可能》
+  core: 中庸极难、非强力可至；君子依乎中庸、遁世不见知而不悔，立恒守之难。
+  verse: 天下国家可均也，爵禄可辞也，白刃可蹈也，中庸不可能也。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 时中达道
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhong_yong_bu_ke_neng
+  method: 中庸不可能
+  signature: fn zhong_yong_bu_ke_neng(self) -> persevere_mean
+  precond: 易退、难恒
+  postcond: 依中庸不悔，恒
+  negative_space: ⊗ 易退则失
+  steps:
+  - 知难
+  - 依中庸
+  - 遁世不悔
+  - 恒守
+  nca_emit: true
+dispatch:
+  main_pipeline: zhong_yong_bu_ke_neng
+  trigger: 天下国家可均也，爵禄可辞也，白刃可蹈也，中庸不可能也。
+  when: 当宜恒守常道、不宜因难退时触发
+  graph:
+  - from: zhong_yong_bu_ke_neng
+    to: []
+decision:
+- if: 需中庸不可能而守
+  call: zhong_yong_bu_ke_neng
+skills:
+- 中庸不可能·顺势研判
+negative_space:
+- 遇难则退则失
+- 炫则非中庸
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

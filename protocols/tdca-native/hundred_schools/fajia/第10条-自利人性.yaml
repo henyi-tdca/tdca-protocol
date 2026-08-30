@@ -1,0 +1,47 @@
+COP-ID: HS-FA-10-20260815-10
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.600224'
+branch: 诸子百家·法家·第10条(自利人性)
+stratum: 诸子百家·法家·时变耕战
+soul:
+  identity: 法家·第10条《自利人性》
+  core: 人挟自为心、趋利避害；以因利设制、用其自为，立制度之人性基。
+  verse: 人行事，非有名则利之也；挟自为心，故可得而用也。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 时变耕战
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zi_li_ren_xing
+  method: 自利人性
+  signature: fn zi_li_ren_xing(design) -> self_interest
+  precond: 逆性设制、敝
+  postcond: 因利设制，用自为
+  negative_space: ⊗ 逆性则敝
+  steps:
+  - 识自为
+  - 因利
+  - 设制
+  - 成事
+  nca_emit: true
+dispatch:
+  main_pipeline: zi_li_ren_xing
+  trigger: 人行事，非有名则利之也；挟自为心，故可得而用也。
+  when: 当宜顺人性设制、不宜强拂时触发
+  graph:
+  - from: zi_li_ren_xing
+    to: []
+decision:
+- if: 需因自利人性
+  call: zi_li_ren_xing
+skills:
+- 自利人性·顺势研判
+negative_space:
+- 逆性设制则敝
+- 纵利无度则争
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

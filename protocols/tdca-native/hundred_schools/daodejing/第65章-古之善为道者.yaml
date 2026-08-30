@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH65-20260815-65
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.874964'
+branch: 诸子百家·道家·道德经·第65章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第65章《古之善为道者》
+  core: 古之善道者不以明(巧智)民，以朴化难；以反智巧治。
+  verse: 古之善为道者，非以明民，将以愚之；民之难治，以其智多。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gu_zhi_shan_wei_dao_zhe
+  method: 古之善为道者
+  signature: fn gu_zhi_shan_wei_dao_zhe(govern) -> plain_people
+  precond: 智巧多、民难治
+  postcond: 非明民，以愚(朴)治
+  negative_space: ⊗ 智多则难
+  steps:
+  - 非明
+  - 不以智
+  - 归朴
+  - 易治
+  nca_emit: true
+dispatch:
+  main_pipeline: gu_zhi_shan_wei_dao_zhe
+  trigger: 古之善为道者，非以明民，将以愚之；民之难治，以其智多。
+  when: 当民巧智难治、宜归朴时触发
+  graph:
+  - from: gu_zhi_shan_wei_dao_zhe
+    to: []
+decision:
+- if: 需以朴化民
+  call: gu_zhi_shan_wei_dao_zhe
+skills:
+- 古之善为道者·顺势研判
+negative_space:
+- 崇智巧则难治
+- 明则诈
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

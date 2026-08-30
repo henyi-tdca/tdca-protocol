@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH38-20260815-38
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.559513'
+branch: 诸子百家·道家·道德经·第38章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第38章《上德不德》
+  core: 礼为乱首(忠信之薄)，上德不德；以返道黜浮礼。
+  verse: 失道而后德，失德而后仁，失仁而后义，失义而后礼。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shang_de_bu_de
+  method: 上德不德
+  signature: fn shang_de_bu_de(order) -> return_dao
+  precond: 重礼而失道，伪生
+  postcond: 上德不德，返道黜礼
+  negative_space: ⊗ 执礼则伪
+  steps:
+  - 见礼薄
+  - 失道
+  - 上德不德
+  - 返本
+  nca_emit: true
+dispatch:
+  main_pipeline: shang_de_bu_de
+  trigger: 失道而后德，失德而后仁，失仁而后义，失义而后礼。
+  when: 当制度重形式轻根本、伪生时触发
+  graph:
+  - from: shang_de_bu_de
+    to: []
+decision:
+- if: 需返道黜浮文
+  call: shang_de_bu_de
+skills:
+- 上德不德·顺势研判
+negative_space:
+- 执礼为乱首
+- 尚文则质薄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

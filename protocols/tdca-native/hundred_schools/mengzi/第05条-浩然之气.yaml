@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ05-20260815-05
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.828375'
+branch: 诸子百家·儒家·孟子·第05条(浩然之气)
+stratum: 诸子百家·儒家·孟子·养气工夫
+soul:
+  identity: 孟子·第05条《浩然之气》
+  core: 浩然之气配义与道、集义所生；以直养无害、积义成刚，立大丈夫之躯。
+  verse: 我善养吾浩然之气……其为气也，至大至刚，以直养而无害，则塞于天地之间。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 养气工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: hao_ran_zhi_qi
+  method: 浩然之气
+  signature: fn hao_ran_zhi_qi(cultivate) -> vast_qi
+  precond: 气馁、义不集
+  postcond: 至大至刚，塞天地
+  negative_space: ⊗ 袭义则馁
+  steps:
+  - 知配义道
+  - 集义
+  - 直养
+  - 无害
+  nca_emit: true
+dispatch:
+  main_pipeline: hao_ran_zhi_qi
+  trigger: 我善养吾浩然之气……其为气也，至大至刚，以直养而无害，则塞于天地之间。
+  when: 当宜养刚大正直之气、不宜苟且时触发
+  graph:
+  - from: hao_ran_zhi_qi
+    to: []
+decision:
+- if: 需养浩然之气
+  call: hao_ran_zhi_qi
+skills:
+- 浩然之气·顺势研判
+negative_space:
+- 袭义而取则馁
+- 无养则散
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

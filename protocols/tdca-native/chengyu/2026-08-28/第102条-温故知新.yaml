@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-102-20260828-102
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.401763'
+branch: 中国成语·认知与辩证·第102条(温故知新)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第102条《温故知新》
+  core: 知识资产需周期性重读——旧知识在新语境下产出新解释项；迭代不是替换而是'故×新语境'的化合，温与知缺一不可。
+  verse: 故纸重温，新意乃生；温而不化则守旧，化而不温则失根。
+  origin: 《论语·为政》：'温故而知新，可以为师矣。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wengu_zhixin
+  method: 温故知新
+  signature: fn wengu_zhixin(reread) -> knowledge_appreciated
+  precond: 存在存量知识资产
+  postcond: 故知新解，资产增值
+  negative_space: ⊗ 温而不化则守旧
+  steps:
+  - 选其故
+  - 带新问
+  - 重其读
+  - 提其新
+  nca_emit: true
+dispatch:
+  main_pipeline: wengu_zhixin
+  trigger: 故纸重温，新意乃生；温而不化则守旧，化而不温则失根。
+  when: 当存量知识长期未重读、语境已更新时触发
+  graph:
+  - from: wengu_zhixin
+    to: []
+decision:
+- if: 需知识迭代
+  call: wengu_zhixin
+skills:
+- 温故知新·思维研判
+negative_space:
+- 温而不化则守旧
+- 弃故逐新则失根
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

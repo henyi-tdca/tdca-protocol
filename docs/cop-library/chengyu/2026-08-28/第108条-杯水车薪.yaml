@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-108-20260828-108
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.440969'
+branch: 中国成语·认知与辩证·第108条(杯水车薪)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第108条《杯水车薪》
+  core: 量级误判警示——投入量与问题量级差数个数量级时，方向正确的投入也是无效投入；先估量级再定投入，量级不足则换机制而非加倍浇水。
+  verse: 杯水虽诚，车薪成焰；量级既殊，善念无补。
+  origin: 《孟子·告子上》：'仁之胜不仁也，犹水胜火也；今之为仁者，犹以一杯水救一车薪之火也。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: beishui_chexin
+  method: 杯水车薪
+  signature: fn beishui_chexin(warn) -> magnitude_matched
+  precond: 投入与问题量级悬殊
+  postcond: 量级先判，不作无效功
+  negative_space: ⊗ 情怀代量级则徒劳
+  steps:
+  - 量其火
+  - 度其水
+  - 判其级
+  - 换其法
+  nca_emit: true
+dispatch:
+  main_pipeline: beishui_chexin
+  trigger: 杯水虽诚，车薪成焰；量级既殊，善念无补。
+  when: 当投入方向正确但量级悬殊、可能无效时触发(作警示)
+  graph:
+  - from: beishui_chexin
+    to: []
+decision:
+- if: 需量级匹配判断
+  call: beishui_chexin
+skills:
+- 杯水车薪·思维研判
+negative_space:
+- 以诚代量则徒劳
+- 判级过粗则错失可救窗口
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

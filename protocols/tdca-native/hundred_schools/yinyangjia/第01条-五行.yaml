@@ -1,0 +1,47 @@
+COP-ID: HS-YY-01-20260815-01
+source_expert: yinyangjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.410961'
+branch: 诸子百家·阴阳家·第01条(五行)
+stratum: 诸子百家·阴阳家·五行本体
+soul:
+  identity: 阴阳家·第01条《五行》
+  core: 五行五材、万物所由；以五性类万物，立元素归类之基。
+  verse: 水火木金土，五材欢用。五行：一曰水，二曰火，三曰木，四曰金，五曰土。
+  role: 思维协议 (诸子百家 / 阴阳家 / 五行)
+  category: 诸子百家 / 阴阳家 / 五行本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wu_xing
+  method: 五行
+  signature: fn wu_xing(classify) -> five_phases
+  precond: 类杂、无统
+  postcond: 五行立，物有归
+  negative_space: ⊗ 失统则散
+  steps:
+  - 识水火
+  - 识木金土
+  - 类万物
+  - 归五
+  nca_emit: true
+dispatch:
+  main_pipeline: wu_xing
+  trigger: 水火木金土，五材欢用。五行：一曰水，二曰火，三曰木，四曰金，五曰土。
+  when: 当宜对事物作元素归类、不宜杂时触发
+  graph:
+  - from: wu_xing
+    to: []
+decision:
+- if: 需五行归类
+  call: wu_xing
+skills:
+- 五行·顺势研判
+negative_space:
+- 类杂则失统
+- 执一废四则偏
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

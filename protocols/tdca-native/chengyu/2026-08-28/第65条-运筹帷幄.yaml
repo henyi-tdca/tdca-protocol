@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-65-20260828-65
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.380197'
+branch: 中国成语·战略与决断·第65条(运筹帷幄)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第65条《运筹帷幄》
+  core: 决胜不在冲锋而在筹划——把'决策'与'执行'分离，以信息汇聚+调度规则在后方统筹全局；是指挥链/参谋制的古典原型，呼应 TDCA 配置权与执行权分离。
+  verse: 运筹帷帐之中，决胜千里之外。
+  origin: 《史记·高祖本纪》：刘邦语'夫运筹策帷帐之中，决胜于千里之外，吾不如子房'，以张良为参谋本位，不亲临阵。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yunchou_weiwo
+  method: 运筹帷幄
+  signature: fn yunchou_weiwo(plan) -> remote_victory
+  precond: 前线执行可信
+  postcond: 帷幄一策，千里定局
+  negative_space: ⊗ 帷幄脱实则空
+  steps:
+  - 聚情报
+  - 建模局
+  - 出方略
+  - 授权执行
+  nca_emit: true
+dispatch:
+  main_pipeline: yunchou_weiwo
+  trigger: 运筹帷帐之中，决胜千里之外。
+  when: 当需将决策与执行分离、以规则和情报远程统筹时触发
+  graph:
+  - from: yunchou_weiwo
+    to: []
+decision:
+- if: 需后方统筹
+  call: yunchou_weiwo
+skills:
+- 运筹帷幄·思维研判
+negative_space:
+- 闭门造车则方略空
+- 越级微操则执行乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

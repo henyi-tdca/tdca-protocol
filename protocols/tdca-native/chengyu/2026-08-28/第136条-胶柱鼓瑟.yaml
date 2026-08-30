@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-136-20260828-136
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.659230'
+branch: 中国成语·认知与辩证·第136条(胶柱鼓瑟)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第136条《胶柱鼓瑟》
+  core: 参数固化警示——把本应随情境调节的参数用胶固定，方法失去对情境的响应；与刻舟求剑成对（彼参照系不变，此参数固化）。该定者定、该活者活。
+  verse: 柱可调音，胶之则定；瑟之音变，柱不知移。
+  origin: 《史记·廉颇蔺相如列传》蔺相如论赵括：'王以名使括，若胶柱而鼓瑟耳。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jiaozhu_guse
+  method: 胶柱鼓瑟
+  signature: fn jiaozhu_guse(warn) -> parameter_defixed
+  precond: 可调参数被固化
+  postcond: 参数应境，调节恢复
+  negative_space: ⊗ 不识其柱则无从活
+  steps:
+  - 识其柱
+  - 察其胶
+  - 活其调
+  - 应其境
+  nca_emit: true
+dispatch:
+  main_pipeline: jiaozhu_guse
+  trigger: 柱可调音，胶之则定；瑟之音变，柱不知移。
+  when: 当方法参数被固化而情境已变时触发(作警示)
+  graph:
+  - from: jiaozhu_guse
+    to: []
+decision:
+- if: 需参数固化检查
+  call: jiaozhu_guse
+skills:
+- 胶柱鼓瑟·思维研判
+negative_space:
+- 该定者被活则失稳
+- 该活者被胶则失应
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

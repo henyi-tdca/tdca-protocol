@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ05-20260815-05
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.588319'
+branch: 诸子百家·儒家·荀子·第05条(积善成德)
+stratum: 诸子百家·儒家·荀子·劝学积德
+soul:
+  identity: 荀子·第05条《积善成德》
+  core: 积微成著、积善成德；以渐积胜骤，立德性养成之序。
+  verse: 积土成山，风雨兴焉……积善成德，而神明自得，圣心备焉。
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 劝学积德
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ji_shan_cheng_de
+  method: 积善成德
+  signature: fn ji_shan_cheng_de(accum) -> virtuous
+  precond: 不积、欲速
+  postcond: 积善成德，圣心备
+  negative_space: ⊗ 不积则溃
+  steps:
+  - 积微
+  - 渐
+  - 成著
+  - 备圣心
+  nca_emit: true
+dispatch:
+  main_pipeline: ji_shan_cheng_de
+  trigger: 积土成山，风雨兴焉……积善成德，而神明自得，圣心备焉。
+  when: 当宜积渐养成、不宜躐等时触发
+  graph:
+  - from: ji_shan_cheng_de
+    to: []
+decision:
+- if: 需积善成德
+  call: ji_shan_cheng_de
+skills:
+- 积善成德·顺势研判
+negative_space:
+- 不积则溃
+- 躐等则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

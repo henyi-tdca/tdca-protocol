@@ -1,0 +1,47 @@
+COP-ID: MACM-09-20260815-09
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.700873'
+branch: 马克思主义·第09条(主要矛盾与矛盾主要方面)
+stratum: 马克思主义·矛盾论
+soul:
+  identity: 马克思主义·第09条《主要矛盾与矛盾主要方面》
+  core: 抓主要矛盾与矛盾主要方面; 以两点论中有重点论, 牵住牛鼻子。
+  verse: 研究任何过程，如果是存在着两个以上矛盾的复杂过程的话，就要用全力找出它的主要矛盾。捉住了这个主要矛盾，一切问题就迎刃而解了。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 矛盾论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhu_yao_mao_dun
+  method: 主要矛盾与矛盾主要方面
+  signature: fn zhu_yao_mao_dun(focus) -> principal_contradiction
+  precond: 眉毛胡子一把抓
+  postcond: 牵牛鼻，重点破
+  negative_space: ⊗ 均力则散
+  steps:
+  - 列矛盾
+  - 定主
+  - 抓主面
+  - 带次要
+  nca_emit: true
+dispatch:
+  main_pipeline: zhu_yao_mao_dun
+  trigger: 研究任何过程，如果是存在着两个以上矛盾的复杂过程的话，就要用全力找出它的主要矛盾。捉住了这个主要矛盾，一切问题就迎刃而解了。
+  when: 当头绪繁多、宜抓重点时触发
+  graph:
+  - from: zhu_yao_mao_dun
+    to: []
+decision:
+- if: 需抓主要矛盾
+  call: zhu_yao_mao_dun
+skills:
+- 主要矛盾与矛盾主要方面·顺势研判
+negative_space:
+- 不分主次则疲
+- 只主次要则偏
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

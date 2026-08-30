@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY06-20260815-06
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.174464'
+branch: 诸子百家·儒家·中庸·第06条(诚明)
+stratum: 诸子百家·儒家·中庸·诚体工夫
+soul:
+  identity: 中庸·第06条《诚明》
+  core: 诚明相生、性教互成；以诚致明、以明归诚，立心性开显之环。
+  verse: 自诚明，谓之性；自明诚，谓之教。诚则明矣，明则诚矣。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 诚体工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: cheng_ming
+  method: 诚明
+  signature: fn cheng_ming(self) -> luminous_cheng
+  precond: 暗塞、明诚隔
+  postcond: 诚明相生，性教成
+  negative_space: ⊗ 隔则两失
+  steps:
+  - 诚
+  - 明
+  - 相生
+  - 归一
+  nca_emit: true
+dispatch:
+  main_pipeline: cheng_ming
+  trigger: 自诚明，谓之性；自明诚，谓之教。诚则明矣，明则诚矣。
+  when: 当心性未明、宜诚明互发时触发
+  graph:
+  - from: cheng_ming
+    to: []
+decision:
+- if: 需诚明相生
+  call: cheng_ming
+skills:
+- 诚明·顺势研判
+negative_space:
+- 明而不诚则妄
+- 诚而不明则暗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

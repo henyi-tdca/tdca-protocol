@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-16-20260827-16
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.960455'
+branch: 中国成语·认知与辩证·第16条(盲人摸象)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第16条《盲人摸象》
+  core: 以局部经验断言整体，是采样偏差；须多视角拼合方能近真，单一局部模型不足以刻画系统全貌。
+  verse: 群盲摸象，各执一体，以偏为全，争而不已。
+  origin: 佛经喻(《大般涅槃经》等)：众盲各摸象之一部(腿/耳/尾/身)，各以为象如柱/如箕/如帚/如墙，互诤不已。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: mangren_moxiang
+  method: 盲人摸象
+  signature: fn mangren_moxiang(warn) -> multi_perspective
+  precond: 以偏概全
+  postcond: 多视角，近整体
+  negative_space: ⊗ 以局部断整体
+  steps:
+  - 收多角
+  - 拼拼图
+  - 校偏差
+  - 近全貌
+  nca_emit: true
+dispatch:
+  main_pipeline: mangren_moxiang
+  trigger: 群盲摸象，各执一体，以偏为全，争而不已。
+  when: 当仅凭单一局部经验下整体结论时触发(作警示)
+  graph:
+  - from: mangren_moxiang
+    to: []
+decision:
+- if: 需多视角拼合
+  call: mangren_moxiang
+skills:
+- 盲人摸象·思维研判
+negative_space:
+- 以偏概全则谬
+- 单模型刻画系统则漏
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

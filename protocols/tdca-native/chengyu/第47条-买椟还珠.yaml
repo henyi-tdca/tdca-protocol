@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-47-20260827-47
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.293541'
+branch: 中国成语·认知与辩证·第47条(买椟还珠)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第47条《买椟还珠》
+  core: 重精美包装(椟)而轻实质内容(珠)，是偏好错位/信号掩盖实质；在预算约束下误把'信号'当'价值'，边际效用配置失当(买椟的MU远高于珠)。须辨信号与实质、使消费匹配真实偏好。
+  verse: 买其椟而还其珠，重饰轻质，本末倒施。
+  origin: 《韩非子·外储说左上》：楚人卖珠，为木兰之椟、桂椒缀之，郑人买椟而还其珠。今世谈说之士亦然，繁饰其言。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: mai_du_huan_zhu
+  method: 买椟还珠
+  signature: fn mai_du_huan_zhu(warn) -> real_preference
+  precond: 惑于饰
+  postcond: 辨实质，配偏好
+  negative_space: ⊗ 重表轻里
+  steps:
+  - 拆信号
+  - 识实质
+  - 校偏好
+  - 正配置
+  nca_emit: true
+dispatch:
+  main_pipeline: mai_du_huan_zhu
+  trigger: 买其椟而还其珠，重饰轻质，本末倒施。
+  when: 当方案/商品重包装轻内容、须辨信号实质时触发(作偏好警示)
+  graph:
+  - from: mai_du_huan_zhu
+    to: []
+decision:
+- if: 需名实/偏好校验
+  call: mai_du_huan_zhu
+skills:
+- 买椟还珠·思维研判
+negative_space:
+- 重表轻里则失本
+- 惑框架则错配
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

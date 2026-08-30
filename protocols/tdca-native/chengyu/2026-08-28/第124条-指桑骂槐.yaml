@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-124-20260828-124
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.577477'
+branch: 中国成语·战略与决断·第124条(指桑骂槐)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第124条《指桑骂槐》
+  core: 间接治理信号——不直接对目标主体施令，而通过对第三方示警传递规则信号，保留对方面子与选择空间；信号经旁观者信道传递，目标自行对号。
+  verse: 大凌小者，警以诱之；指桑而骂，槐自知警。
+  origin: 三十六计·并战计第二十六计：'大凌小者，警以诱之。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhisang_mahuai
+  method: 指桑骂槐
+  signature: fn zhisang_mahuai(signal) -> indirect_warning_sent
+  precond: 直接施令成本高或伤协作
+  postcond: 侧路传令，主体自纠
+  negative_space: ⊗ 指向不明则失焦
+  steps:
+  - 选其桑
+  - 明其警
+  - 观其应
+  - 收其效
+  nca_emit: true
+dispatch:
+  main_pipeline: zhisang_mahuai
+  trigger: 大凌小者，警以诱之；指桑而骂，槐自知警。
+  when: 当规则须传递而直接施令伤面子/协作时触发
+  graph:
+  - from: zhisang_mahuai
+    to: []
+decision:
+- if: 需间接信号治理
+  call: zhisang_mahuai
+skills:
+- 指桑骂槐·思维研判
+negative_space:
+- 指向不明则信号失焦
+- 频用则威慑折价
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

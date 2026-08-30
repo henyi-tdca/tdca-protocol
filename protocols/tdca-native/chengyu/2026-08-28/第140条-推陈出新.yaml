@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-140-20260828-140
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.687639'
+branch: 中国成语·认知与辩证·第140条(推陈出新)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第140条《推陈出新》
+  core: 存量出清机制——旧的不去新的不进，出清须有制度化的退场通道；与温故知新成对（彼增值存量，此出清存量）。出清过急则断档，陈不出则新不入。
+  verse: 谷陈而推之，新谷乃入；器旧而去之，新器乃立。
+  origin: 语本古代常平仓政'推陈敛新'之法：《汉书·食货志》载谷贱增价而籴、谷贵减价而粜，陈谷推出新谷入储。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tuichen_chuxin
+  method: 推陈出新
+  signature: fn tuichen_chuxin(clear) -> stock_cleared_for_new
+  precond: 存量阻碍增量
+  postcond: 出清有序，新旧代谢
+  negative_space: ⊗ 无退场规则则陈积
+  steps:
+  - 立其退
+  - 定其序
+  - 迎其新
+  - 验其续
+  nca_emit: true
+dispatch:
+  main_pipeline: tuichen_chuxin
+  trigger: 谷陈而推之，新谷乃入；器旧而去之，新器乃立。
+  when: 当存量积压阻碍增量、须制度化出清时触发
+  graph:
+  - from: tuichen_chuxin
+    to: []
+decision:
+- if: 需存量出清
+  call: tuichen_chuxin
+skills:
+- 推陈出新·思维研判
+negative_space:
+- 出清过急则断档
+- 陈不出则新不入
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

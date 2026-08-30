@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-144-20260828-144
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.715353'
+branch: 中国成语·修身与治理·第144条(举直错枉)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第144条《举直错枉》
+  core: 选拔的示范效应——提拔谁就是向组织宣布什么算成功；选拔是最响亮的制度信号，错一例的代价是信号失真并引发逆向淘汰。
+  verse: 举直错诸枉，则民服；举枉错诸直，则民不服。
+  origin: 《论语·为政》：哀公问'何为则民服'，孔子对曰'举直错诸枉，则民服；举枉错诸直，则民不服'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: juzhi_cuowang
+  method: 举直错枉
+  signature: fn juzhi_cuowang(promote) -> merit_signal_clear
+  precond: 组织须立成功标准
+  postcond: 直者上位，信号昭明
+  negative_space: ⊗ 举枉则逆向淘汰
+  steps:
+  - 辨其直
+  - 举于位
+  - 错其枉
+  - 昭其故
+  nca_emit: true
+dispatch:
+  main_pipeline: juzhi_cuowang
+  trigger: 举直错诸枉，则民服；举枉错诸直，则民不服。
+  when: 当选拔决策将广播制度信号时触发
+  graph:
+  - from: juzhi_cuowang
+    to: []
+decision:
+- if: 需选拔信号治理
+  call: juzhi_cuowang
+skills:
+- 举直错枉·思维研判
+negative_space:
+- 举枉则逆向淘汰
+- 直而不任则信号失真
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

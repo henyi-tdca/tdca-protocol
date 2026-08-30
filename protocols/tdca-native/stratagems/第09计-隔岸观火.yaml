@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-09
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.875817'
+stratum: 敌战计
+soul:
+  identity: 隔岸观火
+  core: 坐视对方内斗, 待其自溃
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 敌战计
+primitives:
+- name: ge_an_guan_huo
+  method: 隔岸观火
+  signature: 'fn ge_an_guan_huo(context: Situation) -> Outcome'
+  precond: 敌方营内讧, 己不宜介入
+  postcond: 坐视敌内斗, 待其自溃 (目标达成)
+  negative_space: ⊗ 敌可能联合对外则误判
+  steps:
+  - 不介入
+  - 观其互斗
+  - 敌弱则取
+  nca_emit: true
+dispatch:
+  main_pipeline: ge_an_guan_huo
+  graph:
+  - from: ge_an_guan_huo
+    to: []
+  note: 单计独立协议, 主原语 ge_an_guan_huo 即该计执行体
+decision:
+- if: 对方营内讧, 己不宜介入
+  call: ge_an_guan_huo
+skills: []
+negative_space:
+- ⊗ 敌可能联合对外则误判
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

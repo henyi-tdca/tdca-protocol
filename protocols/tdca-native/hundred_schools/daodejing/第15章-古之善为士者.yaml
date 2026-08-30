@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH15-20260815-15
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.299688'
+branch: 诸子百家·道家·道德经·第15章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第15章《古之善为士者》
+  core: 临事审慎如冬涉川，浊以静徐清；以徐缓守清醒。
+  verse: 豫兮若冬涉川，犹兮若畏四邻。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gu_zhi_shan_wei_shi
+  method: 古之善为士者
+  signature: fn yu_xi_ruo_dong_she_chuan(action) -> prudent_clarity
+  precond: 行动仓促、浑浊不清
+  postcond: 审慎徐缓，浊静徐清
+  negative_space: ⊗ 躁则浊
+  steps:
+  - 豫(慎)
+  - 犹(畏)
+  - 徐清
+  - 守静
+  nca_emit: true
+dispatch:
+  main_pipeline: gu_zhi_shan_wei_shi
+  trigger: 豫兮若冬涉川，犹兮若畏四邻。
+  when: 当需审慎推进、环境浑浊不清时触发
+  graph:
+  - from: gu_zhi_shan_wei_shi
+    to: []
+decision:
+- if: 需以审慎守清醒
+  call: gu_zhi_shan_wei_shi
+skills:
+- 古之善为士者·顺势研判
+negative_space:
+- 躁进则浊乱
+- 轻率则溃
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

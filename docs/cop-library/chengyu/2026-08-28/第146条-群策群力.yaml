@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-146-20260828-146
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.731797'
+branch: 中国成语·修身与治理·第146条(群策群力)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第146条《群策群力》
+  core: 聚合决策与聚合执行并举——既聚合意见（策）亦聚合力量（力），聚合机制须双向打通。与集思广益成对（彼集思，此策力并举）。
+  verse: 群策而群力，众乃成一；策不聚则议而不决，力不聚则决而不行。
+  origin: 汉·扬雄《法言·重黎》：'汉屈群策，群策屈群力。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qunce_qunli
+  method: 群策群力
+  signature: fn qunce_qunli(pool) -> idea_and_force_pooled
+  precond: 任务超出单点能力
+  postcond: 策力聚合，众乃成一
+  negative_space: ⊗ 策聚力散则空议
+  steps:
+  - 开其策
+  - 聚其力
+  - 联其动
+  - 收其成
+  nca_emit: true
+dispatch:
+  main_pipeline: qunce_qunli
+  trigger: 群策而群力，众乃成一；策不聚则议而不决，力不聚则决而不行。
+  when: 当须同时聚合意见与执行力量时触发
+  graph:
+  - from: qunce_qunli
+    to: []
+decision:
+- if: 需聚合执行
+  call: qunce_qunli
+skills:
+- 群策群力·思维研判
+negative_space:
+- 聚策不聚力则议而不决
+- 聚力不聚策则蛮干
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

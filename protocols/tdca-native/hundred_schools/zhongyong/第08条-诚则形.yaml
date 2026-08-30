@@ -1,0 +1,50 @@
+COP-ID: HS-RU-ZY08-20260815-08
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.187098'
+branch: 诸子百家·儒家·中庸·第08条(诚则形)
+stratum: 诸子百家·儒家·中庸·诚体工夫
+soul:
+  identity: 中庸·第08条《诚则形》
+  core: 诚由内形外、由著及化；以至诚感通万物，立感化流行之序。
+  verse: 诚则形，形则著，著则明，明则动，动则变，变则化，唯天下至诚为能化。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 诚体工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: cheng_ze_xing
+  method: 诚则形
+  signature: fn cheng_ze_xing(inner) -> transforming
+  precond: 诚匮、感不通
+  postcond: 至诚能化，物化
+  negative_space: ⊗ 不诚则隔
+  steps:
+  - 诚
+  - 形
+  - 著
+  - 明
+  - 动
+  - 变
+  - 化
+  nca_emit: true
+dispatch:
+  main_pipeline: cheng_ze_xing
+  trigger: 诚则形，形则著，著则明，明则动，动则变，变则化，唯天下至诚为能化。
+  when: 当宜以诚感化、不宜强为时触发
+  graph:
+  - from: cheng_ze_xing
+    to: []
+decision:
+- if: 需诚则形
+  call: cheng_ze_xing
+skills:
+- 诚则形·顺势研判
+negative_space:
+- 不诚则隔
+- 强为则逆
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

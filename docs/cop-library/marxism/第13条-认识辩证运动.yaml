@@ -1,0 +1,48 @@
+COP-ID: MACM-13-20260815-13
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.739513'
+branch: 马克思主义·第13条(认识辩证运动)
+stratum: 马克思主义·实践论
+soul:
+  identity: 马克思主义·第13条《认识辩证运动》
+  core: 认识是实践—认识循环上升的运动; 以螺旋深化逼近真理。
+  verse: 实践、认识、再实践、再认识，这种形式循环往复以至无穷，而实践和认识之每一循环都进到了高一级的程度。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 实践论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ren_shi_bian_zheng
+  method: 认识辩证运动
+  signature: fn ren_shi_bian_zheng(loop) -> cognitive_cycle
+  precond: 一次判定、僵化
+  postcond: 循环上升
+  negative_space: ⊗ 僵则退
+  steps:
+  - 实践
+  - 认识
+  - 再实践
+  - 再认识
+  - 升阶
+  nca_emit: true
+dispatch:
+  main_pipeline: ren_shi_bian_zheng
+  trigger: 实践、认识、再实践、再认识，这种形式循环往复以至无穷，而实践和认识之每一循环都进到了高一级的程度。
+  when: 当认识待深化、宜循环验证时触发
+  graph:
+  - from: ren_shi_bian_zheng
+    to: []
+decision:
+- if: 需认识辩证运动
+  call: ren_shi_bian_zheng
+skills:
+- 认识辩证运动·顺势研判
+negative_space:
+- 一次判定则谬
+- 循环无升则转磨
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

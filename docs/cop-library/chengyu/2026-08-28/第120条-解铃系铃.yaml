@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-120-20260828-120
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.521823'
+branch: 中国成语·修身与治理·第120条(解铃系铃)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第120条《解铃系铃》
+  core: 责任闭环——问题的制造者拥有最完整的解缚知识，责任归属与解决能力同源；治理须让系铃人解铃（归责+授权+验收），而非外力硬拆。
+  verse: 系铃者知铃之结，解铃还须系铃人。
+  origin: 宋·惠洪《林间录》：法灯泰钦禅师答'虎项金铃，何人解得？'曰'系者解得'，众乃服。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jieling_xiling
+  method: 解铃系铃
+  signature: fn jieling_xiling(closure) -> accountability_closed
+  precond: 问题有明确制造者
+  postcond: 责归其人，铃解结开
+  negative_space: ⊗ 外力硬拆则结更紧
+  steps:
+  - 归其责
+  - 授其权
+  - 责其解
+  - 验其铃
+  nca_emit: true
+dispatch:
+  main_pipeline: jieling_xiling
+  trigger: 系铃者知铃之结，解铃还须系铃人。
+  when: 当问题须责任闭环、制造者仍在位时触发
+  graph:
+  - from: jieling_xiling
+    to: []
+decision:
+- if: 需责任闭环
+  call: jieling_xiling
+skills:
+- 解铃系铃·思维研判
+negative_space:
+- 系者已逝则须外解
+- 归责而不授权则空转
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

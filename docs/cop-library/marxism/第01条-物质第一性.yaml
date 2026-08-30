@@ -1,0 +1,47 @@
+COP-ID: MACM-01-20260815-01
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.625434'
+branch: 马克思主义·第01条(物质第一性)
+stratum: 马克思主义·唯物辩证法
+soul:
+  identity: 马克思主义·第01条《物质第一性》
+  core: 物质第一性、意识第二性；以客观实在为根基，不从观念出发而从物质出发。
+  verse: 物质决定意识，存在决定思维。观念的东西不外是移入人的头脑并在头脑中改造过的物质的东西。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 唯物辩证法
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wu_zhi_di_yi_xing
+  method: 物质第一性
+  signature: fn wu_zhi_di_yi_xing(reality) -> priority_matter
+  precond: 从观念/意志出发
+  postcond: 从物质实际出发
+  negative_space: ⊗ 唯心思辨则虚
+  steps:
+  - 确物质
+  - 察存在
+  - 定意识
+  - 从实际出发
+  nca_emit: true
+dispatch:
+  main_pipeline: wu_zhi_di_yi_xing
+  trigger: 物质决定意识，存在决定思维。观念的东西不外是移入人的头脑并在头脑中改造过的物质的东西。
+  when: 当宜确立客观根基、不宜从观念出发时触发
+  graph:
+  - from: wu_zhi_di_yi_xing
+    to: []
+decision:
+- if: 需物质第一性
+  call: wu_zhi_di_yi_xing
+skills:
+- 物质第一性·顺势研判
+negative_space:
+- 唯心思辨则脱离实际
+- 把意志当规律则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

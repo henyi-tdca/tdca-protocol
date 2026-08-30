@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-138-20260828-138
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.673654'
+branch: 中国成语·认知与辩证·第138条(审时度势)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第138条《审时度势》
+  core: 行动前的时势双评估——时机（何时）与格局（何势）并察，再定动作方向与烈度；与因势利导成对（彼顺势施导，此先审后行）。
+  verse: 时然后动，势然后行；不先时不后时，不逆势不枉势。
+  origin: 语本《吕氏春秋·察今》'审堂下之阴，而知日月之行、阴阳之变'，后凝为审时度势。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shenshi_duoshi
+  method: 审时度势
+  signature: fn shenshi_duoshi(assess) -> timing_and_landscape_scored
+  precond: 重大行动之前
+  postcond: 时势并察，行动有据
+  negative_space: ⊗ 时察势漏则误动
+  steps:
+  - 审其时
+  - 度其势
+  - 定其向
+  - 校其度
+  nca_emit: true
+dispatch:
+  main_pipeline: shenshi_duoshi
+  trigger: 时然后动，势然后行；不先时不后时，不逆势不枉势。
+  when: 当重大行动前须评估时机与格局时触发
+  graph:
+  - from: shenshi_duoshi
+    to: []
+decision:
+- if: 需时势评估
+  call: shenshi_duoshi
+skills:
+- 审时度势·思维研判
+negative_space:
+- 察而不决则失时
+- 势估过满则冒进
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-78-20260828-78
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.471685'
+branch: 中国成语·认知与辩证·第78条(抱薪救火)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第78条《抱薪救火》
+  core: 若修复手段与病因同构(割地—事秦—添薪)，则每次'救火'都在喂养病根；先判手段是否同构于病因，与病因同构的修复必须熔断、换法。
+  verse: 以地事秦，譬犹抱薪救火，薪不尽，火不灭。
+  origin: 《史记·魏世家》：苏代谓魏王'且夫以地事秦，譬犹抱薪救火，薪不尽，火不灭'；魏渐割地而秦求无已。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: baoxin_jiuhuo
+  method: 抱薪救火
+  signature: fn baoxin_jiuhuo(warn) -> remedy_checked
+  precond: 火不灭而再投薪
+  postcond: 断同构，火乃熄
+  negative_space: ⊗ 薪不尽则火不灭
+  steps:
+  - 验手段
+  - 对病根
+  - 察同构
+  - 断薪或换法
+  nca_emit: true
+dispatch:
+  main_pipeline: baoxin_jiuhuo
+  trigger: 以地事秦，譬犹抱薪救火，薪不尽，火不灭。
+  when: 当问题反复发作且修复投入持续加大时触发(作警示)
+  graph:
+  - from: baoxin_jiuhuo
+    to: []
+decision:
+- if: 需手段病根同构检查
+  call: baoxin_jiuhuo
+skills:
+- 抱薪救火·思维研判
+negative_space:
+- 同构修复则愈治愈糟
+- 因惧添薪而不救则火燎
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

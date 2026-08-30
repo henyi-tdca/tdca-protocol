@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-19
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.086742'
+stratum: 混战计
+soul:
+  identity: 釜底抽薪
+  core: 断根绝源, 消对方势能
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 混战计
+primitives:
+- name: fu_di_chou_xin
+  method: 釜底抽薪
+  signature: 'fn fu_di_chou_xin(context: Situation) -> Outcome'
+  precond: 敌势盛但其根基有隙
+  postcond: 断根绝源, 消敌势能 (目标达成)
+  negative_space: ⊗ 薪非真源则抽空
+  steps:
+  - 找敌能量源(补给/士气/关键依赖)
+  - 断之
+  - 敌势溃
+  nca_emit: true
+dispatch:
+  main_pipeline: fu_di_chou_xin
+  graph:
+  - from: fu_di_chou_xin
+    to: []
+  note: 单计独立协议, 主原语 fu_di_chou_xin 即该计执行体
+decision:
+- if: 对方势盛但其根基有隙
+  call: fu_di_chou_xin
+skills: []
+negative_space:
+- ⊗ 薪非真源则抽空
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

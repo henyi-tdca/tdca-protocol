@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-106-20260828-106
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.427646'
+branch: 中国成语·认知与辩证·第106条(舍本逐末)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第106条《舍本逐末》
+  core: 优先级倒置警示——资源流向高显著性/易得性事项而偏离价值根基；显著性≠重要性，须以价值树校准资源分配。
+  verse: 逐其显者，遗其根者；末盛本枯，一拨即倒。
+  origin: 《战国策·齐策》：赵威后问齐使'苟无岁，何以有民？苟无民，何以有君？故有舍本而问末者耶？'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: sheben_zhumo
+  method: 舍本逐末
+  signature: fn sheben_zhumo(warn) -> priority_recopied
+  precond: 资源分配偏离根基
+  postcond: 本固末从
+  negative_space: ⊗ 本枯则末无所附
+  steps:
+  - 立其本
+  - 权其末
+  - 校资源
+  - 断其逐
+  nca_emit: true
+dispatch:
+  main_pipeline: sheben_zhumo
+  trigger: 逐其显者，遗其根者；末盛本枯，一拨即倒。
+  when: 当资源被高显著性事项吸走、根基投入萎缩时触发(作警示)
+  graph:
+  - from: sheben_zhumo
+    to: []
+decision:
+- if: 需优先级校准
+  call: sheben_zhumo
+skills:
+- 舍本逐末·思维研判
+negative_space:
+- 以显代重则倒置
+- 末尽废则当下亦失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-103-20260828-103
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.408106'
+branch: 中国成语·认知与辩证·第103条(循序渐进)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第103条《循序渐进》
+  core: 复杂能力/系统建设有依赖序——跳序省下的时间会在返工中加倍偿还；顺序本身是进度的一部分。与拔苗助长成对（彼外力强提，此自乱其序）。
+  verse: 如升阶然，一级一级；躐等而进，退而复筑。
+  origin: 宋·朱熹《论语集注》：'读书之法，在循序而渐进，熟读而精思。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xunxu_jianjin
+  method: 循序渐进
+  signature: fn xunxu_jianjin(advance) -> dependency_order_kept
+  precond: 目标有多级依赖结构
+  postcond: 基固而进，不返工
+  negative_space: ⊗ 躐等则返工
+  steps:
+  - 列其序
+  - 识其依赖
+  - 逐级进
+  - 验其基
+  nca_emit: true
+dispatch:
+  main_pipeline: xunxu_jianjin
+  trigger: 如升阶然，一级一级；躐等而进，退而复筑。
+  when: 当多级依赖结构存在、须按序推进时触发
+  graph:
+  - from: xunxu_jianjin
+    to: []
+decision:
+- if: 需依赖序推进
+  call: xunxu_jianjin
+skills:
+- 循序渐进·思维研判
+negative_space:
+- 躐等则返工加倍
+- 序僵不变则错过跃迁窗口
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

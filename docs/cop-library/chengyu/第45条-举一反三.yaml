@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-45-20260827-45
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.274724'
+branch: 中国成语·认知与辩证·第45条(举一反三)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第45条《举一反三》
+  core: 由一事推知同类三事，是以个别悟一般的类比迁移；在已知范式上外推，以少例覆盖多境，提升认知效率。须以'类'为界，不可跨类妄推(非守株待兔之偶律)。
+  verse: 举一隅不以三隅反，则不复也；触类而长，由此及彼。
+  origin: 《论语·述而》：'不愤不启，不悱不发，举一隅不以三隅反，则不复也。' 孔子论启发式教学。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ju_yi_fan_san
+  method: 举一反三
+  signature: fn ju_yi_fan_san(transfer) -> analogical_extend
+  precond: 昧类
+  postcond: 触类长，及彼
+  negative_space: ⊗ 跨类则妄
+  steps:
+  - 举一
+  - 识类
+  - 反三
+  - 迁境
+  nca_emit: true
+dispatch:
+  main_pipeline: ju_yi_fan_san
+  trigger: 举一隅不以三隅反，则不复也；触类而长，由此及彼。
+  when: 当可由一例推多境、宜类比迁移时触发
+  graph:
+  - from: ju_yi_fan_san
+    to: []
+decision:
+- if: 需类比推理
+  call: ju_yi_fan_san
+skills:
+- 举一反三·思维研判
+negative_space:
+- 跨类妄推则谬
+- 不识类则迁错
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

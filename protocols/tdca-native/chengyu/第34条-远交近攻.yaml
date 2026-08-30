@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-34-20260827-34
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.161900'
+branch: 中国成语·战略与决断·第34条(远交近攻)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第34条《远交近攻》
+  core: 交好远敌使其不援，专力攻取近邻，各个击破；是分化削邻的地缘战略——以'远交'消除侧翼威胁、集中资源于'近攻'，避免两线作战。与三十六计同目，此处以历史原型(范雎策)锚定其抽象计目。
+  verse: 交远以孤近，专攻其邻；破一而移，蚕食可尽。
+  origin: 《战国策·秦策》：范雎说秦王'远交近攻'，王用其策，兼并六国。后入三十六计混战计。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yuanjiao_jingong
+  method: 远交近攻
+  signature: fn yuanjiao_jingong(divide) -> neighbor_fallen
+  precond: 多敌环伺
+  postcond: 交远制近，各个破
+  negative_space: ⊗ 远敌亦图近则夹
+  steps:
+  - 交远敌
+  - 专近攻
+  - 破一移
+  - 蚕食尽
+  nca_emit: true
+dispatch:
+  main_pipeline: yuanjiao_jingong
+  trigger: 交远以孤近，专攻其邻；破一而移，蚕食可尽。
+  when: 当多敌环伺、宜先弱后强各个击破时触发
+  graph:
+  - from: yuanjiao_jingong
+    to: []
+decision:
+- if: 需分化削邻
+  call: yuanjiao_jingong
+skills:
+- 远交近攻·思维研判
+negative_space:
+- 远敌亦图近则反被夹
+- 滥交则树敌多
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH20-20260815-20
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.361359'
+branch: 诸子百家·道家·道德经·第20章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第20章《绝学无忧》
+  core: 不与众逐浮华，守独昏之淡泊；以异众守本真。
+  verse: 众人熙熙，我独昏昏；澹兮其若海。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jue_xue_wu_you
+  method: 绝学无忧
+  signature: fn jue_xue_wu_you(self) -> plain_independence
+  precond: 随众逐流、失本真
+  postcond: 独守淡泊，不随俗
+  negative_space: ⊗ 逐众则失我
+  steps:
+  - 察众
+  - 不随
+  - 守昏
+  - 归本
+  nca_emit: true
+dispatch:
+  main_pipeline: jue_xue_wu_you
+  trigger: 众人熙熙，我独昏昏；澹兮其若海。
+  when: 当随大流致失本真、需独立守淡时触发
+  graph:
+  - from: jue_xue_wu_you
+    to: []
+decision:
+- if: 需异众守真
+  call: jue_xue_wu_you
+skills:
+- 绝学无忧·顺势研判
+negative_space:
+- 随众则失我
+- 熙熙则惑
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

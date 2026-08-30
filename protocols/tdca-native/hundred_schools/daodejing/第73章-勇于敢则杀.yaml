@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH73-20260815-73
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.981588'
+branch: 诸子百家·道家·道德经·第73章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第73章《勇于敢则杀》
+  core: 敢杀不敢活，天网疏不失；以不敢顺天网。
+  verse: 勇于敢则杀，勇于不敢则活；天网恢恢，疏而不失。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yong_yu_gan_ze_sha
+  method: 勇于敢则杀
+  signature: fn yong_yu_gan_ze_sha(act) -> heaven_net
+  precond: 勇于敢、陷杀
+  postcond: 勇于不敢，天网不矢
+  negative_space: ⊗ 敢则杀
+  steps:
+  - 观敢
+  - 不敢活
+  - 天网
+  - 疏不失
+  nca_emit: true
+dispatch:
+  main_pipeline: yong_yu_gan_ze_sha
+  trigger: 勇于敢则杀，勇于不敢则活；天网恢恢，疏而不失。
+  when: 当宜勇不敢、顺天道时触发
+  graph:
+  - from: yong_yu_gan_ze_sha
+    to: []
+decision:
+- if: 需勇于不敢
+  call: yong_yu_gan_ze_sha
+skills:
+- 勇于敢则杀·顺势研判
+negative_space:
+- 勇于敢则杀
+- 争则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

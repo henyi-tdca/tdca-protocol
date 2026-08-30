@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-135-20260828-135
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.652417'
+branch: 中国成语·认知与辩证·第135条(画虎类犬)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第135条《画虎类犬》
+  core: 高目标模仿的失败模式——以高标准为范本而能力未达，产出既非虎亦非可用之犬；与东施效颦成对（彼模仿表象，此模仿高标）。启示：设梯度目标而非一步登高。
+  verse: 画虎不成，反类于犬；慕高而仿，失其真形。
+  origin: 汉·马援《诫兄子严敦书》：'所谓刻鹄不成尚类鹜者也……画虎不成反类狗者也。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: huahu_leiquan
+  method: 画虎类犬
+  signature: fn huahu_leiquan(warn) -> gradient_target_set
+  precond: 目标高于现有能力且须模仿
+  postcond: 梯度可达，形神渐进
+  negative_space: ⊗ 一步登高则类犬
+  steps:
+  - 度其能
+  - 设其阶
+  - 仿其神
+  - 校其形
+  nca_emit: true
+dispatch:
+  main_pipeline: huahu_leiquan
+  trigger: 画虎不成，反类于犬；慕高而仿，失其真形。
+  when: 当以高标为范本而能力未达、须设梯度时触发(作警示)
+  graph:
+  - from: huahu_leiquan
+    to: []
+decision:
+- if: 需模仿梯度设计
+  call: huahu_leiquan
+skills:
+- 画虎类犬·思维研判
+negative_space:
+- 不设梯度则类犬
+- 因噎废高则平庸化
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

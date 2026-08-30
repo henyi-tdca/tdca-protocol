@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH61-20260815-61
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.824570'
+branch: 诸子百家·道家·道德经·第61章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第61章《大国者下流》
+  core: 大国处下(下流)为天下交，以静雌胜雄；以谦下聚势。
+  verse: 大国者下流，天下之交；牝常以静胜牡。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: da_guo_zhe_xia_liu
+  method: 大国者下流
+  signature: fn da_guo_zhe_xia_liu(diplo) -> humble_gather
+  precond: 大国逞强、失交
+  postcond: 处下流，静雌胜牡
+  negative_space: ⊗ 逞强则孤
+  steps:
+  - 下流
+  - 为交
+  - 静雌
+  - 胜牡
+  nca_emit: true
+dispatch:
+  main_pipeline: da_guo_zhe_xia_liu
+  trigger: 大国者下流，天下之交；牝常以静胜牡。
+  when: 当大国宜谦下聚交、不逞强时触发
+  graph:
+  - from: da_guo_zhe_xia_liu
+    to: []
+decision:
+- if: 需处下聚势
+  call: da_guo_zhe_xia_liu
+skills:
+- 大国者下流·顺势研判
+negative_space:
+- 逞强则孤
+- 居高则失下
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

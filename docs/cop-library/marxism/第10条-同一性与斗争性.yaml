@@ -1,0 +1,47 @@
+COP-ID: MACM-10-20260815-10
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.710698'
+branch: 马克思主义·第10条(同一性与斗争性)
+stratum: 马克思主义·矛盾论
+soul:
+  identity: 马克思主义·第10条《同一性与斗争性》
+  core: 同一性斗争性结合; 以相对的同一求共存、绝对的斗争求发展。
+  verse: 同一性是有条件的、相对的；斗争性是无条件的、绝对的。在一定条件下互相依存，又互相排斥。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 矛盾论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tong_yi_dou_zheng
+  method: 同一性与斗争性
+  signature: fn tong_yi_dou_zheng(relate) -> identity_struggle
+  precond: 只同或只斗
+  postcond: 相反相成
+  negative_space: ⊗ 只同则腐
+  steps:
+  - 识同一
+  - 识斗争
+  - 看条件
+  - 相反相成
+  nca_emit: true
+dispatch:
+  main_pipeline: tong_yi_dou_zheng
+  trigger: 同一性是有条件的、相对的；斗争性是无条件的、绝对的。在一定条件下互相依存，又互相排斥。
+  when: 当关系处理、宜相反相成时触发
+  graph:
+  - from: tong_yi_dou_zheng
+    to: []
+decision:
+- if: 需同一性与斗争性
+  call: tong_yi_dou_zheng
+skills:
+- 同一性与斗争性·顺势研判
+negative_space:
+- 只同一则合流
+- 只斗争则破裂
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

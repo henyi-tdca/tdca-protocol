@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P03-20260815-03
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.772808'
+branch: 诸子百家·儒家·论语·第03篇(八佾)
+stratum: 诸子百家·儒家·论语·礼乐文质
+soul:
+  identity: 论语·第03篇《八佾》
+  core: 礼以仁为本，无仁之礼为虚文；以仁实礼。
+  verse: 人而不仁，如礼何？人而不仁，如乐何？
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 礼乐文质
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ba_yi_li_ben
+  method: 八佾
+  signature: fn ba_yi_li_ben(rite) -> rite_with_ren
+  precond: 徒具仪式、失礼之本
+  postcond: 仁为礼本，礼实情显
+  negative_space: ⊗ 虚礼则伪
+  steps:
+  - 识礼本
+  - 立仁
+  - 实礼
+  - 去僭
+  nca_emit: true
+dispatch:
+  main_pipeline: ba_yi_li_ben
+  trigger: 人而不仁，如礼何？人而不仁，如乐何？
+  when: 当重形式轻根本、宜返礼之本时触发
+  graph:
+  - from: ba_yi_li_ben
+    to: []
+decision:
+- if: 需以仁实礼
+  call: ba_yi_li_ben
+skills:
+- 八佾·顺势研判
+negative_space:
+- 无仁之礼则虚
+- 僭礼则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

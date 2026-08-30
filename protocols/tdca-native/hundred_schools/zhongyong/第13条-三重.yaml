@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY13-20260815-13
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.223551'
+branch: 诸子百家·儒家·中庸·第13条(三重)
+stratum: 诸子百家·儒家·中庸·时中达道
+soul:
+  identity: 中庸·第13条《三重》
+  core: 议礼制度考文三重、立天下法度；以笃恭化天下，立制度化成之纲。
+  verse: 王天下有三重焉：议礼、制度、考文。故君子笃恭而天下平。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 时中达道
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: san_zhong
+  method: 三重
+  signature: fn san_zhong(rule) -> triple_order
+  precond: 礼废、度乱
+  postcond: 三重立，天下平
+  negative_space: ⊗ 废礼则乱
+  steps:
+  - 议礼
+  - 制度
+  - 考文
+  - 天下平
+  nca_emit: true
+dispatch:
+  main_pipeline: san_zhong
+  trigger: 王天下有三重焉：议礼、制度、考文。故君子笃恭而天下平。
+  when: 当宜立法度、不宜废礼时触发
+  graph:
+  - from: san_zhong
+    to: []
+decision:
+- if: 需立三重
+  call: san_zhong
+skills:
+- 三重·顺势研判
+negative_space:
+- 废礼则乱
+- 度不一则争
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

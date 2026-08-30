@@ -1,0 +1,47 @@
+COP-ID: MICRO-01-20260825-01
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.159491'
+branch: 现代经济学·微观经济学·第01条(供给与需求·均衡)
+stratum: 现代经济学·微观经济学·市场均衡
+soul:
+  identity: 微观经济学·第01条《供给与需求·均衡》
+  core: 供需相交于一点而定价定量，市场借此自发配置稀缺资源；价格机制为无形之手，短缺与过剩皆为失衡信号。
+  verse: 市价者，买卖之所共立也。供多则价落，求多则价升，至供需相值而止，是谓均衡。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 市场均衡
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: supply_demand
+  method: 供给与需求·均衡
+  signature: fn supply_demand(clear) -> equilibrium_price_qty
+  precond: 价僵或失衡
+  postcond: 价量定，市清
+  negative_space: ⊗ 设价则壅
+  steps:
+  - 察供给
+  - 察需求
+  - 求交点
+  - 定均衡
+  nca_emit: true
+dispatch:
+  main_pipeline: supply_demand
+  trigger: 市价者，买卖之所共立也。供多则价落，求多则价升，至供需相值而止，是谓均衡。
+  when: 当分析价格形成、市场出清、短缺/过剩信号时触发
+  graph:
+  - from: supply_demand
+    to: []
+decision:
+- if: 需供需均衡分析
+  call: supply_demand
+skills:
+- 供给与需求·均衡·均衡研判
+negative_space:
+- 管制价则壅塞
+- 昧外生冲击则蔽
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

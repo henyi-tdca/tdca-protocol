@@ -1,0 +1,47 @@
+COP-ID: MACM-12-20260815-12
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.729293'
+branch: 马克思主义·第12条(实践第一)
+stratum: 马克思主义·实践论
+soul:
+  identity: 马克思主义·第12条《实践第一》
+  core: 实践第一; 实践是认识来源、动力、目的、检验标准, 行而后知。
+  verse: 马克思主义者认为人类的生产活动是最基本的实践活动。真理的标准只能是社会的实践。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 实践论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shi_jian_di_yi
+  method: 实践第一
+  signature: fn shi_jian_di_yi(act) -> practice_first
+  precond: 空论、离行
+  postcond: 以行验知
+  negative_space: ⊗ 空论则虚
+  steps:
+  - 重实践
+  - 行中知
+  - 以验真
+  - 回实践
+  nca_emit: true
+dispatch:
+  main_pipeline: shi_jian_di_yi
+  trigger: 马克思主义者认为人类的生产活动是最基本的实践活动。真理的标准只能是社会的实践。
+  when: 当宜以行求知、不宜空论时触发
+  graph:
+  - from: shi_jian_di_yi
+    to: []
+decision:
+- if: 需实践第一
+  call: shi_jian_di_yi
+skills:
+- 实践第一·顺势研判
+negative_space:
+- 空论则虚妄
+- 蛮干无识则盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

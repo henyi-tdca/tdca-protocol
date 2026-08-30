@@ -1,0 +1,47 @@
+COP-ID: HS-YY-04-20260815-04
+source_expert: yinyangjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.447740'
+branch: 诸子百家·阴阳家·第04条(四时)
+stratum: 诸子百家·阴阳家·五行本体
+soul:
+  identity: 阴阳家·第04条《四时》
+  core: 四时行、百物生；以春生夏长秋收冬藏为序，立时令节律之则。
+  verse: 四时行焉，百物生焉。春生夏长秋收冬藏，时使然也。
+  role: 思维协议 (诸子百家 / 阴阳家 / 五行)
+  category: 诸子百家 / 阴阳家 / 五行本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: si_shi
+  method: 四时
+  signature: fn si_shi(season) -> four_seasons
+  precond: 逆时、失序
+  postcond: 时行，物生
+  negative_space: ⊗ 逆时则伤
+  steps:
+  - 识四时
+  - 顺生藏
+  - 因时
+  - 物成
+  nca_emit: true
+dispatch:
+  main_pipeline: si_shi
+  trigger: 四时行焉，百物生焉。春生夏长秋收冬藏，时使然也。
+  when: 当宜因时作息、不宜逆时令时触发
+  graph:
+  - from: si_shi
+    to: []
+decision:
+- if: 需顺四时
+  call: si_shi
+skills:
+- 四时·顺势研判
+negative_space:
+- 逆时则伤物
+- 乱序则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

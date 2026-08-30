@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-125-20260828-125
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.584206'
+branch: 中国成语·战略与决断·第125条(反客为主)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第125条《反客为主》
+  core: 主动权的渐进易手——从客位依序插入、立足、接管枢纽，分阶段完成地位反转；每一步都是既成事实的累积，跃进反被逐。
+  verse: 乘隙插足，扼其主机；渐之进也，客乃为主。
+  origin: 三十六计·并战计第三十计：'乘隙插足，扼其主机，渐之进也。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fanke_weizhu
+  method: 反客为主
+  signature: fn fanke_weizhu(gradual) -> initiative_reversed
+  precond: 主方有隙且容客渐进
+  postcond: 客转为主，主动权易
+  negative_space: ⊗ 躐等则被逐
+  steps:
+  - 察其隙
+  - 插其足
+  - 扼其枢
+  - 代其主
+  nca_emit: true
+dispatch:
+  main_pipeline: fanke_weizhu
+  trigger: 乘隙插足，扼其主机；渐之进也，客乃为主。
+  when: 当存在渐进接管路径、忌一步到位时触发
+  graph:
+  - from: fanke_weizhu
+    to: []
+decision:
+- if: 需主动权渐进
+  call: fanke_weizhu
+skills:
+- 反客为主·思维研判
+negative_space:
+- 渐进过急则被逐
+- 得主而失义则失道
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

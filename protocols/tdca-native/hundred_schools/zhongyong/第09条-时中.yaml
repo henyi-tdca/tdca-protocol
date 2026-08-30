@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY09-20260815-09
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.193094'
+branch: 诸子百家·儒家·中庸·第09条(时中)
+stratum: 诸子百家·儒家·中庸·时中达道
+soul:
+  identity: 中庸·第09条《时中》
+  core: 君子随时处中、权变不离经；以时中行常道，立经权合一之智。
+  verse: 君子之中庸也，君子而时中；小人之中庸也，小人而无忌惮也。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 时中达道
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shi_zhong
+  method: 时中
+  signature: fn shi_zhong(context) -> timely_mean
+  precond: 胶柱、失时宜
+  postcond: 随时处中，无忌惮
+  negative_space: ⊗ 胶则失宜
+  steps:
+  - 识时
+  - 权变
+  - 处中
+  - 不离经
+  nca_emit: true
+dispatch:
+  main_pipeline: shi_zhong
+  trigger: 君子之中庸也，君子而时中；小人之中庸也，小人而无忌惮也。
+  when: 当情境流变、宜权变守中时触发
+  graph:
+  - from: shi_zhong
+    to: []
+decision:
+- if: 需时中
+  call: shi_zhong
+skills:
+- 时中·顺势研判
+negative_space:
+- 胶柱鼓瑟则僵
+- 无忌惮则滥
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

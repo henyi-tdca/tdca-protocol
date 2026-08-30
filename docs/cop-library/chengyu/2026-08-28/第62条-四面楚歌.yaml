@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-62-20260828-62
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.360332'
+branch: 中国成语·战略与决断·第62条(四面楚歌)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第62条《四面楚歌》
+  core: 攻心的最高形态是瓦解对方的'归属预期'——不歼其兵先散其心；信息攻防中，改变对手对'同盟仍在'的信念即改变其战斗力。负空间：己方亦须防同类心理战反噬。
+  verse: 垓下夜闻楚歌声，归思一动，霸王势去。
+  origin: 《史记·项羽本纪》垓下之围：汉军夜唱楚歌，项羽疑楚地尽失，军心涣散，霸王别姬，乌江自刎。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: simian_chuge
+  method: 四面楚歌
+  signature: fn simian_chuge(psyops) -> morale_collapsed
+  precond: 围而不歼
+  postcond: 敌心散，胜于战
+  negative_space: ⊗ 强攻则损
+  steps:
+  - 合围
+  - 传音
+  - 瓦解归附
+  - 收全功
+  nca_emit: true
+dispatch:
+  main_pipeline: simian_chuge
+  trigger: 垓下夜闻楚歌声，归思一动，霸王势去。
+  when: 当竞争以心理/信念攻防为主、宜不战而屈人之兵时触发
+  graph:
+  - from: simian_chuge
+    to: []
+decision:
+- if: 需攻心瓦解
+  call: simian_chuge
+skills:
+- 四面楚歌·思维研判
+negative_space:
+- 无实势支撑则诈露
+- 己军先被反唱则自乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

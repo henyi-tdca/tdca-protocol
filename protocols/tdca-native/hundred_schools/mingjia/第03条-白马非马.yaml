@@ -1,0 +1,47 @@
+COP-ID: HS-MG-03-20260815-03
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.049655'
+branch: 诸子百家·名家·第03条(白马非马)
+stratum: 诸子百家·名家·离坚白
+soul:
+  identity: 名家·第03条《白马非马》
+  core: 白马非马、种属与属性析取；以概念析取破混同，立逻辑区别的严格性。
+  verse: 白马者，马与白也，马与白非马也。求马，黄黑马皆可致；求白马，黄黑马不可致。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 离坚白
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bai_ma_fei_ma
+  method: 白马非马
+  signature: fn bai_ma_fei_ma(concept) -> not_horse
+  precond: 混种属属性
+  postcond: 析取明，概念严
+  negative_space: ⊗ 混同则谬
+  steps:
+  - 析属
+  - 析色
+  - 别白马
+  - 严概念
+  nca_emit: true
+dispatch:
+  main_pipeline: bai_ma_fei_ma
+  trigger: 白马者，马与白也，马与白非马也。求马，黄黑马皆可致；求白马，黄黑马不可致。
+  when: 当宜严格析取概念、不宜混同种属时触发
+  graph:
+  - from: bai_ma_fei_ma
+    to: []
+decision:
+- if: 需白马非马
+  call: bai_ma_fei_ma
+skills:
+- 白马非马·顺势研判
+negative_space:
+- 混种属则谬
+- 析过则碎
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

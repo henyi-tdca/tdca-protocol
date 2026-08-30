@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-99-20260828-99
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.382015'
+branch: 中国成语·战略与决断·第99条(李代桃僵)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第99条《李代桃僵》
+  core: 局部牺牲式交换——以可弃局部承担损失，保全核心整体；取舍按'局部可替代性×整体价值'定价，非平均承损，更非核心硬扛。
+  verse: 桃李相代，僵一存双；损其所可，全其所重。
+  origin: 三十六计·败战计第十一计：'势必有损，损阴以益阳'；乐府《鸡鸣》'李树代桃僵'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: lidai_taojiang
+  method: 李代桃僵
+  signature: fn lidai_taojiang(tradeoff) -> core_preserved
+  precond: 局部损失不可避免
+  postcond: 弃小保全
+  negative_space: ⊗ 代而无择则俱损
+  steps:
+  - 别其重
+  - 择其代
+  - 明其损
+  - 全其核
+  nca_emit: true
+dispatch:
+  main_pipeline: lidai_taojiang
+  trigger: 桃李相代，僵一存双；损其所可，全其所重。
+  when: 当全局必损、须择可替代局部承损时触发
+  graph:
+  - from: lidai_taojiang
+    to: []
+decision:
+- if: 需牺牲式取舍
+  call: lidai_taojiang
+skills:
+- 李代桃僵·思维研判
+negative_space:
+- 无可弃而硬代则俱损
+- 核心误判为局部则本末倒置
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

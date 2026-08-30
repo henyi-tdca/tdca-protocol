@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-21
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.137958'
+stratum: 混战计
+soul:
+  identity: 金蝉脱壳
+  core: 留形走实, 金蝉脱壳
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 混战计
+primitives:
+- name: jin_chan_tuo_ke
+  method: 金蝉脱壳
+  signature: 'fn jin_chan_tuo_ke(context: Situation) -> Outcome'
+  precond: 需撤离而不可显退
+  postcond: 留形走实, 金蝉脱壳 (目标达成)
+  negative_space: ⊗ 伪装不似则早识
+  steps:
+  - 留置伪装(形)
+  - 实转移
+  - 形存实去
+  nca_emit: true
+dispatch:
+  main_pipeline: jin_chan_tuo_ke
+  graph:
+  - from: jin_chan_tuo_ke
+    to: []
+  note: 单计独立协议, 主原语 jin_chan_tuo_ke 即该计执行体
+decision:
+- if: 需撤离而不可显退
+  call: jin_chan_tuo_ke
+skills: []
+negative_space:
+- ⊗ 伪装不似则早识
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

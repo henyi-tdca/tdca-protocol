@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY04-20260815-04
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.161396'
+branch: 诸子百家·儒家·中庸·第04条(慎独)
+stratum: 诸子百家·儒家·中庸·诚体工夫
+soul:
+  identity: 中庸·第04条《慎独》
+  core: 隐微处尤当慎、独知中不苟；以慎独为诚之始功，不欺暗室。
+  verse: 莫见乎隐，莫显乎微，故君子慎其独也。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 诚体工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shen_du
+  method: 慎独
+  signature: fn shen_du(self) -> solitary_care
+  precond: 欺暗室、慢隐微
+  postcond: 慎独不欺，诚立
+  negative_space: ⊗ 慢微则亏
+  steps:
+  - 察隐
+  - 谨微
+  - 慎独
+  - 不欺
+  nca_emit: true
+dispatch:
+  main_pipeline: shen_du
+  trigger: 莫见乎隐，莫显乎微，故君子慎其独也。
+  when: 当无人独处、宜谨隐微时触发
+  graph:
+  - from: shen_du
+    to: []
+decision:
+- if: 需慎独
+  call: shen_du
+skills:
+- 慎独·顺势研判
+negative_space:
+- 慢隐则亏德
+- 欺独则伪
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

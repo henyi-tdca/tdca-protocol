@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-14
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.986955'
+stratum: 攻战计
+soul:
+  identity: 借尸还魂
+  core: 借无用或旧壳载新魂
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 攻战计
+primitives:
+- name: jie_shi_huan_hun
+  method: 借尸还魂
+  signature: 'fn jie_shi_huan_hun(context: Situation) -> Outcome'
+  precond: 需借已有形式立新内容
+  postcond: 借无用或旧壳载新魂 (目标达成)
+  negative_space: ⊗ 壳无号召力则空
+  steps:
+  - 觅可用之壳(名义/平台)
+  - 注入新实质
+  - 立稳
+  nca_emit: true
+dispatch:
+  main_pipeline: jie_shi_huan_hun
+  graph:
+  - from: jie_shi_huan_hun
+    to: []
+  note: 单计独立协议, 主原语 jie_shi_huan_hun 即该计执行体
+decision:
+- if: 需借已有形式立新内容
+  call: jie_shi_huan_hun
+skills: []
+negative_space:
+- ⊗ 壳无号召力则空
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

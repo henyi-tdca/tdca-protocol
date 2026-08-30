@@ -1,0 +1,47 @@
+COP-ID: MICRO-09-20260825-09
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.221921'
+branch: 现代经济学·微观经济学·第09条(垄断竞争)
+stratum: 现代经济学·微观经济学·厂商与结构
+soul:
+  identity: 微观经济学·第09条《垄断竞争》
+  core: 垄断竞争下产品差异化赋局部定价权，长期自由进出使经济利润趋零，伴生过剩产能与广告耗散。
+  verse: 贾众而货异，各有一点之权，久则利微。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 厂商与结构
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: monopolistic_competition
+  method: 垄断竞争
+  signature: fn monopolistic_competition(differentiate) -> excess_capacity
+  precond: 昧差异
+  postcond: 权局部，利微
+  negative_space: ⊗ 昧差异则混于竞争
+  steps:
+  - 识差异
+  - 求局部权
+  - 察长期
+  - 量余能
+  nca_emit: true
+dispatch:
+  main_pipeline: monopolistic_competition
+  trigger: 贾众而货异，各有一点之权，久则利微。
+  when: 当分析品牌竞争、广告、餐饮零售类市场时触发
+  graph:
+  - from: monopolistic_competition
+    to: []
+decision:
+- if: 需垄断竞争分析
+  call: monopolistic_competition
+skills:
+- 垄断竞争·均衡研判
+negative_space:
+- 昧差异则混于竞争
+- 过度广告则耗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-100-20260828-100
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.388492'
+branch: 中国成语·战略与决断·第100条(假痴不癫)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第100条《假痴不癫》
+  core: 藏锋守拙的时机管理——能力显化本身改变博弈（木秀于林），在蓄势期以低调之态降低被打击优先级，待机而发；装的是态势而非无能。
+  verse: 雷霆藏器，静如痴愚；云雷既屯，发乃惊天。
+  origin: 三十六计·并战计第二十七计：'宁伪作不知不为，不伪作假知妄为'；司马懿诈病赚曹爽。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jiachi_budian
+  method: 假痴不癫
+  signature: fn jiachi_budian(conceal) -> low_profile_built
+  precond: 能力显化即招打击
+  postcond: 藏器待时，一发而中
+  negative_space: ⊗ 痴而忘发则真废
+  steps:
+  - 敛其锋
+  - 安其态
+  - 蓄其势
+  - 乘其隙
+  nca_emit: true
+dispatch:
+  main_pipeline: jiachi_budian
+  trigger: 雷霆藏器，静如痴愚；云雷既屯，发乃惊天。
+  when: 当过早显化会招致集中打击、宜蓄势待机时触发
+  graph:
+  - from: jiachi_budian
+    to: []
+decision:
+- if: 需藏锋蓄势
+  call: jiachi_budian
+skills:
+- 假痴不癫·思维研判
+negative_space:
+- 久藏不发则真废
+- 姿态露馅则促对方先发
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

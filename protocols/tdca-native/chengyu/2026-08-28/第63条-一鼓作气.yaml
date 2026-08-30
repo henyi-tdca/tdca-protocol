@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-63-20260828-63
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.367165'
+branch: 中国成语·战略与决断·第63条(一鼓作气)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第63条《一鼓作气》
+  core: 士气/注意力/资金等资源有耗竭曲线，先手方消耗更快；择时本质是让对方先耗竭、己方后出手——节奏差即优势，出手时机优于出手强度。
+  verse: 一鼓作气，再而衰，三而竭，彼竭我盈，故克之。
+  origin: 《左传·庄公十年》长勺之战：曹刿待齐人三鼓后击之，'夫战，勇气也。一鼓作气，再而衰，三而竭。彼竭我盈，故克之'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yigu_zuoqi
+  method: 一鼓作气
+  signature: fn yigu_zuoqi(timing) -> momentum_captured
+  precond: 敌先动而我后应
+  postcond: 彼竭我盈，一举破
+  negative_space: ⊗ 三鼓则竭
+  steps:
+  - 敛势
+  - 待彼竭
+  - 一鼓进
+  - 乘胜扩
+  nca_emit: true
+dispatch:
+  main_pipeline: yigu_zuoqi
+  trigger: 一鼓作气，再而衰，三而竭，彼竭我盈，故克之。
+  when: 当双方资源有耗竭曲线、宜后发制人择时出手时触发
+  graph:
+  - from: yigu_zuoqi
+    to: []
+decision:
+- if: 需节奏择时
+  call: yigu_zuoqi
+skills:
+- 一鼓作气·思维研判
+negative_space:
+- 久拖则己亦竭
+- 一鼓不成而无再鼓
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

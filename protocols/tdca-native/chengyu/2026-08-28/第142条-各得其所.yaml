@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-142-20260828-142
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.701243'
+branch: 中国成语·修身与治理·第142条(各得其所)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第142条《各得其所》
+  core: 分配正义的定位观——治理的良好状态非均等而是各按其性与责得其所应得；定位错配即治理失效之源。与论功行赏成对（彼贡献定价，此位置正义）。
+  verse: 老者安之，朋友信之，少者怀之；交易而退，各得其所。
+  origin: 《论语·公冶长》'老者安之，朋友信之，少者怀之'；《周易·系辞下》'交易而退，各得其所'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gede_qisuo
+  method: 各得其所
+  signature: fn gede_qisuo(place) -> positioning_just
+  precond: 多主体须各安其位
+  postcond: 位得其所，系统安泰
+  negative_space: ⊗ 错配则两失
+  steps:
+  - 识其性
+  - 定其位
+  - 配其得
+  - 验其安
+  nca_emit: true
+dispatch:
+  main_pipeline: gede_qisuo
+  trigger: 老者安之，朋友信之，少者怀之；交易而退，各得其所。
+  when: 当主体错配导致系统低效、须重定位时触发
+  graph:
+  - from: gede_qisuo
+    to: []
+decision:
+- if: 需定位正义
+  call: gede_qisuo
+skills:
+- 各得其所·思维研判
+negative_space:
+- 以均代宜则错配
+- 定位固化则失流动
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

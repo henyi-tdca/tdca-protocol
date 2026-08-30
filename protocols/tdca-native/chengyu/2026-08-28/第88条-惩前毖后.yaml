@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-88-20260828-88
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.541730'
+branch: 中国成语·修身与治理·第88条(惩前毖后)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第88条《惩前毖后》
+  core: 教训的价值在于机制化沉淀——'惩前'若只落到个人检讨则白痛一次；须转化为流程/规则/检查项，让同类错误在下一代操作中不可复现。
+  verse: 予其惩而毖后患。
+  origin: 《诗经·周颂·小毖》：'予其惩而毖后患'——周成王平管蔡之乱后自警，惩前之败而慎后患。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chengqian_bihou
+  method: 惩前毖后
+  signature: fn chengqian_bihou(learn) -> lesson_institutionalized
+  precond: 前事已痛
+  postcond: 毖后，同类不再犯
+  negative_space: ⊗ 痛而不改则再痛
+  steps:
+  - 复盘前事
+  - 提取机制
+  - 嵌入流程
+  - 验其效
+  nca_emit: true
+dispatch:
+  main_pipeline: chengqian_bihou
+  trigger: 予其惩而毖后患。
+  when: 当须从已发错误/事故中沉淀机制、防同类再犯时触发
+  graph:
+  - from: chengqian_bihou
+    to: []
+decision:
+- if: 需教训机制化
+  call: chengqian_bihou
+skills:
+- 惩前毖后·思维研判
+negative_space:
+- 只惩人则隐患存
+- 毖后过严则因噎废食
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-48-20260827-48
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.302785'
+branch: 中国成语·认知与辩证·第48条(奇货可居)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第48条《奇货可居》
+  core: 囤积稀缺之物(奇货)待价而沽，是稀缺性抬价/投机溢价；供需失衡(供给受限)则价格升，居奇者借稀缺博取超额收益。须识'稀缺'是否人为制造、溢价是否可持续(价值
+    vs 价格背离风险)。
+  verse: 囤其奇货，居以待价；稀缺既成，价乃自高。
+  origin: 《史记·吕不韦列传》：吕不韦见秦质子异人'奇货可居'，乃西游秦，质子立为庄襄王，不韦相之，封文信侯。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qihuo_keju
+  method: 奇货可居
+  signature: fn qihuo_keju(hoard) -> scarcity_premium
+  precond: 有稀缺
+  postcond: 居奇货，价自高
+  negative_space: ⊗ 人为稀缺则险
+  steps:
+  - 识稀缺
+  - 囤其货
+  - 待求涨
+  - 沽高价
+  nca_emit: true
+dispatch:
+  main_pipeline: qihuo_keju
+  trigger: 囤其奇货，居以待价；稀缺既成，价乃自高。
+  when: 当识别稀缺性溢价/投机性囤积机会时触发
+  graph:
+  - from: qihuo_keju
+    to: []
+decision:
+- if: 需稀缺定价研判
+  call: qihuo_keju
+skills:
+- 奇货可居·思维研判
+negative_space:
+- 人为稀缺则泡沫
+- 价悖值则崩
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

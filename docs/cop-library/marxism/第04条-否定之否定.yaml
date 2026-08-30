@@ -1,0 +1,48 @@
+COP-ID: MACM-04-20260815-04
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.656850'
+branch: 马克思主义·第04条(否定之否定)
+stratum: 马克思主义·唯物辩证法
+soul:
+  identity: 马克思主义·第04条《否定之否定》
+  core: 否定之否定是扬弃式的上升；以保留积极因素的否定, 走螺旋而非直线。
+  verse: 辩证的否定是自己运动自己完善；发展的螺旋式上升，仿佛向旧东西的回复。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 唯物辩证法
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fou_ding_zhi_fou_ding
+  method: 否定之否定
+  signature: fn fou_ding_zhi_fou_ding(spiral) -> negation_spiral
+  precond: 直线观、或全抛弃
+  postcond: 扬弃上升，螺旋
+  negative_space: ⊗ 全抛弃则断
+  steps:
+  - 正
+  - 反
+  - 合
+  - 扬弃
+  - 上升
+  nca_emit: true
+dispatch:
+  main_pipeline: fou_ding_zhi_fou_ding
+  trigger: 辩证的否定是自己运动自己完善；发展的螺旋式上升，仿佛向旧东西的回复。
+  when: 当宜看发展螺旋、不宜直线或虚无时触发
+  graph:
+  - from: fou_ding_zhi_fou_ding
+    to: []
+decision:
+- if: 需否定之否定
+  call: fou_ding_zhi_fou_ding
+skills:
+- 否定之否定·顺势研判
+negative_space:
+- 直线观则误判
+- 全抛弃则失根
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

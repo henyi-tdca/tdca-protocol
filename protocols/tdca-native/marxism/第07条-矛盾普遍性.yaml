@@ -1,0 +1,47 @@
+COP-ID: MACM-07-20260815-07
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.680816'
+branch: 马克思主义·第07条(矛盾普遍性)
+stratum: 马克思主义·矛盾论
+soul:
+  identity: 马克思主义·第07条《矛盾普遍性》
+  core: 矛盾普遍于一切过程、贯始终; 以承认矛盾为前提, 不回避斗争。
+  verse: 矛盾着的对立面又统一又斗争，由此推动事物的运动和变化。矛盾无处不在，无时不有。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 矛盾论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: mao_dun_pu_bian_xing
+  method: 矛盾普遍性
+  signature: fn mao_dun_pu_bian_xing(find) -> universal_contradiction
+  precond: 讳言矛盾、调和
+  postcond: 敢于揭露矛盾
+  negative_space: ⊗ 调和则溃
+  steps:
+  - 承矛盾
+  - 找对立
+  - 揭斗争
+  - 促转化
+  nca_emit: true
+dispatch:
+  main_pipeline: mao_dun_pu_bian_xing
+  trigger: 矛盾着的对立面又统一又斗争，由此推动事物的运动和变化。矛盾无处不在，无时不有。
+  when: 当回避矛盾、宜正视斗争时触发
+  graph:
+  - from: mao_dun_pu_bian_xing
+    to: []
+decision:
+- if: 需矛盾普遍性
+  call: mao_dun_pu_bian_xing
+skills:
+- 矛盾普遍性·顺势研判
+negative_space:
+- 讳言矛盾则积患
+- 只揭不导则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

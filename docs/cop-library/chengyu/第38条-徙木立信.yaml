@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-38-20260827-38
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.205084'
+branch: 中国成语·战略与决断·第38条(徙木立信)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第38条《徙木立信》
+  core: 以'徙木者赏五十金'的小成本可验证行动，建立政府/制度承诺的可信度，使后续法令因信任而自行；是可信承诺的古代元锚——成本信号(costly signal)证明承诺可信，恰如
+    NCA 确权/机制设计的'使背叛成本>收益'。成语即'制度可信承诺'的史源。
+  verse: 徙木予金，民乃信令；一言为重，法乃自行。
+  origin: 《史记·商君列传》：商鞅变法，立三丈之木于国都市南门，募徙置北门者予十金弗能徙，乃予五十金，一人徙之辄予五十金，以明不欺，卒下令行。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ximu_lixin
+  method: 徙木立信
+  signature: fn ximu_lixin(signal) -> credible_commitment
+  precond: 令不信
+  postcond: 立信锚，法自行
+  negative_space: ⊗ 空令则废
+  steps:
+  - 设小验
+  - 付成本
+  - 明不欺
+  - 令乃行
+  nca_emit: true
+dispatch:
+  main_pipeline: ximu_lixin
+  trigger: 徙木予金，民乃信令；一言为重，法乃自行。
+  when: 当制度/协议需建立可信承诺、令行禁止时触发
+  graph:
+  - from: ximu_lixin
+    to: []
+decision:
+- if: 需可信承诺锚
+  call: ximu_lixin
+skills:
+- 徙木立信·思维研判
+negative_space:
+- 空令无验则不信
+- 成本不足则锚弱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

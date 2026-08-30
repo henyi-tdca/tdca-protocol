@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ08-20260815-08
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.538061'
+branch: 诸子百家·兵家·孙子兵法·第08篇(九变篇)
+stratum: 诸子百家·兵家·孙子兵法·地形机变
+soul:
+  identity: 孙子兵法·第08篇《九变篇》
+  core: 君命有所不受——通于九变之利，知五利五危；杂于利害(虑害以防患、虑利以兴功)；变通不拘常法，唯利是动(正合 TDCA 生态准入门'按可信底线变通')。
+  verse: 涂有所不由，军有所不击，城有所不攻，地有所不争，君命有所不受。是故智者之虑，必杂于利害。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 地形机变
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jun_ming_suo_bu_shou
+  method: 九变篇
+  signature: fn jun_ming_suo_bu_shou(order) -> sanctioned_deviation
+  precond: 拘常法则失机、盲从则败
+  postcond: 通变合利、受制于人则免
+  negative_space: ⊗ 泥法而败
+  steps:
+  - 通九变
+  - 杂利害
+  - 君命有所不受
+  - 唯利是动
+  nca_emit: true
+dispatch:
+  main_pipeline: jun_ming_suo_bu_shou
+  trigger: 涂有所不由，军有所不击，城有所不攻，地有所不争，君命有所不受。是故智者之虑，必杂于利害。
+  when: 当规则与当前最高可信目标冲突、宜按底线变通时触发
+  graph:
+  - from: jun_ming_suo_bu_shou
+    to: []
+decision:
+- if: 需变通不受常命
+  call: jun_ming_suo_bu_shou
+skills:
+- 九变篇·顺势研判
+negative_space:
+- 泥古不化则败
+- 不受而私则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 合规与可信决策审计院
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

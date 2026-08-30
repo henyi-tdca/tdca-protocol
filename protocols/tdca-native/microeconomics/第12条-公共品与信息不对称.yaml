@@ -1,0 +1,47 @@
+COP-ID: MICRO-12-20260825-12
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.243662'
+branch: 现代经济学·微观经济学·第12条(公共品与信息不对称)
+stratum: 现代经济学·微观经济学·福利与失灵
+soul:
+  identity: 微观经济学·第12条《公共品与信息不对称》
+  core: 公共品非排他非竞争致市场供给不足（搭便车）；信息不对称引逆向选择/道德风险，需信号发送、甄别与规制。
+  verse: 公物者，一人享之不减于众；信不对称则劣币驱良。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 福利与失灵
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: public_goods_info
+  method: 公共品与信息不对称
+  signature: fn public_goods_info(provision) -> market_failure
+  precond: 昧搭便车
+  postcond: 供不足，须补
+  negative_space: ⊗ 昧搭便车则供不足
+  steps:
+  - 识公品
+  - 察搭车
+  - 辨不对称
+  - 设机制
+  nca_emit: true
+dispatch:
+  main_pipeline: public_goods_info
+  trigger: 公物者，一人享之不减于众；信不对称则劣币驱良。
+  when: 当国防/灯塔类供给、保险/二手市场失灵研判时触发
+  graph:
+  - from: public_goods_info
+    to: []
+decision:
+- if: 需公共品/信息分析
+  call: public_goods_info
+skills:
+- 公共品与信息不对称·均衡研判
+negative_space:
+- 昧搭便车则供不足
+- 信号须防伪装
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-81-20260828-81
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.492801'
+branch: 中国成语·修身与治理·第81条(望梅止渴)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第81条《望梅止渴》
+  core: 预期是当下行动力的燃料——'脑补的酸梅'真实改变生理状态；但预期激励是'债'，须以真实到达的梅林兑付，否则透支信用，下次望梅不再生津。
+  verse: 前有大梅林，饶子甘酸，可以解渴；士闻之，口皆出水。
+  origin: 《世说新语·假谲》：魏武行军失汲道，军皆渴，乃令曰'前有大梅林，饶子甘酸可以解渴'；士卒闻之，口皆出水，乘此得及前源。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wangmei_zhike
+  method: 望梅止渴
+  signature: fn wangmei_zhike(incentivize) -> expectation_fueled
+  precond: 当下苦而回报远
+  postcond: 预期生津，行军及源
+  negative_space: ⊗ 空头支票则信用竭
+  steps:
+  - 示前利
+  - 激预期
+  - 持行动
+  - 兑现之
+  nca_emit: true
+dispatch:
+  main_pipeline: wangmei_zhike
+  trigger: 前有大梅林，饶子甘酸，可以解渴；士闻之，口皆出水。
+  when: 当团队当下困苦、须以阶段性愿景维持行动力时触发
+  graph:
+  - from: wangmei_zhike
+    to: []
+decision:
+- if: 需预期激励
+  call: wangmei_zhike
+skills:
+- 望梅止渴·思维研判
+negative_space:
+- 无梅林兑现则信用透支
+- 沉迷愿景则不入实操
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

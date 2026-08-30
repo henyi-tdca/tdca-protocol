@@ -1,0 +1,47 @@
+COP-ID: MICRO-11-20260825-11
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.236345'
+branch: 现代经济学·微观经济学·第11条(外部性·科斯)
+stratum: 现代经济学·微观经济学·福利与失灵
+soul:
+  identity: 微观经济学·第11条《外部性·科斯》
+  core: 外部性使私人最优偏离社会最优；科斯定理言若交易成本够低、产权明晰，当事人可私下达有效配置，否则需庇古税/补贴或配额。
+  verse: 一事之利损，或溢于交易之外；界权明则自了。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 福利与失灵
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: externalities_coase
+  method: 外部性·科斯
+  signature: fn externalities_coase(internalize) -> efficient_allocation
+  precond: 昧交易成本
+  postcond: 内化，效复
+  negative_space: ⊗ 昧交易成本则妄
+  steps:
+  - 识溢出
+  - 估社会成本
+  - 明产权
+  - 择内化
+  nca_emit: true
+dispatch:
+  main_pipeline: externalities_coase
+  trigger: 一事之利损，或溢于交易之外；界权明则自了。
+  when: 当污染、研发溢出、公地悲剧等市场失灵需内化时触发
+  graph:
+  - from: externalities_coase
+    to: []
+decision:
+- if: 需外部性内化
+  call: externalities_coase
+skills:
+- 外部性·科斯·均衡研判
+negative_space:
+- 昧交易成本则妄
+- 产权不清则讼
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

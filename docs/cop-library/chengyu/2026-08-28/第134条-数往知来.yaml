@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-134-20260828-134
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.645534'
+branch: 中国成语·认知与辩证·第134条(数往知来)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第134条《数往知来》
+  core: 基于历史序列的外推——盘点既往轨迹提取规律以预测未来；外推有效的前提是'产生历史的机制仍在运行'，机制更迭则数不能知来。
+  verse: 数往者顺，知来者逆；审数以往，可知所来。
+  origin: 《周易·说卦》：'数往者顺，知来者逆。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shuwang_zhilai
+  method: 数往知来
+  signature: fn shuwang_zhilai(extrapolate) -> history_based_forecast
+  precond: 有可信历史序列
+  postcond: 规律得提，预测有据
+  negative_space: ⊗ 机制已变则外推失效
+  steps:
+  - 集其往
+  - 提其律
+  - 验其机
+  - 推其来
+  nca_emit: true
+dispatch:
+  main_pipeline: shuwang_zhilai
+  trigger: 数往者顺，知来者逆；审数以往，可知所来。
+  when: 当须由历史序列预测未来、须先验机制连续性时触发
+  graph:
+  - from: shuwang_zhilai
+    to: []
+decision:
+- if: 需历史外推
+  call: shuwang_zhilai
+skills:
+- 数往知来·思维研判
+negative_space:
+- 机制更迭仍外推则谬
+- 无序列则无从数
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

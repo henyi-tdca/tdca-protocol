@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-75-20260828-75
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.451705'
+branch: 中国成语·认知与辩证·第75条(东施效颦)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第75条《东施效颦》
+  core: 可见的动作只是冰山一角——模仿者复制'动作'而不复制产生动作的约束与能力，反成其害；对标先拆机制、配齐约束，再谈移植。
+  verse: 西施病心而颦，其里之丑人见而美之，归亦捧心而颦，里人走避。
+  origin: 《庄子·天运》：西施病心而颦其里，其里之丑人见而美之，归亦捧心而颦其里；富者闭门不出，贫者挈妻子而去之走。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dongshi_xiaopin
+  method: 东施效颦
+  signature: fn dongshi_xiaopin(warn) -> mechanism_not_surface
+  precond: 表面移植
+  postcond: 拆机制，配约束，再移植
+  negative_space: ⊗ 效颦则反受其乱
+  steps:
+  - 见其形
+  - 拆其构
+  - 配己势
+  - 再取用
+  nca_emit: true
+dispatch:
+  main_pipeline: dongshi_xiaopin
+  trigger: 西施病心而颦，其里之丑人见而美之，归亦捧心而颦，里人走避。
+  when: 当直接照搬他者做法/产品/制度而未评估适配约束时触发(作警示)
+  graph:
+  - from: dongshi_xiaopin
+    to: []
+decision:
+- if: 需机制级移植
+  call: dongshi_xiaopin
+skills:
+- 东施效颦·思维研判
+negative_space:
+- 只复制表象则形似神非
+- 否定一切参照则闭目
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

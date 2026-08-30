@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-51-20260827-51
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.329865'
+branch: 中国成语·修身与治理·第51条(量入为出)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第51条《量入为出》
+  core: 以收入为度制定支出，支出不逾收入，是硬预算约束；在有限资源下先定可支边界再安排用度，防透支。须识'入'须真实可持续(非借债充入)，否则约束虚设。
+  verse: 量其入而制其出，无悖于财；入为主，出为从。
+  origin: 《礼记·王制》'量入以为出'：冢宰制国用，必于岁之杪，五谷皆入然后制国用。理财古训。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: liangru_weichu
+  method: 量入为出
+  signature: fn liangru_weichu(bound) -> hard_budget
+  precond: 出逾入
+  postcond: 入为度，出不悖
+  negative_space: ⊗ 透支则危
+  steps:
+  - 核入
+  - 定界
+  - 制出
+  - 守衡
+  nca_emit: true
+dispatch:
+  main_pipeline: liangru_weichu
+  trigger: 量其入而制其出，无悖于财；入为主，出为从。
+  when: 当支出易超收入、须设硬预算约束时触发
+  graph:
+  - from: liangru_weichu
+    to: []
+decision:
+- if: 需预算边界
+  call: liangru_weichu
+skills:
+- 量入为出·思维研判
+negative_space:
+- 透支则危
+- 虚入则约束空
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

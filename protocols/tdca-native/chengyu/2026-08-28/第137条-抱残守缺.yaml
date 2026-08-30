@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-137-20260828-137
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.665679'
+branch: 中国成语·认知与辩证·第137条(抱残守缺)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第137条《抱残守缺》
+  core: 存量保护过度警示——为既有投入（沉没）护短而拒绝更优新轨；残缺资产须按未来现金流重估，而非按历史投入。与温故知新/推陈出新成对。
+  verse: 抱其残器，守其缺位；习非成是，新轨不入。
+  origin: 《汉书·刘歆传》：'犹欲抱残守缺，挟恐见破之私意。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: baocan_shouque
+  method: 抱残守缺
+  signature: fn baocan_shouque(warn) -> legacy_revalued
+  precond: 旧资产价值衰减且新轨已现
+  postcond: 重估公允，迁移有序
+  negative_space: ⊗ 守缺拒新则落伍
+  steps:
+  - 重估其残
+  - 辨其缺
+  - 开其新
+  - 渐其迁
+  nca_emit: true
+dispatch:
+  main_pipeline: baocan_shouque
+  trigger: 抱其残器，守其缺位；习非成是，新轨不入。
+  when: 当存量资产以历史投入而非未来价值被辩护时触发(作警示)
+  graph:
+  - from: baocan_shouque
+    to: []
+decision:
+- if: 需存量重估
+  call: baocan_shouque
+skills:
+- 抱残守缺·思维研判
+negative_space:
+- 无凭弃旧则折损过当
+- 守缺拒新则落伍
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-59-20260827-59
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.415065'
+branch: 中国成语·修身与治理·第59条(釜底抽薪)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第59条《釜底抽薪》
+  core: 从锅底抽掉柴薪，沸水自止，是攻其要害/去其根本；机制设计在此=识别维持问题的'底层激励/资源'(薪)，移除之则表象(沸)自消，优于扬汤止沸(表层治理)。与'曲突徙薪'互补：一在灾前改结构、一在事中抽根本。
+  verse: 薪在釜底，抽之则沸止；不治其汤，而绝其源。
+  origin: 《三十六计》/ 北齐·魏收'抽薪止沸'：'欲汤之凊，一人炊之，百人扬之，无益也；不如绝薪止火而已。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fudi_chouxin
+  method: 釜底抽薪
+  signature: fn fudi_chouxin(root_out) -> root_cause_gone
+  precond: 治表不息
+  postcond: 抽其薪，沸自止
+  negative_space: ⊗ 扬汤则劳
+  steps:
+  - 识其薪
+  - 抽根本
+  - 绝来源
+  - 沸乃止
+  nca_emit: true
+dispatch:
+  main_pipeline: fudi_chouxin
+  trigger: 薪在釜底，抽之则沸止；不治其汤，而绝其源。
+  when: 当表层治理无效、宜去根本激励时触发
+  graph:
+  - from: fudi_chouxin
+    to: []
+decision:
+- if: 需攻其要害
+  call: fudi_chouxin
+skills:
+- 釜底抽薪·思维研判
+negative_space:
+- 扬汤止沸则劳
+- 抽非其薪则无效
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

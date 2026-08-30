@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-130-20260828-130
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.618436'
+branch: 中国成语·战略与决断·第130条(反间计)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第130条《反间计》
+  core: 信息通道的攻防——利用或策反对方的信息源反向供给，使其判断建立在被污染的证据链上；双向怀疑同时消耗对方的信息信任。
+  verse: 疑中之疑，间中之间；因其间而间之，其计乃成。
+  origin: 《孙子·用间》：'反间者，因其敌间而用之'；三十六计·败战计第三十三计承其说。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fanjianji
+  method: 反间计
+  signature: fn fanjianji(counterint) -> evidence_chain_polluted
+  precond: 对方依赖可识别信息源
+  postcond: 证据链污染，判断失真
+  negative_space: ⊗ 反间无饵则反暴露
+  steps:
+  - 识其间
+  - 因其间
+  - 饵其人
+  - 反其用
+  nca_emit: true
+dispatch:
+  main_pipeline: fanjianji
+  trigger: 疑中之疑，间中之间；因其间而间之，其计乃成。
+  when: 当对方决策依赖外部信息源、宜反向供给时触发
+  graph:
+  - from: fanjianji
+    to: []
+decision:
+- if: 需信息源攻防
+  call: fanjianji
+skills:
+- 反间计·思维研判
+negative_space:
+- 饵不可信则暴露自身
+- 违伦理之间不用
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

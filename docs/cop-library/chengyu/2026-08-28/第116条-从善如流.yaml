@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-116-20260828-116
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.494597'
+branch: 中国成语·修身与治理·第116条(从善如流)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第116条《从善如流》
+  core: 反馈吸收的摩擦最小化——有效反馈到达后即刻采纳执行，不因提出者身份或情绪成本而延迟；吸收速度是组织学习率的直接度量。
+  verse: 善言既至，行之如水；不俟终日，不改其道。
+  origin: 《左传·成公八年》：晋栾书从知庄子等三卿之言而有郊之战，君子曰'从善如流，宜哉！'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: congshan_ruliu
+  method: 从善如流
+  signature: fn congshan_ruliu(absorb) -> learning_rate_maximized
+  precond: 收到有效反馈
+  postcond: 速纳速行，学习率升
+  negative_space: ⊗ 择人纳言则失善
+  steps:
+  - 闻其善
+  - 辨其真
+  - 行其速
+  - 述其果
+  nca_emit: true
+dispatch:
+  main_pipeline: congshan_ruliu
+  trigger: 善言既至，行之如水；不俟终日，不改其道。
+  when: 当有效反馈到达、须消除吸收摩擦时触发
+  graph:
+  - from: congshan_ruliu
+    to: []
+decision:
+- if: 需反馈吸收提速
+  call: congshan_ruliu
+skills:
+- 从善如流·思维研判
+negative_space:
+- 以人废言则失善
+- 盲从则失主权
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

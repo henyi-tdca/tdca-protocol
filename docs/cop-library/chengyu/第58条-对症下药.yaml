@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-58-20260827-58
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.405070'
+branch: 中国成语·认知与辩证·第58条(对症下药)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第58条《对症下药》
+  core: 先明病症再投对症之药，是精准干预/具体问题具体分析；以'实事求是'之'究其是'定方，不套成方(反对刻舟求剑之拘法)。须先诊断后施治，否则药不对症反伤。
+  verse: 症既明，药乃对；不泥成方，随证而投。
+  origin: 《三国志·华佗传》：佗疗疾，'对症下药'，同一病不同人因虚实异而方异。后泛指依具体症结施策。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: duizheng_xiyao
+  method: 对症下药
+  signature: fn duizheng_xiyao(target) -> precise_intervene
+  precond: 症未明
+  postcond: 明症结，药乃对
+  negative_space: ⊗ 套成方则误
+  steps:
+  - 诊其症
+  - 究其因
+  - 定其方
+  - 投对症
+  nca_emit: true
+dispatch:
+  main_pipeline: duizheng_xiyao
+  trigger: 症既明，药乃对；不泥成方，随证而投。
+  when: 当问题具具体症结、宜精准施策不宜套方时触发
+  graph:
+  - from: duizheng_xiyao
+    to: []
+decision:
+- if: 需精准干预
+  call: duizheng_xiyao
+skills:
+- 对症下药·思维研判
+negative_space:
+- 套成方不对症则误
+- 昧症则药反伤
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

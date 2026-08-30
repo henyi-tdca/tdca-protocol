@@ -1,0 +1,47 @@
+COP-ID: HS-FA-01-20260815-01
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.496021'
+branch: 诸子百家·法家·第01条(法)
+stratum: 诸子百家·法家·法度三器
+soul:
+  identity: 法家·第01条《法》
+  core: 法明令一、壹赏壹刑；以公开之法为治本，立可预期之秩序。
+  verse: 壹赏壹刑壹教，明法而治。法令者，民之命也，为治之本也。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 法度三器
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fa_du
+  method: 法
+  signature: fn fa_du(rule) -> clear_law
+  precond: 法乱、赏刑私
+  postcond: 明法而治，民知所从
+  negative_space: ⊗ 法私则乱
+  steps:
+  - 立壹法
+  - 壹赏刑
+  - 明示
+  - 民从
+  nca_emit: true
+dispatch:
+  main_pipeline: fa_du
+  trigger: 壹赏壹刑壹教，明法而治。法令者，民之命也，为治之本也。
+  when: 当宜立法公开一律、不宜任私时触发
+  graph:
+  - from: fa_du
+    to: []
+decision:
+- if: 需立法度
+  call: fa_du
+skills:
+- 法·顺势研判
+negative_space:
+- 法不公开则民惑
+- 刑赏私则乖
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

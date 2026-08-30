@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH46-20260815-46
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.652150'
+branch: 诸子百家·道家·道德经·第46章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第46章《天下有道》
+  core: 知足则常足，祸在不知足；以知足止欲。
+  verse: 祸莫大于不知足，咎莫大于欲得。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_xia_you_dao
+  method: 天下有道
+  signature: fn tian_xia_you_dao(desire) -> quiet_content
+  precond: 欲得不止、生祸
+  postcond: 知足常足，却走马粪
+  negative_space: ⊗ 不知足则祸
+  steps:
+  - 观欲
+  - 知足
+  - 止得
+  - 常足
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_xia_you_dao
+  trigger: 祸莫大于不知足，咎莫大于欲得。
+  when: 当贪欲不止、宜知足时触发
+  graph:
+  - from: tian_xia_you_dao
+    to: []
+decision:
+- if: 需知足止祸
+  call: tian_xia_you_dao
+skills:
+- 天下有道·顺势研判
+negative_space:
+- 不知足则大祸
+- 欲得则咎
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

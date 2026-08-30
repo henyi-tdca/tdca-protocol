@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ02-20260815-02
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.798926'
+branch: 诸子百家·儒家·孟子·第02条(四端说)
+stratum: 诸子百家·儒家·孟子·性善本体
+soul:
+  identity: 孟子·第02条《四端说》
+  core: 性善具四端（恻隐/羞恶/辞让/是非），扩而充之即仁义礼智；以端为种、充为功。
+  verse: 恻隐之心，仁之端也；羞恶之心，义之端也；辞让之心，礼之端也；是非之心，智之端也。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 性善本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: si_duan_shuo
+  method: 四端说
+  signature: fn si_duan_shuo(heart) -> four_sprouts
+  precond: 端蔽、充之不力
+  postcond: 四端充为仁义礼智
+  negative_space: ⊗ 自贼则其端涸
+  steps:
+  - 识四端
+  - 知端为种
+  - 扩充
+  - 成德
+  nca_emit: true
+dispatch:
+  main_pipeline: si_duan_shuo
+  trigger: 恻隐之心，仁之端也；羞恶之心，义之端也；辞让之心，礼之端也；是非之心，智之端也。
+  when: 当见人微善、宜扩其端时触发
+  graph:
+  - from: si_duan_shuo
+    to: []
+decision:
+- if: 需扩四端
+  call: si_duan_shuo
+skills:
+- 四端说·顺势研判
+negative_space:
+- 自谓不能则自贼
+- 端萌而抑则枯
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

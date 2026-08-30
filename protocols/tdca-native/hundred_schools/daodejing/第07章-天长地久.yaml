@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH07-20260815-07
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.218165'
+branch: 诸子百家·道家·道德经·第07章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第07章《天长地久》
+  core: 无私乃成其私；以退身/外身成就长远。
+  verse: 圣人后其身而身先，外其身而身存。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_chang_di_jiu
+  method: 天长地久
+  signature: fn tian_chang_di_jiu(ego) -> lasting_self
+  precond: 主体急功近利、争先而损长远
+  postcond: 后身外身，反得其长久
+  negative_space: ⊗ 争先则蹶
+  steps:
+  - 后其身
+  - 外其身
+  - 非私成私
+  - 长久
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_chang_di_jiu
+  trigger: 圣人后其身而身先，外其身而身存。
+  when: 当因争先/自私反损自身长远利益时触发
+  graph:
+  - from: tian_chang_di_jiu
+    to: []
+decision:
+- if: 需以无私成就长远
+  call: tian_chang_di_jiu
+skills:
+- 天长地久·顺势研判
+negative_space:
+- 争先则蹶
+- 私利熏心则失久
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
