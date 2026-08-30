@@ -14,7 +14,7 @@
 6. **P6 F1.5 NSFL 否决权**：NSFL 预检未过即整体拒绝（Fail-Closed），优先级恒高于其他一切判据——负空间是安全宪法的宪法，不可推翻、不可配置关闭。
 7. **P7 F1.5b 四态动态处置**：否决权的不可推翻性仅指即时门控裁决，不指永恒身份；触犯负空间按四态处置——休眠/禁止/重塑/出清，裁定存证，禁悬置；负空间版本更新时休眠/重塑态强制重评。
 
-## 二、结构（13 家族 + 核心基协议）
+## 二、结构（14 家族 + 核心基协议）
 
 ```
 protocols/tdca-native/
@@ -30,6 +30,7 @@ protocols/tdca-native/
 ├── marxism/            # 马克思主义（15 原生 + 1 旗舰化合）
 ├── engineering-three/  # 工程三协议（25 原生 + 16 化合）
 ├── emissary/           # 特使（1，标准 COP 版）
+├── coldstart/          # 冷启动（1，community 子家族）
 ├── compositions/       # 跨库化合（39 化合）
 └── 麦肯锡思维协议.yaml  # 西方/通用范式（1，根目录）
 ```
@@ -44,10 +45,10 @@ protocols/tdca-native/
 - 协议引用：按 家族/路径 + 文件名（如 `protocols/tdca-native/chengyu/…yaml`），并在引用方注明版本锚（见 VERSION.md 正典锚）。
 - 合规要点：化合协议不得脱离 `composition_policy` 单独使用（P1）；TDCA 体系内使用须保持 `base_protocol=TDCA-CORE` 绑定（P2）；NSFL 否决权不可配置关闭（P6）。
 
-## 五、暂不纳入（如实标注）
+## 五、deferral 收尾（2026-08-30 全清，GSEQ-0761）
 
-- **simulations 家族**：口径待裁定（模拟件归属），暂不纳入本库；社区 cop-library 旧版保留并同标注。
-- **coldstart 围栏件**（1 件，YAML 解析失败）：归口修复后补入。
+- **simulations 家族**：已裁定（TDCA-RULING-20260830-001）——验证证据层 experiment artifacts，不入本库 canonical；社区 cop-library 保留并同标注。
+- **coldstart 围栏件**（1 件）：已修复补入——剥离 Markdown 围栏 2 行（其余 25 行零改动），解析通过后补入 `coldstart/community/`。
 - **emissary 旧版**（谈判者-特使-001.yaml，结构异常）：已由标准 COP 版（谈判者-特使-001-COP.yaml）替代，旧版不收录。
 
-*审查链：TDCA-REVIEW-OPINION-001/002/003 ｜ 修订批次 NCA-TDCA-REASONIX-20260830-007~012 ｜ 建库批次 GSEQ-0759*
+*审查链：TDCA-REVIEW-OPINION-001/002/003 ｜ 修订批次 NCA-TDCA-REASONIX-20260830-007~012 ｜ 建库批次 GSEQ-0759 ｜ 收尾批次 GSEQ-0761*
