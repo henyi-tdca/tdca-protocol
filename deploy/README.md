@@ -43,3 +43,14 @@ cd /root/tdca && bash deploy/install.sh
 ```bash
 rm -f /etc/ssh/sshd_config.d/00-tdca.conf; usermod -p '*' root; systemctl restart ssh; echo HARDENED
 ```
+
+## REG 增量部署前检查单（逐条打钩后才执行；GSEQ-0709 P3 教训入证）
+
+1. **md5 对拍**：凡下载/替换的文件，与仓内 git LF 口径一致——`git show main:<path> | md5sum` 为基准
+2. **镜像依赖完整性**（P3 教训：裸装 `uvicorn` 缺 `websockets` → WS 升级静默降级 HTTP → SPA 兜底 200，仅运行时 WARNING 可察）：
+   - 凡新增/变更 `RUN pip install` 行，核对运行期所需 extras（如 `uvicorn[standard]` 含 websockets）
+   - build 后必查：`docker compose exec gateway python -c "import websockets; print('WS_LIB_OK')"`
+3. **WS 握手探针**（凡动 gateway / nginx 后）：带真 Upgrade 头请求 `/ws/events?channel=notifier`，期望 **403**（fail-closed 无 token 拒入）；得 200 + HTML 即落回 SPA 兜底，**不过**
+4. **门户/静态目录替换后必 `docker compose restart nginx`**（目录替换致挂载失效 404 教训）
+5. **gateway 容器重建必带 db 保拷回植 + create_all**（db 在容器内、非卷挂载，重建即回种子态）：保拷 → 重建 → 回植 → `restart` → `exec gateway python -c "from db import get_engine, Base; import db.models; Base.metadata.create_all(get_engine())"`
+6. **部署后回归**：portal 200 ／ `assets/five-orders` 200（种子库在位）／ `auth/me` 401（鉴权不回退）
