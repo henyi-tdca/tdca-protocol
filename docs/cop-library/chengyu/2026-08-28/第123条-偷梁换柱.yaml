@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-123-20260828-123
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.570505'
+branch: 中国成语·战略与决断·第123条(偷梁换柱)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第123条《偷梁换柱》
+  core: 结构性替换——暗中更换系统的承重要素（梁柱）而保留外观，使系统在未察觉中失去支撑；形不变而关键变量已换。
+  verse: 频更其阵，抽其劲旅；梁柱暗换，其阵自溃。
+  origin: 三十六计·混战计第二十五计：'频更其阵，抽其劲旅，待其自败，而后乘之。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: touliang_huanzhu
+  method: 偷梁换柱
+  signature: fn touliang_huanzhu(substitute) -> core_swapped
+  precond: 系统承重要素可替换且外观可维持
+  postcond: 形同实异，支撑已换
+  negative_space: ⊗ 换而失样则惊觉
+  steps:
+  - 辨其梁
+  - 记其样
+  - 暗其换
+  - 观其溃
+  nca_emit: true
+dispatch:
+  main_pipeline: touliang_huanzhu
+  trigger: 频更其阵，抽其劲旅；梁柱暗换，其阵自溃。
+  when: 当需在不触发警觉下替换系统承重要素时触发
+  graph:
+  - from: touliang_huanzhu
+    to: []
+decision:
+- if: 需结构性替换
+  call: touliang_huanzhu
+skills:
+- 偷梁换柱·思维研判
+negative_space:
+- 换样露形则前功尽弃
+- 误换非梁柱则无伤大局
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

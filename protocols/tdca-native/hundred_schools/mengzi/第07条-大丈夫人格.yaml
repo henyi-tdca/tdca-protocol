@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ07-20260815-07
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.848187'
+branch: 诸子百家·儒家·孟子·第07条(大丈夫人格)
+stratum: 诸子百家·儒家·孟子·养气工夫
+soul:
+  identity: 孟子·第07条《大丈夫人格》
+  core: 大丈夫立乎其大、不为境迁；以志帅气、守道不屈，成独立人格。
+  verse: 富贵不能淫，贫贱不能移，威武不能屈，此之谓大丈夫。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 养气工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: da_zhang_fu
+  method: 大丈夫人格
+  signature: fn da_zhang_fu(self) -> great_man
+  precond: 随境迁、志移
+  postcond: 立乎其大，不屈
+  negative_space: ⊗ 移屈则失大
+  steps:
+  - 立其大
+  - 守道
+  - 不淫移屈
+  - 成丈夫
+  nca_emit: true
+dispatch:
+  main_pipeline: da_zhang_fu
+  trigger: 富贵不能淫，贫贱不能移，威武不能屈，此之谓大丈夫。
+  when: 当宜守节不屈、不宜徇势时触发
+  graph:
+  - from: da_zhang_fu
+    to: []
+decision:
+- if: 需立大丈夫人格
+  call: da_zhang_fu
+skills:
+- 大丈夫人格·顺势研判
+negative_space:
+- 徇势则贱
+- 志移则溃
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

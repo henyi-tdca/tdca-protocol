@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ06-20260815-06
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.838433'
+branch: 诸子百家·儒家·孟子·第06条(养气知言)
+stratum: 诸子百家·儒家·孟子·养气工夫
+soul:
+  identity: 孟子·第06条《养气知言》
+  core: 知言（诐/淫/邪/遁各知其蔽陷离穷）以养气相须；以明辨言辞偏蔽、正心养气。
+  verse: 我知言，我善养吾浩然之气。何谓知言？曰：诐辞知其所蔽……
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 养气工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yang_qi_zhi_yan
+  method: 养气知言
+  signature: fn yang_qi_zhi_yan(hear) -> discern_words
+  precond: 言辞眩、心随蔽
+  postcond: 知言正心，气自养
+  negative_space: ⊗ 徇辞则蔽
+  steps:
+  - 听辞
+  - 辨蔽陷
+  - 知离穷
+  - 正心
+  nca_emit: true
+dispatch:
+  main_pipeline: yang_qi_zhi_yan
+  trigger: 我知言，我善养吾浩然之气。何谓知言？曰：诐辞知其所蔽……
+  when: 当言辞纷杂、宜辨其偏蔽时触发
+  graph:
+  - from: yang_qi_zhi_yan
+    to: []
+decision:
+- if: 需知言辨蔽
+  call: yang_qi_zhi_yan
+skills:
+- 养气知言·顺势研判
+negative_space:
+- 徇辞则心随转
+- 不辨则陷
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

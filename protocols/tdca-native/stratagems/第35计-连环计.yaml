@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-35
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.422827'
+stratum: 败战计
+soul:
+  identity: 连环计
+  core: 多计勾连, 环环相扣
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 败战计
+primitives:
+- name: lian_huan_ji
+  method: 连环计
+  signature: 'fn lian_huan_ji(context: Situation) -> Outcome'
+  precond: 单计不足成事
+  postcond: 多计勾连, 环环相扣 (目标达成)
+  negative_space: ⊗ 一环破则连锁崩
+  steps:
+  - 设多计相生
+  - 一发动全
+  - 敌应接不暇
+  nca_emit: true
+dispatch:
+  main_pipeline: lian_huan_ji
+  graph:
+  - from: lian_huan_ji
+    to: []
+  note: 单计独立协议, 主原语 lian_huan_ji 即该计执行体
+decision:
+- if: 单计不足成事
+  call: lian_huan_ji
+skills: []
+negative_space:
+- ⊗ 一环破则连锁崩
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

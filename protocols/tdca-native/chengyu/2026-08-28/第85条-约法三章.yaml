@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-85-20260828-85
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.521491'
+branch: 中国成语·修身与治理·第85条(约法三章)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第85条《约法三章》
+  core: 制度冷启动的准入规则宜简而可信——三章胜于秦法繁苛；规则数量与执行率成反比，初期可信执行>完备覆盖，后续再渐进扩展。生态冷启动准入的古典原型。
+  verse: 与父老约，法三章耳：杀人者死，伤人及盗抵罪；秦人大喜。
+  origin: 《史记·高祖本纪》：刘邦入关，召诸县父老豪桀约法三章，秦人大喜，争持牛羊酒食献飨军士；唯恐沛公不为秦王。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yuefa_sanzhang
+  method: 约法三章
+  signature: fn yuefa_sanzhang(legislate) -> minimal_credible
+  precond: 新域初入/社区冷启动
+  postcond: 约简法行，众归之
+  negative_space: ⊗ 法繁则民惑
+  steps:
+  - 立三章
+  - 昭必行
+  - 收其信
+  - 渐其备
+  nca_emit: true
+dispatch:
+  main_pipeline: yuefa_sanzhang
+  trigger: 与父老约，法三章耳：杀人者死，伤人及盗抵罪；秦人大喜。
+  when: 当进入新领域/新社区须立初期规则、忌繁文苛法时触发
+  graph:
+  - from: yuefa_sanzhang
+    to: []
+decision:
+- if: 需最小规则集
+  call: yuefa_sanzhang
+skills:
+- 约法三章·思维研判
+negative_space:
+- 以简代完备则欠覆盖
+- 法繁不行则失信
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

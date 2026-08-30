@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-86-20260828-86
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.528062'
+branch: 中国成语·修身与治理·第86条(休养生息)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第86条《休养生息》
+  core: 资源(人/组织/生态)有恢复周期，连年征战式运营把恢复时间清零即入不可持续；懂得暂停的系统才走得远——降负荷是战略动作而非懈怠。
+  verse: 扫除烦苛，与民休息；文景之治，海内殷富。
+  origin: 《汉书·文帝纪赞》/景帝纪赞：汉兴，扫除烦苛，与民休息；文景之世，五谷丰熟，海内殷富——黄老之政'休养生息'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xiusheng_shengxi
+  method: 休养生息
+  signature: fn xiusheng_shengxi(restore) -> capacity_recovered
+  precond: 连续透支
+  postcond: 息而后富，蓄而后发
+  negative_space: ⊗ 战连祸结则竭
+  steps:
+  - 识透支
+  - 降负荷
+  - 养元气
+  - 蓄再发
+  nca_emit: true
+dispatch:
+  main_pipeline: xiusheng_shengxi
+  trigger: 扫除烦苛，与民休息；文景之治，海内殷富。
+  when: 当系统连续高压透支、须安排恢复周期时触发
+  graph:
+  - from: xiusheng_shengxi
+    to: []
+decision:
+- if: 需恢复周期
+  call: xiusheng_shengxi
+skills:
+- 休养生息·思维研判
+negative_space:
+- 息而不复则废
+- 久休失战则退
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

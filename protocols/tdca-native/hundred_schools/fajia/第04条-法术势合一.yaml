@@ -1,0 +1,48 @@
+COP-ID: HS-FA-04-20260815-04
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.532277'
+branch: 诸子百家·法家·第04条(法术势合一)
+stratum: 诸子百家·法家·法度三器
+soul:
+  identity: 法家·第04条《法术势合一》
+  core: 法术势相参、三位一体；以法立公开、术御暗、势设威，立君道全功。
+  verse: 君执柄以处势，故令行禁止；法者，宪令著于官府；术者，藏之于胸中以偶众端。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 法度三器
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fa_shu_shi_he_yi
+  method: 法术势合一
+  signature: fn fa_shu_shi_he_yi(govern) -> trinity
+  precond: 偏一器、不全
+  postcond: 法术势合，治成
+  negative_space: ⊗ 偏则失
+  steps:
+  - 立法
+  - 用术
+  - 乘势
+  - 相参
+  nca_emit: true
+dispatch:
+  main_pipeline: fa_shu_shi_he_yi
+  trigger: 君执柄以处势，故令行禁止；法者，宪令著于官府；术者，藏之于胸中以偶众端。
+  when: 当宜三器并用、不宜偏废时触发
+  graph:
+  - from: fa_shu_shi_he_yi
+    to: []
+decision:
+- if: 需法术势合一
+  call: fa_shu_shi_he_yi
+skills:
+- 法术势合一·顺势研判
+negative_space:
+- 专任法则下欺
+- 专任术则危
+- 专任势则暴
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

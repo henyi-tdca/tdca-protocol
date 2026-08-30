@@ -1,0 +1,47 @@
+COP-ID: MICRO-07-20260825-07
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.207797'
+branch: 现代经济学·微观经济学·第07条(垄断)
+stratum: 现代经济学·微观经济学·厂商与结构
+soul:
+  identity: 微观经济学·第07条《垄断》
+  core: 垄断者面对向下需求曲线，按 MR=MC 限产抬价，造成无谓损失；自然垄断与专利壁垒需规制或公有化。
+  verse: 市惟一贾，无相近之代，则价由己出，产常啬于竞争。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 厂商与结构
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: monopoly
+  method: 垄断
+  signature: fn monopoly(restrict) -> deadweight_loss
+  precond: 以竞争套垄断
+  postcond: 限产抬价，损生
+  negative_space: ⊗ 以竞争模型套垄断则谬
+  steps:
+  - 认需求
+  - 求MR
+  - 定MR=MC
+  - 量损
+  nca_emit: true
+dispatch:
+  main_pipeline: monopoly
+  trigger: 市惟一贾，无相近之代，则价由己出，产常啬于竞争。
+  when: 当分析提价限产、自然垄断规制、专利时长时触发
+  graph:
+  - from: monopoly
+    to: []
+decision:
+- if: 需垄断分析
+  call: monopoly
+skills:
+- 垄断·均衡研判
+negative_space:
+- 以竞争模型套垄断则谬
+- 忽视规制则害
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

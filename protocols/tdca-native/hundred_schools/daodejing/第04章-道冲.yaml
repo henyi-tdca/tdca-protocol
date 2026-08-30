@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH04-20260815-04
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.188523'
+branch: 诸子百家·道家·道德经·第04章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第04章《道冲》
+  core: 道体虚而不满，用之中庸不竭；以虚受纳万有。
+  verse: 道冲而用之或不盈。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dao_chong
+  method: 道冲
+  signature: fn dao_chong(capacity) -> open_capacity
+  precond: 系统/心智容量有限、易满溢
+  postcond: 守虚不盈，持续受纳不竭
+  negative_space: ⊗ 盈则溢
+  steps:
+  - 守虚
+  - 不盈
+  - 受纳
+  - 用不竭
+  nca_emit: true
+dispatch:
+  main_pipeline: dao_chong
+  trigger: 道冲而用之或不盈。
+  when: 当系统因自满/过载而失受纳力时触发
+  graph:
+  - from: dao_chong
+    to: []
+decision:
+- if: 需保持开放受纳容量
+  call: dao_chong
+skills:
+- 道冲·顺势研判
+negative_space:
+- 盈满则溢
+- 充实则拒新
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

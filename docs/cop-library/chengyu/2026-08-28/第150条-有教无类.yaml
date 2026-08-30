@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-150-20260828-150
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.761349'
+branch: 中国成语·修身与治理·第150条(有教无类)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第150条《有教无类》
+  core: 准入包容性治理——教育/协作准入不以出身类别设限，扩大参与者基础以提升涌现上限；与约法三章成对（彼规则简可信，此准入宽包容）。宽而有规。
+  verse: 自行束脩以上，吾未尝无诲焉；教之所至，类之所泯。
+  origin: 《论语·卫灵公》'有教无类'；《史记·仲尼弟子列传》'自行束脩以上，吾未尝无诲焉'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: youjiao_wulei
+  method: 有教无类
+  signature: fn youjiao_wulei(admit) -> inclusive_access_opened
+  precond: 准入含类别偏见
+  postcond: 门开类泯，基盘扩大
+  negative_space: ⊗ 无规则之门则失序
+  steps:
+  - 去其类
+  - 开其门
+  - 立其规
+  - 育其成
+  nca_emit: true
+dispatch:
+  main_pipeline: youjiao_wulei
+  trigger: 自行束脩以上，吾未尝无诲焉；教之所至，类之所泯。
+  when: 当准入存在类别偏见、宜扩大参与基盘时触发
+  graph:
+  - from: youjiao_wulei
+    to: []
+decision:
+- if: 需准入包容性
+  call: youjiao_wulei
+skills:
+- 有教无类·思维研判
+negative_space:
+- 无规则开放则失序
+- 有教无类非无门槛
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-02-20260827-02
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.794089'
+branch: 中国成语·战略与决断·第02条(负荆请罪)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第02条《负荆请罪》
+  core: 当内部地位/功劳之争危及整体目标时，主动承认错误、让渡面子是修复协作的最低成本路径；以'肯认错'换取联盟可信度，是 MOU 正和协作的古典注脚。
+  verse: 位高而退，功盛而屈，负荆一至，将相乃和。
+  origin: 《史记·廉颇蔺相如列传》：廉颇妒蔺相如位在己上，蔺相如回避退让以国为重；廉颇悟，肉袒负荆至蔺门请罪，卒为刎颈之交。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fujing_qingzui
+  method: 负荆请罪
+  signature: fn fujing_qingzui(reconcile) -> alliance_restored
+  precond: 内斗危及整体
+  postcond: 让面子，复协作
+  negative_space: ⊗ 护短则裂
+  steps:
+  - 识整体
+  - 认己过
+  - 让面子
+  - 复联盟
+  nca_emit: true
+dispatch:
+  main_pipeline: fujing_qingzui
+  trigger: 位高而退，功盛而屈，负荆一至，将相乃和。
+  when: 当团队/联盟内部因功劳地位生隙、需修复协作时触发
+  graph:
+  - from: fujing_qingzui
+    to: []
+decision:
+- if: 需协作修复
+  call: fujing_qingzui
+skills:
+- 负荆请罪·思维研判
+negative_space:
+- 死护面子则联盟裂
+- 诿过则信任崩
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

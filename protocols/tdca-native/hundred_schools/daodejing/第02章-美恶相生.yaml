@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH02-20260815-02
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.171563'
+branch: 诸子百家·道家·道德经·第02章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第02章《美恶相生》
+  core: 美恶善恶相对而生，执着一端则蔽；以相对观破二元执。
+  verse: 天下皆知美之为美，斯恶已。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: mei_e_xiang_sheng
+  method: 美恶相生
+  signature: fn mei_e_xiang_sheng(judgment) -> relative_view
+  precond: 已对事物作美/恶、善/不善之二元判定
+  postcond: 见对立面依存转化，破单一价值执
+  negative_space: ⊗ 偏执一端则盲
+  steps:
+  - 立对待
+  - 观依存
+  - 见转化
+  - 破执
+  nca_emit: true
+dispatch:
+  main_pipeline: mei_e_xiang_sheng
+  trigger: 天下皆知美之为美，斯恶已。
+  when: 当决策基于绝对善恶/美丑判断、忽视相对性时触发
+  graph:
+  - from: mei_e_xiang_sheng
+    to: []
+decision:
+- if: 需破除二元价值执
+  call: mei_e_xiang_sheng
+skills:
+- 美恶相生·顺势研判
+negative_space:
+- 以绝对善恶评判则失全观
+- 执美恶一端则蔽
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

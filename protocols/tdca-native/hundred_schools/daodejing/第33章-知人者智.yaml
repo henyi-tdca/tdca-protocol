@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH33-20260815-33
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.504485'
+branch: 诸子百家·道家·道德经·第33章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第33章《知人者智》
+  core: 自知胜知人，自胜胜强力；以向内成真强。
+  verse: 知人者智，自知者明；死而不亡者寿。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_ren_zhe_zhi
+  method: 知人者智
+  signature: fn zhi_ren_zhe_zhi(self) -> true_strength
+  precond: 知人不知己、胜人不胜己
+  postcond: 自知自胜，死而不亡
+  negative_space: ⊗ 外求则弱
+  steps:
+  - 知人
+  - 自知
+  - 胜己
+  - 长久
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_ren_zhe_zhi
+  trigger: 知人者智，自知者明；死而不亡者寿。
+  when: 当优于知人弱于自知、需向内时触发
+  graph:
+  - from: zhi_ren_zhe_zhi
+    to: []
+decision:
+- if: 需自知自胜
+  call: zhi_ren_zhe_zhi
+skills:
+- 知人者智·顺势研判
+negative_space:
+- 知人不知己则盲
+- 胜人不胜己则虚
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-121-20260828-121
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.553488'
+branch: 中国成语·战略与决断·第121条(上屋抽梯)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第121条《上屋抽梯》
+  core: 诱入便利通道后撤除其退路与援应，使对方陷入进退失据；与背水一战同构（彼自构不可退约束，此为对方构造约束）——选择的关闭即承诺的强制。
+  verse: 假之以便，唆之使前；断其援应，陷之失据。
+  origin: 三十六计·并战计第二十八计：'假之以便，唂而诱之'；刘琦登楼抽梯求教于诸葛亮为通行典。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shangwu_chouti
+  method: 上屋抽梯
+  signature: fn shangwu_chouti(close) -> options_closed
+  precond: 对方据守而意愿被诱
+  postcond: 梯撤而局定
+  negative_space: ⊗ 撤梯不严则反噬
+  steps:
+  - 设其便
+  - 诱其入
+  - 撤其梯
+  - 图其困
+  nca_emit: true
+dispatch:
+  main_pipeline: shangwu_chouti
+  trigger: 假之以便，唆之使前；断其援应，陷之失据。
+  when: 当需关闭对方选择空间、构造受控困局时触发
+  graph:
+  - from: shangwu_chouti
+    to: []
+decision:
+- if: 需选择关闭式困局
+  call: shangwu_chouti
+skills:
+- 上屋抽梯·思维研判
+negative_space:
+- 撤梯不彻底则纵脱
+- 无后续手段则困而不解
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-96-20260828-96
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.360699'
+branch: 中国成语·战略与决断·第96条(苦肉计)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第96条《苦肉计》
+  core: 以真实可验证的自损成本发出可信信号（代价信号），使观测方降低戒备；自损是真、其意为诈——信号可信度来自代价不可伪造。
+  verse: 非假痛也，真损其身；皮肉之信，疑乃可消。
+  origin: 三十六计·败战计第三十四计；周瑜打黄盖'一个愿打一个愿挨'为通行注脚。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: kurouji
+  method: 苦肉计
+  signature: fn kurouji(signal) -> costly_credible_signal
+  precond: 对方戒备须以不可伪造的代价破除
+  postcond: 代价为证，戒备乃解
+  negative_space: ⊗ 假损被识则全输
+  steps:
+  - 定其信
+  - 施其损
+  - 传其证
+  - 收其效
+  nca_emit: true
+dispatch:
+  main_pipeline: kurouji
+  trigger: 非假痛也，真损其身；皮肉之信，疑乃可消。
+  when: 当常规承诺不可信、须以真实代价建立信号时触发
+  graph:
+  - from: kurouji
+    to: []
+decision:
+- if: 需代价信号
+  call: kurouji
+skills:
+- 苦肉计·思维研判
+negative_space:
+- 损而无证则白痛
+- 自损被识别则反促对抗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

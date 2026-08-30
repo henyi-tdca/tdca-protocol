@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-43-20260827-43
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.255476'
+branch: 中国成语·认知与辩证·第43条(相反相成)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第43条《相反相成》
+  core: 对立双方既互相排斥又互相依存，在斗争中发展、在同中共存；同一性斗争性结合——以相对的同一求共存、绝对的斗争求发展，故相反而相成(非只同或只斗)。
+  verse: 相反者相成，相成者相反；同中有斗，斗中有同。
+  origin: 《汉书·艺文志》'相反而皆相成也'；亦本矛盾论'同一性斗争性'。如礼与法、文与武、和与战相反相成。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xiangfan_xiangcheng
+  method: 相反相成
+  signature: fn xiangfan_xiangcheng(relate) -> identity_struggle
+  precond: 只同或只斗
+  postcond: 相反相成
+  negative_space: ⊗ 只同则腐
+  steps:
+  - 识同
+  - 识斗
+  - 看条件
+  - 相反相成
+  nca_emit: true
+dispatch:
+  main_pipeline: xiangfan_xiangcheng
+  trigger: 相反者相成，相成者相反；同中有斗，斗中有同。
+  when: 当处理对立关系、宜相反相成时触发
+  graph:
+  - from: xiangfan_xiangcheng
+    to: []
+decision:
+- if: 需同一性与斗争性
+  call: xiangfan_xiangcheng
+skills:
+- 相反相成·思维研判
+negative_space:
+- 只同则合流
+- 只斗则破裂
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

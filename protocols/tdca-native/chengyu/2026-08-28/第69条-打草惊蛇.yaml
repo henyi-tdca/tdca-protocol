@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-69-20260828-69
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.407480'
+branch: 中国成语·战略与决断·第69条(打草惊蛇)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第69条《打草惊蛇》
+  core: 侦查与行动共享信道——观察即暴露；任何对目标的探测都可能改变目标行为(观察者效应)。动作设计须先问'此动作泄露什么'，再定信道与时机。
+  verse: 汝虽打草，吾已惊蛇。
+  origin: 宋·郑文宝《南唐近事》：王鲁主簿受贿事发，鲁判状曰'汝虽打草，吾已惊蛇'。后指行动不慎，先惊动对方。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dacao_jingshe
+  method: 打草惊蛇
+  signature: fn dacao_jingshe(warn) -> exposure_checked
+  precond: 拟侦查/试探
+  postcond: 暴露度评估，静默得实
+  negative_space: ⊗ 草率则惊蛇
+  steps:
+  - 拟动作
+  - 估泄露
+  - 改信道
+  - 静默行
+  nca_emit: true
+dispatch:
+  main_pipeline: dacao_jingshe
+  trigger: 汝虽打草，吾已惊蛇。
+  when: 当需试探/侦查对手而动作本身可能惊动对方时触发(作警示)
+  graph:
+  - from: dacao_jingshe
+    to: []
+decision:
+- if: 需暴露度管控
+  call: dacao_jingshe
+skills:
+- 打草惊蛇·思维研判
+negative_space:
+- 试探即惊蛇则打草成锋
+- 因惧暴露则全盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

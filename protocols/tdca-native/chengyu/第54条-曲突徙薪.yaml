@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-54-20260827-54
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.361687'
+branch: 中国成语·修身与治理·第54条(曲突徙薪)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第54条《曲突徙薪》
+  core: 把直烟囱改弯、移开旁薪，使火患不萌，是风险前置/前端治理；在灾前消除致灾结构(突直薪近)，处置成本远低于灾后救(与防微杜渐同构但更具体：改结构而非仅禁于萌)。
+  verse: 突曲而薪徙，火患无萌；治于未燃，功在无形。
+  origin: 《汉书·霍光传》'曲突徙薪'：客见主人灶直突、傍有积薪，请'曲其突、远徙其薪'，不听从；后果火，人谓'曲突徙薪无恩泽，焦头烂额为上客'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qutu_xixin
+  method: 曲突徙薪
+  signature: fn qutu_xixin(preempt) -> structure_safe
+  precond: 结构致灾
+  postcond: 改结构，患不萌
+  negative_space: ⊗ 待燃则毁
+  steps:
+  - 识结构
+  - 曲其突
+  - 徙其薪
+  - 消患本
+  nca_emit: true
+dispatch:
+  main_pipeline: qutu_xixin
+  trigger: 突曲而薪徙，火患无萌；治于未燃，功在无形。
+  when: 当存在致灾结构、宜前端改造而非灾后救时触发
+  graph:
+  - from: qutu_xixin
+    to: []
+decision:
+- if: 需结构前置治理
+  call: qutu_xixin
+skills:
+- 曲突徙薪·思维研判
+negative_space:
+- 待燃则毁
+- 改表不改本则虚
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

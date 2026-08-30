@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH59-20260815-59
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.801692'
+branch: 诸子百家·道家·道德经·第59章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第59章《治人事天莫若啬》
+  core: 啬(收敛节流)为早服，重积德；以蓄力无不克。
+  verse: 治人事天莫若啬；重积德则无不克。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_ren_shi_tian_mo_ruo_se
+  method: 治人事天莫若啬
+  signature: fn zhi_ren_shi_tian_mo_ruo_se(manage) -> early_store
+  precond: 耗散无蓄、不克
+  postcond: 啬早服，重积德无不克
+  negative_space: ⊗ 耗则穷
+  steps:
+  - 啬
+  - 早服
+  - 积德
+  - 无不克
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_ren_shi_tian_mo_ruo_se
+  trigger: 治人事天莫若啬；重积德则无不克。
+  when: 当耗散无蓄、宜收敛积蓄时触发
+  graph:
+  - from: zhi_ren_shi_tian_mo_ruo_se
+    to: []
+decision:
+- if: 需啬以积德
+  call: zhi_ren_shi_tian_mo_ruo_se
+skills:
+- 治人事天莫若啬·顺势研判
+negative_space:
+- 耗散则穷
+- 不蓄则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

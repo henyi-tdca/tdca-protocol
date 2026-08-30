@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-27
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.258920'
+stratum: 并战计
+soul:
+  identity: 假痴不癫
+  core: 佯愚藏智, 免疑待机
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 并战计
+primitives:
+- name: jia_chi_bu_dian
+  method: 假痴不癫
+  signature: 'fn jia_chi_bu_dian(context: Situation) -> Outcome'
+  precond: 势弱需避嫌
+  postcond: 佯愚藏智, 免疑待机 (目标达成)
+  negative_space: ⊗ 痴过真则失机
+  steps:
+  - 示痴(无争)
+  - 内蓄其实
+  - 机至则发
+  nca_emit: true
+dispatch:
+  main_pipeline: jia_chi_bu_dian
+  graph:
+  - from: jia_chi_bu_dian
+    to: []
+  note: 单计独立协议, 主原语 jia_chi_bu_dian 即该计执行体
+decision:
+- if: 势弱需避嫌
+  call: jia_chi_bu_dian
+skills: []
+negative_space:
+- ⊗ 痴过真则失机
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

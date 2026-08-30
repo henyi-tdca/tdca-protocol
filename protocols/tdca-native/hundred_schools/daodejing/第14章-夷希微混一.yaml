@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH14-20260815-14
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.290978'
+branch: 诸子百家·道家·道德经·第14章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第14章《夷希微混一》
+  core: 夷希微混一不可名，以整体直觉把握不可分之本。
+  verse: 此三者不可致诘，故混而为一。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yi_xi_wei_hun_yi
+  method: 夷希微混一
+  signature: fn yi_xi_wei_hun_yi(whole) -> integral_grasp
+  precond: 对象不可分拆、名相失效
+  postcond: 混而为一，整体直觉把握
+  negative_space: ⊗ 强分则失
+  steps:
+  - 敛感官
+  - 混一
+  - 整体观
+  - 不可名
+  nca_emit: true
+dispatch:
+  main_pipeline: yi_xi_wei_hun_yi
+  trigger: 此三者不可致诘，故混而为一。
+  when: 当对象不可分拆、分析失效需整体把握时触发
+  graph:
+  - from: yi_xi_wei_hun_yi
+    to: []
+decision:
+- if: 需以整体直觉把握不可分者
+  call: yi_xi_wei_hun_yi
+skills:
+- 夷希微混一·顺势研判
+negative_space:
+- 强分拆则失真
+- 名相穷则惑
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

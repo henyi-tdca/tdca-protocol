@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-76-20260828-76
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.458195'
+branch: 中国成语·认知与辩证·第76条(疑邻盗斧)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第76条《疑邻盗斧》
+  core: 先验决定所见的'证据'——框架不换，再多观察也只产出确认；破偏误靠的是让证据可反向证伪己见，而非更多同类观察。
+  verse: 亡斧意邻之子，视其行步颜色言语，无为而不窃斧者；得斧后，视之无似窃斧者。
+  origin: 《列子·说符》：人有亡斧者，意其邻之子；视其行步、颜色、言语、动作态度，无为而不窃斧也。俄而抇其谷而得其斧，他日复见其邻之子，动作态度无似窃斧者。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yilin_daofu
+  method: 疑邻盗斧
+  signature: fn yilin_daofu(warn) -> bias_broken
+  precond: 先验定罪
+  postcond: 换框架，证伪可达
+  negative_space: ⊗ 疑则皆盗
+  steps:
+  - 察己先验
+  - 设证伪判据
+  - 寻反例
+  - 再归因
+  nca_emit: true
+dispatch:
+  main_pipeline: yilin_daofu
+  trigger: 亡斧意邻之子，视其行步颜色言语，无为而不窃斧者；得斧后，视之无似窃斧者。
+  when: 当结论先行、证据只被用来确认己见时触发(作警示)
+  graph:
+  - from: yilin_daofu
+    to: []
+decision:
+- if: 需证伪机制
+  call: yilin_daofu
+skills:
+- 疑邻盗斧·思维研判
+negative_space:
+- 只找支持证据则愈偏
+- 无先验亦无从判断则悬
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

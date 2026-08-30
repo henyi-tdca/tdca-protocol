@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ06-20260815-06
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.520894'
+branch: 诸子百家·兵家·孙子兵法·第06篇(虚实篇)
+stratum: 诸子百家·兵家·孙子兵法·形势势能
+soul:
+  identity: 孙子兵法·第06篇《虚实篇》
+  core: 避实击虚——出其所必趋、趋其所不意，形人而我无形；致人而不致于人，兵无常势、水无常形。
+  verse: 夫兵形象水，水之形避高而趋下，兵之形避实而击虚。故善战者，致人而不致于人。兵无常势，水无常形。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 形势势能
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bi_shi_ji_xu
+  method: 虚实篇
+  signature: fn bi_shi_ji_xu(maneuver) -> asymmetric_advantage
+  precond: 攻其实则损、形露则被动
+  postcond: 我专而敌分、以众击寡
+  negative_space: ⊗ 致于人则困
+  steps:
+  - 形人我无形
+  - 避实击虚
+  - 致人不致于人
+  - 兵无常形
+  nca_emit: true
+dispatch:
+  main_pipeline: bi_shi_ji_xu
+  trigger: 夫兵形象水，水之形避高而趋下，兵之形避实而击虚。故善战者，致人而不致于人。兵无常势，水无常形。
+  when: 当宜调动敌、避实击虚时触发
+  graph:
+  - from: bi_shi_ji_xu
+    to: []
+decision:
+- if: 需避实击虚
+  call: bi_shi_ji_xu
+skills:
+- 虚实篇·顺势研判
+negative_space:
+- 攻坚则损
+- 形露则制于人
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 智能系统建模实验室
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-30-20260827-30
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.085163'
+branch: 中国成语·修身与治理·第30条(防微杜渐)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第30条《防微杜渐》
+  core: 在风险初萌即干预，阻断小患成大祸；处置成本最低点在最前端，'禁于未发'优于'救于既溃'。是前端治理/熔断前置思维。
+  verse: 杜渐防萌，慎终于始，患未形而治，其功至易。
+  origin: 《后汉书·丁鸿传》：丁鸿上封事言'杜渐防萌，慎终于始'，劝和帝防戚宦之渐，患萌则易治、成则难救。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: fangwei_dujian
+  method: 防微杜渐
+  signature: fn fangwei_dujian(preempt) -> front_end_control
+  precond: 待患成大
+  postcond: 萌即治，成本最低
+  negative_space: ⊗ 养患则难救
+  steps:
+  - 察萌
+  - 早干预
+  - 断链
+  - 固本
+  nca_emit: true
+dispatch:
+  main_pipeline: fangwei_dujian
+  trigger: 杜渐防萌，慎终于始，患未形而治，其功至易。
+  when: 当风险初现苗头、宜前端干预防其扩大时触发
+  graph:
+  - from: fangwei_dujian
+    to: []
+decision:
+- if: 需前端治理
+  call: fangwei_dujian
+skills:
+- 防微杜渐·思维研判
+negative_space:
+- 养患至大则难救
+- 待溃而救则费
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

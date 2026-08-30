@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX04-20260815-04
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.913452'
+branch: 诸子百家·儒家·大学·第04目(格物)
+stratum: 诸子百家·儒家·大学·内圣阶梯
+soul:
+  identity: 大学·第04目《格物》
+  core: 穷究事物之理、即物穷理；以格物致知，不臆度。
+  verse: 欲诚其意者，先致其知；致知在格物。物格而后知至。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 内圣阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ge_wu
+  method: 格物
+  signature: fn ge_wu(inquire) -> things_investigated
+  precond: 理未穷、知不明
+  postcond: 物格知至，理明
+  negative_space: ⊗ 臆度则妄
+  steps:
+  - 即物
+  - 穷理
+  - 格其理
+  - 知至
+  nca_emit: true
+dispatch:
+  main_pipeline: ge_wu
+  trigger: 欲诚其意者，先致其知；致知在格物。物格而后知至。
+  when: 当需究理明事、不宜臆断时触发
+  graph:
+  - from: ge_wu
+    to: []
+decision:
+- if: 需格物穷理
+  call: ge_wu
+skills:
+- 格物·顺势研判
+negative_space:
+- 臆度则妄
+- 逐物丧志则迷
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

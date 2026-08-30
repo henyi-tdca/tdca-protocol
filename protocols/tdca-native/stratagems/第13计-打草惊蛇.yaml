@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-13
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.969344'
+stratum: 攻战计
+soul:
+  identity: 打草惊蛇
+  core: 试探引动, 察对方虚实
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 攻战计
+primitives:
+- name: da_cao_jing_she
+  method: 打草惊蛇
+  signature: 'fn da_cao_jing_she(context: Situation) -> Outcome'
+  precond: 敌情不明
+  postcond: 试探引动, 察敌虚实 (目标达成)
+  negative_space: ⊗ 己亦需隐蔽时不宜惊蛇
+  steps:
+  - 轻触试探
+  - 观敌反应
+  - 据反应定策
+  nca_emit: true
+dispatch:
+  main_pipeline: da_cao_jing_she
+  graph:
+  - from: da_cao_jing_she
+    to: []
+  note: 单计独立协议, 主原语 da_cao_jing_she 即该计执行体
+decision:
+- if: 对方态势不明
+  call: da_cao_jing_she
+skills: []
+negative_space:
+- ⊗ 己亦需隐蔽时不宜惊蛇
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

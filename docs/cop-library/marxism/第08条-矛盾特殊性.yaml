@@ -1,0 +1,47 @@
+COP-ID: MACM-08-20260815-08
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.691008'
+branch: 马克思主义·第08条(矛盾特殊性)
+stratum: 马克思主义·矛盾论
+soul:
+  identity: 马克思主义·第08条《矛盾特殊性》
+  core: 矛盾各有特殊性质; 以具体分析对具体矛盾, 拒绝一刀切。
+  verse: 不同质的矛盾，只有用不同质的方法才能解决。具体问题具体分析，是马克思主义的活的灵魂。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 矛盾论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: mao_dun_te_shu_xing
+  method: 矛盾特殊性
+  signature: fn mao_dun_te_shu_xing(analyze) -> specific_analysis
+  precond: 一刀切、套公式
+  postcond: 具体问题具体解
+  negative_space: ⊗ 套公式则误
+  steps:
+  - 辨质
+  - 析特殊
+  - 定法
+  - 对症
+  nca_emit: true
+dispatch:
+  main_pipeline: mao_dun_te_shu_xing
+  trigger: 不同质的矛盾，只有用不同质的方法才能解决。具体问题具体分析，是马克思主义的活的灵魂。
+  when: 当宜因事制宜、不宜机械套用时触发
+  graph:
+  - from: mao_dun_te_shu_xing
+    to: []
+decision:
+- if: 需矛盾特殊性
+  call: mao_dun_te_shu_xing
+skills:
+- 矛盾特殊性·顺势研判
+negative_space:
+- 一刀切则方枘圆凿
+- 只特殊不普遍则散
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-ZY10-20260815-10
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.199383'
+branch: 诸子百家·儒家·中庸·第10条(素位而行)
+stratum: 诸子百家·儒家·中庸·时中达道
+soul:
+  identity: 中庸·第10条《素位而行》
+  core: 素位而行、安分尽责；以上不陵下不援，立本位尽分之德。
+  verse: 君子素其位而行，不愿乎其外。在上位不陵下，在下位不援上。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 时中达道
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: su_wei_er_xing
+  method: 素位而行
+  signature: fn su_wei_er_xing(self) -> station_act
+  precond: 愿乎外、援陵
+  postcond: 素位尽分，安
+  negative_space: ⊗ 愿外则妄
+  steps:
+  - 安位
+  - 不援
+  - 不陵
+  - 尽分
+  nca_emit: true
+dispatch:
+  main_pipeline: su_wei_er_xing
+  trigger: 君子素其位而行，不愿乎其外。在上位不陵下，在下位不援上。
+  when: 当宜守本位尽责、不宜攀援时触发
+  graph:
+  - from: su_wei_er_xing
+    to: []
+decision:
+- if: 需素位而行
+  call: su_wei_er_xing
+skills:
+- 素位而行·顺势研判
+negative_space:
+- 愿乎其外则妄
+- 陵下援上则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

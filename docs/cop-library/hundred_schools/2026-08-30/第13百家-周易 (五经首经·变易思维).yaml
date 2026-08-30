@@ -1,0 +1,185 @@
+COP-ID: HS-YJ-20260830-13
+data_provenance: single-author
+source_expert: hundred_schools_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / hundred_schools slot 补编)
+compiled_at: '2026-08-30T13:05:13.814317'
+branch: 诸子百家·经部·周易
+stratum: 诸子百家·经部·周易
+soul:
+  identity: 周易 (五经首经·变易思维) (Book of Changes (First of the Five Classics))
+  core: '《周易》是''变化中求结构、结构中定宜行''思维的范式化: 以变易-不易-简易三义分层建模, 以阴阳相推解释演化动力, 由象抽出可迁移的结构语义,
+    并以爻位序决定同一要素在不同位置的语义与宜行; 叠加时位相应的待机择时、亢极反转的阈值预警、不确定下的程序化问疑决断, 以及贯穿全周期的忧患自省。其''同素异位则异义''一维与
+    TDCA 立场分离三律同构——机制核不写死语义, 语义由位序(场景)注入; 本协议为纲维级概览, 章句级(64 卦/384 爻)子库另行编译; 须以 TDCA-CORE-20260815-01
+    (生态准入基协议) 为可信底座, 经 NCA 确权、受 NSFL 护栏、依 MOU 正和底线运行。'
+  role: 思维协议 (诸子百家 / 经部 / 中国文化基库)
+  category: 诸子百家 / 诸子百家·经部·周易
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bian_yi_san_yi
+  method: 变易·不易·简易 三义并观
+  signature: fn bian_yi_san_yi(system) -> layered_model
+  precond: 系统处于持续变化中且需建模
+  postcond: 分层得出 变易(现象层可变量)/不易(结构层恒定律)/简易(可操作最小规则)
+  negative_space: ⊗ 只见变而不求不易之律则无从预测
+  steps:
+  - 列变量
+  - 求恒律
+  - 约简规则
+  - 分层建模
+  nca_emit: true
+- name: yin_yang_xiang_tui
+  method: 阴阳相推·二元互补驱动
+  signature: fn yin_yang_xiang_tui(pair) -> dynamic_balance
+  precond: 存在一对相反相成的力量或属性
+  postcond: 以两端互推解释演化动力, 得出动态均衡区间而非单极最优
+  negative_space: ⊗ 取一端弃一端则失动力结构
+  steps:
+  - 辨两端
+  - 察相推
+  - 定均衡区
+  - 调配比
+  nca_emit: true
+- name: guan_xiang_qu_yi
+  method: 观象取义·由象抽结构
+  signature: fn guan_xiang_qu_yi(phenomenon) -> structural_semantics
+  precond: 现象可观察但语义未明
+  postcond: 由具象抽出可复用的结构语义(卦象即结构模型), 供跨情境迁移
+  negative_space: ⊗ 滞于象而不取义则不可迁移
+  steps:
+  - 取象
+  - 抽结构
+  - 命其义
+  - 验迁移
+  nca_emit: true
+- name: yao_wei_ding_yi
+  method: 爻位定义·同素异位则异义
+  signature: fn yao_wei_ding_yi(element, position) -> contextual_meaning
+  precond: 要素已知且其所处位序可判
+  postcond: 同一要素依位序(初/二/三/四/五/上)得不同语义与宜行, 位变则义变
+  negative_space: ⊗ 脱离位序论要素则误判宜行
+  steps:
+  - 定要素
+  - 判位序
+  - 读位义
+  - 依位定宜
+  nca_emit: true
+- name: shi_zhong_dai_ji
+  method: 时位相应·潜显待机
+  signature: fn shi_zhong_dai_ji(timing) -> action_window
+  precond: 时机条件可评估
+  postcond: 依时位相应择潜(勿用)或显(在天), 得出可行动窗口而非恒定动作
+  negative_space: ⊗ 时未至而强显则悔
+  steps:
+  - 评时位
+  - 判潜显
+  - 定窗口
+  - 候而动
+  nca_emit: true
+- name: ji_er_bi_fan
+  method: 亢极有悔·阈值反转
+  signature: fn ji_er_bi_fan(trend) -> threshold_alert
+  precond: 趋势已近其极值区
+  postcond: 标出反转阈值并预置回撤方案(否极泰来/亢龙有悔)
+  negative_space: ⊗ 极处仍加注则由盈转亏
+  steps:
+  - 测趋势
+  - 标阈值
+  - 预回撤
+  - 候反转
+  nca_emit: true
+- name: wen_yi_qu_jue
+  method: 问疑取决·不确定下的程序化决断
+  signature: fn wen_yi_qu_jue(uncertainty) -> structured_decision
+  precond: 信息不足且须在期限内决断
+  postcond: 以固定程序(明疑→设局→读结构→出断)把弥散不确定收敛为可复核决断记录
+  negative_space: ⊗ 以程序结果代替事实校验则成迷信
+  steps:
+  - 明所疑
+  - 设结构
+  - 读其象
+  - 出可复核之断
+  nca_emit: true
+- name: ju_yi_zhong_shi
+  method: 惧以终始·全周期忧患自省
+  signature: fn ju_yi_zhong_shi(lifecycle) -> risk_vigilance
+  precond: 事项已进入某一周期阶段
+  postcond: 始终两端皆设忧患检查点, 顺境亦列失效路径(居安思危)
+  negative_space: ⊗ 顺境不设忧患则伏险不显
+  steps:
+  - 定周期
+  - 设首末检查点
+  - 列失效路径
+  - 循环自省
+  nca_emit: true
+dispatch:
+  main_pipeline: bian_yi_san_yi
+  when: 当情境持续变化、需先建模结构再依位序与时机定宜行时触发
+  graph:
+  - from: bian_yi_san_yi
+    to:
+    - yin_yang_xiang_tui
+    - guan_xiang_qu_yi
+  - from: guan_xiang_qu_yi
+    to:
+    - yao_wei_ding_yi
+  - from: yao_wei_ding_yi
+    to:
+    - shi_zhong_dai_ji
+  - from: yin_yang_xiang_tui
+    to:
+    - ji_er_bi_fan
+  - from: shi_zhong_dai_ji
+    to:
+    - wen_yi_qu_jue
+  - from: ji_er_bi_fan
+    to:
+    - ju_yi_zhong_shi
+  - from: wen_yi_qu_jue
+    to:
+    - ju_yi_zhong_shi
+  - from: ju_yi_zhong_shi
+    to:
+    - bian_yi_san_yi
+  note: 诸子百家 COP 自带调度骨架; 须以 TDCA-CORE-20260815-01 为可信底座
+decision:
+- if: 需分层建模变量与恒律
+  call: bian_yi_san_yi
+- if: 需解释二元互推动力
+  call: yin_yang_xiang_tui
+- if: 需由具象抽结构语义
+  call: guan_xiang_qu_yi
+- if: 同一要素位序不同
+  call: yao_wei_ding_yi
+- if: 需判潜显与行动窗口
+  call: shi_zhong_dai_ji
+- if: 趋势近极值区
+  call: ji_er_bi_fan
+- if: 信息不足须限期决断
+  call: wen_yi_qu_jue
+- if: 需全周期忧患自省
+  call: ju_yi_zhong_shi
+skills:
+- 三义分层建模
+- 二元均衡调配
+- 象义结构抽取
+- 位序语义判读
+- 时位择机
+- 阈值反转预警
+- 程序化问疑决断
+- 全周期忧患自省
+negative_space:
+- ⊗ 只见变而不求不易之律则无从预测
+- ⊗ 取阴阳一端弃另一端则失动力结构
+- ⊗ 滞于象不取义则结构不可迁移
+- ⊗ 脱离位序论要素则误判宜行(违同素异位则异义)
+- ⊗ 时未至而强显、时至而不发, 两者皆失机
+- ⊗ 亢极处仍加注则由盈转亏
+- '⊗ 以问疑程序结果代替事实校验则成迷信(NSFL 熔断: 不得以占决替代证据链)'
+- ⊗ 顺境不设忧患检查点则伏险不显
+- ⊗ 本协议为纲维级概览, 不得据以替代章句级(64 卦)细则推演
+- '⊗ 本协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 8

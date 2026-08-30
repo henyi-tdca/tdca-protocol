@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-98-20260828-98
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.374915'
+branch: 中国成语·战略与决断·第98条(擒贼擒王)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第98条《擒贼擒王》
+  core: 系统解体效率集中于关键节点——打击组织核心（指挥/枢纽/依赖点）以最小代价瓦解整体；先识别、再聚焦，切忌平均用力。
+  verse: 射人先马，擒贼先王；夺其魁首，其众自散。
+  origin: 三十六计·攻战计第十八计：'摧其坚，夺其魁，以解其体'；杜甫诗'射人先射马，擒贼先擒王'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qinzei_qinwang
+  method: 擒贼擒王
+  signature: fn qinzei_qinwang(focus) -> pivotal_node_struck
+  precond: 对方组织存在可识别核心
+  postcond: 枢夺体散
+  negative_space: ⊗ 王不可擒则反受其乱
+  steps:
+  - 识其魁
+  - 聚其力
+  - 夺其枢
+  - 解其体
+  nca_emit: true
+dispatch:
+  main_pipeline: qinzei_qinwang
+  trigger: 射人先马，擒贼先王；夺其魁首，其众自散。
+  when: 当存在可识别关键节点、宜集中资源打击时触发
+  graph:
+  - from: qinzei_qinwang
+    to: []
+decision:
+- if: 需关键节点打击
+  call: qinzei_qinwang
+skills:
+- 擒贼擒王·思维研判
+negative_space:
+- 误识其魁则空耗
+- 打草惊蛇则核心加固
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

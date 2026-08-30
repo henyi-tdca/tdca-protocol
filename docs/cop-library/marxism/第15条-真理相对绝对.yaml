@@ -1,0 +1,47 @@
+COP-ID: MACM-15-20260815-15
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.760565'
+branch: 马克思主义·第15条(真理相对绝对)
+stratum: 马克思主义·实践论
+soul:
+  identity: 马克思主义·第15条《真理相对绝对》
+  core: 真理是相对与绝对的统一; 以相对逼近绝对, 不把任一阶段真理绝对化。
+  verse: 绝对真理的长河中包含着无数相对真理。每一科学真理由于受历史条件限制都是相对真理。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 实践论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhen_li_xiang_dui_jue_dui
+  method: 真理相对绝对
+  signature: fn zhen_li_xiang_dui_jue_dui(truth) -> truth_relative_absolute
+  precond: 把真理绝对化
+  postcond: 在相对中逼近绝对
+  negative_space: ⊗ 绝对化则蔽
+  steps:
+  - 识相对
+  - 见绝对
+  - 防固化
+  - 续逼近
+  nca_emit: true
+dispatch:
+  main_pipeline: zhen_li_xiang_dui_jue_dui
+  trigger: 绝对真理的长河中包含着无数相对真理。每一科学真理由于受历史条件限制都是相对真理。
+  when: 当理论固化、宜保持开放时触发
+  graph:
+  - from: zhen_li_xiang_dui_jue_dui
+    to: []
+decision:
+- if: 需真理相对绝对
+  call: zhen_li_xiang_dui_jue_dui
+skills:
+- 真理相对绝对·顺势研判
+negative_space:
+- 把真理绝对化则僵
+- 相对主义则无可执
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

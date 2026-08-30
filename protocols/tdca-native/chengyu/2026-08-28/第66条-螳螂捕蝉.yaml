@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-66-20260828-66
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.387053'
+branch: 中国成语·战略与决断·第66条(螳螂捕蝉)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第66条《螳螂捕蝉》
+  core: 任何博弈都存在二阶参与者：获利位置本身暴露于更高层玩家；出手前须扫描'猎物—自己—黄雀'三层结构，前利与后患并估——占位即暴露。
+  verse: 螳螂捕蝉，黄雀在后，弹丸又伺，各贪前利而不顾后患。
+  origin: 《说苑·正谏》/《庄子·山木》：园中蝉高居饮露，螳螂执叶伺之，黄雀延颈欲啄螳螂，弹丸在其下又欲弹雀——三者皆务欲得前利而不顾后患。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tanglang_buchan
+  method: 螳螂捕蝉
+  signature: fn tanglang_buchan(scan) -> second_order_risk
+  precond: 只见前利
+  postcond: 三层扫描，后顾有备
+  negative_space: ⊗ 贪前利则忘后患
+  steps:
+  - 见利
+  - 抬头看
+  - 扫黄雀
+  - 定进退
+  nca_emit: true
+dispatch:
+  main_pipeline: tanglang_buchan
+  trigger: 螳螂捕蝉，黄雀在后，弹丸又伺，各贪前利而不顾后患。
+  when: 当处获利位置、须评估更高层竞争者/监管者/第三方风险时触发
+  graph:
+  - from: tanglang_buchan
+    to: []
+decision:
+- if: 需二阶博弈扫描
+  call: tanglang_buchan
+skills:
+- 螳螂捕蝉·思维研判
+negative_space:
+- 只见猎物则引杀机
+- 因噎废食则失前利
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

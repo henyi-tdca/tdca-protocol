@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ03-20260815-03
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.807643'
+branch: 诸子百家·儒家·孟子·第03条(良知良能)
+stratum: 诸子百家·儒家·孟子·性善本体
+soul:
+  identity: 孟子·第03条《良知良能》
+  core: 良知良能不假外求、本具于心；以反身而诚、不学而知，为直觉之善的源头。
+  verse: 人之所不学而能者，其良能也；所不虑而知者，其良知也。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 性善本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: liang_zhi_neng
+  method: 良知良能
+  signature: fn liang_zhi_neng(self) -> innate_good
+  precond: 外求知识、昧其良
+  postcond: 反身诚，良知显
+  negative_space: ⊗ 外求则失其良
+  steps:
+  - 反身
+  - 诚之
+  - 识良知
+  - 行不虑
+  nca_emit: true
+dispatch:
+  main_pipeline: liang_zhi_neng
+  trigger: 人之所不学而能者，其良能也；所不虑而知者，其良知也。
+  when: 当宜信本心直觉之善、不宜徇外时触发
+  graph:
+  - from: liang_zhi_neng
+    to: []
+decision:
+- if: 需致良知
+  call: liang_zhi_neng
+skills:
+- 良知良能·顺势研判
+negative_space:
+- 徇外忘内则昧
+- 以知为蔽则伪
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

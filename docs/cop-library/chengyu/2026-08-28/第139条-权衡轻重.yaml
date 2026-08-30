@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-139-20260828-139
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.680054'
+branch: 中国成语·认知与辩证·第139条(权衡轻重)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第139条《权衡轻重》
+  core: 决策权重显性化——对多目标/多约束先显式赋权再取舍，避免隐性权重主导争议；权重本身须经共识与复盘校准。与舍本逐末成对（彼失校之果，此校准之动作）。
+  verse: 权之为称，悬之于衡；轻者可舍，重者必争。
+  origin: 《孟子·梁惠王上》：'权，然后知轻重；度，然后知长短，物皆然，心为甚。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: quanheng_qingzhong
+  method: 权衡轻重
+  signature: fn quanheng_qingzhong(weight) -> weights_made_explicit
+  precond: 多目标冲突待取舍
+  postcond: 权重显明，取舍有据
+  negative_space: ⊗ 隐性权重则争议不决
+  steps:
+  - 列其项
+  - 赋其权
+  - 校其共
+  - 断其行
+  nca_emit: true
+dispatch:
+  main_pipeline: quanheng_qingzhong
+  trigger: 权之为称，悬之于衡；轻者可舍，重者必争。
+  when: 当多目标取舍悬而不决、须显式赋权时触发
+  graph:
+  - from: quanheng_qingzhong
+    to: []
+decision:
+- if: 需权重显性化
+  call: quanheng_qingzhong
+skills:
+- 权衡轻重·思维研判
+negative_space:
+- 权重隐而不宣则争议不决
+- 权重固化则失情境
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

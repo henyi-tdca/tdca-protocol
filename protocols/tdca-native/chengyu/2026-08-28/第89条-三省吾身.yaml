@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-89-20260828-89
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.549189'
+branch: 中国成语·修身与治理·第89条(三省吾身)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第89条《三省吾身》
+  core: 自我修正不靠意志靠机制——固定频率(日)、固定清单(省项)、固定归档(身)；把'反思'降为可执行的审计协议，与 TDCA 每日审计同构。
+  verse: 吾日三省吾身：为人谋而不忠乎？与朋友交而不信乎？传不习乎？
+  origin: 《论语·学而》：曾子曰'吾日三省吾身：为人谋而不忠乎？与朋友交而不信乎？传不习乎？'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: sanxing_wushen
+  method: 三省吾身
+  signature: fn sanxing_wushen(audit) -> self_audited
+  precond: 反思流于随想
+  postcond: 日省有据，过乃渐除
+  negative_space: ⊗ 不省则过积
+  steps:
+  - 定其频
+  - 列其项
+  - 照其实
+  - 归其档
+  nca_emit: true
+dispatch:
+  main_pipeline: sanxing_wushen
+  trigger: 吾日三省吾身：为人谋而不忠乎？与朋友交而不信乎？传不习乎？
+  when: 当须建立固定频率的自我/系统审计清单时触发
+  graph:
+  - from: sanxing_wushen
+    to: []
+decision:
+- if: 需例行自检
+  call: sanxing_wushen
+skills:
+- 三省吾身·思维研判
+negative_space:
+- 省而无清单则空转
+- 省而不改则自责成瘾
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

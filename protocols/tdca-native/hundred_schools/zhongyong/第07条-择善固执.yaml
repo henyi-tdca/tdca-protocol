@@ -1,0 +1,48 @@
+COP-ID: HS-RU-ZY07-20260815-07
+source_expert: zhongyong_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 心法条目分解)
+compiled_at: '2026-08-15T13:45:45.180587'
+branch: 诸子百家·儒家·中庸·第07条(择善固执)
+stratum: 诸子百家·儒家·中庸·诚体工夫
+soul:
+  identity: 中庸·第07条《择善固执》
+  core: 学—问—思—辨—行五序、择善而固执；以笃行到底，立为学入诚之方。
+  verse: 博学之，审问之，慎思之，明辨之，笃行之……诚之者，择善而固执之者也。
+  role: 思维协议 (诸子百家 / 儒家 / 中庸心法)
+  category: 诸子百家 / 儒家 / 中庸 / 诚体工夫
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ze_shan_gu_zhi
+  method: 择善固执
+  signature: fn ze_shan_gu_zhi(study) -> firm_good
+  precond: 学杂、行不笃
+  postcond: 择善固执，诚成
+  negative_space: ⊗ 不笃则废
+  steps:
+  - 博学
+  - 审问
+  - 慎思
+  - 明辨
+  - 笃行
+  nca_emit: true
+dispatch:
+  main_pipeline: ze_shan_gu_zhi
+  trigger: 博学之，审问之，慎思之，明辨之，笃行之……诚之者，择善而固执之者也。
+  when: 当为学未定、宜博学笃行时触发
+  graph:
+  - from: ze_shan_gu_zhi
+    to: []
+decision:
+- if: 需择善固执
+  call: ze_shan_gu_zhi
+skills:
+- 择善固执·顺势研判
+negative_space:
+- 学而不笃则浮
+- 择非其善则误
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

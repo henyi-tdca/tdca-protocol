@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-25-20260827-25
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.038526'
+branch: 中国成语·修身与治理·第25条(闻鸡起舞)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第25条《闻鸡起舞》
+  core: 以外部节律触发自律行动，把目标嵌入日常节奏；借可依赖的触发点克服惰性，使进取成为习惯而非一时之气。
+  verse: 中夜闻鸡，蹴琨起舞，志在恢复，不因怠废。
+  origin: 《晋书·祖逖传》：祖逖与刘琨同寝，中夜闻荒鸡鸣，蹴琨觉曰'此非恶声也'，因起舞剑；志在恢复中原。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wenji_qiwu
+  method: 闻鸡起舞
+  signature: fn wenji_qiwu(trigger) -> disciplined_action
+  precond: 怠而废志
+  postcond: 节律触发，行不辍
+  negative_space: ⊗ 因怠而废
+  steps:
+  - 立律
+  - 设触发
+  - 即行
+  - 成习
+  nca_emit: true
+dispatch:
+  main_pipeline: wenji_qiwu
+  trigger: 中夜闻鸡，蹴琨起舞，志在恢复，不因怠废。
+  when: 当需把目标转为日常自律、克服惰性时触发
+  graph:
+  - from: wenji_qiwu
+    to: []
+decision:
+- if: 需节律自律
+  call: wenji_qiwu
+skills:
+- 闻鸡起舞·思维研判
+negative_space:
+- 因怠而废则荒
+- 无触发则行辍
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

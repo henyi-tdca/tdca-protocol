@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-70-20260828-70
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.413906'
+branch: 中国成语·战略与决断·第70条(先发制人)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第70条《先发制人》
+  core: 动员有时滞——先动方在对方完成响应前锁定既成事实；主动权本质是时间差的占有。负空间：先发而无后手则暴露于反制，须一手锁事实、一手备反制。
+  verse: 先即制人，后则为人所制。
+  origin: 《史记·项羽本纪》：殷通语'先即制人，后则为人所制'；《汉书·项籍传》同。后指先动手以掌主动。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xianfa_zhiren
+  method: 先发制人
+  signature: fn xianfa_zhiren(initiative) -> tempo_locked
+  precond: 对方动员未竟
+  postcond: 既成事实，主动在握
+  negative_space: ⊗ 后发则制于人
+  steps:
+  - 察时机
+  - 先手定标
+  - 锁事实
+  - 备反制
+  nca_emit: true
+dispatch:
+  main_pipeline: xianfa_zhiren
+  trigger: 先即制人，后则为人所制。
+  when: 当存在动员时滞、宜抢在对方响应前锁定局面时触发
+  graph:
+  - from: xianfa_zhiren
+    to: []
+decision:
+- if: 需主动权抢占
+  call: xianfa_zhiren
+skills:
+- 先发制人·思维研判
+negative_space:
+- 先发无备则成孤注
+- 悖德违法之先发则自毁
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

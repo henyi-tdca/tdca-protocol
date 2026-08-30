@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-49-20260827-49
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.311470'
+branch: 中国成语·认知与辩证·第49条(因地制宜)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第49条《因地制宜》
+  core: 依具体条件(地宜/境况)制定对策，不套用一律之法；是实事求是——从客观实际抽规律、以规律指导实践，具体问题具体分析，忌'一刀切'。与'刻舟求剑'相反：以当下具体为锚。
+  verse: 察地之宜，制事之方；因土而异，不泥一法。
+  origin: 《吴越春秋》/ 农书'因地制宜'：种殖各因其土宜。后泛指依具体情势施策。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yindi_zhiyi
+  method: 因地制宜
+  signature: fn yindi_zhiyi(adapt) -> context_specific
+  precond: 一刀切
+  postcond: 依实情，制其方
+  negative_space: ⊗ 泥法则悖
+  steps:
+  - 察地宜
+  - 究其实
+  - 定方
+  - 施于境
+  nca_emit: true
+dispatch:
+  main_pipeline: yindi_zhiyi
+  trigger: 察地之宜，制事之方；因土而异，不泥一法。
+  when: 当情势各异、宜具体施策不宜一律套用触发
+  graph:
+  - from: yindi_zhiyi
+    to: []
+decision:
+- if: 需具体问题具体分析
+  call: yindi_zhiyi
+skills:
+- 因地制宜·思维研判
+negative_space:
+- 泥成法不知变则悖
+- 昧地宜则方误
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-08-20260827-08
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.847666'
+branch: 中国成语·战略与决断·第08条(退避三舍)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第08条《退避三舍》
+  core: 以'先让一步'换取道义制高点与战略纵深，把退让转为后发优势；让不是弱，是换取主动权的择时。
+  verse: 流亡有诺，临阵三舍，让之以礼，后发制人。
+  origin: 《左传·僖公二十八年》：重耳流亡楚，承诺若返国交战当退避三舍(九十里)；后城濮之战兑现，楚师气骄，晋乃胜。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tuibi_sanshe
+  method: 退避三舍
+  signature: fn tuibi_sanshe(yield) -> positional_advantage
+  precond: 需取道义与纵深
+  postcond: 让一步，得后发
+  negative_space: ⊗ 硬顶则失道
+  steps:
+  - 诺于先
+  - 让于礼
+  - 蓄势
+  - 后发
+  nca_emit: true
+dispatch:
+  main_pipeline: tuibi_sanshe
+  trigger: 流亡有诺，临阵三舍，让之以礼，后发制人。
+  when: 当可先退一步换取道义/空间、避免正面硬顶时触发
+  graph:
+  - from: tuibi_sanshe
+    to: []
+decision:
+- if: 需以退为进
+  call: tuibi_sanshe
+skills:
+- 退避三舍·思维研判
+negative_space:
+- 无谓硬顶则失道
+- 退而无备则被动
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

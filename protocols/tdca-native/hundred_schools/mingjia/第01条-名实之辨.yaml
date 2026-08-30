@@ -1,0 +1,47 @@
+COP-ID: HS-MG-01-20260815-01
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.026919'
+branch: 诸子百家·名家·第01条(名实之辨)
+stratum: 诸子百家·名家·名实本体
+soul:
+  identity: 名家·第01条《名实之辨》
+  core: 名以指实、实为正名之本；以名实相符立概念与言说之基。
+  verse: 名以指实，实名相符。制名以指实，实定而名正。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 名实本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ming_shi_zhi_bian
+  method: 名实之辨
+  signature: fn ming_shi_zhi_bian(name) -> name_reality
+  precond: 名实乖、言乱
+  postcond: 名实相符，言正
+  negative_space: ⊗ 名实乖则惑
+  steps:
+  - 识名用
+  - 指实
+  - 正名
+  - 符实
+  nca_emit: true
+dispatch:
+  main_pipeline: ming_shi_zhi_bian
+  trigger: 名以指实，实名相符。制名以指实，实定而名正。
+  when: 当概念淆乱、宜正名实关系时触发
+  graph:
+  - from: ming_shi_zhi_bian
+    to: []
+decision:
+- if: 需名实之辨
+  call: ming_shi_zhi_bian
+skills:
+- 名实之辨·顺势研判
+negative_space:
+- 名实乖则言乱
+- 滥名则奸生
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-61-20260828-61
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.352840'
+branch: 中国成语·战略与决断·第61条(背水一战)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第61条《背水一战》
+  core: 以地形与阵列自构'不可退'约束，把求生本能转化为战力；与破釜沉舟同属承诺机制，但此为阵法部署级(借势)而非资源级(自毁)——约束设计可借外势，不必尽毁己资。
+  verse: 汉旗背水，士不旋踵，陷之死地，后生乃真。
+  origin: 《史记·淮阴侯列传》井陉之战：韩信背水列阵，'陷之死地而后生，置之亡地而后存'，出奇兵拔赵旗，大破赵军。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: beishui_yizhan
+  method: 背水一战
+  signature: fn beishui_yizhan(deploy) -> last_stand_resolve
+  precond: 众寡悬殊需聚战力
+  postcond: 阵成死地，士自奋
+  negative_space: ⊗ 背水无谋则溃
+  steps:
+  - 察地形
+  - 背水列阵
+  - 置奇兵
+  - 陷死地
+  nca_emit: true
+dispatch:
+  main_pipeline: beishui_yizhan
+  trigger: 汉旗背水，士不旋踵，陷之死地，后生乃真。
+  when: 当众寡悬殊、需以约束设计激发战力且可借势布阵时触发
+  graph:
+  - from: beishui_yizhan
+    to: []
+decision:
+- if: 需借势式承诺
+  call: beishui_yizhan
+skills:
+- 背水一战·思维研判
+negative_space:
+- 背水而无奇正则真溃
+- 滥置死地则全军覆
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

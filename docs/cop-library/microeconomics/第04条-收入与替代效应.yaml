@@ -1,0 +1,47 @@
+COP-ID: MICRO-04-20260825-04
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.185485'
+branch: 现代经济学·微观经济学·第04条(收入与替代效应)
+stratum: 现代经济学·微观经济学·市场均衡
+soul:
+  identity: 微观经济学·第04条《收入与替代效应》
+  core: 将价格变动的总效应分解为替代效应（相对价变，沿无差异曲线）与收入效应（实收入变），解释低档品与吉芬品之反常。
+  verse: 价降，一则物相对廉而趋之（替代），二则实购力增而多求（收入）。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 市场均衡
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: income_substitution
+  method: 收入与替代效应
+  signature: fn income_substitution(decompose) -> effect_split
+  precond: 混二效
+  postcond: 二效分，反常明
+  negative_space: ⊗ 混二效则惑
+  steps:
+  - 求总效
+  - 拆替代
+  - 拆收入
+  - 辨吉芬
+  nca_emit: true
+dispatch:
+  main_pipeline: income_substitution
+  trigger: 价降，一则物相对廉而趋之（替代），二则实购力增而多求（收入）。
+  when: 当解释价格变动对需求的拆分、低档/吉芬品反常时触发
+  graph:
+  - from: income_substitution
+    to: []
+decision:
+- if: 需效应分解
+  call: income_substitution
+skills:
+- 收入与替代效应·均衡研判
+negative_space:
+- 混二效则惑
+- 吉芬反例须慎辨
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

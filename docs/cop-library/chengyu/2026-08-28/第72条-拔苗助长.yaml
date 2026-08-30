@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-72-20260828-72
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.430639'
+branch: 中国成语·认知与辩证·第72条(拔苗助长)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第72条《拔苗助长》
+  core: 系统有其内在生长周期，外力加速超过承载阈值反而摧毁增长根基；KPI 压力/过度运营同理——增长须与承载同频，可扶不可揠。
+  verse: 闵苗不长而揠之，今日病矣，予助苗长矣；苗立槁。
+  origin: 《孟子·公孙丑上》：宋人闵其苗之不长而揠之，茫茫然归，谓其家人'今日病矣，予助苗长矣'；其子趋而往视之，苗则槁矣。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bamiao_zhuzhang
+  method: 拔苗助长
+  signature: fn bamiao_zhuzhang(warn) -> rhythm_respected
+  precond: 强提节奏
+  postcond: 顺周期，长自续
+  negative_space: ⊗ 揠苗则槁
+  steps:
+  - 识周期
+  - 度承载
+  - 顺而导
+  - 忌强提
+  nca_emit: true
+dispatch:
+  main_pipeline: bamiao_zhuzhang
+  trigger: 闵苗不长而揠之，今日病矣，予助苗长矣；苗立槁。
+  when: 当以外部压力强提系统节奏(业务/团队/生态)时触发(作警示)
+  graph:
+  - from: bamiao_zhuzhang
+    to: []
+decision:
+- if: 需节奏顺应
+  call: bamiao_zhuzhang
+skills:
+- 拔苗助长·思维研判
+negative_space:
+- 揠苗则根毁
+- 放任不扶则荒
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

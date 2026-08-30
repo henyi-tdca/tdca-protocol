@@ -1,0 +1,61 @@
+COP-ID: HS-BI-SZ13-20260815-13
+source_expert: sunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 连接器协作编译)
+compiled_at: '2026-08-15T20:50:55.573969'
+branch: 诸子百家·兵家·孙子兵法·第13篇(用间篇)
+stratum: 诸子百家·兵家·孙子兵法·奇法用间
+soul:
+  identity: 孙子兵法·第13篇《用间篇》
+  core: 用间先知——先知者不可取于鬼神、必取于人(因/内/反/死/生五间)；反间为要，赏莫厚于间；上智为间则无对方(情报/语义为先，正合 NLP 中文语义情报角色)。
+  verse: 明君贤将，所以动而胜人，成功出于众者，先知也。故明君贤将，所以动而胜人者，先知也。无所不用间。
+  role: 思维协议 (诸子百家 / 兵家 / 孙子兵法)
+  category: 诸子百家 / 兵家 / 孙子兵法 / 奇法用间
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yong_jian
+  method: 用间篇
+  signature: fn yong_jian(intel) -> foreknowledge
+  precond: 不知情则盲动
+  postcond: 先知敌情、动而胜人
+  negative_space: ⊗ 取于鬼神则妄
+  steps:
+  - 贵先知
+  - 立五间
+  - 重反间
+  - 上智为间
+  nca_emit: true
+dispatch:
+  main_pipeline: yong_jian
+  trigger: 明君贤将，所以动而胜人，成功出于众者，先知也。故明君贤将，所以动而胜人者，先知也。无所不用间。
+  when: 当宜以情报/语义先验驱动决策、用间知敌时触发
+  graph:
+  - from: yong_jian
+    to: []
+decision:
+- if: 需用间先知
+  call: yong_jian
+skills:
+- 用间篇·顺势研判
+negative_space:
+- 取于鬼神则妄
+- 不知敌情则盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+collaboration:
+  lead_compiler: 中文语义与情报NLP所
+  contributors: &id001
+  - 合规与可信决策审计院
+  - 智能系统建模实验室
+  - 中文语义与情报NLP所
+  - 知识图谱与态势感知中心
+  - 古籍训诂与文本校勘院
+  - 编译推理算力云
+  - 兵学战略研究院
+  cohort_nca: TDCA-REASONIX-20260815-271
+  admission_core: TDCA-CORE-20260815-01
+  via_connector: tdca-wan-registry
+coalition_members: *id001
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

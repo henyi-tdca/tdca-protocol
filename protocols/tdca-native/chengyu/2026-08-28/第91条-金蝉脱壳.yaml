@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-91-20260828-91
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.316465'
+branch: 中国成语·战略与决断·第91条(金蝉脱壳)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第91条《金蝉脱壳》
+  core: 撤退/转移时保留原有外在形态作掩护，使实质已完成转移而形态信号未变；信号与实质可分离——观测方读取的是信号，转移的是实质。与三十六计计目同源，成语取其通用机制。
+  verse: 蝉蜕留壳，形在实去；存形护实，遁而不觉。
+  origin: 元·关汉卿《谢天香》已用此语；后为三十六计第二十一计。典取蝉蜕时留壳而不觉。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jinchan_tuoqiao
+  method: 金蝉脱壳
+  signature: fn jinchan_tuoqiao(withdraw) -> substance_relocated
+  precond: 需转移实质且形态信号被持续观测
+  postcond: 形存实去，遁而不觉
+  negative_space: ⊗ 形实俱去则暴露
+  steps:
+  - 定实核
+  - 存其形
+  - 缓其移
+  - 验其遁
+  nca_emit: true
+dispatch:
+  main_pipeline: jinchan_tuoqiao
+  trigger: 蝉蜕留壳，形在实去；存形护实，遁而不觉。
+  when: 当需在观测下完成转移/撤退且须维持原有形态信号时触发
+  graph:
+  - from: jinchan_tuoqiao
+    to: []
+decision:
+- if: 需形实分离式转移
+  call: jinchan_tuoqiao
+skills:
+- 金蝉脱壳·思维研判
+negative_space:
+- 壳存而实未移则空遁
+- 形迹尽撤则惊动观测方
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

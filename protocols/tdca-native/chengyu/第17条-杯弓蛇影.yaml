@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-17-20260827-17
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.969530'
+branch: 中国成语·认知与辩证·第17条(杯弓蛇影)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第17条《杯弓蛇影》
+  core: 将投射/误认当真实威胁，疑心制造伪风险；须以事实核验消解误判，不被自己的解释框架绑架。
+  verse: 杯中弓影，疑而为蛇，病由疑生，影去乃愈。
+  origin: 应劭《风俗通义·怪神》：应郴请杜宣饮，壁弩影映杯中如蛇，宣饮而疑蛇在腹，久病；后示以弩影，宣意解病愈。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: beigong_sheying
+  method: 杯弓蛇影
+  signature: fn beigong_sheying(warn) -> verify_reality
+  precond: 疑影为实
+  postcond: 核事实，消妄
+  negative_space: ⊗ 以疑造伪险
+  steps:
+  - 察源
+  - 验实
+  - 解疑
+  - 归真
+  nca_emit: true
+dispatch:
+  main_pipeline: beigong_sheying
+  trigger: 杯中弓影，疑而为蛇，病由疑生，影去乃愈。
+  when: 当团队因误认/投射而自造恐慌时触发(作辨妄)
+  graph:
+  - from: beigong_sheying
+    to: []
+decision:
+- if: 需事实核验
+  call: beigong_sheying
+skills:
+- 杯弓蛇影·思维研判
+negative_space:
+- 以疑影为真则妄
+- 不核验则伪险缠
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

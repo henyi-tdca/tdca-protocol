@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-113-20260828-113
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.474303'
+branch: 中国成语·修身与治理·第113条(广开言路)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第113条《广开言路》
+  core: 反馈渠道的制度化——信息上行不能依赖个别人的雅量，须有常设通道与保护规则（言者无罪）；渠道宽度决定系统感知精度。与兼听则明成对（彼决策端多源，此渠道端制度）。
+  verse: 谤讥于市，闻于上耳；门庭若市，期年无可谏。
+  origin: 《战国策·齐策》：邹忌讽齐王纳谏，'群臣进谏，门庭若市'；'期年之后，虽欲言，无可进者'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: guangkai_yanlu
+  method: 广开言路
+  signature: fn guangkai_yanlu(open) -> feedback_channel_institutionalized
+  precond: 信息上行不畅
+  postcond: 渠道常设，感知致密
+  negative_space: ⊗ 惩言者则渠道闭
+  steps:
+  - 开其门
+  - 护其言
+  - 别其类
+  - 纳其善
+  nca_emit: true
+dispatch:
+  main_pipeline: guangkai_yanlu
+  trigger: 谤讥于市，闻于上耳；门庭若市，期年无可谏。
+  when: 当信息上行依赖个别人意志、须渠道制度化时触发
+  graph:
+  - from: guangkai_yanlu
+    to: []
+decision:
+- if: 需反馈渠道治理
+  call: guangkai_yanlu
+skills:
+- 广开言路·思维研判
+negative_space:
+- 开而不纳则伪开
+- 惩报忧者则渠道永闭
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-52-20260827-52
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.340049'
+branch: 中国成语·修身与治理·第52条(集思广益)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第52条《集思广益》
+  core: 聚集多方智慧以广益，是信息聚合机制——以多人视角拼合近真(破盲人摸象之蔽)，使决策不蔽于一隅。机制设计在此=设计聚合/加权机制使真知浮现、避免群体极化或一言堂。
+  verse: 集众思，广忠益；独察则蔽，合议乃明。
+  origin: 诸葛亮《教与军师长史参军掾属》：'夫参署者，集众思广忠益也。' 又《三国志》注。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jisi_guangyi
+  method: 集思广益
+  signature: fn jisi_guangyi(aggregate) -> collective_intel
+  precond: 独察则蔽
+  postcond: 聚众思，益乃广
+  negative_space: ⊗ 一言堂则偏
+  steps:
+  - 聚众
+  - 纳异
+  - 加权
+  - 近真
+  nca_emit: true
+dispatch:
+  main_pipeline: jisi_guangyi
+  trigger: 集众思，广忠益；独察则蔽，合议乃明。
+  when: 当决策需多方信息聚合、破单一视角时触发
+  graph:
+  - from: jisi_guangyi
+    to: []
+decision:
+- if: 需信息聚合机制
+  call: jisi_guangyi
+skills:
+- 集思广益·思维研判
+negative_space:
+- 一言堂则偏
+- 群极化则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-10-20260827-10
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.861790'
+branch: 中国成语·战略与决断·第10条(唇亡齿寒)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第10条《唇亡齿寒》
+  core: 识别依存关系中的连锁风险：邻方受损即己方受损，不可因短期小利牺牲共生结构；是系统相依/外部性的古典直觉。
+  verse: 虞虢相邻，虢亡虞随，唇缺齿露，其寒可知。
+  origin: 《左传·僖公五年》：宫之奇谏虞公，言'辅车相依，唇亡齿寒'，虞虢相倚，晋假道灭虢则虞亦不保；虞公不听，果亡。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chunwang_chihan
+  method: 唇亡齿寒
+  signature: fn chunwang_chihan(assess) -> interdependence_risk
+  precond: 昧依存
+  postcond: 连锁明，防患先
+  negative_space: ⊗ 见利忘邻则危
+  steps:
+  - 识邻
+  - 察链
+  - 量损
+  - 护共生
+  nca_emit: true
+dispatch:
+  main_pipeline: chunwang_chihan
+  trigger: 虞虢相邻，虢亡虞随，唇缺齿露，其寒可知。
+  when: 当评估邻方受损对自身连锁影响、是否牺牲共生换小利时触发
+  graph:
+  - from: chunwang_chihan
+    to: []
+decision:
+- if: 需依存风险识别
+  call: chunwang_chihan
+skills:
+- 唇亡齿寒·思维研判
+negative_space:
+- 见小利忘共生则危
+- 孤立看损益则蔽
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

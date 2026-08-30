@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-19-20260827-19
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.984072'
+branch: 中国成语·认知与辩证·第19条(邯郸学步)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第19条《邯郸学步》
+  core: 盲目模仿他人而丢失自身优势，是同质化陷阱；学习须以'保住本'为前提，舍本逐末终至两头落空。
+  verse: 燕人学步，未得国能，又失故步，匍匐而归。
+  origin: 《庄子·秋水》：燕寿陵余子学行于邯郸，未得国能，又失其故行，直匍匐而归耳。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: handan_xuebu
+  method: 邯郸学步
+  signature: fn handan_xuebu(warn) -> keep_own_core
+  precond: 盲目模仿
+  postcond: 保本，择善学
+  negative_space: ⊗ 舍本逐末
+  steps:
+  - 识己长
+  - 择可学
+  - 保本
+  - 融新
+  nca_emit: true
+dispatch:
+  main_pipeline: handan_xuebu
+  trigger: 燕人学步，未得国能，又失故步，匍匐而归。
+  when: 当盲目照搬外部模式、有丢失自身优势风险时触发(作警示)
+  graph:
+  - from: handan_xuebu
+    to: []
+decision:
+- if: 需保本而学
+  call: handan_xuebu
+skills:
+- 邯郸学步·思维研判
+negative_space:
+- 舍本逐末则两失
+- 盲目模仿则失己
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

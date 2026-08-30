@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ10-20260815-10
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.875604'
+branch: 诸子百家·儒家·孟子·第10条(义利之辨)
+stratum: 诸子百家·儒家·孟子·王道政术
+soul:
+  identity: 孟子·第10条《义利之辨》
+  core: 先义后利、以义制利；上下交征利则危，以仁义为纲则安。
+  verse: 王何必曰利？亦有仁义而已矣。上下交征利而国危矣。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 王道政术
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yi_li_zhi_bian
+  method: 义利之辨
+  signature: fn yi_li_zhi_bian(weigh) -> righteousness_first
+  precond: 唯利是图、交征
+  postcond: 仁义为纲，国安
+  negative_space: ⊗ 唯利则危
+  steps:
+  - 辨义利
+  - 先义
+  - 制利
+  - 安上下
+  nca_emit: true
+dispatch:
+  main_pipeline: yi_li_zhi_bian
+  trigger: 王何必曰利？亦有仁义而已矣。上下交征利而国危矣。
+  when: 当宜先义后利、不宜唯利时触发
+  graph:
+  - from: yi_li_zhi_bian
+    to: []
+decision:
+- if: 需明义利之辨
+  call: yi_li_zhi_bian
+skills:
+- 义利之辨·顺势研判
+negative_space:
+- 交征利则危
+- 见利忘义则溃
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

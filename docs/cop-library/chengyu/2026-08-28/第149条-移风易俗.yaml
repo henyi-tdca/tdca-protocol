@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-149-20260828-149
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.754720'
+branch: 中国成语·修身与治理·第149条(移风易俗)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第149条《移风易俗》
+  core: 文化层的长周期治理——行为规范之下的默认值（风俗）改变须靠示范+环境+代际，非一令可行；治理须度量'俗变率'而非宣告完成。
+  verse: 移其风，易其俗；其感人深，其化成固。
+  origin: 《荀子·乐论》：乐'可以善民心，其感人深，其移风易俗'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yifeng_yisu
+  method: 移风易俗
+  signature: fn yifeng_yisu(culture) -> default_norm_shifted
+  precond: 默认行为模式须改
+  postcond: 风移俗易，默认值更新
+  negative_space: ⊗ 一令代化则反弹
+  steps:
+  - 择其范
+  - 设其境
+  - 恒其久
+  - 量其变
+  nca_emit: true
+dispatch:
+  main_pipeline: yifeng_yisu
+  trigger: 移其风，易其俗；其感人深，其化成固。
+  when: 当须改变群体默认行为模式时触发
+  graph:
+  - from: yifeng_yisu
+    to: []
+decision:
+- if: 需文化层治理
+  call: yifeng_yisu
+skills:
+- 移风易俗·思维研判
+negative_space:
+- 以令代化则反弹
+- 无度量则不知其变
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

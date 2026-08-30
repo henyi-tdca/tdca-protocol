@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH64-20260815-64
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.863873'
+branch: 诸子百家·道家·道德经·第64章
+stratum: 诸子百家·道家·道德经·无为治国
+soul:
+  identity: 道德经·第64章《其安易持》
+  core: 安易持、未兆易谋，合抱生毫末；以早微积成。
+  verse: 其安易持，为之于未有；千里之行，始于足下。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 无为治国
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qi_an_yi_chi
+  method: 其安易持
+  signature: fn qi_an_yi_chi(tend) -> micro_seed
+  precond: 溃后施救、晚
+  postcond: 为之未有，积微成著
+  negative_space: ⊗ 待著则溃
+  steps:
+  - 安易持
+  - 未有谋
+  - 毫末
+  - 足下始
+  nca_emit: true
+dispatch:
+  main_pipeline: qi_an_yi_chi
+  trigger: 其安易持，为之于未有；千里之行，始于足下。
+  when: 当事将溃、宜早微防时触发
+  graph:
+  - from: qi_an_yi_chi
+    to: []
+decision:
+- if: 需为之未有
+  call: qi_an_yi_chi
+skills:
+- 其安易持·顺势研判
+negative_space:
+- 待著则溃
+- 终大则难
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

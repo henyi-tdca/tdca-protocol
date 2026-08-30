@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-119-20260828-119
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.514863'
+branch: 中国成语·修身与治理·第119条(过犹不及)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第119条《过犹不及》
+  core: 参数校准——治理/干预存在最优区间，不足与过度同属偏离；多数系统毁于过度而非不足，故校准动作常在'减'侧。
+  verse: 师与商也，过与不及；俱为失中，减其一偏。
+  origin: 《论语·先进》：子贡问师与商也孰贤，子曰'师也过，商也不及'，曰'过犹不及'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: guoyou_buji
+  method: 过犹不及
+  signature: fn guoyou_buji(calibrate) -> optimal_interval_held
+  precond: 干预强度偏离最优区间
+  postcond: 度得其中，张弛有节
+  negative_space: ⊗ 无度则两边皆失
+  steps:
+  - 定其度
+  - 测其偏
+  - 收其过
+  - 补其不
+  nca_emit: true
+dispatch:
+  main_pipeline: guoyou_buji
+  trigger: 师与商也，过与不及；俱为失中，减其一偏。
+  when: 当治理/干预强度需校准、警惕过度时触发
+  graph:
+  - from: guoyou_buji
+    to: []
+decision:
+- if: 需干预校准
+  call: guoyou_buji
+skills:
+- 过犹不及·思维研判
+negative_space:
+- 以勤补过则更过
+- 以惰补不及则更懈
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

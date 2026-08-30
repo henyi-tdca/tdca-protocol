@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-39-20260827-39
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.215428'
+branch: 中国成语·战略与决断·第39条(纲举目张)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第39条《纲举目张》
+  core: 提起网纲则全网眼自张，喻抓住关键枢纽/系统杠杆，以最小干预撬动整体；是机制设计的关键杠杆点——识别'牵一发而动全身'的结构节点，在要害设机制，使全局自组织趋向目标。
+  verse: 一举其纲，万目皆张；执本以御末，用力寡而功多。
+  origin: 《吕氏春秋·用民》/ 郑玄注《诗》'纲举目张'：善张网者引其纲，不一一撒万目而后得；比喻治国抓纲。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gangju_muzhang
+  method: 纲举目张
+  signature: fn gangju_muzhang(leverage) -> system_align
+  precond: 逐末则乱
+  postcond: 执其纲，众目张
+  negative_space: ⊗ 逐末则劳
+  steps:
+  - 识纲
+  - 执其要
+  - 设杠杆
+  - 众自张
+  nca_emit: true
+dispatch:
+  main_pipeline: gangju_muzhang
+  trigger: 一举其纲，万目皆张；执本以御末，用力寡而功多。
+  when: 当系统复杂、宜抓关键杠杆而非处处发力时触发
+  graph:
+  - from: gangju_muzhang
+    to: []
+decision:
+- if: 需关键杠杆治理
+  call: gangju_muzhang
+skills:
+- 纲举目张·思维研判
+negative_space:
+- 逐末则劳而寡功
+- 纲错则全盘乖
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-67-20260828-67
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.393798'
+branch: 中国成语·战略与决断·第67条(哀兵必胜)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第67条《哀兵必胜》
+  core: 道义合法性是战斗力的乘数：被剥夺感转化为战斗意志时，弱势方可胜强势方；治理者须警惕'制造哀兵'——压迫本身在为对手增能。
+  verse: 抗兵相若，哀者胜矣。
+  origin: 《老子》六十九章：'故抗兵相若，哀者胜矣。'后化为成语，指受压迫而悲愤奋起的一方战斗力更强。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: aibing_bisheng
+  method: 哀兵必胜
+  signature: fn aibing_bisheng(morale) -> underdog_won
+  precond: 两军相若
+  postcond: 哀者胜，势逆转
+  negative_space: ⊗ 骄兵则败
+  steps:
+  - 明道义
+  - 聚悲愤
+  - 转战志
+  - 持后劲
+  nca_emit: true
+dispatch:
+  main_pipeline: aibing_bisheng
+  trigger: 抗兵相若，哀者胜矣。
+  when: 当弱势方以正义性聚士气、或强势方须检视己方是否制造哀兵时触发
+  graph:
+  - from: aibing_bisheng
+    to: []
+decision:
+- if: 需士气乘数研判
+  call: aibing_bisheng
+skills:
+- 哀兵必胜·思维研判
+negative_space:
+- 恃哀而轻战则虚
+- 滥用悲愤则失道
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

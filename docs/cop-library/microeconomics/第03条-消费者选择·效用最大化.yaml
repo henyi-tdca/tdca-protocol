@@ -1,0 +1,47 @@
+COP-ID: MICRO-03-20260825-03
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.178550'
+branch: 现代经济学·微观经济学·第03条(消费者选择·效用最大化)
+stratum: 现代经济学·微观经济学·市场均衡
+soul:
+  identity: 微观经济学·第03条《消费者选择·效用最大化》
+  core: 消费者在预算约束下最大化效用，均衡于各品边际效用之比等于价格之比（MU/P 均等）；无差异曲线与预算线之切点为最优。
+  verse: 人以其有限之资，求所欲之极；权衡取舍，至边际而止。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 市场均衡
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: consumer_choice
+  method: 消费者选择·效用最大化
+  signature: fn consumer_choice(maximize) -> optimal_bundle
+  precond: 昧偏好或越约束
+  postcond: 效用极，约束内
+  negative_space: ⊗ 昧偏好则谬
+  steps:
+  - 列偏好
+  - 立预算
+  - 求边际
+  - 定切点
+  nca_emit: true
+dispatch:
+  main_pipeline: consumer_choice
+  trigger: 人以其有限之资，求所欲之极；权衡取舍，至边际而止。
+  when: 当在有限预算下做消费取舍、解释需求曲线时触发
+  graph:
+  - from: consumer_choice
+    to: []
+decision:
+- if: 需消费者最优选择
+  call: consumer_choice
+skills:
+- 消费者选择·效用最大化·均衡研判
+negative_space:
+- 昧真实偏好则谬
+- 忽收入约束则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

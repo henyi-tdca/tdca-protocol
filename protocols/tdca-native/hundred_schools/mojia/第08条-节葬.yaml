@@ -1,0 +1,47 @@
+COP-ID: HS-MO-08-20260815-08
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.067754'
+branch: 诸子百家·墨家·第08条(节葬)
+stratum: 诸子百家·墨家·节用三表
+soul:
+  identity: 墨家·第08条《节葬》
+  core: 节葬短丧、反厚丧久哀；以省民力，立丧制之俭。
+  verse: 节葬短丧，反厚葬久丧。衣衾三领，足以朽肉；棺椁三寸，足以朽骨。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 节用三表
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jie_zang
+  method: 节葬
+  signature: fn jie_zang(rite) -> simple_burial
+  precond: 厚葬、久丧废业
+  postcond: 节葬，民力省
+  negative_space: ⊗ 厚丧则废
+  steps:
+  - 约丧
+  - 短哀
+  - 省费
+  - 复业
+  nca_emit: true
+dispatch:
+  main_pipeline: jie_zang
+  trigger: 节葬短丧，反厚葬久丧。衣衾三领，足以朽肉；棺椁三寸，足以朽骨。
+  when: 当宜简丧、不宜厚费时触发
+  graph:
+  - from: jie_zang
+    to: []
+decision:
+- if: 需节葬
+  call: jie_zang
+skills:
+- 节葬·顺势研判
+negative_space:
+- 厚葬则竭家
+- 久丧则废业
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

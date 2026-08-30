@@ -1,0 +1,47 @@
+COP-ID: HS-FA-07-20260815-07
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.565714'
+branch: 诸子百家·法家·第07条(明主治吏不治民)
+stratum: 诸子百家·法家·刑名权柄
+soul:
+  identity: 法家·第07条《明主治吏不治民》
+  core: 明主治吏不治民、以吏治民；以抓关键层级，立管理之要。
+  verse: 圣人治吏不治民。吏者，所以治民也；明主治吏则官皆得其人。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 刑名权柄
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ming_zhu_zhi_li
+  method: 明主治吏不治民
+  signature: fn ming_zhu_zhi_li(manage) -> rule_officials
+  precond: 亲民、纲乱
+  postcond: 治吏，官得人
+  negative_space: ⊗ 亲民则紊
+  steps:
+  - 识关键
+  - 治吏
+  - 择人
+  - 民自理
+  nca_emit: true
+dispatch:
+  main_pipeline: ming_zhu_zhi_li
+  trigger: 圣人治吏不治民。吏者，所以治民也；明主治吏则官皆得其人。
+  when: 当宜抓管理节点、不宜事必亲时触发
+  graph:
+  - from: ming_zhu_zhi_li
+    to: []
+decision:
+- if: 需治吏不治民
+  call: ming_zhu_zhi_li
+skills:
+- 明主治吏不治民·顺势研判
+negative_space:
+- 事必亲则紊
+- 吏非其人则败
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-MG-07-20260815-07
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.094332'
+branch: 诸子百家·名家·第07条(历物十事)
+stratum: 诸子百家·名家·合同异
+soul:
+  identity: 名家·第07条《历物十事》
+  core: 历物十事、极观相对；以大一至小、天地相卑，破常识对待之执。
+  verse: 至大无外谓之大一，至小无内谓之小一。天与地卑，山与泽平。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 合同异
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: li_wu_shi_shi
+  method: 历物十事
+  signature: fn li_wu_shi_shi(observe) -> extreme_view
+  precond: 执常对待
+  postcond: 极观明，对待破
+  negative_space: ⊗ 执常则蔽
+  steps:
+  - 观极大
+  - 观极小
+  - 识相对
+  - 破执
+  nca_emit: true
+dispatch:
+  main_pipeline: li_wu_shi_shi
+  trigger: 至大无外谓之大一，至小无内谓之小一。天与地卑，山与泽平。
+  when: 当宜破常识对待、作极观时触发
+  graph:
+  - from: li_wu_shi_shi
+    to: []
+decision:
+- if: 需历物十事
+  call: li_wu_shi_shi
+skills:
+- 历物十事·顺势研判
+negative_space:
+- 执常对待则蔽
+- 相对论无边则滑
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

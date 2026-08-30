@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH35-20260815-35
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.526239'
+branch: 诸子百家·道家·道德经·第35章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第35章《执大象》
+  core: 执大道(大象)天下归，视听之娱止于过客；以本御末。
+  verse: 执大象，天下往；乐与饵，过客止。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_da_xiang
+  method: 执大象
+  signature: fn zhi_da_xiang(attract) -> root_attraction
+  precond: 以末节娱人、不留
+  postcond: 执大象，天下往
+  negative_space: ⊗ 逐饵则散
+  steps:
+  - 执大象
+  - 天下往
+  - 不饵
+  - 本御末
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_da_xiang
+  trigger: 执大象，天下往；乐与饵，过客止。
+  when: 当以感官诱惑聚人、难留时触发
+  graph:
+  - from: zhi_da_xiang
+    to: []
+decision:
+- if: 需以大象归人
+  call: zhi_da_xiang
+skills:
+- 执大象·顺势研判
+negative_space:
+- 逐乐饵则散
+- 末胜则本失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

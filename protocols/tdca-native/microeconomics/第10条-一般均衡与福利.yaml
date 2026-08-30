@@ -1,0 +1,47 @@
+COP-ID: MICRO-10-20260825-10
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.229195'
+branch: 现代经济学·微观经济学·第10条(一般均衡与福利)
+stratum: 现代经济学·微观经济学·福利与失灵
+soul:
+  identity: 微观经济学·第10条《一般均衡与福利》
+  core: 一般均衡刻画所有市场同时出清；福利经济学第一、二定理连效率与均衡，帕累托最优为效率判据，须防价值预设。
+  verse: 百货相因，一市之动，波及其余；welfare 者，无人更劣而有人更优也。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 福利与失灵
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: general_equilibrium_welfare
+  method: 一般均衡与福利
+  signature: fn general_equilibrium_welfare(optimize) -> pareto_optimal
+  precond: 见木不见林
+  postcond: 全清，效极
+  negative_space: ⊗ 昧一般均衡则蔽
+  steps:
+  - 联市场
+  - 求全清
+  - 判帕累托
+  - 察定理
+  nca_emit: true
+dispatch:
+  main_pipeline: general_equilibrium_welfare
+  trigger: 百货相因，一市之动，波及其余；welfare 者，无人更劣而有人更优也。
+  when: 当跨市场联动、政策总效率评估时触发
+  graph:
+  - from: general_equilibrium_welfare
+    to: []
+decision:
+- if: 需一般均衡/福利分析
+  call: general_equilibrium_welfare
+skills:
+- 一般均衡与福利·均衡研判
+negative_space:
+- 昧一般均衡则见木不见林
+- 福利判据须防价值预设
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

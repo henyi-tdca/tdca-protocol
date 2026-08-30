@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-21-20260827-21
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.001277'
+branch: 中国成语·修身与治理·第21条(一诺千金)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第21条《一诺千金》
+  core: 信用是长期可复用资产，轻诺必寡信；以'许必践'建立可信承诺，是 NCA 确权/承诺可信的人际原型。
+  verse: 季布一诺，重于百金，楚人谚之，终赖以免。
+  origin: 《史记·季布栾布列传》：楚人谚'得黄金百斤，不如得季布一诺'；季布以信义重于诸侯，后获赦免。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yinuo_qianjin
+  method: 一诺千金
+  signature: fn yinuo_qianjin(commit) -> trust_asset
+  precond: 轻诺
+  postcond: 许必践，信可复
+  negative_space: ⊗ 轻诺则寡信
+  steps:
+  - 慎许
+  - 立据
+  - 必践
+  - 积信
+  nca_emit: true
+dispatch:
+  main_pipeline: yinuo_qianjin
+  trigger: 季布一诺，重于百金，楚人谚之，终赖以免。
+  when: 当建立长期合作关系、需以信用作可复用资产时触发
+  graph:
+  - from: yinuo_qianjin
+    to: []
+decision:
+- if: 需可信承诺
+  call: yinuo_qianjin
+skills:
+- 一诺千金·思维研判
+negative_space:
+- 轻诺则寡信
+- 许而不践则废
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

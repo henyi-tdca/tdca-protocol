@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-112-20260828-112
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.467989'
+branch: 中国成语·修身与治理·第112条(集腋成裘)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第112条《集腋成裘》
+  core: 微贡献聚合机制——单点微小贡献经聚合规则形成整体价值；关键在聚合规则（可信记账+按量确权），无规则则微贡献永久散落。
+  verse: 一腋至微，聚之成裘；散则俱微，聚乃成制。
+  origin: 《慎子·知忠》：'狐白之裘，盖非一狐之腋也'；后聚众微以成大器之通喻。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jiye_chengqiu
+  method: 集腋成裘
+  signature: fn jiye_chengqiu(aggregate) -> micro_contributions_pooled
+  precond: 存在大量微小贡献源
+  postcond: 微聚成制，价值显化
+  negative_space: ⊗ 无记账则聚而复散
+  steps:
+  - 立其账
+  - 纳其微
+  - 核其量
+  - 成其裘
+  nca_emit: true
+dispatch:
+  main_pipeline: jiye_chengqiu
+  trigger: 一腋至微，聚之成裘；散则俱微，聚乃成制。
+  when: 当海量微小贡献须聚合为整体价值时触发
+  graph:
+  - from: jiye_chengqiu
+    to: []
+decision:
+- if: 需微贡献聚合
+  call: jiye_chengqiu
+skills:
+- 集腋成裘·思维研判
+negative_space:
+- 无可信记账则散
+- 聚而不确权则贡献者退场
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

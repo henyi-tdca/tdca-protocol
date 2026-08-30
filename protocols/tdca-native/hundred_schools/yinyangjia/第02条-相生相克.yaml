@@ -1,0 +1,47 @@
+COP-ID: HS-YY-02-20260815-02
+source_expert: yinyangjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.420817'
+branch: 诸子百家·阴阳家·第02条(相生相克)
+stratum: 诸子百家·阴阳家·五行本体
+soul:
+  identity: 阴阳家·第02条《相生相克》
+  core: 五行相生相克、生克互济；以生克为机枢，立动态平衡之环。
+  verse: 水生木，木生火，火生土，土生金，金生水。克者：水克火，火克金，金克木，木克土，土克水。
+  role: 思维协议 (诸子百家 / 阴阳家 / 五行)
+  category: 诸子百家 / 阴阳家 / 五行本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xiang_sheng_xiang_ke
+  method: 相生相克
+  signature: fn xiang_sheng_xiang_ke(cycle) -> generate_restrain
+  precond: 偏生或偏克
+  postcond: 生克衡，机运
+  negative_space: ⊗ 偏则乖
+  steps:
+  - 明生
+  - 明克
+  - 衡生克
+  - 成环
+  nca_emit: true
+dispatch:
+  main_pipeline: xiang_sheng_xiang_ke
+  trigger: 水生木，木生火，火生土，土生金，金生水。克者：水克火，火克金，金克木，木克土，土克水。
+  when: 当系统待调、宜察生克平衡时触发
+  graph:
+  - from: xiang_sheng_xiang_ke
+    to: []
+decision:
+- if: 需相生相克
+  call: xiang_sheng_xiang_ke
+skills:
+- 相生相克·顺势研判
+negative_space:
+- 偏生则壅
+- 偏克则伤
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

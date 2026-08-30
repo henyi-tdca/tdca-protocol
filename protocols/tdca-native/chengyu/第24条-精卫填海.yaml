@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-24-20260827-24
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.027175'
+branch: 中国成语·修身与治理·第24条(精卫填海)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第24条《精卫填海》
+  core: 以微小持续对抗不可撼动之巨，是抗逆韧性的象征；明知力微而不可休，以'不息'本身对抗绝望。
+  verse: 女娃溺海，化为精卫，衔石填海，永不止息。
+  origin: 《山海经·北山经》：炎帝之少女女娃游于东海溺而不返，故为精卫，常衔西山之木石以堙于东海。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jingwei_tianhai
+  method: 精卫填海
+  signature: fn jingwei_tianhai(resist) -> unyielding_resilience
+  precond: 巨力不可逆
+  postcond: 微持，韧不熄
+  negative_space: ⊗ 因微而弃
+  steps:
+  - 认巨
+  - 衔微
+  - 不息
+  - 韧存
+  nca_emit: true
+dispatch:
+  main_pipeline: jingwei_tianhai
+  trigger: 女娃溺海，化为精卫，衔石填海，永不止息。
+  when: 当面对压倒性逆境、需以韧性对抗时触发
+  graph:
+  - from: jingwei_tianhai
+    to: []
+decision:
+- if: 需抗逆韧性
+  call: jingwei_tianhai
+skills:
+- 精卫填海·思维研判
+negative_space:
+- 因力微而弃则溃
+- 息则前功弃
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ11-20260815-11
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.881717'
+branch: 诸子百家·儒家·孟子·第11条(与民同乐)
+stratum: 诸子百家·儒家·孟子·王道政术
+soul:
+  identity: 孟子·第11条《与民同乐》
+  core: 与民同乐忧、共其好恶；以同乐得民心，不独乐而天下怨。
+  verse: 乐民之乐者，民亦乐其乐；忧民之忧者，民亦忧其忧。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 王道政术
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yu_min_tong_le
+  method: 与民同乐
+  signature: fn yu_min_tong_le(share) -> shared_joy
+  precond: 独乐民怨
+  postcond: 同乐，民归
+  negative_space: ⊗ 独乐则怨
+  steps:
+  - 识民乐
+  - 同其乐
+  - 共其忧
+  - 得民心
+  nca_emit: true
+dispatch:
+  main_pipeline: yu_min_tong_le
+  trigger: 乐民之乐者，民亦乐其乐；忧民之忧者，民亦忧其忧。
+  when: 当宜与民同乐、不宜独享时触发
+  graph:
+  - from: yu_min_tong_le
+    to: []
+decision:
+- if: 需与民同乐
+  call: yu_min_tong_le
+skills:
+- 与民同乐·顺势研判
+negative_space:
+- 独乐则天下怨
+- 违民欲则叛
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

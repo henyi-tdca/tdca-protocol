@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-28-20260827-28
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.068873'
+branch: 中国成语·修身与治理·第28条(指鹿为马)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第28条《指鹿为马》
+  core: 以权力强行重定义事实，是真理扭曲；须有独立确权锚，使'指鹿为马'无法篡断真相。是其反面——NCA 不可篡改确权正为防止此弊。
+  verse: 赵高指鹿，群臣或默，或言马者，顺逆可见。
+  origin: 《史记·秦始皇本纪》：赵高欲为乱，献鹿曰马，二世笑问左右，或默或言马以顺高，或言鹿者后族诛。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhilu_weima
+  method: 指鹿为马
+  signature: fn zhilu_weima(warn) -> independent_anchor
+  precond: 以权易真
+  postcond: 立锚，拒篡真
+  negative_space: ⊗ 以权代真则乱
+  steps:
+  - 识篡改
+  - 立锚
+  - 拒顺
+  - 守真
+  nca_emit: true
+dispatch:
+  main_pipeline: zhilu_weima
+  trigger: 赵高指鹿，群臣或默，或言马者，顺逆可见。
+  when: 当有人以权位重定义事实、需防真相被篡时触发(作确权警示)
+  graph:
+  - from: zhilu_weima
+    to: []
+decision:
+- if: 需独立确权锚
+  call: zhilu_weima
+skills:
+- 指鹿为马·思维研判
+negative_space:
+- 以权易真则乱
+- 无锚则真相篡
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

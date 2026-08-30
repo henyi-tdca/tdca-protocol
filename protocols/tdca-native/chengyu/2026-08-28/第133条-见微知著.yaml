@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-133-20260828-133
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.638858'
+branch: 中国成语·认知与辩证·第133条(见微知著)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第133条《见微知著》
+  core: 微信号的趋势推断——从微小早期迹象外推后续大势；推断须绑定机制解释链（为何微能知著），否则成过度联想。是数据流感知的认识论基础。
+  verse: 微而知彰，见端知末；见微以知萌，见端以知末。
+  origin: 《韩非子·说林上》：'圣人见微以知萌，见端以知末'；《周易·系辞》'知微知彰'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jianwei_zhizhu
+  method: 见微知著
+  signature: fn jianwei_zhizhu(infer) -> early_signal_decoded
+  precond: 存在早期微弱信号
+  postcond: 微兆得解，趋势先知
+  negative_space: ⊗ 无机制链则联想失真
+  steps:
+  - 捕其微
+  - 释其义
+  - 验其链
+  - 推其著
+  nca_emit: true
+dispatch:
+  main_pipeline: jianwei_zhizhu
+  trigger: 微而知彰，见端知末；见微以知萌，见端以知末。
+  when: 当须从早期微弱信号推断趋势时触发
+  graph:
+  - from: jianwei_zhizhu
+    to: []
+decision:
+- if: 需早期信号推断
+  call: jianwei_zhizhu
+skills:
+- 见微知著·思维研判
+negative_space:
+- 无解释链则联想失真
+- 见微不察则失先机
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-04
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.699447'
+stratum: 胜战计
+soul:
+  identity: 以逸待劳
+  core: 养精蓄锐, 待对方疲而击之
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 胜战计
+primitives:
+- name: yi_yi_dai_lao
+  method: 以逸待劳
+  signature: 'fn yi_yi_dai_lao(context: Situation) -> Outcome'
+  precond: 敌远来或躁动, 己方可守
+  postcond: 养精蓄锐, 待敌疲而击之 (目标达成)
+  negative_space: ⊗ 己亦疲或时间不在己则不可行
+  steps:
+  - 固守蓄力
+  - 诱敌耗散
+  - 敌疲则突击
+  nca_emit: true
+dispatch:
+  main_pipeline: yi_yi_dai_lao
+  graph:
+  - from: yi_yi_dai_lao
+    to: []
+  note: 单计独立协议, 主原语 yi_yi_dai_lao 即该计执行体
+decision:
+- if: 对方远来或躁动, 行动方可守
+  call: yi_yi_dai_lao
+skills: []
+negative_space:
+- ⊗ 己亦疲或时间不在己则不可行
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

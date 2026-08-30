@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH37-20260815-37
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.548739'
+branch: 诸子百家·道家·道德经·第37章
+stratum: 诸子百家·道家·道德经·道体论
+soul:
+  identity: 道德经·第37章《道常无为》
+  core: 道无为而万物自化，无不为；以不妄为成一切为。
+  verse: 道常无为而无不为。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 道体论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dao_chang_wu_wei
+  method: 道常无为
+  signature: fn dao_chang_wu_wei(govern) -> all_by_nonaction
+  precond: 妄为而事不成
+  postcond: 无为，万物自化(无不为)
+  negative_space: ⊗ 妄为则败
+  steps:
+  - 守无为
+  - 不妄
+  - 自化
+  - 无不为
+  nca_emit: true
+dispatch:
+  main_pipeline: dao_chang_wu_wei
+  trigger: 道常无为而无不为。
+  when: 当强为反败、宜无为自化时触发
+  graph:
+  - from: dao_chang_wu_wei
+    to: []
+decision:
+- if: 需以无为成无不为
+  call: dao_chang_wu_wei
+skills:
+- 道常无为·顺势研判
+negative_space:
+- 妄为则乱
+- 强执则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

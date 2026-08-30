@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-143-20260828-143
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.708715'
+branch: 中国成语·修身与治理·第143条(量才录用)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第143条《量才录用》
+  core: 人岗匹配治理——按实际胜任力分配职责，宁小其任勿过其器；与任人唯贤成对（彼定选拔标准，此校匹配精度）。
+  verse: 量其器而授其职，称其力而任其事；器小任重则折，才大用小则逸。
+  origin: 语本《管子·权修》'察能授官，班禄赐予，使民之机也'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: liangcai_luyong
+  method: 量才录用
+  signature: fn liangcai_luyong(match) -> talent_role_fitted
+  precond: 岗位与人才匹配待定
+  postcond: 才岗相称，效率出
+  negative_space: ⊗ 器小任重则折
+  steps:
+  - 量其才
+  - 度其岗
+  - 授其职
+  - 验其效
+  nca_emit: true
+dispatch:
+  main_pipeline: liangcai_luyong
+  trigger: 量其器而授其职，称其力而任其事；器小任重则折，才大用小则逸。
+  when: 当授权配置须按胜任力校准精度时触发
+  graph:
+  - from: liangcai_luyong
+    to: []
+decision:
+- if: 需人岗匹配
+  call: liangcai_luyong
+skills:
+- 量才录用·思维研判
+negative_space:
+- 超载授权则折
+- 才岗久锁则钝
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

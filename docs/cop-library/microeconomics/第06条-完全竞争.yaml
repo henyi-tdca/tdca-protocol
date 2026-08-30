@@ -1,0 +1,47 @@
+COP-ID: MICRO-06-20260825-06
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.199385'
+branch: 现代经济学·微观经济学·第06条(完全竞争)
+stratum: 现代经济学·微观经济学·厂商与结构
+soul:
+  identity: 微观经济学·第06条《完全竞争》
+  core: 完全竞争下厂商为价格接受者，长期均衡价=最低平均成本=边际成本，经济利润趋于零，配置达帕累托效率。
+  verse: 市若平畴，农者众而各微，价不由一人而定，利趋于零。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 厂商与结构
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: perfect_competition
+  method: 完全竞争
+  signature: fn perfect_competition(equilibrate) -> zero_profit
+  precond: 设壁垒或限进出
+  postcond: 价=MC，效极
+  negative_space: ⊗ 设自由进出则虚
+  steps:
+  - 认接受者
+  - 求P=MC
+  - 察长期
+  - 零利
+  nca_emit: true
+dispatch:
+  main_pipeline: perfect_competition
+  trigger: 市若平畴，农者众而各微，价不由一人而定，利趋于零。
+  when: 当以基准模型评估市场效率、定价权有无时触发
+  graph:
+  - from: perfect_competition
+    to: []
+decision:
+- if: 需完全竞争基准
+  call: perfect_competition
+skills:
+- 完全竞争·均衡研判
+negative_space:
+- 设自由进出则虚
+- 昧信息不对称则偏
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

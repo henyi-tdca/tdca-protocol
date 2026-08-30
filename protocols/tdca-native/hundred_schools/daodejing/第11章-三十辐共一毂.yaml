@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH11-20260815-11
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.263501'
+branch: 诸子百家·道家·道德经·第11章
+stratum: 诸子百家·道家·道德经·辩证转化
+soul:
+  identity: 道德经·第11章《三十辐共一毂》
+  core: 有无相生，虚空方为器用；以留白/空缺成功能。
+  verse: 有之以为利，无之以为用。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 辩证转化
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: san_shi_fu_gong_yi_gu
+  method: 三十辐共一毂
+  signature: fn you_wu_xiang_sheng(design) -> functional_void
+  precond: 设计/组织塞满而无用
+  postcond: 留虚空，成其用
+  negative_space: ⊗ 实塞则废
+  steps:
+  - 识有
+  - 用无
+  - 留空
+  - 成用
+  nca_emit: true
+dispatch:
+  main_pipeline: san_shi_fu_gong_yi_gu
+  trigger: 有之以为利，无之以为用。
+  when: 当系统因填满而失功能、需留白时触发
+  graph:
+  - from: san_shi_fu_gong_yi_gu
+    to: []
+decision:
+- if: 需以虚空成用
+  call: san_shi_fu_gong_yi_gu
+skills:
+- 三十辐共一毂·顺势研判
+negative_space:
+- 实塞则失用
+- 满填则废
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

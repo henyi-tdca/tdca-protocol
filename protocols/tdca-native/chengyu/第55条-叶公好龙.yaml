@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-55-20260827-55
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.372170'
+branch: 中国成语·修身与治理·第55条(叶公好龙)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第55条《叶公好龙》
+  core: 表面爱龙、真龙降临却惊走，是名实不符/虚伪之好；所好者'龙之符号'非'龙之实'。须辨'所宣称'与'所真迎'，防止以姿态代实质(与买椟还珠同属名实之辨，此重在'好'之真伪)。
+  verse: 叶公好龙，雕楹画楣；真龙见之，弃而走避。
+  origin: 汉·刘向《新序·杂事》：叶公子高好龙，钩以写龙、凿以写龙，天龙闻而下之，叶公弃而还走，失其魂魄。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yegong_haolong
+  method: 叶公好龙
+  signature: fn yegong_haolong(warn) -> nominal_vs_real
+  precond: 惑于名
+  postcond: 辨真伪，去虚好
+  negative_space: ⊗ 重名轻实
+  steps:
+  - 察所宣
+  - 验所迎
+  - 辨真伪
+  - 去虚
+  nca_emit: true
+dispatch:
+  main_pipeline: yegong_haolong
+  trigger: 叶公好龙，雕楹画楣；真龙见之，弃而走避。
+  when: 当有人表面推崇、真临却拒，须辨名实真伪时触发(作名实警示)
+  graph:
+  - from: yegong_haolong
+    to: []
+decision:
+- if: 需名实校验
+  call: yegong_haolong
+skills:
+- 叶公好龙·思维研判
+negative_space:
+- 重名轻实则蔽
+- 以姿态代实质
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

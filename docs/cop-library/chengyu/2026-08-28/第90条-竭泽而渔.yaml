@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-90-20260828-90
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.556146'
+branch: 中国成语·修身与治理·第90条(竭泽而渔)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第90条《竭泽而渔》
+  core: 以耗竭产能来源换取短期最大产出，是用未来现金流换当期收益的自杀式优化；可持续性的底线是'取之有度'——泽在，则渔岁岁有之。负空间警示型治理原语。
+  verse: 竭泽而渔，岂不获得？而明年无鱼。
+  origin: 《吕氏春秋·义赏》：雍季谏晋文公，'竭泽而渔，岂不获得？而明年无鱼'——以此论胜后当顾根本。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jieze_eryu
+  method: 竭泽而渔
+  signature: fn jieze_eryu(warn) -> sustainability_kept
+  precond: 短期产出压力
+  postcond: 取之有度，岁岁有鱼
+  negative_space: ⊗ 竭泽则断未来
+  steps:
+  - 识产能源
+  - 度其再生
+  - 定取额
+  - 留其本
+  nca_emit: true
+dispatch:
+  main_pipeline: jieze_eryu
+  trigger: 竭泽而渔，岂不获得？而明年无鱼。
+  when: 当以透支资源/团队/生态产能换取短期指标时触发(作熔断警示)
+  graph:
+  - from: jieze_eryu
+    to: []
+decision:
+- if: 需可持续底线
+  call: jieze_eryu
+skills:
+- 竭泽而渔·思维研判
+negative_space:
+- 竭泽取尽则明年无鱼
+- 过度封存则当期亦失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

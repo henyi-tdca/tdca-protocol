@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-40-20260827-40
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.224910'
+branch: 中国成语·战略与决断·第40条(居安思危)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第40条《居安思危》
+  core: 在安稳时预想危局、先立不可被胜之形，待机而动；是'先为不可胜'——修道保法、藏于九地，胜可知而不可为，无恃其不来。把风险前置为常态准备，而非临渴掘井。
+  verse: 安而不忘危，存而不忘亡；先为不可胜，以待敌之败。
+  origin: 《左传·襄公十一年》：书曰'居安思危，思则有备，有备无患'；魏绛谏晋悼公。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: ju_an_siwei
+  method: 居安思危
+  signature: fn ju_an_siwei(prepare) -> invincible_posture
+  precond: 安而忘危
+  postcond: 立不败，待可胜
+  negative_space: ⊗ 恃安则危
+  steps:
+  - 识安
+  - 预危
+  - 立形
+  - 待机
+  nca_emit: true
+dispatch:
+  main_pipeline: ju_an_siwei
+  trigger: 安而不忘危，存而不忘亡；先为不可胜，以待敌之败。
+  when: 当处境安稳、宜先固本待机防患时触发
+  graph:
+  - from: ju_an_siwei
+    to: []
+decision:
+- if: 需先为不可胜
+  call: ju_an_siwei
+skills:
+- 居安思危·思维研判
+negative_space:
+- 恃安忘危则倾
+- 备而不用则冗余
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

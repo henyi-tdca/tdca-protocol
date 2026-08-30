@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-41-20260827-41
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.234229'
+branch: 中国成语·认知与辩证·第41条(知己知彼)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第41条《知己知彼》
+  core: 既明己之长短，又察敌之虚实，方能立于不败；是信息对称/知胜总纲——以双向认知消弭不确定性，使决策基于完整态势而非臆测。不知彼不知己则每战必败。
+  verse: 知己知彼，百战不殆；不知彼己，每战必殆。
+  origin: 《孙子兵法·谋攻篇》：'知彼知己者，百战不殆；不知彼而知己，一胜一负；不知彼不知己，每战必殆。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhiji_zhibi
+  method: 知己知彼
+  signature: fn zhiji_zhibi(scan) -> informed_edge
+  precond: 昧彼己
+  postcond: 双向明，战不殆
+  negative_space: ⊗ 昧则殆
+  steps:
+  - 知己
+  - 知彼
+  - 校虚实
+  - 定方略
+  nca_emit: true
+dispatch:
+  main_pipeline: zhiji_zhibi
+  trigger: 知己知彼，百战不殆；不知彼己，每战必殆。
+  when: 当决策前需全面认知己方与对手态势时触发
+  graph:
+  - from: zhiji_zhibi
+    to: []
+decision:
+- if: 需信息对称研判
+  call: zhiji_zhibi
+skills:
+- 知己知彼·思维研判
+negative_space:
+- 昧彼己则殆
+- 以臆代察则盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

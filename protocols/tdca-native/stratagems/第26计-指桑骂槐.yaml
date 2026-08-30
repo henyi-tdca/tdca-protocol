@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-26
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:32.240926'
+stratum: 并战计
+soul:
+  identity: 指桑骂槐
+  core: 敲侧警正, 以威慑众
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 并战计
+primitives:
+- name: zhi_sang_ma_huai
+  method: 指桑骂槐
+  signature: 'fn zhi_sang_ma_huai(context: Situation) -> Outcome'
+  precond: 需警诫不从者
+  postcond: 敲侧警正, 以威慑众 (目标达成)
+  negative_space: ⊗ 桑槐皆不畏则无效
+  steps:
+  - 指桑(旁)示威
+  - 骂槐(正)惧
+  - 众服
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_sang_ma_huai
+  graph:
+  - from: zhi_sang_ma_huai
+    to: []
+  note: 单计独立协议, 主原语 zhi_sang_ma_huai 即该计执行体
+decision:
+- if: 需警诫不从者
+  call: zhi_sang_ma_huai
+skills: []
+negative_space:
+- ⊗ 桑槐皆不畏则无效
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-145-20260828-145
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.725163'
+branch: 中国成语·修身与治理·第145条(张弛有度)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第145条《张弛有度》
+  core: 治理节奏的制度化——紧张与松弛按节律交替并写入制度，而非依赖临场判断；与休养生息成对（彼恢复窗口，此常态节律）。
+  verse: 一张一弛，文武之道；久张则疲，久弛则废。
+  origin: 《礼记·杂记下》：孔子曰'张而不弛，文武弗能也；弛而不张，文武弗为也。一张一弛，文武之道也'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhangchi_youdu
+  method: 张弛有度
+  signature: fn zhangchi_youdu(rhythm) -> cadence_institutionalized
+  precond: 系统须可持续运行节律
+  postcond: 张弛成律，续航稳定
+  negative_space: ⊗ 无律则任意
+  steps:
+  - 定其律
+  - 量其张
+  - 排其弛
+  - 验其效
+  nca_emit: true
+dispatch:
+  main_pipeline: zhangchi_youdu
+  trigger: 一张一弛，文武之道；久张则疲，久弛则废。
+  when: 当运行强度须制度化节律、防久张久弛时触发
+  graph:
+  - from: zhangchi_youdu
+    to: []
+decision:
+- if: 需节律治理
+  call: zhangchi_youdu
+skills:
+- 张弛有度·思维研判
+negative_space:
+- 久张不弛则系统疲损
+- 久弛不张则松弛失效
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

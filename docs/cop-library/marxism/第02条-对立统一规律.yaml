@@ -1,0 +1,48 @@
+COP-ID: MACM-02-20260815-02
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.636424'
+branch: 马克思主义·第02条(对立统一规律)
+stratum: 马克思主义·唯物辩证法
+soul:
+  identity: 马克思主义·第02条《对立统一规律》
+  core: 对立统一是唯物辩证法的实质与核心；以矛盾双方既同一又斗争推动发展。
+  verse: 对立的统一是有条件的、暂时的、过渡的；互相排斥的对立面的斗争则是绝对的。矛盾是事物发展的动力。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 唯物辩证法
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: dui_li_tong_yi
+  method: 对立统一规律
+  signature: fn dui_li_tong_yi(conflict) -> unity_opposites
+  precond: 见一面、不见对立
+  postcond: 在对立中把握统一
+  negative_space: ⊗ 形而上学则僵
+  steps:
+  - 找矛盾
+  - 析两面
+  - 看同一
+  - 看斗争
+  - 促转化
+  nca_emit: true
+dispatch:
+  main_pipeline: dui_li_tong_yi
+  trigger: 对立的统一是有条件的、暂时的、过渡的；互相排斥的对立面的斗争则是绝对的。矛盾是事物发展的动力。
+  when: 当事物停滞、宜找内在矛盾动力时触发
+  graph:
+  - from: dui_li_tong_yi
+    to: []
+decision:
+- if: 需对立统一规律
+  call: dui_li_tong_yi
+skills:
+- 对立统一规律·顺势研判
+negative_space:
+- 调和矛盾则停滞
+- 只斗争不统一则破裂
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

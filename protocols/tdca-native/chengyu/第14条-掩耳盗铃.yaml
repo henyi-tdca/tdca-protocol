@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-14-20260827-14
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.927883'
+branch: 中国成语·认知与辩证·第14条(掩耳盗铃)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第14条《掩耳盗铃》
+  core: 自欺式忽略约束——以为自己不知=约束不存在，是典型认知盲区；客观约束不因主观无视而消失。
+  verse: 盗铃而掩其耳，以为不闻，自蔽耳目，其声愈彰。
+  origin: 《吕氏春秋·自知》：范氏亡，百姓有得钟者，欲负走而钟大，以椎毁之，恐人闻声，遽掩其耳；恶己自闻犹可，恶人闻则悖。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yanyer_daoling
+  method: 掩耳盗铃
+  signature: fn yanyer_daoling(warn) -> objective_constraint
+  precond: 以主观掩客观
+  postcond: 直面约束，不欺
+  negative_space: ⊗ 以无知为无
+  steps:
+  - 识约束
+  - 莫自欺
+  - 正面视
+  - 求解法
+  nca_emit: true
+dispatch:
+  main_pipeline: yanyer_daoling
+  trigger: 盗铃而掩其耳，以为不闻，自蔽耳目，其声愈彰。
+  when: 当有人无视明显约束、企图'假装不存在'时触发(作警示)
+  graph:
+  - from: yanyer_daoling
+    to: []
+decision:
+- if: 需直面客观约束
+  call: yanyer_daoling
+skills:
+- 掩耳盗铃·思维研判
+negative_space:
+- 以主观掩客观则盲
+- 无视约束则崩
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

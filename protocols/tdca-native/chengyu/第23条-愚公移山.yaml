@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-23-20260827-23
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.019714'
+branch: 中国成语·修身与治理·第23条(愚公移山)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第23条《愚公移山》
+  core: 以代际持续行动对冲巨大阻力，量变到质变；当单点力量不足，以'持续+传承'把不可撼动化为终可平。
+  verse: 年且九十，率子移山，子又生孙，山不加增，何苦不平。
+  origin: 《列子·汤问》：北山愚公年九十余，率子孙叩石垦壤移太行、王屋；智叟笑之，公言'子又生孙，孙又生子'，天帝感其诚，命夸娥氏二子负山。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yugong_yishan
+  method: 愚公移山
+  signature: fn yugong_yishan(persist) -> cumulative_conquest
+  precond: 阻巨而力薄
+  postcond: 持续，量变质
+  negative_space: ⊗ 半途而废
+  steps:
+  - 立志
+  - 传续
+  - 日进
+  - 质变
+  nca_emit: true
+dispatch:
+  main_pipeline: yugong_yishan
+  trigger: 年且九十，率子移山，子又生孙，山不加增，何苦不平。
+  when: 当面对巨阻力、宜以持续积累+传承突破时触发
+  graph:
+  - from: yugong_yishan
+    to: []
+decision:
+- if: 需持续积累
+  call: yugong_yishan
+skills:
+- 愚公移山·思维研判
+negative_space:
+- 半途而废则废
+- 无传承则断
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

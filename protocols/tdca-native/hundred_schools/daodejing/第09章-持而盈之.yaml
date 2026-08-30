@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH09-20260815-09
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.244049'
+branch: 诸子百家·道家·道德经·第09章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第09章《持而盈之》
+  core: 满则招损，功成身退；以知止避溢。
+  verse: 持而盈之，不如其已。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: chi_er_ying_zhi
+  method: 持而盈之
+  signature: fn chi_er_ying_zhi(gain) -> timely_exit
+  precond: 持有已盈、势将溢损
+  postcond: 知止不殆，功成身退
+  negative_space: ⊗ 盈则溢损
+  steps:
+  - 察盈
+  - 知止
+  - 身退
+  - 保全
+  nca_emit: true
+dispatch:
+  main_pipeline: chi_er_ying_zhi
+  trigger: 持而盈之，不如其已。
+  when: 当已得满盈、再进则损时触发
+  graph:
+  - from: chi_er_ying_zhi
+    to: []
+decision:
+- if: 需知止保盈
+  call: chi_er_ying_zhi
+skills:
+- 持而盈之·顺势研判
+negative_space:
+- 盈满不退则溢
+- 锐不可久
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

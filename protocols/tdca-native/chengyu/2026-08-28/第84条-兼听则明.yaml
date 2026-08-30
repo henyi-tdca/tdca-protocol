@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-84-20260828-84
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.514423'
+branch: 中国成语·修身与治理·第84条(兼听则明)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第84条《兼听则明》
+  core: 单一信道的'真相'是信道偏置的投影；决策信息须多源交叉验证，且须容纳反对声音——无声反对的系统，坏消息不会上行，暗即由此生。
+  verse: 兼听则明，偏信则暗。
+  origin: 《资治通鉴·唐纪》：魏徵答唐太宗'兼听则明，偏信则暗'；语本《潜夫论·明暗》'君之所以明者，兼听也；其所以暗者，偏信也'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jianting_zeming
+  method: 兼听则明
+  signature: fn jianting_zeming(aggregate) -> cross_validated
+  precond: 信源单一
+  postcond: 交叉验，明乃生
+  negative_space: ⊗ 偏信则暗
+  steps:
+  - 广开源
+  - 纳异见
+  - 交叉验
+  - 断于实
+  nca_emit: true
+dispatch:
+  main_pipeline: jianting_zeming
+  trigger: 兼听则明，偏信则暗。
+  when: 当重大决策信息来源单一、须多源交叉验证时触发
+  graph:
+  - from: jianting_zeming
+    to: []
+decision:
+- if: 需多源聚合
+  call: jianting_zeming
+skills:
+- 兼听则明·思维研判
+negative_space:
+- 兼听而不断则乱
+- 斥异见则信息渠道枯
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-11-20260827-11
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.903632'
+branch: 中国成语·认知与辩证·第11条(塞翁失马)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第11条《塞翁失马》
+  core: 福祸相依、动态转化，短期损失可能蕴含长期收益，反之亦然；须以期权/动态视角看待事件，不可静态定福祸。辩证思维是 TDCA 化合涌现的认知前提。
+  verse: 马亡非祸，引胡为福，子伤非悲，免役为幸。
+  origin: 《淮南子·人间训》：边塞翁马亡，人吊之，翁曰'此何遽不为福'；后马引胡骏归；子堕马折髀，免兵役而存——祸福相转。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: saiweng_sima
+  method: 塞翁失马
+  signature: fn saiweng_sima(reframe) -> dynamic_outcome
+  precond: 静态定福祸
+  postcond: 转视角，见转化
+  negative_space: ⊗ 以一时定终身
+  steps:
+  - 不急判
+  - 看转化
+  - 留期权
+  - 待后效
+  nca_emit: true
+dispatch:
+  main_pipeline: saiweng_sima
+  trigger: 马亡非祸，引胡为福，子伤非悲，免役为幸。
+  when: 当遭遇得失、宜以动态辩证视角重估利弊时触发
+  graph:
+  - from: saiweng_sima
+    to: []
+decision:
+- if: 需辩证重估
+  call: saiweng_sima
+skills:
+- 塞翁失马·思维研判
+negative_space:
+- 静态定福祸则盲
+- 忽视转化则失机
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

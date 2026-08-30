@@ -1,0 +1,47 @@
+COP-ID: HS-FA-09-20260815-09
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.588204'
+branch: 诸子百家·法家·第09条(不法古不循今)
+stratum: 诸子百家·法家·时变耕战
+soul:
+  identity: 法家·第09条《不法古不循今》
+  core: 世异事异、因时变法；不法古不循今，立变法之勇。
+  verse: 世异则事异，事异则备变。圣人不法古，不修今，因世而为之治。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 时变耕战
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: bu_fa_gu_bu_xun_jin
+  method: 不法古不循今
+  signature: fn bu_fa_gu_bu_xun_jin(reform) -> timely_reform
+  precond: 泥古、法弊
+  postcond: 因世变法，治宜
+  negative_space: ⊗ 泥古则弊
+  steps:
+  - 察世异
+  - 识事变
+  - 变法
+  - 宜民
+  nca_emit: true
+dispatch:
+  main_pipeline: bu_fa_gu_bu_xun_jin
+  trigger: 世异则事异，事异则备变。圣人不法古，不修今，因世而为之治。
+  when: 当宜因时变法、不宜泥古时触发
+  graph:
+  - from: bu_fa_gu_bu_xun_jin
+    to: []
+decision:
+- if: 需不法古不循今
+  call: bu_fa_gu_bu_xun_jin
+skills:
+- 不法古不循今·顺势研判
+negative_space:
+- 泥古则法弊
+- 骤变则民扰
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

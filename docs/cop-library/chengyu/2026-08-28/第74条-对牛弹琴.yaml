@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-74-20260828-74
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.444017'
+branch: 中国成语·认知与辩证·第74条(对牛弹琴)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第74条《对牛弹琴》
+  core: 沟通有效性由接收方的解码能力决定，不由发送方的编码质量决定；向错误信道/错误认知模型发送信息等于未发送——改的是编码与信道，不是音量。
+  verse: 弹清角之操而牛弗顾，转为蚊虻之声，牛则摇尾而听。
+  origin: 《牟子理惑论》：公明仪为牛弹清角之操，牛伏食如故；转为蚊虻声、孤犊鸣声，牛摇尾倾听。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: duiniu_tanqin
+  method: 对牛弹琴
+  signature: fn duiniu_tanqin(communicate) -> model_matched
+  precond: 受众解码失配
+  postcond: 换编码，达其耳
+  negative_space: ⊗ 弹琴不辨牛
+  steps:
+  - 识受众
+  - 察其模
+  - 换编码
+  - 验回声
+  nca_emit: true
+dispatch:
+  main_pipeline: duiniu_tanqin
+  trigger: 弹清角之操而牛弗顾，转为蚊虻之声，牛则摇尾而听。
+  when: 当信息传达反复失效、须检视受众认知模型与信道时触发
+  graph:
+  - from: duiniu_tanqin
+    to: []
+decision:
+- if: 需编码适配
+  call: duiniu_tanqin
+skills:
+- 对牛弹琴·思维研判
+negative_space:
+- 加大音量则愈聋
+- 轻视受众则失众
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

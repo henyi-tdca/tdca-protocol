@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-87-20260828-87
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.535225'
+branch: 中国成语·修身与治理·第87条(水滴石穿)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第87条《水滴石穿》
+  core: 单次微小量无足道，方向恒定×时间复利则可穿石；复利三要素=方向恒定、频率稳定、时间够长——断续的滴与变向的滴皆不成穿。
+  verse: 水非石之钻，索非木之锯，渐靡使之然也。
+  origin: 《汉书·枚乘传》：'泰山之霤穿石，单极之绠断干……水非石之钻，索非木之锯，渐靡使之然也。'宋·罗大经《鹤林玉露》记张乖崖语'绳锯木断，水滴石穿'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shuidi_shichuan
+  method: 水滴石穿
+  signature: fn shuidi_shichuan(accumulate) -> compound_effect
+  precond: 力微而期远
+  postcond: 渐靡之力，石为之穿
+  negative_space: ⊗ 变向则洞不成
+  steps:
+  - 定向
+  - 定频
+  - 持续
+  - 累积
+  nca_emit: true
+dispatch:
+  main_pipeline: shuidi_shichuan
+  trigger: 水非石之钻，索非木之锯，渐靡使之然也。
+  when: 当以微小持续投入对巨大长期目标、须守复利纪律时触发
+  graph:
+  - from: shuidi_shichuan
+    to: []
+decision:
+- if: 需复利坚持
+  call: shuidi_shichuan
+skills:
+- 水滴石穿·思维研判
+negative_space:
+- 频繁变向则前功弃
+- 三日曝则滴水断
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

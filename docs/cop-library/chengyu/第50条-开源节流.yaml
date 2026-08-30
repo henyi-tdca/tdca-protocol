@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-50-20260827-50
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.321156'
+branch: 中国成语·认知与辩证·第50条(开源节流)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第50条《开源节流》
+  core: 开源(扩大有效收入/供给)与节流(压缩不必要成本)并重，是跨期预算/收支管理；厂商在约束下求成本最小(节流)+ 拓有效产出(开源)，使资源可持续。须防'开源无度'(耗本)或'节流过甚'(伤能)。
+  verse: 开源以广入，节流以省出；收支两理，用乃不竭。
+  origin: 《荀子·富国》'开源节流'：'故明主必谨养其和，节其流，开其源，而时斟酌焉。' 理财之要。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: kaiyuan_jieliu
+  method: 开源节流
+  signature: fn kaiyuan_jieliu(balance) -> sustainable_budget
+  precond: 收支失理
+  postcond: 开源节流，用不竭
+  negative_space: ⊗ 滥开则耗
+  steps:
+  - 识收
+  - 拓源
+  - 节支
+  - 衡收支
+  nca_emit: true
+dispatch:
+  main_pipeline: kaiyuan_jieliu
+  trigger: 开源以广入，节流以省出；收支两理，用乃不竭。
+  when: 当需跨期收支平衡、资源可持续时触发
+  graph:
+  - from: kaiyuan_jieliu
+    to: []
+decision:
+- if: 需收支管理
+  call: kaiyuan_jieliu
+skills:
+- 开源节流·思维研判
+negative_space:
+- 滥开则耗本
+- 过节则伤能
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

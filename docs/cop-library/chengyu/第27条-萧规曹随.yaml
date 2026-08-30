@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-27-20260827-27
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.058543'
+branch: 中国成语·修身与治理·第27条(萧规曹随)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第27条《萧规曹随》
+  core: 既有良制经验证有效，沿用优于擅改；变更须有'优于现状'的证据，无故更张反扰民。是'路径依赖合理性'的治理注脚。
+  verse: 萧何立制，曹参守之，无所变更，民乃安宁。
+  origin: 《史记·曹相国世家》：曹参代萧何为相，举事无所变更，一遵萧何约束；惠帝怪之，参曰'陛下与高帝/萧何孰圣'?乃悟。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xiaogui_caosui
+  method: 萧规曹随
+  signature: fn xiaogui_caosui(inherit) -> validated_stability
+  precond: 无故更张
+  postcond: 守良制，民安
+  negative_space: ⊗ 擅改则扰
+  steps:
+  - 验旧制
+  - 察有效
+  - 慎变更
+  - 保稳定
+  nca_emit: true
+dispatch:
+  main_pipeline: xiaogui_caosui
+  trigger: 萧何立制，曹参守之，无所变更，民乃安宁。
+  when: 当接手已验证有效的制度、有人想擅改时触发(作稳制警示)
+  graph:
+  - from: xiaogui_caosui
+    to: []
+decision:
+- if: 需守良制
+  call: xiaogui_caosui
+skills:
+- 萧规曹随·思维研判
+negative_space:
+- 无故更张则扰民
+- 擅改无据则乱
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

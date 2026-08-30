@@ -1,0 +1,47 @@
+COP-ID: MICRO-05-20260825-05
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.192491'
+branch: 现代经济学·微观经济学·第05条(生产者理论·成本)
+stratum: 现代经济学·微观经济学·厂商与结构
+soul:
+  identity: 微观经济学·第05条《生产者理论·成本》
+  core: 厂商在技术与要素价格约束下选成本最小要素组合；边际成本先降后升，规模经济与范围经济据以判别。
+  verse: 产者以其技与费，求利之极；短长期之成本异势。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 厂商与结构
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: producer_cost
+  method: 生产者理论·成本
+  signature: fn producer_cost(minimize) -> cost_curve
+  precond: 混短长
+  postcond: 成本极，技合
+  negative_space: ⊗ 混短长期则误
+  steps:
+  - 列技术
+  - 定要素价
+  - 求最小
+  - 绘成本
+  nca_emit: true
+dispatch:
+  main_pipeline: producer_cost
+  trigger: 产者以其技与费，求利之极；短长期之成本异势。
+  when: 当分析供给曲线来源、规模经济、停产点时触发
+  graph:
+  - from: producer_cost
+    to: []
+decision:
+- if: 需厂商成本分析
+  call: producer_cost
+skills:
+- 生产者理论·成本·均衡研判
+negative_space:
+- 混短长期则误
+- 昧交易成本则偏
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

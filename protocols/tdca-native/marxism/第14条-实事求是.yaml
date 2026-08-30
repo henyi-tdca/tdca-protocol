@@ -1,0 +1,47 @@
+COP-ID: MACM-14-20260815-14
+source_expert: marxism_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 方法条目分解)
+compiled_at: '2026-08-15T13:47:42.749717'
+branch: 马克思主义·第14条(实事求是)
+stratum: 马克思主义·实践论
+soul:
+  identity: 马克思主义·第14条《实事求是》
+  core: 实事求是; 从客观实际抽规律、以规律指导实践, 不凭主观想象。
+  verse: ‘实事’就是客观存在着的一切事物，‘是’就是客观事物的内部联系即规律性，‘求’就是我们去研究。
+  role: 思维协议 (现代学科基库 / 马克思主义 / 方法论)
+  category: 现代学科基库 / 马克思主义 / 实践论
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shi_shi_qiu_shi
+  method: 实事求是
+  signature: fn shi_shi_qiu_shi(study) -> seek_truth
+  precond: 凭主观、想当然
+  postcond: 从实求规律
+  negative_space: ⊗ 主观则妄
+  steps:
+  - 察实事
+  - 究其是
+  - 得规律
+  - 指导行
+  nca_emit: true
+dispatch:
+  main_pipeline: shi_shi_qiu_shi
+  trigger: ‘实事’就是客观存在着的一切事物，‘是’就是客观事物的内部联系即规律性，‘求’就是我们去研究。
+  when: 当宜从实求规、不宜主观臆断时触发
+  graph:
+  - from: shi_shi_qiu_shi
+    to: []
+decision:
+- if: 需实事求是
+  call: shi_shi_qiu_shi
+skills:
+- 实事求是·顺势研判
+negative_space:
+- 主观臆断则失
+- 求而不化为空
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

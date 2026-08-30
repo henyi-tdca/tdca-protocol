@@ -1,0 +1,47 @@
+COP-ID: MICRO-02-20260825-02
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.171825'
+branch: 现代经济学·微观经济学·第02条(需求弹性)
+stratum: 现代经济学·微观经济学·市场均衡
+soul:
+  identity: 微观经济学·第02条《需求弹性》
+  core: 以弹性度量需求量对价格/收入/交叉价格的敏感程度，区分富有与缺乏弹性，指导定价、税负归宿与反诈。
+  verse: 价一动而求或微应或剧应，其应变之度谓之弹性。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 市场均衡
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: demand_elasticity
+  method: 需求弹性
+  signature: fn demand_elasticity(measure) -> elasticity_coeff
+  precond: 昧敏感度
+  postcond: 弹性明，归宿定
+  negative_space: ⊗ 以弧代点则粗
+  steps:
+  - 定基准
+  - 算变动率
+  - 求比
+  - 判弹性
+  nca_emit: true
+dispatch:
+  main_pipeline: demand_elasticity
+  trigger: 价一动而求或微应或剧应，其应变之度谓之弹性。
+  when: 当评估提价/降价后果、税负由谁承担时触发
+  graph:
+  - from: demand_elasticity
+    to: []
+decision:
+- if: 需弹性分析
+  call: demand_elasticity
+skills:
+- 需求弹性·均衡研判
+negative_space:
+- 以弧长弹性代点弹性则粗
+- 忽品类差异则误
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

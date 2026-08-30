@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-60-20260827-60
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.427242'
+branch: 中国成语·修身与治理·第60条(水能载舟)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第60条《水能载舟》
+  core: 统治者(舟)依托民众(水)而存，水既能载亦能覆，是民本/正和协作的古典隐喻——治理的正当性与可持续性来自被治者的承载，须以'载'代'覆'(顺下、处下如江海百谷王)。荀子·王制原典，此处以'民本承载'锚定正和协作底线。
+  verse: 君者舟也，庶人者水也；水则载舟，水则覆舟。
+  origin: 《荀子·王制》'君者舟也，庶人者水也；水则载舟，水则覆舟'。唐太宗引以自儆。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shui_neng_zaizhou
+  method: 水能载舟
+  signature: fn shui_neng_zaizhou(warn) -> legitimacy_base
+  precond: 忘民本
+  postcond: 顺下，舟乃安
+  negative_space: ⊗ 逆民则覆
+  steps:
+  - 识承载
+  - 顺其下
+  - 固正和
+  - 防覆舟
+  nca_emit: true
+dispatch:
+  main_pipeline: shui_neng_zaizhou
+  trigger: 君者舟也，庶人者水也；水则载舟，水则覆舟。
+  when: 当治理须以民本/正和协作为可持续底线时触发
+  graph:
+  - from: shui_neng_zaizhou
+    to: []
+decision:
+- if: 需民本承载研判
+  call: shui_neng_zaizhou
+skills:
+- 水能载舟·思维研判
+negative_space:
+- 逆民则覆舟
+- 虐下则失载
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-29-20260827-29
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:49.075749'
+branch: 中国成语·修身与治理·第29条(朝三暮四)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第29条《朝三暮四》
+  core: 仅变名目(分配表象)未变实质，须看净量而非框架；框架切换制造'得了便宜'的错觉，本质不变。是名实之辨的思维协议。
+  verse: 狙公赋芧，朝三暮四则怒，朝四暮三则喜，实量不易。
+  origin: 《庄子·齐物论》：狙公赋芧曰'朝三而暮四'，众狙皆怒；曰'然则朝四而暮三'，众狙皆悦；名实未亏而喜怒为用。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhaosan_musi
+  method: 朝三暮四
+  signature: fn zhaosan_musi(warn) -> net_not_frame
+  precond: 惑于名目
+  postcond: 看净量，破框架
+  negative_space: ⊗ 以名目代实质
+  steps:
+  - 拆名目
+  - 算净量
+  - 破框架
+  - 见实质
+  nca_emit: true
+dispatch:
+  main_pipeline: zhaosan_musi
+  trigger: 狙公赋芧，朝三暮四则怒，朝四暮三则喜，实量不易。
+  when: 当方案仅改说法/顺序、实质未变却被人接受时触发(作名实警示)
+  graph:
+  - from: zhaosan_musi
+    to: []
+decision:
+- if: 需名实之辨
+  call: zhaosan_musi
+skills:
+- 朝三暮四·思维研判
+negative_space:
+- 以名目代实质则惑
+- 惑框架则失算
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

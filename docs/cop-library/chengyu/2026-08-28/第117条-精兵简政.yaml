@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-117-20260828-117
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.501414'
+branch: 中国成语·修身与治理·第117条(精兵简政)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第117条《精兵简政》
+  core: 组织轻量化治理——冗余编制与流程是持续消耗的固定成本；裁并判据是'单位产出/成本'，且裁的是结构不是能力，须保留必要冗余以维持抗脆性。
+  verse: 兵在精不在多，政在简不在繁；冗则耗，简则敏。
+  origin: 1941 年陕甘宁边区李鼎铭提'精兵简政'议案而被采纳施行，为现代治理注脚。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: jingbing_jianzheng
+  method: 精兵简政
+  signature: fn jingbing_jianzheng(streamline) -> org_lightweight
+  precond: 组织固定成本高企
+  postcond: 结构轻量，敏捷不减
+  negative_space: ⊗ 裁及能力则自废
+  steps:
+  - 量其效
+  - 别其冗
+  - 并其构
+  - 存其能
+  nca_emit: true
+dispatch:
+  main_pipeline: jingbing_jianzheng
+  trigger: 兵在精不在多，政在简不在繁；冗则耗，简则敏。
+  when: 当组织/流程固定成本高企、须结构轻量化时触发
+  graph:
+  - from: jingbing_jianzheng
+    to: []
+decision:
+- if: 需组织轻量化
+  call: jingbing_jianzheng
+skills:
+- 精兵简政·思维研判
+negative_space:
+- 裁及核心能力则自废
+- 简及必要冗余则失抗脆性
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

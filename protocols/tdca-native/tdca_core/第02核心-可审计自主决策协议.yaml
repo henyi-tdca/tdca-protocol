@@ -1,0 +1,126 @@
+COP-ID: TDCA-CORE-20260815-02
+source_expert: tdca_core_canonical
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-15T06:33:47.652571'
+branch: TDCA核心·可审计自主决策
+stratum: TDCA核心·可审计自主决策
+soul:
+  identity: 可审计自主决策协议 (Auditable Autonomous Decision Protocol)
+  core: '把人类自主决策的原则编译为智能体可执行的门控决策协议: 决策门→原语状态机→下游skill调度→NCA确权→NSFL护栏→可回滚; 全程可追溯,
+    人类只需审计不必理解。这是 COP 作为''自主决策源泉层''的方法本体。'
+  role: 思维协议 (TDCA核心范式类)
+  category: TDCA核心 / TDCA核心·可审计自主决策
+primitives:
+- name: decision_gate
+  method: 决策门(必败不可战等)
+  signature: fn decision_gate(context) -> gate_verdict
+  precond: 情境与决策门条件已知
+  postcond: 触发门控给出 进/退/待 判定
+  negative_space: ⊗ 门条件缺失则误判
+  steps:
+  - 取情境
+  - 对门
+  - 判进/退/待
+  nca_emit: true
+- name: primitive_state_machine
+  method: 原语状态机
+  signature: fn primitive_state_machine(gate) -> plan
+  precond: 门判定已知
+  postcond: 按判定调度原语状态机生成方案
+  negative_space: ⊗ 状态跃迁非法则崩
+  steps:
+  - 入态
+  - 迁态
+  - 出方案
+  nca_emit: true
+- name: skill_dispatch
+  method: 下游skill调度
+  signature: fn skill_dispatch(plan) -> execution
+  precond: 方案与原语就绪
+  postcond: 调度下游 Skill(肌肉)执行
+  negative_space: ⊗ 调度越权则失控
+  steps:
+  - 选skill
+  - 授权
+  - 执行
+  nca_emit: true
+- name: nca_attest
+  method: NCA确权留痕
+  signature: fn nca_attest(step) -> attested
+  precond: 每步执行
+  postcond: 每步生成 NCA 权属链
+  negative_space: ⊗ 无确权则不可审计
+  steps:
+  - 捕获
+  - 确权
+  - 链
+  nca_emit: true
+- name: nsfl_fuse
+  method: NSFL熔断
+  signature: fn nsfl_fuse(plan) -> fused
+  precond: 计划与红线
+  postcond: 越线熔断
+  negative_space: ⊗ 越线不熔断则破底线
+  steps:
+  - 预检
+  - 熔断/放行
+  nca_emit: true
+- name: rollback
+  method: 可回滚
+  signature: fn rollback(decision) -> rolled_back
+  precond: 决策有 NCA 链
+  postcond: 可经 NCA 链回滚到任一历史态
+  negative_space: ⊗ 无链则不可回
+  steps:
+  - 定位
+  - 回滚
+  - 复证
+  nca_emit: true
+dispatch:
+  main_pipeline: decision_gate
+  graph:
+  - from: decision_gate
+    to:
+    - primitive_state_machine
+  - from: primitive_state_machine
+    to:
+    - skill_dispatch
+  - from: skill_dispatch
+    to:
+    - nca_attest
+    - nsfl_fuse
+  - from: nca_attest
+    to:
+    - rollback
+  - from: nsfl_fuse
+    to:
+    - rollback
+  note: TDCA 核心协议自带调度骨架
+decision:
+- if: 需门控判定
+  call: decision_gate
+- if: 需生成方案
+  call: primitive_state_machine
+- if: 需执行
+  call: skill_dispatch
+- if: 需确权
+  call: nca_attest
+- if: 需守红线
+  call: nsfl_fuse
+- if: 需回滚
+  call: rollback
+skills:
+- 决策门配置
+- 原语状态机编排
+- NSFL熔断配置
+negative_space:
+- ⊗ 决策必须经门控, 黑箱决策不可信
+- ⊗ 状态机跃迁须合法, 非法跃迁致崩
+- ⊗ 调度 skill 不得越权
+- ⊗ 每步须 NCA 确权, 否则不可审计
+- ⊗ 越 NSFL 即熔断, 不可放行
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 6

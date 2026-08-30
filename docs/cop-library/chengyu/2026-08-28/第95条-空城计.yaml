@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-95-20260828-95
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.354359'
+branch: 中国成语·战略与决断·第95条(空城计)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第95条《空城计》
+  core: 实力真空时以'示弱到不可信'制造信息迷雾，使对方在不确定性下选择保守；威慑可由信念构造，但须以一贯的可信记录背书——信用是空城的承重墙。
+  verse: 城虚兵尽，琴音自若；疑城之下，退兵自走。
+  origin: 三十六计·败战计第三十二计；《三国演义》西城诸葛亮抚琴退司马懿——'平生谨慎'为其信用底座。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: kongchengji
+  method: 空城计
+  signature: fn kongchengji(deter) -> belief_based_deterrence
+  precond: 实力真空而对方决策者多疑
+  postcond: 疑而自退
+  negative_space: ⊗ 遇不疑者则破
+  steps:
+  - 察其疑
+  - 示其空
+  - 稳其态
+  - 借其退
+  nca_emit: true
+dispatch:
+  main_pipeline: kongchengji
+  trigger: 城虚兵尽，琴音自若；疑城之下，退兵自走。
+  when: 当实力真空且对方存在不确定性规避倾向时触发
+  graph:
+  - from: kongchengji
+    to: []
+decision:
+- if: 需信念式威慑
+  call: kongchengji
+skills:
+- 空城计·思维研判
+negative_space:
+- 遇不被疑者则破
+- 屡用则信用竭
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

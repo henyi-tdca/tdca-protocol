@@ -1,0 +1,108 @@
+{
+  "library": "protocols/tdca-native",
+  "version_anchor": {
+    "canon": [
+      "F1.5",
+      "F1.5b"
+    ],
+    "review_close": "GSEQ-0755",
+    "build_batch": "GSEQ-0759"
+  },
+  "totals": {
+    "native_cop_canonical": 455,
+    "composed_cop": 60,
+    "total_cop": 515,
+    "native_physical": 453,
+    "core_base_physical": 3,
+    "physical_yaml": 516
+  },
+  "deferred": [
+    {
+      "item": "coldstart/community/第01条-开源社区冷启动·正和准入.yaml",
+      "reason": "YAML 解析失败（围栏件），归口修复后补入",
+      "counted_in_canonical": true
+    },
+    {
+      "item": "emissary/谈判者-特使-001.yaml",
+      "reason": "结构异常旧版，已由 谈判者-特使-001-COP.yaml 标准版替代",
+      "counted_in_canonical": true
+    },
+    {
+      "item": "simulations 家族",
+      "reason": "口径待裁定，暂不纳入（cop-library 旧版保留并标注）",
+      "counted_in_canonical": false
+    }
+  ],
+  "families": {
+    "chengyu": {
+      "label": "中国成语",
+      "native": 150,
+      "composed": 0
+    },
+    "compositions": {
+      "label": "跨库化合",
+      "native": 0,
+      "composed": 39
+    },
+    "emissary": {
+      "label": "特使",
+      "native": 1,
+      "composed": 0
+    },
+    "engineering-three": {
+      "label": "工程三协议",
+      "native": 25,
+      "composed": 16
+    },
+    "games": {
+      "label": "经典博弈",
+      "native": 4,
+      "composed": 0
+    },
+    "hundred_schools": {
+      "label": "诸子百家",
+      "native": 200,
+      "composed": 4
+    },
+    "marxism": {
+      "label": "马克思主义",
+      "native": 15,
+      "composed": 1
+    },
+    "mechanism_design": {
+      "label": "机制设计",
+      "native": 1,
+      "composed": 0
+    },
+    "microeconomics": {
+      "label": "微观经济学",
+      "native": 12,
+      "composed": 0
+    },
+    "scenario": {
+      "label": "场景",
+      "native": 7,
+      "composed": 0
+    },
+    "stratagems": {
+      "label": "三十六计",
+      "native": 37,
+      "composed": 0
+    },
+    "tdca_core": {
+      "label": "TDCA 核心基协议",
+      "native": 0,
+      "composed": 0,
+      "core_base": 3
+    },
+    "(root)": {
+      "label": "西方/通用范式（根目录）",
+      "native": 1,
+      "composed": 0
+    }
+  },
+  "license": "Apache-2.0",
+  "data_nature": "ID92：制度编译产物（审查闭环版，F1.5 正典逐字一致）",
+  "generated": "2026-08-30T23:05:00+08:00",
+  "source_of_truth": "protocols/tdca-native（cop-library 为运用/展示层）"
+}

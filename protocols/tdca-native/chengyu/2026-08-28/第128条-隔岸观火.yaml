@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-128-20260828-128
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.604446'
+branch: 中国成语·战略与决断·第128条(隔岸观火)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第128条《隔岸观火》
+  core: 对抗内生化的旁观时机——冲突双方互耗时不介入，待其自弱再图；介入时点=秩序收益大于等待收益。与以逸待劳成对（彼主动造消耗差，此借对方内生消耗）。
+  verse: 静守隔岸，观其内乱；暴戾恣睢，其势自屠。
+  origin: 三十六计·攻战计第九计：'阳乖序乱，阴以待逆。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: geanguanhuo
+  method: 隔岸观火
+  signature: fn geanguanhuo(observe) -> internal_attrition_waited
+  precond: 对方阵营内生冲突
+  postcond: 坐收其变，入场择时
+  negative_space: ⊗ 误判火势则引火及身
+  steps:
+  - 察其乱
+  - 守其岸
+  - 度其变
+  - 择其入
+  nca_emit: true
+dispatch:
+  main_pipeline: geanguanhuo
+  trigger: 静守隔岸，观其内乱；暴戾恣睢，其势自屠。
+  when: 当对抗体内耗、宜旁观待变择时介入时触发
+  graph:
+  - from: geanguanhuo
+    to: []
+decision:
+- if: 需旁观择时
+  call: geanguanhuo
+skills:
+- 隔岸观火·思维研判
+negative_space:
+- 火势蔓延则殃及自身
+- 长观不决则失窗口
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

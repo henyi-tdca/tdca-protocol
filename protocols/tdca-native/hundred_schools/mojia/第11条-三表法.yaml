@@ -1,0 +1,47 @@
+COP-ID: HS-MO-11-20260815-11
+source_expert: mojing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.091022'
+branch: 诸子百家·墨家·第11条(三表法)
+stratum: 诸子百家·墨家·节用三表
+soul:
+  identity: 墨家·第11条《三表法》
+  core: 言必三表：本古事、原民情、用利国；以本原用立认识与言论之准。
+  verse: 言必立仪：本之（上本之于古者圣王之事）；原之（下原察百姓耳目之实）；用之（发以为刑政，观其中国家百姓人民之利）。
+  role: 思维协议 (诸子百家 / 墨家 / 墨翟十事)
+  category: 诸子百家 / 墨家 / 节用三表
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: san_biao_fa
+  method: 三表法
+  signature: fn san_biao_fa(judge) -> three_tables
+  precond: 言无准、妄议
+  postcond: 三表立，言可征
+  negative_space: ⊗ 无仪则妄
+  steps:
+  - 本古
+  - 原民
+  - 用利
+  - 定言
+  nca_emit: true
+dispatch:
+  main_pipeline: san_biao_fa
+  trigger: 言必立仪：本之（上本之于古者圣王之事）；原之（下原察百姓耳目之实）；用之（发以为刑政，观其中国家百姓人民之利）。
+  when: 当宜立言论准的、不宜虚论时触发
+  graph:
+  - from: san_biao_fa
+    to: []
+decision:
+- if: 需三表法
+  call: san_biao_fa
+skills:
+- 三表法·顺势研判
+negative_space:
+- 无仪则妄议
+- 偏一表则失
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

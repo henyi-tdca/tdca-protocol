@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-97-20260828-97
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.368005'
+branch: 中国成语·战略与决断·第97条(连环计)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第97条《连环计》
+  core: 单策力薄时以多计互为因果链耦合，使拆解任一环都落入其余环节的约束；组合复杂度即防御复杂度。须预留退环，防己亦受困。
+  verse: 一计孤行，两计相生；环环相扣，解一则崩。
+  origin: 三十六计·败战计第三十五计：'将多兵众，不可以敌，使其自相累，以杀其势'；庞统献连环于赤壁。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: lianhuanji
+  method: 连环计
+  signature: fn lianhuanji(compose) -> chained_constraints
+  precond: 单策不足以动全局
+  postcond: 环环相扣，牵一发而动
+  negative_space: ⊗ 环失联动则各自为破
+  steps:
+  - 拆其局
+  - 布其环
+  - 联其动
+  - 待其溃
+  nca_emit: true
+dispatch:
+  main_pipeline: lianhuanji
+  trigger: 一计孤行，两计相生；环环相扣，解一则崩。
+  when: 当需以策略组合制造耦合约束、单策不济时触发
+  graph:
+  - from: lianhuanji
+    to: []
+decision:
+- if: 需组合策略
+  call: lianhuanji
+skills:
+- 连环计·思维研判
+negative_space:
+- 环不成链则自乱
+- 不留退环则己亦受困
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

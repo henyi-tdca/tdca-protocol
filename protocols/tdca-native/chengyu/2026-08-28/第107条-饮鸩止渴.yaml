@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-107-20260828-107
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.434394'
+branch: 中国成语·认知与辩证·第107条(饮鸩止渴)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第107条《饮鸩止渴》
+  core: 已知有害的应急手段被短期需求正当化——解燃眉与蓄长毒同体；应急可救急，但须预设退出条件，不可让应急常态化。与抱薪救火成对（彼手段喂养病根，此已知毒性仍饮）。
+  verse: 鸩入于喉，渴乃暂止；毒发于后，悔不可追。
+  origin: 《后汉书·霍谞传》：'譬犹疗饥于附子，止渴于鸩毒，未入肠胃，已绝咽喉。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yinzhen_zhike
+  method: 饮鸩止渴
+  signature: fn yinzhen_zhike(warn) -> exit_condition_set
+  precond: 应急手段具长期副作用
+  postcond: 急解毒可控，退路预设
+  negative_space: ⊗ 应急常态化则毒深
+  steps:
+  - 别其急
+  - 权其毒
+  - 限其量
+  - 设其退
+  nca_emit: true
+dispatch:
+  main_pipeline: yinzhen_zhike
+  trigger: 鸩入于喉，渴乃暂止；毒发于后，悔不可追。
+  when: 当以已知有害手段解短期之急、须设退出条件时触发(作警示)
+  graph:
+  - from: yinzhen_zhike
+    to: []
+decision:
+- if: 需应急毒性管控
+  call: yinzhen_zhike
+skills:
+- 饮鸩止渴·思维研判
+negative_space:
+- 无退出条件则应急成常态
+- 因毒废急则渴毙当下
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

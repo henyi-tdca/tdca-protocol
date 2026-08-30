@@ -1,0 +1,42 @@
+COP-ID: STRATAGEM-COP-20260814-07
+base_protocol: TDCA-CORE-20260815-01
+source_expert: thirty_six_stratagems
+compiler: cognitive_compiler (T1+T2 规范复用)
+compiled_at: '2026-08-14T17:15:31.795055'
+stratum: 敌战计
+soul:
+  identity: 无中生有
+  core: 由虚变实, 欺诈最终成真
+  role: 思维协议 (兵法策略类)
+  category: 三十六计 / 敌战计
+primitives:
+- name: wu_zhong_sheng_you
+  method: 无中生有
+  signature: 'fn wu_zhong_sheng_you(context: Situation) -> Outcome'
+  precond: 需造势而无可据之实
+  postcond: 由虚变实, 欺诈最终成真 (目标达成)
+  negative_space: ⊗ 虚实质变须连贯, 中段断则露馅; 忌对多疑之敌
+  steps:
+  - 先示虚(小假使敌习)
+  - 敌习以为常
+  - 突转为实击之
+  nca_emit: true
+dispatch:
+  main_pipeline: wu_zhong_sheng_you
+  graph:
+  - from: wu_zhong_sheng_you
+    to: []
+  note: 单计独立协议, 主原语 wu_zhong_sheng_you 即该计执行体
+decision:
+- if: 需造势而无可据之实
+  call: wu_zhong_sheng_you
+skills: []
+negative_space:
+- ⊗ 虚实质变须连贯, 中段断则露馅; 忌对多疑之敌
+- '⊗ 禁止机械套用: 计须契合态势, 非态势则不用'
+- '⊗ 禁止违反 NSFL: 伦理/法律负空间不可越'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

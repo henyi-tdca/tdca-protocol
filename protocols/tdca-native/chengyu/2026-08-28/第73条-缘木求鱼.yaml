@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-73-20260828-73
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.437623'
+branch: 中国成语·认知与辩证·第73条(缘木求鱼)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第73条《缘木求鱼》
+  core: 努力量级无法弥补方法方向错误——路径不可达时，投入越大偏离越远；先验路径可达性，再谈投入强度。
+  verse: 以若所为，求若所欲，犹缘木而求鱼也。
+  origin: 《孟子·梁惠王上》：孟子谏齐宣王以武力求霸欲'辟土地，朝秦楚'：'以若所为，求若所欲，犹缘木而求鱼也'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yuanmu_qiuyu
+  method: 缘木求鱼
+  signature: fn yuanmu_qiuyu(warn) -> path_feasible
+  precond: 方向存疑
+  postcond: 路径可达，力不虚掷
+  negative_space: ⊗ 缘木则无鱼
+  steps:
+  - 明所欲
+  - 验所由
+  - 判可达
+  - 再投入
+  nca_emit: true
+dispatch:
+  main_pipeline: yuanmu_qiuyu
+  trigger: 以若所为，求若所欲，犹缘木而求鱼也。
+  when: 当以高投入掩盖路径不可达、或方向存疑仍加码时触发(作警示)
+  graph:
+  - from: yuanmu_qiuyu
+    to: []
+decision:
+- if: 需路径可行性先验
+  call: yuanmu_qiuyu
+skills:
+- 缘木求鱼·思维研判
+negative_space:
+- 以勤补错则愈陷
+- 不验路径则空耗
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

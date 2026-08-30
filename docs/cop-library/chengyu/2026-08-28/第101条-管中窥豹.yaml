@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-101-20260828-101
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.394913'
+branch: 中国成语·认知与辩证·第101条(管中窥豹)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第101条《管中窥豹》
+  core: 局部观测是对整体的偏采样——可见一斑而不可断全豹；由局部推断整体须声明采样偏差与覆盖度，否则以偏概全。
+  verse: 竹管一孔，时见一斑；斑非全豹，慎勿遽断。
+  origin: 《世说新语·方正》：王献之数岁时观门生樗蒲曰'南风不竞'，门生曰'此郎亦管中窥豹，时见一斑'。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: guanzhong_kuibao
+  method: 管中窥豹
+  signature: fn guanzhong_kuibao(infer) -> sampling_bias_declared
+  precond: 仅得局部观测
+  postcond: 斑归斑，豹归豹
+  negative_space: ⊗ 以斑代豹则盲
+  steps:
+  - 记其斑
+  - 声其偏
+  - 量其覆
+  - 再断豹
+  nca_emit: true
+dispatch:
+  main_pipeline: guanzhong_kuibao
+  trigger: 竹管一孔，时见一斑；斑非全豹，慎勿遽断。
+  when: 当由局部观测推整体结论、须声明推断边界时触发
+  graph:
+  - from: guanzhong_kuibao
+    to: []
+decision:
+- if: 需局部推断边界声明
+  call: guanzhong_kuibao
+skills:
+- 管中窥豹·思维研判
+negative_space:
+- 以斑断豹则盲
+- 拒一切局部观测则全盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

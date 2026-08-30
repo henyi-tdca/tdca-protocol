@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH79-20260815-79
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:04.056815'
+branch: 诸子百家·道家·道德经·第79章
+stratum: 诸子百家·道家·道德经·修身认知
+soul:
+  identity: 道德经·第79章《和大怨》
+  core: 和怨必有余怨，以德(司契不责)解；天道无亲常与善。
+  verse: 和大怨，必有余怨；天道无亲，常与善人。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 修身认知
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: he_da_yuan
+  method: 和大怨
+  signature: fn he_da_yuan(conflict) -> debt_not_blame
+  precond: 强和怨、余怨
+  postcond: 执左契不责，天道常与善
+  negative_space: ⊗ 责则余怨
+  steps:
+  - 察怨
+  - 不责
+  - 司契
+  - 善人
+  nca_emit: true
+dispatch:
+  main_pipeline: he_da_yuan
+  trigger: 和大怨，必有余怨；天道无亲，常与善人。
+  when: 当强和解反余怨、宜不责时触发
+  graph:
+  - from: he_da_yuan
+    to: []
+decision:
+- if: 需司契不责
+  call: he_da_yuan
+skills:
+- 和大怨·顺势研判
+negative_space:
+- 强和则余怨
+- 责则仇
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

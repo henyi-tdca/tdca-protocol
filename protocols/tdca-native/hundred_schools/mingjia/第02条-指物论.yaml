@@ -1,0 +1,47 @@
+COP-ID: HS-MG-02-20260815-02
+source_expert: mingjia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:47.038683'
+branch: 诸子百家·名家·第02条(指物论)
+stratum: 诸子百家·名家·名实本体
+soul:
+  identity: 名家·第02条《指物论》
+  core: 物莫非指、指非指；以指称构造对象，立概念指称之元理。
+  verse: 物莫非指，而指非指。天下无指，物无可以谓物。
+  role: 思维协议 (诸子百家 / 名家 / 名实之辨)
+  category: 诸子百家 / 名家 / 名实本体
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_wu_lun
+  method: 指物论
+  signature: fn zhi_wu_lun(refer) -> reference
+  precond: 昧指物、混称
+  postcond: 指物明，称当
+  negative_space: ⊗ 昧指则混
+  steps:
+  - 识指
+  - 指物
+  - 别指非指
+  - 称当
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_wu_lun
+  trigger: 物莫非指，而指非指。天下无指，物无可以谓物。
+  when: 当宜明概念指称、不宜混称时触发
+  graph:
+  - from: zhi_wu_lun
+    to: []
+decision:
+- if: 需指物论
+  call: zhi_wu_lun
+skills:
+- 指物论·顺势研判
+negative_space:
+- 昧指则混称
+- 指非指而执则妄
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

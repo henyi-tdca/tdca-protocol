@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-64-20260828-64
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.373712'
+branch: 中国成语·战略与决断·第64条(兵贵神速)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第64条《兵贵神速》
+  core: 时间维度的先占权：当收益随时间衰减(先动优势/窗口期)时，速度本身就是壁垒；轻装化(减辎重)是提速的代价支付方式——为速度放弃次要携带。
+  verse: 千里袭人，辎重难行，轻兵兼道，先机乃得。
+  origin: 《三国志·郭嘉传》：征乌桓，郭嘉言'兵贵神速，今千里袭人，辎重多，难以趋利'，乃轻兵兼道，出卢龙塞，卒破乌桓。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: binggui_shensu
+  method: 兵贵神速
+  signature: fn binggui_shensu(speed) -> window_seized
+  precond: 窗口期收益衰减
+  postcond: 先占，窗内定局
+  negative_space: ⊗ 辎重则迟
+  steps:
+  - 辨窗口
+  - 减辎重
+  - 轻装进
+  - 占先位
+  nca_emit: true
+dispatch:
+  main_pipeline: binggui_shensu
+  trigger: 千里袭人，辎重难行，轻兵兼道，先机乃得。
+  when: 当存在时间窗口/先动优势、宜轻装快进抢位时触发
+  graph:
+  - from: binggui_shensu
+    to: []
+decision:
+- if: 需速度壁垒
+  call: binggui_shensu
+skills:
+- 兵贵神速·思维研判
+negative_space:
+- 为速弃要害则后继乏
+- 无窗而盲快则自疲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-MZ09-20260815-09
+source_expert: mengzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:36:50.868207'
+branch: 诸子百家·儒家·孟子·第09条(民贵君轻)
+stratum: 诸子百家·儒家·孟子·王道政术
+soul:
+  identity: 孟子·第09条《民贵君轻》
+  core: 民贵君轻、得民为天；以民为本位，政权合法性系于民心。
+  verse: 民为贵，社稷次之，君为轻。是故得乎丘民而为天子。
+  role: 思维协议 (诸子百家 / 儒家 / 孟子义理)
+  category: 诸子百家 / 儒家 / 孟子 / 王道政术
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: min_gui_jun_qing
+  method: 民贵君轻
+  signature: fn min_gui_jun_qing(polity) -> people_first
+  precond: 君贵民贱、失本
+  postcond: 得丘民为天子
+  negative_space: ⊗ 轻民则危
+  steps:
+  - 立民本
+  - 得民心
+  - 正名位
+  - 安社稷
+  nca_emit: true
+dispatch:
+  main_pipeline: min_gui_jun_qing
+  trigger: 民为贵，社稷次之，君为轻。是故得乎丘民而为天子。
+  when: 当宜以民为本、不宜独尊君时触发
+  graph:
+  - from: min_gui_jun_qing
+    to: []
+decision:
+- if: 需立民贵君轻
+  call: min_gui_jun_qing
+skills:
+- 民贵君轻·顺势研判
+negative_space:
+- 虐民失位
+- 独夫则倾
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

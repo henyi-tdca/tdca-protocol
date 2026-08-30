@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-68-20260828-68
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.400658'
+branch: 中国成语·战略与决断·第68条(攻心为上)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第68条《攻心为上》
+  core: 强制服从的成本持续发生，认同服从的成本一次性支付；治理/协作优先改信念而非压行为——七纵七擒是'证明给对方看'的可信过程，非怀柔表演。
+  verse: 用兵之道，攻心为上，攻城为下；心战为上，兵战为下。
+  origin: 《三国志》注引《襄阳记》：马谡谏诸葛亮南征'攻心为上，攻城为下'；亮七纵七擒孟获，南人不复反矣。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: gongxin_weishang
+  method: 攻心为上
+  signature: fn gongxin_weishang(persuade) -> allegiance_won
+  precond: 对抗成本高
+  postcond: 心服，不再反
+  negative_space: ⊗ 攻城则反复
+  steps:
+  - 察其心
+  - 释其疑
+  - 示以信
+  - 纳其归
+  nca_emit: true
+dispatch:
+  main_pipeline: gongxin_weishang
+  trigger: 用兵之道，攻心为上，攻城为下；心战为上，兵战为下。
+  when: 当须将对抗关系转为认同协作、降低长期治理成本时触发
+  graph:
+  - from: gongxin_weishang
+    to: []
+decision:
+- if: 需认同构建
+  call: gongxin_weishang
+skills:
+- 攻心为上·思维研判
+negative_space:
+- 屡纵无信则纵敌
+- 只擒不服则养患
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

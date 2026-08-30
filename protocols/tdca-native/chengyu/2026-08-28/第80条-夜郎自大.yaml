@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-80-20260828-80
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T13:24:29.486098'
+branch: 中国成语·认知与辩证·第80条(夜郎自大)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第80条《夜郎自大》
+  core: 无外部参照的自我评估必然失真——评估须引入圈层外的强参照系；封闭系统内的排位第一，在更大坐标系中可能不值一提。定位的本质是选对参照系。
+  verse: 汉孰与我大？——以道不通，各以为一州主，不知汉之广大。
+  origin: 《史记·西南夷列传》：滇王问汉使'汉孰与我大？'及夜郎侯亦然——以道不通故，各自以为一州主，不知汉广大。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yelang_zida
+  method: 夜郎自大
+  signature: fn yelang_zida(warn) -> external_benchmark
+  precond: 封闭自评
+  postcond: 引外参，定位实
+  negative_space: ⊗ 无外参则自大
+  steps:
+  - 开通道
+  - 引外参
+  - 重标定
+  - 再定位
+  nca_emit: true
+dispatch:
+  main_pipeline: yelang_zida
+  trigger: 汉孰与我大？——以道不通，各以为一州主，不知汉之广大。
+  when: 当封闭环境内自我评估/排位、缺乏外部基准时触发(作警示)
+  graph:
+  - from: yelang_zida
+    to: []
+decision:
+- if: 需外部基准校准
+  call: yelang_zida
+skills:
+- 夜郎自大·思维研判
+negative_space:
+- 以局部第一代全局定位则盲
+- 妄自菲薄亦失真
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

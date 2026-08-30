@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-56-20260827-56
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T12:06:22.382416'
+branch: 中国成语·认知与辩证·第56条(自相矛盾)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第56条《自相矛盾》
+  core: 同时主张'矛无不陷'与'盾不可陷'，两言互伐、逻辑不能共存，是逻辑矛盾；矛盾论视之为'同一性与斗争性'失当——只斗(互相否定)而无同一(可共存语境)，故陈述自破。须消解表述中的互斥断言。
+  verse: 以子之矛，陷子之盾；无不陷与不可陷，两言相伐。
+  origin: 《韩非子·难一》：楚人有鬻盾与矛者，誉之曰'吾盾之坚莫能陷''吾矛之利于物无不陷'，或曰'以子之矛陷子之盾何如'，其人弗能应。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zixiang_maodun
+  method: 自相矛盾
+  signature: fn zixiang_maodun(warn) -> logical_consistency
+  precond: 两言互斥
+  postcond: 消解矛盾，陈述立
+  negative_space: ⊗ 自伐则破
+  steps:
+  - 列断言
+  - 查互斥
+  - 定语境
+  - 解矛盾
+  nca_emit: true
+dispatch:
+  main_pipeline: zixiang_maodun
+  trigger: 以子之矛，陷子之盾；无不陷与不可陷，两言相伐。
+  when: 当陈述含互斥断言、逻辑不能自洽时触发(作逻辑警示)
+  graph:
+  - from: zixiang_maodun
+    to: []
+decision:
+- if: 需逻辑一致性校验
+  call: zixiang_maodun
+skills:
+- 自相矛盾·思维研判
+negative_space:
+- 两言互伐则自破
+- 昧语境则争
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

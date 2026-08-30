@@ -1,0 +1,47 @@
+COP-ID: HS-RU-P17-20260815-17
+source_expert: lunyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 篇目分解)
+compiled_at: '2026-08-15T13:13:20.884153'
+branch: 诸子百家·儒家·论语·第17篇(阳货)
+stratum: 诸子百家·儒家·论语·为学教育
+soul:
+  identity: 论语·第17篇《阳货》
+  core: 性近习远、习染成性；以教移习、化性起伪。
+  verse: 性相近也，习相远也；唯上知与下愚不移。
+  role: 思维协议 (诸子百家 / 儒家 / 论语篇目)
+  category: 诸子百家 / 儒家 / 论语 / 为学教育
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xing_jin_xi_yuan
+  method: 阳货
+  signature: fn xing_jin_xi_yuan(educate) -> nurture_habit
+  precond: 纵习失教、性远
+  postcond: 性近习远，教以移习
+  negative_space: ⊗ 纵习则远
+  steps:
+  - 识性近
+  - 察习
+  - 施教
+  - 移习
+  nca_emit: true
+dispatch:
+  main_pipeline: xing_jin_xi_yuan
+  trigger: 性相近也，习相远也；唯上知与下愚不移。
+  when: 当性习可塑、宜以教化习时触发
+  graph:
+  - from: xing_jin_xi_yuan
+    to: []
+decision:
+- if: 需性近习远
+  call: xing_jin_xi_yuan
+skills:
+- 阳货·顺势研判
+negative_space:
+- 纵恶习则远
+- 教不得法则泥
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

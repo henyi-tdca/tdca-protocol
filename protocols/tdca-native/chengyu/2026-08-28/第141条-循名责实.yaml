@@ -1,0 +1,50 @@
+COP-ID: CHENGYU-141-20260828-141
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.694327'
+branch: 中国成语·修身与治理·第141条(循名责实)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第141条《循名责实》
+  core: 名实校验治理——对承诺/头衔/指标按其名义逐一问责实际达成；治理的信息成本靠'名'降低，治理实效靠'责实'保障。律三v2 同构：data_feed
+    之名责其实之据。
+  verse: 循名而责实，操其柄以课其功；名不当实，责乃随之。
+  origin: 《韩非子·定法》：'循名而责实'；申不害之术要旨。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: xunming_zeshi
+  method: 循名责实
+  signature: fn xunming_zeshi(audit) -> name_reality_checked
+  precond: 名实可能存在偏差
+  postcond: 名责相符，术治乃行
+  negative_space: ⊗ 责实过苛则名浮
+  steps:
+  - 定其名
+  - 课其实
+  - 校其差
+  - 施其赏罚
+  nca_emit: true
+dispatch:
+  main_pipeline: xunming_zeshi
+  trigger: 循名而责实，操其柄以课其功；名不当实，责乃随之。
+  when: 当须按承诺/指标逐一问责实际达成时触发
+  graph:
+  - from: xunming_zeshi
+    to: []
+decision:
+- if: 需名实校验
+  call: xunming_zeshi
+skills:
+- 循名责实·思维研判
+negative_space:
+- 只求名则虚浮
+- 苛责实则失容错
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

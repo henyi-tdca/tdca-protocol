@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-127-20260828-127
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:41:37.606848'
+branch: 中国成语·战略与决断·第127条(以逸待劳)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第127条《以逸待劳》
+  core: 时机与消耗管理——不主动消耗而令对方消耗，行动方以逸蓄能待其疲；主动性藏在'不战'里。与一鼓作气成对（彼择彼竭我盈之点出手，此先造消耗差）。
+  verse: 困敌之势，不以战；损刚益柔，逸而待劳。
+  origin: 三十六计·胜战计第四计：'困敌之势，不以战；损刚益柔。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yiyi_dailao
+  method: 以逸待劳
+  signature: fn yiyi_dailao(conserve) -> attrition_gap_built
+  precond: 对方处于主动消耗位
+  postcond: 彼竭我盈，后发而胜
+  negative_space: ⊗ 逸而无度则失机
+  steps:
+  - 敛其锐
+  - 固其守
+  - 耗其力
+  - 待其竭
+  nca_emit: true
+dispatch:
+  main_pipeline: yiyi_dailao
+  trigger: 困敌之势，不以战；损刚益柔，逸而待劳。
+  when: 当可转入消耗位、宜以逸蓄势时触发
+  graph:
+  - from: yiyi_dailao
+    to: []
+decision:
+- if: 需消耗差管理
+  call: yiyi_dailao
+skills:
+- 以逸待劳·思维研判
+negative_space:
+- 久逸则己亦钝
+- 待变而不备则变至无措
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

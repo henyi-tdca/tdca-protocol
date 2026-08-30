@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-148-20260828-148
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.746931'
+branch: 中国成语·修身与治理·第148条(约定俗成)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第148条《约定俗成》
+  core: 制度的自发涌现——规范/命名/惯例由共同体反复互动沉淀而成，先约定后俗成；治理可播种约定（初始规则）但不能替代演化（俗成）。
+  verse: 名无固宜，约之以命；约定俗成，谓之实名。
+  origin: 《荀子·正名》：'名无固宜，约之以命，约定俗成谓之宜，异于约则谓之不宜。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yueding_sucheng
+  method: 约定俗成
+  signature: fn yueding_sucheng(seed) -> norm_emerged
+  precond: 共同体互动反复发生
+  postcond: 约定沉淀，俗成为典
+  negative_space: ⊗ 强推不成则伪俗
+  steps:
+  - 播其约
+  - 育其俗
+  - 察其成
+  - 定其典
+  nca_emit: true
+dispatch:
+  main_pipeline: yueding_sucheng
+  trigger: 名无固宜，约之以命；约定俗成，谓之实名。
+  when: 当须以播种初始规则促成规范自发沉淀时触发
+  graph:
+  - from: yueding_sucheng
+    to: []
+decision:
+- if: 需制度涌现
+  call: yueding_sucheng
+skills:
+- 约定俗成·思维研判
+negative_space:
+- 强力颁布而非约定则难俗成
+- 俗成不典则失稳定
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

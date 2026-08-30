@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX09-20260815-09
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.967516'
+branch: 诸子百家·儒家·大学·第09目(齐家)
+stratum: 诸子百家·儒家·大学·外王阶梯
+soul:
+  identity: 大学·第09目《齐家》
+  core: 整治家族、孝悌慈恕推于家；以齐家及国，风化自近。
+  verse: 欲治其国者，先齐其家。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 外王阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: qi_jia
+  method: 齐家
+  signature: fn qi_jia(family) -> ordered_family
+  precond: 家不齐、教不行
+  postcond: 家齐国治，风化
+  negative_space: ⊗ 家乱则国危
+  steps:
+  - 孝
+  - 悌
+  - 慈
+  - 齐家
+  nca_emit: true
+dispatch:
+  main_pipeline: qi_jia
+  trigger: 欲治其国者，先齐其家。
+  when: 当宜由家及国、先齐其家时触发
+  graph:
+  - from: qi_jia
+    to: []
+decision:
+- if: 需齐家为本
+  call: qi_jia
+skills:
+- 齐家·顺势研判
+negative_space:
+- 家不齐则国乱
+- 溺爱则废
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-147-20260828-147
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.740089'
+branch: 中国成语·修身与治理·第147条(同舟共济)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第147条《同舟共济》
+  core: 利益共同体的情境构造——竞争主体在共享风险情境下自发协作；治理可主动构造'同舟情境'（共享风险池）以催化协作。MOU 正和协作的古典直觉。
+  verse: 吴越同舟，遇风而济；其相救也，如左右手。
+  origin: 《孙子·九地》：'夫吴人与越人相恶也，当其同舟而济，遇风，其相救也如左右手。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tongzhou_gongji
+  method: 同舟共济
+  signature: fn tongzhou_gongji(pool) -> shared_risk_alliance
+  precond: 竞争主体间存在可共享风险
+  postcond: 风险共担，协作自发
+  negative_space: ⊗ 风过舟安则盟散
+  steps:
+  - 造其舟
+  - 共其险
+  - 济其难
+  - 固其盟
+  nca_emit: true
+dispatch:
+  main_pipeline: tongzhou_gongji
+  trigger: 吴越同舟，遇风而济；其相救也，如左右手。
+  when: 当须构造共享风险池以催化跨主体协作时触发
+  graph:
+  - from: tongzhou_gongji
+    to: []
+decision:
+- if: 需共享风险构造
+  call: tongzhou_gongji
+skills:
+- 同舟共济·思维研判
+negative_space:
+- 风过舟安则盟散
+- 责任不均则济而不力
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

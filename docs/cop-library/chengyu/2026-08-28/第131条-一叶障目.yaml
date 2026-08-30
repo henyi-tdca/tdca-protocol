@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-131-20260828-131
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:39:53.625292'
+branch: 中国成语·认知与辩证·第131条(一叶障目)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第131条《一叶障目》
+  core: 近距遮蔽警示——离问题太近的单一遮挡物可遮蔽全局视域；障碍不在信息量而在视野结构，须换观测位。与管中窥豹成对（彼采样有限，此被局部遮蔽）。
+  verse: 一叶蔽目，不见太山；两豆塞耳，不闻雷霆。
+  origin: 三国魏·邯郸淳《笑林》：楚人读《淮南子》得'螳螂伺蝉自障叶可以隐形'之说，以叶自蔽而问妻。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: yiye_zhangmu
+  method: 一叶障目
+  signature: fn yiye_zhangmu(warn) -> occlusion_removed
+  precond: 视域被近距单一遮挡
+  postcond: 障显而移，视域复全
+  negative_space: ⊗ 识叶不能则常蔽
+  steps:
+  - 察其叶
+  - 移其位
+  - 广其视
+  - 复其观
+  nca_emit: true
+dispatch:
+  main_pipeline: yiye_zhangmu
+  trigger: 一叶蔽目，不见太山；两豆塞耳，不闻雷霆。
+  when: 当结论视野疑被单一近距因素遮挡时触发(作警示)
+  graph:
+  - from: yiye_zhangmu
+    to: []
+decision:
+- if: 需视野遮蔽检查
+  call: yiye_zhangmu
+skills:
+- 一叶障目·思维研判
+negative_space:
+- 识叶不能则常蔽
+- 因噎废观则全盲
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

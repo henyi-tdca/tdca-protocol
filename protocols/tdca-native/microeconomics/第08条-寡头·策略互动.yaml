@@ -1,0 +1,47 @@
+COP-ID: MICRO-08-20260825-08
+source_expert: microeconomics_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 现代学科条目分解)
+compiled_at: '2026-08-26T11:28:59.214788'
+branch: 现代经济学·微观经济学·第08条(寡头·策略互动)
+stratum: 现代经济学·微观经济学·厂商与结构
+soul:
+  identity: 微观经济学·第08条《寡头·策略互动》
+  core: 寡头间策略依存，以古诺（产量）/伯特兰（价格）/斯塔克伯格（先行）模型与博弈论分析均衡，结果依赖对手信念。
+  verse: 市惟数贾，一举一动，众皆应之；谋须度人。
+  role: 思维协议 (现代经济学 / 微观经济学 / 分析模块)
+  category: 现代经济学 / 微观经济学 / 厂商与结构
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: oligopoly
+  method: 寡头·策略互动
+  signature: fn oligopoly(strategize) -> nash_equilibrium
+  precond: 昧依存
+  postcond: 均衡依信念
+  negative_space: ⊗ 昧依存则孤
+  steps:
+  - 识对手
+  - 建反应
+  - 求均衡
+  - 察合谋
+  nca_emit: true
+dispatch:
+  main_pipeline: oligopoly
+  trigger: 市惟数贾，一举一动，众皆应之；谋须度人。
+  when: 当少数卖者相互牵制、合谋/价格战研判时触发
+  graph:
+  - from: oligopoly
+    to: []
+decision:
+- if: 需寡头策略分析
+  call: oligopoly
+skills:
+- 寡头·策略互动·均衡研判
+negative_space:
+- 昧依存则孤
+- 合谋须防法禁
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

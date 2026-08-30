@@ -1,0 +1,48 @@
+COP-ID: CHENGYU-04-20260827-04
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-27T11:35:48.809397'
+branch: 中国成语·战略与决断·第04条(卧薪尝胆)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第04条《卧薪尝胆》
+  core: 处于绝对劣势时，以长期隐忍与持续积累换取翻转，不急于一时胜负；以战略耐心把'时间'变为盟友，是跨期可信承诺的古典形态。
+  verse: 败而不亡，薪胆在侧，十年生聚，一朝复国。
+  origin: 《史记·越王勾践世家》：勾践为吴所败，卧薪尝胆，身自耕作、夫人织布，十年生聚十年教训，终灭吴。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: woxin_changdan
+  method: 卧薪尝胆
+  signature: fn woxin_changdan(endure) -> reversal_accrued
+  precond: 处绝对劣势
+  postcond: 积厚，待翻转
+  negative_space: ⊗ 急于一战则亡
+  steps:
+  - 忍辱
+  - 蓄力
+  - 待时
+  - 翻转
+  nca_emit: true
+dispatch:
+  main_pipeline: woxin_changdan
+  trigger: 败而不亡，薪胆在侧，十年生聚，一朝复国。
+  when: 当处于劣势需长期逆风翻盘、忌冒进时触发
+  graph:
+  - from: woxin_changdan
+    to: []
+decision:
+- if: 需战略耐心
+  call: woxin_changdan
+skills:
+- 卧薪尝胆·思维研判
+negative_space:
+- 急于求成则速亡
+- 无积累则翻转空
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

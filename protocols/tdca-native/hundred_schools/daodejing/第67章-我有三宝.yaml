@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH67-20260815-67
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:03.898418'
+branch: 诸子百家·道家·道德经·第67章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第67章《我有三宝》
+  core: 慈(柔爱)、俭(收敛)、不敢为先(处后)；以三宝守柔胜刚。
+  verse: 我有三宝：一曰慈，二曰俭，三曰不敢为天下先。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: wo_you_san_bao
+  method: 我有三宝
+  signature: fn wo_you_san_bao(self) -> three_treasures
+  precond: 逞强弃柔、败
+  postcond: 慈俭不敢先，以退为进
+  negative_space: ⊗ 舍慈则勇则亡
+  steps:
+  - 慈
+  - 俭
+  - 不敢先
+  - 守柔
+  nca_emit: true
+dispatch:
+  main_pipeline: wo_you_san_bao
+  trigger: 我有三宝：一曰慈，二曰俭，三曰不敢为天下先。
+  when: 当逞强冒进、宜持三宝守柔时触发
+  graph:
+  - from: wo_you_san_bao
+    to: []
+decision:
+- if: 需三宝守柔
+  call: wo_you_san_bao
+skills:
+- 我有三宝·顺势研判
+negative_space:
+- 舍慈则亡
+- 敢先则困
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

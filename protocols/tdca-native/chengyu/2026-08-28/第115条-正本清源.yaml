@@ -1,0 +1,49 @@
+COP-ID: CHENGYU-115-20260828-115
+data_provenance: single-author
+source_expert: chengyu_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 中方文明思维条目分解)
+compiled_at: '2026-08-28T16:17:12.487630'
+branch: 中国成语·修身与治理·第115条(正本清源)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第115条《正本清源》
+  core: 制度性根治——治标反复发作时溯源至产生问题的机制根基并重构之；与釜底抽薪成对（彼应急除薪止损，此立制改源断根）。
+  verse: 扬汤百沸，不如釜底一薪；清其源头，流自不浊。
+  origin: 《汉书·刑法志》：'岂宜惟思清原正本之论，删定律令。'
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhengben_qingyuan
+  method: 正本清源
+  signature: fn zhengben_qingyuan(rootfix) -> source_institution_rebuilt
+  precond: 标准化治理反复发作
+  postcond: 源清流澈，不再复发
+  negative_space: ⊗ 误判源则白改
+  steps:
+  - 溯其源
+  - 定其本
+  - 改其制
+  - 验其流
+  nca_emit: true
+dispatch:
+  main_pipeline: zhengben_qingyuan
+  trigger: 扬汤百沸，不如釜底一薪；清其源头，流自不浊。
+  when: 当同类问题反复发作、须溯源重构产生机制时触发
+  graph:
+  - from: zhengben_qingyuan
+    to: []
+decision:
+- if: 需源头治理
+  call: zhengben_qingyuan
+skills:
+- 正本清源·思维研判
+negative_space:
+- 误判源头则白改
+- 急于清源则伤存量
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

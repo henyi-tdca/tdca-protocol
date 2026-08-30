@@ -1,0 +1,47 @@
+COP-ID: HS-DAO-CH78-20260815-78
+source_expert: daodejing_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 章句分解)
+compiled_at: '2026-08-15T13:03:04.041322'
+branch: 诸子百家·道家·道德经·第78章
+stratum: 诸子百家·道家·道德经·守柔不争
+soul:
+  identity: 道德经·第78章《天下莫柔弱于水》
+  core: 水至柔克刚，正言若反；以柔弱胜坚强(反言成真)。
+  verse: 天下莫柔弱于水，而攻坚强者莫之能胜；正言若反。
+  role: 思维协议 (诸子百家 / 道家 / 道德经章句)
+  category: 诸子百家 / 道家 / 道德经 / 守柔不争
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: tian_xia_mo_rou_ruo_yu_shui
+  method: 天下莫柔弱于水
+  signature: fn tian_xia_mo_rou_ruo_yu_shui(force) -> water_wins
+  precond: 刚强相抗、不胜
+  postcond: 柔弱胜刚，正言若反
+  negative_space: ⊗ 刚则折
+  steps:
+  - 至柔
+  - 攻坚
+  - 莫胜
+  - 正言反
+  nca_emit: true
+dispatch:
+  main_pipeline: tian_xia_mo_rou_ruo_yu_shui
+  trigger: 天下莫柔弱于水，而攻坚强者莫之能胜；正言若反。
+  when: 当以柔克刚、真理反言时触发
+  graph:
+  - from: tian_xia_mo_rou_ruo_yu_shui
+    to: []
+decision:
+- if: 需柔弱胜刚
+  call: tian_xia_mo_rou_ruo_yu_shui
+skills:
+- 天下莫柔弱于水·顺势研判
+negative_space:
+- 刚强则折
+- 顺言则蔽
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

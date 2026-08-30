@@ -1,0 +1,47 @@
+COP-ID: HS-RU-XZ04-20260815-04
+source_expert: xunzi_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:45.581202'
+branch: 诸子百家·儒家·荀子·第04条(劝学)
+stratum: 诸子百家·儒家·荀子·劝学积德
+soul:
+  identity: 荀子·第04条《劝学》
+  core: 学不可已、积渐胜自然；以博学参省、知明行无过，立为学之基。
+  verse: 学不可以已。青，取之于蓝，而青于蓝；冰，水为之，而寒于水。
+  role: 思维协议 (诸子百家 / 儒家 / 荀子义理)
+  category: 诸子百家 / 儒家 / 荀子 / 劝学积德
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: quan_xue
+  method: 劝学
+  signature: fn quan_xue(study) -> ever_study
+  precond: 废学、不知省
+  postcond: 知明行无过
+  negative_space: ⊗ 废学则愚
+  steps:
+  - 学不已
+  - 参省
+  - 积渐
+  - 知明
+  nca_emit: true
+dispatch:
+  main_pipeline: quan_xue
+  trigger: 学不可以已。青，取之于蓝，而青于蓝；冰，水为之，而寒于水。
+  when: 当宜力学不已、不宜止息时触发
+  graph:
+  - from: quan_xue
+    to: []
+decision:
+- if: 需劝学
+  call: quan_xue
+skills:
+- 劝学·顺势研判
+negative_space:
+- 学止则退
+- 不省则罔
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

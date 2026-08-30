@@ -1,0 +1,47 @@
+COP-ID: HS-FA-02-20260815-02
+source_expert: fajia_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 义理条目分解)
+compiled_at: '2026-08-15T13:45:46.507361'
+branch: 诸子百家·法家·第02条(术)
+stratum: 诸子百家·法家·法度三器
+soul:
+  identity: 法家·第02条《术》
+  core: 术为御下之巧、循名责实；以潜御群臣，立考课之方。
+  verse: 术者，因任而授官，循名而责实，操杀生之柄，课群臣之能者也。藏于无事，示无为。
+  role: 思维协议 (诸子百家 / 法家 / 法术势)
+  category: 诸子百家 / 法家 / 法度三器
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: shu_yu
+  method: 术
+  signature: fn shu_yu(control) -> technique
+  precond: 任非其能、名实乖
+  postcond: 循名责实，臣服
+  negative_space: ⊗ 无术则蔽
+  steps:
+  - 因任
+  - 授官
+  - 责实
+  - 课能
+  nca_emit: true
+dispatch:
+  main_pipeline: shu_yu
+  trigger: 术者，因任而授官，循名而责实，操杀生之柄，课群臣之能者也。藏于无事，示无为。
+  when: 当宜考课群臣、不宜暗于下时触发
+  graph:
+  - from: shu_yu
+    to: []
+decision:
+- if: 需用术
+  call: shu_yu
+skills:
+- 术·顺势研判
+negative_space:
+- 无术则蔽于奸
+- 术露则臣窥
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

@@ -1,0 +1,47 @@
+COP-ID: HS-RU-DX05-20260815-05
+source_expert: daxue_canonical
+compiler: cognitive_compiler (T1+T2 规范复用 / 纲领目次分解)
+compiled_at: '2026-08-15T13:24:15.923954'
+branch: 诸子百家·儒家·大学·第05目(致知)
+stratum: 诸子百家·儒家·大学·内圣阶梯
+soul:
+  identity: 大学·第05目《致知》
+  core: 推极其知、扩充知识至极；以知致诚，不蔽不杂。
+  verse: 致知在格物。知至而后意诚。
+  role: 思维协议 (诸子百家 / 儒家 / 大学纲目)
+  category: 诸子百家 / 儒家 / 大学 / 内圣阶梯
+  base_protocol: TDCA-CORE-20260815-01
+primitives:
+- name: zhi_zhi
+  method: 致知
+  signature: fn zhi_zhi(extend) -> knowledge_pushed
+  precond: 知有未尽、蔽
+  postcond: 知至意诚，明理
+  negative_space: ⊗ 知蔽则暗
+  steps:
+  - 格物
+  - 致知
+  - 推极
+  - 知至
+  nca_emit: true
+dispatch:
+  main_pipeline: zhi_zhi
+  trigger: 致知在格物。知至而后意诚。
+  when: 当知识未透、宜推极时触发
+  graph:
+  - from: zhi_zhi
+    to: []
+decision:
+- if: 需致知推极
+  call: zhi_zhi
+skills:
+- 致知·顺势研判
+negative_space:
+- 知蔽则暗
+- 博而不约则杂
+- '⊗ 本章协议须以 TDCA-CORE-20260815-01 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
