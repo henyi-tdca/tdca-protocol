@@ -1,0 +1,294 @@
+{
+  "total": 41,
+  "pass": 41,
+  "fail": 0,
+  "items": [
+    {
+      "sub": "trial",
+      "file": "A1-惟一差异原则.yaml",
+      "sha256": "945cd14f891c962d",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A2-误差控制三支柱.yaml",
+      "sha256": "77e1ae6aec622ed7",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A3-试验生命周期四阶段.yaml",
+      "sha256": "f5b83551deee1760",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A4-设计选择决策树.yaml",
+      "sha256": "e194e53aa655d94f",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A5-变异分解思维.yaml",
+      "sha256": "0887d7596598208f",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A6-稳健性评估思维.yaml",
+      "sha256": "760aa6b725d8bb0f",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A7-试验陷阱防御.yaml",
+      "sha256": "08de6520f9abdb46",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "trial",
+      "file": "A8-试验检查门控.yaml",
+      "sha256": "9ff371806812af61",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B1-灰度世界观.yaml",
+      "sha256": "f2107368cf0291ce",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B2-白化收敛思维.yaml",
+      "sha256": "57e742fefc97c551",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B3-冲击扰动缓冲.yaml",
+      "sha256": "566454f3bbe4ddf6",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B4-序列生成思维.yaml",
+      "sha256": "71bb4a76156c9a6d",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B5-灰色关联分析.yaml",
+      "sha256": "0a23c8fee72d101c",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B6-灰色聚类评估.yaml",
+      "sha256": "c132dd06d6d4fc82",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B7-GM建模决策.yaml",
+      "sha256": "1b6b80495f2f0e8a",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B8-灰靶决策思维.yaml",
+      "sha256": "167b452838994f49",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "grey",
+      "file": "B9-滚动白化控制.yaml",
+      "sha256": "03a24ccff26bc6d3",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C1-设计预防公理.yaml",
+      "sha256": "e3f19dbd3c1800e4",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C2-系统效能权衡.yaml",
+      "sha256": "be29822311d2b99a",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C3-全生命周期协议.yaml",
+      "sha256": "1fc9512e4e436c98",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C4-失效模式分析.yaml",
+      "sha256": "11811a92358f9808",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C5-容错降额设计.yaml",
+      "sha256": "1b29ba32387eae5b",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C6-建模预计决策.yaml",
+      "sha256": "3429b0eb67be574a",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C7-增长验证分离.yaml",
+      "sha256": "717df8c0de3ae67d",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "dependability",
+      "file": "C8-失效数据闭环.yaml",
+      "sha256": "e3f5fd9beb316fba",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-01.yaml",
+      "sha256": "d24c8b5cbaac1cd2",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-02.yaml",
+      "sha256": "941d73024d8f17b4",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-03.yaml",
+      "sha256": "8508254a3e009690",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-04.yaml",
+      "sha256": "2d64de61bdc3b408",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-05.yaml",
+      "sha256": "7d53599705a16bea",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-01.yaml",
+      "sha256": "b56b4e0950e10b62",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-02.yaml",
+      "sha256": "aed7fb53c27ba3db",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-03.yaml",
+      "sha256": "18e2e8abd6d3faad",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-04.yaml",
+      "sha256": "5336648125092214",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-05.yaml",
+      "sha256": "4a9c6f4e19c075cd",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-06.yaml",
+      "sha256": "4538e4fbfe1d085f",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-07.yaml",
+      "sha256": "978df4b610bc0649",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-01.yaml",
+      "sha256": "27c70ac4edb42cd8",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-02.yaml",
+      "sha256": "b494d458c2e44bac",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-03.yaml",
+      "sha256": "6f29da77a4500102",
+      "pass": true,
+      "issues": []
+    },
+    {
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-04.yaml",
+      "sha256": "70f6b5edba1b92ff",
+      "pass": true,
+      "issues": []
+    }
+  ]
+}

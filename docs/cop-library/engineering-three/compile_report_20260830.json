@@ -1,0 +1,390 @@
+{
+  "report": {
+    "total": 41,
+    "ok": 41,
+    "fail": 0,
+    "cop_ids": [
+      "TRIAL-COP-20260830-01",
+      "TRIAL-COP-20260830-02",
+      "TRIAL-COP-20260830-03",
+      "TRIAL-COP-20260830-04",
+      "TRIAL-COP-20260830-05",
+      "TRIAL-COP-20260830-06",
+      "TRIAL-COP-20260830-07",
+      "TRIAL-COP-20260830-08",
+      "GREY-COP-20260830-01",
+      "GREY-COP-20260830-02",
+      "GREY-COP-20260830-03",
+      "GREY-COP-20260830-04",
+      "GREY-COP-20260830-05",
+      "GREY-COP-20260830-06",
+      "GREY-COP-20260830-07",
+      "GREY-COP-20260830-08",
+      "GREY-COP-20260830-09",
+      "DEP-COP-20260830-01",
+      "DEP-COP-20260830-02",
+      "DEP-COP-20260830-03",
+      "DEP-COP-20260830-04",
+      "DEP-COP-20260830-05",
+      "DEP-COP-20260830-06",
+      "DEP-COP-20260830-07",
+      "DEP-COP-20260830-08",
+      "COMPOSED-AGENTSAFETY-20260830-01",
+      "COMPOSED-AGENTSAFETY-20260830-02",
+      "COMPOSED-AGENTSAFETY-20260830-03",
+      "COMPOSED-AGENTSAFETY-20260830-04",
+      "COMPOSED-AGENTSAFETY-20260830-05",
+      "COMPOSED-SCENESAFETY-20260830-01",
+      "COMPOSED-SCENESAFETY-20260830-02",
+      "COMPOSED-SCENESAFETY-20260830-03",
+      "COMPOSED-SCENESAFETY-20260830-04",
+      "COMPOSED-SCENESAFETY-20260830-05",
+      "COMPOSED-SCENESAFETY-20260830-06",
+      "COMPOSED-SCENESAFETY-20260830-07",
+      "COMPOSED-TDCAGATE-20260830-01",
+      "COMPOSED-TDCAGATE-20260830-02",
+      "COMPOSED-TDCAGATE-20260830-03",
+      "COMPOSED-TDCAGATE-20260830-04"
+    ],
+    "failures": []
+  },
+  "manifest": [
+    {
+      "cop_id": "TRIAL-COP-20260830-01",
+      "sub": "trial",
+      "file": "A1-惟一差异原则.yaml",
+      "sha256": "03a44d6788acdc37753aa81ea6c9c6012e029d1b574f272436699270bc980cbc",
+      "size": 3234,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-02",
+      "sub": "trial",
+      "file": "A2-误差控制三支柱.yaml",
+      "sha256": "84fb4b9dc97562673997c46abc5d7ae324af81134863088d243d7a7157ade7e9",
+      "size": 3268,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-03",
+      "sub": "trial",
+      "file": "A3-试验生命周期四阶段.yaml",
+      "sha256": "c6e8eb6d09a72412274cb24a712539e2076223b9a05d4ced0fb1d10de831ec43",
+      "size": 3220,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-04",
+      "sub": "trial",
+      "file": "A4-设计选择决策树.yaml",
+      "sha256": "6d77722b38ba8f31fc8687eb28fa8388ae042d77b736e687d43e3e2d8efa45eb",
+      "size": 3282,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-05",
+      "sub": "trial",
+      "file": "A5-变异分解思维.yaml",
+      "sha256": "f06f25e8cdfe94691245920a69297d88a7a1c3671db7653f956bba04d49f438f",
+      "size": 3184,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-06",
+      "sub": "trial",
+      "file": "A6-稳健性评估思维.yaml",
+      "sha256": "9513e3c22e2613da4b3cd6f42b11acecd3fce7fafe0b69838b99bbb0ac2b3423",
+      "size": 3187,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-07",
+      "sub": "trial",
+      "file": "A7-试验陷阱防御.yaml",
+      "sha256": "ad55c6a3c19d65720f7edb15c786a4f22d8250f682256744c82c2a3d06397271",
+      "size": 3210,
+      "validation": true
+    },
+    {
+      "cop_id": "TRIAL-COP-20260830-08",
+      "sub": "trial",
+      "file": "A8-试验检查门控.yaml",
+      "sha256": "52a47801b57c78f6f68c15b572abd07590b32fd9e6a7f5793a2b86a8693093f3",
+      "size": 3152,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-01",
+      "sub": "grey",
+      "file": "B1-灰度世界观.yaml",
+      "sha256": "e001743d71bb2e1bce6f858d18d220c5fa631bd9b73764e78e24c8171c40dee3",
+      "size": 3166,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-02",
+      "sub": "grey",
+      "file": "B2-白化收敛思维.yaml",
+      "sha256": "ff46f374d8362981fa5e36d609c9779b3f93217eb9dbaf2aa6a9f1925b9c7fb1",
+      "size": 3128,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-03",
+      "sub": "grey",
+      "file": "B3-冲击扰动缓冲.yaml",
+      "sha256": "67c113516ff14509bb389a1c1231baa363f3f979a73e953735a21a5fb610d61c",
+      "size": 3234,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-04",
+      "sub": "grey",
+      "file": "B4-序列生成思维.yaml",
+      "sha256": "dbc66044b096d6c96f9bfb6b4f0d749bb9119a1782cdce4b0d96fd61ac57071c",
+      "size": 3139,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-05",
+      "sub": "grey",
+      "file": "B5-灰色关联分析.yaml",
+      "sha256": "94304b2a25cad47233c4d5912e1f34c1f22eb17d6aa8f617644a4be3e58d36c3",
+      "size": 3148,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-06",
+      "sub": "grey",
+      "file": "B6-灰色聚类评估.yaml",
+      "sha256": "5d28588d275141ffa57abbc9ef72376e0743ee9433a1615a64ed6bd86695c44b",
+      "size": 3166,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-07",
+      "sub": "grey",
+      "file": "B7-GM建模决策.yaml",
+      "sha256": "46ca787c30ed370f00a23e84cd740fcc5cf9bd48e630d7d9a4c039e5c5e9c2b2",
+      "size": 3201,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-08",
+      "sub": "grey",
+      "file": "B8-灰靶决策思维.yaml",
+      "sha256": "746a8e1ae6c020c13a336f28d899ff65de150f70dc56fec945899f1cb8019f39",
+      "size": 3113,
+      "validation": true
+    },
+    {
+      "cop_id": "GREY-COP-20260830-09",
+      "sub": "grey",
+      "file": "B9-滚动白化控制.yaml",
+      "sha256": "93b71be82fd3bb6cc8dcb98b69895db40a5910ebff675e8a07770e7d3f292da4",
+      "size": 3158,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-01",
+      "sub": "dependability",
+      "file": "C1-设计预防公理.yaml",
+      "sha256": "3ee614ea8b228d9bcb678d97dc933439a08d772ebf15c2225648693b31a84734",
+      "size": 3201,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-02",
+      "sub": "dependability",
+      "file": "C2-系统效能权衡.yaml",
+      "sha256": "f5db1c5a48084a1b7a9014f0dc6b368e4cc0943735d057aff8274c3b023f2d6c",
+      "size": 3191,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-03",
+      "sub": "dependability",
+      "file": "C3-全生命周期协议.yaml",
+      "sha256": "769763eb14ebf4d6436e1cd0a5d0cb773f46dc4ffd5978915c07bb0c7d1ac31a",
+      "size": 3273,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-04",
+      "sub": "dependability",
+      "file": "C4-失效模式分析.yaml",
+      "sha256": "7f4bc4731be5057b41083ac4da61882a131bd1ae6031ac0420831e248c282c2e",
+      "size": 3204,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-05",
+      "sub": "dependability",
+      "file": "C5-容错降额设计.yaml",
+      "sha256": "283a266ae801ffc831dc856e2c911a12a04b531fdf51f0216410a396246cbad3",
+      "size": 3126,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-06",
+      "sub": "dependability",
+      "file": "C6-建模预计决策.yaml",
+      "sha256": "dfed5ef5b0f9cc55f47a891de19ca496d877d0faad2ecc2c1a194c3e13c2cffb",
+      "size": 3158,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-07",
+      "sub": "dependability",
+      "file": "C7-增长验证分离.yaml",
+      "sha256": "541abdf50e7f7cf853dc6397ea944f993369a21cb0d512c2c57fa289b804f2fb",
+      "size": 3245,
+      "validation": true
+    },
+    {
+      "cop_id": "DEP-COP-20260830-08",
+      "sub": "dependability",
+      "file": "C8-失效数据闭环.yaml",
+      "sha256": "09c841378203828ea2cc37cc81b7f4f1c9540c8f0cf25164479533048e2f8b0b",
+      "size": 3246,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-AGENTSAFETY-20260830-01",
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-01.yaml",
+      "sha256": "459ff8dc3ab67442a0cace1c2d31ef23bb863779dacabfebd5ed625501422005",
+      "size": 5916,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-AGENTSAFETY-20260830-02",
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-02.yaml",
+      "sha256": "46e843bcf5dda5ab6f1564f2369ae7dadbc146c70d4acc441c7366a84ba99a9a",
+      "size": 5559,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-AGENTSAFETY-20260830-03",
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-03.yaml",
+      "sha256": "df698170d510907b3fb89ac1b7e94c16425072fe2d37135108b6658380c8688e",
+      "size": 5591,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-AGENTSAFETY-20260830-04",
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-04.yaml",
+      "sha256": "166835afc7b2f461a3b02551a7b38774c4159159547b3cc1642640f0f4ae4368",
+      "size": 5665,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-AGENTSAFETY-20260830-05",
+      "sub": "fusion",
+      "file": "COMPOSED-AGENTSAFETY-20260830-05.yaml",
+      "sha256": "d39cc7ebc40a1e9596fd5176b89ed35ac9f66cddc3f062f131a2f0501b86ccbf",
+      "size": 5575,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-01",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-01.yaml",
+      "sha256": "d9582c11c900a7280a6ae30e36d9a677905bc92e2e69478c0a5455f52dbff791",
+      "size": 5495,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-02",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-02.yaml",
+      "sha256": "d45a1685365d1b98810033bdfdba9d5d92f45493d3292af66d7e8bed7febdde8",
+      "size": 5530,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-03",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-03.yaml",
+      "sha256": "b6d2813daee18a148458b2e8a254e8c0fe993ffef7aa19b40644de09ee1edf76",
+      "size": 5553,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-04",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-04.yaml",
+      "sha256": "4fa0e52ed295a822ae7e994ce929f7ebed8d8d76b34ce00257cef1737e1dec7b",
+      "size": 5572,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-05",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-05.yaml",
+      "sha256": "3145b7ca9da848fe24a17de9df0f8753cc867c59dce10a115b1c8879aa778eff",
+      "size": 5489,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-06",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-06.yaml",
+      "sha256": "fdd2dfad1d109ea2d9889a9d059252a05b06040ce0c225df616a848fc8748898",
+      "size": 5437,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-SCENESAFETY-20260830-07",
+      "sub": "fusion_scene",
+      "file": "COMPOSED-SCENESAFETY-20260830-07.yaml",
+      "sha256": "b18dc60f90168aa8a93925083c4f215606b85c14ae7edb46da8c0ab4abdf5125",
+      "size": 5556,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-TDCAGATE-20260830-01",
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-01.yaml",
+      "sha256": "43b39af8db40b99e6fcf248fe6d65be09fb8a9ce071e1da906bc15ac79f7981f",
+      "size": 7481,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-TDCAGATE-20260830-02",
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-02.yaml",
+      "sha256": "19d74bd15f08e4322098b03057043d49e0ca5ce3d1208d2cc788fe3ac8521159",
+      "size": 5652,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-TDCAGATE-20260830-03",
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-03.yaml",
+      "sha256": "4fcada160bcc643ccf2b226730a058caf6eb28398d5f75a2e28e72d211e38642",
+      "size": 5873,
+      "validation": true
+    },
+    {
+      "cop_id": "COMPOSED-TDCAGATE-20260830-04",
+      "sub": "fusion_tdca",
+      "file": "COMPOSED-TDCAGATE-20260830-04.yaml",
+      "sha256": "324a5d19aab246eeb4124f233b98693f0ca132dbd6c20a8df0ff7f79849d9271",
+      "size": 5857,
+      "validation": true
+    }
+  ],
+  "batch_nca": "TDCA-REASONIX-20260830-010",
+  "composition_policy": {
+    "standalone": false,
+    "tdca_native": true,
+    "mandatory_base": "TDCA-CORE (TDCA 体系内强制遵守, 不可配置关闭)",
+    "detachable": "剥离 TDCA 治理层后协议语义保持独立自洽, 可移植至其他治理体系",
+    "note": "思维协议不是独立发挥作用的, 须与系列内其他 COP 组合调用 (用户裁定 2026-08-30)",
+    "constitution": "NSFL 否决权 (F1.5, 用户裁定 2026-08-30 21:07): 任一事件未通过 NSFL 预检 (负空间触碰), 即使其他四判据全部通过, 亦视为整体拒绝 (Fail-Closed); NSFL 预检优先级恒高于其他一切判据——负空间是安全宪法的宪法, 不可配置关闭, 不可被多数判据推翻。动态修正 (用户裁定 2026-08-30 21:19): TDCA 是动态管理, 负空间本质保守不轻易变化但仍会演化——现在触犯不等于永远触犯; 否决权的不可推翻性仅指即时门控裁决, 不指永恒身份; 触犯负空间的实体在 sandbox 检验后走四态动态处置: 休眠/禁止/重塑/出清, 负空间版本更新时休眠/重塑态实体优先重评"
+  }
+}

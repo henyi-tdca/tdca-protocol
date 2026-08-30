@@ -1,0 +1,79 @@
+{
+  "families": {
+    "stratagems": {
+      "files": 39,
+      "composed": 0,
+      "native": 37
+    },
+    "scenario": {
+      "files": 7,
+      "composed": 0,
+      "native": 7
+    },
+    "compositions": {
+      "files": 39,
+      "composed": 39,
+      "native": 0
+    },
+    "engineering-three": {
+      "files": 41,
+      "composed": 16,
+      "native": 25
+    },
+    "games": {
+      "files": 4,
+      "composed": 0,
+      "native": 4
+    },
+    "hundred_schools": {
+      "files": 216,
+      "composed": 4,
+      "native": 200
+    },
+    "marxism": {
+      "files": 17,
+      "composed": 1,
+      "native": 15
+    },
+    "mechanism_design": {
+      "files": 1,
+      "composed": 0,
+      "native": 1
+    },
+    "microeconomics": {
+      "files": 13,
+      "composed": 0,
+      "native": 12
+    },
+    "chengyu": {
+      "files": 151,
+      "composed": 0,
+      "native": 150
+    },
+    "tdca_core": {
+      "files": 4,
+      "composed": 0,
+      "native": 3
+    },
+    "coldstart": {
+      "files": 1,
+      "composed": 0,
+      "native": 0
+    },
+    "emissary": {
+      "files": 2,
+      "composed": 0,
+      "native": 1
+    }
+  },
+  "composed_total": 60,
+  "composed_fail": [],
+  "native_total": 455,
+  "native_fail": [],
+  "parse_fail": [
+    {
+      "file": "coldstart\\community\\第01条-开源社区冷启动·正和准入.yaml",
+      "error": "while scanning for the next token\nfound character '`' that cannot start any token\n  in \"C:\\Users\\22850\\Desktop\\TDCA-MEMO"
+    }
+  ]
+}
