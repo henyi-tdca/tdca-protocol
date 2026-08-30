@@ -400,6 +400,49 @@
   </div>
 </section>
 
+<!-- INFRA-B3（GSEQ-0715）：模拟与接入区（静态卡片区，增量不重构） -->
+<section class="assets" id="simzone">
+  <h2>🎛 模拟与接入区 <span class="tag">模拟器 / 适配器 / 连接器 / 数据流 API</span><span class="tag">链接宁缺毋假 · 未发布如实标注（ID92）</span></h2>
+  <p class="sub">模拟器组（演示态 SIMULATED 为主）与接入件组（适配器/连接器/数据流 API，已开源件直达可核验地址）。工作区既有但未发布件如实标 <span class="soon">即将开放</span>。</p>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <h3>① 模拟器 ×4</h3>
+      <ul>
+        <li>教学模拟器（E-EDU V1.0）<span class="soon">即将开放</span></li>
+        <li>SIL 过渡模拟器 <span class="soon">即将开放</span>（工作区件 tdca-notification-machine 未发布）</li>
+        <li>沙盒模拟器（SBX-OPS 三空间）<span class="soon">即将开放</span>；在线 SEA 五要件状态 → <a href="#sandbox-zone">沙盒实验室区</a>（实时实读）</li>
+        <li>场景沙盒 <span class="soon">即将开放</span>（工作区件 tdca-cross-scene 未发布）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>② 适配器 ×3</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tdca-adapters/acps" target="_blank">ACPs 适配器</a>（样板 1 FROZEN，人类签批 GSEQ-0523，Mulan PSL v2）</li>
+        <li>制度适配器（ISO 42001 · NIST RMF 双实例）<span class="soon">即将开放</span>；<a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/tdca-adapters/MATRIX.md" target="_blank">适配器矩阵</a>（全量在册，上游 response_status 如实标注）</li>
+        <li>CSCP 适配器 <span class="soon">即将开放</span>（工作区件 tdca-cscp 未发布）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>③ 连接器 ×2</h3>
+      <ul>
+        <li>TDCA 连接器 v2（TF-IDF + 多维匹配 + 负空间反向）<span class="soon">即将开放</span>；匹配/距离组件真实件 →
+          <a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/tools/tdca_fuzzy_distance.py" target="_blank">tdca_fuzzy_distance.py</a> ·
+          <a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/tools/tdca_cognitive_distance.py" target="_blank">tdca_cognitive_distance.py</a></li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/mcp_bridge" target="_blank">mcp-bridge</a>（stdio JSON-RPC 桥 + 存证水印；大模型栏「MCP 实测」即在用它）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>④ 场景数据流 API</h3>
+      <ul>
+        <li>动态数据流第五依赖 / 新鲜度门 → <a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/tools/context_provider.py" target="_blank">tools/context_provider.py</a></li>
+        <li>M2 试点实证（真实遥测→COP 决策）→ <a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/tools/thingsboard_pool/pilot_m2_dataflow.py" target="_blank">pilot_m2_dataflow.py</a> ·
+          <a href="https://github.com/henyi-tdca/tdca-protocol/blob/main/tools/thingsboard_pool/evidence/M2-PILOT-DATAFLOW-20260829.json" target="_blank">证据 JSON</a></li>
+        <li>编排器 <span class="soon">即将开放</span>（工作区件 tdca-flow-orchestrator 未发布）；在线实读 → <a href="#market-zone">分层市场区</a> / <a href="#sandbox-zone">沙盒实验室区</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- M1.2 资产导航区（GSEQ-0650）：6 类权威资产卡片网格，链接真实直达 -->
 <section class="assets">
   <h2>📦 资产导航 <span class="tag">TDCA 权威资产总入口</span></h2>
@@ -465,7 +508,7 @@
   <a href="https://github.com/henyi-tdca/tdca-protocol">GitHub 仓库</a> ·
   <a href="https://github.com/henyi-tdca/tdca-protocol/discussions">Discussions</a> ·
   <a href="https://gitee.com/siweihanshuzhineng_0/tdca-protocol">Gitee 镜像</a> ·
-  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651 ｜ 分层市场/沙盒实验室/公告资讯 INFRA-B1 批次1 GSEQ-0706 ｜ 工具链区 INFRA-B2 GSEQ-0708
+  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651 ｜ 分层市场/沙盒实验室/公告资讯 INFRA-B1 批次1 GSEQ-0706 ｜ 工具链区 INFRA-B2 GSEQ-0708 ｜ 模拟与接入区 INFRA-B3 GSEQ-0715
 </footer>
 
 <script>
