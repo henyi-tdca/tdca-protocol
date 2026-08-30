@@ -6,38 +6,27 @@
       "F1.5b"
     ],
     "review_close": "GSEQ-0755",
-    "build_batch": "GSEQ-0759"
+    "build_batch": "GSEQ-0759",
+    "close_batch": "GSEQ-0761"
   },
   "totals": {
     "native_cop_canonical": 455,
     "composed_cop": 60,
     "total_cop": 515,
-    "native_physical": 453,
+    "native_physical": 454,
     "core_base_physical": 3,
-    "physical_yaml": 516
+    "physical_yaml": 517
   },
-  "deferred": [
-    {
-      "item": "coldstart/community/第01条-开源社区冷启动·正和准入.yaml",
-      "reason": "YAML 解析失败（围栏件），归口修复后补入",
-      "counted_in_canonical": true
-    },
-    {
-      "item": "emissary/谈判者-特使-001.yaml",
-      "reason": "结构异常旧版，已由 谈判者-特使-001-COP.yaml 标准版替代",
-      "counted_in_canonical": true
-    },
-    {
-      "item": "simulations 家族",
-      "reason": "已裁定（TDCA-RULING-20260830-001, 2026-08-30）：验证证据层 experiment artifacts——协议的测试报告，保留为协议库验证证据（docs/cop-library/simulations），不入 canonical 计数",
-      "counted_in_canonical": false,
-      "ruling": "TDCA-RULING-20260830-001"
-    }
-  ],
+  "deferred": [],
   "families": {
     "chengyu": {
       "label": "中国成语",
       "native": 150,
+      "composed": 0
+    },
+    "coldstart": {
+      "label": "冷启动",
+      "native": 1,
       "composed": 0
     },
     "compositions": {
