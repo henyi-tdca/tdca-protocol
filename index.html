@@ -79,6 +79,12 @@
   .id-note { font-size:12px; color:var(--dim); margin-top:6px; }
   footer { padding:14px 24px; border-top:1px solid var(--line); font-size:12px; color:var(--dim); }
   footer a { color:var(--human); text-decoration:none; }
+  /* INFRA-B1 批次1（GSEQ-0706）：分层市场区 / 沙盒实验室区 / 公告资讯区 */
+  .warn { color:var(--warn); }
+  .zone-note { font-size:12px; color:var(--dim); margin-top:6px; }
+  .gate-btn { background:#0b0e12; border:1px solid var(--slm); color:var(--slm); border-radius:6px;
+              padding:5px 12px; cursor:pointer; font-size:12.5px; margin-top:8px; }
+  .gate-btn:hover { border-color:var(--fg); color:var(--fg); }
   @media (max-width:900px) { main { flex-direction:column; } }
 </style>
 </head>
@@ -252,6 +258,101 @@
   </section>
 </main>
 
+<!-- ========== INFRA-B1 批次1（GSEQ-0706）：分层市场区 / 沙盒实验室区 / 公告资讯区 ========== -->
+
+<!-- B1-1 分层市场区：L3 所有权市场 × L2 配置权市场（资格=缔约后参与） -->
+<section class="assets" id="market-zone">
+  <h2>🏛 分层市场区 <span class="tag">资格 = 缔约后参与</span><span class="tag">资产池实读 REAL · 市场框架 SIMULATED（ID92）</span></h2>
+  <p class="sub">双轨市场：L3 走中心化登记确权，L2 走分布式协议配置权（ID76 第三极权利——不拥有参数，只拥有场景化调用权）。参与须先
+    <a href="https://github.com/henyi-tdca/tdca-protocol/issues/new/choose" target="_blank" style="color:var(--llm)">缔约加入 TDCA</a> 并登录账号会话。</p>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <h3>L3 · 中心化所有权市场</h3>
+      <ul>
+        <li>资产登记 / 确权 / 交易（中心化登记台账，权利锚=国家可信版权链/天平链）</li>
+        <li>资产税 <b>1–3%</b>（按阶计征，模拟态记账，凭账本转实际结算）</li>
+        <li>五阶资产池见下表——<b class="ok">实时实读后端</b>（/api/v1/assets/five-orders）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>L2 · 分布式协议配置权市场</h3>
+      <ul>
+        <li>配置权计量 + P<sub>C</sub> 定价 + 订单（正和认知核验，S-15 一键闭环）</li>
+        <li>真实计量实例：<a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/cypress_pool" target="_blank">cypress_pool</a> ·
+          <a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/thingsboard_pool" target="_blank">thingsboard_pool</a>（设备流→COP 决策已实证，M2 试点）</li>
+        <li>配置调用 <code>config-right/call</code>：<b class="sim">缔约 + 登录后开放</b>（写操作须 TDCA-SES 会话，fail-closed）</li>
+      </ul>
+      <button class="gate-btn" onclick="gatedWrite('配置权调用 config-right/call')">▶ 发起配置调用（须缔约+登录）</button>
+    </div>
+  </div>
+  <table style="margin-top:12px">
+    <tr><th>阶</th><th>资产类别</th><th>说明</th><th>在册数</th></tr>
+    <tbody id="fo-body"><tr><td colspan="4" style="color:var(--dim)">五阶资产池实读装载中…</td></tr></tbody>
+  </table>
+  <div class="zone-note" id="fo-status">资产池状态装载中…</div>
+</section>
+
+<!-- B1-2 沙盒实验室区：SEA 宪法化口径（区别于左栏存证起草沙盒） -->
+<section class="assets" id="sandbox-zone">
+  <h2>🧪 沙盒实验室区 <span class="tag">SEA 宪法化口径：L2-R8 / HUF / ID27</span><span class="tag">五要件实读 REAL</span></h2>
+  <p class="sub">本区为<b>沙盒准入实验室</b>，区别于左栏「存证起草沙盒」（匿名草稿演示、不落链）：此处面向真实场景入盒——SEA 五要件状态实时实读（/api/v1/sandbox/sea-status），入盒申请须登录会话，<b>出盒须人类签名（ID71，AI 无权代行）</b>。</p>
+  <table>
+    <tr><th>SEA 要件</th><th>状态</th><th>备注</th></tr>
+    <tbody id="sea-body"><tr><td colspan="3" style="color:var(--dim)">SEA 五要件实读装载中…</td></tr></tbody>
+  </table>
+  <div class="zone-note" id="sea-note">沙盒准入状态装载中…</div>
+  <div class="asset-grid" style="margin-top:12px">
+    <div class="asset-card">
+      <h3>实验类型</h3>
+      <ul>
+        <li>场景编译（SandboxCompilePipeline，fail-closed）</li>
+        <li>负空间冲突检测（NSFL 边界，命中即熔断）</li>
+        <li>激活系数评估（门槛 &gt; 1.2，L-4 待真实场景数据）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>入盒申请</h3>
+      <ul>
+        <li>口径：L2-R8 沙盒先行 / HUF 终裁 / ID27 可逆性</li>
+        <li>申请 <code>sandbox/apply</code>：落库 + NCA 存证（TaskLodge），申请人=登录用户</li>
+        <li>AMBER 项不阻塞预研，但阻塞入盒</li>
+      </ul>
+      <button class="gate-btn" onclick="gatedWrite('沙盒入盒申请 sandbox/apply')">▶ 申请入盒（须缔约+登录）</button>
+    </div>
+  </div>
+</section>
+
+<!-- B1-3 公告/资讯区（动态区，与资产导航静态区分） -->
+<section class="assets" id="news-zone">
+  <h2>📢 公告 / 资讯区 <span class="tag">动态区 · 与下方资产导航（静态总入口）区分</span></h2>
+  <p class="sub">项目公告、权威发布与实时广播；全部指向真实可核验地址，宁缺毋假。</p>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <h3>📌 公告</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/discussions/36" target="_blank">反哺公示 × Weekly 首期</a></li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/discussions" target="_blank">Discussions 公告总入口</a>（Weekly 周刊每周封版发布）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/discussions/35" target="_blank">COP-002 调用规则</a>（¥0.01 调用 + 15% 嵌套分润）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>📰 官方权威资讯</h3>
+      <ul>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/whitepapers" target="_blank">白皮书动态</a>（AI 治理 WP-001 / 认知 WP-001）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/papers" target="_blank">论文区</a>（MONOGRAPH-COP / IT）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/commits/main" target="_blank">发布记录</a>（main 提交流，逐笔可核）</li>
+      </ul>
+    </div>
+    <div class="asset-card">
+      <h3>📡 广播</h3>
+      <ul>
+        <li>测试云实时事件广播 → <a href="#sentinel" style="color:var(--llm)">哨兵视图</a>（网关业务链 + MCP 桥存证链，30s 轮询 real）</li>
+        <li>重大版本与制度变更随 Weekly 同步播发</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- M1.2 资产导航区（GSEQ-0650）：6 类权威资产卡片网格，链接真实直达 -->
 <section class="assets">
   <h2>📦 资产导航 <span class="tag">TDCA 权威资产总入口</span></h2>
@@ -317,7 +418,7 @@
   <a href="https://github.com/henyi-tdca/tdca-protocol">GitHub 仓库</a> ·
   <a href="https://github.com/henyi-tdca/tdca-protocol/discussions">Discussions</a> ·
   <a href="https://gitee.com/siweihanshuzhineng_0/tdca-protocol">Gitee 镜像</a> ·
-  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651
+  <a href="https://henyi-tdca.github.io/tdca-protocol/">静态门面（离线备用）</a> ｜ M2 测试云施工令 TDCA-HANDOFF-KIMI-CLOUD-TEST-EXEC-001（GSEQ-0640）｜ 资产导航+存证起草沙盒 GSEQ-0650/0651 ｜ 分层市场/沙盒实验室/公告资讯 INFRA-B1 批次1 GSEQ-0706
 </footer>
 
 <script>
@@ -516,7 +617,52 @@ async function draftCheck(){
 // gh-pages 静态门面：应用页链接指向测试云主入口（M4 应用侧在测试云）
 if(!LIVE){ const a = document.getElementById('my-agents-link'); if(a) a.href = CLOUD_URL + 'me'; }
 
-sentinelLive(); mcpTailLive(); setInterval(sentinelLive, 30000); setInterval(mcpTailLive, 30000);
+// ---- INFRA-B1 批次1（GSEQ-0706）：分层市场 / 沙盒实验室 实时实读 + 缔约门禁 ----
+async function fiveOrdersLive(){
+  const el = document.getElementById('fo-status');
+  const tb = document.getElementById('fo-body');
+  if(!el || !tb) return;
+  if(!LIVE){ el.textContent = STATIC_HINT; tb.innerHTML = '<tr><td colspan="4" style="color:var(--dim)">静态门面不实时实读（见上方提示）</td></tr>'; return; }
+  try {
+    const r = await fetch('/api/v1/assets/five-orders');
+    const d = await r.json();
+    const data = d.data || d;
+    const rows = data.assets || [];
+    tb.innerHTML = rows.map(a =>
+      `<tr><td>${a.order}</td><td>${a.name}</td><td>${a.desc}</td><td>${a.count}</td></tr>`).join('')
+      || '<tr><td colspan="4" style="color:var(--dim)">暂无资产阶记录</td></tr>';
+    el.textContent = `五阶资产池实读成功（${rows.length} 阶）｜${data.note || ''}｜水印 ${d.nca_watermark || '—'}`;
+  } catch(e){ el.textContent = "资产池接口暂不可达：" + e; }
+}
+async function seaStatusLive(){
+  const el = document.getElementById('sea-note');
+  const tb = document.getElementById('sea-body');
+  if(!el || !tb) return;
+  if(!LIVE){ el.textContent = STATIC_HINT; tb.innerHTML = '<tr><td colspan="3" style="color:var(--dim)">静态门面不实时实读（见上方提示）</td></tr>'; return; }
+  try {
+    const r = await fetch('/api/v1/sandbox/sea-status');
+    const d = await r.json();
+    const data = d.data || d;
+    const rows = data.sea || [];
+    const cls = s => s === 'GREEN' ? 'ok' : (s === 'AMBER' ? 'sim' : 'warn');
+    tb.innerHTML = rows.map(x =>
+      `<tr><td>${x.requirement}</td><td class="${cls(x.status)}">${x.status}</td><td>${x.note}</td></tr>`).join('')
+      || '<tr><td colspan="3" style="color:var(--dim)">暂无 SEA 要件记录</td></tr>';
+    const green = rows.filter(x => x.status === 'GREEN').length;
+    el.textContent = `SEA 五要件实读成功：${green}/${rows.length} GREEN` +
+      (data.all_green ? '（全绿，可入盒）' : '（AMBER 不阻塞预研、阻塞入盒）') +
+      `｜${data.note || ''}｜水印 ${d.nca_watermark || '—'}`;
+  } catch(e){ el.textContent = "SEA 状态接口暂不可达：" + e; }
+}
+function gatedWrite(feature){
+  const msg = `【${feature}】为缔约后参与的写操作（fail-closed）：须 ① 缔约加入 TDCA ② 账号登录会话（TDCA-SES）。`;
+  if(LIVE){ if(confirm(msg + '\n\n点「确定」前往登录 / 我的智能体（/me）')) location.href = '/me'; }
+  else { alert(msg + '\n\n' + STATIC_HINT); }
+}
+
+sentinelLive(); mcpTailLive(); fiveOrdersLive(); seaStatusLive();
+setInterval(sentinelLive, 30000); setInterval(mcpTailLive, 30000);
+setInterval(fiveOrdersLive, 30000); setInterval(seaStatusLive, 30000);
 </script>
 </body>
 </html>
