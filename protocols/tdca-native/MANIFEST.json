@@ -29,8 +29,9 @@
     },
     {
       "item": "simulations 家族",
-      "reason": "口径待裁定，暂不纳入（cop-library 旧版保留并标注）",
-      "counted_in_canonical": false
+      "reason": "已裁定（TDCA-RULING-20260830-001, 2026-08-30）：验证证据层 experiment artifacts——协议的测试报告，保留为协议库验证证据（docs/cop-library/simulations），不入 canonical 计数",
+      "counted_in_canonical": false,
+      "ruling": "TDCA-RULING-20260830-001"
     }
   ],
   "families": {
