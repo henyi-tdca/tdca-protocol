@@ -1,0 +1,42 @@
+{
+  "NCA-ID": "NCA-COLDSTART-EXP-20260831-094653",
+  "Operation-Type": "ColdstartRealRerun",
+  "Operator": "community-ledger（自动化，GSEQ-0785 路径 A）",
+  "Timestamp": "2026-08-31T09:46:53Z",
+  "model": "deepseek-v4-flash",
+  "flash_only": true,
+  "phases": [
+    {
+      "phase": "准入",
+      "tokens": 2066,
+      "est_cost": 0.002066,
+      "output": "{\"decision\":\"REJECT\",\"positive_sum\":\"双方增量>0 判据不成立：res/BATNA 均为自报且无历史 NCA 链，无法验证真实能力与外部选项，正和增量不可证实。\",\"honesty\":\"res/batna 自报=data_provenance:mixed；BATNA 存疑即熔断：因无历史 NCA 链，BATNA 可信度存疑，触发熔断，不允许以自报值作为缔约依据。\",\"nsfl_ok\":true}"
+    },
+    {
+      "phase": "沙盒",
+      "tokens": 1731,
+      "est_cost": 0.001731,
+      "output": "```json\n{\n  \"vb_anchor_conclusion\": {\n    \"anchored\": true,\n    \"basis\": \"因 protocols/tdca-native 已实存实核麦肯锡 COP 编译基准（sha8=e8655643）与三十六计逐计编译基准（37 件在库，第01条 COP 已入 protocols/tdca-native），冷启动 VB 重定价不再仅依赖组织者主权宣言，而已具备可验证的外部锚基准，故 VB 锚定结论为 anchored=true。\"\n  },\n  \"initial_vb_200_assessment\": {\n    \"status\": \"conditional_reasonable\",\n    \"evaluation\": \"初始 VB=200 在无外部锚阶段属于组织者主权声明，可被承认为冷启动基线；外部锚实核后，200 应视为待校准初始值而非最终锚定值。其合理性取决于沙盒内与麦肯锡 COP 编译基准及三十六计逐计编译基准的映射校准结果；若映射得分与 200 的系统偏差超出预设容差，则应触发 VB 重定价。\"\n  },\n  \"sandbox_iteration_discipline\": {\n    \"statement\": \"生产落盘严格后置到 mou_ok 之后。在 mou_ok 未确认之前，所有冷启动、VB 重定价、锚定校"
+    },
+    {
+      "phase": "生产",
+      "tokens": 1325,
+      "est_cost": 0.001325,
+      "output": "yaml 机验通过（六键齐全，围栏已剥）"
+    }
+  ],
+  "total_tokens": 5122,
+  "est_cost_cny": 0.005122,
+  "cost_nature": "SIMULATED 估算",
+  "vb_anchor": {
+    "anchor": "麦肯锡COP编译基准 + 三十六计逐计编译基准（protocols/tdca-native 实存实核）",
+    "mckinsey_sha256_8": "e8655643",
+    "stratagems_count": 37,
+    "coldstart_01_in_library": true,
+    "anchored": true
+  },
+  "vb_unverified_anchor_removed": true,
+  "data_provenance": "mixed（res/batna 自报；VB 锚定=实核在库证据）",
+  "artifact": "artifacts/coldstart-real-rerun\\第01条-开源社区冷启动·正和准入-rerun.yaml",
+  "status": "ok"
+}
