@@ -44,6 +44,10 @@
   .intent-chips button { background:#0b0e12; border:1px solid var(--line); color:var(--dim);
                          border-radius:12px; font-size:12px; padding:2px 10px; cursor:pointer; }
   .intent-chips button:hover { color:var(--human); border-color:var(--human); }
+  .nl-nav-btn { display:inline-block; margin-top:6px; padding:6px 14px; background:#0b0e12;
+                border:1px solid var(--slm); color:var(--slm); border-radius:6px; font-size:13px;
+                text-decoration:none; cursor:pointer; }
+  .nl-nav-btn:hover { background:var(--slm); color:#0b0e12; }
   table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px; }
   th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; vertical-align:top; }
   th { color:var(--dim); font-weight:600; }
@@ -132,8 +136,10 @@
         <button onclick="tryIntent(this)">创建一条新存证</button>
         <button onclick="tryIntent(this)">签批当前待办</button>
         <button onclick="tryIntent(this)">查看熔断记录</button>
+        <button onclick="tryIntent(this)">登录</button>
       </div>
       <div class="out" id="nl-out">→ 等待输入…</div>
+      <div id="nl-nav"></div>
     </div>
     <table>
       <tr><th>意图</th><th>进入功能</th><th>门禁</th></tr>
@@ -636,14 +642,27 @@ const CLOUD_URL = 'http://47.76.42.139:8080/';
 const STATIC_HINT = '本端为静态门面（离线备用）。实时演示（NL 真实算力 / MCP 实测 / 哨兵实时）请至测试云主入口：' + CLOUD_URL;
 
 const INTENTS = [
-  ["查询存证链尾", "→ 意图识别：查询。进入【存证链尾只读视图】。（本地降级响应）"],
-  ["创建一条新存证", "→ 意图识别：创建。进入【NCA 起草】——六要素声明 + 人类签批。（本地降级响应）"],
-  ["签批当前待办", "→ 意图识别：签批。进入【DCD 待办】——签批权为人类专属（ID71）。（本地降级响应）"],
-  ["查看熔断记录", "→ 意图识别：查询。进入【NSFL 熔断记录】。（本地降级响应）"]
+  ["查询存证链尾", "→ 意图识别：查询。进入【存证链尾只读视图】。（本地降级响应）", "/audit"],
+  ["创建一条新存证", "→ 意图识别：创建。进入【NCA 起草】——六要素声明 + 人类签批。（本地降级响应）", "/attestation/dynamic"],
+  ["签批当前待办", "→ 意图识别：签批。进入【DCD 待办】——签批权为人类专属（ID71）。（本地降级响应）", "/attestation/dynamic"],
+  ["查看熔断记录", "→ 意图识别：查询。进入【NSFL 熔断记录】。（本地降级响应）", "/audit"],
+  ["登录", "→ 意图识别：登录。进入【登录页】。（本地降级响应）", "/auth"]
 ];
+function nlNavRender(route, title){
+  const nav = document.getElementById('nl-nav');
+  if(!nav) return;
+  nav.innerHTML = '';
+  if(!route) return;
+  const a = document.createElement('a');
+  a.className = 'nl-nav-btn';
+  a.href = (LIVE ? '' : CLOUD_URL) + route.replace(/^\//, '');
+  a.textContent = `🔀 前往功能：${title}（${route}）`;
+  nav.appendChild(a);
+}
 async function nlDemo(){
   const v = document.getElementById('nl-input').value.trim();
   const out = document.getElementById('nl-out');
+  nlNavRender(null);
   if(!v){ out.textContent = "→ 请先输入一句话意图。"; return; }
   if(!LIVE){ out.textContent = "→ " + STATIC_HINT; return; }
   out.textContent = "→ 请求真实后端 /api/v1/intent …";
@@ -663,12 +682,17 @@ async function nlDemo(){
     }
     const reply = data.reply ? `「${data.reply}」` : '';
     out.textContent = `→ [real] ${reply}意图：${data.action || '—'}｜进入【${data.title}】（路由 ${data.route}）。${guide ? '操作指引：' + guide : ''}${data.matched === false ? '（未精确识别，已给总览）' : ''}${boundary}`;
+    // GSEQ-0774：意图→路由直达——LLM 响应附「前往功能」可点击入口
+    if(data.matched && data.route && data.route !== '/') nlNavRender(data.route, data.title);
+    else nlNavRender(null);
   } catch(e) {
     let hit = INTENTS[0];
     if(/创|建|新|写/.test(v)) hit = INTENTS[1];
     if(/签|批|裁决/.test(v)) hit = INTENTS[2];
     if(/熔断|负空间|拒/.test(v)) hit = INTENTS[3];
+    if(/登|注册/.test(v)) hit = INTENTS[4];
     out.textContent = hit[1] + "（后端暂不可达，降级本地映射）";
+    nlNavRender(hit[2], hit[0]);
   }
 }
 function tryIntent(btn){
