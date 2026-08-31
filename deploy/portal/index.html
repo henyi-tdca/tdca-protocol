@@ -53,6 +53,11 @@
   .nl-fallback a { padding:6px 12px; border:1px solid var(--slm); color:var(--slm);
                    border-radius:6px; font-size:13px; text-decoration:none; background:#0b0e12; }
   .nl-fallback a:hover { background:var(--slm); color:#0b0e12; }
+  .nl-row { display:flex; gap:8px; }
+  .nl-row input { flex:1; width:auto !important; }
+  .nl-send { background:var(--slm); color:#0b0e12; border:none; border-radius:6px;
+             padding:8px 16px; font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap; }
+  .nl-send:hover { background:#ffe066; }
   .gnav { display:flex; gap:8px; padding:10px 24px; border-bottom:1px solid var(--line);
           flex-wrap:wrap; align-items:center; background:var(--card);
           position:sticky; top:0; z-index:50; }
@@ -153,7 +158,10 @@
     <p style="font-size:13px;color:var(--dim)">用一句话说明意图，系统按意图进入对应功能（查询 / 创建 / 签批）。<b class="ok">本栏接真实后端</b>：意图导航走 <code>/api/v1/intent</code>——DeepSeek 真实算力（real 水印，费用回执）；LLM 不可用或触发算力熔断（日¥2/月¥8）时自动降级确定性规则表，行为可审计。</p>
     <div id="nl-nav"></div>
     <div class="demo-io">
-      <input id="nl-input" placeholder="例如：帮我查一下最近一条存证" onkeydown="if(event.key==='Enter')nlDemo()">
+      <div class="nl-row">
+        <input id="nl-input" placeholder="例如：帮我查一下最近一条存证" onkeydown="if(event.key==='Enter')nlDemo()">
+        <button class="nl-send" id="nl-send" onclick="nlDemo()">▶ 发送意图</button>
+      </div>
       <div class="intent-chips">
         <button onclick="tryIntent(this)">查询存证链尾</button>
         <button onclick="tryIntent(this)">创建一条新存证</button>
