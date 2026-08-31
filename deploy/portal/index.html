@@ -44,10 +44,22 @@
   .intent-chips button { background:#0b0e12; border:1px solid var(--line); color:var(--dim);
                          border-radius:12px; font-size:12px; padding:2px 10px; cursor:pointer; }
   .intent-chips button:hover { color:var(--human); border-color:var(--human); }
-  .nl-nav-btn { display:inline-block; margin-top:6px; padding:6px 14px; background:#0b0e12;
-                border:1px solid var(--slm); color:var(--slm); border-radius:6px; font-size:13px;
-                text-decoration:none; cursor:pointer; }
-  .nl-nav-btn:hover { background:var(--slm); color:#0b0e12; }
+  .nl-nav-btn { display:inline-block; margin:8px 0; padding:10px 20px; background:var(--slm);
+                color:#0b0e12; border:2px solid var(--slm); border-radius:8px; font-size:15px;
+                font-weight:700; text-decoration:none; cursor:pointer;
+                box-shadow:0 0 12px rgba(255,212,59,.35); }
+  .nl-nav-btn:hover { background:#ffe066; }
+  .nl-fallback { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; align-items:center; }
+  .nl-fallback a { padding:6px 12px; border:1px solid var(--slm); color:var(--slm);
+                   border-radius:6px; font-size:13px; text-decoration:none; background:#0b0e12; }
+  .nl-fallback a:hover { background:var(--slm); color:#0b0e12; }
+  .gnav { display:flex; gap:8px; padding:10px 24px; border-bottom:1px solid var(--line);
+          flex-wrap:wrap; align-items:center; background:var(--card);
+          position:sticky; top:0; z-index:50; }
+  .gnav .gnav-label { font-size:13px; color:var(--dim); margin-right:4px; }
+  .gnav a { padding:6px 16px; border:1px solid var(--line); border-radius:6px; font-size:14px;
+            color:var(--fg); text-decoration:none; background:#0b0e12; }
+  .gnav a:hover { border-color:var(--slm); color:var(--slm); }
   table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px; }
   th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; vertical-align:top; }
   th { color:var(--dim); font-weight:600; }
@@ -103,6 +115,16 @@
   </div>
 </header>
 
+<nav class="gnav" id="global-nav" aria-label="全局导航">
+  <span class="gnav-label">🧭 全局导航（未登录可达）：</span>
+  <a href="/" data-route="">首页</a>
+  <a href="/audit" data-route="audit">存证</a>
+  <a href="/attestation/dynamic" data-route="attestation/dynamic">起草</a>
+  <a href="/attestation/dynamic" data-route="attestation/dynamic">签批</a>
+  <a href="/audit" data-route="audit">熔断</a>
+  <a href="/auth" data-route="auth">登录</a>
+</nav>
+
 <div class="toolbar">
   <span>视图控制：</span>
   <button onclick="showAll()">[三栏共见]</button>
@@ -129,6 +151,7 @@
     <h2>人类 · 自然语言入口 <span class="ops">
       <button onclick="hideCol('col-human')">隐藏</button><button onclick="fullCol('col-human')">全屏</button></span></h2>
     <p style="font-size:13px;color:var(--dim)">用一句话说明意图，系统按意图进入对应功能（查询 / 创建 / 签批）。<b class="ok">本栏接真实后端</b>：意图导航走 <code>/api/v1/intent</code>——DeepSeek 真实算力（real 水印，费用回执）；LLM 不可用或触发算力熔断（日¥2/月¥8）时自动降级确定性规则表，行为可审计。</p>
+    <div id="nl-nav"></div>
     <div class="demo-io">
       <input id="nl-input" placeholder="例如：帮我查一下最近一条存证" onkeydown="if(event.key==='Enter')nlDemo()">
       <div class="intent-chips">
@@ -139,7 +162,6 @@
         <button onclick="tryIntent(this)">登录</button>
       </div>
       <div class="out" id="nl-out">→ 等待输入…</div>
-      <div id="nl-nav"></div>
     </div>
     <table>
       <tr><th>意图</th><th>进入功能</th><th>门禁</th></tr>
@@ -659,6 +681,26 @@ function nlNavRender(route, title){
   a.textContent = `🔀 前往功能：${title}（${route}）`;
   nav.appendChild(a);
 }
+// GSEQ-0774③：意图未匹配兜底——任何意图都有可达入口（最近功能建议）
+const FALLBACK_FUNCS = [["存证", "/audit"], ["起草", "/attestation/dynamic"], ["签批", "/attestation/dynamic"], ["熔断", "/audit"], ["登录", "/auth"]];
+function nlNavFallback(){
+  const nav = document.getElementById('nl-nav');
+  if(!nav) return;
+  nav.innerHTML = '';
+  const box = document.createElement('div');
+  box.className = 'nl-fallback';
+  const lab = document.createElement('span');
+  lab.style.cssText = 'font-size:13px;color:var(--dim)';
+  lab.textContent = '→ 未精确匹配，最近功能直达：';
+  box.appendChild(lab);
+  FALLBACK_FUNCS.forEach(([t, r]) => {
+    const a = document.createElement('a');
+    a.href = (LIVE ? '' : CLOUD_URL) + r.replace(/^\//, '');
+    a.textContent = t;
+    box.appendChild(a);
+  });
+  nav.appendChild(box);
+}
 async function nlDemo(){
   const v = document.getElementById('nl-input').value.trim();
   const out = document.getElementById('nl-out');
@@ -682,9 +724,9 @@ async function nlDemo(){
     }
     const reply = data.reply ? `「${data.reply}」` : '';
     out.textContent = `→ [real] ${reply}意图：${data.action || '—'}｜进入【${data.title}】（路由 ${data.route}）。${guide ? '操作指引：' + guide : ''}${data.matched === false ? '（未精确识别，已给总览）' : ''}${boundary}`;
-    // GSEQ-0774：意图→路由直达——LLM 响应附「前往功能」可点击入口
+    // GSEQ-0774：意图→路由直达——LLM 响应附「前往功能」可点击入口；GSEQ-0779③：未匹配兜底最近功能
     if(data.matched && data.route && data.route !== '/') nlNavRender(data.route, data.title);
-    else nlNavRender(null);
+    else nlNavFallback();
   } catch(e) {
     let hit = INTENTS[0];
     if(/创|建|新|写/.test(v)) hit = INTENTS[1];
@@ -848,7 +890,12 @@ async function draftCheck(){
 
 // gh-pages 静态门面：应用页链接指向测试云主入口（M4 应用侧在测试云）
 if(!LIVE){ const a = document.getElementById('my-agents-link'); if(a) a.href = CLOUD_URL + 'me';
-  const l = document.getElementById('login-link'); if(l) l.href = CLOUD_URL + 'auth'; }
+  const l = document.getElementById('login-link'); if(l) l.href = CLOUD_URL + 'auth';
+  // GSEQ-0779：全局导航 gh-pages 改写——首页回静态本页，功能页指测试云
+  document.querySelectorAll('#global-nav a').forEach(x => {
+    const r = x.getAttribute('data-route');
+    x.href = r ? CLOUD_URL + r : 'index.html';
+  }); }
 
 // ---- INFRA-B1 批次1（GSEQ-0706）：分层市场 / 沙盒实验室 实时实读 + 缔约门禁 ----
 async function fiveOrdersLive(){
