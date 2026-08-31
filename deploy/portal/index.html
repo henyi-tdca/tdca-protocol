@@ -110,6 +110,7 @@
   <button onclick="fullCol('col-slm')">[全屏] 小模型栏</button>
   <span style="margin-left:auto"></span>
   <span>参与：</span>
+  <a href="/auth" id="login-link"><button style="border-color:var(--slm);color:var(--slm)">[登录/注册]</button></a>
   <a href="https://github.com/henyi-tdca/tdca-protocol/issues/new/choose" target="_blank"><button style="border-color:var(--llm);color:var(--llm)">[我要缔约]</button></a>
   <a href="https://github.com/henyi-tdca/tdca-protocol/fork" target="_blank"><button style="border-color:var(--human);color:var(--human)">[我要 Fork]</button></a>
 </div>
@@ -393,7 +394,7 @@
     <div class="asset-card">
       <h3>⑤ skill 库</h3>
       <ul>
-        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/cop-library" target="_blank">cop-library</a>（353 COP 策略库，¥0.01 调用 + 15% 嵌套分润）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/cop-library" target="_blank">cop-library</a>（515 COP 权威库，¥0.01 调用 + 15% 嵌套分润）</li>
         <li>SKILL 能力挂点 <span class="soon">即将开放</span></li>
       </ul>
     </div>
@@ -580,7 +581,7 @@
         <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/core-go" target="_blank">core-go 核心协议库</a>（Apache-2.0）</li>
         <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/mcp_bridge" target="_blank">mcp-bridge</a>（stdio 桥 + 存证水印）</li>
         <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/tools/cts_l1" target="_blank">CTS-L1 认证</a></li>
-        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/cop-library" target="_blank">cop-library</a>（353 COP，¥0.01 调用 + 15% 嵌套分润）</li>
+        <li><a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/cop-library" target="_blank">cop-library</a>（515 COP 权威库，¥0.01 调用 + 15% 嵌套分润）</li>
       </ul>
     </div>
     <div class="asset-card">
@@ -822,7 +823,8 @@ async function draftCheck(){
 }
 
 // gh-pages 静态门面：应用页链接指向测试云主入口（M4 应用侧在测试云）
-if(!LIVE){ const a = document.getElementById('my-agents-link'); if(a) a.href = CLOUD_URL + 'me'; }
+if(!LIVE){ const a = document.getElementById('my-agents-link'); if(a) a.href = CLOUD_URL + 'me';
+  const l = document.getElementById('login-link'); if(l) l.href = CLOUD_URL + 'auth'; }
 
 // ---- INFRA-B1 批次1（GSEQ-0706）：分层市场 / 沙盒实验室 实时实读 + 缔约门禁 ----
 async function fiveOrdersLive(){
