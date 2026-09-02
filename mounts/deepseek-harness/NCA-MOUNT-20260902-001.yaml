@@ -1,0 +1,34 @@
+NCA-ID: NCA-MOUNT-20260902-001
+target: deepseek-ai/deepseek-harness
+action: propose_plugin_mount
+payload:
+  interface: harness/cordis plugin contract (read-only)
+  tdca_side:
+    config_boundary:
+      write: false
+      upstream_code_change: false
+      network_send: false
+      proposals_only: true
+      profit_sharing_mode: simulated
+      tax_rate_simulated: 0.15
+    mou:
+      mode: simulated
+      base_utility_sim: 49.0
+      tax_15pct_sim: 7.35
+      cashflow: none (ID92 模拟态，不承诺打款)
+      stamped_at: '2026-09-02T02:05:16.567258+00:00'
+  upstream_side:
+    repo_full: deepseek-ai/deepseek-harness
+    license_spdx: MIT
+    code_change: none
+  proposal_only: true
+boundary:
+  write: false
+  upstream_code_change: false
+  network_send: false
+  proposals_only: true
+  profit_sharing_mode: simulated
+  tax_rate_simulated: 0.15
+stamped_at: '2026-09-02T02:05:16.567258+00:00'
+integrity:
+  sha256_16: 8a145a1764a9a345
