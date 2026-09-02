@@ -1,0 +1,34 @@
+NCA-ID: NCA-MOUNT-20260902-001
+target: openai/codex
+action: propose_tool_mount
+payload:
+  interface: MCP tool contract (read-only, mcp-bridge aligned)
+  tdca_side:
+    config_boundary:
+      write: false
+      upstream_code_change: false
+      network_send: false
+      proposals_only: true
+      profit_sharing_mode: simulated
+      tax_rate_simulated: 0.15
+    mou:
+      mode: simulated
+      base_utility_sim: 55.0
+      tax_15pct_sim: 8.25
+      cashflow: none (ID92 模拟态，不承诺打款)
+      stamped_at: '2026-09-02T02:05:16.570718+00:00'
+  upstream_side:
+    repo_full: openai/codex
+    license_spdx: Apache-2.0
+    code_change: none
+  proposal_only: true
+boundary:
+  write: false
+  upstream_code_change: false
+  network_send: false
+  proposals_only: true
+  profit_sharing_mode: simulated
+  tax_rate_simulated: 0.15
+stamped_at: '2026-09-02T02:05:16.570718+00:00'
+integrity:
+  sha256_16: e3253f89178d1b81
