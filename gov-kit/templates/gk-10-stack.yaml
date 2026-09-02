@@ -1,0 +1,7 @@
+# GK-10 零自研对接记录模板（独立版）——必填字段标注 [R]
+stack_item: STACK-2026-0001       # [R] 对接记录号
+need: ""                          # [R] 需求
+solution: ""                      # [R] 现成方案
+mode: ""                          # [R] 调用/配置/复用
+zero_selfbuild: true              # [R] 零自研声明
+record_ref: ""                    # [R] 存证号（无存证不交付）

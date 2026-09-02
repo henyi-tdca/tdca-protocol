@@ -1,0 +1,16 @@
+# GK-09 创新双通道提案模板（独立版）——必填字段标注 [R]
+innovation_id: INNOV-2026-0001    # [R] 提案号
+channel: ""                       # [R] innovation / micro-innovation
+title: ""                         # [R] 提案标题
+task_statement:                   # [R] 任务声明
+  objective: ""                   # 目标
+  constraint: ""                  # 约束
+  prior: ""                       # 先验
+  config_boundary: ""             # 边界
+  allocation: ""                  # 预期分配
+  audit: ""                       # 审计轨迹
+falsification_prediction: ""      # [R] 证伪预判
+minimalism_check: ""              # [R] 已有成熟方案？复用/新建
+negative_space_check: ""          # [R] 未触 / 触发（触发即否决）
+risk_tier: ""                     # [R] 低/中/高
+record_ref: ""                    # [R] 存证号

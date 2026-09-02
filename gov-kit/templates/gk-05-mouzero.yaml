@@ -1,0 +1,9 @@
+# GK-05 效用归零记录模板（独立版）——必填字段标注 [R]
+mouzero: MOUZERO-2026-0001        # [R] 归零记录号
+event: ""                         # [R] 调用/协作标识
+utility_anchor: 0                 # [R] 0=归零 / >0=确认（地板信号，非效用近似）
+breaker_triggered: false          # [R] 熔断触发
+fee_charged: 0                    # [R] 0=不收费 / 正常
+meter_log_written: false          # 是否入有效账本（归零=不入，仅审计存证）
+record_ref: ""                    # [R] 存证号（无存证=未处置）
+data_provenance: ""               # [R] simulated / real 如实

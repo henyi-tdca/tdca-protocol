@@ -1,0 +1,13 @@
+# GK-11 编排闭环记录模板（独立版）——必填字段标注 [R]
+orch_task: ORCH-2026-0001         # [R] 任务号
+dispatch:                         # [R]
+  instruction: ""                 # 指令（落盘）
+  record_ref: ""                  # 分发存证
+executor: ""                      # [R] 施工方/发布方
+execution:                        # [R]
+  deliverables: []                # 交付物清单
+  data_provenance: ""             # 数据性质（real/simulated）
+verification:                     # 审核结论（制度层）
+  verdict: ""                     # 通过/退回
+record_chain: []                  # [R] [分发, 交付物, 审核]
+status: ""                        # [R] closed / pending（fail-closed：未全存证=未完成）

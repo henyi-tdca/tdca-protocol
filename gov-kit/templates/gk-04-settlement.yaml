@@ -1,0 +1,10 @@
+# GK-04 统一结算记录模板（独立版）——必填字段标注 [R]
+settlement: SETTLE-2026-0001      # [R] 结算记录号
+transaction: ""                   # [R] 交易标识
+fee: 0                            # [R] 服务费
+pools:                            # [R] 三池分流
+  infra: 0                        # 基础设施池
+  creator: 0                      # 贡献者分成池
+  reserve: 0                      # 治理储备池
+record_ref: ""                    # [R] 存证号
+data_provenance: ""               # [R] simulated / real 如实（模拟态：不产生现金）

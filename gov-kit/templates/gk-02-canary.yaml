@@ -1,0 +1,14 @@
+# GK-02 灰度门记录模板（独立版）——必填字段标注 [R]
+canary_id: CANARY-2026-0001       # [R] 灰度记录号
+change: ""                        # [R] 变更内容
+risk_tier: ""                     # [R] 低/中/高
+canary_params:                    # [R]
+  ratio_start: 0.05               # [R] 起始比例
+  observe_days: 7                 # [R] 观察期（天）
+  rollback_condition: ""          # [R] 回滚条件
+observe_data:                     # 观察期指标数据
+  metric: ""                      # 指标名
+  value: ""                       # 实测值
+result: ""                        # [R] 达标放量（含终比例）/ 回滚（含原因）
+record_ref: ""                    # [R] 存证号（无存证=未灰度）
+data_provenance: ""               # [R] real / simulated 如实
