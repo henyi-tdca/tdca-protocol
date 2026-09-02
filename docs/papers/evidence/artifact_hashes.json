@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-09-01",
+  "discipline": "real file hashes (sha256), verifiable by re-run",
+  "_correction": {
+    "gseq": "0841",
+    "status": "ALL 38 prior values invalidated and recomputed from disk",
+    "root_cause": "GSEQ-0840 collection hashed an in-memory re-serialization (or stale working copy), not the raw on-disk file bytes. The recorded values matched NO on-disk copy of any of the 38 files. Recomputed here directly from the canonical source files cited in E1.",
+    "canonical_sources": {
+      "stratagems_36": "TDCA-MEMO-006-Workspace/.tdca-protocol/cognitive-compiler/stratagems/*.yaml",
+      "iching_2": "开发会话文件/tdca-protocol/protocols/tdca-native/iching/第01卦-乾.yaml, 第02卦-坤.yaml"
+    },
+    "authoritative_crosscheck": "Disk-recomputed values match Reasonix-provided authoritative values: 第01卦-乾 sha256_16=910fa1a9, 第02卦-坤 sha256_16=7bc18e9b, 第01计-瞒天过海 sha256_16=e45a9a31. (GSEQ-0841)",
+    "verification": "Re-run sha256sum on the canonical source files reproduces every value below. 'verifiable by re-run' now holds."
+  },
+  "stratagems_36": {
+    "第01计-瞒天过海.yaml": "e45a9a3198b32ce2507e3fee5b5ec5dd5fbf7602bb9186ca6b1534c798b4a2b9",
+    "第02计-围魏救赵.yaml": "2700420ee7269778acf9e633c071798beb984b6e034f9c1786b17a00db51ccab",
+    "第03计-借刀杀人.yaml": "baadcde4359d15164dd10c1aaaa51ae78e5b14c8d5464baaddb22998688e59d1",
+    "第04计-以逸待劳.yaml": "2eb46e05a3931754ef7faed287d885ef79e79603fff94171f3ba5a7a4875a125",
+    "第05计-趁火打劫.yaml": "a90a0da7257da1b907eb202df9e6c8a046683404e58e6a768463abe99b30f4ee",
+    "第06计-声东击西.yaml": "90ef5ca56d88794e5bcd1888872923b1d9274097262f75d301fe806cf3c8a751",
+    "第07计-无中生有.yaml": "bb881c5d274734a1a2f5afcf413a178292c6f7e653e33528c510e7fc40bc6f6c",
+    "第08计-暗度陈仓.yaml": "0fca027be4553ccd22eff21e88486b675380659c1f15d1d8cc84a74f0d5e904c",
+    "第09计-隔岸观火.yaml": "78e6d4529cf600925d4f34e08138a5532c1cddbe2e364ec22f6832e4fb86c115",
+    "第10计-笑里藏刀.yaml": "b240a6121a2cddd0251a27311b7c88d85fd619b676699531193c73590e0ef43e",
+    "第11计-李代桃僵.yaml": "7f211a022eaaac7298374d4aeb0c5187a2ff16f0f34afc72fd771c8a073a59a0",
+    "第12计-顺手牵羊.yaml": "e09ff336f653655bccc7cc9cfe74e7dad020e435c6b0ce2407bb6a4519e61dab",
+    "第13计-打草惊蛇.yaml": "c2c3b74300178d62265979dfcf3e8b13232bffc3050975296060a82a4473668d",
+    "第14计-借尸还魂.yaml": "ca4513d857706f787e5d3652ef1059f79a215bdd55b5a5f3edeb4ee08b64b442",
+    "第15计-调虎离山.yaml": "af1db51768e9aaa81745b86da04663f0ee11b710d936922262a891b50599d54c",
+    "第16计-欲擒故纵.yaml": "3acc47ed5dff09c6bbdbd6a21aa787402ad6e527a3a2537dd977918f5d34a645",
+    "第17计-抛砖引玉.yaml": "aafce28e3d1fba7650253cf2068f703db4d2e1b89fc6cfa6d77239cea542c7b9",
+    "第18计-擒贼擒王.yaml": "82a46ab88c714060c50aa176e5e99e1281bb83daffd7fa86c5a9b9c666eb27a9",
+    "第19计-釜底抽薪.yaml": "0217b639f7aa600cf2265b571b98a536cb6c6c250eeffe78febb8b7fda9f5cfd",
+    "第20计-浑水摸鱼.yaml": "1e8b7ebc875581eaa0d90748ca2a9cdd84b19583df64531e4ec6f7663a502430",
+    "第21计-金蝉脱壳.yaml": "f73cdf1342db7495af9b228231a226449e9617784198d320d87f4d9b49887a48",
+    "第22计-关门捉贼.yaml": "dcd1dc48a49a027502d6cfac2be1da6af08f5fc342b169420b6b7e5c40cc94bf",
+    "第23计-远交近攻.yaml": "759febf6672e561ba9c8f78550e4959b62b059e0d3d45c9176965532c5edf356",
+    "第24计-假道伐虢.yaml": "e2808a705fb4ba278e92ee7328e532ab5066060d028e5979715d4c17cd286b47",
+    "第25计-偷梁换柱.yaml": "48ead02eabb26a77434cf8b25546acd997c39b5f721a9b14fd6f75fc4a32c0e5",
+    "第26计-指桑骂槐.yaml": "42882a778c18e416c3a029719065f66368b81120897ccfb13a83d5244f784489",
+    "第27计-假痴不癫.yaml": "49ffd9c31bab8aae305085e5bc34501623bcf7673fa336a92a56c4e281457e3f",
+    "第28计-上屋抽梯.yaml": "245a5300ba49059b5630b508136ec7727552988ae08ed553ecd2d142bee423f1",
+    "第29计-树上开花.yaml": "d86b50fd93a785ce374ef24b3b56399abb992f3a3d6a1603f534fb9dcb3cb0e8",
+    "第30计-反客为主.yaml": "e1f39fe92c254f56a6d1b9620ea27fe73566025e25ed42cdbad65a31e63f1c5b",
+    "第31计-美人计.yaml": "e6fcdeeee1d51aa1561f0c056871969e83b50b886c822f7025694d37bff00365",
+    "第32计-空城计.yaml": "b72d31f4dcb9bc089aff7cada46dcaabe26c013ebda5f7c14e135aee62fec0d8",
+    "第33计-反间计.yaml": "957a9784cf0f6626931d6ebd8e4641bb0e9a450bb55bf8ebb18203852da2cf31",
+    "第34计-苦肉计.yaml": "cc9c2753658c04f2e8190590d7e3f005e865e79fa03ea88d82c94f3635bf7327",
+    "第35计-连环计.yaml": "456ec25c64be3fa36d5fa068d618a896ea0f7afb504ec358af5fdbc0e74f5c5f",
+    "第36计-走为上.yaml": "9712a8b8d3eb6be0513f6bf1b0433d6fd9fbe28ce4150325dbceb4d66df10ddc"
+  },
+  "iching_2": {
+    "第01卦-乾.yaml": "910fa1a96f1da1c370b7cb7dd463d63be6e05ba1849c0d8d861066db1e1e4e60",
+    "第02卦-坤.yaml": "7bc18e9ba19d7e59e8009d9a0df13dc1b6ee3db253b6469f7b28beeba9419be6"
+  },
+  "stratagems_count": 36,
+  "iching_count": 2
+}
