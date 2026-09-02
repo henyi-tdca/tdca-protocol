@@ -1,0 +1,18 @@
+# GK-03 可靠性检查单记录模板（独立版）——必填字段标注 [R]
+reliability_check: RELIABILITY-2026-0001  # [R] 检查单号
+system: ""                        # [R] 受检系统
+checks:                           # [R] 三查 9 项（通过/N-A/未过）
+  redundancy:
+    backup_path: ""               # 查1-① 关键路径备选
+    dual_record: ""               # 查1-② 双副本冗余
+    data_restore: ""              # 查1-③ 数据备份/恢复
+  circuit_breaker:
+    condition_defined: ""         # 查2-① 熔断条件定义
+    fail_closed: ""               # 查2-② 熔断 fail-closed
+    recovery_path: ""             # 查2-③ 恢复/重试路径
+  fail_closed:
+    unregistered_rejected: ""     # 查3-① 未注册默认拒绝
+    no_record_not_done: ""        # 查3-② 无存证视为未发生
+    insufficient_denied: ""       # 查3-③ 权限不足拒绝
+verdict: ""                       # [R] 可上线 / 不可上线（含未过项）
+record_ref: ""                    # [R] 存证号（无存证=未检查）

@@ -1,0 +1,15 @@
+# GK-12 三重门全链记录模板（独立版）——必填字段标注 [R]
+gate_chain: GATECHAIN-2026-0001   # [R] 全链记录号
+change: ""                        # [R] 变更内容
+gates:                            # [R] 三门（缺一即不上线）
+  trial:
+    status: ""                    # PASS/FAIL
+    record_ref: ""                # TRIAL 存证
+  canary:
+    status: ""                    # PASS/ROLLBACK
+    record_ref: ""                # CANARY 存证
+  reliability:
+    status: ""                    # PASS(8/9+)/FAIL
+    record_ref: ""                # RELIABILITY 存证
+verdict: ""                       # [R] 全量放行/否决/回滚
+record_ref: ""                    # [R] 全链收口存证

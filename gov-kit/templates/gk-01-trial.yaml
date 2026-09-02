@@ -1,0 +1,17 @@
+# GK-01 试验门记录模板（独立版）——必填字段标注 [R]
+trial_id: TRIAL-2026-0001          # [R] 试验记录号
+new_capability: ""                # [R] 新能力名称
+objective: ""                     # [R] 目标一句话
+core_hypothesis: ""               # [R] 核心假设（可证伪表述）
+falsification_criterion: ""       # [R] 可证伪判据：出现 X 证据即证伪
+sandbox_scope: ""                 # [R] 隔离范围/模拟数据
+precheck:
+  coalition_feasible: ""          # [R] 合作可行性（各成员收益≥保留收益）：PASS/FAIL
+  negative_space: ""              # [R] 负空间检查：未触/触发
+trial_data:
+  run_summary: ""                 # [R] 试跑摘要
+  observations: []                # 关键观察（如实，含失败）
+verdict: ""                       # [R] 证伪→否决或重构｜证实→进入灰度门
+conclusion: ""                    # 结论与依据
+record_ref: ""                    # [R] 存证号（无存证=未试验）
+data_provenance: ""               # [R] real / simulated 如实

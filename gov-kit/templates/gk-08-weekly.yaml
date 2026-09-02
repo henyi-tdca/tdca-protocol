@@ -1,0 +1,9 @@
+# GK-08 优化周快照记录模板（独立版）——必填字段标注 [R]
+weekly_snapshot: WS-36-2026       # [R] 快照号（ISO 周）
+utility_anchor_rate: ""           # [R] 效用锚定率（值+环比）
+test_green: ""                    # [R] 测试健康
+dual_consistent: ""               # [R] 双副本一致（哈希对拍）
+record_closure_rate: ""           # [R] 存证闭环率
+ecosystem_activity: ""            # [R] 生态活跃（趋势，如实）
+below_target: []                  # [R] 未达标清单（指标+gap+处置）
+record_ref: ""                    # [R] 存证号（无存证=未观察）

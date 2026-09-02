@@ -1,0 +1,8 @@
+# GK-07 运维分级处置记录模板（独立版）——必填字段标注 [R]
+ops_entry: OPS-2026-0001          # [R] 处置记录号
+source: ""                        # [R] 自动观察/哨兵/人工巡查
+finding: ""                       # [R] 观察项 + 实测值/状态
+tier: ""                          # [R] 🔴/🟡/🟢
+disposition: ""                   # [R] 升级负责人/登记待办/复核修正
+record_ref: ""                    # [R] 存证号（无存证=未处置）
+data_provenance: ""               # [R] real / simulated 如实

@@ -1,0 +1,8 @@
+# GK-06 快慢双层记录模板（独立版）——必填字段标注 [R]
+fastslow: FASTSLOW-2026-0001      # [R] 记录号
+auto_handled: []                  # [R] 自动层处理项
+escalated:                        # 上报人工项
+  case: ""                        # 情形
+  evidence_pack: ""               # 证据包（触发记录/指标/存证）
+human_ruling: ""                  # 人工裁决结果（回写规则）
+record_ref: ""                    # [R] 存证号
