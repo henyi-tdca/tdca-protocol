@@ -113,6 +113,22 @@
 
 **社区发布（2026-08-28 批次）**：[COP-002《思维协议库认知资产调用规则》](https://github.com/henyi-tdca/tdca-protocol/discussions/35)（¥0.01 调用 / 15% 嵌套分润 / 双边界严选）｜[TDCA Weekly 首期：GitHub 基建反哺公示 + 观察报告首篇](https://github.com/henyi-tdca/tdca-protocol/discussions/36)｜[Weekly 特刊：制度诊断 10 篇论丛摘要合集](https://github.com/henyi-tdca/tdca-protocol/discussions/37)（AI 审计 / Skill / 思维协议 / 许可 / 溯源 / 安全 / 框架 / ACPs / 算力 / Token）
 
+## 资产索引 / Asset Index
+
+查看 TDCA 资产全景（五层 + 反馈回路）：[docs/repo-inventory-summary.md](docs/repo-inventory-summary.md)
+
+- ① 制度层：docs/formal-proofs · docs/papers（中英论文 + 六项实证 E1–E6）
+- ② 引擎层：core-go · docs/cognitive-compiler
+- ③ 经济运行层：结算/税收锚定/NCA 确权资产
+- ④ 运行层：gateway · MCP bridge · 适配器 · 前端（测试云主战场 / gh-pages 兜底）
+- ⑤ 业务线：sandbox-ops · 场景包 · 商学院（E-EDU）· 社区演练场
+- **活制度回路**：外部 Issue/PR（代码）· 配置权调用 MOU（效用）· 社区讨论提案（认知）→ 制度演进 → 再发布
+
+Asset index & five-layer map: [docs/repo-inventory-summary.md](docs/repo-inventory-summary.md) — institutions → engines → economic run → runtime → business lines, closed by a three-channel feedback loop (Issues/PRs, MOU call data, community proposals) that keeps TDCA a living institution.
+
+---
+*README 增补段 v1 — 2026-09-02 ｜ 推送物（Reasonix 备，推送动作归发布通道）*
+
 ## 合规红线（必须遵守）
 
 | 红线 | 依据 |
