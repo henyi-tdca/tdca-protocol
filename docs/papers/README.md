@@ -1,5 +1,10 @@
 # TDCA 论文与实证证据包 / TDCA Paper & Empirical Evidence Package
 
+## 理论白皮书 / Theoretical White Papers
+
+- **函数白皮书 V2.1**（制度效用配置的形式化理论）= 主文档 V2.0-FROZEN（[TDCA-FUNCTION-WP-002-函数白皮书.md](TDCA-FUNCTION-WP-002-函数白皮书.md)，人类签批 2026-08-21）+ 附录 G（[TDCA-FUNCTION-WP-002-APPX-G-附录G-制度大模型与制度孪生函数化登记.md](TDCA-FUNCTION-WP-002-APPX-G-附录G-制度大模型与制度孪生函数化登记.md)，人类签批 2026-08-26 并入构成 V2.1）
+- **数学基础白皮书（修订本）**：[TDCA-MATH-WP-REV-001-数学基础白皮书修订本.md](TDCA-MATH-WP-REV-001-数学基础白皮书修订本.md)（V1.0-FROZEN，人类签批 2026-08-23）——公理化体系与可执行证明，含公理 6 实例化闭环（机验见 [core-go/docs/formal-proofs/](../../core-go/docs/formal-proofs/)）
+
 ## 论文 / Papers
 
 **中文定稿**：TDCA：论迹不论心的可信多智能体协作协议——制度设计、工程实证与模型无关性
