@@ -16,7 +16,7 @@
 | 上游项目 | License | 登记存证 | 挂载路径 |
 |---|---|---|---|
 | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) | MIT | NCA-MOUNT-20260902-001 | 正常登记（告知函 #5098 观察窗届满未回应 → mount_eligible） |
-| [openai/codex](https://github.com/openai/codex) | Apache-2.0 | NCA-MOUNT-20260902-001（ev-codex） | 正常登记（告知函 #41644 观察窗届满未回应 → mount_eligible） |
+| [openai/codex](https://github.com/openai/codex) | Apache-2.0 | NCA-MOUNT-20260902-002 | 正常登记（告知函 #41644 观察窗届满未回应 → mount_eligible） |
 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | Apache-2.0 | NCA-MOUNT-20260905-001 | 正常登记（告知函 #4755 已发，后按内部制度裁定撤回，无人工表态） |
 | [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) | MIT | NCA-MOUNT-20260905-002 | 正常登记（告知函 #3452 已发，后按内部制度裁定撤回，无人工表态） |
 | [modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | Apache-2.0 | NCA-MOUNT-20260905-003 | 正常登记（告知函 #2758 已发，后按内部制度裁定撤回，无人工表态） |
