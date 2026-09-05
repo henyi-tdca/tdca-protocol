@@ -1,0 +1,30 @@
+{
+  "verdict": "REGISTERED",
+  "nca_id": "NCA-MOUNT-20260905-006",
+  "watermark_sha256_16": "33eb3bb44db67f29",
+  "proposal": {
+    "interface": "记忆增强 Agent 运行时（服务/API 面）（只读协议层引用声明）",
+    "registration_state": "registered_only",
+    "channel": {
+      "notice_url": "https://github.com/letta-ai/letta/issues/3440",
+      "notice_nca": "NCA-ECOACT-20260905-NTC-017",
+      "status": "告知函 2026-09-05 经 Issue #3440 发出后被对方 bot 即时自动关闭（spam），无人工表态 → 经许可静默挂载，转事后公示"
+    },
+    "tdca_side": {
+      "config_boundary": {
+        "write": false,
+        "upstream_code_change": false,
+        "network_send": false,
+        "proposals_only": true,
+        "profit_sharing_mode": "simulated",
+        "tax_rate_simulated": 0.15
+      }
+    },
+    "upstream_side": {
+      "repo_full": "letta-ai/letta",
+      "license_spdx": "Apache-2.0",
+      "code_change": "none"
+    },
+    "proposal_only": true
+  }
+}
