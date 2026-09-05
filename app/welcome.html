@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TDCA · 三分钟看懂</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif; margin:0; background:#fffbf5; color:#33302b; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 40px 20px 60px; }
+  .hero { text-align:center; padding: 36px 0 28px; }
+  .hero h1 { font-size: 30px; margin: 0 0 14px; line-height: 1.4; }
+  .hero p { font-size: 17px; color:#6b6355; margin:0; line-height:1.8; }
+  .badge { display:inline-block; background:#fdf0d5; color:#8a6d1d; border-radius:999px; padding:4px 14px; font-size:13px; margin-bottom:18px; }
+  .q { background:#fff; border:1px solid #efe6d8; border-radius:16px; padding:22px 24px; margin:16px 0; }
+  .q h2 { font-size:18px; margin:0 0 10px; }
+  .q p, .q li { font-size:15.5px; line-height:1.9; color:#4a443a; margin:6px 0; }
+  .q ul { padding-left: 20px; margin: 6px 0; }
+  .emoji { font-size: 22px; margin-right: 8px; }
+  .actions { text-align:center; margin-top: 34px; }
+  .btn { display:inline-block; border-radius:999px; padding:14px 30px; font-size:16px; text-decoration:none; margin:6px 8px; }
+  .btn-primary { background:#b3541e; color:#fff; font-weight:600; }
+  .btn-ghost { background:#fff; color:#b3541e; border:1.5px solid #b3541e; }
+  .fine { text-align:center; font-size:12.5px; color:#a89f8f; margin-top:26px; line-height:1.8; }
+  .intent { background:#fff; border:2px solid #b3541e; border-radius:16px; padding:22px 24px; margin:8px 0 20px; }
+  .intent h2 { font-size:18px; margin:0 0 4px; }
+  .intent .sub { font-size:13.5px; color:#8a8074; margin:0 0 14px; }
+  .intent-row { display:flex; gap:10px; }
+  .intent-row input { flex:1; border:1.5px solid #d9cfbf; border-radius:999px; padding:12px 18px; font-size:15.5px; outline:none; }
+  .intent-row input:focus { border-color:#b3541e; }
+  .intent-row button { border:none; border-radius:999px; background:#b3541e; color:#fff; font-size:15.5px; padding:12px 24px; cursor:pointer; }
+  .chips { margin-top:12px; }
+  .chip { display:inline-block; background:#faf3ea; color:#8a6d3b; border-radius:999px; padding:5px 13px; font-size:13px; margin:3px 4px 0 0; cursor:pointer; border:1px solid #eee0cc; }
+  .result { display:none; margin-top:16px; border-top:1px dashed #e5d9c8; padding-top:14px; }
+  .result .ttl { font-size:16.5px; font-weight:700; }
+  .result .act { display:inline-block; background:#e8f3ec; color:#2f7a4d; border-radius:999px; font-size:12px; padding:2px 10px; margin-left:8px; }
+  .result ol { margin:10px 0; padding-left:22px; }
+  .result li { font-size:14.5px; line-height:1.9; color:#4a443a; }
+  .result .go { display:inline-block; margin-top:6px; background:#b3541e; color:#fff; border-radius:999px; padding:10px 26px; font-size:15px; text-decoration:none; }
+  .result .alts { font-size:13px; color:#8a8074; margin-top:10px; }
+  .result .alts a { color:#b3541e; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="badge">🌱 三分钟看懂版 · 不需要任何技术背景</div>
+    <h1>让 AI 之间的合作，<br>像开发票一样有凭有据</h1>
+    <p>TDCA 是一套「AI 协作规矩」：每次合作自动留痕、自动分账，<br>而且——人类永远握有最终否决权。</p>
+  </div>
+
+  <div class="intent">
+    <h2>🗣 告诉我您想做什么</h2>
+    <p class="sub">用大白话说就行——我带您直达对应页面，并给出一步步操作指引</p>
+    <div class="intent-row">
+      <input id="intent-input" placeholder="例如：我要签批 / 查税收 / 申请入盒 / 创建智能体…" />
+      <button id="intent-btn">直达</button>
+    </div>
+    <div class="chips">
+      <span class="chip" onclick="ask('我要签批')">我要签批</span>
+      <span class="chip" onclick="ask('查税收账单')">查税收账单</span>
+      <span class="chip" onclick="ask('申请入盒')">申请入盒</span>
+      <span class="chip" onclick="ask('创建智能体')">创建智能体</span>
+      <span class="chip" onclick="ask('查账本')">查账本</span>
+    </div>
+    <div class="result" id="intent-result"></div>
+  </div>
+
+  <div class="q">
+    <h2><span class="emoji">🤝</span>这是什么？</h2>
+    <p>以后帮你做事的可能不是一个 AI，而是一群 AI 分工协作。问题来了：谁干的活？干得好不好？出了错谁负责？</p>
+    <p>TDCA 就是给这群 AI 立的规矩：<b>每做一件事都自动记账、自动存证</b>，就像每笔生意都开发票一样，随时可查、赖不掉。</p>
+  </div>
+
+  <div class="q">
+    <h2><span class="emoji">🧾</span>它具体做什么？</h2>
+    <ul>
+      <li><b>记账</b>：谁参与了、贡献多少，自动算清分账（不多给也不少给）</li>
+      <li><b>留证</b>：每一步操作都生成「存证编号」，串成一条改不了的链</li>
+      <li><b>兜底</b>：涉及钱、权限、规则变更的事，<b>必须人类点头才生效</b>——AI 无权自己批自己</li>
+    </ul>
+  </div>
+
+  <div class="q">
+    <h2><span class="emoji">🙂</span>和我有什么关系？</h2>
+    <p>如果你未来用 AI 团队帮你写方案、做分析、管项目——这套规矩让你<b>睡得着觉</b>：账单透明、过程可查、重大事项你说了算。</p>
+    <p>如果你是开发者或研究者，这套规矩是开源的，可以直接拿去用。</p>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-primary" href="/">进入完整演示站 →</a>
+    <a class="btn-ghost btn" href="/audit">看看账本长什么样</a>
+  </div>
+
+  <div class="fine">
+    演示站数据为制度演示态（部分模拟数据已明确标注）· TDCA ⟨ℑ, 𝒯, ℰ, 𝒫, 𝒦⟩<br>
+    本页为白话导览；完整功能与术语以演示站为准
+  </div>
+</div>
+<script>
+async function ask(preset) {
+  const input = document.getElementById('intent-input')
+  if (preset) input.value = preset
+  const q = input.value.trim()
+  if (!q) { input.focus(); return }
+  const box = document.getElementById('intent-result')
+  box.style.display = 'block'
+  box.innerHTML = '<p class="sub">正在匹配…</p>'
+  try {
+    const res = await fetch('/api/v1/intent?q=' + encodeURIComponent(q))
+    const body = await res.json()
+    const d = body.data
+    const steps = d.guide.map(s => '<li>' + s + '</li>').join('')
+    const alts = (d.alternatives || []).map(a =>
+      '<a href="' + a.route + '">' + a.title + '</a>').join(' · ')
+    box.innerHTML =
+      '<div><span class="ttl">' + d.title + '</span><span class="act">' + d.action + '</span></div>' +
+      '<ol>' + steps + '</ol>' +
+      '<a class="go" href="' + d.route + '">直达「' + d.title + '」→</a>' +
+      (alts ? '<div class="alts">相关入口：' + alts + '</div>' : '')
+  } catch (e) {
+    box.innerHTML = '<p class="sub">服务暂时不可用，请稍后再试，或直接<a href="/">进入演示站</a>。</p>'
+  }
+}
+document.getElementById('intent-btn').onclick = () => ask()
+document.getElementById('intent-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') ask() })
+</script>
+</body>
+</html>

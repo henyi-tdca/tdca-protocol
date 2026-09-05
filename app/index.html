@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TDCA 官网 · 四层架构制度橱窗</title>
+    <script type="module" crossorigin src="./assets/index-30v7IDwo.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CSIQTgQM.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // 裸路径直达引导：HashRouter 只读 location.hash，
+      // 直接访问 /register、/agents 等裸路径时改写为 /index.html#/... 深链接。
+      // 注意：nginx 的 location = / 精确匹配服务门户静态页，故不能改写为 /#/...（会落门户），
+      // 必须显式走 /index.html（经代理至 web 容器 SPA），刷新亦安全。
+      (function () {
+        var p = location.pathname;
+        if (p !== "/" && !/\.html?$/.test(p) && p.indexOf("/assets/") !== 0) {
+          location.replace("/index.html#" + p + location.search);
+        }
+      })();
+    </script>
+  </body>
+</html>
