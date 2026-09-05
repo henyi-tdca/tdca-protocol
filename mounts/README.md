@@ -24,6 +24,17 @@
 |---|---|---|---|---|---|
 | [deepseek-harness/](deepseek-harness/) | deepseek-ai/deepseek-harness（#5098） | harness/cordis 插件契约（只读观测插件提案） | MIT | share-enabled | NCA-ECOACT-20260830-MOUNT-001 |
 | [openai-codex/](openai-codex/) | openai/codex（#41644） | MCP 工具契约（只读桥接提案） | Apache-2.0 | share-enabled | NCA-ECOACT-20260830-MOUNT-002 |
+| [servers/](servers/) | modelcontextprotocol/servers（#4755） | MCP 参考服务器集合（只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260905-001 |
+| [python-sdk/](python-sdk/) | modelcontextprotocol/python-sdk（#3452） | MCP Python SDK（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260905-002 |
+| [typescript-sdk/](typescript-sdk/) | modelcontextprotocol/typescript-sdk（#2758） | MCP TypeScript SDK（只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260905-003 |
+| [langchain/](langchain/) | langchain-ai/langchain（#40212） | Agent 编排框架（只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260905-004 |
+| [graphiti/](graphiti/) | getzep/graphiti（#1838） | 时序知识图谱记忆层（只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260905-005 |
+| [letta/](letta/) | letta-ai/letta（#3440） | 记忆增强 Agent 运行时（只读协议层引用声明） | Apache-2.0 | share-enabled · **静默挂载** | NCA-MOUNT-20260905-006 |
+| [semantic-kernel/](semantic-kernel/) | microsoft/semantic-kernel（#14380） | 多语言 Agent 编排 SDK（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260905-007 |
+
+> **S3 首批登记（2026-09-05）**：上表后 7 项为登记态——只读接口引用声明 + 存证，不宣称已封装可用（封装评估另批，ID92 模拟态标注）。
+> **静默挂载两项（langchain / letta）**：经许可（MIT / Apache-2.0）静默挂载——零触碰对方仓，对方机器拒收前置告知（bot 自动关闭，无人工表态）故转事后公示（RULING-20260905-002）。
+> 通道状态如实记录：servers / python-sdk / typescript-sdk / graphiti 四项告知函发出后同日按内部制度裁定主动撤回（not_planned），无上游人工表态；semantic-kernel 告知函在架 OPEN。
 
 ## 纪律
 

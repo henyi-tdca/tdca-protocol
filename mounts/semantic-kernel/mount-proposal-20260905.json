@@ -1,0 +1,30 @@
+{
+  "verdict": "REGISTERED",
+  "nca_id": "NCA-MOUNT-20260905-007",
+  "watermark_sha256_16": "85714f0c0d438a1b",
+  "proposal": {
+    "interface": "多语言 Agent 编排 SDK（库面）（只读协议层引用声明）",
+    "registration_state": "registered_only",
+    "channel": {
+      "notice_url": "https://github.com/microsoft/semantic-kernel/discussions/14380",
+      "notice_nca": "NCA-ECOACT-20260905-NTC-018",
+      "status": "告知函 2026-09-05 经 Discussion #14380 发出，在架 OPEN，无上游人工表态（观察窗程序进行中）"
+    },
+    "tdca_side": {
+      "config_boundary": {
+        "write": false,
+        "upstream_code_change": false,
+        "network_send": false,
+        "proposals_only": true,
+        "profit_sharing_mode": "simulated",
+        "tax_rate_simulated": 0.15
+      }
+    },
+    "upstream_side": {
+      "repo_full": "microsoft/semantic-kernel",
+      "license_spdx": "MIT",
+      "code_change": "none"
+    },
+    "proposal_only": true
+  }
+}

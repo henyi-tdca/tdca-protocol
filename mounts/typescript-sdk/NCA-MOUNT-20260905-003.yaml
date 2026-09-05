@@ -1,0 +1,33 @@
+NCA-ID: NCA-MOUNT-20260905-003
+target: modelcontextprotocol/typescript-sdk
+action: propose_plugin_mount
+payload:
+  interface: MCP TypeScript SDK（库/协议实现面）（只读协议层引用声明）
+  registration_state: registered_only
+  channel:
+    notice_url: https://github.com/modelcontextprotocol/typescript-sdk/issues/2758
+    notice_nca: NCA-ECOACT-20260905-NTC-014
+    status: 告知函 2026-09-05 经 Issue #2758 通道发出；同日按内部制度裁定主动撤回关闭（not_planned），无上游人工表态
+  tdca_side:
+    config_boundary:
+      write: false
+      upstream_code_change: false
+      network_send: false
+      proposals_only: true
+      profit_sharing_mode: simulated
+      tax_rate_simulated: 0.15
+  upstream_side:
+    repo_full: modelcontextprotocol/typescript-sdk
+    license_spdx: Apache-2.0
+    code_change: none
+  proposal_only: true
+boundary:
+  write: false
+  upstream_code_change: false
+  network_send: false
+  proposals_only: true
+  profit_sharing_mode: simulated
+  tax_rate_simulated: 0.15
+stamped_at: '2026-09-05T07:30:00+00:00'
+integrity:
+  sha256_16: 4c34d5cde02b8c7c

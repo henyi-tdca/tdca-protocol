@@ -1,0 +1,33 @@
+NCA-ID: NCA-MOUNT-20260905-005
+target: getzep/graphiti
+action: propose_plugin_mount
+payload:
+  interface: 时序知识图谱记忆层（库/服务面）（只读协议层引用声明）
+  registration_state: registered_only
+  channel:
+    notice_url: https://github.com/getzep/graphiti/issues/1838
+    notice_nca: NCA-ECOACT-20260905-NTC-016
+    status: 告知函 2026-09-05 经 Issue #1838 通道发出；同日按内部制度裁定主动撤回关闭（not_planned），无上游人工表态
+  tdca_side:
+    config_boundary:
+      write: false
+      upstream_code_change: false
+      network_send: false
+      proposals_only: true
+      profit_sharing_mode: simulated
+      tax_rate_simulated: 0.15
+  upstream_side:
+    repo_full: getzep/graphiti
+    license_spdx: Apache-2.0
+    code_change: none
+  proposal_only: true
+boundary:
+  write: false
+  upstream_code_change: false
+  network_send: false
+  proposals_only: true
+  profit_sharing_mode: simulated
+  tax_rate_simulated: 0.15
+stamped_at: '2026-09-05T07:30:00+00:00'
+integrity:
+  sha256_16: 23a425f24c40256a
