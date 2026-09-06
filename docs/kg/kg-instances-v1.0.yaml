@@ -1,0 +1,251 @@
+kg_instances:
+  version: TDCA-KG-INSTANCES-v1.0
+  constitutional_base: TDCA-CONSTITUTION-PREAMBLE-2026-001
+  ontology_ref: TDCA-KG-001 §2.2
+  nodes:
+    constitutions:
+    - article: 0
+      title: 宪法序言-场景目标函数
+      text: 解决制度与技术同构问题，使机机交互可信安全
+      enforcement_level: HARD
+      applicable_scenes:
+      - 全场景
+      ota_version: v1.0
+    - article: 0
+      title: 宪法序言-零摩擦运用
+      text: 让所有主体零摩擦运用，合规时隐形越界时刚性
+      enforcement_level: HARD
+      applicable_scenes:
+      - 全场景
+      ota_version: v1.0
+    - article: 0
+      title: 宪法序言-资源整合
+      text: 整合全社会跨学科知识数据算力，保护认知异构性
+      enforcement_level: HARD
+      applicable_scenes:
+      - 全场景
+      ota_version: v1.0
+    - article: 0
+      title: 宪法序言-正和效用
+      text: 最终必须正和效用，越狱效用≤0，税收锚定硬测量
+      enforcement_level: HARD
+      applicable_scenes:
+      - 全场景
+      ota_version: v1.0
+    principles:
+    - id: ID29
+      name: 制度基座具有不可还原的第一性
+      category: INSTITUTIONAL
+      priority: 5
+      formalization: '∀y∈技术基座, ¬∃z: z 可还原为 ℬ'
+    - id: ID31
+      name: 最简机制设计
+      category: TECHNICAL
+      priority: 4
+      formalization: 若三个风扇能解决，就不需要 NCA
+    - id: ID32
+      name: 制度红利永远大于技术红利
+      category: ECONOMIC
+      priority: 5
+      formalization: 制度红利：秩序创造，累积性/网络锁定/不可复制
+    - id: ID35
+      name: 制度-技术同构
+      category: TECHNICAL
+      priority: 5
+      formalization: 制度逻辑内化为技术设计约束，技术状态外化为制度审计证据
+    - id: ID38
+      name: 破例识别原理
+      category: COGNITIVE
+      priority: 4
+      formalization: 要求'破例'即伪创新信号
+    - id: ID54
+      name: MRCR 多角色兼容性
+      category: INSTITUTIONAL
+      priority: 3
+      formalization: 同一主体不可同时持有冲突的协议层角色
+    - id: ID68
+      name: Protocolizer 协议化引擎
+      category: TECHNICAL
+      priority: 4
+      formalization: 将制度框架编译为可执行函数语料
+    - id: ID71
+      name: 快与慢战略
+      category: INSTITUTIONAL
+      priority: 4
+      formalization: 快系统确定性自动化 + 慢系统人类价值判断
+    - id: ID76
+      name: 配置权第三极
+      category: ECONOMIC
+      priority: 5
+      formalization: 𝒜_protocol 独立调度 𝒜_human 与 𝒜_machine
+    - id: ID79
+      name: MOU 最低可见效用
+      category: ECONOMIC
+      priority: 5
+      formalization: MOU = Tax_in + Tax_out；连续无税收则场景权重归零
+    - id: ID81
+      name: 五元拓扑空间
+      category: COGNITIVE
+      priority: 5
+      formalization: Ω=(V,E,T,G,μ) 道路连通
+    - id: ID82
+      name: 蒸馏批判与跃进原理
+      category: TECHNICAL
+      priority: 4
+      formalization: 制度同构跃进 ψ≠Distill；接口熵=0
+    - id: ID85
+      name: NSFL 负空间函数语言
+      category: INSTITUTIONAL
+      priority: 5
+      formalization: ⊗禁止/⊘限制/⊙观察；三不可三可原则
+    - id: ID86
+      name: LEGAL 绝对熔断
+      category: INSTITUTIONAL
+      priority: 5
+      formalization: LEGAL ∧ HARD → alt=∅
+    - id: ID91
+      name: 自反化合原理
+      category: COGNITIVE
+      priority: 5
+      formalization: TDCA 自身是多学科化合生成的 NCA
+    - id: ID43
+      name: MCT 制度即货币
+      category: ECONOMIC
+      priority: 5
+      formalization: 数字人民币智能合约编码制度
+    nsfl_rules:
+    - id: NSFL-LEGAL-001
+      type: LEGAL
+      pattern: ⊗ 违法/绕过监管/伪造/洗钱/逃税
+      level: HARD
+      alt_path: null
+      human_override: false
+    - id: NSFL-INST-001
+      type: ETHICAL
+      pattern: ⊗ 修改 §9.3 不可升级锚点
+      level: HARD
+      alt_path: 宪法修正案慢系统流程
+      human_override: false
+    - id: NSFL-COG-001
+      type: BELIEF
+      pattern: ⊗ 伪造 NCA/虚假原理/虚构存证
+      level: HARD
+      alt_path: 溯源校验
+      human_override: false
+    - id: NSFL-ECO-001
+      type: TECHNICAL
+      pattern: ⊗ 无真实税收数据的 MOU 模拟
+      level: HARD
+      alt_path: 税收数据核验
+      human_override: false
+    asset_classes:
+    - tier: 1
+      name: IP
+      pricing_dimension:
+      - UTILITY
+      - CONFIG
+      min_config_unit: IP 效用函数
+    - tier: 2
+      name: 知识
+      pricing_dimension:
+      - UTILITY
+      - TIME
+      min_config_unit: 知识单元
+    - tier: 3
+      name: 交换
+      pricing_dimension:
+      - UTILITY
+      - TIME
+      - CONFIG
+      min_config_unit: 配置权调用
+    - tier: 4
+      name: 场景权重
+      pricing_dimension:
+      - UTILITY
+      - CONFIG
+      min_config_unit: 场景效用函数
+    - tier: 5
+      name: 认知NCA
+      pricing_dimension:
+      - UTILITY
+      - TIME
+      min_config_unit: NCA 嵌套认知资产
+    nca_types:
+    - nca_id: NCA-INST-001
+      type: INSTITUTIONAL
+      layer: 1
+      parent_nca: null
+      mou_contribution: 0
+      note: 宪法序言四支柱存证
+    - nca_id: NCA-COG-001
+      type: COGNITIVE
+      layer: 1
+      parent_nca: null
+      mou_contribution: 0
+      note: 制度大模型涌现原理（PRINCIPLE-META-003）
+  edges:
+  - edge_type: DERIVES_FROM
+    source: CONST-序言-正和效用
+    target: ID79
+    weight: 1.0
+    audit_trail: TERMS-001 §2.4
+  - edge_type: DERIVES_FROM
+    source: CONST-序言-场景目标函数
+    target: ID35
+    weight: 1.0
+    audit_trail: CONSTITUTION-PREAMBLE-2026-001 支柱1
+  - edge_type: DERIVES_FROM
+    source: CONST-序言-零摩擦运用
+    target: ID81
+    weight: 1.0
+    audit_trail: CONSTITUTION-PREAMBLE-2026-001 支柱2
+  - edge_type: DERIVES_FROM
+    source: CONST-序言-资源整合
+    target: ID91
+    weight: 1.0
+    audit_trail: CONSTITUTION-PREAMBLE-2026-001 支柱3
+  - edge_type: DERIVES_FROM
+    source: ID82
+    target: ID35
+    weight: 1.0
+    audit_trail: TERMS-001 §2.5
+  - edge_type: DERIVES_FROM
+    source: ID79
+    target: ID43
+    weight: 1.0
+    audit_trail: TERMS-001 §2.4
+  - edge_type: DERIVES_FROM
+    source: ID76
+    target: ID81
+    weight: 1.0
+    audit_trail: TERMS-001 §2.2
+  - edge_type: DERIVES_FROM
+    source: ID85
+    target: ID86
+    weight: 1.0
+    audit_trail: TERMS-001 §2.1
+  - edge_type: ENFORCES
+    source: CONST-序言-正和效用
+    target: ID79
+    weight: 1.0
+    audit_trail: 宪法序言支柱4
+  - edge_type: ENFORCES
+    source: CONST-序言-场景目标函数
+    target: ID38
+    weight: 1.0
+    audit_trail: 宪法序言支柱1
+  semantic_annotations:
+    DCD-20260805-003:
+      D1:
+        decision: RECONCILE 双向量体系
+        cognitive_state_vector_semantics:
+          agent_state: S_state=(A认知活跃度, D决策距离, L学习速率, C协作连通度, SC自我置信度) — 汇编 V2.0，用于智能体状态/MACM
+            3.0
+          asset_cognitive: S_asset=(A可用性, D可靠性, L可学习性, C合规性, SC场景一致性) — TERMS-001，用于资产认知语境
+          usage: 符号相同须标注语境
+        D2:
+          asset_value_vector: V=(U,S,F,C,R)，R<0 一票否决（KB-ECON-001）
+        D3:
+          constitution: 函数族 C_16 + 操作规则第4~30条
+        D4:
+          executable: Agent-Executable V2.0 编号 C01-C16
