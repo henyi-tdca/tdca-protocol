@@ -1,0 +1,169 @@
+smart_contracts:
+  version: TDCA-CONTRACTS-v1.0
+  repo: REPO-004
+  constitutional_base: TDCA-META-003 / TDCA-CONST-v3.1.2
+  templates:
+  - contract_id: CONST-ENFORCE-001
+    name: 宪法十六条强制执行合约
+    type: CONSTITUTION_ENFORCEMENT
+    anchor: TERMS-001 §2.1 宪法十六条 / ID29
+    purpose: 将宪法十六条编码为智能合约硬约束，不可被技术组件修改
+    state:
+      constitution_version: TDCA-CONST-v3.1.2
+      articles:
+        count: 16
+        enforcement:
+        - HARD
+        - SOFT
+        - GUIDANCE
+      clause_encoding:
+        standard: Agent-Executable V2.0 (DCD-20260805-003 D4)
+        clauses:
+          C01: 可观测性
+          C02: 正和聚合
+          C03: 自证性
+          C04: 配置权第三极
+          C05: 刚需线保护
+          C06-C16: 扩展硬约束
+      article_count: 16
+    functions:
+    - name: enforce_article
+      params:
+        article: int(1-16)
+        action: hash
+      constraint: ∀c_i ∈ ℂ₁₆, c_i 不可被技术组件修改
+    - name: check_ota_version
+      params:
+        version: SemVer
+      constraint: 仅 OTA 活宪法机制在人类监督下迭代（ID33）
+    - name: verify_article_integrity
+      params:
+        article_hash: sha256
+      constraint: 校验条文哈希与版本一致性
+    - name: check_constitutional
+      params:
+        operation: op
+        scene: scene
+        agents: list
+      constraint: 'ConstitutionalChecker: C01可观测/C02正和(Shapley>0)/C03自证/C04配置权/C05刚需线/C06-16；任一违反
+        → FUSE；场景边界 → SANDBOX'
+    nsfl:
+      touch_immutable_anchor: BLOCKED（§9.3 四锚点）
+  - contract_id: NSFL-FUSE-001
+    name: 负空间熔断执行合约
+    type: NSFL_ENFORCEMENT
+    anchor: TERMS-001 §2.1 NSFL / ID85/ID86
+    purpose: 负空间函数语言 Runtime 执行：⊗禁止/⊘限制/⊙观察 + 替代路径
+    state:
+      nsfl_version: V0.2
+      types:
+      - ETHICAL
+      - LEGAL
+      - EMOTIONAL
+      - BELIEF
+      - TECHNICAL
+      operators:
+      - ⊗
+      - ⊘
+      - ⊙
+    functions:
+    - name: block_legal
+      params:
+        rule_id: str
+        pattern: ⊗
+      constraint: LEGAL ∧ HARD → alt=∅（绝对熔断，无替代路径）
+    - name: route_alt_path
+      params:
+        rule_id: str
+        alt: func
+      constraint: 非 LEGAL 类型提供替代路径
+    - name: human_override
+      params:
+        rule_id: str
+        signature: DID
+      constraint: 仅人类可覆盖（慢系统 ID71）
+    nsfl:
+      legal_absolute: true
+  - contract_id: MOU-ANCHOR-001
+    name: MOU 税收锚定合约
+    type: MOU_ANCHORING
+    anchor: TERMS-001 §2.4 MOU / ID79/ID92 / DCEP 对接
+    purpose: 配置权交易税收锚定：MOU = Tax_in + Tax_out，硬下限验证
+    state:
+      verification_window: 30
+      minimum_days: 28
+      currency: CNY
+    functions:
+    - name: anchor_mou
+      params:
+        transaction_id: str
+        tax_in: int
+        tax_out: int
+      constraint: MOU = tax_in + tax_out；无真实数据禁止模拟（NSFL 经济负空间）
+    - name: verify_continuity
+      params:
+        window: 30
+      constraint: '|MOU_verified| ≥ 0.93 × window（缺失率 < 7%）'
+    - name: check_scene_weight
+      params:
+        scene_id: str
+      constraint: 连续无税收 → Weight_scene → 0（ID79 公理）
+    dcep:
+      contract_type: MOU_ANCHOR
+      currency: CNY
+  - contract_id: CONFIG-RIGHT-SCHEDULE-001
+    name: 配置权调度合约
+    type: CONFIG_RIGHT_SCHEDULING
+    anchor: TERMS-001 §2.2 配置权/配置权第三极 / ID76 / MRCR ID54
+    purpose: 配置权七元组验证 + 跨库调度 + 收益分配（Shapley）
+    state:
+      seven_tuple:
+      - who
+      - what
+      - when
+      - how
+      - share
+      - cfg
+      - tax
+      share_constraint: ∑Share_i = 1, Share_i ≥ 0
+    functions:
+    - name: verify_config_right
+      params:
+        cr: seven_tuple
+      constraint: 七元组完整性 + 边界校验（∂𝒞ℛ）
+    - name: schedule_call
+      params:
+        cr: seven_tuple
+        target: repo
+      constraint: 配置权第三极独立调度（𝒜_protocol）
+    - name: shapley_allocate
+      params:
+        contributions: map
+      constraint: Shapley 值精确分配边际贡献，防搭便车
+    - name: mrcr_check
+      params:
+        agent_id: str
+        scenes: list
+      constraint: MRCR 场景隔离（同一主体不可持有冲突角色）
+  - contract_id: DCEP-MOU-001
+    name: 数字人民币智能合约对接模板
+    type: DCEP_INTEGRATION
+    anchor: ID43 制度即货币 / ID70 CBDC 唯一性 / ID80
+    purpose: 宪法十六条 + UPDA + 配置权第三极 + MCT 编码为数字人民币智能合约硬约束
+    state:
+      cbdc_currency: CNY
+      contracts:
+      - CONST-ENFORCE-001
+      - NSFL-FUSE-001
+      - MOU-ANCHOR-001
+      - CONFIG-RIGHT-SCHEDULE-001
+    functions:
+    - name: execute_contract
+      params:
+        contract_type: str
+        params: dict
+      constraint: 无限递归协作状态空间坍缩为可验证税收硬数据（ID80）
+    - name: query_contract
+      params:
+        transaction_id: str
+      constraint: 验证交易 MOU 是否已锚定
