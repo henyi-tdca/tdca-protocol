@@ -12,7 +12,7 @@
 |---|---|---|---|
 | 宪法十六条（TDCA-CONST） | v3.1.2（KB-INST-020 权威基准） | `sha256:99A0A1136DCBD4C7…`（基准文件哈希）+ 固件 CONSTITUTION_HASH `sha256:9beb123c…` | 与 TDID/L0-state 交叉校验 |
 | NSFL 规则（R1-R10） | V0.2（pkg/nsfl/nsfl.go 源码即规范） | `sha256:91681E26389DC57E…` | go test 比对 |
-| 公理 6 实例化 | TDCA-CORE-GO-AXIOM6-001 | 实现 `sha256:2DA492D39E3D81BC…`（axiom6.go）｜ 证明文档 `sha256:654679722AA02326…` | `VerifyAxiom6()` 机验 |
+| 公理 6 实例化 | TDCA-CORE-GO-AXIOM6-001 | 实现 `sha256:2DA492D39E3D81BC…`（axiom6.go）｜ 证明文档 `sha256:72106D6CF3B7C805…`（AXIOM6-PROOF.md，2026-09-09 重算回填——原登记 654679722AA02326… 与文件失配，WorkBuddy VERIFY-EXT-2026-09-09 独立核证发现） | `VerifyAxiom6()` 机验 |
 | 数学基础白皮书 | TDCA-MATH-WP-REV-001 V1.0-FROZEN | `sha256:D8271AD0135F3CC9…` | 文件哈希比对 |
 | 分润规则 | 15%（动态分润，模拟态） | 宣言 §三 `sha256:20C8BFCEE24C237F…` | 邀请函措辞比对 |
 

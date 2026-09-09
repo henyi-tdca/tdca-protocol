@@ -32,3 +32,41 @@ jobs:
       - name: CLI smoke
         working-directory: core-go
         run: ./tdcad version
+
+      # --- 制度哈希清单校验（防篡改锚 ① 自动化——WorkBuddy VERIFY-EXT-2026-09-09 断链发现后增设）---
+      # 依据: TDCA-SECURITY-TAMPER-001 ｜ INSTITUTION-HASHES.md（sha256 前 16 位）
+      # 校验: AXIOM6-PROOF.md（证明文档）+ axiom6.go（实现）哈希与清单声称一致；
+      #       失配即 fail——防「文件被改而清单未回填」静默断链重演。
+      - name: Verify institution hashes (sha256 prefix)
+        working-directory: core-go
+        run: |
+          python3 - <<'PY'
+          import hashlib, pathlib
+          expected = {
+            "docs/formal-proofs/AXIOM6-PROOF.md": "72106D6CF3B7C805",
+            "pkg/enforce/axiom6.go": "2DA492D39E3D81BC",
+          }
+          fails = []
+          for rel, want in expected.items():
+            h = hashlib.sha256(pathlib.Path(rel).read_bytes()).hexdigest().upper()[:16]
+            if h != want:
+              fails.append(f"{rel}: 期望 {want} 实际 {h}")
+          if fails:
+            raise SystemExit("INSTITUTION-HASHES 校验失败:\n" + "\n".join(fails))
+          print("institution hashes OK (AXIOM6-PROOF + axiom6.go)")
+          PY
+
+      # --- MCP 互操作常驻冒烟（官方第三方 SDK 独立验证，防互通倒退）---
+      # 依据: TDCA-SMOKE-INTEROP-001 §六（阶段 2-B，GSEQ-1082）
+      # 每次 core-go 变更须跑：官方 mcp SDK（非自研 client）连 tdcad mcp serve，
+      # 验证 handshake/tools/enforce_check PASS——互通性不倒退门禁。
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install official MCP SDK
+        run: pip install mcp
+
+      - name: MCP interop smoke (official 3P SDK)
+        working-directory: core-go/bridge
+        run: python smoke_mcp_thirdparty.py
