@@ -1,5 +1,7 @@
 # TDCA 论文与实证证据包 / TDCA Paper & Empirical Evidence Package
 
+> 国内镜像入口见[主仓 README](../../README.md)「国内镜像 / Domestic Mirror」段。
+
 ## 理论白皮书 / Theoretical White Papers
 
 - **函数白皮书 V2.1**（制度效用配置的形式化理论）= 主文档 V2.0-FROZEN（[TDCA-FUNCTION-WP-002-函数白皮书.md](TDCA-FUNCTION-WP-002-函数白皮书.md)，人类签批 2026-08-21）+ 附录 G（[TDCA-FUNCTION-WP-002-APPX-G-附录G-制度大模型与制度孪生函数化登记.md](TDCA-FUNCTION-WP-002-APPX-G-附录G-制度大模型与制度孪生函数化登记.md)，人类签批 2026-08-26 并入构成 V2.1）
