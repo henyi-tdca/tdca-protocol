@@ -65,6 +65,7 @@
   .gnav a { padding:6px 16px; border:1px solid var(--line); border-radius:6px; font-size:14px;
             color:var(--fg); text-decoration:none; background:#0b0e12; }
   .gnav a:hover { border-color:var(--slm); color:var(--slm); }
+  .gnav a .gnav-note { font-size:11px; color:var(--dim); }
   table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px; }
   th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; vertical-align:top; }
   th { color:var(--dim); font-weight:600; }
@@ -124,9 +125,9 @@
   <span class="gnav-label">🧭 全局导航（未登录可达）：</span>
   <a href="/" data-route="">首页</a>
   <a href="/audit" data-route="audit">存证</a>
-  <a href="/attestation/dynamic" data-route="attestation/dynamic">起草</a>
-  <a href="/attestation/dynamic" data-route="attestation/dynamic">签批</a>
-  <a href="/audit" data-route="audit">熔断</a>
+  <a href="/attestation/dynamic" data-route="attestation/dynamic">起草<span class="gnav-note">（同页 · 新建）</span></a>
+  <a href="/attestation/dynamic" data-route="attestation/dynamic">签批<span class="gnav-note">（同页 · 待办裁决）</span></a>
+  <a href="/audit" data-route="audit">熔断<span class="gnav-note">（/audit 页内区块）</span></a>
   <a href="https://github.com/henyi-tdca/tdca-protocol/tree/main/docs/regulations" target="_blank">规范制度</a>
   <a href="/auth" data-route="auth">登录</a>
 </nav>
