@@ -8,6 +8,19 @@
 >
 > **显影论（一句话）**：TDCA 对智能体做「显影」而非「白箱化」——不拆解黑箱内部，只在制度层让每一次协作可确权、可计量、可问责（[认知论定位 →](docs/papers/TDCA-MONOGRAPH-COP-001.md)）。
 
+## 国内镜像 / Domestic Mirror
+
+本项目在国内开源平台提供同步镜像，便于国内访问：
+
+- **AtomGit**（开放原子开源基金会）：https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
+
+镜像与 GitHub 主仓同源；**以主仓为准**，镜像可能存在短暂同步延迟。
+
+A synchronized mirror is available on AtomGit (OpenAtom Foundation):
+https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
+
+The mirror tracks the GitHub main repository. **The main repository remains authoritative**, and the mirror may lag briefly.
+
 | 结算锚 | 效用锚 | 权利锚 |
 |---|---|---|
 | 数字人民币 e-CNY（唯一结算轨道，法偿性 + 央行负债 + 结算终局性） | 税收 MOU = tax_in + tax_out（国家财政审计背书的最低可见效用） | 国家可信版权链 / 天平链（法律赋予而非技术赋予，存证具司法证据效力） |
