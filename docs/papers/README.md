@@ -13,6 +13,9 @@
 **English version**：TDCA: Governing Multi-Agent Collaboration by Protocol-Level Institutions Rather Than Model Capability — Engineering Empirics and Cross-Model Reproducibility
 → [TDCA-paper-EN.md](TDCA-paper-EN.md)（FROZEN final, SHA256 `4323f5c492c36070b83d8b646269f461ffa731e283c43d5fa7b59e1e9ebb591d`）
 
+**函数大模型（FLM）**：函数大模型：参数大模型之外的第二范式（范畴论）
+→ [TDCA-PAPER-FUNCTIONAL-LM-001.md](TDCA-PAPER-FUNCTIONAL-LM-001.md)（FROZEN 公开版，SHA256 `364537fdfbc720e1906c198c215cd66b50c87b02ba01bd5765cc7dd94776fac4`）——知识载体为显式函数工件、知识生产为编译而非训练的第二范式主张，含七项范畴判据与相邻系统谱系差分
+
 **作者**：张帆（Zhang Fan）——恒益场景（厦门）数字经济研究院（Hengyi Scene (Xiamen) Digital Economy Research Institute），通信作者。
 
 ## 摘要 / Abstracts
