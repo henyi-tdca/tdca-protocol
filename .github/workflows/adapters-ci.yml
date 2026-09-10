@@ -27,15 +27,21 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: 门禁 1 — 语法校验（白名单包全量 .py）
+      - name: 门禁 1 — 语法校验（白名单包全量 .py，不落盘）
         run: |
-          set -e
-          FILES=()
-          for p in $PUBLIC_PACKS; do
-            while IFS= read -r f; do FILES+=("$f"); done < <(find "$p" -name "*.py")
-          done
-          echo "待校验 .py：${#FILES[@]} 个（白名单：$PUBLIC_PACKS）"
-          python -m py_compile "${FILES[@]}"
+          python - <<'PY'
+          import os, pathlib, py_compile, tempfile
+          packs = os.environ["PUBLIC_PACKS"].split()
+          files = []
+          for pk in packs:
+              files += [str(p) for p in pathlib.Path(pk).rglob("*.py")]
+          print(f"待校验 .py：{len(files)} 个（白名单：{' '.join(packs)}）")
+          with tempfile.TemporaryDirectory() as td:
+              cfile = os.path.join(td, "c.pyc")
+              for f in files:
+                  py_compile.compile(f, cfile=cfile, doraise=True)
+          print("✅ 语法校验通过（不落盘）")
+          PY
 
       - name: 门禁 2 — 公开件终扫（口径 V1.1 六类，命中即失败）
         run: |
