@@ -1,0 +1,80 @@
+# TDCA Adaptors CI — 公开包门禁（语法 + 公开件终扫 + 内部路径注入 + 无编译缓存）
+# 依据: TDCA-IMPROVEMENT-20260910-001 I-1（GSEQ-1207）/ REV-001（GSEQ-1210）
+# 终扫口径 V1.1——用 `TDCA-Int`，勿沿用旧版 `TDCA-INT-`（尾连字符致漏检）
+name: adapters-ci
+
+on:
+  push:
+    paths:
+      - "tdca-adapters/**"
+      - ".github/workflows/adapters-ci.yml"
+  pull_request:
+    paths:
+      - "tdca-adapters/**"
+
+env:
+  # 公开包白名单（空格分隔）——仅这些目录适用「公开件零内部标识」终扫
+  # 新增公开包时在此追加（加包 = 显式登记动作）
+  PUBLIC_PACKS: "tdca-adapters/interop"
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 门禁 1 — 语法校验（白名单包全量 .py）
+        run: |
+          set -e
+          FILES=()
+          for p in $PUBLIC_PACKS; do
+            while IFS= read -r f; do FILES+=("$f"); done < <(find "$p" -name "*.py")
+          done
+          echo "待校验 .py：${#FILES[@]} 个（白名单：$PUBLIC_PACKS）"
+          python -m py_compile "${FILES[@]}"
+
+      - name: 门禁 2 — 公开件终扫（口径 V1.1 六类，命中即失败）
+        run: |
+          set -e
+          PAT='GSEQ-|TDCA-STD-|DCD-|TDCA-Int|TDCA-AGENT-GOVERNANCE|C:\\Users|22850|global-workspace|Reasonix|Kimi|WorkBuddy|算力|tdca-fos|tdca-utility-genie|parents\[2\]|__pycache__|\.pyc'
+          RC=0
+          for p in $PUBLIC_PACKS; do
+            echo "扫描: $p"
+            if grep -rInhE "$PAT" "$p" \
+                 --include="*.py" --include="*.md" --include="*.txt" --include="LICENSE"; then
+              RC=1
+            fi
+          done
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::公开件终扫命中内部标识（见上列行）"
+            exit 1
+          fi
+          echo "✅ 公开件终扫零命中（范围：$PUBLIC_PACKS）"
+
+      - name: 门禁 3 — 内部路径注入（白名单包，精确模式）
+        run: |
+          set -e
+          RC=0
+          for p in $PUBLIC_PACKS; do
+            if grep -rInE 'sys\.path.*(tdca-fos|tdca-utility-genie|tdca-adapters[^-])' "$p" --include="*.py"; then
+              RC=1
+            fi
+          done
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::检测到内部工作区路径注入（sys.path 引用内部项目目录）"
+            exit 1
+          fi
+          echo "✅ 无内部路径注入"
+
+      - name: 门禁 4 — 无编译缓存（全目录 tdca-adapters/**）
+        run: |
+          set -e
+          HIT=$(find tdca-adapters \( -name "*.pyc" -o -name "__pycache__" -o -name ".pytest_cache" \) | head -20)
+          if [ -n "$HIT" ]; then
+            echo "::error::检测到编译/测试缓存产物（不应提交）："; echo "$HIT"; exit 1
+          fi
+          echo "✅ 无编译缓存产物"
