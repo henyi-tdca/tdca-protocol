@@ -14,6 +14,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
 
@@ -74,11 +75,30 @@ func readJSON(path string, v any) error {
 // ---- mcp ----
 
 // cmdMCP 启动 MCP 桥接服务（挂载模式：外部 Agent 通过 stdio 调用核心三件）
+//
+// 会话纪律参数（TDCA-STD-SESSION-001 §七；偏离默认值随会话事件存证）：
+//   tdcad mcp serve [--allow-anonymous=true] [--t-handshake=10s] [--t-ping=30s]
+//                   [--t-pong=15s] [--n-stale=2] [--n-abort=3]
+//                   [--t-drain=5s] [--t-gc=60s] [--max-inflight=1]
 func cmdMCP(args []string) error {
-	if len(args) != 1 || args[0] != "serve" {
-		return fmt.Errorf("usage: tdcad mcp serve")
+	if len(args) < 1 || args[0] != "serve" {
+		return fmt.Errorf("usage: tdcad mcp serve [--allow-anonymous=true --t-handshake=10s --t-ping=30s --t-pong=15s --n-stale=2 --n-abort=3 --t-drain=5s --t-gc=60s --max-inflight=1]")
 	}
-	server := mcp.NewServer()
+	policy := mcp.DefaultSessionPolicy()
+	fs := flag.NewFlagSet("mcp serve", flag.ContinueOnError)
+	fs.BoolVar(&policy.AllowAnon, "allow-anonymous", policy.AllowAnon, "允许匿名会话（默认 true=匿名只读；显式 false=持权必需，握手即拒）")
+	fs.DurationVar(&policy.THandshake, "t-handshake", policy.THandshake, "握手超时（H1→H3）")
+	fs.DurationVar(&policy.TPing, "t-ping", policy.TPing, "服务端 ping 周期")
+	fs.DurationVar(&policy.TPong, "t-pong", policy.TPong, "pong 等待上限（逾期记 miss）")
+	fs.IntVar(&policy.NStale, "n-stale", policy.NStale, "miss 降级阈值（→STALE）")
+	fs.IntVar(&policy.NAbort, "n-abort", policy.NAbort, "miss 中止阈值（→ABORTED）")
+	fs.DurationVar(&policy.TDrain, "t-drain", policy.TDrain, "断开排空上限")
+	fs.DurationVar(&policy.TGC, "t-gc", policy.TGC, "STALE/SUSPENDED 会话回收时限")
+	fs.IntVar(&policy.MaxInflight, "max-inflight", policy.MaxInflight, "在途请求上限")
+	if err := fs.Parse(args[1:]); err != nil {
+		return err
+	}
+	server := mcp.NewServerWithPolicy(policy)
 	return server.Serve(os.Stdin, os.Stdout)
 }
 
