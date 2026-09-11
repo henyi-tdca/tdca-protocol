@@ -284,7 +284,9 @@ def main():
     L.append("")
 
     out = "\n".join(L) + "\n"
-    rep = os.path.join(_HERE, "COLDSTART-EXPERIMENT-REPORT.md")
+    outdir = os.path.join(_HERE, "output")
+    os.makedirs(outdir, exist_ok=True)
+    rep = os.path.join(outdir, "COLDSTART-EXPERIMENT-REPORT.md")
     with open(rep, "w", encoding="utf-8") as f:
         f.write(out)
     print(out)
