@@ -87,7 +87,7 @@ func cardJSON(overrides map[string]any) string {
 func TestInitializeHandshake(t *testing.T) {
 	s := NewServer()
 	resps := run(t, s,
-		`{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","clientInfo":{"name":"ext-agent","version":"1.0"}}}`,
+		initReq(1, tdcaMetaJSON(nil)),
 		`{"jsonrpc":"2.0","id":2,"method":"tools/list"}`,
 	)
 	if len(resps) != 2 {
@@ -101,6 +101,14 @@ func TestInitializeHandshake(t *testing.T) {
 	si := info["serverInfo"].(map[string]any)
 	if si["name"] != "tdca-core-go-mcp" {
 		t.Errorf("serverInfo.name = %v", si["name"])
+	}
+	// 会话层：initialize 应答须携带 _meta.tdca.session_id 与 session_policy（TDCA-STD-SESSION-001 §四）
+	meta := info["_meta"].(map[string]any)["tdca"].(map[string]any)
+	if meta["session_id"] != "PCS-tok-test-01" {
+		t.Errorf("session_id = %v", meta["session_id"])
+	}
+	if _, ok := meta["session_policy"]; !ok {
+		t.Errorf("missing session_policy")
 	}
 	list := resps[1]["result"].(map[string]any)["tools"].([]any)
 	if len(list) != 4 {
@@ -123,7 +131,7 @@ func TestEnforceCheckPass(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(nil))}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if err, _ := resp["error"]; err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -137,7 +145,7 @@ func TestEnforceCheckRejectProtocol(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(map[string]any{"protocol_version": "9.9.9"}))}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if _, ok := resp["error"]; !ok {
 		// 若实现返回 result 而非 error，检查 status
 		if !strings.Contains(resultText(t, resp), "REJECT") {
@@ -151,7 +159,7 @@ func TestEnforceCheckInjectionBlocked(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(map[string]any{"agent_id": "<script>alert(1)</script>"}))}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if _, ok := resp["error"]; !ok {
 		text := resultText(t, resp)
 		if !strings.Contains(text, "REJECT") && !strings.Contains(text, "BLOCK") {
@@ -171,7 +179,7 @@ func TestEnforceCheckUnknownFieldRejected(t *testing.T) {
 	}
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(j(card))}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
 		t.Fatalf("unknown field must be schema-rejected, got %v", resp)
 	} else {
@@ -196,7 +204,7 @@ func TestNcaAppendOk(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nca_append", "arguments": map[string]any{"record": json.RawMessage(recordJSON("sha256:genesis"))}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	text := resultText(t, resp)
 	if !strings.Contains(text, `"status":"appended"`) || !strings.Contains(text, `"count":1`) {
 		t.Errorf("want appended/count=1, got %s", text)
@@ -208,7 +216,7 @@ func TestNcaAppendTamperRejected(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nca_append", "arguments": map[string]any{"record": json.RawMessage(recordJSON("sha256:deadbeef"))}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
 		t.Fatalf("tampered prev_hash must be rejected, got %v", resp)
 	} else if !strings.Contains(err.(map[string]any)["message"].(string), "prev_hash") {
@@ -225,7 +233,7 @@ func TestNcaVerifyChain(t *testing.T) {
 	rec2 := ncaRec(t, "n2", rec1Hash)
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nca_verify", "arguments": map[string]any{"records": []any{rec1, rec2}}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	text := resultText(t, resp)
 	if !strings.Contains(text, `"verify":true`) {
 		t.Errorf("want verify true, got %s", text)
@@ -251,7 +259,7 @@ func TestNcaVerifyForgedRejected(t *testing.T) {
 	rec2["hash"] = "sha256:forged" // 篡改
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nca_verify", "arguments": map[string]any{"records": []any{rec1, rec2}}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if _, ok := resp["error"]; !ok {
 		text := resultText(t, resp)
 		if strings.Contains(text, `"verify": true`) {
@@ -266,7 +274,7 @@ func TestNsflWarn(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "suspicious-pattern"}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	text := resultText(t, resp)
 	if !strings.Contains(text, `"status":"WARN"`) {
 		t.Errorf("want WARN, got %s", text)
@@ -277,7 +285,7 @@ func TestNsflBlock(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "unauthenticated"}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	text := resultText(t, resp)
 	if !strings.Contains(text, `"status":"BLOCK"`) || !strings.Contains(text, `"blocked":true`) {
 		t.Errorf("want BLOCK, got %s", text)
@@ -289,7 +297,7 @@ func TestNsflFusedIrreversible(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "nsfl-bypass-attempt"}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	text := resultText(t, resp)
 	if !strings.Contains(text, `"status":"FUSED"`) || !strings.Contains(text, `"irreversible":true`) {
 		t.Errorf("want FUSED irreversible, got %s", text)
@@ -301,7 +309,7 @@ func TestNsflMissingArgSchemaRejected(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1"}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
 		t.Fatalf("missing signal must be schema-rejected, got %v", resp)
 	} else if !strings.Contains(err.(map[string]any)["message"].(string), "schema violation") {
@@ -314,7 +322,7 @@ func TestNsflMissingArgSchemaRejected(t *testing.T) {
 func TestUnknownMethod(t *testing.T) {
 	s := NewServer()
 	req := `{"jsonrpc":"2.0","id":1,"method":"tools/unknown"}`
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
 		t.Fatalf("unknown method must error, got %v", resp)
 	} else if err.(map[string]any)["code"].(float64) != CodeMethod {
@@ -326,7 +334,7 @@ func TestUnknownTool(t *testing.T) {
 	s := NewServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "evil_tool", "arguments": map[string]any{}}})
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if _, ok := resp["error"]; !ok {
 		t.Fatalf("unknown tool must error, got %v", resp)
 	}
@@ -335,7 +343,7 @@ func TestUnknownTool(t *testing.T) {
 func TestParseError(t *testing.T) {
 	s := NewServer()
 	req := `{"jsonrpc":"2.0","id":1,"method":` // 截断 JSON
-	resp := run(t, s, req)[0]
+	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
 		t.Fatalf("parse error must be reported, got %v", resp)
 	} else if err.(map[string]any)["code"].(float64) != CodeParse {
@@ -347,10 +355,11 @@ func TestParseError(t *testing.T) {
 
 func TestMountModeE2E(t *testing.T) {
 	// 外部 Agent（如 DeepSeek Harness 类）通过 MCP stdio 挂载 TDCA 核心：
-	// 准入 → 存证 → 熔断 全链，不改外部源码（BIDIR-001）
+	// 会话握手 → 准入 → 存证 → 熔断 → 断开小结 全链，不改外部源码（BIDIR-001）
 	s := NewServer()
 	reqs := []string{
-		`{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","clientInfo":{"name":"dsh-agent","version":"0.1"}}}`,
+		initReq(1, tdcaMetaJSON(nil)),
+		initializedNotif,
 		j(map[string]any{"jsonrpc": "2.0", "id": 2, "method": "tools/list"}),
 		j(map[string]any{"jsonrpc": "2.0", "id": 3, "method": "tools/call",
 			"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(nil))}}}),
@@ -358,14 +367,20 @@ func TestMountModeE2E(t *testing.T) {
 			"params": map[string]any{"name": "nca_append", "arguments": map[string]any{"record": json.RawMessage(recordJSON("sha256:genesis"))}}}),
 		j(map[string]any{"jsonrpc": "2.0", "id": 5, "method": "tools/call",
 			"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "dsh", "signal": "suspicious-pattern"}}}),
+		`{"jsonrpc":"2.0","method":"close"}`,
 	}
 	resps := run(t, s, reqs...)
-	if len(resps) != 5 {
-		t.Fatalf("want 5 responses, got %d", len(resps))
+	// 5 条 RPC 响应 + 1 条会话小结通知（close 触发）
+	if len(resps) != 6 {
+		t.Fatalf("want 6 responses, got %d: %v", len(resps), resps)
 	}
-	// ① 握手
-	if resps[0]["result"].(map[string]any)["protocolVersion"] != ProtocolVersion {
+	// ① 握手（含 _meta.tdca.session_id）
+	initRes := resps[0]["result"].(map[string]any)
+	if initRes["protocolVersion"] != ProtocolVersion {
 		t.Errorf("handshake failed")
+	}
+	if initRes["_meta"].(map[string]any)["tdca"].(map[string]any)["session_id"] != "PCS-tok-test-01" {
+		t.Errorf("session_id missing in handshake")
 	}
 	// ② 工具枚举
 	if len(resps[1]["result"].(map[string]any)["tools"].([]any)) != 4 {
@@ -382,6 +397,11 @@ func TestMountModeE2E(t *testing.T) {
 	// ⑤ 熔断 WARN
 	if m := resultMap(t, resps[4]); m["action"].(map[string]any)["status"] != "WARN" {
 		t.Errorf("nsfl_eval must WARN, got %v", m)
+	}
+	// ⑥ 断开小结（close → DRAINING → CLOSED；小结载域 _meta.tdca.session_summary，规范 §六 D3）
+	sum := summaryFromClose(t, resps[5])
+	if sum["state"] != StateClosed || sum["end_reason"] != ReasonNormalClose || sum["request_count"].(float64) != 3 {
+		t.Errorf("summary mismatch: %v", sum)
 	}
 }
 

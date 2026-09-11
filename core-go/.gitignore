@@ -1,0 +1,6 @@
+# Build artifacts
+*.exe
+**/tdcad
+!**/cmd/tdcad/
+dist/
+.tmp/
