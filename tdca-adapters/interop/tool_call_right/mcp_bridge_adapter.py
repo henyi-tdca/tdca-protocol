@@ -86,18 +86,12 @@ class McpToolFaceAdapter:
     def probe_channel(self, extra_candidates: Optional[List[str]] = None) -> Dict[str, Any]:
         """探测发布通道就绪度（**只读**，不执行任何工具、不建连接）。
 
-        判定依据：① `tdcad` 是否在 PATH；② core-go 构建产物候选路径是否存在。
+        判定依据：① `tdcad` 是否在 PATH；② 调用方注入的候选路径是否存在。
         探就绪 ≠ 可执行：实执仍须显式注入 transport（见 `execute_with_channel`）。
         """
         on_path = shutil.which(self.tdcad_command)
-        ws = Path(__file__).resolve().parents[2]
+        # 构建产物路径由调用方注入（extra_candidates）；本包不假设本机目录布局
         candidates = [str(p) for p in (extra_candidates or [])]
-        candidates += [
-            str(ws / "tdca-core-go" / "bin" / f"{self.tdcad_command}.exe"),
-            str(ws / "tdca-core-go" / "dist" / f"{self.tdcad_command}.exe"),
-            str(ws / "tdca-core-go" / f"{self.tdcad_command}.exe"),
-            str(ws / "tdca-core-go" / "bin" / self.tdcad_command),
-        ]
         artifacts = [c for c in candidates if os.path.exists(c)]
         ready = bool(on_path) or bool(artifacts)
         return {"command": self.tdcad_command, "transport": "stdio",

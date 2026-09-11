@@ -33,7 +33,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
 
-_WS = Path(__file__).resolve().parents[2]
+_WS = Path(__file__).resolve().parents[1]
 # 权威源可注入：默认在**包外层目录**查找同名模板集（缺失则构造时明确报错，见 README 依赖契约）
 DEFAULT_TEMPLATES = _WS / "contract-templates-v1.0.yaml"
 
