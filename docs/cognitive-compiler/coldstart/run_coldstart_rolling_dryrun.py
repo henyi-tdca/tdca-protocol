@@ -165,7 +165,9 @@ def main():
     L.append("- 产物不推送(待签批走 PR)。")
 
     out = "\n".join(L) + "\n"
-    rep = os.path.join(_HERE, "COLDSTART-ROLLING-DRYRUN-REPORT.md")
+    outdir = os.path.join(_HERE, "output")
+    os.makedirs(outdir, exist_ok=True)
+    rep = os.path.join(outdir, "COLDSTART-ROLLING-DRYRUN-REPORT.md")
     with open(rep, "w", encoding="utf-8") as f:
         f.write(out)
     print(out)
