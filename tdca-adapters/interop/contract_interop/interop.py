@@ -4,7 +4,7 @@
 制度依据:
   - 内化白皮书 §2.2（185.6 交互 → NCA 生成协议的通信层：点对点/群组/混合 → 单/多/网络嵌套 NCA）
   - 内化白皮书 §4.1（智能合约预计算：**国标交互日志 = 税收事件触发器**）
-  - 智能合约 × 国标交互协议对接（交互日志 = 税收事件触发器）
+  - M4（重排 内部存证）：D+14a 智能合约 × 国标交互协议对接；验收「交互日志=税收事件触发器」用例通过
 
 三模式（185.6）:
   p2p（点对点）/ group（群组）/ hybrid（混合）
@@ -13,16 +13,19 @@
   - **交互日志即税收事件触发器**：每次交互产生纳税事实（value=0 亦记录事实，不因归零丢失）
   - **幂等**：同 event_id 不重复计税/不重复生成合约意图
   - 负空间声明 → 熔断拒绝（不记录为纳税事实）
-  - 合约结算须存证（fail-closed）；MOU 模拟态更新（模拟态标注）
+  - 合约结算须存证（fail-closed）；MOU 模拟态更新
   - 数据性质: 模拟态
 
 SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+
 
 MODES = ("p2p", "group", "hybrid")
 
