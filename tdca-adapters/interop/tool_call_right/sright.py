@@ -23,10 +23,13 @@ SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 
+import sys
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
+
 
 MIN_SCENE_FIT = 0.5       # 效用兼容层最低拟合度（制度阈值，可配）
 
@@ -106,6 +109,56 @@ class GrantRecord:
 
 
 @dataclass
+class CommitmentDeclaration:
+    """调用前承诺声明（185.7 步 3/6 **结构化**）——目标函数 + 约束矩阵摘要 + 转发上下文。
+
+    #3 落点：调用链步 3（目标函数声明与约束矩阵摘要）与步 6（请求转发）由字符串占位
+    → 结构化对象（可机器校验、可随存证归档、可供审计复算）。
+    """
+    objective: Dict[str, Any]
+    constraints: Dict[str, Any]
+    forward_context: Dict[str, Any]
+    declared_at: str = ""
+    nca_ref: Optional[str] = None
+    simulated: bool = True
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"objective": self.objective, "constraints": self.constraints,
+                "forward_context": self.forward_context, "declared_at": self.declared_at,
+                "nca_ref": self.nca_ref, "simulated": True}
+
+
+@dataclass
+class CallerNotification:
+    """跨主体调用方通知（#5）——边界变更触及在册授予时，通知受影响调用方。
+
+    纪律：通知仅**告知**变更并要求复查，不自动改授予状态；送达与确认各留痕；
+    跨主体场景下按 `party_tdid` 分账（每方独立通知 + 独立存证）。
+    """
+    notification_id: str
+    tool_id: str
+    party_tdid: str
+    grant_id: str
+    kind: str = "boundary-change"
+    message: str = ""
+    old_boundary: str = ""
+    new_boundary: str = ""
+    at: str = ""
+    delivered_at: Optional[str] = None
+    acknowledged_at: Optional[str] = None
+    nca_ref: Optional[str] = None
+    simulated: bool = True
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"notification_id": self.notification_id, "tool_id": self.tool_id,
+                "party_tdid": self.party_tdid, "grant_id": self.grant_id, "kind": self.kind,
+                "message": self.message, "old_boundary": self.old_boundary,
+                "new_boundary": self.new_boundary, "at": self.at,
+                "delivered_at": self.delivered_at, "acknowledged_at": self.acknowledged_at,
+                "nca_ref": self.nca_ref, "simulated": True}
+
+
+@dataclass
 class CallOutcome:
     granted: bool
     reason: str
@@ -114,18 +167,22 @@ class CallOutcome:
     positive_sum_delta: Optional[float] = None
     utility_engine: str = ""
     tax: float = 0.0
+    coalition_utility: float = 0.0      # 联盟总效用锚定值（落地结算守恒核验用，#2）
     budget_after: float = 0.0
     nca_ref: Optional[str] = None
     result: Any = None
     shapley: Dict[str, float] = field(default_factory=dict)
     grant_id: Optional[str] = None
+    commitment: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return {"granted": self.granted, "reason": self.reason, "steps": self.steps,
                 "ccv": self.ccv, "positive_sum_delta": self.positive_sum_delta,
                 "utility_engine": self.utility_engine, "tax": self.tax,
+                "coalition_utility": self.coalition_utility,
                 "budget_after": self.budget_after, "nca_ref": self.nca_ref,
-                "shapley": self.shapley, "grant_id": self.grant_id}
+                "shapley": self.shapley, "grant_id": self.grant_id,
+                "commitment": self.commitment}
 
 
 class SRightGateway:
@@ -138,6 +195,8 @@ class SRightGateway:
         self._tools: Dict[str, ToolDescriptor] = {}
         self._boundary_events: List[Dict[str, Any]] = []
         self._grants: Dict[str, GrantRecord] = {}
+        self._notifications: Dict[str, CallerNotification] = {}
+        self._notif_seq = 0
         if nca_generator is None:
             from tdca_nca.generator import NCAGenerator  # type: ignore
             nca_generator = NCAGenerator()
@@ -173,21 +232,90 @@ class SRightGateway:
         if scene_fit:
             tool.scene_fit = scene_fit
         affected = []
+        notify_ids: List[str] = []
         if boundary_changed:
             for g in self._grants.values():
                 if g.tool_id == tool_id and g.status == "ACTIVE":
                     g.status = "RECHECK_REQUIRED"
                     affected.append(g.grant_id)
+                    note = self._raise_notification(
+                        tool_id=tool_id, party_tdid=g.caller_tdid, grant_id=g.grant_id,
+                        old_boundary=old["boundary"], new_boundary=tool.boundary,
+                        message=(f"工具 {tool_id} 边界由 {old['boundary']} 变更为 {tool.boundary}；"
+                                 f"您在册授予 {g.grant_id} 须复查（recheck_grant）后方可继续调用"))
+                    notify_ids.append(note.notification_id)
         event = {"event": "boundary_change", "tool_id": tool_id, "old": old,
                  "new": {"version": version, "boundary": tool.boundary},
                  "boundary_changed": boundary_changed,
                  "recheck_required": True, "affected_grants": affected,
-                 "note": "边界变更须重过效用精灵正和评估；在册授予标记复查（185.7 §5.2 映射）",
+                 "notifications": notify_ids,
+                 "note": "边界变更须重过效用精灵正和评估；在册授予标记复查（185.7 §5.2 映射）；"
+                         "受影响调用方逐一通知（跨主体，见 notifications）",
                  "at": self._now(), "simulated": True}
         nca = self._gen.generate(type="sright-boundary-change", layer=2, content=event)
         event["nca_ref"] = nca.nca_id
         self._boundary_events.append(event)
         return event
+
+    # ---------- ②b 跨主体调用方通知（#5） ----------
+    def _raise_notification(self, *, tool_id: str, party_tdid: str, grant_id: str,
+                            old_boundary: str, new_boundary: str, message: str,
+                            kind: str = "boundary-change") -> CallerNotification:
+        self._notif_seq += 1
+        note = CallerNotification(
+            notification_id=f"NTF-{self._notif_seq:04d}", tool_id=tool_id,
+            party_tdid=party_tdid, grant_id=grant_id, kind=kind, message=message,
+            old_boundary=old_boundary, new_boundary=new_boundary, at=self._now())
+        nca = self._gen.generate(type="sright-caller-notification", layer=2,
+                                 content={"notification_id": note.notification_id,
+                                          "tool_id": tool_id, "party_tdid": party_tdid,
+                                          "grant_id": grant_id, "kind": kind,
+                                          "old_boundary": old_boundary,
+                                          "new_boundary": new_boundary,
+                                          "message": message, "simulated": True})
+        note.nca_ref = nca.nca_id
+        self._notifications[note.notification_id] = note
+        return note
+
+    def notifications(self, party_tdid: Optional[str] = None,
+                      pending_only: bool = False) -> List[Dict[str, Any]]:
+        """通知清单（只读）：可按调用方过滤；`pending_only` 只看未确认者。"""
+        rows = []
+        for n in self._notifications.values():
+            if party_tdid is not None and n.party_tdid != party_tdid:
+                continue
+            if pending_only and n.acknowledged_at is not None:
+                continue
+            rows.append(n.to_dict())
+        return rows
+
+    def deliver_notifications(self, party_tdid: Optional[str] = None) -> List[Dict[str, Any]]:
+        """送达通知（模拟态送达记录——不改变授予状态，只标记送达）。"""
+        out = []
+        for n in self._notifications.values():
+            if party_tdid is not None and n.party_tdid != party_tdid:
+                continue
+            if n.delivered_at is None:
+                n.delivered_at = self._now()
+            out.append(n.to_dict())
+        return out
+
+    def acknowledge_notification(self, notification_id: str, party_tdid: str) -> Dict[str, Any]:
+        """调用方确认收到（跨主体确认留痕；**须由该主体本人确认**）。"""
+        n = self._notifications.get(notification_id)
+        if n is None:
+            raise KeyError(f"未知通知: {notification_id}")
+        if n.party_tdid != party_tdid:
+            raise PermissionError(
+                f"通知 {notification_id} 属 {n.party_tdid}，不得由 {party_tdid} 代确认")
+        if n.acknowledged_at is None:
+            n.acknowledged_at = self._now()
+        nca = self._gen.generate(type="sright-caller-notification-ack", layer=2,
+                                 content={"notification_id": n.notification_id,
+                                          "party_tdid": party_tdid, "grant_id": n.grant_id,
+                                          "at": n.acknowledged_at, "simulated": True})
+        return {"notification_id": n.notification_id, "acknowledged_at": n.acknowledged_at,
+                "nca_ref": nca.nca_id, "simulated": True}
 
     # ---------- PCR-Token ----------
     @staticmethod
@@ -219,6 +347,61 @@ class SRightGateway:
         checks["signed"] = bool(token.signature)
         return {"ok": all(checks.values()), "checks": checks,
                 "signature_mode": "local-signed", "simulated": True}
+
+    # ---------- 步 3/6 结构化声明（#3） ----------
+    def declare_commitment(self, req: CallRequest) -> CommitmentDeclaration:
+        """调用前承诺声明（185.7 步 3 + 步 6 **结构化**）。
+
+        目标函数: 把调用意图与制度约束结构化声明——目标函数（含效用目标与正和基线）+
+                  约束矩阵摘要（宪法/边界/阈值/预算/负空间/税收）+ 转发上下文
+        约束矩阵: 声明不改变任何判定；数值取自当前网关与工具在册状态（可审计复算）
+        先验分布: 185.7 内化映射 §2.2 + TDCA 配置权调用规范 V1.1 §二（步 3/步 6）
+        配置权边界: L2 场景层（声明层，不处分）
+        预期分配: `CommitmentDeclaration`（随调用存证归档）
+        审计轨迹: nca_ref（sright-commitment-declare）
+        """
+        tool = self._tools.get(req.tool_id)
+        baseline = round(float(sum(req.independent_utilities)), 6)
+        objective = {
+            "statement": (f"在边界[{tool.boundary if tool else '未注册'}]内以最小配置权代价"
+                          f"完成场景[{req.scene}]任务，并使联盟效用不低于独立基线"),
+            "scene": req.scene,
+            "tool_id": req.tool_id,
+            "utility_target": float(req.coalition_utility),
+            "independence_baseline": baseline,
+            "positive_sum_target": round(float(req.coalition_utility) - baseline, 6),
+            "engine": self.utility_engine,
+            "simulated": True,
+        }
+        constraints = {
+            "constitutional": ["宪法第十六条：过程可观测（NCA 全程留痕）",
+                               "：人类签批权不代行", "：模拟态强制标注"],
+            "boundary": tool.boundary if tool else None,
+            "scene_fit_min": MIN_SCENE_FIT,
+            "scene_fit_actual": (tool.scene_fit.get(req.scene) if tool else None),
+            "budget_cap": round(self.budget, 6),
+            "budget_cost": float(req.budget_cost),
+            "nsfl": "declared-violation" if req.violates_nsfl else "clean",
+            "tax_rate": self.tax_rate,
+            "mou_anchors": len(tool.mou_anchors) if tool else 0,
+            "simulated": True,
+        }
+        forward_context = {
+            "pcr_token": req.pcr_token.token_id if req.pcr_token is not None else None,
+            "token_mode": "attached" if req.pcr_token is not None else "absent(降级为 tdid 校验)",
+            "oid": req.oid,
+            "payload_keys": sorted(req.payload.keys()),
+            "nca_context": f"scene={req.scene};tool={req.tool_id}",
+            "simulated": True,
+        }
+        decl = CommitmentDeclaration(objective=objective, constraints=constraints,
+                                     forward_context=forward_context, declared_at=self._now())
+        nca = self._gen.generate(type="sright-commitment-declare", layer=2,
+                                 content={"objective": objective, "constraints": constraints,
+                                          "forward_context": forward_context,
+                                          "caller_tdid": req.caller_tdid, "simulated": True})
+        decl.nca_ref = nca.nca_id
+        return decl
 
     # ---------- CCV 五层 ----------
     def ccv_verify(self, req: CallRequest, tool: Optional[ToolDescriptor]) -> Dict[str, Any]:
@@ -312,18 +495,23 @@ class SRightGateway:
             return self._reject(f"CCV 未通过（{','.join(bad)}）——拒绝", steps,
                                 ccv=ccv, delta=ccv["positive_sum_delta"])
 
-        # 步 3-4：目标函数声明 + 预算检查
-        st(3, "目标函数声明与约束矩阵摘要", True, f"scene={req.scene}")
+        # 步 3：目标函数声明 + 约束矩阵摘要（**结构化**，#3）
+        decl = self.declare_commitment(req)
+        st(3, "目标函数声明与约束矩阵摘要（结构化）", True,
+           f"objective=正和≥{decl.objective['positive_sum_target']}; "
+           f"constraints={len(decl.constraints)} 项; nca={decl.nca_ref}")
         if req.budget_cost > self.budget:
             st(4, "配置权预算检查", False, f"cost={req.budget_cost} > budget={self.budget}")
             return self._reject("配置权预算不足（拒绝）", steps, ccv=ccv,
-                                delta=ccv["positive_sum_delta"])
+                                delta=ccv["positive_sum_delta"], commitment=decl.to_dict())
         self.budget = round(self.budget - req.budget_cost, 6)
         st(4, "配置权预算检查", True, f"cost={req.budget_cost} remaining={self.budget}")
 
-        # 步 5-6：选择 + 转发（附 token/上下文）
+        # 步 5-6：选择 + 转发（附 PCR-Token / NCA 上下文——结构化）
         st(5, "工具选择（效用最大化+边界合规）", True, f"tool={req.tool_id}")
-        st(6, "请求转发（附 PCR-Token/NCA 上下文）", True, "forwarded")
+        st(6, "请求转发（附 PCR-Token/NCA 上下文）", True,
+           f"token={decl.forward_context['pcr_token']} mode={decl.forward_context['token_mode']} "
+           f"nca_ctx={decl.forward_context['nca_context']}")
 
         # 步 7：正和性最终确认（执行前）
         is_pos, delta = self._engine.positive_sum_check(req.coalition_utility, req.independent_utilities)
@@ -373,8 +561,10 @@ class SRightGateway:
         return CallOutcome(granted=True, reason="授予（CCV 五层通过 + 正和 + 预算内）",
                            steps=steps, ccv=ccv, positive_sum_delta=delta,
                            utility_engine=self.utility_engine, tax=tax,
+                           coalition_utility=float(req.coalition_utility),
                            budget_after=self.budget, nca_ref=nca.nca_id, result=result,
-                           shapley=shapley, grant_id=grant.grant_id)
+                           shapley=shapley, grant_id=grant.grant_id,
+                           commitment=decl.to_dict())
 
     # ---------- 内部/观测 ----------
     @staticmethod
@@ -383,10 +573,11 @@ class SRightGateway:
 
     def _reject(self, reason: str, steps: List[Dict[str, Any]],
                 ccv: Optional[Dict[str, Any]] = None,
-                delta: Optional[float] = None) -> CallOutcome:
+                delta: Optional[float] = None,
+                commitment: Optional[Dict[str, Any]] = None) -> CallOutcome:
         return CallOutcome(granted=False, reason=reason, steps=steps, ccv=ccv or {},
                            positive_sum_delta=delta, utility_engine=self.utility_engine,
-                           budget_after=self.budget)
+                           budget_after=self.budget, commitment=commitment or {})
 
     def boundary_events(self) -> List[Dict[str, Any]]:
         return list(self._boundary_events)
