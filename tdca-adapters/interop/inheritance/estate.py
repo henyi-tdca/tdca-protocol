@@ -21,9 +21,12 @@ SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+
 
 DISPOSITIONS = ("continue", "dormant", "deregister")
 
@@ -210,7 +213,7 @@ class InheritanceRegistry:
         return rec
 
     def resolve_dispute(self, subject_tdid: str, ruling: str) -> EstateRecord:
-        """人类裁决登记（人类裁决）——本接口仅登记裁决结果，AI 不代行裁决。"""
+        """人类裁决登记——本接口仅登记裁决结果，AI 不代行裁决。"""
         rec = self._estates.get(subject_tdid)
         if rec is None or rec.status != "DISPUTED":
             raise InheritanceError("无争议待裁决")
