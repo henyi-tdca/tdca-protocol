@@ -62,7 +62,24 @@ theorem corollary2_effort_comparative_statics
     (hinterior : ∀ α : ℝ, 0 < D (e α))
     (α β : ℝ) (hα : α < 1) (hβ : β < 1) (hab : α < β) :
     e β < e α := by
-  sorry
+  have h1 : (0:ℝ) < 1 - β := sub_pos.mpr hβ
+  have h3 : (1:ℝ) - β < 1 - α := sub_lt_sub_left hab 1
+  have hDe : D (e α) < D (e β) := by
+    by_contra hle
+    push_neg at hle
+    have h4 : (1 - β) * D (e β) ≤ (1 - β) * D (e α) :=
+      mul_le_mul_of_nonneg_left hle (le_of_lt h1)
+    have h5 : (1 - β) * D (e α) < (1 - α) * D (e α) :=
+      mul_lt_mul_of_pos_right h3 (hinterior α)
+    have h6 : (1 - β) * D (e β) < (1 - α) * D (e α) := lt_of_le_of_lt h4 h5
+    rw [hFOC β, hFOC α] at h6
+    exact (lt_irrefl _) h6
+  by_contra hge
+  push_neg at hge
+  rcases eq_or_lt_of_le hge with heq | hlt
+  · rw [heq] at hDe
+    exact (lt_irrefl _) hDe
+  · exact absurd hDe (not_lt_of_gt (hD _ _ hlt))
   /- 证明策略（初等单调性路径，无需分析库——★ 级而非 ★★ 级）：
      1. 由 hFOC 得 (1−α)·D(e α) = (1−β)·D(e β)
      2. 反设 D(e β) ≤ D(e α)：由 0 < 1−β < 1−α 及 hinterior，
