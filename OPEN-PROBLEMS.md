@@ -1,7 +1,7 @@
 # TDCA Open Problems · 形式化开放问题（社区研究入口）
 
 > 源：TDCA-FORMAL-OPEN-PROBLEMS-001（GSEQ-0393）｜ 基线：TDCA-MATH-WP-REV-001 V1.0-FROZEN / TDCA-FUNCTION-WP-002 V2.0-FROZEN
-> 10 项：★ 入门 3 ｜ ★★ 中等 4 ｜ ★★★ 挑战 3 —— 欢迎外部专家参与，贡献走 [CONTRIBUTING](CONTRIBUTING.md)（分润 15% + NCA 确权）
+> 11 项：★ 入门 3 ｜ ★★ 中等 5 ｜ ★★★ 挑战 3 —— 欢迎外部专家参与，贡献走 [CONTRIBUTING](CONTRIBUTING.md)（分润 15% + NCA 确权）
 > 数据性质：全部研究对象当前为制度演示态（SIMULATED, ID92）；不标"绝对安全"——每项证明须附模型假设与适用范围。
 
 ---
@@ -36,6 +36,8 @@
 *Machine-formalize the elementary monotonicity proof of Corollary 2 — clear the `sorry`,
 or produce a counterexample / restate as a conditional proposition (all three are legitimate end states).*
 
+- **进展（2026-09-12）**：Lean 4 工程骨架与 CI 机验通道**已入库 main**（`core-go/docs/formal-proofs/lean/`，PR #127；两硬门禁：`lake env lean` 零 error + `sorry` 计数 = 1）；候选件 **V1.1** 已机验通过。**剩余 = `sorry` 清零**。
+
 ## ★★ 中等（需形式化功底）
 
 ### P-3 公理 6 推广到 NCA 哈希链与 NSFL 熔断器
@@ -62,6 +64,16 @@ or produce a counterexample / restate as a conditional proposition (all three ar
 - **目标**：将熔断条件（C_i(x)>0 ∨ Δ_U≤0 ∨ f⁻ 失败）形式化为可判定谓词 + 复杂度论证。
 - **现状引用**：TDCA-MATH-WP-REV-001 §4 + APPX-E §E.4。
 - *Formalize the fuse condition as a decidable predicate with complexity bounds.*
+
+### P-11 归责节点映射的机器可验子集（★★ 中等）
+
+- **问题**：WP-MATERIALISM-001 V1.2 §2.2.2.5 映射表当前为制度陈述，非数学命题。
+- **目标**：抽取可形式化子集（如：扣缴义务层存在性 ⟺ 存证链完整性 + 准入登记完备性的必要条件陈述），进 Lean/Isabelle；不可抽取部分显式声明留在制度层。
+- **说明**：防止"映射表"被误读为已形式化——**先声明哪些格子能进证明器**。
+- **参与入口**：提交证明 PR → CI 机验 → DCD 门禁评审。
+- **现状引用**：WP-MATERIALISM-001 V1.2 §2.2.2.5（映射表）。
+
+*Extract the machine-verifiable subset of the attribution-node mapping — declare which cells can enter the proof checker before attempting any of them.*
 
 ## ★★★ 挑战（开放研究，期待突破）
 
