@@ -12,6 +12,8 @@
 |---|---|---|---|---|
 | A-1 | 公理 6 可计算审计还原性（enforce 实例化：f=Verify / f⁻=AuditVerify / g=RightInverse） | `TDCA-CORE-GO-AXIOM6-001` + `pkg/enforce/axiom6.go` | ✅ `VerifyAxiom6()` 9 断言全 PASS | X=AgentCard 有限集；模型假设：白名单可逆校验（非形式化数学证明的替代——见数学基础白皮书 §2）；**不标"绝对安全"** |
 | A-2 | 定理 E.1~E.4（存在性/唯一性/右逆充要/NSFL 联动） | `TDCA-FUNCTION-WP-002-APPX-E`（FROZEN） | 框架级（机验待 P-1） | 集合论标准框架；X 可数前置 |
+| A-3 | 命题 P4a：C < q(1−p)R ⟹ T_process 严格占优（原 B-3） | `research/papers/formal/TDCA-P4a-Corollary2-Lean4-Candidate-V1.2.lean` + `core-go/docs/formal-proofs/lean/TDCA/ExPostTrust.lean` | ✅ `lake env lean` 零 error（PR #127 / 机验通道）；模型假设：单次协作、C 由 A 承担；**不标"绝对安全"** |
+| A-4 | 推论 2：α ↑ ⟹ e_B* ↓（攫取问题的比较静态，原 B-4） | 同上 | ✅ `lake env lean` 零 error + `sorry` = 0（PR #128 后机验）；模型假设与适用范围见件头 |
 
 ## 二、Tier B · 已证但边界待定（证明 + 适用边界声明）
 
@@ -19,8 +21,6 @@
 |---|---|---|---|
 | B-1 | 命题 3.10 认知距离不对称（d_cognitive(a,b) ≠ d_cognitive(b,a)） | 权威锚 AUTHORITY-CONSTITUTION L2582-2585（定义引用） | 🔶 无独立证明文件——**P-5 开放问题**（吸引专家） |
 | B-2 | 定理 2.2 配置权右逆（φ(g(φ(x)))=φ(x)） | TDCA-FUNCTION-WP-002 §2（证明框架） | 🔶 框架级，未机验 |
-| B-3 | 命题 P4a：C < q(1−p)R ⟹ T_process 严格占优 | WP-MATERIALISM-001 §5.2.1 + `TDCA-P4a-Corollary2-Lean4-Candidate-V1.1.lean` | 🔶 **CI 机验已通过**（`lake env lean` 零 error；PR #127 / main `fc92a8f`）；**暂不升档**（与 `sorry` 清零一并处理，2026-09-12 裁定）；模型假设：单次协作、C 由 A 承担 |
-| B-4 | 推论 2：α ↑ ⟹ e_B* ↓（攫取问题的比较静态） | 同上 Lean 文件 | 🔶 **CI 机验通道已建并通过**（`lake env lean` 零 error + `sorry` 闸门 = 1；PR #127）；含 1 处 sorry（初等单调性路径，★ 级）；清零路径已列，证不出则为 conditional |
 | B-5 | 分层归责预判：智能体 = 可归责第一节点，委托人 = 最终责任主体（路径三） | WP-MATERIALISM-001 V1.2 §2.2.2 | 🔶 模型层预判，非事实层断言；随 §2.2.2.6 四信号检验，证伪则修订 |
 
 ## 三、Tier C · 进行中/未定稿（[proof: pending]，不挂公理名）
@@ -33,7 +33,7 @@
 | C-4 | 五可充要性定理 8.8 完整证明 | [proof: pending] —— **P-7 开放问题** |
 | C-5 | 宪法十六条全函数化形式化 | [proof: pending] —— **P-8 开放问题** |
 | C-6 | 三锚（e-CNY/税收/版权链）验证框架 | [proof: pending] —— **P-9 开放问题**（SIMULATED ID92） |
-| C-7 | 推论 2 的 α=0 社会最优校验 + FOC 由凹性证出（分析核心） | [proof: pending] —— 见 Lean 文件尾注 checklist [2][3]；**机验通道已建**（`core-go/docs/formal-proofs/lean/`） |
+| C-7 | 推论 2 的 α=0 社会最优校验 + FOC 由凹性证出（分析核心） | [proof: pending] —— 见 Lean 文件尾注 checklist [2][3]；**机验通道已建**（`core-go/docs/formal-proofs/lean/`）；**[1] 已由 corollary2 全证覆盖；[2][3] 仍 pending** |
 | C-8 | 法律演化四信号（FATF VASP 裁定 / 代理行为可归责立法 / 智能体税务触发节点 / 首份合同获承认） | [proof: pending] —— 外部事实信号，非证明义务；按 EVO-001 可审计等待 |
 
 ## 四、规则
