@@ -1,7 +1,7 @@
 # TDCA Open Problems · 形式化开放问题（社区研究入口）
 
 > 源：TDCA-FORMAL-OPEN-PROBLEMS-001（GSEQ-0393）｜ 基线：TDCA-MATH-WP-REV-001 V1.0-FROZEN / TDCA-FUNCTION-WP-002 V2.0-FROZEN
-> 9 项：★ 入门 2 ｜ ★★ 中等 4 ｜ ★★★ 挑战 3 —— 欢迎外部专家参与，贡献走 [CONTRIBUTING](CONTRIBUTING.md)（分润 15% + NCA 确权）
+> 10 项：★ 入门 3 ｜ ★★ 中等 4 ｜ ★★★ 挑战 3 —— 欢迎外部专家参与，贡献走 [CONTRIBUTING](CONTRIBUTING.md)（分润 15% + NCA 确权）
 > 数据性质：全部研究对象当前为制度演示态（SIMULATED, ID92）；不标"绝对安全"——每项证明须附模型假设与适用范围。
 
 ---
@@ -20,6 +20,21 @@
 - **目标**：全仓公理/命题/定理声称逐项绑定证明文件或标 [proof: pending]。
 - **参与入口**：对任意一行声称给出证明、反例或更精确表述，PR 增补矩阵。
 - *Audit and extend the claims-vs-proof matrix: bind every claim to a proof file or mark it pending.*
+
+### P-10 推论 2 初等证明路径机器化（★ 入门）
+
+- **问题**：Lean 候选已给出初等单调性证明策略（WP-MATERIALISM-001 §5.2.1 尾注），
+  剩余第 2 步实数不等式链（`by_contra` + `mul_lt_mul` 系引理装配）未机器化；
+  该定理现有 **1 处显式 `sorry`**。
+- **目标**：`sorry` 清零 → `corollary2_effort_comparative_statics` 升 Tier A；
+  **失败亦为合法终态**——输出精确反例，或改述为 conditional 命题并更新适用范围
+  （三态原则：proved / refuted / conditional）。
+- **依赖**：仅 `Mathlib.Data.Real.Basic`，无分析库依赖。
+- **参与入口**：提交 Lean 证明 PR → CI（`lake env lean`）零错误 → DCD 门禁评审。
+- **现状引用**：`TDCA-P4a-Corollary2-Lean4-Candidate.lean`（候选件）；CLAIMS-MATRIX B-4 / C-7。
+
+*Machine-formalize the elementary monotonicity proof of Corollary 2 — clear the `sorry`,
+or produce a counterexample / restate as a conditional proposition (all three are legitimate end states).*
 
 ## ★★ 中等（需形式化功底）
 
