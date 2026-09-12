@@ -18,6 +18,9 @@
 **函数大模型（FLM）**：函数大模型：参数大模型之外的第二范式（范畴论）
 → [TDCA-PAPER-FUNCTIONAL-LM-001.md](TDCA-PAPER-FUNCTIONAL-LM-001.md)（FROZEN 公开版，SHA256 `364537fdfbc720e1906c198c215cd66b50c87b02ba01bd5765cc7dd94776fac4`）——知识载体为显式函数工件、知识生产为编译而非训练的第二范式主张，含七项范畴判据与相邻系统谱系差分
 
+**工作论文（唯物史观）**：智能体协作拓扑的制度化：基于唯物史观的制度发现框架
+→ [TDCA-WP-MATERIALISM-001.md](TDCA-WP-MATERIALISM-001.md)（公开版，SHA256 `7FC0531F7DC2B3BF215F5F8EB1D67DA07EFCB0AB478657AEE24FF64C0D9D6C53`）
+
 **作者**：张帆（Zhang Fan）——恒益场景（厦门）数字经济研究院（Hengyi Scene (Xiamen) Digital Economy Research Institute），通信作者。
 
 ## 摘要 / Abstracts

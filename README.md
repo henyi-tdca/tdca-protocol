@@ -80,7 +80,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`docs/regulations/`](docs/regulations/) | 制度规范区（总索引）：缔约注册协议三件套（中英人读 + 机读，实物在 [`docs/register-contract/`](docs/register-contract/)）等 | 在架规范索引 · 哈希可溯源 |
 | [`docs/cop-library/`](docs/cop-library/) | 思维协议库（8 类范式子库：诸子百家 / 三十六计 / 博弈 / 机制设计 / 场景 / 化合等） | 原生 COP 336 + 化合 COP 44（[编译清单](docs/cognitive-compiler/思维协议编译清单_2026-08-25.md)口径，仓内可核验） |
 | [`docs/cognitive-compiler/chengyu/`](docs/cognitive-compiler/chengyu/) | 成语 COP 库（中文化合基库） | 60 条 + manifest + 编译脚本 |
-| [`docs/papers/`](docs/papers/) | 论丛：《制度大模型：从"机器证明"到"制度主义"》V3.0 / 《显影而非白箱化：思维协议的认知论定位》 | 2 篇 |
+| [`docs/papers/`](docs/papers/) | 论丛：《制度大模型：从"机器证明"到"制度主义"》V3.0 / 《显影而非白箱化：思维协议的认知论定位》 / 《智能体协作拓扑的制度化：基于唯物史观的制度发现框架》 | 3 篇 |
 | [`docs/whitepapers/`](docs/whitepapers/) | 白皮书：《AI 泛滥下的开源治理》/《思维协议基础设施》V0.1.1-DRAFT | 2 篇 |
 
 ## 增值服务（TDCA-VALUE-PRICING-001 已确认生效）
