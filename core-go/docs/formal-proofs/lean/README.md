@@ -6,8 +6,11 @@
 
 - 入库文件均为 **CANDIDATE（候选）** 状态：须通过 CI 机验（`lake env lean` 零错误）方为机验通过。
 - **机验通过不等于 Tier A**：升档须另行完成签批流程，且要求 `sorry` 计数为零。
-- 当前候选件 `TDCA/ExPostTrust.lean` 含 **1 处显式 `sorry`**（`corollary2_effort_comparative_statics`），
-  在 `sorry` 清零前该定理不得视为已证明。CI 闸门固定校验 `sorry` 计数 = 1，防止静默改动。
+- 当前候选件 `TDCA/ExPostTrust.lean` 版本为 **V1.1**（相对 V1 的差异 = 5 处注释降级
+  `/--` → `/-`，均位于 `variable` 命令前——Lean 4 语法不允许 `variable` 携带文档注释；
+  正文、两条定理与尾注语义零改动），含 **1 处显式 `sorry`**
+  （`corollary2_effort_comparative_statics`），在 `sorry` 清零前该定理不得视为已证明。
+  CI 闸门固定校验 `sorry` 计数 = 1，防止静默改动。
 
 ## 目录结构
 
@@ -31,5 +34,4 @@ lake exe cache get   # 拉取 Mathlib 预编译缓存，避免全量编译
 lake env lean TDCA/ExPostTrust.lean
 ```
 
-预期结果：退出码 0（零 error），输出含 1 条
-`warning: declaration uses 'sorry'`。
+预期结果：退出码 0（零 error），输出含 1 条 `sorry` 警告。
