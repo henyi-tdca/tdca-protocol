@@ -43,7 +43,7 @@ jobs:
 
       - name: Gate on sorry count = 1
         run: |
-          count=$(grep -c "declaration uses 'sorry'" lean-output.txt || true)
+          count=$(grep -cE "declaration uses .?sorry.?" lean-output.txt || true)
           echo "sorry warning count: $count"
           if [ "$count" -ne 1 ]; then
             echo "::error::sorry count changed (expected 1, got $count)"
