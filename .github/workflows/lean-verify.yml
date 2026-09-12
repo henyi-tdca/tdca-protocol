@@ -1,0 +1,55 @@
+name: lean-verify
+
+on:
+  push:
+    paths:
+      - "core-go/docs/formal-proofs/lean/**"
+      - ".github/workflows/lean-verify.yml"
+  pull_request:
+    paths:
+      - "core-go/docs/formal-proofs/lean/**"
+      - ".github/workflows/lean-verify.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: core-go/docs/formal-proofs/lean
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+
+      - name: Machine-check candidate (lake env lean, zero errors)
+        run: |
+          set -eo pipefail
+          lake env lean TDCA/ExPostTrust.lean 2>&1 | tee lean-output.txt
+          if grep -q "error:" lean-output.txt; then
+            echo "::error::lake env lean reported errors"
+            exit 1
+          fi
+
+      - name: Gate on sorry count = 1
+        run: |
+          count=$(grep -c "declaration uses 'sorry'" lean-output.txt || true)
+          echo "sorry warning count: $count"
+          if [ "$count" -ne 1 ]; then
+            echo "::error::sorry count changed (expected 1, got $count)"
+            exit 1
+          fi
+
+      - name: Show lean output tail
+        if: always()
+        run: tail -n 20 lean-output.txt || true
