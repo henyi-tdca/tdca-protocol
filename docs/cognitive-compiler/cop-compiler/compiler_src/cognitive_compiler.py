@@ -149,6 +149,14 @@ def s5_validate(cop):
     for cp in cop["primitives"]:
         if not cp.get("signature") or "fn " not in cp["signature"]:
             issues.append(f"原语 {cp.get('name')} 缺函数签名")
+    # 立场熔断（律一/律二集成点）：立场分离校验器可用时，违规 COP 在编译期直接熔断
+    # （抛 StanceViolation）；校验器缺失不静默放行 schema 校验，仅跳过立场闸
+    try:
+        import stance_separation_check as _ssc
+    except ImportError:
+        _ssc = None
+    if _ssc is not None:
+        _ssc.check_cop(cop, strict=True)
     cop["validation"] = {"passed": len(issues) == 0, "issues": issues, "primitive_count": len(cop.get("primitives", []))}
     return issues
 

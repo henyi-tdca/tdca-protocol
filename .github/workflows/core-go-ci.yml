@@ -65,8 +65,14 @@ jobs:
           python-version: "3.12"
 
       - name: Install official MCP SDK
-        run: pip install mcp
+        run: pip install mcp pytest
 
       - name: MCP interop smoke (official 3P SDK)
         working-directory: core-go/bridge
         run: python smoke_mcp_thirdparty.py
+
+      # --- Python bridge 单元测试（防 Python 客户端与 Go server 协议漂移）---
+      # 依赖上方 Build tdcad 产物（bridge 客户端按 core-go/tdcad 定位二进制）。
+      - name: Python bridge unit tests
+        working-directory: core-go
+        run: python -m pytest bridge/tests -q

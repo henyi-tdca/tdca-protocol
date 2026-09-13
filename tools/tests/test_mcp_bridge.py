@@ -66,6 +66,7 @@ def test_stdio_end_to_end(tmp_path):
     ]
     p = subprocess.run([sys.executable, "-m", "mcp_bridge", "--evidence", str(ev)],
                        input="\n".join(lines) + "\n", capture_output=True, text=True,
+                       encoding="utf-8",
                        cwd=str(TOOLS), timeout=30)
     outs = [json.loads(x) for x in p.stdout.strip().splitlines() if x.strip()]
     assert [o["id"] for o in outs] == [1, 2, 3]

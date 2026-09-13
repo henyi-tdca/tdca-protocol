@@ -10,6 +10,9 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "config"))
 sys.path.insert(0, os.path.join(ROOT, "nca-generator"))
+# cognitive_compiler 等编译器模块实物在 cop-compiler/compiler_src（随库迁移后锚点）
+sys.path.insert(0, os.path.normpath(os.path.join(
+    ROOT, "..", "docs", "cognitive-compiler", "cop-compiler", "compiler_src")))
 
 # 实物锚点：机制核在原生协议权威库（protocols/tdca-native），场景绑定在 cop-library
 STRATAGEMS_NATIVE = os.path.join(ROOT, "..", "protocols", "tdca-native", "stratagems")
@@ -167,20 +170,22 @@ def t14():
         pass
 
 
-case("T1 R1 原语立场字段拒绝", t1)
-case("T2 R1 根节点立场字段拒绝", t2)
-case("T3 R2 scene_binding 缺 bindings 拒绝", t3)
-case("T4 R2 绑定缺 scene/stance 拒绝", t4)
-case("T5 R2/R3 绑定无 mounts 拒绝", t5)
-case("T6 R3 mounts 残缺拒绝", t6)
-case("T7 R3 四类挂载齐备通过", t7)
-case("T8 R4 fail-closed 异常类型", t8)
-case("T9 旧 COP 兼容通过", t9)
-case("T10 打草惊蛇机制核实物双校验", t10)
-case("T11 三十六计旧计兼容通过", t11)
-case("T12 机制核扫描 0 立场命中", t12)
-case("T13 词表中性替换确定性", t13)
-case("T14 s5_validate 集成熔断", t14)
+CASES = [
+    ("T1 R1 原语立场字段拒绝", t1),
+    ("T2 R1 根节点立场字段拒绝", t2),
+    ("T3 R2 scene_binding 缺 bindings 拒绝", t3),
+    ("T4 R2 绑定缺 scene/stance 拒绝", t4),
+    ("T5 R2/R3 绑定无 mounts 拒绝", t5),
+    ("T6 R3 mounts 残缺拒绝", t6),
+    ("T7 R3 四类挂载齐备通过", t7),
+    ("T8 R4 fail-closed 异常类型", t8),
+    ("T9 旧 COP 兼容通过", t9),
+    ("T10 打草惊蛇机制核实物双校验", t10),
+    ("T11 三十六计旧计兼容通过", t11),
+    ("T12 机制核扫描 0 立场命中", t12),
+    ("T13 词表中性替换确定性", t13),
+    ("T14 s5_validate 集成熔断", t14),
+]
 
 
 # ---- 律三v2 动态状态通道 (R5 + 新鲜度门) ----
@@ -260,13 +265,36 @@ def t21():
         assert SSC.check_data_feed(bind["mounts"]["data_feed"]) == [], b
 
 
-case("T15 R5a 状态依赖缺 data_feed 拒绝", t15)
-case("T16 R5b data_feed 结构残缺拒绝", t16)
-case("T17 R5 合法 data_feed 通过", t17)
-case("T18 新鲜度门 新鲜快照 pass", t18)
-case("T19 新鲜度门 陈旧快照 frozen", t19)
-case("T20 新鲜度门 四类异常全 frozen", t20)
-case("T21 试点实物 机制核+绑定 data_feed", t21)
+CASES += [
+    ("T15 R5a 状态依赖缺 data_feed 拒绝", t15),
+    ("T16 R5b data_feed 结构残缺拒绝", t16),
+    ("T17 R5 合法 data_feed 通过", t17),
+    ("T18 新鲜度门 新鲜快照 pass", t18),
+    ("T19 新鲜度门 陈旧快照 frozen", t19),
+    ("T20 新鲜度门 四类异常全 frozen", t20),
+    ("T21 试点实物 机制核+绑定 data_feed", t21),
+]
 
-print("════ %d/%d 通过 ════" % (len(PASS), len(PASS) + len(FAIL)))
-sys.exit(0 if not FAIL else 1)
+
+def main() -> None:
+    for name, fn in CASES:
+        case(name, fn)
+    print("════ %d/%d 通过 ════" % (len(PASS), len(PASS) + len(FAIL)))
+    sys.exit(0 if not FAIL else 1)
+
+
+if __name__ == "__main__":
+    main()
+
+
+# pytest 兼容入口：每个用例一个参数化项（脚本模式无需 pytest）
+try:
+    import pytest as _pytest
+except ImportError:
+    _pytest = None
+
+if _pytest is not None:
+
+    @_pytest.mark.parametrize("name,fn", CASES, ids=[n for n, _ in CASES])
+    def test_stance_case(name, fn):
+        fn()

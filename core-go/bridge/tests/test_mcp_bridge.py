@@ -6,7 +6,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tdca_mcp_bridge import TdcaMcpClient, _find_tdcad
 
 
@@ -49,8 +49,8 @@ class TestEnforce:
             try:
                 c.call_tool("enforce_check", {"agent_card": _card(agent_id="<script>alert(1)</script>")})
                 assert False, "injection must be blocked"
-            except RuntimeError:
-                pass
+            except RuntimeError as e:
+                assert "injection detected" in str(e), f"expected injection rejection, got: {e}"
 
     def test_unknown_field_schema_rejected(self):
         with TdcaMcpClient() as c:
@@ -86,8 +86,8 @@ class TestNca:
             try:
                 c.call_tool("nca_append", {"record": self._rec(prev="sha256:deadbeef")})
                 assert False, "forged prev_hash must be rejected"
-            except RuntimeError:
-                pass
+            except RuntimeError as e:
+                assert "prev_hash mismatch" in str(e), f"expected chain-tamper rejection, got: {e}"
 
 
 class TestNsfl:
