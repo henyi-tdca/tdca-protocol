@@ -42,7 +42,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`gov-kit/`](gov-kit/) | **研发治理包**：总纲 / 试验门 / 灰度门 / 可靠性检查单 | 在架 |
 | [`deploy/`](deploy/) | **部署件**：gateway / mcp / nl / web 四件套 Dockerfile + docker-compose | 在架 |
 
-## tools/ 工具货架（全部开源可跑，零第三方依赖）
+## tools/ 工具货架（全部开源可跑；第三方依赖实测：PyYAML 6 个文件、fastapi/uvicorn/pydantic 见于 4 个 API 模块——见各目录 `requirements.txt`，测试另需 pytest）
 
 | 套件 | 能力 | 快速开始 |
 |---|---|---|
@@ -166,7 +166,7 @@ Asset index & five-layer map: [docs/repo-inventory-summary.md](docs/repo-invento
 
 - 变更通道：FROZEN 交付物只走 DCD 流程（提案 → 六要素 → 变更明细 → 制度审查 REV → 人类签批 → 升版存证）
 - 存证纪律：里程碑动作必生成 NCA 存证（链式哈希引用），无存证 = 未发生
-- 状态：PACK-001 V1.3 / DUAL V1.1 ｜ 制度审查 PASSED ｜ 签批 NCA-20260811-002~005 ｜ 引擎测试全绿（发布前门禁复核）
+- 状态：PACK-001 V1.3 / DUAL V1.1 ｜ 制度审查 PASSED ｜ 签批 NCA-20260811-002~005（可核验载体：release 提交 `4d39e96`「release: TDCA Protocol Pack V1.3 + Dual-Protocol V1.1」；NCA 台账正本为仓外存证）｜ 引擎测试全绿（发布前门禁复核）
 
 ## License
 
