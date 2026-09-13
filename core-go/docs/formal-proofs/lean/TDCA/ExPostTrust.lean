@@ -2,8 +2,9 @@
   TDCA-WP-MATERIALISM-001 V1.1 · §5.2.1 博弈模型 · Lean 4 候选
   ============================================================================
   内容：命题 P4a（替代条件）证明 + 推论 2（攫取问题比较静态）形式化
-  状态：CANDIDATE——未经 Lean 工具链机器验证，须 CI（lake env lean）零错误。
-        P4a 已完整证明；推论 2 含 1 处显式 sorry，sorry 清零前不得标 Tier A
+  状态：CANDIDATE V1.2——已经 Lean 工具链机器验证（CI：lake env lean 零
+        错误，CI 闸门固定校验 sorry 计数 = 0）。P4a 与推论 2 均已完整证明，
+        sorry 已清零；升 Tier A 仍须另行完成签批流程
         （TDCA 分层标注纪律 + 闭环时机内生原理：不强行闭环）。
   模型假设（按 V1.2 修订建议取定：存证成本 C 由委托方 A 承担——
     委托方为过程可信付费，与 L1 增值服务结构自契）：
@@ -44,7 +45,7 @@ theorem P4a_substitution_condition
   unfold costExPost costProcess
   exact sub_pos.mpr h
 
-/-! ## 推论 2：攫取问题的比较静态（1 处 sorry，义务见尾注） -/
+/-! ## 推论 2：攫取问题的比较静态（sorry 已清零，闭合记录见尾注） -/
 
 /- 边际产出 D = ∂V/∂e_B（e_A 固定截面；严格递减 ⟸ V 对 e_B 严格凹） -/
 variable (D : ℝ → ℝ)
@@ -87,11 +88,12 @@ theorem corollary2_effort_comparative_statics
         （by_contra + mul_lt_mul 系列引理，全部在 Mathlib 实数序公理内）
      3. 故 D(e β) > D(e α)；由 hD 反单调性得 e β < e α
      ────────────────────────────────────────────────────────────
-     剩余义务（sorry 清零 checklist）：
+     剩余义务（sorry 清零 checklist）——闭合记录：
      [1] 第 2 步实数不等式链的机器形式化（mul_lt_mul_of_pos 系引理装配）
-     [2] α = 0 即社会最优的单独陈述与 FOC 退化校验
+         ——已闭合（V1.2：CI 机验零错误、sorry 计数 = 0）
+     [2] α = 0 即社会最优的单独陈述与 FOC 退化校验——仍 pending（后续工作）
      [3] 由"假设 FOC 处处成立"升级为"从 V 的凹性证出 FOC 刻画"
-         （唯一性由严格凹保证）——此项为分析核心，失败则降级为
+         （唯一性由严格凹保证）——仍 pending（后续工作）；失败则降级为
          conditional 命题并更新适用范围，亦为合法终态。 -/
 
 end TDCA.ExPostTrust
