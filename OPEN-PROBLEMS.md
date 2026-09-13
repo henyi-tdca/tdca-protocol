@@ -24,19 +24,19 @@
 ### P-10 推论 2 初等证明路径机器化（★ 入门）
 
 - **问题**：Lean 候选已给出初等单调性证明策略（WP-MATERIALISM-001 §5.2.1 尾注），
-  剩余第 2 步实数不等式链（`by_contra` + `mul_lt_mul` 系引理装配）未机器化；
-  该定理现有 **1 处显式 `sorry`**。
+  剩余第 2 步实数不等式链（`by_contra` + `mul_lt_mul` 系引理装配）的机器化。
 - **目标**：`sorry` 清零 → `corollary2_effort_comparative_statics` 升 Tier A；
   **失败亦为合法终态**——输出精确反例，或改述为 conditional 命题并更新适用范围
   （三态原则：proved / refuted / conditional）。
 - **依赖**：仅 `Mathlib.Data.Real.Basic`，无分析库依赖。
 - **参与入口**：提交 Lean 证明 PR → CI（`lake env lean`）零错误 → DCD 门禁评审。
-- **现状引用**：`TDCA-P4a-Corollary2-Lean4-Candidate.lean`（候选件）；CLAIMS-MATRIX B-4 / C-7。
+- **现状引用**：`core-go/docs/formal-proofs/lean/TDCA/ExPostTrust.lean`（V1.2 候选件，`sorry` 已清零）；CLAIMS-MATRIX A-3 / A-4 / C-7。
 
-*Machine-formalize the elementary monotonicity proof of Corollary 2 — clear the `sorry`,
-or produce a counterexample / restate as a conditional proposition (all three are legitimate end states).*
+*Machine-formalize the elementary monotonicity proof of Corollary 2 — the `sorry` has been cleared
+(V1.2, machine-verified in CI); residual follow-ups ([2][3] in the file's tail note) live on as C-7.*
 
-- **进展（2026-09-12）**：Lean 4 工程骨架与 CI 机验通道**已入库 main**（`core-go/docs/formal-proofs/lean/`，PR #127；两硬门禁：`lake env lean` 零 error + `sorry` 计数 = 1）；候选件 **V1.1** 已机验通过。**剩余 = `sorry` 清零**。
+- **进展（2026-09-13，已收口）**：`sorry` 已清零（V1.2；CI 双硬门禁：`lake env lean` 零 error + `sorry` 计数 = 0），
+  定理已升 Tier A（CLAIMS-MATRIX A-3 / A-4）。本题记为**已终结**（终态 = proved）；尾注 checklist [2][3] 转入 C-7 继续开放。
 
 ## ★★ 中等（需形式化功底）
 
