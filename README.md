@@ -36,7 +36,11 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`pack/`](pack/) | **TDCA 智能体编程协议包（PACK-001）**：30 分钟制度注入入门——7 份规范 + 5 个机器可读模板 | V1.3 ✅ 已签批（NCA-002~005） |
 | [`dual/`](dual/) | **双协议化合引擎（DUAL-PROTOCOL）**：场景协议 × 制度协议运行时化合——4 引擎模块 + 测试 + 四行业示例 | V1.1 ✅ 已签批 |
 | [`core-go/`](core-go/) | **Go 强类型生产级核心引擎**：enforce / nca / nsfl 核心三件 + tdcad 守护进程 + MCP 桥接（AI 可调用工具）+ Python↔Go 桥接（Apache-2.0 独立许可，与根 MIT 双许可并存） | V1.0.0 ✅ 已签批｜ CI 在线门禁 ✅（core-go-ci：vet + race + build + smoke） |
-| [`ecoscan/`](ecoscan/) | **生态雷达 + 邀请自动化（ECOSCAN）**：扫描 → 诊断 → 邀请 → 实测回收 → NCA 台账全链流水线（Apache-2.0 独立许可） | M2 ✅ 40 用例全绿 |
+| [`ecoscan/`](ecoscan/) | **生态雷达 + 邀请自动化（ECOSCAN）**：扫描 → 诊断 → 邀请 → 实测回收 → NCA 台账全链流水线（Apache-2.0 独立许可） | M2 ✅ 66 用例全绿 |
+| [`protocols/`](protocols/) | **原生协议权威库（tdca-native，单一事实源）**：七原则声明与正典锚，518 份机器可读协议 | 持续入库 |
+| [`tdca-adapters/`](tdca-adapters/) | **外部协议适配器**：协议互操作与身份桥接适配（含 ACPS 适配器与适配矩阵） | 在架 |
+| [`gov-kit/`](gov-kit/) | **研发治理包**：总纲 / 试验门 / 灰度门 / 可靠性检查单 | 在架 |
+| [`deploy/`](deploy/) | **部署件**：gateway / mcp / nl / web 四件套 Dockerfile + docker-compose | 在架 |
 
 ## tools/ 工具货架（全部开源可跑，零第三方依赖）
 
@@ -71,16 +75,16 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | 律二 | 立场只经 scene_binding 场景注入，与机制核分离 | `tools/stance_separation_check.py` |
 | 律三 v2 | 静态配置 × 动态状态**双通道**挂载：协议不在真空中显影，曝光条件写进 schema（新鲜度 SLA 5s/15s，陈旧/断流即冻结） | `tools/data_feed_gate.py` + `tools/context_provider.py` |
 
-**示范**：三十六计之「打草惊蛇」双文件对照——[`第13计-打草惊蛇-机制核.yaml`](docs/cop-library/stratagems/第13计-打草惊蛇-机制核.yaml)（零立场机制核）× [`第13计-打草惊蛇.yaml`](docs/cop-library/stratagems/第13计-打草惊蛇.yaml)（场景立场注入），直观演示律一/律二分离。
+**示范**：三十六计之「打草惊蛇」双文件对照——[`第13计-打草惊蛇-机制核.yaml`](protocols/tdca-native/stratagems/2026-08-28/第13计-打草惊蛇-机制核.yaml)（零立场机制核）× [`第13计-打草惊蛇.yaml`](docs/cop-library/stratagems/第13计-打草惊蛇.yaml)（场景立场注入），直观演示律一/律二分离。
 
 **认知资产与文献导航**
 
 | 目录 | 内容 | 规模 |
 |---|---|---|
 | [`docs/regulations/`](docs/regulations/) | 制度规范区（总索引）：缔约注册协议三件套（中英人读 + 机读，实物在 [`docs/register-contract/`](docs/register-contract/)）等 | 在架规范索引 · 哈希可溯源 |
-| [`docs/cop-library/`](docs/cop-library/) | 思维协议库（8 类范式子库：诸子百家 / 三十六计 / 博弈 / 机制设计 / 场景 / 化合等） | 原生 COP 336 + 化合 COP 44（[编译清单](docs/cognitive-compiler/思维协议编译清单_2026-08-25.md)口径，仓内可核验） |
-| [`docs/cognitive-compiler/chengyu/`](docs/cognitive-compiler/chengyu/) | 成语 COP 库（中文化合基库） | 60 条 + manifest + 编译脚本 |
-| [`docs/papers/`](docs/papers/) | 论丛：《制度大模型：从"机器证明"到"制度主义"》V3.0 / 《显影而非白箱化：思维协议的认知论定位》 / 《智能体协作拓扑的制度化：基于唯物史观的制度发现框架》 | 3 篇 |
+| [`docs/cop-library/`](docs/cop-library/) | 思维协议库（诸子百家 / 三十六计 / 博弈 / 机制设计 / 场景 / 成语 / 化合等范式子库） | 原生 COP 470 + 化合 COP 60 = **530**（2026-09-13 实扫，见 [COP-MANIFEST](docs/cop-library/COP-MANIFEST-2026-09-13.md)；[08-25 编译清单](docs/cognitive-compiler/思维协议编译清单_2026-08-25.md)为历史快照） |
+| [`docs/cognitive-compiler/chengyu/`](docs/cognitive-compiler/chengyu/) | 成语 COP 库（历史基库；现行库为 [`docs/cop-library/chengyu/`](docs/cop-library/chengyu/)，150 条） | 旧库 60 条 + manifest + 编译脚本 |
+| [`docs/papers/`](docs/papers/) | 论丛：《制度大模型：从"机器证明"到"制度主义"》V3.0 / 《显影而非白箱化：思维协议的认知论定位》 / 《智能体协作拓扑的制度化：基于唯物史观的制度发现框架》 | 主打 3 篇（全量 9 篇正文 + 1 索引） |
 | [`docs/whitepapers/`](docs/whitepapers/) | 白皮书：《AI 泛滥下的开源治理》/《思维协议基础设施》V0.1.1-DRAFT | 2 篇 |
 
 ## 增值服务（TDCA-VALUE-PRICING-001 已确认生效）
@@ -114,7 +118,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 - **挂载 / 化合双轨**：外部项目可 mount（外部挂载协议层，不改你的代码）或 compound（资产与制度函数化合）；拒绝即止——配置权归还，不施压
 - **只赋能不改码（边界声明）**：TDCA 核心协议库（core-go）为本项目原创的独立许可（Apache-2.0）；对外项目的挂载/化合服务**绝不修改他人源码，仅通过 MCP 协议外部调用**
 - **动态分润 15% + 开源方优先**：无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给项目方或其社区基金会（涉及跨境支付的情形，依外汇管理法规完成流程后办理）。分润为生态内部基于 Simulated（模拟态）的 MOU 计量——真实态（e-CNY 接入）落地前，分润暂以 NCA 确权及 ERI 权重记账，不产生真实现金流；不发币、不做平台
-- **形式化研究入口**：[`OPEN-PROBLEMS.md`](OPEN-PROBLEMS.md)（9 项开放问题：★ 入门 / ★★ 中等 / ★★★ 挑战）——证明贡献附机器可读验证，走 DCD 门禁评审
+- **形式化研究入口**：[`OPEN-PROBLEMS.md`](OPEN-PROBLEMS.md)（11 项开放问题：★ 入门 / ★★ 中等 / ★★★ 挑战）——证明贡献附机器可读验证，走 DCD 门禁评审
 - **分层标注**：声称-证明对照见 [`core-go/docs/formal-proofs/CLAIMS-MATRIX.md`](core-go/docs/formal-proofs/CLAIMS-MATRIX.md)；安全披露见 [`core-go/SECURITY.md`](core-go/SECURITY.md)（48h 确认 / 90 天修复）
 
 **官网门户（测试体验环境）**：http://47.76.42.139:8080/ （M2 三栏人机共治 · 真实后端：人类 NL 入口 real × 大模型 MCP 实测 × 小模型轻量规格 + 哨兵实时链尾；未备案测试实例，不对外正式宣称——按量停机时暂时不可达属正常）
@@ -131,7 +135,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 
 查看 TDCA 资产全景（五层 + 反馈回路）：[docs/repo-inventory-summary.md](docs/repo-inventory-summary.md)
 
-- ① 制度层：docs/formal-proofs · docs/papers（中英论文 + 六项实证 E1–E6）
+- ① 制度层：core-go/docs/formal-proofs · docs/papers（中英论文 + 六项实证 E1–E6）
 - ② 引擎层：core-go · docs/cognitive-compiler
 - ③ 经济运行层：结算/税收锚定/NCA 确权资产
 - ④ 运行层：gateway · MCP bridge · 适配器 · 前端（测试云主战场 / gh-pages 兜底）

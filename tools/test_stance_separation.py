@@ -11,6 +11,10 @@ sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "config"))
 sys.path.insert(0, os.path.join(ROOT, "nca-generator"))
 
+# 实物锚点：机制核在原生协议权威库（protocols/tdca-native），场景绑定在 cop-library
+STRATAGEMS_NATIVE = os.path.join(ROOT, "..", "protocols", "tdca-native", "stratagems")
+STRATAGEMS_COPLIB = os.path.join(ROOT, "..", "docs", "cop-library", "stratagems")
+
 import stance_separation_check as SSC
 from stance_separation_check import check_cop, StanceViolation
 import stance_neutrality as SN
@@ -128,7 +132,7 @@ def t9():
 
 # T10 实物: 打草惊蛇机制核 yaml → s5_validate + 校验器双通过
 def t10():
-    cop = yaml.safe_load(open(os.path.join(ROOT, "stratagems", "第13计-打草惊蛇-机制核.yaml"), encoding="utf-8"))
+    cop = yaml.safe_load(open(os.path.join(STRATAGEMS_NATIVE, "2026-08-28", "第13计-打草惊蛇-机制核.yaml"), encoding="utf-8"))
     CC.s5_validate(cop)
     assert cop["validation"]["passed"] is True
     check_cop(cop, strict=True)
@@ -136,13 +140,13 @@ def t10():
 
 # T11 实物: 三十六计旧计 COP(立场词已在 primitives, 律一范围外) → 校验器通过(兼容)
 def t11():
-    cop = yaml.safe_load(open(os.path.join(ROOT, "stratagems", "第02计-围魏救赵.yaml"), encoding="utf-8"))
+    cop = yaml.safe_load(open(os.path.join(STRATAGEMS_NATIVE, "第02计-围魏救赵.yaml"), encoding="utf-8"))
     check_cop(cop, strict=True)
 
 
 # T12 扫描器: 机制核 soul.core/decision 0 立场命中
 def t12():
-    cop = yaml.safe_load(open(os.path.join(ROOT, "stratagems", "第13计-打草惊蛇-机制核.yaml"), encoding="utf-8"))
+    cop = yaml.safe_load(open(os.path.join(STRATAGEMS_NATIVE, "2026-08-28", "第13计-打草惊蛇-机制核.yaml"), encoding="utf-8"))
     hits = [h for _, v in SN.yaml_field_paths(cop) for h in SN.find_hits(v)]
     assert hits == [], hits
 
@@ -248,11 +252,11 @@ def t20():
 
 # T21 试点实物: 机制核 + 两绑定 均携合法 data_feed 且过全部校验
 def t21():
-    core = yaml.safe_load(open(os.path.join(ROOT, "stratagems", "第13计-打草惊蛇-机制核.yaml"), encoding="utf-8"))
+    core = yaml.safe_load(open(os.path.join(STRATAGEMS_NATIVE, "2026-08-28", "第13计-打草惊蛇-机制核.yaml"), encoding="utf-8"))
     assert core.get("state_dependent") is True
     check_cop(core, strict=True)
     for b in ("打草惊蛇-场景A-侦查试探.yaml", "打草惊蛇-场景B-暴露警示.yaml"):
-        bind = yaml.safe_load(open(os.path.join(ROOT, "stratagems", "bindings", b), encoding="utf-8"))
+        bind = yaml.safe_load(open(os.path.join(STRATAGEMS_COPLIB, "bindings", b), encoding="utf-8"))
         assert SSC.check_data_feed(bind["mounts"]["data_feed"]) == [], b
 
 
