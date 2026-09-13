@@ -29,14 +29,15 @@ class TdcadBridge:
 
     @staticmethod
     def _find_binary() -> str:
-        """探测 tdcad：1) 环境变量 2) 本地构建产物 3) PATH。"""
+        """探测 tdcad：1) 环境变量 2) 本地构建产物（core-go 根，.exe/无扩展名）3) PATH。"""
         env = os.environ.get("TDCAD_BIN")
         if env:
             return env
-        local = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                             "..", "tdcad.exe")
-        if os.path.exists(local):
-            return local
+        here = os.path.dirname(os.path.abspath(__file__))
+        for name in ("tdcad.exe", "tdcad"):
+            local = os.path.join(here, "..", "..", name)
+            if os.path.exists(local):
+                return local
         on_path = shutil.which("tdcad")
         if on_path:
             return on_path

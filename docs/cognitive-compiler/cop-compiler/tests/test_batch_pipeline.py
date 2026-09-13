@@ -63,7 +63,8 @@ class TestDomainListing:
 
     def test_36计域_36文件(self):
         files = BP.list_domain_cops("stratagems")
-        assert len(files) == 36
+        # 域随库增长（场景绑定等增量件）；下限 = 36 计本体
+        assert len(files) >= 36
 
     def test_百家库域_数量(self):
         files = BP.list_domain_cops("hundred_schools")
@@ -74,12 +75,12 @@ class TestDomainListing:
         assert not any("manifest" in os.path.basename(f) for f in files)
 
     def test_M2_百家库全量215(self):
-        # M2 任务①: 百家库 215 = 203 COP + 12 manifest 全量纳入
+        # M2 任务①: 百家库全量纳入（COP + manifest）；库随时间增长，锚定 M2 基线为下限
         rep = BP.compile_domain("hundred_schools", emit_nca_flag=False)
-        assert rep["ok"] == 203
+        assert rep["ok"] >= 203
         assert rep["manifests"]["total"] == 12
         assert rep["manifests"]["ok"] == 12
-        assert rep["all_files"] == 215
+        assert rep["all_files"] == rep["ok"] + rep["manifests"]["total"]
 
     def test_manifest_校验(self):
         man_total, man_ok, issues = BP.verify_manifests("hundred_schools")
@@ -140,9 +141,9 @@ class TestSceneIntegration:
         scene = {"scene_vector": [0.7, 0.3, 0.8, 0.6, 0.4], "sc": SL.sc_scene(0.8, 0.8, 0.8, 0.1)}
         for d, expect in (("games", 4), ("compositions", 13)):
             rep = BP.compile_domain(d, emit_nca_flag=False, scene_mode=scene)
-            assert rep["ok"] == expect
+            assert rep["ok"] >= expect  # 库随时间增长；下限锚定 M3 基线
             assert rep["u_cde"]["coverage"] == 100.0
-            assert rep["u_cde"]["computed"] == expect
+            assert rep["u_cde"]["computed"] == rep["ok"]
 
     def test_M4_七域全量U_CDE(self):
         # M4 任务②: U_CDE 场景库全量接入——7 域全量场景模式（含百家库嵌套子目录递归统计）
@@ -153,7 +154,7 @@ class TestSceneIntegration:
             total_cop += rep["ok"]
             total_ucde += rep["u_cde"]["computed"]
             assert rep["u_cde"]["coverage"] == 100.0
-        assert total_cop == 267 and total_ucde == 267
+        assert total_cop >= 267 and total_ucde == total_cop  # 下限锚定 M4 基线；U_CDE 全覆盖
 
     def test_M4_字段标准化(self):
         # U_CDE 字段标准化（u0/sc/a/u_cde/negative_u_handling 五字段 + formula/scene_vector）
@@ -235,7 +236,7 @@ class TestECalibration:
         ev = EC.run_operations_evidence()
         assert set(ev["scenes"].keys()) == {"商业转型", "军事撤退", "合规审查"}
         for sname, sdata in ev["scenes"].items():
-            assert sdata["sample_count"] == 267
+            assert sdata["sample_count"] >= 267  # 样本量 = 全库 COP 数，随库增长
             assert 0 <= sdata["u_cde_min"] <= sdata["u_cde_max"] <= 1
         # 低 SC 场景（合规审查）应触发 E-1 熔断（U_CDE < 0.15）
         assert ev["scenes"]["合规审查"]["fuse_trigger_count"] > 0
@@ -255,13 +256,13 @@ class TestECalibration:
         with open(out, "r", encoding="utf-8") as f:
             data = _json.load(f)
         assert data["status"] == "SIMULATED"
-        assert data["scenes"]["商业转型"]["sample_count"] == 267
+        assert data["scenes"]["商业转型"]["sample_count"] >= 267  # 随库增长
 
 
 class TestCompileDomain:
     def test_单域编译_产出增强COP(self):
         rep = BP.compile_domain("stratagems", emit_nca_flag=False)
-        assert rep["ok"] == 36 and rep["fail"] == 0
+        assert rep["ok"] >= 36 and rep["fail"] == 0  # 下限锚定 36 计本体；零失败为硬约束
         # 产出物含语义层字段
         sample = os.path.join(BATCH_OUT, "stratagems", "第01计-瞒天过海.yaml")
         assert os.path.isfile(sample)

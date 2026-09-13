@@ -31,7 +31,8 @@ sys.path.insert(0, _THIS)
 sys.path.insert(0, os.path.join(_THIS, '..', 'compiler_src'))
 import semantic_layer as SL
 
-LIB = os.environ.get("TDCA_COP_LIB") or os.path.join(_THIS, "..", "cop-library")
+_PROBE = os.path.normpath(os.path.join(_THIS, "..", "..", "..", "cop-library"))
+LIB = os.environ.get("TDCA_COP_LIB") or (_PROBE if os.path.isdir(_PROBE) else os.path.normpath(os.path.join(_THIS, "..", "cop-library")))
 STRATAGEMS = os.path.join(LIB, "stratagems")
 COMPOSITIONS = os.path.join(LIB, "compositions")
 

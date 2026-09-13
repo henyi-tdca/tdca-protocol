@@ -146,6 +146,8 @@ def batch_alignment_report(domain):
     返回: dict（domain/total/avg_completeness/min/max/coverage 达标率）
     """
     files = BP.list_domain_cops(domain)
+    # 场景绑定件（bindings/）非 COP 本体——其校验由立场分离套件覆盖，不纳入 schema 对齐口径
+    files = [f for f in files if "bindings" not in os.path.normpath(f).split(os.sep)]
     reports = []
     for f in files:
         with open(f, "r", encoding="utf-8") as fh:

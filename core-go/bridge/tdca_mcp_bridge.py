@@ -24,12 +24,13 @@ from typing import Any, Dict, List, Optional
 # ---- 定位 tdcad.exe（MCP 服务端）----
 
 def _find_tdcad() -> str:
-    """优先工作区根 tdcad.exe；否则 PATH。"""
+    """优先工作区根 tdcad 二进制（Windows 为 tdcad.exe）；否则 PATH。"""
     here = os.path.dirname(os.path.abspath(__file__))
     root = os.path.dirname(here)  # tdca-core-go/（本文件位于 bridge/ 下）
-    exe = os.path.join(root, "tdcad.exe")
-    if os.path.exists(exe):
-        return exe
+    for name in ("tdcad.exe", "tdcad"):
+        exe = os.path.join(root, name)
+        if os.path.exists(exe):
+            return exe
     return "tdcad"
 
 
@@ -58,20 +59,56 @@ class TdcaMcpClient:
             print(">>", line)
         self._proc.stdin.write(line + "\n")
         self._proc.stdin.flush()
-        resp = json.loads(self._proc.stdout.readline())
+        return self._read_response()
+
+    def _read_response(self) -> Dict[str, Any]:
+        """读一帧响应；途中应答服务端 ping（pong response）并跳过通知帧。"""
+        while True:
+            msg = json.loads(self._proc.stdout.readline())
+            if self._debug:
+                print("<<", json.dumps(msg, ensure_ascii=False))
+            # 服务端心跳 ping（request：有 id 且有 method）→ 回 pong response
+            if msg.get("method") == "ping" and "id" in msg:
+                pong = {"jsonrpc": "2.0", "id": msg["id"], "result": {"pong": True}}
+                line = json.dumps(pong)
+                if self._debug:
+                    print(">>", line)
+                self._proc.stdin.write(line + "\n")
+                self._proc.stdin.flush()
+                continue
+            if "id" not in msg:  # 通知帧：非响应，跳过
+                continue
+            return msg
+
+    def _notify(self, method: str, params: Optional[Dict[str, Any]] = None) -> None:
+        """发送 JSON-RPC 通知（无 id，不读响应）。"""
+        msg: Dict[str, Any] = {"jsonrpc": "2.0", "method": method}
+        if params is not None:
+            msg["params"] = params
+        line = json.dumps(msg, ensure_ascii=False)
         if self._debug:
-            print("<<", json.dumps(resp, ensure_ascii=False))
-        return resp
+            print(">>", line)
+        self._proc.stdin.write(line + "\n")
+        self._proc.stdin.flush()
 
     # ---- MCP 会话 ----
 
-    def initialize(self) -> Dict[str, Any]:
-        """握手：协议版本 + serverInfo。"""
+    def initialize(self, token_id: str = "ext-agent-demo",
+                   scope: Optional[List[str]] = None) -> Dict[str, Any]:
+        """握手：协议版本 + serverInfo；携带持权声明（pcr_token），H2 应答后补 H3
+        （notifications/initialized）完成会话建立。匿名会话为只读——写类工具须持权。"""
         resp = self._send("initialize", {
             "protocolVersion": "2025-06-18",
             "clientInfo": {"name": "ext-agent", "version": "0.1"},
             "capabilities": {},
+            "_meta": {"tdca": {"pcr_token": {
+                "token_id": token_id,
+                "scope": scope if scope is not None else ["mcp"],
+            }}},
         })
+        if "error" in resp:
+            raise RuntimeError(f"[MCP-ERROR] initialize: {resp['error']['message']}")
+        self._notify("notifications/initialized")
         return resp["result"]
 
     def list_tools(self) -> List[Dict[str, Any]]:
