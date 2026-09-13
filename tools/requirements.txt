@@ -1,0 +1,3 @@
+# tools/ 工具货架运行依赖（PyYAML：6 个文件 import yaml）
+# 测试另需 pytest（仅 tests/ 与 test_*.py 使用）
+PyYAML>=6.0

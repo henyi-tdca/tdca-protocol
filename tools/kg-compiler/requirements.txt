@@ -1,0 +1,4 @@
+# kg-compiler API 服务依赖（api.py，可选 API 模式）
+fastapi>=0.110
+pydantic>=2.6
+uvicorn>=0.29
