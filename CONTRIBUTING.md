@@ -37,7 +37,7 @@ PR 合并前，GitHub Actions（`admission-check.yml`）会对 `nca-archives/` �
 | 类型 | 入口 | 评审 |
 |---|---|---|
 | 准入缔约（L1） | 上方七步 | admission-check 自动门禁 + 守门人核对 |
-| 证明/解答贡献（[OPEN-PROBLEMS](OPEN-PROBLEMS.md) P-1~P-9） | PR 附机器可读验证文件（Lean/Isabelle/Coq 或可执行断言验证器） | ★级走常规 PR；★★/★★★ 级触发 **DCD 门禁**（人类 + 智能体双审 + 公示期）——未附机器验证不进入评审 |
+| 证明/解答贡献（[OPEN-PROBLEMS](OPEN-PROBLEMS.md) P-1~P-11） | PR 附机器可读验证文件（Lean/Isabelle/Coq 或可执行断言验证器） | ★级走常规 PR；★★/★★★ 级触发 **DCD 门禁**（人类 + 智能体双审 + 公示期）——未附机器验证不进入评审 |
 | 工具/文档改进 | 常规 PR | 维护者评审 |
 
 ### Tier 标注纪律

@@ -5,7 +5,7 @@
 
 ## 本库构成（2026-08-30 全量同步，GSEQ-0759）
 
-- **同步口径**：旧版 353 → 权威修订版 **515 COP**（原生 455 + 化合 60）——7 共同家族内容更新 + 5 新家族新增（chengyu / marxism / microeconomics / engineering-three / emissary）。
+- **现状口径（2026-09-13 实扫）**：**530 COP**（原生 470 + 化合 60）——以 [COP-MANIFEST-2026-09-13](COP-MANIFEST-2026-09-13.md) 为唯一现状依据。历史口径（备查）：旧版 353 → 2026-08-30 全量同步 515（原生 455 + 化合 60，7 共同家族内容更新 + 5 新家族新增：chengyu / marxism / microeconomics / engineering-three / emissary）。
 - 家族目录：`compositions/ scenario/ stratagems/ hundred_schools/ games/ mechanism_design/ microeconomics/ marxism/ chengyu/ engineering-three/ emissary/ tdca_core/ simulations/`。
 - **simulations 家族**：旧版保留，**口径待裁定**（模拟件归属），以 protocols/tdca-native 收录为准（当前未纳入）。
 - **coldstart 围栏件**：不纳入（解析失败件归口修复后补）。
