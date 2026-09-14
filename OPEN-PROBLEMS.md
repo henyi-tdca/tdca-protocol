@@ -75,6 +75,24 @@
 
 *Extract the machine-verifiable subset of the attribution-node mapping — declare which cells can enter the proof checker before attempting any of them.*
 
+### P-12 元函数可显影定理纲领（★★★ 挑战）
+
+- **问题**：制度函数族（部分、确定、可计算映射）在复合与嵌套下，是否存在**可计算的反射广义逆**（显影函数）？其**存在性、可靠性、保持性**可被机器验证到何种程度？
+- **目标**：以单一纲领统摄若干既有开放问题（证明器机验移植 / 推广到不可变哈希链与分级熔断 / 规模可持续的充要性 / 制度条款的函数化一致性 / 三个外部锚的验证框架），给出统一的形式化路径并**明确划出可机验子集**。
+- **说明**：本纲领属**模型层**（可竞争、可证伪）；`proved` / `refuted` / `conditional` 三态皆为合法终态；纲领内的阈值取值属策略层，不随件公开。
+- **参与入口**：提交证明脚本或可执行断言验证器 → 机器验证 → 门禁评审。
+
+*Is there a computable reflexive generalized inverse (a "development" map) for the institution-function family — and how far can existence, soundness and preservation be machine-checked?*
+
+### P-13 场景形成机制的形式化子集（★★ 中等）
+
+- **问题**：场景形成机制（设计主导 / 自组织涌现 / 两者混合）中，**哪些部分能进证明器**？「自组织场景经共识固化跃迁为完备场景」能否被形式化？
+- **目标**：**先声明**可形式化子集（集合与定义层、单调性与值域界、跃迁的**见证方向**）与不可形式化部分（阈值取值、意义度量的**可观测代理**性质、存在量词的**半判定性**），再对子集给出可机验表述。
+- **说明**：属模型层；不可机验部分**显式声明留在制度与业务层**，不以形式化名义使用。
+- **参与入口**：提交证明脚本或断言验证器 → 机器验证 → 门禁评审。
+
+*Which parts of scene-formation dynamics can enter a proof checker — and which must stay declarative?*
+
 ## ★★★ 挑战（开放研究，期待突破）
 
 ### P-7 五可充要性定理完整证明（定理 8.8）
