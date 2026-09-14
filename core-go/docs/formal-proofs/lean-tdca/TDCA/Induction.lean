@@ -71,7 +71,44 @@ theorem G_eq_self_on_image {D : Type} (f : D → Option D) (G : D → D)
 theorem M4_induction_step {D : Type} (f : D → Option D) (G : D → D)
     (hR : IsRightInverse f G) (hC : CompatLayer f G) (n : ℕ) :
     IsRightInverse (iterate f n) (Giterate G n) := by
-  sorry
+  have hGid : ∀ y, (∃ x, f x = some y) → G y = y := G_eq_self_on_image f G hR hC
+  have hfid : ∀ y, (∃ x, f x = some y) → f y = some y := by
+    intro y hy
+    rcases hy with ⟨x, hx⟩
+    have h1 : f (G y) = some y := hR x y hx
+    rw [hGid y ⟨x, hx⟩] at h1
+    exact h1
+  have hGit : ∀ m y, (∃ x, f x = some y) → Giterate G m y = y := by
+    intro m
+    induction m with
+    | zero => intro y _; rfl
+    | succ k ih =>
+      intro y hy
+      show G (Giterate G k y) = y
+      rw [ih y hy]
+      exact hGid y hy
+  have hitid : ∀ m y, (∃ x, f x = some y) → iterate f m y = some y := by
+    intro m
+    induction m with
+    | zero => intro y _; rfl
+    | succ k ih =>
+      intro y hy
+      show (iterate f k y).bind f = some y
+      rw [ih y hy]
+      exact hfid y hy
+  intro x y h
+  cases n with
+  | zero =>
+    have hxy : x = y := Option.some.inj h
+    subst hxy
+    rfl
+  | succ k =>
+    have hdecomp : ∃ w, iterate f k x = some w ∧ f w = some y :=
+      Option.bind_eq_some_iff.mp h
+    rcases hdecomp with ⟨w, _, hfw⟩
+    have hyIm : ∃ x', f x' = some y := ⟨w, hfw⟩
+    rw [hGit (k + 1) y hyIm]
+    exact hitid (k + 1) y hyIm
 
 /-- **M-4 五可保持（骨架 · 谓词层）**：以**抽象谓词族** `Five` 进入证明，
     只断言「逐层保持 ⇒ n 层保持」的**形态**；`Five` 的具体语义**留制度层**。
