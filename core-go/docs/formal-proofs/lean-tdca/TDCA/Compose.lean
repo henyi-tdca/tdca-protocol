@@ -33,7 +33,10 @@ theorem L2_comp_some {D R S : Type} (g : R → Option S) (f : D → Option R) (x
     义务 **L2-b**（见尾注）：`Option.bind_eq_none_iff` 系引理装配。 -/
 theorem L2_comp_none {D R S : Type} (g : R → Option S) (f : D → Option R) (x : D) :
     comp g f x = none ↔ f x = none ∨ ∃ y : R, f x = some y ∧ g y = none := by
-  sorry
+  unfold comp
+  cases f x with
+  | none => simp
+  | some y => simp
 
 /-! ## 段 1 · L3 · 复合广义逆的代数（**含兼容条件澄清**） -/
 
