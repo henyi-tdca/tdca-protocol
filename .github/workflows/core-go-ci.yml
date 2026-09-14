@@ -37,23 +37,42 @@ jobs:
       # 依据: TDCA-SECURITY-TAMPER-001 ｜ INSTITUTION-HASHES.md（sha256 前 16 位）
       # 校验: AXIOM6-PROOF.md（证明文档）+ axiom6.go（实现）哈希与清单声称一致；
       #       失配即 fail——防「文件被改而清单未回填」静默断链重演。
-      - name: Verify institution hashes (sha256 prefix)
+      - name: Verify institution hashes (sha256 prefix · single source)
         working-directory: core-go
         run: |
           python3 - <<'PY'
           import hashlib, pathlib
-          expected = {
-            "docs/formal-proofs/AXIOM6-PROOF.md": "72106D6CF3B7C805",
-            "pkg/enforce/axiom6.go": "2DA492D39E3D81BC",
-          }
+          SRC = "docs/formal-proofs/INSTITUTION-HASHES.md"
+          B, E = "<!-- INSTITUTION-HASHES-BEGIN -->", "<!-- INSTITUTION-HASHES-END -->"
+          text = pathlib.Path(SRC).read_text(encoding="utf-8")
+          if B not in text or E not in text:
+              raise SystemExit("机读区块缺失：" + SRC)
+          block = text.split(B, 1)[1].split(E, 1)[0]
+          expected = {}
+          for line in block.splitlines():
+              line = line.strip()
+              if not line or line.startswith("#"):
+                  continue
+              parts = line.split()
+              if len(parts) != 2:
+                  continue
+              expected[parts[0]] = parts[1].upper()
+          if not expected:
+              raise SystemExit("机读区块解析为空：" + SRC)
           fails = []
           for rel, want in expected.items():
-            h = hashlib.sha256(pathlib.Path(rel).read_bytes()).hexdigest().upper()[:16]
-            if h != want:
-              fails.append(f"{rel}: 期望 {want} 实际 {h}")
+              h = hashlib.sha256(pathlib.Path(rel).read_bytes()).hexdigest().upper()[:16]
+              if h != want:
+                  fails.append(rel + ": 期望 " + want + " 实际 " + h)
+          # 加严：人读表格中的哈希须与机读区块一致（同一文件内自检）
+          table = text.split(B, 1)[0]
+          for rel, want in expected.items():
+              name = rel.rsplit("/", 1)[-1]
+              if name in table and want not in table:
+                  fails.append("清单人读表与机读区块不一致：" + name)
           if fails:
-            raise SystemExit("INSTITUTION-HASHES 校验失败:\n" + "\n".join(fails))
-          print("institution hashes OK (AXIOM6-PROOF + axiom6.go)")
+              raise SystemExit("INSTITUTION-HASHES 校验失败:\n" + "\n".join(fails))
+          print("institution hashes OK (single source: " + SRC + ", " + str(len(expected)) + " 项)")
           PY
 
       # --- MCP 互操作常驻冒烟（官方第三方 SDK 独立验证，防互通倒退）---
