@@ -55,7 +55,12 @@ def CompatLayer {D : Type} (f : D → Option D) (G : D → D) : Prop :=
 theorem G_eq_self_on_image {D : Type} (f : D → Option D) (G : D → D)
     (hR : IsRightInverse f G) (hC : CompatLayer f G) :
     ∀ y, (∃ x, f x = some y) → G y = y := by
-  sorry
+  intro y hy
+  rcases hy with ⟨x, hx⟩
+  have h1 : f (G y) = some y := hR x y hx
+  have h2 : f (G y) = some (G y) := hC y ⟨x, hx⟩
+  rw [h1] at h2
+  exact (Option.some.inj h2).symm
 
 /-- **M-4 归纳步骨架（兼容条件版）**：`Φ` 有右逆 `G` 且兼容条件成立 ⟹ **`Φⁿ` 有右逆 `Gⁿ`**。
     ⚠️ **`conditional` 标注（治理裁定）**：本定理**适用范围** = **满足兼容条件 `CompatLayer` 的 `Φ`**；
