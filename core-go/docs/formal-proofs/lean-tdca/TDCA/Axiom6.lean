@@ -9,7 +9,7 @@ import Mathlib.Data.Fintype.Basic          -- 新增（裁定 ③ 允许）
   ⛔ 不得表述为「四约束全证」。
 
   ⚠️ 约束 3 之非空前提（甲′ · 治理裁定 2026-09-14）：
-     · 原定稿（仅 [DecidableEq R] [Fintype D]）在 D = Empty 时不成立（不存在任何函数 g : R → D；反例已机验，见 GSEQ-1615）。
+     · 原定稿（仅 [DecidableEq R] [Fintype D]）在 D = Empty 时不成立（不存在任何函数 g : R → D；反例已机验）。
      · 甲′ 增补 [Inhabited D]（数据版；⚠️ Nonempty D〔Prop 版〕不够）。
      · 依据：权威件 §1.1 的 X（AgentCard 集合）实际非空 ⟹ [Inhabited D] 系对工程前提的显式化，⛔ 非削弱结论；
        与 L3-c（取甲·可枚举代表元）一致。
