@@ -168,9 +168,72 @@ theorem M4_five_preserved {D : Type} (Five : (D → Option D) → Prop)
 /-- **M-4′（规范代表元版骨架）**：若存在「像内还原」的选择函数 `G`，则 `Φⁿ` 的像内还原由其迭代给出。
     ⚠️ **未闭合 → `sorry`**（义务 L7-c）；⚠️ `G` 存在性**本文件不证**（`L3-c`）。 -/
 theorem M4_induction_step_canonical {D : Type} (f : D → Option D) (G : D → D)
-    (hG : ∀ y, (∃ x, f x = some y) → ∃ z, iterate f 1 z = some y ∧ G y = z) (n : ℕ) :
+    (hG : ∀ y, (∃ x, f x = some y) → ∃ z, iterate f 1 z = some y ∧ G y = z)
+    (hGimg : ∀ y, (∃ x, f x = some y) → ∃ x', f x' = some (G y))   -- 乙-1 新增前提：G y ∈ Im(f)
+    (n : ℕ) :
     ∀ x y, iterate f n x = some y → ∃ z, iterate f n z = some y ∧ Giterate G n y = z := by
-  sorry
+  -- hG 的函数形式：像点上 f (G y) = some y
+  have hGR : ∀ y, (∃ x, f x = some y) → f (G y) = some y := by
+    intro y hy
+    rcases hG y hy with ⟨z, hz1, hz2⟩
+    rw [hz2]
+    exact hz1
+  -- 头部展开：iterate (m+1) 由第一步与后 m 层复合给出
+  have hhead : ∀ m z, iterate f (m + 1) z = (f z).bind (iterate f m) := by
+    intro m
+    induction m with
+    | zero =>
+      intro z
+      show f z = (f z).bind (iterate f 0)
+      cases f z with
+      | none => rfl
+      | some w => rfl
+    | succ k ih =>
+      intro z
+      show (iterate f (k + 1) z).bind f = (f z).bind (iterate f (k + 1))
+      rw [ih z]
+      exact Option.bind_assoc (f z) (iterate f k) f
+  -- 逐层像性：G^(m+1) y 仍在 Im(f) 内（hGimg 的迭代）
+  have hGimIt : ∀ m y, (∃ x, f x = some y) → ∃ x', f x' = some (Giterate G (m + 1) y) := by
+    intro m
+    induction m with
+    | zero =>
+      intro y hy
+      show ∃ x', f x' = some (G y)
+      exact hGimg y hy
+    | succ k ih =>
+      intro y hy
+      show ∃ x', f x' = some (G (Giterate G (k + 1) y))
+      exact hGimg _ (ih y hy)
+  -- 关键：G^m y 是 y 在 Φ^m 下的还原见证
+  have key : ∀ m y, (∃ x, f x = some y) → iterate f m (Giterate G m y) = some y := by
+    intro m
+    induction m with
+    | zero =>
+      intro y _
+      rfl
+    | succ k ih =>
+      intro y hy
+      cases k with
+      | zero =>
+        show f (G y) = some y
+        exact hGR y hy
+      | succ k' =>
+        show iterate f (k' + 2) (G (Giterate G (k' + 1) y)) = some y
+        rw [hhead (k' + 1) (G (Giterate G (k' + 1) y))]
+        have ht : ∃ x', f x' = some (Giterate G (k' + 1) y) := hGimIt k' y hy
+        rw [hGR _ ht]
+        exact ih y hy
+  -- 主归纳：n = 0 时 Φ⁰ = id；n = k+1 时 y ∈ Im(f)，取 key 的见证
+  intro x y h
+  cases n with
+  | zero =>
+    have hxy : x = y := Option.some.inj h
+    subst hxy
+    exact ⟨x, rfl, rfl⟩
+  | succ k =>
+    rcases Option.bind_eq_some_iff.mp h with ⟨w, _, hfw⟩
+    exact ⟨Giterate G (k + 1) y, key (k + 1) y ⟨w, hfw⟩, rfl⟩
 
 end TDCA.MetaInverse
 
