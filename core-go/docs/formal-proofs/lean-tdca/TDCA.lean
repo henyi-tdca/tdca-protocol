@@ -11,3 +11,6 @@ import TDCA.Induction
 -- M-8 Lean 化（2026-09-14）：新增 `import TDCA.SceneEmergence`
 -- ——场景形成机制可机验子集 F-1~F-6（命题 M-8.1~M-8.6）。
 import TDCA.SceneEmergence
+-- 公理 6 证明器通道（2026-09-14）：新增 `import TDCA.Axiom6`
+-- ——四约束形式化（约束 1 / 2 归位自 TDCA.MetaInverse；约束 3 为甲′ 形态，非空前提见该件头注）。
+import TDCA.Axiom6
