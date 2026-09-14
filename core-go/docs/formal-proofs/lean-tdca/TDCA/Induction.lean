@@ -119,8 +119,46 @@ theorem M4_five_preserved {D : Type} (Five : (D → Option D) → Prop)
     (hR : IsRightInverse f G) (hC : CompatLayer f G)
     (hstep : ∀ (f' : D → Option D) (G' : D → D),
       IsRightInverse f' G' → CompatLayer f' G' → Five f' → Five (fun x => (f' x).bind f))
-    (hf : Five f) (n : ℕ) : Five (iterate f n) := by
-  sorry
+    (hf : Five f) (n : ℕ) : Five (iterate f (n + 1)) := by
+  have hGid : ∀ y, (∃ x, f x = some y) → G y = y := G_eq_self_on_image f G hR hC
+  have hfid : ∀ y, (∃ x, f x = some y) → f y = some y := by
+    intro y hy
+    rcases hy with ⟨x, hx⟩
+    have h1 : f (G y) = some y := hR x y hx
+    rw [hGid y ⟨x, hx⟩] at h1
+    exact h1
+  have hGit : ∀ m y, (∃ x, f x = some y) → Giterate G m y = y := by
+    intro m
+    induction m with
+    | zero => intro y _; rfl
+    | succ k ih =>
+      intro y hy
+      show G (Giterate G k y) = y
+      rw [ih y hy]
+      exact hGid y hy
+  have hitid : ∀ m y, (∃ x, f x = some y) → iterate f m y = some y := by
+    intro m
+    induction m with
+    | zero => intro y _; rfl
+    | succ k ih =>
+      intro y hy
+      show (iterate f k y).bind f = some y
+      rw [ih y hy]
+      exact hfid y hy
+  have hCit : ∀ m, CompatLayer (iterate f (m + 1)) (Giterate G (m + 1)) := by
+    intro m y hy
+    rcases hy with ⟨x, hx⟩
+    have hdecomp : ∃ w, iterate f m x = some w ∧ f w = some y :=
+      Option.bind_eq_some_iff.mp hx
+    rcases hdecomp with ⟨w, _, hfw⟩
+    have hyIm : ∃ x', f x' = some y := ⟨w, hfw⟩
+    rw [hGit (m + 1) y hyIm]
+    exact hitid (m + 1) y hyIm
+  induction n with
+  | zero => exact hf
+  | succ k ih =>
+    exact hstep (iterate f (k + 1)) (Giterate G (k + 1))
+      (M4_induction_step f G hR hC (k + 1)) (hCit k) ih
 
 /-! ## 规范性对照（**规范代表元版**，裁定 ①「双版并列」的另一半）
 
