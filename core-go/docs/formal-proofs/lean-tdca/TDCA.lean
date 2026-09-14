@@ -14,3 +14,6 @@ import TDCA.SceneEmergence
 -- 公理 6 证明器通道（2026-09-14）：新增 `import TDCA.Axiom6`
 -- ——四约束形式化（约束 1 / 2 归位自 TDCA.MetaInverse；约束 3 为甲′ 形态，非空前提见该件头注）。
 import TDCA.Axiom6
+-- 公理 6 · 约束 4 条件形态附录（2026-09-14）：新增 `import TDCA.Axiom6Complexity`
+-- ——复杂度以建模参数进入、约束以假设形式给出、结论标 conditional；⛔ 不得读作已从程序推出。
+import TDCA.Axiom6Complexity
