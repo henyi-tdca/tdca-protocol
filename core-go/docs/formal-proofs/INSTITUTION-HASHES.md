@@ -15,6 +15,12 @@
 | 公理 6 实例化 | TDCA-CORE-GO-AXIOM6-001 | 实现 `sha256:2DA492D39E3D81BC…`（axiom6.go）｜ 证明文档 `sha256:72106D6CF3B7C805…`（AXIOM6-PROOF.md，2026-09-09 重算回填——原登记 654679722AA02326… 与文件失配，WorkBuddy VERIFY-EXT-2026-09-09 独立核证发现） | `VerifyAxiom6()` 机验 |
 | 数学基础白皮书 | TDCA-MATH-WP-REV-001 V1.0-FROZEN | `sha256:D8271AD0135F3CC9…` | 文件哈希比对 |
 | 分润规则 | 15%（动态分润，模拟态） | 宣言 §三 `sha256:20C8BFCEE24C237F…` | 邀请函措辞比对 |
+<!-- INSTITUTION-HASHES-BEGIN -->
+# 机读校验区块（machine-readable）—— CI 门禁的唯一期望值来源
+# 格式：<工作区相对路径（以 core-go 为根）>  <sha256 前 16 位，大写>
+docs/formal-proofs/AXIOM6-PROOF.md  72106D6CF3B7C805
+pkg/enforce/axiom6.go               2DA492D39E3D81BC
+<!-- INSTITUTION-HASHES-END -->
 
 > 注：哈希为 sha256 前 16 位（完整 64 位可在对应文件验证）；精确值于 2026-08-23 分层开源发布批次回填。本清单为**验证入口规范**。
 
