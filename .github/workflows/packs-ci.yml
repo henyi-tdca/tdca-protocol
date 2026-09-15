@@ -1,0 +1,125 @@
+# TDCA Packs CI — 通知机/EIOS 公开包门禁（语法 + 披露终扫 + 内部路径注入 + 无缓存 + 模拟态标注在场）
+# 依据: TDCA-HANDOFF-KIMI-M2-P3-007（GSEQ-1709）整改 C —— 新目录装门禁
+# 设计: 仿 adapters-ci 门禁模型；⛔ 只加严 —— 不改任何既有 workflow 既有条件
+# 终扫口径: 禁「编号类内部标识」（日期型存证号 / 签批编号 / ID92 全形态 / AI 角色名 /
+#   内部路径与在册件号）；下列「经裁定保留类」不在禁列（见步骤 1 回报第 3 项）:
+#   ID38Exception/[ID38-TRIGGER]/ID38-EXCEPTION（代码标识）· FC-012/fc012（模块名）·
+#   TDCA-FOUNDER-001（12 处全保留裁定）· TDCA-SI-CHIP/TDCA-PUBKEY（机制标识格式）·
+#   FC-001~005 / FC-SPEC / REV-NM-001 / KB-*/AGENT-EXEC-001 等（规范文档名）
+name: packs-ci
+
+permissions:
+  contents: read   # 只读门禁：不写库、不评论、不调用任何 secrets
+
+on:
+  push:
+    paths:
+      - "tdca-notification-machine/**"
+      - "tdca-eios/**"
+      - ".github/workflows/packs-ci.yml"
+  pull_request:
+    paths:
+      - "tdca-notification-machine/**"
+      - "tdca-eios/**"
+      - ".github/workflows/packs-ci.yml"
+
+env:
+  PACKS: "tdca-notification-machine tdca-eios"
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 门禁 1 — 语法校验（两包全量 .py，不落盘）
+        run: |
+          python - <<'PY'
+          import os, pathlib, py_compile, tempfile
+          packs = os.environ["PACKS"].split()
+          files = []
+          for pk in packs:
+              if not pathlib.Path(pk).is_dir():
+                  print(f"（提示）目录不存在，跳过：{pk}")
+                  continue
+              files += [str(p) for p in pathlib.Path(pk).rglob("*.py")]
+          print(f"待校验 .py：{len(files)} 个")
+          with tempfile.TemporaryDirectory() as td:
+              cfile = os.path.join(td, "c.pyc")
+              for f in files:
+                  py_compile.compile(f, cfile=cfile, doraise=True)
+          print("✅ 语法校验通过（不落盘）")
+          PY
+
+      - name: 门禁 2 — 披露终扫（编号类内部标识，大小写不敏感＋变形容忍，命中即失败）
+        run: |
+          set -e
+          # 禁列（禁 ID92 全形态：id92/ID92/Id92/id-92/id 92/id92_note）：
+          PAT='\bid[\s_\-]*92\b|\bid92_note\b|TDCA-(NCA|FC)-20[0-9]{6}|TDCA-NM-(IMPL|L7)-20[0-9]{6}|\bNCA-0[0-9]+\b|\bKIMI-[0-9]+\b|Reasonix|GSEQ-|C:\\Users|global-workspace|算力'
+          RC=0
+          for p in $PACKS; do
+            [ -d "$p" ] || { echo "（提示）目录不存在，跳过：$p"; continue; }
+            echo "扫描: $p"
+            if grep -rInhiE "$PAT" "$p" \
+                 --include="*.py" --include="*.md" --include="*.html" --include="*.json"; then
+              RC=1
+            fi
+          done
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::披露终扫命中禁列内部标识（见上列行；保留类口径见本文件头注释）"
+            exit 1
+          fi
+          echo "✅ 披露终扫零命中（范围：$PACKS）"
+
+      - name: 门禁 3 — 内部路径注入（已登记例外之外，新增注入即失败）
+        run: |
+          set -e
+          # 已登记例外（GSEQ-1709 待裁项 b，另行议处）：tdca-call-rules /
+          #   tdca-dual-protocol-package / tdca-utility-genie —— 锁现状，⛔ 新增注入即失败
+          RC=0
+          for p in $PACKS; do
+            [ -d "$p" ] || continue
+            if grep -rInE 'sys\.path.*(tdca-fos|tdca-tima|tdca-flow-orchestrator|tdca-adapters[^-]|global-workspace|tdca-web)' "$p" --include="*.py"; then
+              RC=1
+            fi
+          done
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::检测到未登记的内部工作区路径注入（sys.path 引用内部项目目录）"
+            exit 1
+          fi
+          echo "✅ 无未登记内部路径注入（例外三项已锁定现状）"
+
+      - name: 门禁 4 — 无编译/测试缓存（两包全目录）
+        run: |
+          set -e
+          HIT=$(find tdca-notification-machine tdca-eios \( -name "*.pyc" -o -name "__pycache__" -o -name ".pytest_cache" -o -name ".coverage" \) 2>/dev/null | head -20)
+          if [ -n "$HIT" ]; then
+            echo "::error::检测到编译/测试缓存产物（不应提交）："; echo "$HIT"; exit 1
+          fi
+          echo "✅ 无编译/测试缓存产物"
+
+      - name: 门禁 5 — 模拟态标注在场（硬件未投产部署披露不可回退）
+        run: |
+          set -e
+          RC=0
+          # 模板八件：标注字段须为 simulation_note（A-5 锁定，防 id92 回潮）
+          for f in $(find tdca-notification-machine/templates/.tdca -name "*.json" 2>/dev/null); do
+            if ! grep -q '"simulation_note"' "$f"; then
+              echo "::error::模板缺 simulation_note 标注字段：$f"; RC=1
+            fi
+          done
+          # 关键件：须含「未投产部署」模拟态披露
+          for f in tdca-notification-machine/tdca-firmware-spec.md \
+                   tdca-notification-machine/engine/notification_machine_engine.py \
+                   tdca-notification-machine/simulator/nm_simulator.py \
+                   tdca-eios/src/nm_device_driver.py \
+                   tdca-eios/README.md; do
+            if [ -f "$f" ] && ! grep -q "未投产部署" "$f"; then
+              echo "::error::关键件缺「硬件未投产部署」模拟态披露：$f"; RC=1
+            fi
+          done
+          [ "$RC" -eq 0 ] && echo "✅ 模拟态标注在场（模板 8 件 + 关键件 5 件）" || exit 1
