@@ -16,7 +16,7 @@
 | 3 | 计量映射引擎 V0.1 | 代码 | tdca-notification-machine/engine/notification_machine_engine.py |
 | 4 | 8 用例测试 | 测试 | tdca-notification-machine/tests/test_nm_engine.py |
 | 5 | NCA-Lite 8 字段裁剪映射 | 文档 | tdca-notification-machine/nca-lite-mapping.md |
-| 6 | FC-SPEC V1.2（五层架构基线） | 文档 | docs/notification-machine/TDCA-FC-20260811-004-NOTIFICATION-MACHINE-FC-SPEC.md |
+| 6 | FC-SPEC V1.2（五层架构基线） | 文档 | docs/notification-machine/（FC-SPEC V1.2 公开版） |
 
 ## 二、违规清单
 

@@ -10,7 +10,7 @@ import importlib.util
 import os
 import sys
 
-WS = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # global-workspace
+WS = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # 工作区根
 
 # ---- TIMA: 保持 src 包名（EIOS 模块兼容） ----
 TIMA_SRC = os.path.join(WS, 'tdca-tima')
