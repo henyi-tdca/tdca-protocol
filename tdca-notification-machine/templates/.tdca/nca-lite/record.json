@@ -1,5 +1,5 @@
 {
-  "id92_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；通知机硬件未投产部署，本实现为模拟（SIL），不构成真实部署",
+  "simulation_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；通知机硬件未投产部署，本实现为模拟（SIL），不构成真实部署",
   "nca_lite": { "version": "1.0" },
   "nca_id": "TDCA-NCA-LITE-{HWID}-{seq}",
   "type": "fact|auth|mou|state|service",
