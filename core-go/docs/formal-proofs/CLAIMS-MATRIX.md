@@ -11,6 +11,11 @@
 | # | 声称 | 证明文件 | 机验 | 模型假设/适用范围 |
 |---|---|---|---|---|
 | A-1 | 公理 6 可计算审计还原性（enforce 实例化：f=Verify / f⁻=AuditVerify / g=RightInverse） | `TDCA-CORE-GO-AXIOM6-001` + `pkg/enforce/axiom6.go` | ✅ `VerifyAxiom6()` 9 断言全 PASS | X=AgentCard 有限集；模型假设：白名单可逆校验（非形式化数学证明的替代——见数学基础白皮书 §2）；**不标"绝对安全"** |
+> 注（证明器通道 · Lean）：上述公理 6 可计算审计还原性，已于证明器侧给出形式化陈述并入库
+> —— `lean-tdca/TDCA/Axiom6.lean`：约束 1 完备性（`constraint1_completeness`）／约束 2 可靠性
+> （`constraint2_soundness`）／约束 3 可还原性·甲′（`constraint3_right_inverse`，三前提）。
+> ⚠️ 适用范围＝抽象层（`D` 为有限类型），⛔ 不重复 Go 通道的制度实例，⛔ 不得据以表述制度层结论；
+> ⛔ 本注仅增列证明器通道，不改 Go 通道结论与其适用范围。
 | A-2 | 定理 E.1~E.4（存在性/唯一性/右逆充要/NSFL 联动） | `TDCA-FUNCTION-WP-002-APPX-E`（FROZEN） | 框架级（机验待 P-1） | 集合论标准框架；X 可数前置 |
 | A-3 | 命题 P4a：C < q(1−p)R ⟹ T_process 严格占优（原 B-3） | `research/papers/formal/TDCA-P4a-Corollary2-Lean4-Candidate-V1.2.lean` + `core-go/docs/formal-proofs/lean/TDCA/ExPostTrust.lean` | ✅ `lake env lean` 零 error（PR #127 / 机验通道）；模型假设：单次协作、C 由 A 承担；**不标"绝对安全"** |
 | A-4 | 推论 2：α ↑ ⟹ e_B* ↓（攫取问题的比较静态，原 B-4） | 同上 | ✅ `lake env lean` 零 error + `sorry` = 0（PR #128 后机验）；模型假设与适用范围见件头 |
