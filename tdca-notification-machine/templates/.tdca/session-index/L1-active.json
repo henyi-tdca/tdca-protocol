@@ -1,0 +1,8 @@
+{
+  "id92_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；通知机硬件未投产部署，本实现为模拟（SIL），不构成真实部署",
+  "scene_id": "scene-phy-notification",
+  "role": "NM-Operator",
+  "config_right_hash": "sha256:{TCN 侧 Config-Right-Token 引用摘要——Token 本体不上芯片}",
+  "binding_ref": "config/scene-binding.json",
+  "expires": null
+}

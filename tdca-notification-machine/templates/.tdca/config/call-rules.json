@@ -1,0 +1,23 @@
+{
+  "id92_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；MOU 锚定保持模拟态（D-011）；通知机硬件未投产部署，本实现为模拟（SIL）",
+  "call_type": "disposable",
+  "tax_rates": {
+    "dispatch_tax": 0.02,
+    "royalty": 0.05
+  },
+  "mou_mode": "simulated",
+  "mou_anchor": {
+    "status": "Simulated",
+    "total_cost_cny": 0.0,
+    "inbound_tax": null,
+    "outbound_tax": null,
+    "note": "实证基线为成本记录非税收硬数据；真实税收锚定待 DCEP 接入（模拟态裁决）"
+  },
+  "nsfl_version": "V0.2",
+  "sign": {
+    "alg": "SM2",
+    "pubkey_ref": "TDCA-PUBKEY-{TDID8}-{idx}",
+    "value": "{SM2 签名值 base64}",
+    "signed_at": "{UTC ISO8601}"
+  }
+}
