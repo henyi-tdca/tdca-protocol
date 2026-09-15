@@ -25,3 +25,4 @@ nca_runtime/
 
 # 编译工作区生成的审计白名单（GSEQ-0617：保留工作区文件，不入库）
 tools/audit_whitelist.py
+tdca-notification-machine/simulator/out/
