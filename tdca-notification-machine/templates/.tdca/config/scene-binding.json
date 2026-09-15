@@ -1,0 +1,27 @@
+{
+  "simulation_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；通知机硬件未投产部署，本实现为模拟（SIL），不构成真实部署",
+  "tdca_version": "v3.1.2",
+  "scene_type": "notification-machine",
+  "physical_anchor": {
+    "tdid": "TDID-{...}",
+    "puf_hash": "sha256:{...}",
+    "five_anchor": ["address", "line", "hardware", "cost", "subject"]
+  },
+  "scene_nsfl_ext": [
+    "SCENE-PHY-001: 物理拆解/篡改 → CRITICAL/BLOCK（熔断电路触发，不可逆）",
+    "SCENE-PHY-002: 固件版本不在允许列表 → CRITICAL/BLOCK（制度负空间）",
+    "SCENE-PHY-003: PUF 密钥导出尝试 → CRITICAL/BLOCK（绝对负空间）"
+  ],
+  "scene_review": [
+    "REV-PHY-001: 品类认证有效（TDCA-REG-NAMING-001 命名授权）",
+    "REV-PHY-002: 国密合规（SM2/SM4 不落盘）",
+    "REV-PHY-003: 场景合规前置（政务/金融/医疗 → 等保）"
+  ],
+  "compound_ref": null,
+  "sign": {
+    "alg": "SM2",
+    "pubkey_ref": "TDCA-PUBKEY-{TDID8}-{idx}",
+    "value": "{SM2 签名值 base64}",
+    "signed_at": "{UTC ISO8601}"
+  }
+}

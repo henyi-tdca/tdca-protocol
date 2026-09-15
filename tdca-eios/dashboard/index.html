@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EIOS 全周期管理看板 — M5 原型</title>
+<!--
+  TDCA-PHASE-E-INT-1 M5 交付
+  Tier 2: CDN + Babel 浏览器转译（与 Phase B 同栈）
+  复用 UI-001~007 视觉规范（HC-EINT-005）：
+    UI-001 L5 人际网络 → 智能体列表面板（米色/Georgia）
+    UI-003 L3 控制台   → MOU 看板面板（金色高亮）
+    UI-005 L1 实时监控 → NCA 审计面板（黑底绿字 monospace + 熔断指示）
+    UI-007 拓扑穿越   → 生命周期时间线面板（ASP 9 Phase 状态）
+  后端对接: /api/v1/dashboard/{agents|timeline|nca|mou}（mock 数据先行）
+  NSFL: 禁止修改 Phase B UI-001~007 已归档代码；仅复用视觉规范与组件模式
+  模拟态: 通知机硬件未投产部署；本看板数据为 mock 模拟，不构成真实部署。
+-->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  /* Phase B 五层视觉规范（复用 UI-001~007 CSS 变量与风格） */
+  :root { --L5:#8B0000; --L4:#FF8C00; --L3:#FFD700; --L2:#228B22; --L1:#0000CD; }
+  body { font-family:'Segoe UI','PingFang SC',sans-serif; margin:0; background:#f8f9fa; }
+  .app { min-height:100vh; padding:16px; }
+  .nav { display:flex; align-items:center; gap:4px; padding:12px; background:#fff;
+         border-radius:8px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.1); }
+  .nav .title { font-weight:700; margin-right:12px; color:#333; }
+  .nav .sub { color:#666; font-size:13px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:900px){ .grid { grid-template-columns:1fr; } }
+  .card { background:#fff; border-radius:8px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  .card h3 { margin:0 0 12px; font-size:15px; color:#333; }
+
+  /* UI-001 L5 人际网络视觉规范（智能体列表面板） */
+  .l5-panel { background:#F5E6D3; color:#5a4632; border-radius:12px; padding:16px; }
+  .l5-panel h3 { font-family:'Georgia',serif; color:#D4A574; }
+  .agent-row { display:flex; align-items:center; gap:10px; padding:8px 6px; border-bottom:1px dashed #d8c3a5; }
+  .agent-row .dot { width:10px; height:10px; border-radius:50%; }
+  .agent-row .name { font-weight:600; flex:1; }
+  .agent-row .phase { font-size:12px; color:#8a7355; background:#fff; padding:2px 8px; border-radius:10px; }
+
+  /* UI-003 L3 控制台视觉规范（MOU 看板面板） */
+  .l3-panel { background:#FFF8DC; border:1px solid #FFD700; border-radius:8px; padding:16px; }
+  .l3-panel h3 { color:#d4a017; }
+  .mou-total { font-size:28px; font-weight:700; color:#d4a017; margin:8px 0; }
+  .mou-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f0e6c8; font-size:13px; }
+
+  /* UI-005 L1 实时监控视觉规范（NCA 审计面板） */
+  .l1-panel { background:#0A0A0A; color:#00FF88; padding:16px; font-family:monospace; border-radius:0; }
+  .l1-panel h3 { color:#00FF88; }
+  .l1-line { font-size:12px; line-height:1.7; border-bottom:1px solid #1c3a2a; }
+  .l1-fuse { display:inline-block; width:12px; height:12px; border-radius:50%; background:#00FF88; margin-right:6px; }
+  .l1-fuse.fused { background:#FF4444; animation:blink 1s infinite; }
+  @keyframes blink { 50% { opacity:0.3; } }
+
+  /* UI-007 拓扑穿越视觉规范（生命周期时间线面板） */
+  .timeline { display:flex; align-items:center; gap:2px; margin:12px 0; flex-wrap:wrap; }
+  .tl-node { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+             font-size:10px; font-weight:700; background:#e9ecef; color:#666; border:2px solid #ccc; }
+  .tl-node.done { background:var(--L2); border-color:var(--L2); color:#fff; }
+  .tl-node.cur { background:var(--L3); border-color:var(--L3); color:#333; transform:scale(1.15); }
+  .tl-node.fused { background:#dc3545; border-color:#dc3545; color:#fff; }
+  .tl-arrow { color:#999; font-size:10px; }
+  .tl-row { padding:6px 0; border-bottom:1px solid #eee; font-size:13px; display:flex; justify-content:space-between; }
+
+  .btn { padding:6px 14px; background:#FFD700; border:none; border-radius:4px; cursor:pointer; font-weight:600; }
+  .meta { color:#888; font-size:12px; margin-top:8px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ============ mock 数据（M5 阶段；M6 对接 /api/v1/dashboard/*） ============
+const MOCK_AGENTS = [
+  { id:'AGENT-001', name:'知识图谱编译器', layer:'L2', phase:'P8 DELIVERING', color:'#228B22' },
+  { id:'AGENT-002', name:'效用精灵', layer:'L3', phase:'P6 PUBLISHING', color:'#FFD700' },
+  { id:'AGENT-003', name:'NCA 存证代理', layer:'L1', phase:'P5 REGISTERING', color:'#0000CD' },
+  { id:'AGENT-004', name:'通知机-苏州01', layer:'L0', phase:'P4 ANCHORING', color:'#8B0000' },
+  { id:'AGENT-005', name:'制度审计员', layer:'L5', phase:'P3 VALIDATING', color:'#FF8C00' },
+];
+const MOCK_PHASES = ['P0','P1','P2','P3','P4','P5','P6','P7','P8'];
+const MOCK_NCA = [
+  { id:'NCA-P0-AGENT-001', phase:'P0', t:'10:01:22', evt:'意图孕育' },
+  { id:'NCA-P2-AGENT-001', phase:'P2', t:'10:03:41', evt:'协议编译' },
+  { id:'NCA-P4-AGENT-004', phase:'P4', t:'10:05:07', evt:'节点锚定(TDID绑定)' },
+  { id:'NCA-P7-AGENT-002', phase:'P7', t:'10:06:55', evt:'正和求解(ERI>CCI)' },
+  { id:'NCA-FUSE-AGENT-003', phase:'FUSE', t:'10:08:12', evt:'LEVEL_2 熔断(负空间)' },
+];
+const MOCK_MOU = [
+  { flow:'FLOW-001', tax_in:120, tax_out:60 },
+  { flow:'FLOW-002', tax_in:80, tax_out:40 },
+  { flow:'FLOW-003', tax_in:200, tax_out:100 },
+];
+
+// ============ 面板 1：智能体列表（UI-001 L5 视觉扩展） ============
+function AgentListPanel({ agents }) {
+  return (
+    <div className="card l5-panel">
+      <h3>智能体列表（UI-001 L5 人际网络扩展）</h3>
+      {agents.map(a => (
+        <div className="agent-row" key={a.id}>
+          <span className="dot" style={{ background:a.color }} />
+          <span className="name">{a.name} <span className="meta">({a.id})</span></span>
+          <span className="phase">{a.phase}</span>
+        </div>
+      ))}
+      <div className="meta">数据源: GET /api/v1/dashboard/agents</div>
+    </div>
+  );
+}
+
+// ============ 面板 2：生命周期时间线（UI-007 拓扑穿越扩展 + ASP 9 Phase） ============
+function TimelinePanel({ agents }) {
+  const [agent, setAgent] = useState(agents[0]);
+  const curIdx = MOCK_PHASES.indexOf(agent.phase.split(' ')[0]);
+  return (
+    <div className="card">
+      <h3>生命周期时间线（UI-007 拓扑穿越扩展 · ASP ↔ FC-012）</h3>
+      <select value={agent.id} onChange={e => setAgent(agents.find(a => a.id === e.target.value))}>
+        {agents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+      </select>
+      <div className="timeline">
+        {MOCK_PHASES.map((p, i) => (
+          <span key={p} style={{ display:'flex', alignItems:'center' }}>
+            <span className={`tl-node ${i < curIdx ? 'done' : i === curIdx ? 'cur' : ''}`}>{p}</span>
+            {i < MOCK_PHASES.length-1 && <span className="tl-arrow">▶</span>}
+          </span>
+        ))}
+      </div>
+      {agent.phase.includes('FUSE')
+        ? <div className="nsfl" style={{ background:'#dc3545', color:'#fff', padding:'8px', borderRadius:4 }}>
+            负空间熔断（NSFL Level-2）— 等待人类裁决
+          </div>
+        : <div className="tl-row"><span>当前状态</span><b>{agent.phase}</b></div>}
+      <div className="meta">数据源: GET /api/v1/asp/agents/{'{id}'}/timeline（委托 FC-012 trajectory）</div>
+    </div>
+  );
+}
+
+// ============ 面板 3：NCA 审计面板（UI-005 L1 视觉扩展） ============
+function NCAAuditPanel({ ncaList }) {
+  return (
+    <div className="card l1-panel">
+      <h3>NCA 审计轨迹（UI-005 L1 实时监控扩展）</h3>
+      <div><span className={`l1-fuse ${ncaList.some(n => n.phase === 'FUSE') ? 'fused' : ''}`} />实时链路监控</div>
+      {ncaList.map(n => (
+        <div className="l1-line" key={n.id}>
+          [{n.t}] {n.id} <span style={{ color: n.phase === 'FUSE' ? '#FF4444' : '#00FF88' }}>{n.phase}</span> — {n.evt}
+        </div>
+      ))}
+      <div className="meta" style={{ color:'#0f7' }}>数据源: GET /api/v1/dashboard/nca（FC-001 存证）</div>
+    </div>
+  );
+}
+
+// ============ 面板 4：MOU 看板（UI-003 L3 视觉扩展） ============
+function MOUBoardPanel({ mouList }) {
+  const total = mouList.reduce((s, m) => s + m.tax_in + m.tax_out, 0);
+  return (
+    <div className="card l3-panel">
+      <h3>MOU 税收看板（UI-003 L3 控制台扩展）</h3>
+      <div className="mou-total">¥ {total}</div>
+      {mouList.map(m => (
+        <div className="mou-row" key={m.flow}>
+          <span>{m.flow}</span>
+          <span>进项 ¥{m.tax_in} / 出项 ¥{m.tax_out}</span>
+        </div>
+      ))}
+      <div className="meta">数据源: GET /api/v1/dashboard/mou（FC-003A 结算）</div>
+    </div>
+  );
+}
+
+// ============ 应用 ============
+function App() {
+  return (
+    <div className="app">
+      <div className="nav">
+        <span className="title">EIOS 全周期管理看板</span>
+        <span className="sub">TDCA-PHASE-E-INT-1 · M5 原型 · 复用 UI-001/003/005/007 视觉规范</span>
+      </div>
+      <div className="grid">
+        <AgentListPanel agents={MOCK_AGENTS} />
+        <TimelinePanel agents={MOCK_AGENTS} />
+        <NCAAuditPanel ncaList={MOCK_NCA} />
+        <MOUBoardPanel mouList={MOCK_MOU} />
+      </div>
+      <div className="meta" style={{ marginTop:12 }}>
+        M6 对接: /api/v1/dashboard/*（FastAPI 后端 + SQLite mock 存储）· 冒烟 Phase 3（14 用例）
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
