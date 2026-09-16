@@ -74,13 +74,53 @@ class NmSimulator:
     # ---- 1. 上电：PUF → TDID → 引擎初始化 ----
 
     def boot(self) -> dict:
-        """上电：读取 PUF 指纹 → 生成 TDID → 初始化计量引擎。"""
+        """上电：读取 PUF 指纹 → 生成 TDID → 初始化计量引擎 → S-2 启动回读续号。"""
         puf = self.driver.read_puf()
         tdid = self.driver.generate_td_id(puf, CONSTITUTION_HASH, self.driver.batch_id)
         self.tdid = tdid
         self.puf_hash = "sha256:" + hashlib.sha256(puf.encode("utf-8")).hexdigest()
         self.engine = NotificationMachineEngine(tdid=tdid)
-        return {"tdid": tdid, "puf_hash": self.puf_hash, "batch_id": self.driver.batch_id}
+        resumed = self._resume_nca_seq_if_any()
+        return {"tdid": tdid, "puf_hash": self.puf_hash, "batch_id": self.driver.batch_id,
+                "nca_seq_resumed_from": resumed}
+
+    # ---- 1.1 启动回读（S-2 修复：seq 持久化 ＋ 连续性校验 ＋ 日抛终态续号）----
+
+    def _resume_nca_seq_if_any(self) -> Optional[int]:
+        """若 .tdca/state.json 已存在（先前会话持久化），回读 nca_lite_seq 并校验链序连续：
+
+        - 快照序号须与盘上 nca-lite 记录文件之最大序号一致（不一致 ⟹ fail-closed 拒绝启动）；
+        - 校验过则引擎续号（⛔ 不复位、不复用、不跳号）。
+        - ⭐ 日抛终态处置（明示）：日抛（DISPOSABLE）会话终结后序号封存于 state.json，
+          新会话（同一 out_dir 再次 boot）自封存值续号 —— ⛔ 不复位；
+          本机制只处置序号连续性，⛔ 不改「日抛优先」判定规则本身（map_call_type 未动）。
+        - 旧版快照无 nca_lite_seq 字段（S-2 修复前产物）⟹ 视为无序号可续，返回 None。
+        """
+        state_path = self.out_dir / ".tdca" / "state.json"
+        if not state_path.exists():
+            return None
+        snap = json.loads(state_path.read_text(encoding="utf-8"))
+        seq = snap.get("nca_lite_seq")
+        if seq is None:
+            return None
+        max_on_disk = self._max_nca_seq_on_disk()
+        if max_on_disk != seq:
+            raise RuntimeError(
+                "[NSFL-TRIGGER] 启动连续性校验失败：快照 seq={}，盘上最大 seq={}".format(seq, max_on_disk))
+        self.engine.resume_nca_seq(seq)
+        return seq
+
+    def _max_nca_seq_on_disk(self) -> int:
+        """盘上 nca-lite 记录文件（TDCA-NCA-LITE-*-NNNN.json）之最大序号；无记录 = 0。"""
+        n = 0
+        d = self.out_dir / ".tdca" / "nca-lite"
+        if d.exists():
+            for p in d.rglob("TDCA-NCA-LITE-*-*.json"):
+                try:
+                    n = max(n, int(p.stem.rsplit("-", 1)[1]))
+                except ValueError:
+                    raise RuntimeError("[NSFL-TRIGGER] nca-lite 文件名序号不可解析：{}".format(p.name))
+        return n
 
     # ---- 2. L1 所有权登记（快系统采集 + 所有权锚定）----
 
