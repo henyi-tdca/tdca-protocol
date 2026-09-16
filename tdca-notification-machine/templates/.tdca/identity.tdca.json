@@ -1,0 +1,21 @@
+{
+  "simulation_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；通知机硬件未投产部署，本实现为模拟（SIL），不构成真实部署",
+  "tdid": "TDID-{SHA256(PUF指纹‖宪法哈希‖批次号)前32位大写}",
+  "puf_hash": "sha256:{PUF指纹哈希——密钥材料永不落盘}",
+  "constitution_hash": "sha256:{当前宪法哈希}",
+  "sm2_pubkey": "{SE SM2 公钥 base64 DER}",
+  "five_anchor": [
+    { "name": "address", "value": "{地址锚}" },
+    { "name": "line", "value": "{线路锚}" },
+    { "name": "hardware", "value": "{硬件锚}" },
+    { "name": "cost", "value": "{成本锚}" },
+    { "name": "subject", "value": "{主体锚}" }
+  ],
+  "firmware_version": "{SemVer——必须∈允许列表，否则 SCENE-PHY-002}",
+  "sign": {
+    "alg": "SM2",
+    "pubkey_ref": "TDCA-PUBKEY-{TDID8}-{idx}",
+    "value": "{SM2 签名值 base64}",
+    "signed_at": "{UTC ISO8601}"
+  }
+}

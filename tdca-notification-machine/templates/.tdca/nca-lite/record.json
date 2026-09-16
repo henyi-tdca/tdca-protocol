@@ -1,0 +1,20 @@
+{
+  "simulation_note": "模拟态标注: 本模板为格式规范产物，不构成真实配置权执行路径；通知机硬件未投产部署，本实现为模拟（SIL），不构成真实部署",
+  "nca_lite": { "version": "1.0" },
+  "nca_id": "TDCA-NCA-LITE-{HWID}-{seq}",
+  "type": "fact|auth|mou|state|service",
+  "hash": "sha256:{载荷哈希}",
+  "ts": "{UTC ISO8601}",
+  "signer": {
+    "alg": "SM2",
+    "pubkey_ref": "TDCA-PUBKEY-{TDID8}-{idx}",
+    "value": "{base64}"
+  },
+  "payload_ref": "FactHash_{n}",
+  "prev_hash": "sha256:{前块}",
+  "nsfl": {
+    "version": "V0.2",
+    "triggered": false,
+    "trigger_reason": null
+  }
+}
