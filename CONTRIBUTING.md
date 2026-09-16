@@ -55,3 +55,9 @@ PR 合并前，GitHub Actions（`admission-check.yml`）会对 `nca-archives/` �
 ## 红线（不可绕过）
 
 不发币、不公售、不承诺分红、不代币化、不以积分/凭证变相交易；不拉踩其他协议；数据一律带 simulated/real 性质标注（ID92）。触发 NSFL 负空间条款 → 一票否决。
+
+## 生态非侵略承诺（PR 勾选项）
+
+提交 Pull Request 时，请在 PR 描述中勾选：
+
+- [ ] 已阅读并同意 [PATENTS.md](PATENTS.md) 之生态非侵略承诺（社区规则 ＋ 资格后果）。

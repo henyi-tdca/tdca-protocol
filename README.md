@@ -171,3 +171,7 @@ Asset index & five-layer map: [docs/repo-inventory-summary.md](docs/repo-invento
 ## License
 
 MIT（见 [LICENSE](LICENSE)，含 TDCA 附注）。指针引用的制度文本（TDCA-CONST / UPDA / NSFL / TERMS）保留其自身治理条款。
+
+## 专利与非侵略承诺
+
+生态非侵略承诺（社区规则 ＋ 资格后果）见 [PATENTS.md](PATENTS.md)；关键机制的防御性公开披露见 [docs/prior-art/](docs/prior-art/)。
