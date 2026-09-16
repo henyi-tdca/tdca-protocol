@@ -175,3 +175,7 @@ MIT（见 [LICENSE](LICENSE)，含 TDCA 附注）。指针引用的制度文本�
 ## 专利与非侵略承诺
 
 生态非侵略承诺（社区规则 ＋ 资格后果）见 [PATENTS.md](PATENTS.md)；关键机制的防御性公开披露见 [docs/prior-art/](docs/prior-art/)。
+
+## 现有技术披露（防御性公开）
+
+关键机制的防御性公开披露见 [docs/prior-art/](docs/prior-art/)（PA-001~PA-005，首批 5 件）——构成可供审查比对的现有技术资料；采信与否取决于受理机关。
