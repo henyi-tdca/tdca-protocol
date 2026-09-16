@@ -112,7 +112,7 @@ jobs:
               echo "::error::模板缺 simulation_note 标注字段：$f"; RC=1
             fi
           done
-          # 关键件：须含「未投产部署」模拟态披露
+          # 关键件：须含「未投产部署」模拟态披露（既有抽查，保留不动）
           for f in tdca-notification-machine/tdca-firmware-spec.md \
                    tdca-notification-machine/engine/notification_machine_engine.py \
                    tdca-notification-machine/simulator/nm_simulator.py \
@@ -122,4 +122,14 @@ jobs:
               echo "::error::关键件缺「硬件未投产部署」模拟态披露：$f"; RC=1
             fi
           done
-          [ "$RC" -eq 0 ] && echo "✅ 模拟态标注在场（模板 8 件 + 关键件 5 件）" || exit 1
+          # 全量口径（W-10 加严，⭐ 只加严）：两目录「未投产部署」标注件数 ≥ 27
+          # （现状锁定 27 件各 1 处；目录未迁移入仓时跳过计数，与既有 [-f] 守卫同语义，
+          #  ⛔ 不致既有合法件误拒）
+          if [ -d tdca-notification-machine ] || [ -d tdca-eios ]; then
+            cnt=$(grep -rl "未投产部署" tdca-notification-machine tdca-eios 2>/dev/null | wc -l)
+            if [ "$cnt" -lt 27 ]; then
+              echo "::error::「未投产部署」模拟态披露不足：现 $cnt 件 < 27（全量口径）"; RC=1
+            fi
+            echo "全量口径: 未投产部署标注 $cnt 件（≥27 ✅）"
+          fi
+          [ "$RC" -eq 0 ] && echo "✅ 模拟态标注在场（模板 8 件 + 关键件 5 件 + 全量 ≥27）" || exit 1
