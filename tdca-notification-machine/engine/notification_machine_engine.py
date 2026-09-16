@@ -258,8 +258,26 @@ class NotificationMachineEngine:
             "last_transition": self._last_transition,
             "transition_nca_ref": None,   # 由 TCN 慢系统回填，原型预留回写接口
             "fuse_info": self._fuse_info,
+            "nca_lite_seq": self._nca_seq,  # S-2 修复：序号纳入快照（持久化载体，供启动回读续号）
             "sign": self._sign("state-snapshot"),
         }
+
+    def resume_nca_seq(self, persisted_seq: int) -> int:
+        """启动回读（S-2 修复）：从持久化快照恢复 NCA-Lite 序号 —— 续号不复位。
+
+        连续性校验（fail-closed，参照 fact-chain index 结构性断言先例）：
+        - 序号须为非负整数（bool 拒收）；
+        - ⛔ 不得回退：持久值小于内存当前值即拒绝；
+        - 恢复后下一条记录序号 = persisted_seq + 1（_gen_nca_lite 自增先行，
+          天然续号 ⟹ 不复用、不跳号）。
+        """
+        if not isinstance(persisted_seq, int) or isinstance(persisted_seq, bool) or persisted_seq < 0:
+            raise ValueError("[NSFL-TRIGGER] seq 回读非法：{!r}".format(persisted_seq))
+        if persisted_seq < self._nca_seq:
+            raise ValueError("[NSFL-TRIGGER] seq 回退：持久值 {} < 当前 {}".format(
+                persisted_seq, self._nca_seq))
+        self._nca_seq = persisted_seq
+        return self._nca_seq
 
     # ---- 主流程 ----
 
