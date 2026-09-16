@@ -113,6 +113,12 @@
 - **现状引用**：TDCA-ENG-CLOSED-001（外部依赖清单）。
 - *Design the formal verification framework for the three sovereign anchors once connected.*
 
+### P-16 协议基础设施的专利防御体系（治理工程 · 开放）
+- **问题**：协议基础设施的关键机制（合规前置准入、负空间熔断、断言锚点、延迟阻断、存证生命周期）面临被第三方抢注专利的风险；如何以零专利申请成本，建立可维护、可验证、可持续的现有技术防御体系。
+- **目标**：防御性公开的规范化流程——可实现披露标准（7 项自查）、公开仓 commit 锚定、半年周期复扫与清单增补机制、社区非侵略规则的资格后果模型。
+- **现状引用**：[docs/prior-art/](docs/prior-art/)（PA-001~PA-005 首批披露）+ [PATENTS.md](PATENTS.md)（生态非侵略承诺）。
+- *Establish a zero-patent-cost, maintainable defensive-publication system for protocol infrastructure: implementable disclosure standards, public-commit anchoring, periodic re-scan, and a community non-aggression rule with qualification consequences.*
+
 ---
 
 ## 提交需知（Submission Requirements）
