@@ -28,7 +28,7 @@
 | `nca-lite/*`（每条记录） | A7100 SE（SM2） | SE 签名（基线原有） |
 | `session-index/L0-state.nca` | A7100 SE（SM2） | SE 签名（基线原有） |
 | **`session-index/L1-active.json`** | **A7100 SE（SM2）** | **V1.1-REV 新增：SE 签名 ＋ 固件 HMAC 保留为附加校验** |
-| `config/*`（scene-binding ＋ call-rules） | A7100 SE（SM2，SE-SIGN-5） | SE 签名（基线原有） |
+| `config/*`（scene-binding ＋ call-rules） | A7100 SE（SM2） | SE 签名（基线原有） |
 
 ---
 
