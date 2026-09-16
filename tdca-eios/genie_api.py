@@ -21,16 +21,16 @@ class GenieAPI:
 
     # 能力清单（九大能力 + 派生端点）
     CAPABILITIES = {
-        'positive-sum': {'capability': '正和满意解', 'id': 'ID84', 'method': 'POST'},
-        'inverse': {'capability': '反函数求解', 'id': 'ID21', 'method': 'POST'},
-        'shape': {'capability': '能力塑造', 'id': 'ID8', 'method': 'POST'},
-        'validate-delivery': {'capability': '交付确认', 'id': 'ID79+ID43', 'method': 'POST'},
-        'shapley': {'capability': 'Shapley 分配', 'id': 'ID24', 'method': 'POST'},
-        'optimize': {'capability': '约束优化', 'id': 'ID24', 'method': 'POST'},
-        'measure': {'capability': '计量/因果推断', 'id': 'ID24', 'method': 'POST'},
-        'bayesian': {'capability': '贝叶斯更新', 'id': 'ID24', 'method': 'POST'},
-        'game-equilibrium': {'capability': '博弈均衡求解', 'id': 'ID24', 'method': 'POST'},
-        'cross-domain': {'capability': '跨域配置权映射', 'id': 'ID76/ID81', 'method': 'POST'},
+        'positive-sum': {'capability': '正和满意解', 'id': 'positive-sum', 'capability_id': 'positive-sum', 'method': 'POST'},
+        'inverse': {'capability': '反函数求解', 'id': 'inverse', 'capability_id': 'inverse', 'method': 'POST'},
+        'shape': {'capability': '能力塑造', 'id': 'shape', 'capability_id': 'shape', 'method': 'POST'},
+        'validate-delivery': {'capability': '交付确认', 'id': 'validate-delivery', 'capability_id': 'validate-delivery', 'method': 'POST'},
+        'shapley': {'capability': 'Shapley 分配', 'id': 'shapley', 'capability_id': 'shapley', 'method': 'POST'},
+        'optimize': {'capability': '约束优化', 'id': 'optimize', 'capability_id': 'optimize', 'method': 'POST'},
+        'measure': {'capability': '计量/因果推断', 'id': 'measure', 'capability_id': 'measure', 'method': 'POST'},
+        'bayesian': {'capability': '贝叶斯更新', 'id': 'bayesian', 'capability_id': 'bayesian', 'method': 'POST'},
+        'game-equilibrium': {'capability': '博弈均衡求解', 'id': 'game-equilibrium', 'capability_id': 'game-equilibrium', 'method': 'POST'},
+        'cross-domain': {'capability': '跨域配置权映射', 'id': 'cross-domain', 'capability_id': 'cross-domain', 'method': 'POST'},
     }
 
     def __init__(self):
