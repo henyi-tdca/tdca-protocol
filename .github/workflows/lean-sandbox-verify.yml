@@ -33,7 +33,7 @@ jobs:
       - name: Fetch Mathlib cache
         run: lake exe cache get
 
-      - name: Machine-check sandbox files (gate: error count = 0)
+      - name: "Machine-check sandbox files (gate: error count = 0)"
         run: |
           lake env lean TDCA/Entropy.lean 2>&1 | tee entropy-output.txt; e1=${PIPESTATUS[0]}
           lake env lean TDCA/Integration.lean 2>&1 | tee integration-output.txt; e2=${PIPESTATUS[0]}
