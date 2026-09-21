@@ -44,7 +44,7 @@ structure Channel (X : Type*) [Fintype X] where
   row_sum : ∀ x, ∑ y, T x y = 1
 
 /-- KL 散度（V-0）：⚠️ 绝对连续前提**显式进假设位**（`h_ac`），⛔ 不藏入定义。 -/
-def klDiv {X : Type*} [Fintype X] (P Q : FinDist X)
+noncomputable def klDiv {X : Type*} [Fintype X] (P Q : FinDist X)
     (h_ac : ∀ x, Q.p x = 0 → P.p x = 0) : ℝ :=
   ∑ x, P.p x * Real.log (P.p x / Q.p x)
 
@@ -57,11 +57,11 @@ def klDiv {X : Type*} [Fintype X] (P Q : FinDist X)
 /- ## V-1 EI 定义式（doUnif／effDist／cutChannel／EI） -/
 
 /-- 均匀 do-干预（最大熵干预分布 · 单点定义）。 -/
-def doUnif (X : Type*) [Fintype X] : FinDist X :=
+noncomputable def doUnif (X : Type*) [Fintype X] : FinDist X :=
   ⟨fun _ => (Fintype.card X : ℝ)⁻¹, sorry, sorry⟩
 
 /-- 干预下效分布（effDist）：`P` 经 `T` 之一步演化。 -/
-def effDist {X : Type*} [Fintype X] (T : Channel X) (P : FinDist X) : FinDist X :=
+noncomputable def effDist {X : Type*} [Fintype X] (T : Channel X) (P : FinDist X) : FinDist X :=
   ⟨fun y => ∑ x, P.p x * T.T x y, sorry, sorry⟩
 
 /-- 非平凡二分分割（V-0／V-7：头补 `[DecidableEq X]`，体内 `Finset` 运算须之）。 -/
@@ -70,7 +70,7 @@ structure Bipartition (X : Type*) [Fintype X] [DecidableEq X] where
   nontriv : S.Nonempty ∧ S ≠ Finset.univ
 
 /-- 断边以均匀噪声重接（cutChannel · V-1）：跨 π 部分之边以均匀分布重接。 -/
-def cutChannel {X : Type*} [Fintype X] [DecidableEq X]
+noncomputable def cutChannel {X : Type*} [Fintype X] [DecidableEq X]
     (T : Channel X) (π : Bipartition X) : Channel X :=
   ⟨fun x y => if (x ∈ π.S ∧ y ∈ π.S) ∨ (x ∉ π.S ∧ y ∉ π.S) then T.T x y
               else (Fintype.card X : ℝ)⁻¹,
@@ -81,7 +81,7 @@ def cutChannel {X : Type*} [Fintype X] [DecidableEq X]
     同一干预 ＋ 同一效变量 ⟹ **分割为唯一自变量**。
     ⚠️ 效力边界句（P-4 强制携带）：EI 数值依赖干预分布之选取；本侧固定均匀干预；更换干预分布 ⟹ 数值不可比。
     ⛔ 互信息式 `I(X_t ; X_{t+1})` 不得用于整合度（仅作伴随指标「信息通量」登记，本模块不实现）。 -/
-def EI {X : Type*} [Fintype X] [DecidableEq X] (T : Channel X) (π : Bipartition X) : ℝ :=
+noncomputable def EI {X : Type*} [Fintype X] [DecidableEq X] (T : Channel X) (π : Bipartition X) : ℝ :=
   klDiv (effDist T (doUnif X)) (effDist (cutChannel T π) (doUnif X)) (by sorry)
 
 /- ## V-2 占位防护：EIMeasure 度量接口（三定理一律 `∀ (E : EIMeasure X), …`） -/
@@ -105,7 +105,7 @@ structure CollabNetwork (X : Type*) [Fintype X] [DecidableEq X] where
 ⛔ P-11：`effectiveInformation := 0`／`integration := …` 常数占位已废——整合度由 `Phi`（经 EIMeasure）承载。 -/
 
 /-- 整合度 Φ（V-6）：`sInf { E.ei T π | π }`（定理层只用精确值）。 -/
-def Phi {X : Type*} [Fintype X] [DecidableEq X] (E : EIMeasure X) (T : Channel X) : ℝ :=
+noncomputable def Phi {X : Type*} [Fintype X] [DecidableEq X] (E : EIMeasure X) (T : Channel X) : ℝ :=
   sInf { r : ℝ | ∃ π : Bipartition X, r = E.ei T π }
 
 /- ## V-4 分化性下界（δ 显式假设位） -/
@@ -116,7 +116,7 @@ def differentiated {X : Type*} [Fintype X] [DecidableEq X]
     (T : Channel X) (π : Bipartition X) (δ : ℝ) : Prop := δ ≤ EI T π
 
 /-- 最大可证下界 deltaMin（V-4 派生）。 -/
-def deltaMin {X : Type*} [Fintype X] [DecidableEq X]
+noncomputable def deltaMin {X : Type*} [Fintype X] [DecidableEq X]
     (T : Channel X) (π : Bipartition X) : ℝ :=
   sSup { δ : ℝ | differentiated T π δ }
 

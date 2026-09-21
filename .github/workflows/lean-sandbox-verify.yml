@@ -38,7 +38,11 @@ jobs:
           lake env lean TDCA/Entropy.lean 2>&1 | tee entropy-output.txt; e1=${PIPESTATUS[0]}
           lake env lean TDCA/Integration.lean 2>&1 | tee integration-output.txt; e2=${PIPESTATUS[0]}
           echo "entropy exit=$e1 integration exit=$e2"
-          if grep -q "error:" entropy-output.txt integration-output.txt; then
+          if [ "$e1" -ne 0 ] || [ "$e2" -ne 0 ]; then
+            echo "::error::lake env lean exited non-zero (entropy=$e1 integration=$e2)"
+            exit 1
+          fi
+          if grep -qE "error(\([A-Za-z0-9._]+\))?:" entropy-output.txt integration-output.txt; then
             echo "::error::lake env lean reported errors"
             exit 1
           fi
