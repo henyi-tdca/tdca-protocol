@@ -26,3 +26,11 @@ nca_runtime/
 # 编译工作区生成的审计白名单（GSEQ-0617：保留工作区文件，不入库）
 tools/audit_whitelist.py
 tdca-notification-machine/simulator/out/
+
+# 每日产物与本地工作件（B-C 2026-09-22 追加；依据 TDCA-HANDOFF-EXEC-REPO-SYNC-001 GSEQ-1916）
+docs/cognitive-compiler/coldstart/DAILY-CURATION-*.md
+docs/cognitive-compiler/coldstart/COLDSTART-ROLLING-LOG-*.md
+docs/cognitive-compiler/coldstart/output/
+docs/cognitive-compiler/coldstart/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+docs/cognitive-compiler/coldstart/_w_out/
+.tdca-nca/
