@@ -35,9 +35,14 @@ jobs:
 
       - name: Machine-check candidate (lake env lean, zero errors)
         run: |
-          set -eo pipefail
-          lake env lean TDCA/ExPostTrust.lean 2>&1 | tee lean-output.txt
-          if grep -q "error:" lean-output.txt; then
+          set -o pipefail
+          lake env lean TDCA/ExPostTrust.lean 2>&1 | tee lean-output.txt; ec=${PIPESTATUS[0]}
+          echo "lean exit=$ec"
+          if [ "$ec" -ne 0 ]; then
+            echo "::error::lake env lean exited non-zero (exit=$ec)"
+            exit 1
+          fi
+          if grep -qE "error(\([A-Za-z0-9._]+\))?:" lean-output.txt; then
             echo "::error::lake env lean reported errors"
             exit 1
           fi
