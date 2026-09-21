@@ -1,0 +1,60 @@
+name: lean-sandbox-verify
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "core-go/docs/formal-proofs/lean-sandbox/**"
+      - ".github/workflows/lean-sandbox-verify.yml"
+  pull_request:
+    paths:
+      - "core-go/docs/formal-proofs/lean-sandbox/**"
+      - ".github/workflows/lean-sandbox-verify.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  lean-sandbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: core-go/docs/formal-proofs/lean-sandbox
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+
+      - name: Machine-check sandbox files (gate: error count = 0)
+        run: |
+          lake env lean TDCA/Entropy.lean 2>&1 | tee entropy-output.txt; e1=${PIPESTATUS[0]}
+          lake env lean TDCA/Integration.lean 2>&1 | tee integration-output.txt; e2=${PIPESTATUS[0]}
+          echo "entropy exit=$e1 integration exit=$e2"
+          if grep -q "error:" entropy-output.txt integration-output.txt; then
+            echo "::error::lake env lean reported errors"
+            exit 1
+          fi
+
+      - name: Count and locate sorry (counted, NOT gated)
+        run: |
+          c1=$(grep -cE "declaration uses .?sorry.?" entropy-output.txt || true)
+          c2=$(grep -cE "declaration uses .?sorry.?" integration-output.txt || true)
+          echo "sorry warning count (NOT gated): entropy=$c1 integration=$c2 total=$((c1+c2))"
+          echo "sorry warning locations (from build output):"
+          grep -HnE "declaration uses .?sorry.?" entropy-output.txt integration-output.txt || true
+          echo "raw sorry token locations (declaration + line, from sources):"
+          grep -Hn "sorry" TDCA/Entropy.lean TDCA/Integration.lean || true
+
+      - name: Show output tails
+        if: always()
+        run: |
+          tail -n 20 entropy-output.txt || true
+          tail -n 20 integration-output.txt || true
