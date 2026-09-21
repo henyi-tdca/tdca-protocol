@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
+import sys
 
 from tdca_cognitive_distance import (
     CognitiveDistanceCalculator,
@@ -38,6 +39,7 @@ class PairMeasure:
     fuzzy_direction: str        # HIGH/MEDIUM/LOW/NO_DIFFERENCE（模糊置信度增强）
     fuzzy_nearness: float
     provenance: str             # ID92: SIMULATED | REAL-{source}
+    defaults_applied: tuple = ()  # 缺维按 0.5 默认的 [{label}.{dim}] 清单（空=无默认）
 
     def to_dict(self) -> dict:
         return {
@@ -53,6 +55,7 @@ class PairMeasure:
             "fuzzy_direction": self.fuzzy_direction,
             "fuzzy_nearness": round(self.fuzzy_nearness, 6),
             "provenance": self.provenance,
+            "defaults_applied": list(self.defaults_applied),
         }
 
 
@@ -133,8 +136,8 @@ class CogAlignService:
         输出: 不对称距离（命题 3.10）+ 优势方 + 双向对齐难度（定义 3.37）
               + 协商触发建议（NIA-MACM PHASE-2）+ 模糊置信度方向（FUZZY_CONFIDENCE）
         """
-        self._validate_state(s_a, "subject_a")
-        self._validate_state(s_b, "subject_b")
+        defaults_a = self._validate_state(s_a, "subject_a")
+        defaults_b = self._validate_state(s_b, "subject_b")
         pair = self._dist.measure_pair(subject_a, s_a, subject_b, s_b)
         conf = self._fuzzy.fuzzy_confidence(s_a, s_b)
         return PairMeasure(
@@ -148,6 +151,7 @@ class CogAlignService:
             fuzzy_direction=conf.direction,
             fuzzy_nearness=conf.nearness,
             provenance=provenance or self._provenance,
+            defaults_applied=tuple(defaults_a + defaults_b),
         )
 
     # ---- 多主体评测（A-2）----
@@ -219,14 +223,27 @@ class CogAlignService:
         rows.sort(key=lambda r: r["cognitive_level"], reverse=True)
         return rows
 
-    def _validate_state(self, state: Dict[str, float], label: str) -> None:
-        """五维状态校验（[0,1] 区间，缺失维按 0.5 默认——对齐 CognitiveStateCalculator）。"""
-        errors = []
+    def _validate_state(self, state: Dict[str, float], label: str) -> List[str]:
+        """五维状态校验（[0,1] 区间，缺失维按 0.5 默认——对齐 CognitiveStateCalculator）。
+
+        未知键（不在 A/D/L/C/SC，大小写敏感）⟹ 报错（杀死「小写键静默全零」）。
+        缺维 ⟹ 保留 0.5 默认（既有调用方不受影响），但向 stderr 打 [DEFAULT] 标记，
+        并返回缺维清单供报告 defaults_applied 字段使用（静默失败变为可见）。
+        """
+        errors, defaults = [], []
+        for k in sorted(state):
+            if k not in ("A", "D", "L", "C", "SC"):
+                errors.append(f"未知键 {k}")
         for dim in ("A", "D", "L", "C", "SC"):
             v = state.get(dim)
-            if v is not None and not isinstance(v, (int, float)):
+            if v is None:
+                defaults.append(f"{label}.{dim}")
+                print(f"[DEFAULT] {label}.{dim}=0.5", file=sys.stderr)
+                continue
+            if not isinstance(v, (int, float)):
                 errors.append(f"{label}.{dim} 非数值: {v}")
-            elif v is not None and not (0.0 <= v <= 1.0):
+            elif not (0.0 <= v <= 1.0):
                 errors.append(f"{label}.{dim} 超出 [0,1]: {v}")
         if errors:
             raise ValueError(f"[NSFL-TRIGGER] cog_align validate failed: {'; '.join(errors)}")
+        return defaults

@@ -110,6 +110,41 @@ class TestPairMeasure:
         with pytest.raises(ValueError, match="NSFL-TRIGGER"):
             svc.measure("a", bad, "b", _s())
 
+    def test_lowercase_keys_rejected_as_unknown(self):
+        """小写键（大小写敏感，不在 A/D/L/C/SC）→ 「未知键」报错（杀死静默全零）。"""
+        svc = CogAlignService()
+        lowercase = {"a": 0.9, "d": 0.5, "l": 0.5, "c": 0.5, "sc": 0.5}
+        with pytest.raises(ValueError, match="未知键 a"):
+            svc.measure("a", lowercase, "b", _s())
+
+    def test_unknown_key_mixed_with_valid_rejected(self):
+        """合法大写键混入未知键 → 报错（不因有五维合法而放行）。"""
+        svc = CogAlignService()
+        mixed = _s(zeta=0.3)
+        with pytest.raises(ValueError, match="未知键 zeta"):
+            svc.measure("a", mixed, "b", _s())
+
+    def test_missing_dims_defaulted_with_warning(self, capsys):
+        """缺维保留 0.5 默认：stderr 打 [DEFAULT]，报告带 defaults_applied。"""
+        svc = CogAlignService()
+        partial = {"A": 0.9}  # 缺 D/L/C/SC
+        m = svc.measure("a", partial, "b", _s())
+        err = capsys.readouterr().err
+        assert "[DEFAULT] subject_a.D=0.5" in err
+        assert "[DEFAULT] subject_a.SC=0.5" in err
+        assert "subject_b" not in err  # b 五维齐全，不应有 [DEFAULT]
+        report = m.to_dict()
+        assert report["defaults_applied"] == [
+            "subject_a.D", "subject_a.L", "subject_a.C", "subject_a.SC"]
+        assert report["d_cognitive_ab"] > 0.0  # 默认值参与计算，结果非全零
+
+    def test_full_dims_no_defaults(self, capsys):
+        """五维齐全：无 [DEFAULT]、defaults_applied 为空（正常路径零变化）。"""
+        svc = CogAlignService()
+        m = svc.measure("a", _s(A=0.9), "b", _s(A=0.1))
+        assert capsys.readouterr().err == ""
+        assert m.to_dict()["defaults_applied"] == []
+
 
 class TestMultiSubject:
     """A-2 多主体矩阵。"""
