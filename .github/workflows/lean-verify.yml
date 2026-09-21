@@ -1,6 +1,7 @@
 name: lean-verify
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "core-go/docs/formal-proofs/lean/**"
