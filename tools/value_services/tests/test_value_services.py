@@ -68,3 +68,21 @@ class TestValueServicesBundle:
         """未知服务 → rc 2（非 SystemExit）。"""
         rc = vs_main(["bogus", "measure"])
         assert rc == 2
+
+
+class TestModuleEntry:
+    """`python -m value_services` 入口（README 所载命令可跑）。"""
+
+    def test_python_dash_m_version_runs(self):
+        """subprocess：python -m value_services --version ⟹ exit 0。"""
+        import subprocess
+        import sys
+        from pathlib import Path
+
+        tools_dir = Path(__file__).resolve().parents[2]
+        proc = subprocess.run(
+            [sys.executable, "-m", "value_services", "--version"],
+            cwd=tools_dir, capture_output=True, text=True, timeout=60,
+        )
+        assert proc.returncode == 0
+        assert "value_services 2.0.0-M2" in proc.stdout
