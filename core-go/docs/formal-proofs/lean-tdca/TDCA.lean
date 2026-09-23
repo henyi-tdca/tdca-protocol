@@ -17,3 +17,7 @@ import TDCA.Axiom6
 -- 公理 6 · 约束 4 条件形态附录（2026-09-14）：新增 `import TDCA.Axiom6Complexity`
 -- ——复杂度以建模参数进入、约束以假设形式给出、结论标 conditional；⛔ 不得读作已从程序推出。
 import TDCA.Axiom6Complexity
+-- 准入守卫（2026-09-23）：新增 `import TDCA.Admission`
+-- ——N-3 制度准入状态机（七态）＋ N-2 信任根分级↔场景密级（fail-closed），共用骨架一次建模双用；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5／B1–B5）。
+import TDCA.Admission
