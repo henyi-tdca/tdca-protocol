@@ -1,7 +1,7 @@
 /-
   TDCA 形式化证明课题 · M-3 段 1+2 · 化合保持性：复合（L2 / L3 / L4）
   ============================================================================
-  状态：SKELETON——**未经机器验证**（本工程无 Lean 工具链：lean/lake/elan 均不可用）
+  状态：本机已机验（2026-09-22，Lean 4.34.0-rc2）——lake build 0 error、逐件 exit 0、零 sorry；**非 CI 机验**
 
   依据：M-3 方案设计§三 三段式（段 1 代数 / 段 2 前置）§五 引理清单 L2/L3/L4
   对应：输入件《形式化证明总纲》M-3「Φ₂∘Φ₁ 有可计算反射广义逆 G₁∘G₂」
@@ -53,7 +53,7 @@ theorem L2_comp_none {D R S : Type} (g : R → Option S) (f : D → Option R) (x
     （V2 的 `47:52` 等 4 处陈述级错误**全部消失**），但**证明体**在 `59:56 / 59:55` 报见证层错误 ——
     原写法 `h_compat s ⟨r, hfr, hgr⟩` 把 `r : R`（`L2_comp_some` 内层 `∃ y : R` 的见证）**误作**
     `∃ x : D, comp g f x = some s` 的见证；现改为**在 `rw` 改写前**取**原始输入见证** `h_compat s ⟨x, hx⟩`（`x : D`）。
-    ⚠️ **补正后未机验**（待 V4 复跑）。 -/
+    ⚠️ **补正后已机验（2026-09-22 本机 Lean 4.34.0-rc2）：exit 0、零 sorry**（V4 复跑即本机复跑；CI 复跑仍待）。 -/
 theorem L3a_compose_right_inverse {D R S : Type}
     (f : D → Option R) (g : R → Option S) (gf : R → D) (hg : S → R)
     (h_ctx : ∀ r, (∃ x, f x = some r) → f (gf r) = some r)
@@ -88,7 +88,7 @@ theorem L3b_canonical_right_inverse {D R S : Type}
 
 /-- **复合守卫**：`P`（首段定义域守卫）**合取** `Q`（次段值域守卫）——**不可剥离** -/
 def guardComp {D R S : Type} (P : D → Prop) (Q : R → Prop)
-    (f : D → Option R) (g : R → Option S) (x : D) : Prop :=
+    (f : D → Option R) (_g : R → Option S) (x : D) : Prop :=
   P x ∧ ∃ y : R, f x = some y ∧ Q y
 
 /-- **L4a（守卫保持 · 蕴含侧）**：复合守卫 ⟹ 首段守卫（且次段守卫可由像取得）。 -/
@@ -123,12 +123,12 @@ end TDCA.MetaInverse
           原 `h_compat : … → f (hg s) = some (hg s)` **类型不匹配**（`hg s : R`、`f : D → Option R`），
           经 V2 外部机验报 `47:52` 等 4 处 error 暴露；现为 **`… → ∃ d : D, f d = some (hg s)`**（像内形式，**命题不变**）；
           证明相应为「取见证 → 交 `h_ctx` 还原 → `L2_comp_some` 闭合」。
-          ⚠️ **修正后未机验**（须复跑）；**关键点仍是 `h_compat`（兼容条件）为显式真实前提**——
+          ⚠️ **修正后已机验（2026-09-22 本机）：exit 0、零 sorry**（CI 复跑仍待）；**关键点仍是 `h_compat`（兼容条件）为显式真实前提**——
           它不是装饰，而是「`G = gf ∘ hg`」成立的前提（输入件原文未显式列出）。
    [L3-c] `L3b_canonical_right_inverse`：`G` 的**存在性**（枚举代表元）未证——
           依赖 `s ∈ Im(Φ)` 时可构造代表元；若 `D` 无限且无可选择结构，
           须以 `Classical.choice` + 良序化承接（**设计决策**，见 M-3 方案 §四）。
    [L4-a/L4-b] 已给完整证明尝试（谓词层，低风险）。
-  ⚠️ **本文件含 1 处 `sorry`**（`L2_comp_none`）——**不得声称 `sorry = 0`**。
+  ⚠️ **本文件已机验（2026-09-22 本机 Lean 4.34.0-rc2）：`L2_comp_none` 为完整证明，全件 `sorry` = 0（编译器零 sorry 告警，双口径）**；CI 复跑前对外称「本机机验通过」。
   ⚠️ 三态原则：若某条经机验不成立，**改述为 conditional 或输出反例**（合法终态）。
 -/
