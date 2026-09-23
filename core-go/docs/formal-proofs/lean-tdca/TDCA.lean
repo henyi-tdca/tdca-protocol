@@ -25,3 +25,7 @@ import TDCA.Admission
 -- ——N-1 信任链分支结构（向下传导、向上隔离；单点失效≠全网重置），零依赖刻画式件；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
 import TDCA.FailureRadius
+-- 负空间迁移不变量（2026-09-23）：新增 `import TDCA.NegativeSpace`
+-- ——N-6 负空间（底线）之修订：底线只增不减、迁移不删除（出处有落）、签批留痕、再修订保持；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A6）。
+import TDCA.NegativeSpace
