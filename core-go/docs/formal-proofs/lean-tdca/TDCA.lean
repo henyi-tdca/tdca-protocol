@@ -21,3 +21,7 @@ import TDCA.Axiom6Complexity
 -- ——N-3 制度准入状态机（七态）＋ N-2 信任根分级↔场景密级（fail-closed），共用骨架一次建模双用；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5／B1–B5）。
 import TDCA.Admission
+-- 失效半径有界性（2026-09-23）：新增 `import TDCA.FailureRadius`
+-- ——N-1 信任链分支结构（向下传导、向上隔离；单点失效≠全网重置），零依赖刻画式件；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
+import TDCA.FailureRadius
