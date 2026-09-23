@@ -33,3 +33,7 @@ import TDCA.NegativeSpace
 -- ——N-5 格式锚＋效用锚：分配效力 ⟺ 双锚齐备（可连不可分），接口层 SIMULATED 判 conditional；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
 import TDCA.DualAnchor
+-- 版本对齐 fail-closed（2026-09-23）：新增 `import TDCA.VersionAlignment`
+-- ——N-4 制度版本＋检查器版本：失配 ⟹ 拒、不确定 ⟹ 拒（fail-closed），与「先工件后制度」同一根；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
+import TDCA.VersionAlignment
