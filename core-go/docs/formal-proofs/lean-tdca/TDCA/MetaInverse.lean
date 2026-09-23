@@ -46,6 +46,7 @@ theorem M1_verify_sound (f : D → Option R) (y : R) (x : D)
     则反射广义逆的两条正则性公理成立：
       (i)  `∀ x y, f x = some y → f (g y) = some y`（对应 `Φ₀ G₀ Φ₀ = Φ₀`）
       (ii) `∀ y, (∃ x, f x = some y) → f (g y) = some y`（对应 `G₀ Φ₀ G₀ = G₀` 的像内形态）
+    ⚠️ `g` 的**存在性**本文件不证（属构造性前提，形态同 Compose.lean 之 L3b 注记）。
     证明要点：均由 `hg` 直接给出；(ii) 由 (i) 消解存在量词。 -/
 theorem M2_reflexive_inverse (f : D → Option R) (g : R → D)
     (hg : ∀ y x, f x = some y → f (g y) = some y) :
