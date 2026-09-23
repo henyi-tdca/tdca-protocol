@@ -37,3 +37,7 @@ import TDCA.DualAnchor
 -- ——N-4 制度版本＋检查器版本：失配 ⟹ 拒、不确定 ⟹ 拒（fail-closed），与「先工件后制度」同一根；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
 import TDCA.VersionAlignment
+-- 快慢接口存在性（2026-09-23）：新增 `import TDCA.FastSlow`
+-- ——N-7 快系统必有异常上报与人类介入口子（缺口子 ⟹ 可被劫持），合法性分工非性能分工；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
+import TDCA.FastSlow
