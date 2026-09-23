@@ -33,3 +33,7 @@ import TDCA.NegativeSpace
 -- ——N-5 格式锚＋效用锚：分配效力 ⟺ 双锚齐备（可连不可分），接口层 SIMULATED 判 conditional；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
 import TDCA.DualAnchor
+-- 快慢接口存在性（2026-09-23）：新增 `import TDCA.FastSlow`
+-- ——N-7 快系统必有异常上报与人类介入口子（缺口子 ⟹ 可被劫持），合法性分工非性能分工；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
+import TDCA.FastSlow
