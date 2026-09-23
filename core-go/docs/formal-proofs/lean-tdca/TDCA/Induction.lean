@@ -112,7 +112,9 @@ theorem M4_induction_step {D : Type} (f : D → Option D) (G : D → D)
 /-- **M-4 五可保持（骨架 · 谓词层）**：以**抽象谓词族** `Five` 进入证明，
     只断言「逐层保持 ⇒ n 层保持」的**形态**；`Five` 的具体语义**留制度层**。
     ⚠️ 「五可 ⟺ 层内可持续」等**制度层等价关系不在本骨架范围**，
-       **不得**以形式化名义使用（表述与机验纪律 / `M8` §N-1′~N-6′ 纪律同款）。 -/
+       **不得**以形式化名义使用（表述与机验纪律 / `M8` §N-1′~N-6′ 纪律同款）。
+    📜 沿革（2026-09-24 补记）：原形态「对一切 `n`（含 `n = 0`）」**不成立（已证伪）**——
+       `n = 0` 时结论化为 `Five (iterate f 1)`，无 `hstep` 可用；现形限定 **≥1 层**（`n + 1`）。 -/
 theorem M4_five_preserved {D : Type} (Five : (D → Option D) → Prop)
     (f : D → Option D) (G : D → D)
     (hR : IsRightInverse f G) (hC : CompatLayer f G)
