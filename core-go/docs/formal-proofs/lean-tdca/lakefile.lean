@@ -1,5 +1,5 @@
 -- TDCA 形式化证明课题 · M1 Lean 工程
--- 状态：本机已机验（2026-09-22，Lean 4.34.0-rc2 / Lake 5.0.0-src，lake build EXIT=0、913 jobs、0 error）——**非 CI 机验**，对外仍不得称「已证明」（表述与机验纪律）
+-- 状态：本机已机验（2026-09-22，Lean 4.34.0-rc2 / Lake 5.0.0-src，lake build EXIT=0、919 jobs、0 error）——**非 CI 机验**，对外仍不得称「已证明」（表述与机验纪律）
 -- 工具链：lean-toolchain = leanprover/lean4:v4.34.0-rc2（与本目录 lean-toolchain 文件一致）
 -- 依赖：Mathlib（与既有形式化先例一致的库面）
 import Lake
