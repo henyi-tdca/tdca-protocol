@@ -29,3 +29,7 @@ import TDCA.FailureRadius
 -- ——N-6 负空间（底线）之修订：底线只增不减、迁移不删除（出处有落）、签批留痕、再修订保持；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A6）。
 import TDCA.NegativeSpace
+-- 双锚一致性（2026-09-23）：新增 `import TDCA.DualAnchor`
+-- ——N-5 格式锚＋效用锚：分配效力 ⟺ 双锚齐备（可连不可分），接口层 SIMULATED 判 conditional；
+-- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
+import TDCA.DualAnchor
