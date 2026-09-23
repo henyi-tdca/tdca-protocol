@@ -47,9 +47,10 @@ omit [DecidableEq R] in
     则反射广义逆的两条正则性公理成立：
       (i)  `∀ x y, f x = some y → f (g y) = some y`（对应 `Φ₀ G₀ Φ₀ = Φ₀`）
       (ii) `∀ y, (∃ x, f x = some y) → f (g y) = some y`（对应 `G₀ Φ₀ G₀ = G₀` 的像内形态）
-    ⚠️ `g` 的**存在性**本文件不证（属构造性前提，形态同 Compose.lean 之 L3b 注记）。
-    证明要点：均由 `hg` 直接给出；(ii) 由 (i) 消解存在量词。 -/
-theorem M2_reflexive_inverse (f : D → Option R) (g : R → D)
+    证明要点：均由 `hg` 直接给出；(ii) 由 (i) 消解存在量词。
+    ⚠️ 2026-09-24 降级为**内部引理**（`private`）：结论第一合取支与前提逐字相同（量词交换）、
+       第二支为直接例化，属逻辑近平凡，不再作为对外定理挂出；数学事实内容保留。 -/
+private theorem M2_reflexive_inverse (f : D → Option R) (g : R → D)
     (hg : ∀ y x, f x = some y → f (g y) = some y) :
     (∀ x y, f x = some y → f (g y) = some y) ∧
     (∀ y, (∃ x, f x = some y) → f (g y) = some y) := by
