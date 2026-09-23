@@ -91,13 +91,6 @@ def guardComp {D R S : Type} (P : D → Prop) (Q : R → Prop)
     (f : D → Option R) (_g : R → Option S) (x : D) : Prop :=
   P x ∧ ∃ y : R, f x = some y ∧ Q y
 
-/-- **L4a（守卫保持 · 蕴含侧）**：复合守卫 ⟹ 首段守卫（且次段守卫可由像取得）。 -/
-theorem L4_guard_implies_first {D R S : Type} (P : D → Prop) (Q : R → Prop)
-    (f : D → Option R) (g : R → Option S) (x : D) :
-    guardComp P Q f g x → P x := by
-  intro h
-  exact h.1
-
 /-- **L4b（剥离红队）**：**存在** `x` 使 `P x` 成立而 `guardComp` 不成立——
     即「**只保留首段守卫**」会**漏掉**次段守卫，故守卫**不可剥离**（违反即为内核违规）。
     2026-09-24 删结论冗余合取支 `P x ∧`（cosmetic；`P x` 已由前提 `hP` 给出），余不动。 -/
@@ -127,7 +120,9 @@ end TDCA.MetaInverse
    [L3-c] `L3b_canonical_right_inverse`：`G` 的**存在性**（枚举代表元）未证——
           依赖 `s ∈ Im(Φ)` 时可构造代表元；若 `D` 无限且无可选择结构，
           须以 `Classical.choice` + 良序化承接（**设计决策**，见 M-3 方案 §四）。
-   [L4-a/L4-b] 已给完整证明尝试（谓词层，低风险）。
+   [L4-a] 2026-09-24 **降为登记簿项**：`guardComp P Q f g x → P x` 系 `guardComp` 之**定义展开**
+          （定义含 `P x` 为合取支），不再作独立定理挂出；数学事实以本行登记，内容不删。
+   [L4-b] `L4_guard_not_separable`：已给完整证明（剥离红队）。
   ⚠️ **本文件已机验（2026-09-22 本机 Lean 4.34.0-rc2）：`L2_comp_none` 为完整证明，全件 `sorry` = 0（编译器零 sorry 告警，双口径）**；CI 复跑前对外称「本机机验通过」。
   ⚠️ 三态原则：若某条经机验不成立，**改述为 conditional 或输出反例**（合法终态）。
 -/
