@@ -99,18 +99,17 @@ theorem L4_guard_implies_first {D R S : Type} (P : D → Prop) (Q : R → Prop)
   exact h.1
 
 /-- **L4b（剥离红队）**：**存在** `x` 使 `P x` 成立而 `guardComp` 不成立——
-    即「**只保留首段守卫**」会**漏掉**次段守卫，故守卫**不可剥离**（违反即为内核违规）。 -/
+    即「**只保留首段守卫**」会**漏掉**次段守卫，故守卫**不可剥离**（违反即为内核违规）。
+    2026-09-24 删结论冗余合取支 `P x ∧`（cosmetic；`P x` 已由前提 `hP` 给出），余不动。 -/
 theorem L4_guard_not_separable {D R S : Type} (P : D → Prop) (Q : R → Prop)
     (f : D → Option R) (g : R → Option S) (x : D) (y : R)
-    (hP : P x) (hf : f x = some y) (hQ : ¬ Q y) :
-    P x ∧ ¬ guardComp P Q f g x := by
-  constructor
-  · exact hP
-  · intro hconj
-    rcases hconj with ⟨_, y', hf', hQ'⟩
-    rw [hf] at hf'
-    injection hf' with hy
-    exact hQ (hy.symm ▸ hQ')
+    (_hP : P x) (hf : f x = some y) (hQ : ¬ Q y) :
+    ¬ guardComp P Q f g x := by
+  intro hconj
+  rcases hconj with ⟨_, y', hf', hQ'⟩
+  rw [hf] at hf'
+  injection hf' with hy
+  exact hQ (hy.symm ▸ hQ')
 
 end TDCA.MetaInverse
 
