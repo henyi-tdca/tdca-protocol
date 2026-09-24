@@ -80,7 +80,7 @@ Mechanism chain: three-phase gating (admission / sandbox / production) → COP (
 |---|---|---|---|---|---|
 | **GLM-5.2** | McKinsey COP (T1/T2 baseline) | GLM-authored `cognitive_compiler` | spec authoring real (2026-08; exact effort pending¹) | baseline schema, six keys present | McKinsey COP baseline **sha8=`e8655643`** |
 | **Hunyuan** | Thirty-Six Stratagems (36) | GLM-authored → **Hunyuan took over compile** | batch single-run 36×2 files, real 2026-08-14 | **36/36 PASS** | sample COP 第01计 SHA256=`e45a9a3198b32ce2507e3fee5b5ec5dd5fbf7602bb9186ca6b1534c798b4a2b9` |
-| **Hunyuan** | I Ching (2/64) | GLM-authored script → **Hunyuan verified** | 第01乾 8-31 + 第02坤 9-01, real | COP schema six-element PASS | 第01卦-乾 sha256_16=`910fa1a96f1da1c3`; 第02卦-坤 sha256_16=`7bc18e9ba19d7e59` |
+| **Hunyuan** | I Ching (25/64) | GLM-authored script → **Hunyuan verified** | 第01乾 8-31 + 第02坤 9-01, real | COP schema six-element PASS | 第01卦-乾 sha256_16=`910fa1a96f1da1c3`; 第02卦-坤 sha256_16=`7bc18e9ba19d7e59` |
 | **DeepSeek** | cold-start real rerun | community-ledger automation | **5122 tok real call**, real 2026-08-31T09:46:53Z | six-key yaml machine-verify PASS | `cold-start evidence` (model=deepseek-v4-flash) |
 | **KIMI** | (publishing / liaison line, not compile) | — | — | — | KIMI relayed Weekly-003 / three essays (publishing line)² |
 
@@ -152,9 +152,9 @@ From `cold-start evidence.json`:
 | Paradigm | Program (authoring model) | Runtime (execution model) | Consistency evidence |
 |---|---|---|---|
 | Thirty-Six Stratagems (36) | GLM-5.2 authored `cognitive_compiler` | **Hunyuan took over compile** | 36/36 COP six-element PASS; NCA chained attribution isomorphic |
-| I Ching (2/64) | GLM-5.2 authored `compile_iching.py` | **Hunyuan verified** | 第01乾/第02坤 COP schema isomorphic; sha256_16 `910fa1a9…`/`7bc18e9b…` |
+| I Ching (25/64) | GLM-5.2 authored `compile_iching.py` | **Hunyuan verified** | 第01乾/第02坤 COP schema isomorphic; sha256_16 `910fa1a9…`/`7bc18e9b…` |
 
-- **Pure-local compile**: I Ching compile uses `compile_iching.py` + `iching_data.py` (64-hexagram local corpus ~45 KB); COP deterministically generated from local data; **63/64 effort zero-LLM** (model not in loop). Artifacts 2/64 (第01乾 8-31 / 第02坤 9-01), `progress.yaml` marks `completed: 2 / total: 64 / status: running`.
+- **Pure-local compile**: I Ching compile uses `compile_iching.py` + `iching_data.py` (64-hexagram local corpus ~45 KB); COP deterministically generated from local data; **63/64 effort zero-LLM** (model not in loop). Artifacts 25/64 as of 2026-09-25 (自第01乾 8-31 起由每日 03:00 自动化续编), `progress.yaml` marks `completed: 25 / total: 64 / status: running`.
 
 **Evidence-chain claim**: most AI-governance papers stop at "principles"; TDCA supplies **executable code + cross-model reproducible artifacts** as dual evidence — "program vs runtime": switching runtime (GLM-5.2 → Hunyuan) does not change delivery, and pure-local compile pushes independence to "model not in loop."
 

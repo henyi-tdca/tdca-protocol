@@ -1,0 +1,64 @@
+COP-ID: ICHING-COP-01
+base_protocol: TDCA-CORE-20260815-01
+source_expert: zhouyi
+compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiled_at: '2026-08-31T18:52:13.835060+08:00'
+stratum: 上经
+hexagram:
+  seq: 1
+  name: 乾
+  pinyin: qián
+  upper: 乾
+  lower: 乾
+  nature: 乾为天
+  gua_ci_real: 元，亨，利，贞。
+  da_xiang_real: 天行健，君子以自强不息。
+provenance:
+  gua_ci: real
+  gua_ci_source: 周易·乾卦·卦辞（通行本原文引用）
+  da_xiang: real
+  da_xiang_source: 周易·乾卦·大象传（通行本原文引用）
+  modern_implications: generated_by_workbuddy
+  negative_space: generated_by_workbuddy（含 NSFL 通用禁令）
+soul:
+  identity: 乾（乾为天）
+  core: 乾为天
+  role: 思维协议 (易理决策类)
+  category: 周易六十四卦 / 上经
+  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+primitives:
+- name: qián
+  method: 乾
+  signature: 'fn qián(context: Situation) -> Outcome'
+  precond: 组织/决策情境契合本卦意象（乾为天）
+  postcond: 依本卦 core 与负空间守正行权，达成正和决策
+  negative_space: ⊗ 忌亢龙有悔：位极而刚愎自用、不听反证则倾覆；领导不可无制衡。
+  steps:
+  - 辨势：识别当前所处卦象对应的组织/决策情境与时机位阶
+  - 守正：以本卦 core 与负空间为边界，不越 NSFL 否决权
+  - 行权：据 modern_implications 择机行动——顺势则进，当止则止
+  nca_emit: true
+dispatch:
+  main_pipeline: qián
+  graph:
+  - from: qián
+    to: []
+  note: 单卦独立协议，主原语 qián 即该卦决策执行体
+decision:
+- if: 情境契合本卦意象（乾为天）且未触负空间
+  call: qián
+skills: []
+modern_implications:
+- 刚健进取须配节奏：创始阶段以『潜→见→惕→跃→飞→亢』六位递进，组织扩张不可跳过能力沉淀期直接『飞龙在天』，否则亢龙有悔。
+- 领导者以『自强不息』为元动力，但『利贞』定边界——可持续的正和增长优于透支式冒进；用九『见群龙无首』提示分权自治优于个人英雄。
+- 决策前先问『当下在第几爻』：环境未成熟时守『潜龙勿用』，资源到位后『亢龙有悔』预警过度自信，避免成败系于一人。
+negative_space:
+- ⊗ 禁止违反 NSFL：伦理/法律负空间不可越（F1.5 否决权宪法条款，优先级恒高于一切判据，Fail-Closed）
+- ⊗ 忌亢龙有悔：位极而刚愎自用、不听反证则倾覆；领导不可无制衡。
+- ⊗ 忌潜龙妄动：势能未蓄而强出头，徒耗资源且失先机。
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
+  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated

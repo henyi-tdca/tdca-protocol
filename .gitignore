@@ -34,3 +34,12 @@ docs/cognitive-compiler/coldstart/output/
 docs/cognitive-compiler/coldstart/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 docs/cognitive-compiler/coldstart/_w_out/
 .tdca-nca/
+# coldstart 实验产物面整体忽略（2026-09-24 追加 · L1-SI-077；授权：创始人「暂不提交，那 227 项不建议整体提交，宜加忽略规则」）
+# ⚠️ 已跟踪件不受影响（gitignore 不影响已跟踪）；本目录今后若需入仓正式件，须 git add -f 或先移出本目录
+docs/cognitive-compiler/coldstart/
+_run/
+artifacts/
+# 未跟踪面处置（TDCA-HANDOFF-EXEC-REPO-UNTRACKED-DISPOSAL-001；只加忽略、不删任何文件）
+TDCA-仓库现状评估报告-20260912.md
+docs/cognitive-compiler/cop-compiler/compiler_src/batch-output/
+docs/cop-library/stratagems/2026-08-28/
