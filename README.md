@@ -36,7 +36,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`pack/`](pack/) | **TDCA 智能体编程协议包**：30 分钟制度注入入门——7 份规范 + 5 个机器可读模板 |
 | [`dual/`](dual/) | **双协议化合引擎（DUAL-PROTOCOL）**：场景协议 × 制度协议运行时化合——4 引擎模块 + 测试 + 四行业示例 |
 | [`core-go/`](core-go/) | **Go 强类型生产级核心引擎**：enforce / nca / nsfl 核心三件 + tdcad 守护进程 + MCP 桥接（AI 可调用工具）+ Python↔Go 桥接（Apache-2.0 独立许可，与根 MIT 双许可并存） |
-| [`ecoscan/`](ecoscan/) | **生态雷达 + 邀请自动化（ECOSCAN）**：扫描 → 诊断 → 邀请 → 实测回收 → NCA 台账全链流水线（Apache-2.0 独立许可） |
+| [`ecoscan/`](ecoscan/) | **生态雷达 + 告知（ECOSCAN）**：扫描 → 诊断 → 邀请 → 实测回收 → NCA 台账全链流水线（Apache-2.0 独立许可） |
 | [`protocols/`](protocols/) | **原生协议权威库（tdca-native，单一事实源）**：七原则声明与正典锚，518 份机器可读协议 |
 | [`tdca-adapters/`](tdca-adapters/) | **外部协议适配器**：协议互操作与身份桥接适配（含 ACPS 适配器与适配矩阵） |
 | [`gov-kit/`](gov-kit/) | **研发治理包**：总纲 / 试验门 / 灰度门 / 可靠性检查单 |
@@ -101,7 +101,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 
 - **挂载 / 化合双轨**：外部项目可 mount（外部挂载协议层，不改你的代码）或 compound（资产与制度函数化合）；拒绝即止——配置权归还，不施压
 - **只赋能不改码（边界声明）**：TDCA 核心协议库（core-go）为本项目原创的独立许可（Apache-2.0）；对外项目的挂载/化合服务**绝不修改他人源码，仅通过 MCP 协议外部调用**
-- **动态分润 15% + 开源方优先**：无明确收费约定时按开源规则合法挂载，收益默认支付 15% 版税给项目方或其社区基金会（涉及跨境支付的情形，依外汇管理法规完成流程后办理）。**分润为自愿的商业合作约定；使用本仓库不产生任何付费义务；本条不构成许可条件，亦不构成使用前提。**分润为生态内部基于 Simulated（模拟态）的 MOU 计量——真实态（e-CNY 接入）落地前，分润暂以 NCA 确权及 ERI 权重记账，不产生真实现金流；不发币、不做平台
+- **动态分润 15% + 开源方优先**：无明确收费约定时按开源规则合法挂载（涉及跨境支付的情形，依外汇管理法规完成流程后办理）。**分润为自愿的商业合作约定；使用本仓库不产生任何付费义务；本条不构成许可条件，亦不构成使用前提。**分润为生态内部基于 Simulated（模拟态）的 MOU 计量——真实态（e-CNY 接入）落地前，分润暂以 NCA 确权及 ERI 权重记账，不产生真实现金流；不发币、不做平台
 - **形式化研究入口**：[`OPEN-PROBLEMS.md`](OPEN-PROBLEMS.md)（11 项开放问题：★ 入门 / ★★ 中等 / ★★★ 挑战）——证明贡献附机器可读验证，走 DCD 门禁评审
 - **分层标注**：声称-证明对照见 [`core-go/docs/formal-proofs/CLAIMS-MATRIX.md`](core-go/docs/formal-proofs/CLAIMS-MATRIX.md)；安全披露见 [`core-go/SECURITY.md`](core-go/SECURITY.md)（48h 确认 / 90 天修复）
 
