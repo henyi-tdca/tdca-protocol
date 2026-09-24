@@ -152,9 +152,9 @@ From `cold-start evidence.json`:
 | Paradigm | Program (authoring model) | Runtime (execution model) | Consistency evidence |
 |---|---|---|---|
 | Thirty-Six Stratagems (36) | GLM-5.2 authored `cognitive_compiler` | **Hunyuan took over compile** | 36/36 COP six-element PASS; NCA chained attribution isomorphic |
-| I Ching (2/64) | GLM-5.2 authored `compile_iching.py` | **Hunyuan verified** | 第01乾/第02坤 COP schema isomorphic; sha256_16 `910fa1a9…`/`7bc18e9b…` |
+| I Ching (25/64) | GLM-5.2 authored `compile_iching.py` | **Hunyuan verified** | 第01乾/第02坤 COP schema isomorphic; sha256_16 `910fa1a9…`/`7bc18e9b…` |
 
-- **Pure-local compile**: I Ching compile uses `compile_iching.py` + `iching_data.py` (64-hexagram local corpus ~45 KB); COP deterministically generated from local data; **63/64 effort zero-LLM** (model not in loop). Artifacts 2/64 (第01乾 8-31 / 第02坤 9-01), `progress.yaml` marks `completed: 2 / total: 64 / status: running`.
+- **Pure-local compile**: I Ching compile uses `compile_iching.py` + `iching_data.py` (64-hexagram local corpus ~45 KB); COP deterministically generated from local data; **63/64 effort zero-LLM** (model not in loop). Artifacts 25/64 as of 2026-09-25 (自第01乾 8-31 起由每日 03:00 自动化续编), `progress.yaml` marks `completed: 25 / total: 64 / status: running`.
 
 **Evidence-chain claim**: most AI-governance papers stop at "principles"; TDCA supplies **executable code + cross-model reproducible artifacts** as dual evidence — "program vs runtime": switching runtime (GLM-5.2 → Hunyuan) does not change delivery, and pure-local compile pushes independence to "model not in loop."
 
