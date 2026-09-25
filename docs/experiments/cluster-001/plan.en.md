@@ -9,6 +9,9 @@ Obtain **readable behavioural evidence** along the "breadth" axis: (a) thicker w
 (b) simulated contrast of institutional increments; (c) consistency corroboration when needed.
 
 ## 2. Groups (strictly separate)
+
+> Terminology: **arm/group** = A / B / C; **orchestration** = the four variants run inside arm A. Same below.
+
 - **Group A (institutional contrast)**: one task, four orchestrations × **3 rounds** each —
   ① bare; ② +attestation; ③ +attribution; ④ +circuit-breaker check.
   Comparisons must **not** be shared with, or conflated with, other experiments.
