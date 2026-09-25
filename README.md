@@ -172,3 +172,14 @@ Asset index & five-layer map: [docs/repo-inventory-summary.md](docs/repo-invento
 ### 现有技术披露（防御性公开）
 
 关键机制的防御性公开披露见 [docs/prior-art/](docs/prior-art/)（PA-001~PA-005，首批 5 件）——构成可供审查比对的现有技术资料；采信与否取决于受理机关。
+
+## 打包方式（如实说明 · 2026-09-25 补 · REMEDIATION-001 E 组）
+
+本仓库**不做整体打包发布**：无 `pyproject.toml`／`setup.py` 属有意为之——各组件以目录为单元独立演进、直接消费，避免单点打包掩盖组件边界。消费方式：
+
+- `cd tools && python -m <模块> …`（核心工具链，标准库为主）；
+- `cd dual && python -m pytest tests/ -q`（双协议引擎，仅测试期需 `pytest`，用户级安装即可）；
+- `cd ecoscan && python -m pytest tests/ -q`（生态雷达，同上）；
+- Go 组件见 `core-go/README.md`，Lean 形式化见 `core-go/docs/formal-proofs/lean/`。
+
+不打包不等于不可用：上列命令即完整消费入口，无隐藏安装步骤。
