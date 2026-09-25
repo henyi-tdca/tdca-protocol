@@ -16,8 +16,13 @@ import json
 import time
 import datetime
 import yaml
+import os
+from pathlib import Path
 
-REPO = r"C:/Users/22850/Desktop/开发会话文件/tdca-protocol"
+# 仓库根：TDCA_REPO_ROOT 覆盖优先；默认按本文件位置 parents[3] 探测
+REPO = Path(os.environ["TDCA_REPO_ROOT"]).expanduser().resolve() if os.environ.get("TDCA_REPO_ROOT") else Path(__file__).resolve().parents[3]
+if not (REPO / "docs" / "cognitive-compiler").is_dir():
+    raise SystemExit("[FAIL] 仓库根探测失败: %s（可用 TDCA_REPO_ROOT 覆盖）——不静默空跑" % REPO)
 _CC = os.path.join(REPO, "docs", "cognitive-compiler")
 _HERE = os.path.join(_CC, "coldstart")
 _SIM = os.path.join(_CC, "simulations", "multilateral_search_match")
