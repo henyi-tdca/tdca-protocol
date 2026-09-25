@@ -42,6 +42,36 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`gov-kit/`](gov-kit/) | **研发治理包**：总纲 / 试验门 / 灰度门 / 可靠性检查单 |
 | [`deploy/`](deploy/) | **部署件**：gateway / mcp / nl / web 四件套 Dockerfile + docker-compose |
 
+## 用户前置指引（先看这一节：什么能用 / 什么别看）
+
+### 一、能用（跑得起来）
+- `tools/`　Python 工具链（守门、准入、对账等）——装 `PyYAML`+`pytest` 即可跑：
+  `cd tools && python -m pytest tests -q`
+- `dual/`　双协议化合引擎：`cd dual && python -m pytest tests/ -q`
+- `ecoscan/`　生态雷达：`cd ecoscan && python -m pytest tests/ -q`
+- `core-go/`　Go 核心引擎：⚠️ 先构建 `go build -o tdcad ./cmd/tdcad`，再 `go test -race ./...`
+- `deploy/`　容器编排：⚠️ 需 Docker 环境
+- `core-go/docs/formal-proofs/`　形式化证明：⚠️ 需 Lean 工具链
+- 其它可用件：适配器、挂载库、治理工具包、NCA 生成器、运行态件、门户件等（见仓库导航）
+
+### 二、读就行（不必运行）
+- `protocols/`　思维协议语料；`docs/`　论文、白皮书与语料库
+- `nca-archives/`　准入存证；`skills/`　技能件
+
+### 三、过程与档案（可跳过）
+- `docs/cognitive-compiler/coldstart/**`　冷启动过程脚本与每日报告
+- `artifacts/`、`_run/` 等本地运行痕迹
+> 这些是过程产物，不影响使用；新读者可整段跳过。
+
+### 四、非公开面（仓库里没有）
+- 部分目录（如实验目录、工作台、证据目录）为未跟踪，不在公开仓库中。
+> ⚠️ 找不到它们是正常的，请勿据此判定「缺件」。
+
+### 五、已知落差（如实）
+1. 守门步骤已就位；CI 门禁接入正在收口（尚未宣称「已 CI 化」）；
+2. Go／Lean／Docker 三栈需自备环境；
+3. 部分历史文档中的路径与本机环境相关，可忽略。
+
 ## tools/ 工具货架（全部开源可跑；第三方依赖实测：PyYAML 6 个文件、fastapi/uvicorn/pydantic 见于 4 个 API 模块——见各目录 `requirements.txt`，测试另需 pytest）
 
 | 套件 | 能力 | 快速开始 |
