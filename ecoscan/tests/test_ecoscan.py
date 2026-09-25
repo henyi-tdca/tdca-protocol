@@ -7,6 +7,7 @@ A-4 邀请纪律: 频率限制 + 台账防重复（≤2 条/周/目标）
 A-5 测试: ≥15 用例全绿（M1）
 """
 import pytest
+from datetime import datetime, timedelta, timezone
 
 from tdca_ecoscan.diagnoser import TIER_A, TIER_B, TIER_C, CandidateDiagnoser
 from tdca_ecoscan.inviter import WEEKLY_INVITE_LIMIT, InviteGenerator
@@ -44,12 +45,14 @@ class TestScanner:
 
     def test_recent_active(self):
         s = EcoScanner()
-        t = s.scan_static([_repo(pushed="2026-08-20T00:00:00Z")])[0]
+        recent = (datetime.now(timezone.utc) - timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        t = s.scan_static([_repo(pushed=recent)])[0]
         assert s.is_recent(t, days=30) is True
 
     def test_recent_stale(self):
         s = EcoScanner()
-        t = s.scan_static([_repo(pushed="2026-01-01T00:00:00Z")])[0]
+        stale = (datetime.now(timezone.utc) - timedelta(days=90)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        t = s.scan_static([_repo(pushed=stale)])[0]
         assert s.is_recent(t, days=30) is False
 
     def test_recent_no_timestamp(self):
