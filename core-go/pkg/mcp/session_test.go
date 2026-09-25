@@ -56,6 +56,31 @@ func tdcaMetaJSON(overrides map[string]any) map[string]any {
 	return m
 }
 
+// testGatewayAuth 测试网关绑定表（条例 R1 来源唯一：持权握手必须有绑定，否则 credential-unbound）。
+// tok-test-02 绑定 Scope 缺 "mcp"，供 A4 越界负例（绑定 scope 不含 mcp 即拒 token-scope-insufficient）。
+func testGatewayAuth() *StaticGatewayAuth {
+	g := NewStaticGatewayAuth()
+	g.Bind("tok-test-01", CredBinding{TenantID: "tenant-test", Env: "env-test", Scope: []string{"mcp"}})
+	g.Bind("tok-test-02", CredBinding{TenantID: "tenant-test", Env: "env-test", Scope: []string{"read-only"}})
+	g.Bind("tok-expired-hs", CredBinding{TenantID: "tenant-test", Env: "env-test", Scope: []string{"mcp"}})
+	g.Bind("tok-a17-live", CredBinding{TenantID: "tenant-test", Env: "env-test", Scope: []string{"mcp"}})
+	return g
+}
+
+// newTestServer 构造注入测试网关绑定的 Server（R1 落地后持权握手必需）
+func newTestServer() *Server {
+	s := NewServer()
+	s.SetGatewayAuth(testGatewayAuth())
+	return s
+}
+
+// newTestServerWithPolicy 同上，指定会话纪律参数
+func newTestServerWithPolicy(p SessionPolicy) *Server {
+	s := NewServerWithPolicy(p)
+	s.SetGatewayAuth(testGatewayAuth())
+	return s
+}
+
 // initReq 构造 initialize 请求行（meta=nil 表示不带 _meta.tdca）
 func initReq(id any, meta map[string]any) string {
 	params := map[string]any{
@@ -152,7 +177,7 @@ func summaryFromClose(t *testing.T, line map[string]any) map[string]any {
 // ---- A1 握手四步正常流 ----
 
 func TestA1HandshakeEstablished(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	resps := run(t, s, initReq(1, tdcaMetaJSON(nil)), initializedNotif)
 	if len(resps) != 1 {
 		t.Fatalf("want 1 response (initialize), got %d: %v", len(resps), resps)
@@ -186,7 +211,7 @@ func TestA1HandshakeEstablished(t *testing.T) {
 // ---- A2 版本不相容（无静默降级；-32000 + tdca/session: 前缀；R-11 协商后集合外仍拒）----
 
 func TestA2VersionIncompatible(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	bad := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 		"protocolVersion": "1999-01-01",
 		"clientInfo":      map[string]any{"name": "sess-test", "version": "0.1"},
@@ -208,7 +233,7 @@ func TestA2VersionIncompatible(t *testing.T) {
 		t.Errorf("want session_rejected/version-incompatible, got %+v", rej)
 	}
 	// R-11：protocolVersion 缺失 → -32602（fail-closed 参数纪律，非会话层拒绝）
-	s2 := NewServer()
+	s2 := newTestServer()
 	noVer := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 		"clientInfo": map[string]any{"name": "sess-test", "version": "0.1"},
 		"_meta":      map[string]any{"tdca": tdcaMetaJSON(nil)},
@@ -217,7 +242,7 @@ func TestA2VersionIncompatible(t *testing.T) {
 		t.Errorf("missing protocolVersion must be -32602, got %v", c)
 	}
 	// R-11：protocolVersion 非字符串 → -32602
-	s3 := NewServer()
+	s3 := newTestServer()
 	numVer := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 		"protocolVersion": 20250618,
 		"clientInfo":      map[string]any{"name": "sess-test", "version": "0.1"},
@@ -232,7 +257,7 @@ func TestA2VersionIncompatible(t *testing.T) {
 func TestA3TokenMissing(t *testing.T) {
 	p := DefaultSessionPolicy()
 	p.AllowAnon = false // 显式关闭匿名准入（--allow-anonymous=false）
-	s := NewServerWithPolicy(p)
+	s := newTestServerWithPolicy(p)
 	meta := tdcaMetaJSON(nil)
 	delete(meta, "pcr_token")
 	resps := run(t, s, initReq(1, meta))
@@ -240,7 +265,7 @@ func TestA3TokenMissing(t *testing.T) {
 		t.Errorf("want token-missing, got %v", resps[0])
 	}
 	// 完全无 _meta.tdca 同样拒绝
-	s2 := NewServerWithPolicy(p)
+	s2 := newTestServerWithPolicy(p)
 	resps2 := run(t, s2, initReq(1, nil))
 	if !strings.Contains(errMsg(t, resps2[0]), ReasonTokenMissing) {
 		t.Errorf("want token-missing (no _meta.tdca), got %v", resps2[0])
@@ -250,8 +275,9 @@ func TestA3TokenMissing(t *testing.T) {
 // ---- A4 token 越界 / 握手期过期（同子码 token-scope-insufficient，规范 §十三 A4）----
 
 func TestA4TokenScopeOrHandshakeExpiry(t *testing.T) {
-	// 越界：scope 不含 "mcp"
-	s := NewServer()
+	// 越界：tok-test-02 的网关绑定 Scope=["read-only"] 不含 "mcp"（R1 来源唯一后由绑定承载越界语义；
+	// 请求里的 scope 字段不再是授权来源，仅作收窄请求）→ 仍拒 token-scope-insufficient（子码不变）
+	s := newTestServer()
 	meta := tdcaMetaJSON(map[string]any{
 		"pcr_token": map[string]any{"token_id": "tok-test-02", "scope": []string{"read-only"}},
 	})
@@ -264,7 +290,7 @@ func TestA4TokenScopeOrHandshakeExpiry(t *testing.T) {
 		t.Errorf("rejected event must record token_id only, got %+v", rej)
 	}
 	// 握手期过期：expires_at 早于握手时刻 → 同子码
-	s2 := NewServer()
+	s2 := newTestServer()
 	past := time.Now().Add(-time.Minute).UTC().Format(time.RFC3339Nano)
 	meta2 := tdcaMetaJSON(map[string]any{
 		"pcr_token": map[string]any{"token_id": "tok-expired-hs", "scope": []string{"mcp"}, "expires_at": past},
@@ -281,7 +307,7 @@ func TestA4TokenScopeOrHandshakeExpiry(t *testing.T) {
 // ---- A5 握手期调用 tools/call → session-not-established ----
 
 func TestA5NotEstablished(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	// 完全无握手
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "suspicious-pattern"}}})
@@ -293,7 +319,7 @@ func TestA5NotEstablished(t *testing.T) {
 		t.Errorf("want tdca/session:session-not-established, got %v", resps[0])
 	}
 	// H1 已过但 H3 未到（HANDSHAKING）同样拒绝
-	s2 := NewServer()
+	s2 := newTestServer()
 	resps2 := run(t, s2, initReq(1, tdcaMetaJSON(nil)), req)
 	if !strings.Contains(errMsg(t, resps2[1]), ReasonSessionNotEstablished) {
 		t.Errorf("HANDSHAKING tools/call must reject, got %v", resps2[1])
@@ -328,7 +354,7 @@ func TestA6MissStale(t *testing.T) {
 func TestA6HeartbeatServerDriven(t *testing.T) {
 	p := DefaultSessionPolicy()
 	p.TPing, p.TPong = 20*time.Millisecond, 15*time.Millisecond
-	s := NewServerWithPolicy(p)
+	s := newTestServerWithPolicy(p)
 	sess, out := serveInteractive(t, s, 300*time.Millisecond,
 		initReq(1, tdcaMetaJSON(nil)), initializedNotif)
 	// 服务端确已发出 ping request（保活由服务端定时发出；id = tdca-ping-N）
@@ -408,7 +434,7 @@ func (failWriter) Write(p []byte) (int, error) {
 }
 
 func TestA9HalfOpenWriteFailure(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	in := strings.NewReader(initReq(1, tdcaMetaJSON(nil)) + "\n")
 	err := s.Serve(in, failWriter{})
 	if err == nil {
@@ -435,7 +461,7 @@ func TestA9HalfOpenWriteFailure(t *testing.T) {
 		t.Fatalf("want session_abort/transport-broken event, got %+v", sess.Events)
 	}
 	// 中途半开变体：握手成功后写失败（close 小结写不出）→ 同样立即 ABORTED
-	s2 := NewServer()
+	s2 := newTestServer()
 	in2 := strings.NewReader(strings.Join(append(handshakeLines(), `{"jsonrpc":"2.0","method":"close"}`), "\n") + "\n")
 	if err := s2.Serve(in2, failWriter{}); err == nil {
 		t.Fatalf("Serve must return write error on broken pipe mid-session")
@@ -449,7 +475,7 @@ func TestA9HalfOpenWriteFailure(t *testing.T) {
 // ---- A10 正常断开 + 在途排空：DRAINING → CLOSED + 小结四项一致 ----
 
 func TestA10CloseDrainClosed(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	toolReq := j(map[string]any{"jsonrpc": "2.0", "id": 2, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "suspicious-pattern"}}})
 	lines := append(handshakeLines(), toolReq, `{"jsonrpc":"2.0","method":"close"}`)
@@ -585,7 +611,7 @@ func TestA12bGCTimeoutDraining(t *testing.T) {
 // ---- A13 session_id 跨会话复用尝试 → 拒绝（不变量 1；重连须重新握手）----
 
 func TestA13SessionIDReuseRejected(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	// 已建立会话上重复 initialize → 拒绝，原会话不被替换
 	resps := run(t, s, initReq(1, tdcaMetaJSON(nil)), initializedNotif, initReq(2, tdcaMetaJSON(nil)))
 	if len(resps) != 2 {
@@ -614,13 +640,13 @@ func TestA13SessionIDReuseRejected(t *testing.T) {
 
 func TestA14FailClosed(t *testing.T) {
 	// 未知方法 → -32601
-	s1 := NewServer()
+	s1 := newTestServer()
 	r1 := run(t, s1, `{"jsonrpc":"2.0","id":1,"method":"tools/unknown"}`)[0]
 	if errCode(t, r1) != -32601 {
 		t.Errorf("unknown method must be -32601, got %v", r1)
 	}
 	// initialize 顶层未知字段 → -32602
-	s2 := NewServer()
+	s2 := newTestServer()
 	badInit := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 		"protocolVersion": ProtocolVersion,
 		"clientInfo":      map[string]any{"name": "x", "version": "0.1"},
@@ -632,7 +658,7 @@ func TestA14FailClosed(t *testing.T) {
 		t.Errorf("unknown initialize field must be -32602, got %v", r2)
 	}
 	// _meta 未知命名空间 → -32602
-	s3 := NewServer()
+	s3 := newTestServer()
 	badMeta := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 		"protocolVersion": ProtocolVersion,
 		"clientInfo":      map[string]any{"name": "x", "version": "0.1"},
@@ -642,14 +668,14 @@ func TestA14FailClosed(t *testing.T) {
 		t.Errorf("unknown _meta namespace must be -32602")
 	}
 	// _meta.tdca 未知字段 → -32602
-	s4 := NewServer()
+	s4 := newTestServer()
 	meta := tdcaMetaJSON(nil)
 	meta["__admin__"] = true
 	if errCode(t, run(t, s4, initReq(1, meta))[0]) != -32602 {
 		t.Errorf("unknown _meta.tdca field must be -32602")
 	}
 	// 工具参数未知字段 → -32602（schema violation，ESTABLISHED 后）
-	s5 := NewServer()
+	s5 := newTestServer()
 	badCall := j(map[string]any{"jsonrpc": "2.0", "id": 2, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "x", "__x__": 1}}})
 	r5 := runEstablished(t, s5, badCall)[0]
@@ -679,7 +705,7 @@ func TestA15HeartbeatNotInEvents(t *testing.T) {
 
 func TestA16NoTokenValueInEvents(t *testing.T) {
 	// pcr_token 携带未知字段（如 token 值本体）→ fail-closed 拒绝
-	s := NewServer()
+	s := newTestServer()
 	meta := tdcaMetaJSON(map[string]any{
 		"pcr_token": map[string]any{"token_id": "tok-v5", "scope": []string{"mcp"}, "value": "SECRET-TOKEN-VALUE"},
 	})
@@ -691,7 +717,7 @@ func TestA16NoTokenValueInEvents(t *testing.T) {
 		t.Errorf("error must not echo token value")
 	}
 	// 正常会话事件序列化：仅 token_id，无任何 token 值字段
-	s2 := NewServer()
+	s2 := newTestServer()
 	run(t, s2, initReq(1, tdcaMetaJSON(nil)), initializedNotif, `{"jsonrpc":"2.0","method":"close"}`)
 	sess := s2.Session()
 	raw, _ := json.Marshal(sess.Events)
@@ -756,7 +782,7 @@ func TestA17TokenExpiryServeDriven(t *testing.T) {
 	meta := tdcaMetaJSON(map[string]any{
 		"pcr_token": map[string]any{"token_id": "tok-a17-live", "scope": []string{"mcp"}, "expires_at": exp},
 	})
-	s := NewServer()
+	s := newTestServer()
 	inR, inW := io.Pipe()
 	var out bytes.Buffer
 	done := make(chan error, 1)
@@ -812,7 +838,7 @@ func TestA17TokenExpiryServeDriven(t *testing.T) {
 // ---- A18 匿名只读（R-12：默认 allow_anonymous=true；匿名仅只读工具，写类拒 token-missing；事件记 anonymous）----
 
 func TestA18AnonymousReadOnly(t *testing.T) {
-	s := NewServer() // 默认策略（allow_anonymous=true，裁定 D-7）
+	s := newTestServer() // 默认策略（allow_anonymous=true，裁定 D-7）
 	resps := run(t, s,
 		initReq(1, nil), initializedNotif,
 		j(map[string]any{"jsonrpc": "2.0", "id": 2, "method": "tools/call",
@@ -859,7 +885,7 @@ func TestA18AnonymousReadOnly(t *testing.T) {
 		t.Errorf("reject_count = %d, want 1", sess.rejectCount)
 	}
 	// 持权会话事件记 anonymous=false（可复算对照）
-	s2 := NewServer()
+	s2 := newTestServer()
 	_ = runEstablished(t, s2)
 	if ev := s2.Session().Events[0]; ev.Anonymous {
 		t.Errorf("credentialed session must record anonymous=false, got %+v", ev)
@@ -870,7 +896,7 @@ func TestA18AnonymousReadOnly(t *testing.T) {
 
 func TestA19VersionNegotiation(t *testing.T) {
 	for _, v := range SupportedProtocolVersions {
-		s := NewServer()
+		s := newTestServer()
 		req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 			"protocolVersion": v,
 			"clientInfo":      map[string]any{"name": "sess-test", "version": "0.1"},
@@ -894,7 +920,7 @@ func TestA19VersionNegotiation(t *testing.T) {
 		}
 	}
 	// 集合外（近版本越界）→ 保持 -32000 version-incompatible（A2 已覆盖远古版本）
-	s := NewServer()
+	s := newTestServer()
 	bad := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{
 		"protocolVersion": "2026-01-01",
 		"clientInfo":      map[string]any{"name": "sess-test", "version": "0.1"},
@@ -916,7 +942,7 @@ func TestA19VersionNegotiation(t *testing.T) {
 
 // 主体不过门禁 → entry-rejected（规范 §九 子码；§十三 未单列）
 func TestEntryRejected(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	meta := tdcaMetaJSON(map[string]any{
 		"agent_card": json.RawMessage(cardJSON(map[string]any{"protocol_version": "9.9.9"})),
 	})
@@ -954,7 +980,7 @@ func TestHandshakeTimeout(t *testing.T) {
 
 // ESTABLISHED 后 tools/call 正常 + 计数（A1/A10 的补充断言）
 func TestEstablishedToolCall(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 2, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(nil))}}})
 	resps := runEstablished(t, s, req)
@@ -974,7 +1000,7 @@ func TestEstablishedToolCall(t *testing.T) {
 
 // 对端 ping request → pong response（规范 §五 双向可发）
 func TestPingPong(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	resps := runEstablished(t, s, `{"jsonrpc":"2.0","id":2,"method":"ping"}`)
 	res := resps[0]["result"].(map[string]any)
 	if res["pong"] != true {
@@ -987,7 +1013,7 @@ func TestHeartbeatPongResponseClearsMiss(t *testing.T) {
 	p := DefaultSessionPolicy()
 	p.TPing, p.TPong = 30*time.Millisecond, 15*time.Millisecond
 	p.NStale, p.NAbort = 5, 8 // 放宽阈值，专注验证 pong response 清零语义
-	s := NewServerWithPolicy(p)
+	s := newTestServerWithPolicy(p)
 	inR, inW := io.Pipe()
 	var out bytes.Buffer
 	done := make(chan error, 1)
@@ -1047,7 +1073,7 @@ func TestMaxInflightExceeded(t *testing.T) {
 // 匿名准入开关（R-12 后默认 true：无持权建匿名只读会话 PCS-anon；显式 false 回退握手即拒，见 A3）
 func TestAllowAnonymousPolicy(t *testing.T) {
 	// 默认（--allow-anonymous 缺省 = true）：无持权可建匿名会话
-	s := NewServer()
+	s := newTestServer()
 	resps := run(t, s, initReq(1, nil), initializedNotif)
 	if e, ok := resps[0]["error"]; ok {
 		t.Fatalf("anonymous must be allowed by default: %v", e)

@@ -156,6 +156,7 @@ type Session struct {
 	AgentID   string         // 主体
 	Scene     string         // 场景
 	TokenID   string         // 只记 ID，永不记 token 值
+	Scope     []string       // 生效作用域（条例 R1/R3：网关绑定收窄裁决结果；不入事件、不改事件 schema）
 	State     string         // 状态机当前态
 	MissCount int            // 心跳 miss 计数
 	Inflight  int            // 在途请求数
@@ -460,23 +461,28 @@ type pcrToken struct {
 }
 
 // validateHandshake 校验握手三要素（主体/场景/持权），失败返回 *SessionGateError（不建会话）。
-// 通过则返回可建会话的要素。fail-closed：任何一项不满足即拒，不静默降级。
+// 通过则返回可建会话的要素（含生效作用域 scope）。fail-closed：任何一项不满足即拒，不静默降级。
+//
+// 条例《租户与环境作用域凭证绑定条例》落地：
+//   - R1 来源唯一：作用域授权来源 = 网关认证上下文绑定（auth.Binding(tokenID)），
+//     请求参数 _meta.tdca.pcr_token.scope 永不作授权来源，仅作收窄请求交 ResolveScope（R3）。
+//   - fail-closed：未配认证提供者 / 绑定查无 → credential-unbound。
 //
 // 如实登记（整改指令 R-4 / R-5）：
-//   - scope 语义为【临时最小定义：须含字面量 "mcp"】，规范 §二 指向 SRIGHT-001 §三
-//     scope_covers（须覆盖工具边界）——规范补充条款另批处理（D-3 待裁定），本轮不改实现。
+//   - scope 门槛语义为【临时最小定义：绑定 Scope 须含字面量 "mcp"】，规范 §二 指向
+//     SRIGHT-001 §三 scope_covers（须覆盖工具边界）——规范补充条款另批处理（D-3 待裁定）。
 //   - expires_at 解析失败归【token-missing】分支（R-5 选定：保留现行为；若规范侧采纳
 //     token-malformed 子码，后续批次切换）。
-func validateHandshake(policy SessionPolicy, meta *tdcaMeta, clientName string, now time.Time) (agentID, scene, tokenID string, expiresAt time.Time, err error) {
+func validateHandshake(policy SessionPolicy, auth GatewayAuthProvider, meta *tdcaMeta, clientName string, now time.Time) (agentID, scene, tokenID string, scope []string, expiresAt time.Time, err error) {
 	agentID = clientName
 	// 主体校验：agent_card 过 enforce 门禁（entry-rejected）
 	if meta != nil && meta.AgentCard != nil {
 		res, gerr := gateAgentCard(meta.AgentCard)
 		if gerr != nil {
-			return "", "", "", time.Time{}, &SessionGateError{Code: ReasonEntryRejected, Detail: "agent_card invalid: " + gerr.Error()}
+			return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonEntryRejected, Detail: "agent_card invalid: " + gerr.Error()}
 		}
 		if res.Status != "PASS" {
-			return "", "", "", time.Time{}, &SessionGateError{Code: ReasonEntryRejected, Detail: "enforce " + res.Status + ": " + res.Reason}
+			return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonEntryRejected, Detail: "enforce " + res.Status + ": " + res.Reason}
 		}
 		agentID = res.AgentID
 		scene = res.SceneID
@@ -488,21 +494,30 @@ func validateHandshake(policy SessionPolicy, meta *tdcaMeta, clientName string, 
 	// 持权校验（AllowAnon=false 时握手即拒；默认 true 时建匿名只读会话 PCS-anon，裁定 D-7）
 	if meta == nil || meta.PCRToken == nil || meta.PCRToken.TokenID == "" {
 		if !policy.AllowAnon {
-			return "", "", "", time.Time{}, &SessionGateError{Code: ReasonTokenMissing, Detail: "_meta.tdca.pcr_token.token_id required"}
+			return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonTokenMissing, Detail: "_meta.tdca.pcr_token.token_id required"}
 		}
-		return agentID, scene, "", time.Time{}, nil
+		return agentID, scene, "", nil, time.Time{}, nil
 	}
 	tok := meta.PCRToken
-	// 作用域：临时最小定义（须含字面量 "mcp"；D-3 待裁定，见函数头注释 R-4）
+	// R1 来源唯一：按 token_id 取网关绑定；未配提供者 / 查无绑定 → credential-unbound（fail-closed）
+	if auth == nil {
+		return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonCredentialUnbound, Detail: "gateway auth provider not configured"}
+	}
+	bind, bound := auth.Binding(tok.TokenID)
+	if !bound {
+		return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonCredentialUnbound, Detail: "no credential binding for token_id"}
+	}
+	// 作用域门槛：绑定 Scope 须含字面量 "mcp"（D-3 待裁定，见函数头注释 R-4；
+	// 子码保持 §十三 A4 不变：token-scope-insufficient）
 	okScope := false
-	for _, sc := range tok.Scope {
+	for _, sc := range bind.Scope {
 		if sc == "mcp" {
 			okScope = true
 			break
 		}
 	}
 	if !okScope {
-		return "", "", "", time.Time{}, &SessionGateError{Code: ReasonTokenScopeInsufficient, Detail: "scope must include \"mcp\""}
+		return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonTokenScopeInsufficient, Detail: "bound scope must include \"mcp\""}
 	}
 	// 到期：握手期过期 → token-scope-insufficient（规范 §十三 A4：越界/握手期过期同子码；
 	// 会话期到期另走 token-expired → SUSPENDED，见 BeforeToolCall/CheckTimeouts）
@@ -510,14 +525,19 @@ func validateHandshake(policy SessionPolicy, meta *tdcaMeta, clientName string, 
 		exp, perr := time.Parse(time.RFC3339Nano, tok.ExpiresAt)
 		if perr != nil {
 			// R-5 选定分支：解析失败归 token-missing
-			return "", "", "", time.Time{}, &SessionGateError{Code: ReasonTokenMissing, Detail: "expires_at not RFC3339: " + perr.Error()}
+			return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonTokenMissing, Detail: "expires_at not RFC3339: " + perr.Error()}
 		}
 		if now.After(exp) {
-			return "", "", "", time.Time{}, &SessionGateError{Code: ReasonTokenScopeInsufficient, Detail: "credential already expired at handshake"}
+			return "", "", "", nil, time.Time{}, &SessionGateError{Code: ReasonTokenScopeInsufficient, Detail: "credential already expired at handshake"}
 		}
 		expiresAt = exp
 	}
-	return agentID, scene, tok.TokenID, expiresAt, nil
+	// R3 单调收窄：请求 tok.Scope 仅作收窄请求；填宽拒 scope-widening，冲突以凭证为准
+	eff, ge := ResolveScope(bind.Scope, tok.Scope)
+	if ge != nil {
+		return "", "", "", nil, time.Time{}, ge
+	}
+	return agentID, scene, tok.TokenID, eff, expiresAt, nil
 }
 
 // gateAgentCard 复用 enforce 门禁校验握手主体（与工具语义同源，不改判定语义）
