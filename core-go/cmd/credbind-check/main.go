@@ -7,13 +7,12 @@
 //	                        对每个规格跑 CheckSpecClean（R2 规格洁净）
 //	credbind-check selftest 对内建核心工具规格自查（须 0 命中）
 //
-// 退出码语义：
+// 退出码语义（丙案，GSEQ-2818：失败一律 1，细分原因写进输出文本，不塞进退出码）：
 //
 //	0 = CHECK PASS
-//	2 = 用法错误 / 空输入（未提供目标）
-//	3 = 目标路径不存在
-//	4 = 零扫描即失守（路径存在但扫到 0 个规格件）
-//	5 = CHECK FAIL（检出违规）
+//	1 = CHECK FAIL（失败统称：目标路径不存在 / 零扫描即失守 / 检出违规；
+//	    细分原因见输出文本：not found / ZERO-SCAN / VIOLATION）
+//	2 = 用法错误 / 空输入（未提供目标；保留 2 对齐 Go 侧惯例，同 tdcad）
 //
 // 输出确定性（A-3）：文件列表排序、命中随序、无时间戳，同输入同输出逐字节一致。
 //
@@ -32,13 +31,13 @@ import (
 	"github.com/henyi-tdca/tdca-core-go/pkg/mcp"
 )
 
-// 退出码语义（见文件头注释）
+// 退出码语义（见文件头注释；丙案 GSEQ-2818：失败一律 1，用法错保留 2 对齐 Go 惯例）
 const (
 	exitPass      = 0 // CHECK PASS
 	exitUsage     = 2 // 用法错误 / 空输入
-	exitNoTarget  = 3 // 目标路径不存在
-	exitZeroScan  = 4 // 零扫描即失守
-	exitCheckFail = 5 // CHECK FAIL（检出违规）
+	exitNoTarget  = 1 // 目标路径不存在（失败统称 1；细分见输出文本 not found）
+	exitZeroScan  = 1 // 零扫描即失守（失败统称 1；细分见输出文本 ZERO-SCAN）
+	exitCheckFail = 1 // CHECK FAIL（检出违规；细分见输出文本 VIOLATION 逐条）
 )
 
 const usageLine = "usage: credbind-check <路径> | credbind-check selftest"

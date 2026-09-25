@@ -35,7 +35,7 @@ jobs:
 
       # --- 凭证绑定条例门禁（GSEQ-2805 施工 / GSEQ-2811 签批接入；只加严不放宽）---
       # credbind-check selftest：对 4 件核心工具规格跑 R2 规格洁净自扫；
-      # 检出违规 exit 5、零扫描 exit 4——非 0 即 fail（零扫描即失守，fail-closed）。
+      # 检出违规／零扫描均 exit 1（丙案 GSEQ-2818：失败统称 1，细分见输出文本）——非 0 即 fail。
       - name: Credbind spec-clean gate (selftest)
         working-directory: core-go
         run: |
