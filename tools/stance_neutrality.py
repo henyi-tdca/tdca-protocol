@@ -72,21 +72,25 @@ SKIP_DIRS = ("__pycache__", ".git", ".workbuddy", ".github")
 SCOPE_DECLARATION = (
     "扫描范围声明 | 扫: 目标映射范围内 *.yaml/*.yml/*.py/*.md"
     "（compiler→tools 全树; repo→docs/cop-library 六子目; 自定义→给定文件或目录）"
-    " | 分档: 机制核(命中计违规) / 语料区 docs/cop-library/**(命中不计违规、不整改)"
+    " | 分档: 机制核(命中计违规) / 语料区 docs/cop-library/**(命中不计违规、不整改) / 测试夹具区 tools/tests/**(命中不计违规、不整改)"
     " | 不扫: __pycache__/.git/.workbuddy/.github、中文引文豁免段(「」『』“”)、EXEMPT_FILES 素材件、守门器自身"
 )
 
 CORPUS_MARK = ("docs", "cop-library")  # 语料区判档路径标记 (通则 B-2)
+FIXTURE_MARK = ("tools", "tests")  # 测试夹具区判档路径标记 (甲案 2026-09-25 创始人裁定: 豁免/不计违规/不整改)
 
 
 def tier_of(path):
-    """机制核 / 语料区分档: 路径含 docs/cop-library 段者为语料区"""
+    """机制核 / 语料区 / 测试夹具区分档
+    路径含 tools/tests 段者为测试夹具区; 含 docs/cop-library 段者为语料区; 其余机制核"""
     try:
         parts = Path(path).resolve().parts
     except OSError:
         return "mech"
-    return "corpus" if any(parts[i] == "docs" and parts[i + 1] == "cop-library"
-                           for i in range(len(parts) - 1)) else "mech"
+    for mark in (FIXTURE_MARK, CORPUS_MARK):
+        if any(tuple(parts[i:i + 2]) == mark for i in range(len(parts) - 1)):
+            return "fixture" if mark == FIXTURE_MARK else "corpus"
+    return "mech"
 
 KEY_LINE_RE = re.compile(r"[\"'](core|decision_if|decision|if|scene)[\"']\s*:")
 FIELD_PATH_RE = re.compile(r"(^|\.)soul\.core|(^|\.)decision")
@@ -227,8 +231,10 @@ def is_exempt(rel):
 def scan_base(base, label, do_rectify=False, log=None, subdirs=None):
     tf = hf = hits = 0
     chf = corpus_hits = 0  # 语料区命中（豁免，不计违规——TDCA-STD-GATE-ZERO-SCAN-001 B-2 / Q-6）
+    ffh = fixture_hits = 0  # 测试夹具区命中（豁免，不计违规不整改——甲案 2026-09-25）
     details = []
     corpus_details = []
+    fixture_details = []
     for p in iter_scope_files(base, subdirs=subdirs):
         rel = os.path.relpath(p, base)
         if is_exempt(rel):
@@ -244,11 +250,16 @@ def scan_base(base, label, do_rectify=False, log=None, subdirs=None):
             except Exception:
                 print("[WARN] yaml 解析失败(fail-closed): %s" % rel)
                 continue
-            if tier == "corpus":  # 语料区: 只记命中, 不整改不计违规
+            if tier in ("corpus", "fixture"):  # 语料区/测试夹具区: 只记命中, 不整改不计违规
                 if fhits:
-                    chf += 1
-                    corpus_hits += len(fhits)
-                    corpus_details.append((rel, len(fhits)))
+                    if tier == "corpus":
+                        chf += 1
+                        corpus_hits += len(fhits)
+                        corpus_details.append((rel, len(fhits)))
+                    else:
+                        ffh += 1
+                        fixture_hits += len(fhits)
+                        fixture_details.append((rel, len(fhits)))
                 continue
             if do_rectify and fhits:
                 k = rectify_yaml(p, log)
@@ -268,11 +279,16 @@ def scan_base(base, label, do_rectify=False, log=None, subdirs=None):
             else:
                 fhits = [(w, frag) for line in txt.splitlines()
                          if KEY_LINE_RE.search(line) for w, frag in find_hits(line)]
-            if tier == "corpus":  # 语料区: 只记命中, 不整改不计违规
+            if tier in ("corpus", "fixture"):  # 语料区/测试夹具区: 只记命中, 不整改不计违规
                 if fhits:
-                    chf += 1
-                    corpus_hits += len(fhits)
-                    corpus_details.append((rel, len(fhits)))
+                    if tier == "corpus":
+                        chf += 1
+                        corpus_hits += len(fhits)
+                        corpus_details.append((rel, len(fhits)))
+                    else:
+                        ffh += 1
+                        fixture_hits += len(fhits)
+                        fixture_details.append((rel, len(fhits)))
                 continue
             if do_rectify and fhits:
                 k = rectify_text_file(p, log, is_md=p.endswith(".md"))
@@ -287,8 +303,8 @@ def scan_base(base, label, do_rectify=False, log=None, subdirs=None):
             details.append((rel, fhits))
     print("扫描根: %s" % Path(base).resolve())
     print("===== 立场%s [%s] =====" % ("整改" if do_rectify else "扫描", label))
-    print("文件: %d | 机制核命中文件: %d | 机制核命中: %d | 语料区(豁免)命中文件: %d | 语料区(豁免)命中: %d"
-          % (tf, hf, hits, chf, corpus_hits))
+    print("文件: %d | 机制核命中文件: %d | 机制核命中: %d | 语料区(豁免)命中文件: %d | 语料区(豁免)命中: %d | 测试夹具区(豁免)命中文件: %d | 测试夹具区(豁免)命中: %d"
+          % (tf, hf, hits, chf, corpus_hits, ffh, fixture_hits))
     for rel, info in details:
         if do_rectify:
             print("  [整改] %s (%d 处)" % (rel, info))
@@ -300,8 +316,11 @@ def scan_base(base, label, do_rectify=False, log=None, subdirs=None):
                 print("    … 另 %d 处" % (len(info) - 4))
     for rel, n in corpus_details:
         print("  [语料区·豁免] %s (%d 处)" % (rel, n))
+    for rel, n in fixture_details:
+        print("  [测试夹具区·豁免] %s (%d 处)" % (rel, n))
     return {"label": label, "files": tf, "hit_files": hf, "hits": hits,
-            "corpus_hit_files": chf, "corpus_hits": corpus_hits}
+            "corpus_hit_files": chf, "corpus_hits": corpus_hits,
+            "fixture_hit_files": ffh, "fixture_hits": fixture_hits}
 
 
 def verify_base(base, log):
