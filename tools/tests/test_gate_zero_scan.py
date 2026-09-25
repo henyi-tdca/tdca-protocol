@@ -4,7 +4,9 @@
 沙盒验证：全部样本建于 tmp_path，不扫主干、不改仓库。
 六类样本：空输入 / 空目录 / 不存在路径 / 机制核正例 / 语料区负例 / 自扫。
 误伤率须为 0（语料区不得判违规）；同输入同输出（可重复）。
+编码纪律（GATE-SCOPE-FIX-001）：跨进程取输出显式声明 UTF-8，不依赖控制台默认。
 """
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -18,11 +20,14 @@ MECH_COP = 'decision: [{"if": "我方得算 > 敌方", "call": "f", "action": "�
 MECH_CLEAN = 'decision: [{"if": "态势占优", "call": "f", "action": "行"}]'
 CORPUS_PY = '"decision": "我方得算 > 敌方", "call": "f"\n'
 
+# 显式声明编码：子进程 stdout/stderr 一律 UTF-8（gbk/cp936 控制台亦可复跑）
+CHILD_ENV = dict(os.environ, PYTHONIOENCODING="utf-8")
+
 
 def run_gate(*args, cwd=None):
     return subprocess.run([sys.executable, str(GATE)] + list(args),
                           capture_output=True, timeout=60,
-                          cwd=str(cwd or TOOLS))
+                          cwd=str(cwd or TOOLS), env=CHILD_ENV)
 
 
 def out(p):
