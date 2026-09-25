@@ -28,3 +28,9 @@ TF-IDF 加权 + 多维语义匹配 + 负空间反向信号的场景 → COP 匹�
 python adapter_matcher.py            # 内置 6 条款演示
 python cop_connector.py              # 需将 COP_DIR 指向本地 cop-library 语料目录
 ```
+
+### 环境前提与路径覆盖（2026-09-25 补 · REMEDIATION-001）
+
+- 实测环境：Windows 11 + Python 3.12；COP 语料须已存在于本地工作区。
+- `cop_connector.py` 的 COP_DIR 默认 = `<TDCA_WS>/tdca-thinktank/research/topics/thinking-protocol/cop-library`；`TDCA_WS` 缺省取当前用户目录下 `AppData/Roaming/reasonix/global-workspace`（不再硬编码绝对路径）。
+- **覆盖入口**：设环境变量 `TDCA_WS` 指向含上述目录的工作区即可；目录不存在即明确报错退出（不静默空跑）。

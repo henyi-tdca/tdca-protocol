@@ -59,7 +59,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`tools/thingsboard_pool/`](tools/thingsboard_pool/) | 五项目⑤ ThingsBoard 对接：IoT 计量 + L2 | `cd tools && python -m pytest thingsboard_pool -q` |
 | [`tools/context_provider.py`](tools/context_provider.py) | **COP 动态数据流**：context provider 抽象层 + ProviderRegistry 注册机制（未注册 fail-closed）+ ThingsBoard 适配 | `cd tools && python -m pytest tests/test_context_provider.py -q` |
 | [`tools/data_feed_gate.py`](tools/data_feed_gate.py) | **律三 v2 运行时门控**：数据流准入 + 新鲜度 SLA（陈旧/断流冻结，联动 NSFL 熔断） | `cd tools && python -m pytest tests -q` |
-| [`tools/stance_neutrality.py`](tools/stance_neutrality.py) + [`tools/stance_separation_check.py`](tools/stance_separation_check.py) | **三律守门**：机制核零立场静态检查（律一/律二 CI 化） | `cd tools && python stance_separation_check.py` |
+| [`tools/stance_neutrality.py`](tools/stance_neutrality.py) + [`tools/stance_separation_check.py`](tools/stance_separation_check.py) | **三律守门**：机制核零立场静态检查（律一/律二；守门工具已就绪，CI 接入为阶段 2、须另行明示启用） | `cd tools && python stance_separation_check.py <cop.yaml…>`（空参即非 0 退出，非静默通过） |
 
 基座模块（同层）：`tdca_cognitive_distance.py`（定义 3.36/3.37，命题 3.10）/ `tdca_cognitive_state.py`（五维状态）/ `tdca_fuzzy_distance.py`（模糊层）。全量回归：`cd tools && python -m pytest -q`（详见 [`tools/README.md`](tools/README.md)）。
 
@@ -67,7 +67,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 
 思维协议（Cognitive Protocol, COP）是把人类默会知识编译为**可确权、可计价、可分润**的制度协议资产——「显影而非白箱化」的工程载体（[开源说明与调用规则 →](docs/cop-library/OPENING.md)）。
 
-**三律（硬约束，CI 化守门）**
+**三律（硬约束，守门工具已就绪；CI 接入待阶段 2 另行明示启用）**
 
 | 律 | 内容 | 守门 |
 |---|---|---|
