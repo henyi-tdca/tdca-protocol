@@ -1,0 +1,23 @@
+name: stance-gate
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  stance-gate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: pip install pytest pyyaml
+      - name: 律一/律二守门（机制核零立场；语料区豁免内建于工具）
+        run: python tools/stance_neutrality.py check repo
+      - name: 守门通则断言 Q-1~Q-9
+        run: python -m pytest tools/tests/test_gate_zero_scan.py -q
