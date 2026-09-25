@@ -34,7 +34,8 @@ go build -o tdcad ./cmd/tdcad
 # 熔断判定
 ./tdcad nsfl eval t1 suspicious-pattern
 
-# 测试（含破坏性 + -race）
+# 测试（含破坏性 + -race）——前置：先构建 tdcad（bridge 端到端测试需可执行文件）
+go build -o tdcad ./cmd/tdcad
 go test -race ./...
 ```
 
