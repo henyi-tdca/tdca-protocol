@@ -11,7 +11,11 @@
 package mcp
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
+	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -63,6 +67,77 @@ func (g *StaticGatewayAuth) Binding(tokenID string) (CredBinding, bool) {
 	defer g.mu.RUnlock()
 	b, ok := g.bindings[tokenID]
 	return b, ok
+}
+
+// Len 绑定数（装配日志用；只出计数，不出任何 token_id 或凭据值）
+func (g *StaticGatewayAuth) Len() int {
+	g.mu.RLock()
+	defer g.mu.RUnlock()
+	return len(g.bindings)
+}
+
+// ---- 本地配置源装载（GSEQ-2815：tdcad 启动时装配认证源）----
+
+// gatewayAuthFile 本地配置源文件格式（严格解析：DisallowUnknownFields，
+// 任何额外字段——含 token/secret/value 之类凭据字面字段——结构性拒绝，
+// 这是凭据纪律的机械防线：token_id 是标识符，凭据本体永不入码/入仓/入日志）
+type gatewayAuthFile struct {
+	Bindings []gatewayAuthFileBinding `json:"bindings"`
+}
+
+type gatewayAuthFileBinding struct {
+	TokenID  string   `json:"token_id"`
+	TenantID string   `json:"tenant_id"`
+	Env      string   `json:"env"`
+	Scope    []string `json:"scope"`
+}
+
+// LoadStaticGatewayAuthFile 从本地配置源 JSON 文件装载静态绑定表。
+//
+// 信任等级标注：本地配置源下，条例 R1 之「已验证」由部署侧保证（非网关侧）——
+// 网关侧只负责按 token_id 取绑定并 fail-closed，不验证凭据本体真伪。
+//
+// 校验（全部 fail-closed，错误信息只报字段名与序号，不回显文件内容值）：
+//   - 文件不可读 / JSON 畸形 → 错
+//   - token_id 空 → 错；scope 空 → 错；token_id 重复 → 错
+//   - 未知字段（含任何凭据字面字段）→ DisallowUnknownFields 结构性拒绝
+func LoadStaticGatewayAuthFile(path string) (*StaticGatewayAuth, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("gateway-auth: file unreadable: %v", err)
+	}
+	defer f.Close()
+	dec := json.NewDecoder(f)
+	dec.DisallowUnknownFields()
+	var doc gatewayAuthFile
+	if err := dec.Decode(&doc); err != nil {
+		var se *json.SyntaxError
+		if errors.As(err, &se) {
+			// 语法错只报字节偏移，不回显文件内容
+			return nil, fmt.Errorf("gateway-auth: malformed JSON at byte offset %d", se.Offset)
+		}
+		// 未知字段/类型错：encoding/json 只含字段名与类型，不含值
+		return nil, fmt.Errorf("gateway-auth: %v", err)
+	}
+	if err := dec.Decode(&struct{}{}); err != io.EOF {
+		return nil, fmt.Errorf("gateway-auth: malformed JSON: unexpected trailing data")
+	}
+	g := NewStaticGatewayAuth()
+	seen := map[string]int{}
+	for i, b := range doc.Bindings {
+		if b.TokenID == "" {
+			return nil, fmt.Errorf("gateway-auth: bindings[%d].token_id is empty", i)
+		}
+		if len(b.Scope) == 0 {
+			return nil, fmt.Errorf("gateway-auth: bindings[%d].scope is empty", i)
+		}
+		if first, dup := seen[b.TokenID]; dup {
+			return nil, fmt.Errorf("gateway-auth: bindings[%d].token_id duplicates bindings[%d]", i, first)
+		}
+		seen[b.TokenID] = i
+		g.Bind(b.TokenID, CredBinding{TenantID: b.TenantID, Env: b.Env, Scope: b.Scope})
+	}
+	return g, nil
 }
 
 // ---- R2 规格洁净 ----

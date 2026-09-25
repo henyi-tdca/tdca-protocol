@@ -128,3 +128,34 @@ type enforceCard struct {
 	AgentID string `json:"agent_id"`
 	Role    string `json:"role"`
 }
+
+// ---- GSEQ-2815 认证源装配（assembleGatewayAuth）----
+
+func TestAssembleGatewayAuthEmptyPath(t *testing.T) {
+	// 空路径 → (nil, nil)：不注入，持权握手保持 fail-closed
+	g, err := assembleGatewayAuth("")
+	if err != nil || g != nil {
+		t.Fatalf("empty path must yield (nil, nil), got %v/%v", g, err)
+	}
+}
+
+func TestAssembleGatewayAuthMissingFile(t *testing.T) {
+	// 不存在路径 → 返回 error（fail-closed），不 panic
+	if _, err := assembleGatewayAuth(filepath.Join(t.TempDir(), "no-such.json")); err == nil {
+		t.Fatal("missing path must error")
+	}
+}
+
+func TestAssembleGatewayAuthBridgeFixture(t *testing.T) {
+	// 合法夹具（bridge 测试夹具相对路径）→ 非 nil 且绑定可查
+	g, err := assembleGatewayAuth(filepath.Join("..", "..", "bridge", "tests", "gateway-auth.test.json"))
+	if err != nil {
+		t.Fatalf("bridge fixture must load, got %v", err)
+	}
+	if g == nil || g.Len() != 1 {
+		t.Fatalf("expected 1 binding, got %+v", g)
+	}
+	if _, ok := g.Binding("ext-agent-demo"); !ok {
+		t.Fatal("fixture binding ext-agent-demo must be resolvable")
+	}
+}

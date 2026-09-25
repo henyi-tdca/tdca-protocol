@@ -10,6 +10,8 @@
 package mcp
 
 import (
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -194,5 +196,90 @@ func TestCB4HandshakeScopeWideningRejected(t *testing.T) {
 	rej := s.RejectedEvents()
 	if len(rej) != 1 || rej[0].Reason != ReasonScopeWidening {
 		t.Errorf("session_rejected must record scope-widening, got %+v", rej)
+	}
+}
+
+// ---- GSEQ-2815 本地配置源装载：LoadStaticGatewayAuthFile ----
+
+// writeAuthFile 写临时认证源文件（测试辅助）
+func writeAuthFile(t *testing.T, content string) string {
+	t.Helper()
+	p := filepath.Join(t.TempDir(), "gateway-auth.json")
+	if err := os.WriteFile(p, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	return p
+}
+
+func TestLoadStaticGatewayAuthFileOK(t *testing.T) {
+	// 合法文件加载成功且绑定可查
+	p := writeAuthFile(t, `{"bindings":[{"token_id":"ext-agent-demo","tenant_id":"tenant-bridge-test","env":"env-test","scope":["mcp"]}]}`)
+	g, err := LoadStaticGatewayAuthFile(p)
+	if err != nil {
+		t.Fatalf("valid file must load, got %v", err)
+	}
+	if g.Len() != 1 {
+		t.Fatalf("expected 1 binding, got %d", g.Len())
+	}
+	b, ok := g.Binding("ext-agent-demo")
+	if !ok {
+		t.Fatal("binding for ext-agent-demo must be found")
+	}
+	if b.TenantID != "tenant-bridge-test" || b.Env != "env-test" || !reflect.DeepEqual(b.Scope, []string{"mcp"}) {
+		t.Fatalf("binding mismatch: %+v", b)
+	}
+	if _, ok := g.Binding("no-such-token"); ok {
+		t.Fatal("unknown token_id must not have a binding")
+	}
+}
+
+func TestLoadStaticGatewayAuthFileUnknownFieldRejected(t *testing.T) {
+	// 未知字段（凭据字面字段 token_value）→ DisallowUnknownFields 结构性拒绝；
+	// 错误含字段名，不含文件内容值
+	p := writeAuthFile(t, `{"bindings":[{"token_id":"x","tenant_id":"t","env":"e","scope":["mcp"],"token_value":"s3cr3t"}]}`)
+	_, err := LoadStaticGatewayAuthFile(p)
+	if err == nil || !strings.Contains(err.Error(), "token_value") {
+		t.Fatalf("unknown credential-literal field must be rejected with field name, got %v", err)
+	}
+	if strings.Contains(err.Error(), "s3cr3t") {
+		t.Fatalf("error must not echo file content value, got %v", err)
+	}
+	// 顶层未知字段同样拒
+	p2 := writeAuthFile(t, `{"bindings":[],"secret":"x"}`)
+	if _, err := LoadStaticGatewayAuthFile(p2); err == nil || !strings.Contains(err.Error(), "secret") {
+		t.Fatalf("top-level unknown field must be rejected, got %v", err)
+	}
+}
+
+func TestLoadStaticGatewayAuthFileNotExist(t *testing.T) {
+	_, err := LoadStaticGatewayAuthFile(filepath.Join(t.TempDir(), "no-such-file.json"))
+	if err == nil {
+		t.Fatal("missing file must error")
+	}
+}
+
+func TestLoadStaticGatewayAuthFileMalformed(t *testing.T) {
+	p := writeAuthFile(t, `{"bindings":[{broken`)
+	if _, err := LoadStaticGatewayAuthFile(p); err == nil {
+		t.Fatal("malformed JSON must error")
+	}
+}
+
+func TestLoadStaticGatewayAuthFileValidation(t *testing.T) {
+	cases := []struct {
+		name    string
+		content string
+		want    string // 错误信息须含的字段名/序号定位
+	}{
+		{"token_id empty", `{"bindings":[{"token_id":"","tenant_id":"t","env":"e","scope":["mcp"]}]}`, "bindings[0].token_id"},
+		{"scope empty", `{"bindings":[{"token_id":"x","tenant_id":"t","env":"e","scope":[]}]}`, "bindings[0].scope"},
+		{"token_id dup", `{"bindings":[{"token_id":"x","tenant_id":"t","env":"e","scope":["mcp"]},{"token_id":"x","tenant_id":"t2","env":"e2","scope":["mcp"]}]}`, "duplicates bindings[0]"},
+	}
+	for _, c := range cases {
+		p := writeAuthFile(t, c.content)
+		_, err := LoadStaticGatewayAuthFile(p)
+		if err == nil || !strings.Contains(err.Error(), c.want) {
+			t.Errorf("%s: must reject with %q in error, got %v", c.name, c.want, err)
+		}
 	}
 }
