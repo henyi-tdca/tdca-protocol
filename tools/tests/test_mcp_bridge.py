@@ -65,10 +65,14 @@ def test_stdio_end_to_end(tmp_path):
             "params": {"name": "nca:chain", "arguments": {}}}),
     ]
     p = subprocess.run([sys.executable, "-m", "mcp_bridge", "--evidence", str(ev)],
-                       input="\n".join(lines) + "\n", capture_output=True, text=True,
-                       encoding="utf-8",
-                       cwd=str(TOOLS), timeout=30)
-    outs = [json.loads(x) for x in p.stdout.strip().splitlines() if x.strip()]
+                       input=("\n".join(lines) + "\n").encode("utf-8"),
+                       capture_output=True, timeout=30,
+                       cwd=str(TOOLS))
+    # 先报子进程自身失败（退出码/stderr），避免 None.strip 式裸崩
+    assert p.returncode == 0, "mcp_bridge 子进程退出 %d, stderr: %s" % (
+        p.returncode, p.stderr.decode("utf-8", errors="replace"))
+    stdout_text = p.stdout.decode("utf-8", errors="replace")
+    outs = [json.loads(x) for x in stdout_text.strip().splitlines() if x.strip()]
     assert [o["id"] for o in outs] == [1, 2, 3]
     assert "hello tdca" in outs[1]["result"]["content"][0]["text"]
     assert "NCA-MCP" in outs[2]["result"]["content"][0]["text"]
