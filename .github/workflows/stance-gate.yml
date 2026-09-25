@@ -17,7 +17,12 @@ jobs:
           python-version: "3.12"
       - name: Install deps
         run: pip install pytest pyyaml
-      - name: 律一/律二守门（机制核零立场；语料区豁免内建于工具）
+      # 范围口径（显式声明，承 TDCA-STD-GATE-ZERO-SCAN-001 B 条）：
+      #   机制核 ＝ tools 全树（check compiler）：立场词命中即 FAIL；fail-closed，直取退出码。
+      #   语料区 ＝ docs/cop-library/**（含 hundred_schools/**，check repo）：命中豁免、不计违规、不整改。
+      - name: 机制核守门（tools 全树；命中即 FAIL）
+        run: python tools/stance_neutrality.py check compiler
+      - name: 律一/律二守门（语料区豁免内建于工具）
         run: python tools/stance_neutrality.py check repo
       - name: 守门通则断言 Q-1~Q-9
         run: python -m pytest tools/tests/test_gate_zero_scan.py -q
