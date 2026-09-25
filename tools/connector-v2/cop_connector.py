@@ -16,11 +16,17 @@ import sys
 import math
 import yaml
 from collections import Counter
+from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-WS = r"C:\Users\22850\AppData\Roaming\reasonix\global-workspace"
-COP_DIR = os.path.join(WS, r"tdca-thinktank\research\topics\thinking-protocol\cop-library")
+# 工作区路径：环境变量 TDCA_WS 覆盖优先；默认取当前用户目录下 reasonix 全局工作区（不硬编码用户）
+WS = Path(os.environ["TDCA_WS"]).expanduser() if os.environ.get("TDCA_WS") else Path.home() / "AppData" / "Roaming" / "reasonix" / "global-workspace"
+COP_DIR = WS / "tdca-thinktank" / "research" / "topics" / "thinking-protocol" / "cop-library"
+if not COP_DIR.is_dir():
+    print("[FAIL] COP_DIR 不存在: %s（可用环境变量 TDCA_WS 覆盖工作区）" % COP_DIR, file=sys.stderr)
+    print("       不静默空跑：设置 TDCA_WS 指向含 tdca-thinktank/.../cop-library 的工作区", file=sys.stderr)
+    sys.exit(2)
 
 STOPWORDS = set("""的 了 与 和 及 或 在 是 为 于 之 其 中 被 把 让 使 用 对 向 从 到 自 而 且 但 却 则 已 将 会 能 可 应 需 有 无 不 非 是 否 一个 一种 这个 那个 这些 那些 我们 你们 他们 通过 进行 实现 产生 形成 需要 可以 应当 必须 用于 作为 以及 或者 并且 因为 所以 如果 那么 从而 因此 相关 问题 情况 方式 方法 过程 结果 目标 主体 对象 内容 范围 边界 约束 条件 前提 后件 步骤 流程 机制 规则 体系 结构 功能 作用 意义 价值 效用 场景 协作 调用 配置 分配 收益 风险 安全 合规 审计 存证 治理 制度 协议 思维 认知 决策 执行 验证 评估 检测 监测 管理 控制 调度 编排 组合 化合 分解 抽象 具体 整体 局部 全局 动态 静态 线性 非线性 对称 不对称 同构 异构""".split())
 

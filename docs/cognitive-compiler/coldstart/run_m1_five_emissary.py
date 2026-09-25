@@ -34,10 +34,14 @@ import nca_generator as NCA
 from coldstart_mcp_client import connect_external_agent
 from providers.base import Candidate
 
-# 评估者: utility-genie (真实模块)
-UG = r"C:/Users/22850/Desktop/TDCA归档文件夹/.tdca-nca/scripts/utility_genie"
-if UG not in sys.path:
-    sys.path.insert(0, UG)
+# 评估者: utility-genie (真实模块)：TDCA_UG 覆盖优先；默认取用户桌面归档（不硬编码用户）
+import os
+from pathlib import Path
+UG = Path(os.environ["TDCA_UG"]).expanduser().resolve() if os.environ.get("TDCA_UG") else Path.home() / "Desktop" / "TDCA归档文件夹" / ".tdca-nca" / "scripts" / "utility_genie"
+if not UG.is_dir():
+    raise SystemExit("[FAIL] utility-genie 目录不存在: %s（可用 TDCA_UG 覆盖）——不静默空跑" % UG)
+if str(UG) not in sys.path:
+    sys.path.insert(0, str(UG))
 from tdca_utility_genie import TDCAUtilityGenie
 from solvers.positive_sum_solver import Agent
 

@@ -7,10 +7,24 @@
 与 mcp_external_agent_server.py 手写帧同构, 零第三方依赖。
 """
 import json
+import os
 import subprocess
 import sys
+from pathlib import Path
 
-_PY = "C:/Users/22850/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
+
+def _resolve_py() -> str:
+    """外部 python：TDCA_PYTHON 覆盖优先；默认找 ~/.workbuddy 自带环境；都不在则回落当前解释器"""
+    env = os.environ.get("TDCA_PYTHON")
+    if env:
+        return env
+    cand = Path.home() / ".workbuddy" / "binaries" / "python" / "envs" / "default" / "Scripts" / "python.exe"
+    if cand.exists():
+        return str(cand)
+    return sys.executable
+
+
+_PY = _resolve_py()
 
 
 def _send_buf(wbuf, msg):

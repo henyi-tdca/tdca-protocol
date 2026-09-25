@@ -16,12 +16,20 @@ import sys
 import json
 import time
 import datetime
+from pathlib import Path
 
-REPO = r"C:/Users/22850/Desktop/开发会话文件/tdca-protocol"
+# 仓库根：TDCA_REPO_ROOT 覆盖优先；默认按本文件位置 parents[3] 探测
+REPO = Path(os.environ["TDCA_REPO_ROOT"]).expanduser().resolve() if os.environ.get("TDCA_REPO_ROOT") else Path(__file__).resolve().parents[3]
+if not (REPO / "docs" / "cognitive-compiler").is_dir():
+    raise SystemExit("[FAIL] 仓库根探测失败: %s（可用 TDCA_REPO_ROOT 覆盖）——不静默空跑" % REPO)
 _CC = os.path.join(REPO, "docs", "cognitive-compiler")
 _HERE = os.path.join(_CC, "coldstart")
 _SIM = os.path.join(_CC, "simulations", "multilateral_search_match")
-UG = r"C:/Users/22850/Desktop/TDCA归档文件夹/.tdca-nca/scripts/utility_genie"
+# utility-genie 评估者目录：TDCA_UG 覆盖优先；默认取用户桌面归档（不硬编码用户）
+import os
+UG = Path(os.environ["TDCA_UG"]).expanduser().resolve() if os.environ.get("TDCA_UG") else Path.home() / "Desktop" / "TDCA归档文件夹" / ".tdca-nca" / "scripts" / "utility_genie"
+if not UG.is_dir():
+    raise SystemExit("[FAIL] utility-genie 目录不存在: %s（可用 TDCA_UG 覆盖）——不静默空跑" % UG)
 
 # 预置权威仓库正确绝对路径(修复 docs/ 层级导致的相对路径错位)
 for p in (_CC, _SIM, os.path.join(REPO, "config"), os.path.join(REPO, "nca-generator"), UG):
