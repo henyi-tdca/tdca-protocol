@@ -21,7 +21,7 @@ import (
 func call(t *testing.T, s *Server, line string) map[string]any {
 	t.Helper()
 	var out bytes.Buffer
-	srv := NewServer()
+	srv := newTestServer()
 	// 保持 Server 引用：此处每个测试独立服务器，模拟外部 Agent 单次连接
 	_ = srv
 	// 直接处理（无状态桥接：每次 Serve 新实例，等价于外部 Agent 独立挂载）
@@ -85,7 +85,7 @@ func cardJSON(overrides map[string]any) string {
 // ---- 1. 握手与工具枚举 ----
 
 func TestInitializeHandshake(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	resps := run(t, s,
 		initReq(1, tdcaMetaJSON(nil)),
 		`{"jsonrpc":"2.0","id":2,"method":"tools/list"}`,
@@ -128,7 +128,7 @@ func TestInitializeHandshake(t *testing.T) {
 // ---- 2. enforce_check ----
 
 func TestEnforceCheckPass(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(nil))}}})
 	resp := runEstablished(t, s, req)[0]
@@ -142,7 +142,7 @@ func TestEnforceCheckPass(t *testing.T) {
 }
 
 func TestEnforceCheckRejectProtocol(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(map[string]any{"protocol_version": "9.9.9"}))}}})
 	resp := runEstablished(t, s, req)[0]
@@ -156,7 +156,7 @@ func TestEnforceCheckRejectProtocol(t *testing.T) {
 
 func TestEnforceCheckInjectionBlocked(t *testing.T) {
 	// 破坏性测试：提示注入 → fail-closed
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "enforce_check", "arguments": map[string]any{"agent_card": json.RawMessage(cardJSON(map[string]any{"agent_id": "<script>alert(1)</script>"}))}}})
 	resp := runEstablished(t, s, req)[0]
@@ -170,7 +170,7 @@ func TestEnforceCheckInjectionBlocked(t *testing.T) {
 
 func TestEnforceCheckUnknownFieldRejected(t *testing.T) {
 	// JSON Schema 合规拦截：未知字段 → 拒绝（注入/越权前置）
-	s := NewServer()
+	s := newTestServer()
 	card := map[string]any{
 		"agent_id": "NM-001", "protocol_version": "3.1.2",
 		"scene_id": "scene-phy-notification", "role": "NM-Operator",
@@ -201,7 +201,7 @@ func recordJSON(prev string) string {
 }
 
 func TestNcaAppendOk(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nca_append", "arguments": map[string]any{"record": json.RawMessage(recordJSON("sha256:genesis"))}}})
 	resp := runEstablished(t, s, req)[0]
@@ -213,7 +213,7 @@ func TestNcaAppendOk(t *testing.T) {
 
 func TestNcaAppendTamperRejected(t *testing.T) {
 	// 破坏性测试：伪造 prev_hash → 篡改拒绝
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nca_append", "arguments": map[string]any{"record": json.RawMessage(recordJSON("sha256:deadbeef"))}}})
 	resp := runEstablished(t, s, req)[0]
@@ -225,7 +225,7 @@ func TestNcaAppendTamperRejected(t *testing.T) {
 }
 
 func TestNcaVerifyChain(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	// 构造两记录链（第二条 prev_hash = 第一条记录哈希）——通过 MCP 无法取哈希，
 	// 故用同构 JSON 直接构造链式记录
 	rec1 := ncaRec(t, "n1", "sha256:genesis")
@@ -253,7 +253,7 @@ func ncaRec(t *testing.T, id, prev string) map[string]any {
 
 func TestNcaVerifyForgedRejected(t *testing.T) {
 	// 破坏性测试：伪造记录（hash 与载荷不符）→ 验证失败
-	s := NewServer()
+	s := newTestServer()
 	rec1 := ncaRec(t, "n1", "sha256:genesis")
 	rec2 := ncaRec(t, "n2", rec1["hash"].(string))
 	rec2["hash"] = "sha256:forged" // 篡改
@@ -271,7 +271,7 @@ func TestNcaVerifyForgedRejected(t *testing.T) {
 // ---- 4. nsfl_eval ----
 
 func TestNsflWarn(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "suspicious-pattern"}}})
 	resp := runEstablished(t, s, req)[0]
@@ -282,7 +282,7 @@ func TestNsflWarn(t *testing.T) {
 }
 
 func TestNsflBlock(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "unauthenticated"}}})
 	resp := runEstablished(t, s, req)[0]
@@ -294,7 +294,7 @@ func TestNsflBlock(t *testing.T) {
 
 func TestNsflFusedIrreversible(t *testing.T) {
 	// 破坏性测试：绕过尝试 → FUSED 不可逆
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1", "signal": "nsfl-bypass-attempt"}}})
 	resp := runEstablished(t, s, req)[0]
@@ -306,7 +306,7 @@ func TestNsflFusedIrreversible(t *testing.T) {
 
 func TestNsflMissingArgSchemaRejected(t *testing.T) {
 	// JSON Schema 合规拦截：缺 required → 拒绝
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "nsfl_eval", "arguments": map[string]any{"trigger_id": "t1"}}})
 	resp := runEstablished(t, s, req)[0]
@@ -320,7 +320,7 @@ func TestNsflMissingArgSchemaRejected(t *testing.T) {
 // ---- 5. 协议级 ----
 
 func TestUnknownMethod(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := `{"jsonrpc":"2.0","id":1,"method":"tools/unknown"}`
 	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
@@ -331,7 +331,7 @@ func TestUnknownMethod(t *testing.T) {
 }
 
 func TestUnknownTool(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := j(map[string]any{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
 		"params": map[string]any{"name": "evil_tool", "arguments": map[string]any{}}})
 	resp := runEstablished(t, s, req)[0]
@@ -341,7 +341,7 @@ func TestUnknownTool(t *testing.T) {
 }
 
 func TestParseError(t *testing.T) {
-	s := NewServer()
+	s := newTestServer()
 	req := `{"jsonrpc":"2.0","id":1,"method":` // 截断 JSON
 	resp := runEstablished(t, s, req)[0]
 	if err, ok := resp["error"]; !ok {
@@ -356,7 +356,7 @@ func TestParseError(t *testing.T) {
 func TestMountModeE2E(t *testing.T) {
 	// 外部 Agent（如 DeepSeek Harness 类）通过 MCP stdio 挂载 TDCA 核心：
 	// 会话握手 → 准入 → 存证 → 熔断 → 断开小结 全链，不改外部源码（BIDIR-001）
-	s := NewServer()
+	s := newTestServer()
 	reqs := []string{
 		initReq(1, tdcaMetaJSON(nil)),
 		initializedNotif,

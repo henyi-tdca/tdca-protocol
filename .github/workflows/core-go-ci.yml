@@ -33,6 +33,15 @@ jobs:
         working-directory: core-go
         run: ./tdcad version
 
+      # --- 凭证绑定条例门禁（GSEQ-2805 施工 / GSEQ-2811 签批接入；只加严不放宽）---
+      # credbind-check selftest：对 4 件核心工具规格跑 R2 规格洁净自扫；
+      # 检出违规／零扫描均 exit 1（丙案 GSEQ-2818：失败统称 1，细分见输出文本）——非 0 即 fail。
+      - name: Credbind spec-clean gate (selftest)
+        working-directory: core-go
+        run: |
+          go build -o credbind-check ./cmd/credbind-check
+          ./credbind-check selftest
+
       # --- 制度哈希清单校验（防篡改锚 ① 自动化——WorkBuddy VERIFY-EXT-2026-09-09 断链发现后增设）---
       # 依据: TDCA-SECURITY-TAMPER-001 ｜ INSTITUTION-HASHES.md（sha256 前 16 位）
       # 校验: AXIOM6-PROOF.md（证明文档）+ axiom6.go（实现）哈希与清单声称一致；

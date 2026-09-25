@@ -83,10 +83,11 @@ type Server struct {
 
 	// ---- 会话层（单会话单主体，max_inflight=1，裁定 D-4A）----
 	sesMu    sync.Mutex
-	session  *Session       // 当前会话（替换既有单值 s.client；nil = 无会话）
-	policy   SessionPolicy  // 会话纪律参数（规范 §七，cmd flag 可覆盖）
-	rejected []SessionEvent // session_rejected 事件（握手拒绝不建会话，仍须存证）
-	pingSeq  int            // 服务端 ping 序号（ping request id = tdca-ping-N）
+	session  *Session            // 当前会话（替换既有单值 s.client；nil = 无会话）
+	policy   SessionPolicy       // 会话纪律参数（规范 §七，cmd flag 可覆盖）
+	auth     GatewayAuthProvider // 网关认证上下文（条例 R1 来源唯一；SetGatewayAuth 注入）
+	rejected []SessionEvent      // session_rejected 事件（握手拒绝不建会话，仍须存证）
+	pingSeq  int                 // 服务端 ping 序号（ping request id = tdca-ping-N）
 
 	encMu sync.Mutex // 应答写出互斥（心跳 goroutine 与主循环并发写）
 }
@@ -105,6 +106,21 @@ func NewServerWithPolicy(policy SessionPolicy) *Server {
 	}
 	s.registerCoreTools()
 	return s
+}
+
+// SetGatewayAuth 注入网关认证上下文（条例 R1：作用域授权来源唯一 = 按 token_id 取绑定）。
+// 须在 Serve 前注入；持权握手时未注入或绑定查无一律拒 credential-unbound（fail-closed）。
+func (s *Server) SetGatewayAuth(p GatewayAuthProvider) {
+	s.sesMu.Lock()
+	defer s.sesMu.Unlock()
+	s.auth = p
+}
+
+// gatewayAuth 取当前网关认证上下文（可能为 nil → 持权握手 fail-closed）
+func (s *Server) gatewayAuth() GatewayAuthProvider {
+	s.sesMu.Lock()
+	defer s.sesMu.Unlock()
+	return s.auth
 }
 
 // Session 当前会话（检查点/测试用；可能为 nil）
@@ -149,10 +165,14 @@ func (s *Server) transportBroken() {
 	}
 }
 
-// Register 注册工具（外部扩展点；重名拒绝——防覆盖注入）
+// Register 注册工具（外部扩展点；重名拒绝——防覆盖注入）。
+// 条例 R2 规格洁净：inputSchema 字段名含租户/环境标识即拒绝装载（fail-closed）。
 func (s *Server) Register(t Tool, h ToolHandler) error {
 	if t.Name == "" || h == nil {
 		return fmt.Errorf("mcp: invalid tool registration")
+	}
+	if err := CheckSpecClean(t.InputSchema); err != nil {
+		return fmt.Errorf("mcp: tool %q spec rejected: %w", t.Name, err)
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -758,7 +778,8 @@ func (s *Server) handleInitialize(req rpcRequest, now time.Time) rpcResponse {
 		}
 	}
 	// 三要素校验（主体/场景/持权）→ 不通过则记 session_rejected
-	agentID, scene, tokenID, expiresAt, verr := validateHandshake(s.policy, meta, p.ClientInfo.Name, now)
+	// 条例 R1：作用域授权来源 = 网关认证上下文绑定（s.gatewayAuth()），非请求参数
+	agentID, scene, tokenID, scope, expiresAt, verr := validateHandshake(s.policy, s.gatewayAuth(), meta, p.ClientInfo.Name, now)
 	if verr != nil {
 		ge := verr.(*SessionGateError)
 		tid := ""
@@ -770,6 +791,7 @@ func (s *Server) handleInitialize(req rpcRequest, now time.Time) rpcResponse {
 	}
 	// H1 通过 → 建会话（HANDSHAKING）；协商结果随会话记入 session_open 事件（裁定 D-6）
 	sess := NewSession(s.policy, agentID, scene, tokenID, expiresAt, now)
+	sess.Scope = scope // 生效作用域（R3 收窄裁决结果；不入事件、不改事件 schema）
 	sess.negotiatedVersion = clientVersion
 	s.sesMu.Lock()
 	s.session = sess

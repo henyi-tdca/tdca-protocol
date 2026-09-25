@@ -80,9 +80,13 @@ func readJSON(path string, v any) error {
 //   tdcad mcp serve [--allow-anonymous=true] [--t-handshake=10s] [--t-ping=30s]
 //                   [--t-pong=15s] [--n-stale=2] [--n-abort=3]
 //                   [--t-drain=5s] [--t-gc=60s] [--max-inflight=1]
+//                   [--gateway-auth-file=<path>]
+//
+// 认证源装配（GSEQ-2815）：--gateway-auth-file 指定本地配置源 JSON（缺省取环境变量
+// TDCA_GATEWAY_AUTH_FILE）；不配置则不注入认证源，持权握手 fail-closed（credential-unbound）。
 func cmdMCP(args []string) error {
 	if len(args) < 1 || args[0] != "serve" {
-		return fmt.Errorf("usage: tdcad mcp serve [--allow-anonymous=true --t-handshake=10s --t-ping=30s --t-pong=15s --n-stale=2 --n-abort=3 --t-drain=5s --t-gc=60s --max-inflight=1]")
+		return fmt.Errorf("usage: tdcad mcp serve [--allow-anonymous=true --t-handshake=10s --t-ping=30s --t-pong=15s --n-stale=2 --n-abort=3 --t-drain=5s --t-gc=60s --max-inflight=1 --gateway-auth-file=<path>]")
 	}
 	policy := mcp.DefaultSessionPolicy()
 	fs := flag.NewFlagSet("mcp serve", flag.ContinueOnError)
@@ -95,11 +99,34 @@ func cmdMCP(args []string) error {
 	fs.DurationVar(&policy.TDrain, "t-drain", policy.TDrain, "断开排空上限")
 	fs.DurationVar(&policy.TGC, "t-gc", policy.TGC, "STALE/SUSPENDED 会话回收时限")
 	fs.IntVar(&policy.MaxInflight, "max-inflight", policy.MaxInflight, "在途请求上限")
+	authFile := fs.String("gateway-auth-file", os.Getenv("TDCA_GATEWAY_AUTH_FILE"),
+		"网关认证绑定文件（本地配置源 JSON；缺省取环境变量 TDCA_GATEWAY_AUTH_FILE）")
 	if err := fs.Parse(args[1:]); err != nil {
 		return err
 	}
+	auth, err := assembleGatewayAuth(*authFile)
+	if err != nil {
+		return err // fail-closed：加载失败进程非 0 退出（错误不含文件内容）
+	}
 	server := mcp.NewServerWithPolicy(policy)
+	if auth != nil {
+		server.SetGatewayAuth(auth)
+		// 信任等级标注日志：只出绑定计数，不出任何 token_id 或凭据值
+		fmt.Fprintf(os.Stderr, "gateway-auth: local config source, %d bindings loaded（信任等级：R1『已验证』由部署侧保证，非网关侧）\n", auth.Len())
+	} else {
+		fmt.Fprintln(os.Stderr, "gateway-auth: not configured; 持权握手将 fail-closed (credential-unbound)")
+	}
 	return server.Serve(os.Stdin, os.Stdout)
+}
+
+// assembleGatewayAuth 解析路径 → 加载 → 返回认证源（GSEQ-2815；抽出以便进程内测试）：
+//   - path 空 → (nil, nil)：不注入认证源，持权握手保持 fail-closed（credential-unbound）
+//   - path 非空 → LoadStaticGatewayAuthFile；加载失败即返回 error（fail-closed）
+func assembleGatewayAuth(path string) (*mcp.StaticGatewayAuth, error) {
+	if path == "" {
+		return nil, nil
+	}
+	return mcp.LoadStaticGatewayAuthFile(path)
 }
 
 // ---- enforce ----
