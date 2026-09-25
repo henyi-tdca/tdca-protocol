@@ -1,0 +1,63 @@
+COP-ID: ICHING-COP-17
+base_protocol: TDCA-CORE-20260815-01
+source_expert: zhouyi
+compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiled_at: '2026-09-25T16:35:52.700513+08:00'
+stratum: 上经
+hexagram:
+  seq: 17
+  name: 随
+  pinyin: suí
+  upper: 兑
+  lower: 震
+  nature: 泽雷随
+  gua_ci_real: 元亨利贞，无咎。
+  da_xiang_real: 泽中有雷，随；君子以向晦入宴息。
+provenance:
+  gua_ci: real
+  gua_ci_source: 周易·随卦·卦辞（通行本原文引用）
+  da_xiang: real
+  da_xiang_source: 周易·随卦·大象传（通行本原文引用）
+  modern_implications: generated_by_workbuddy
+  negative_space: generated_by_workbuddy（含 NSFL 通用禁令）
+soul:
+  identity: 随（泽雷随）
+  core: 泽雷随
+  role: 思维协议 (易理决策类)
+  category: 周易六十四卦 / 上经
+  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+primitives:
+- name: suí
+  method: 随
+  signature: 'fn suí(context: Situation) -> Outcome'
+  precond: 组织/决策情境契合本卦意象（泽雷随）
+  postcond: 依本卦 core 与负空间守正行权，达成正和决策
+  negative_space: ⊗ 忌随波逐流：无主见跟风，失方向。
+  steps:
+  - 辨势：识别当前所处卦象对应的组织/决策情境与时机位阶
+  - 守正：以本卦 core 与负空间为边界，不越 NSFL 否决权
+  - 行权：据 modern_implications 择机行动——顺势则进，当止则止
+  nca_emit: true
+dispatch:
+  main_pipeline: suí
+  graph:
+  - from: suí
+    to: []
+  note: 单卦独立协议，主原语 suí 即该卦决策执行体
+decision:
+- if: 情境契合本卦意象（泽雷随）且未触负空间
+  call: suí
+skills: []
+modern_implications:
+- 随=因时而动、顺势跟进：环境变则策略随，固执己见者咎；但『向晦入宴息』设边界——知止。
+- 随非盲从，是审时度势的灵活；无咎来自『元亨利贞』的正道随顺。
+negative_space:
+- ⊗ 禁止违反 NSFL：伦理/法律负空间不可越（F1.5 否决权宪法条款，优先级恒高于一切判据，Fail-Closed）
+- ⊗ 忌随波逐流：无主见跟风，失方向。
+- ⊗ 忌随时无节：该止不止，疲于奔命。
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
+  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated

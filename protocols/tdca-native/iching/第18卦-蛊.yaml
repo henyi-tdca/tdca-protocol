@@ -1,0 +1,63 @@
+COP-ID: ICHING-COP-18
+base_protocol: TDCA-CORE-20260815-01
+source_expert: zhouyi
+compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiled_at: '2026-09-25T16:35:52.704406+08:00'
+stratum: 上经
+hexagram:
+  seq: 18
+  name: 蛊
+  pinyin: gǔ
+  upper: 艮
+  lower: 巽
+  nature: 山风蛊
+  gua_ci_real: 元亨，利涉大川。先甲三日，后甲三日。
+  da_xiang_real: 山下有风，蛊；君子以振民育德。
+provenance:
+  gua_ci: real
+  gua_ci_source: 周易·蛊卦·卦辞（通行本原文引用）
+  da_xiang: real
+  da_xiang_source: 周易·蛊卦·大象传（通行本原文引用）
+  modern_implications: generated_by_workbuddy
+  negative_space: generated_by_workbuddy（含 NSFL 通用禁令）
+soul:
+  identity: 蛊（山风蛊）
+  core: 山风蛊
+  role: 思维协议 (易理决策类)
+  category: 周易六十四卦 / 上经
+  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+primitives:
+- name: gǔ
+  method: 蛊
+  signature: 'fn gǔ(context: Situation) -> Outcome'
+  precond: 组织/决策情境契合本卦意象（山风蛊）
+  postcond: 依本卦 core 与负空间守正行权，达成正和决策
+  negative_space: ⊗ 忌讳疾忌医：积弊拖延，蛊毒深宫。
+  steps:
+  - 辨势：识别当前所处卦象对应的组织/决策情境与时机位阶
+  - 守正：以本卦 core 与负空间为边界，不越 NSFL 否决权
+  - 行权：据 modern_implications 择机行动——顺势则进，当止则止
+  nca_emit: true
+dispatch:
+  main_pipeline: gǔ
+  graph:
+  - from: gǔ
+    to: []
+  note: 单卦独立协议，主原语 gǔ 即该卦决策执行体
+decision:
+- if: 情境契合本卦意象（山风蛊）且未触负空间
+  call: gǔ
+skills: []
+modern_implications:
+- 蛊=积弊待革：组织久则生蠹，须『振民育德』主动整治；『先甲后甲』强调变革前后都要周密部署。
+- 整治积弊宜系统手术而非头痛医头，利涉大川靠根除而非掩盖。
+negative_space:
+- ⊗ 禁止违反 NSFL：伦理/法律负空间不可越（F1.5 否决权宪法条款，优先级恒高于一切判据，Fail-Closed）
+- ⊗ 忌讳疾忌医：积弊拖延，蛊毒深宫。
+- ⊗ 忌猛药伤本：革弊过激，自毁根基。
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
+  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated

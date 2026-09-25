@@ -1,0 +1,63 @@
+COP-ID: ICHING-COP-50
+base_protocol: TDCA-CORE-20260815-01
+source_expert: zhouyi
+compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiled_at: '2026-09-25T16:34:00.298728+08:00'
+stratum: 下经
+hexagram:
+  seq: 50
+  name: 鼎
+  pinyin: dǐng
+  upper: 离
+  lower: 巽
+  nature: 火风鼎
+  gua_ci_real: 元吉，亨。
+  da_xiang_real: 木上有火，鼎；君子以正位凝命。
+provenance:
+  gua_ci: real
+  gua_ci_source: 周易·鼎卦·卦辞（通行本原文引用）
+  da_xiang: real
+  da_xiang_source: 周易·鼎卦·大象传（通行本原文引用）
+  modern_implications: generated_by_workbuddy
+  negative_space: generated_by_workbuddy（含 NSFL 通用禁令）
+soul:
+  identity: 鼎（火风鼎）
+  core: 火风鼎
+  role: 思维协议 (易理决策类)
+  category: 周易六十四卦 / 下经
+  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+primitives:
+- name: dǐng
+  method: 鼎
+  signature: 'fn dǐng(context: Situation) -> Outcome'
+  precond: 组织/决策情境契合本卦意象（火风鼎）
+  postcond: 依本卦 core 与负空间守正行权，达成正和决策
+  negative_space: ⊗ 忌鼎而位歪：结构不正，倾覆。
+  steps:
+  - 辨势：识别当前所处卦象对应的组织/决策情境与时机位阶
+  - 守正：以本卦 core 与负空间为边界，不越 NSFL 否决权
+  - 行权：据 modern_implications 择机行动——顺势则进，当止则止
+  nca_emit: true
+dispatch:
+  main_pipeline: dǐng
+  graph:
+  - from: dǐng
+    to: []
+  note: 单卦独立协议，主原语 dǐng 即该卦决策执行体
+decision:
+- if: 情境契合本卦意象（火风鼎）且未触负空间
+  call: dǐng
+skills: []
+modern_implications:
+- 鼎=鼎新与承重：『正位凝命』——就位于正、凝定使命，方能烹任大事（承载与转化）。
+- 组织如鼎，结构正、使命清，则元吉亨通，可化杂乱为原料为成果。
+negative_space:
+- ⊗ 禁止违反 NSFL：伦理/法律负空间不可越（F1.5 否决权宪法条款，优先级恒高于一切判据，Fail-Closed）
+- ⊗ 忌鼎而位歪：结构不正，倾覆。
+- ⊗ 忌凝命不清：使命模糊，空转。
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
+  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated
