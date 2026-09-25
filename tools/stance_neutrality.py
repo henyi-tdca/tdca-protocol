@@ -8,20 +8,35 @@
   - *.md   : 全文扫描, 豁免 「」『』“” 引文段; EXEMPT_FILES 为素材文献类豁免
 
 模式:
-  scan    输出命中清单
+  scan    输出命中清单（退出码: 任一目标扫描文件数为 0 → 1；全部非零 → 0）
   rectify 执行中性化替换 (yaml: soul.core/decision; py/md: 口径内文本), 生成改动日志
-  check   验收: 0 命中退出 0, 否则退出 1 (fail-closed)
+  check   验收: 0 命中且各目标扫描数非 0 → 退出 0, 否则退出 1 (fail-closed)
   verify  语义损失核对: 每处改动逆映射后须与原文全等 → 证明仅词表替换、零附带改动
+
+守门通则 (REMEDIATION-001 A2): 未提供目标/目标路径不存在 → 退出 2；
+扫描数为 0 → 判失守退出非 0, 并显式打印扫描根绝对路径 + 文件计数 + 命中计数,
+输出可区分「未扫到」与「已扫且无违规」。
+目标映射: compiler→tools 全树; repo→docs/cop-library 六子目; 其它→任意路径。
+仓库根: 自动探测 (本文件 parents[1]), 可用环境变量 TDCA_REPO_ROOT 覆盖。
 """
 import os
 import re
 import sys
 import json
+from pathlib import Path
 import yaml
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-REPO_CL = r"C:/Users/22850/Desktop/开发会话文件/tdca-protocol/docs/cop-library"
+ROOT = Path(__file__).resolve().parent
 SCOPE_SUBDIRS = ["stratagems", "games", "hundred_schools", "compositions", "simulations", "mechanism_design"]
+
+
+def repo_root() -> Path:
+    """仓库根自动探测：环境变量 TDCA_REPO_ROOT 覆盖优先，否则按本文件位置 parents[1]"""
+    env = os.environ.get("TDCA_REPO_ROOT")
+    return Path(env).expanduser().resolve() if env else Path(__file__).resolve().parents[1]
+
+
+REPO_CL = repo_root() / "docs" / "cop-library"
 
 # 主体立场词表 → 中性替换 (长词优先匹配)
 LEXICON = [
@@ -157,15 +172,25 @@ def rectify_text_file(path, log, is_md=False):
     return n
 
 
-def iter_scope_files(base):
-    for sub in SCOPE_SUBDIRS:
-        d = os.path.join(base, sub)
-        if not os.path.isdir(d):
+def iter_scope_files(base, subdirs=None):
+    """遍历扫描范围。base 为单文件时直出；为目录时：subdirs 给定则仅走这些子目录，
+    否则走整树。跳过 __pycache__/.git/.workbuddy。"""
+    base = Path(base)
+    exts = (".yaml", ".yml", ".py", ".md")
+    if base.is_file():
+        if base.suffix.lower() in exts:
+            yield str(base)
+        return
+    if not base.is_dir():
+        return
+    roots = [base / s for s in subdirs] if subdirs else [base]
+    for d in roots:
+        if not d.is_dir():
             continue
         for root, dirs, files in os.walk(d):
             dirs[:] = [x for x in dirs if x not in ("__pycache__", ".git", ".workbuddy")]
             for fn in sorted(files):
-                if fn.endswith((".yaml", ".yml", ".py", ".md")):
+                if fn.endswith(exts):
                     yield os.path.join(root, fn)
 
 
@@ -173,10 +198,10 @@ def is_exempt(rel):
     return any(rel.endswith(e) for e in EXEMPT_FILES)
 
 
-def scan_base(base, label, do_rectify=False, log=None):
+def scan_base(base, label, do_rectify=False, log=None, subdirs=None):
     tf = hf = hits = 0
     details = []
-    for p in iter_scope_files(base):
+    for p in iter_scope_files(base, subdirs=subdirs):
         rel = os.path.relpath(p, base)
         if is_exempt(rel):
             continue
@@ -219,6 +244,7 @@ def scan_base(base, label, do_rectify=False, log=None):
             hf += 1
             hits += len(fhits)
             details.append((rel, fhits))
+    print("扫描根: %s" % Path(base).resolve())
     print("===== 立场%s [%s] =====" % ("整改" if do_rectify else "扫描", label))
     print("文件: %d | 命中文件: %d | 命中: %d" % (tf, hf, hits))
     for rel, info in details:
@@ -245,34 +271,80 @@ def verify_base(base, log):
     return bad == 0
 
 
+def resolve_base(t):
+    """目标→范围映射（A1）:
+      compiler → tools 全树（扫描编译器自身源码，纠正旧映射"tools 下找 cop-library 六子目"恒零之误）
+      repo     → <仓库根>/docs/cop-library 六子目（仓库根自动探测，可被 TDCA_REPO_ROOT 覆盖）
+      其它     → 任意文件/目录路径（须存在，否则报错非 0）
+    """
+    if t == "compiler":
+        return ROOT, None
+    if t == "repo":
+        if not REPO_CL.is_dir():
+            raise FileNotFoundError("repo 范围不存在: %s" % REPO_CL)
+        return REPO_CL, SCOPE_SUBDIRS
+    p = Path(t).expanduser()
+    if not p.exists():
+        raise FileNotFoundError("目标路径不存在: %s" % t)
+    return p, None
+
+
+def fail_zero(label, base):
+    print("[FAIL] 零扫描（失守）: 目标 %s | 扫描根 %s" % (label, Path(base).resolve()), file=sys.stderr)
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "scan"
-    targets = sys.argv[2:] or ["compiler", "repo"]
-    log_path = os.path.join(ROOT, "stance_rectify_log.json")
-    if mode == "rectify":
-        log = []
-        for t in targets:
-            base = ROOT if t == "compiler" else REPO_CL
-            scan_base(base, t, do_rectify=True, log=log)
-        with open(log_path, "w", encoding="utf-8") as f:
-            json.dump(log, f, ensure_ascii=False, indent=1)
-        print("改动日志: %s (%d 条)" % (log_path, len(log)))
-    elif mode == "verify":
+    log_path = ROOT / "stance_rectify_log.json"
+    if mode == "verify":
         with open(log_path, "r", encoding="utf-8") as f:
             log = json.load(f)
         ok = verify_base(None, log)
         sys.exit(0 if ok else 1)
+    targets = sys.argv[2:]
+    if not targets:
+        print("[FAIL] 未提供目标（空目标即失守）。用法: %s <scan|rectify|check> <compiler|repo|路径...>"
+              % Path(sys.argv[0]).name, file=sys.stderr)
+        sys.exit(2)
+    bases = []
+    for t in targets:
+        try:
+            base, subs = resolve_base(t)
+        except FileNotFoundError as e:
+            print("[FAIL] %s" % e, file=sys.stderr)
+            sys.exit(2)
+        bases.append((t, base, subs))
+    zero_scan = False
+    if mode == "rectify":
+        log = []
+        for t, base, subs in bases:
+            r = scan_base(base, t, do_rectify=True, log=log, subdirs=subs)
+            if r["files"] == 0:
+                zero_scan = True
+                fail_zero(t, base)
+        log_path.write_text(json.dumps(log, ensure_ascii=False, indent=1), encoding="utf-8")
+        print("改动日志: %s (%d 条)" % (log_path, len(log)))
+        sys.exit(1 if zero_scan else 0)
     elif mode == "check":
         total = 0
-        for t in targets:
-            base = ROOT if t == "compiler" else REPO_CL
-            total += scan_base(base, t)["hits"]
-        print("CHECK %s: 总命中 %d" % ("PASS" if total == 0 else "FAIL", total))
-        sys.exit(0 if total == 0 else 1)
+        for t, base, subs in bases:
+            r = scan_base(base, t, subdirs=subs)
+            total += r["hits"]
+            if r["files"] == 0:
+                zero_scan = True
+                fail_zero(t, base)
+        print("CHECK %s: 总命中 %d" % ("PASS" if total == 0 and not zero_scan else "FAIL", total))
+        sys.exit(0 if total == 0 and not zero_scan else 1)
+    elif mode == "scan":
+        for t, base, subs in bases:
+            r = scan_base(base, t, subdirs=subs)
+            if r["files"] == 0:
+                zero_scan = True
+                fail_zero(t, base)
+        sys.exit(1 if zero_scan else 0)
     else:
-        for t in targets:
-            base = ROOT if t == "compiler" else REPO_CL
-            scan_base(base, t)
+        print("[FAIL] 未知模式: %s（可用 scan|rectify|check|verify）" % mode, file=sys.stderr)
+        sys.exit(2)
 
 
 if __name__ == "__main__":

@@ -107,10 +107,18 @@ def check_data_feed(df):
 
 
 if __name__ == "__main__":
+    import os
     import sys
     import yaml
+    if len(sys.argv) < 2:
+        print("[FAIL] 未提供待检 COP 文件（空输入即失守）。用法: python stance_separation_check.py <cop.yaml...>",
+              file=sys.stderr)
+        sys.exit(2)
     ok = 0
     for p in sys.argv[1:]:
+        if not os.path.exists(p):
+            print("[FAIL] 文件不存在: %s" % p, file=sys.stderr)
+            continue
         with open(p, "r", encoding="utf-8") as f:
             cop = yaml.safe_load(f)
         try:
