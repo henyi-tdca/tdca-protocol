@@ -1,0 +1,63 @@
+COP-ID: ICHING-COP-54
+base_protocol: TDCA-CORE-20260815-01
+source_expert: zhouyi
+compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiled_at: '2026-09-25T16:34:03.039355+08:00'
+stratum: 下经
+hexagram:
+  seq: 54
+  name: 归妹
+  pinyin: guī mèi
+  upper: 震
+  lower: 兑
+  nature: 雷泽归妹
+  gua_ci_real: 征凶，无攸利。
+  da_xiang_real: 泽上有雷，归妹；君子以永终知敝。
+provenance:
+  gua_ci: real
+  gua_ci_source: 周易·归妹卦·卦辞（通行本原文引用）
+  da_xiang: real
+  da_xiang_source: 周易·归妹卦·大象传（通行本原文引用）
+  modern_implications: generated_by_workbuddy
+  negative_space: generated_by_workbuddy（含 NSFL 通用禁令）
+soul:
+  identity: 归妹（雷泽归妹）
+  core: 雷泽归妹
+  role: 思维协议 (易理决策类)
+  category: 周易六十四卦 / 下经
+  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+primitives:
+- name: guī_mèi
+  method: 归妹
+  signature: 'fn guī_mèi(context: Situation) -> Outcome'
+  precond: 组织/决策情境契合本卦意象（雷泽归妹）
+  postcond: 依本卦 core 与负空间守正行权，达成正和决策
+  negative_space: ⊗ 忌归妹妄征：错位强合，凶。
+  steps:
+  - 辨势：识别当前所处卦象对应的组织/决策情境与时机位阶
+  - 守正：以本卦 core 与负空间为边界，不越 NSFL 否决权
+  - 行权：据 modern_implications 择机行动——顺势则进，当止则止
+  nca_emit: true
+dispatch:
+  main_pipeline: guī_mèi
+  graph:
+  - from: guī_mèi
+    to: []
+  note: 单卦独立协议，主原语 guī_mèi 即该卦决策执行体
+decision:
+- if: 情境契合本卦意象（雷泽归妹）且未触负空间
+  call: guī_mèi
+skills: []
+modern_implications:
+- 归妹=非正常结合：『征凶』警示违背常理的勉强绑定（如错位并购、仓促合伙）必凶。
+- 『永终知敝』：结盟前想清终点与隐患，不为一时冲动定长期契约。
+negative_space:
+- ⊗ 禁止违反 NSFL：伦理/法律负空间不可越（F1.5 否决权宪法条款，优先级恒高于一切判据，Fail-Closed）
+- ⊗ 忌归妹妄征：错位强合，凶。
+- ⊗ 忌不知敝：盲盟不见隐患，噬。
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
+  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated

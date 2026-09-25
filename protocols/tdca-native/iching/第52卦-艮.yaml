@@ -1,0 +1,63 @@
+COP-ID: ICHING-COP-52
+base_protocol: TDCA-CORE-20260815-01
+source_expert: zhouyi
+compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiled_at: '2026-09-25T16:34:01.685628+08:00'
+stratum: 下经
+hexagram:
+  seq: 52
+  name: 艮
+  pinyin: gèn
+  upper: 艮
+  lower: 艮
+  nature: 艮为山
+  gua_ci_real: 艮其背，不获其身；行其庭，不见其人，无咎。
+  da_xiang_real: 兼山，艮；君子以思不出其位。
+provenance:
+  gua_ci: real
+  gua_ci_source: 周易·艮卦·卦辞（通行本原文引用）
+  da_xiang: real
+  da_xiang_source: 周易·艮卦·大象传（通行本原文引用）
+  modern_implications: generated_by_workbuddy
+  negative_space: generated_by_workbuddy（含 NSFL 通用禁令）
+soul:
+  identity: 艮（艮为山）
+  core: 艮为山
+  role: 思维协议 (易理决策类)
+  category: 周易六十四卦 / 下经
+  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+primitives:
+- name: gèn
+  method: 艮
+  signature: 'fn gèn(context: Situation) -> Outcome'
+  precond: 组织/决策情境契合本卦意象（艮为山）
+  postcond: 依本卦 core 与负空间守正行权，达成正和决策
+  negative_space: ⊗ 忌止而废事：当止不止乱，当行不行怠。
+  steps:
+  - 辨势：识别当前所处卦象对应的组织/决策情境与时机位阶
+  - 守正：以本卦 core 与负空间为边界，不越 NSFL 否决权
+  - 行权：据 modern_implications 择机行动——顺势则进，当止则止
+  nca_emit: true
+dispatch:
+  main_pipeline: gèn
+  graph:
+  - from: gèn
+    to: []
+  note: 单卦独立协议，主原语 gèn 即该卦决策执行体
+decision:
+- if: 情境契合本卦意象（艮为山）且未触负空间
+  call: gèn
+skills: []
+modern_implications:
+- 艮=止：『思不出其位』——聚焦本职、不越界妄念，是高效专注的止学。
+- 适时叫停（艮其背）比持续动作更稀缺：止住贪多、止住越位。
+negative_space:
+- ⊗ 禁止违反 NSFL：伦理/法律负空间不可越（F1.5 否决权宪法条款，优先级恒高于一切判据，Fail-Closed）
+- ⊗ 忌止而废事：当止不止乱，当行不行怠。
+- ⊗ 忌思出位：越界妄谋，失焦。
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
+  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated
