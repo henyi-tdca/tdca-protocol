@@ -22,7 +22,7 @@
   ID31（缺失即异常、异常即阻断）、CI 侧既有 fail-closed 实践。
   真实版本比对之密码学绑定、CI 接线属工程层，不在本件形式化范围。
 
-  机验状态：本机已机验（Lean 4.34.0-rc2，lake build 0 error）；非 CI 机验。
+  机验状态：本机已机验（2026-09-23，Lean 4.34.0-rc2，lake build 0 error）；非 CI 机验。
   三态终态声明（分层分列）：
    · 结构层——本节各定理均为内核可检完整证明（proved）；
    · 接口层——real_gate_conditional 为忠实性假设下之条件定理，判 conditional；
