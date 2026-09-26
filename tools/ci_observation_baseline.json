@@ -1,12 +1,12 @@
 {
   "_meta": "GSEQ-2902 块 A 档三观察门基线（tools/ci_consistency_gate.py observe 用）；建立日 2026-09-26；⛔ 只加严，观察门只报不挡",
   "warnings": {
-    "value": 0,
-    "note": "构建日志 warning 计数；本机无法跑 lake build（需出网），以 CI 首跑日志为准回填"
+    "value": 6,
+    "note": "构建日志 warning 计数；首跑实测（2026-09-26，lean-verify run 36255874526·job lean-tdca）＝6，恰为在册豁免「上游弃用告警 6 处」（Mathlib.Data.Real.Basic 弃用，按裁未动）"
   },
   "deprecations": {
-    "value": 0,
-    "note": "构建日志 deprecation 计数；同上，以 CI 首跑日志为准回填（既有豁免：上游弃用告警 6 处＝N 系件头隔离设计，按裁未动，首跑后按实测回填）"
+    "value": 6,
+    "note": "构建日志 deprecation 计数；首跑实测（2026-09-26，同上 run）＝6＝6 个 Mathlib 依赖件之 'Mathlib.Data.Real.Basic' 上游弃用告警，与在册豁免「弃用告警 6 处」计数吻合，按裁未动"
   },
   "placeholders": {
     "value": 26,

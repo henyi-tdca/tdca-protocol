@@ -17,7 +17,7 @@
 > ⚠️ 适用范围＝抽象层（`D` 为有限类型），⛔ 不重复 Go 通道的制度实例，⛔ 不得据以表述制度层结论；
 > ⛔ 本注仅增列证明器通道，不改 Go 通道结论与其适用范围。
 | A-2 | 定理 E.1~E.4（存在性/唯一性/右逆充要/NSFL 联动） | `TDCA-FUNCTION-WP-002-APPX-E`（FROZEN） | 框架级（机验待 P-1） | 集合论标准框架；X 可数前置 |
-| A-3 | 命题 P4a：C < q(1−p)R ⟹ T_process 严格占优（原 B-3） | `research/papers/formal/TDCA-P4a-Corollary2-Lean4-Candidate-V1.2.lean` + `core-go/docs/formal-proofs/lean/TDCA/ExPostTrust.lean` | ✅ `lake env lean` 零 error（PR #127 / 机验通道）；模型假设：单次协作、C 由 A 承担；**不标"绝对安全"** |
+| A-3 | 命题 P4a：C < q(1−p)R ⟹ T_process 严格占优（原 B-3） | `research/papers/formal/TDCA-P4a-Corollary2-Lean4-Candidate-V1.2.lean`（研究侧引用·不入库，与 P-3/P-4「artifacts 不进主仓」同源） + `core-go/docs/formal-proofs/lean/TDCA/ExPostTrust.lean` | ✅ `lake env lean` 零 error（PR #127 / 机验通道）；模型假设：单次协作、C 由 A 承担；**不标"绝对安全"** |
 | A-4 | 推论 2：α ↑ ⟹ e_B* ↓（攫取问题的比较静态，原 B-4） | 同上 | ✅ `lake env lean` 零 error + `sorry` = 0（PR #128 后机验）；模型假设与适用范围见件头 |
 | A-5 | N-1 失效半径有界性：信任链单点失效向下传导、向上隔离，不全局重置，既有记录不失效 | `lean-tdca/TDCA/FailureRadius.lean`（`isolation` / `no_global_reset` / `downward_reaches` / `prior_records_survive` 等） | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道落地中（lean-verify.yml `lean-tdca` job，首跑未跑）；模型假设：A1 信任链＝分支有限集合、向下传导＝分支内位置序号增大方向；A2 失效事件带在链证据（无链外失效）；A3/A4 affected／survives 定义即刻画；A5 不建模跨分支共享状态；适用范围＝抽象骨架层，密钥轮换／重锚等动态属工程层；**不标"绝对安全"** |
 | A-6 | N-2 信任根分级 ↔ 场景密级：接入判定 fail-closed（层级不达标即拒），放行集对密级向下封闭 | `lean-tdca/TDCA/Admission.lean`（`requiredLevel_mono` / `admit_iff` / `admit_reject_high_low` / `admit_downward_closed`） | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道落地中（同上）；模型假设：B1 信任根四级与场景密级均为 ℕ 全序离散梯级；B2 层级只表信任强度不表身份；B3 requiredLevel 单调不减（恒等实现，任何单调实现可替换）；B4 fail-closed 无「告警后放行」；B5 判定只依赖（密级，根层级）两参；**不标"绝对安全"** |

@@ -23,7 +23,7 @@
   结算／仲裁为慢系统）；慢系统上报 ESCALATE ⟹ 快慢分离、人类裁决。
   真实裁决枚举与计费组件属工程层，不在本件形式化范围。
 
-  机验状态：本机已机验（Lean 4.34.0-rc2，lake build 0 error）；非 CI 机验。
+  机验状态：本机已机验（2026-09-23，Lean 4.34.0-rc2，lake build 0 error）；非 CI 机验。
   三态终态声明（分层分列）：
    · 结构层——本节各定理均为内核可检完整证明（proved）；
    · 接口层——real_verdict_conditional 为忠实性假设下之条件定理，判 conditional；
