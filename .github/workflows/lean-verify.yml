@@ -5,10 +5,12 @@ on:
   push:
     paths:
       - "core-go/docs/formal-proofs/lean/**"
+      - "core-go/docs/formal-proofs/lean-tdca/**"
       - ".github/workflows/lean-verify.yml"
   pull_request:
     paths:
       - "core-go/docs/formal-proofs/lean/**"
+      - "core-go/docs/formal-proofs/lean-tdca/**"
       - ".github/workflows/lean-verify.yml"
 
 permissions:
@@ -59,3 +61,75 @@ jobs:
       - name: Show lean output tail
         if: always()
         run: tail -n 20 lean-output.txt || true
+
+  # 档二②a（GSEQ-2902 块 A）：lean-tdca 工程机验通道
+  # 闸径：① 零依赖件（无 ^import Mathlib）逐件 lean 直验；② 全量 lake build；
+  # 两闸均要求 exit 0＋无 error＋sorry 警告计数=0。⛔ 只加严。
+  lean-tdca:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: core-go/docs/formal-proofs/lean-tdca
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Direct-check zero-dependency files (no Mathlib import)
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            echo "=== direct check: $f"
+            out=$(lean "$f" 2>&1) && ec=0 || ec=$?
+            if [ -n "$out" ]; then echo "$out"; fi
+            echo "lean exit=$ec"
+            if [ "$ec" -ne 0 ]; then
+              echo "::error::$f: lean exited non-zero (exit=$ec)"
+              fail=1
+            fi
+            if echo "$out" | grep -qE "error(\([A-Za-z0-9._]+\))?:"; then
+              echo "::error::$f: lean reported errors"
+              fail=1
+            fi
+            if echo "$out" | grep -qE "declaration uses .?sorry.?"; then
+              echo "::error::$f: sorry warning present"
+              fail=1
+            fi
+          done < <(grep -L -E '^import (Mathlib|TDCA)' TDCA/*.lean)
+          exit "$fail"
+
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+
+      - name: Full build (lake build, tee log)
+        run: |
+          set -o pipefail
+          lake build 2>&1 | tee lean-tdca-build.log; ec=${PIPESTATUS[0]}
+          echo "lake build exit=$ec"
+          if [ "$ec" -ne 0 ]; then
+            echo "::error::lake build exited non-zero (exit=$ec)"
+            exit 1
+          fi
+          if grep -qE "error(\([A-Za-z0-9._]+\))?:" lean-tdca-build.log; then
+            echo "::error::lake build reported errors"
+            exit 1
+          fi
+          count=$(grep -cE "declaration uses .?sorry.?" lean-tdca-build.log || true)
+          echo "sorry warning count: $count"
+          if [ "$count" -ne 0 ]; then
+            echo "::error::sorry count changed (expected 0, got $count)"
+            exit 1
+          fi
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-tdca-build-log
+          path: core-go/docs/formal-proofs/lean-tdca/lean-tdca-build.log
+          if-no-files-found: warn

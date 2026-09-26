@@ -1,0 +1,84 @@
+# consistency-gate —— GSEQ-2902 块 A 一致性闸门
+#
+# 三档模型（出处：GSEQ-2902 块 A 施工单，⛔ 只加严）：
+#   档二②b claims job  声称-证据一致性硬闸（tools/ci_consistency_gate.py claims-check）
+#   档二②c format job  新增件格式硬闸（format-check：UTF-8 / 无 BOM / 行尾一致）
+#   档三   observe job  观察门·只报不挡（observe，永远 exit 0；job 级 continue-on-error）
+#
+# 既有豁免锁现状（出处 GSEQ-2902，按裁未动，本闸门不触碰）：
+#   上游弃用告警 6 处（＝ 6 个 N 系件头「不 import Mathlib」隔离设计）；
+#   packs-ci 白名单；路径注入三例外；stance 守门三区判档。
+
+name: consistency-gate
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "core-go/docs/formal-proofs/**"
+      - "tools/ci_consistency_gate.py"
+      - "tools/tests/test_ci_consistency_gate.py"
+      - "tools/ci_observation_baseline.json"
+      - ".github/workflows/consistency-gate.yml"
+  pull_request:
+    paths:
+      - "core-go/docs/formal-proofs/**"
+      - "tools/ci_consistency_gate.py"
+      - "tools/tests/test_ci_consistency_gate.py"
+      - "tools/ci_observation_baseline.json"
+      - ".github/workflows/consistency-gate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  claims:
+    name: 声称一致性（硬闸）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: claims-check
+        run: python tools/ci_consistency_gate.py claims-check
+
+  format:
+    name: 新增件格式（硬闸）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: format-check（新增 .lean/.md 件）
+        run: python tools/ci_consistency_gate.py format-check --base "origin/${{ github.base_ref || 'main' }}"
+
+  observe:
+    name: 观察门·只报不挡
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 拉取 lean-tdca 构建日志（有则计数，无则记 0）
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true
+        with:
+          workflow: lean-verify.yml
+          name: lean-tdca-build-log
+          workflow_conclusion: success
+      - name: observe（永远 exit 0）
+        run: |
+          if [ -f lean-tdca-build.log ]; then
+            python tools/ci_consistency_gate.py observe --build-log lean-tdca-build.log
+          else
+            python tools/ci_consistency_gate.py observe
+          fi
