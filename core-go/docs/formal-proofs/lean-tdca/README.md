@@ -34,7 +34,13 @@ lean-tdca/
 │   ├── Compose.lean            # 复合：定义域刻画 / 复合右逆（兼容条件版与规范代表元版）/ 守卫保持
 │   ├── EpsAdd.lean             # ε-可加性结构（建模假设与数学引理在类型层分离）
 │   ├── Induction.lean          # 归纳步骨架（层叠复合）
-│   └── SceneEmergence.lean     # 场景形成机制可机验子集（两栏切分）
+│   ├── SceneEmergence.lean     # 场景形成机制可机验子集（两栏切分）
+│   ├── Admission.lean          # N-3 制度准入状态机（七态）＋ N-2 信任根分级↔场景密级（零依赖）
+│   ├── FailureRadius.lean      # N-1 失效半径有界性（信任链分支结构，零依赖）
+│   ├── VersionAlignment.lean   # N-4 版本对齐 fail-closed（零依赖）
+│   ├── DualAnchor.lean         # N-5 双锚一致性（格式锚＋效用锚，零依赖）
+│   ├── NegativeSpace.lean      # N-6 负空间（底线）迁移不变量（零依赖）
+│   └── FastSlow.lean           # N-7 快慢接口存在性（零依赖）
 └── README.md                   # 本文件
 ```
 
@@ -48,6 +54,15 @@ lean-tdca/
 | **M-3** | 化合保持性子件：L2 / L3a / L3b / L4 / L5 | `Compose.*` / `EpsAdd.eps_accumulation` | ✅ 子件外部机验通过（**逐条附前提**）；⚠️ **主体仍在验证中** |
 | **M-4** | 分形归纳主定理（归纳步骨架） | `Induction.M4_induction_step`（兼容条件版）等 4 条 | ⏳ **陈述已类型检查通过；证明未闭合**（`sorry` 保留） |
 | **M-8** | 场景形成机制形式化子集 | `SceneEmergence.*`（6 条定理） | ⏳ **证明尝试已给出，机验待完成** |
+| **N-1** | 失效半径有界性（分支隔离／不全局重置／向下传导·向上隔离／既有记录不失效） | `FailureRadius.isolation` / `no_global_reset` / `downward_reaches` / `prior_records_survive` 等 | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job |
+| **N-2** | 信任根分级 ↔ 场景密级（fail-closed 接入判定；放行集对密级向下封闭） | `Admission.requiredLevel_mono` / `admit_iff` / `admit_reject_high_low` / `admit_downward_closed` | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job |
+| **N-3** | 制度准入状态机（七态：迁移刻画／非熔断态出边完备／熔断终态／降级·暂停出边受限） | `Admission.AdmTrans_iff_AdmSucc` / `AdmTrans_complete` / `fused_terminal` / `degraded_out_only` / `suspended_out_only` | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job |
+| **N-4** | 版本对齐 fail-closed（失配 ⟹ 拒；不确定 ⟹ 拒；发布门＝版本门 ∧ 工件门同一根） | `VersionAlignment.deny_on_mismatch` / `deny_none_left` / `release_requires_both` 等 | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job |
+| **N-5** | 双锚一致性（格式锚＋效用锚：分配效力 ⟺ 双锚齐备；可连不可分；双锚独立） | `DualAnchor.alloc_requires_both` / `connect_but_not_alloc` / `connect_not_sufficient` 等 | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job；⚠️ 接口层 SIMULATED，判 conditional |
+| **N-6** | 负空间（底线）迁移不变量（底线只增不减／出处有落／签批留痕／再修订保持） | `NegativeSpace.baseline_mono` / `relocate_lands` / `migrate_signed` / `invariant_chain` | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job |
+| **N-7** | 快慢接口存在性（异常上报与人类介入口子非空；缺口子 ⟹ 可被劫持；合法性分工非性能分工） | `FastSlow.report_channel_exists` / `human_channel_exists` / `gap_implies_hijack` 等 | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道见 lean-verify.yml lean-tdca job；⚠️ 接口层 SIMULATED，判 conditional |
+
+> **N 系统一限定（逐条适用）**：**(a)** 机验口径为**本机机验**（Lean 4.34.0-rc2，sorry=0），⛔ 不得表述为「CI 已机验」——CI 机验通道（lean-verify.yml `lean-tdca` job）落地中，以首跑结果为准；**(b)** 六件均为**零依赖件**（不 import Mathlib），模型假设与适用范围见各件头（A1–An／B1–Bn）；**(c)** 结论仅及抽象骨架层，制度层/工程层动态不在范围；**(d)** N-4／N-5／N-7 之接口层结论以显式假设承载、判 **conditional**（SIMULATED 现状下不可核），⛔ 不得以结构层证明冒充接口实况；**(e)** ⛔ 不标「绝对安全」。
 
 **统一限定（逐条适用）**：**(a)** 全部结论**仅及抽象层**；**(b)** 每条**附前提**（兼容条件 / 构造性存在假设 / 建模假设「逐步误差一致有界」）；**(c)** ⛔ 不得概括为「M-3 / M-4 已证明」。
 

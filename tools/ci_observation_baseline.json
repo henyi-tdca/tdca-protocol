@@ -1,0 +1,19 @@
+{
+  "_meta": "GSEQ-2902 块 A 档三观察门基线（tools/ci_consistency_gate.py observe 用）；建立日 2026-09-26；⛔ 只加严，观察门只报不挡",
+  "warnings": {
+    "value": 0,
+    "note": "构建日志 warning 计数；本机无法跑 lake build（需出网），以 CI 首跑日志为准回填"
+  },
+  "deprecations": {
+    "value": 0,
+    "note": "构建日志 deprecation 计数；同上，以 CI 首跑日志为准回填（既有豁免：上游弃用告警 6 处＝N 系件头隔离设计，按裁未动，首跑后按实测回填）"
+  },
+  "placeholders": {
+    "value": 26,
+    "note": "tdca-adapters/ 与 tools/ 下 *.py（排除 __pycache__）中「占位」两字标记纯字面计数；2026-09-26 本机实测（含 ci_consistency_gate.py 及其测试件注释中的字面出现）"
+  },
+  "max_note_age_days": {
+    "value": 4,
+    "note": "lean-tdca 件头「本机已机验（YYYY-MM-DD）」距今最长天数；2026-09-26 实测（lakefile.lean 记 2026-09-22）；另：6 个 N 系件头标「已机验」但未注日期，单列于 observe 输出"
+  }
+}
