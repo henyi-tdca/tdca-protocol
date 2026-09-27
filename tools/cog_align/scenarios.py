@@ -9,7 +9,7 @@
 制度锚定: ID60（不对称对齐）/ 定义 3.37（对齐难度 exp(−d)）/ 思想病毒防御叙事
 NSFL-Declaration: 场景判定为评测输出（SIMULATED 数据），不构成真实安全结论；
                  漂移告警仅提示需人工复核（ID92 数据纪律）。
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

@@ -26,7 +26,7 @@ NSFL-Declaration:
   - 模糊计算只用于认知距离度量，不改变负空间绝对性（法律禁止仍精确熔断，无模糊计算，ID86）
   - 模糊置信度必须标注方向 + 置信区间，禁止输出伪精确数值
   - 禁止伪造认知状态数据
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 
 from __future__ import annotations

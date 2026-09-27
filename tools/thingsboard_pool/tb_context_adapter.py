@@ -10,7 +10,7 @@ API 外部依赖（免费优先，收费禁用——预算纪律）:
   - 以上均为可选在线通道；M1 默认经注入数据源运行（离线可测），在线失败 fail-closed
 
 数据性质: real 设备流标 real；模拟流标 simulated（ID92）。
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

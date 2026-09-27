@@ -11,7 +11,7 @@ NSFL-Declaration:
   - S向量字段可空，不破坏已有 NCA v2.0 解析
   - 计算需真实数据，初期可用默认值并标记 [DEFAULT]
   - 禁止伪造认知状态数据
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 
 import math

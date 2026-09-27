@@ -13,7 +13,7 @@
 纪律: 全 SIMULATED（ID92）；0 真实资金流；0 配置权真实调用；红线（无资产/无保本/无资金池/
 无庞氏）内嵌审计——检出违例 → BLOCKED（回滚语义，对齐 SBX-OPS Closed）。
 
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

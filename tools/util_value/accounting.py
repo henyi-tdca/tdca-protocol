@@ -12,7 +12,7 @@ NSFL-Declaration:
   - 入表报告只含可观测下限（地板），不含主观估值（会计入账依据）
   - 版权链上链为模拟通道（真实上链需司法链运营方接入——不冒充已上链）
   - 真实交易数据按来源标注；合成数据 SIMULATED
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

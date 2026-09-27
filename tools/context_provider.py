@@ -9,7 +9,7 @@
   - 无数据流 fail-closed: 拒动态决策，降级为仅静态推理（unverified）
   - NSFL 熔断联动: 实时状态触发负空间禁区 → frozen
   - API 外部依赖: 优先免费开放 API，收费 API 禁用（预算纪律）
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 
