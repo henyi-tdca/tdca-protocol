@@ -37,7 +37,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`dual/`](dual/) | **双协议化合引擎（DUAL-PROTOCOL）**：场景协议 × 制度协议运行时化合——4 引擎模块 + 测试 + 四行业示例 |
 | [`core-go/`](core-go/) | **Go 强类型生产级核心引擎**：enforce / nca / nsfl 核心三件 + tdcad 守护进程 + MCP 桥接（AI 可调用工具）+ Python↔Go 桥接（Apache-2.0 独立许可，与根 MIT 双许可并存） |
 | [`ecoscan/`](ecoscan/) | **生态雷达 + 告知（ECOSCAN）**：扫描 → 诊断 → 邀请 → 实测回收 → NCA 台账全链流水线（Apache-2.0 独立许可） |
-| [`protocols/`](protocols/) | **原生协议权威库（tdca-native，单一事实源）**：七原则声明与正典锚，518 份机器可读协议 |
+| [`protocols/`](protocols/) | **原生协议权威库（tdca-native，单一事实源）**：七原则声明与正典锚，583 份机器可读协议（2026-09-27 实扫，口径＝git 跟踪件 `protocols/**/*.yaml`，与 `tools/cop_count_scan.py` 同源；tdca-native 审查闭环口径另记于其 README） |
 | [`tdca-adapters/`](tdca-adapters/) | **外部协议适配器**：协议互操作与身份桥接适配（含 ACPS 适配器与适配矩阵） |
 | [`gov-kit/`](gov-kit/) | **研发治理包**：总纲 / 试验门 / 灰度门 / 可靠性检查单 |
 | [`deploy/`](deploy/) | **部署件**：gateway / mcp / nl / web 四件套 Dockerfile + docker-compose |
@@ -68,7 +68,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 > ⚠️ 找不到它们是正常的，请勿据此判定「缺件」。
 
 ### 五、已知落差（如实）
-1. 守门步骤已就位；CI 门禁接入正在收口（尚未宣称「已 CI 化」）；
+1. 守门步骤已就位并接入 CI：stance-gate／consistency-gate／lean-verify／core-go-ci 四个 workflow 常驻 main 分支触发（2026-09-27 实测全绿）；
 2. Go／Lean／Docker 三栈需自备环境；
 3. 部分历史文档中的路径与本机环境相关，可忽略。
 
@@ -89,7 +89,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 | [`tools/thingsboard_pool/`](tools/thingsboard_pool/) | 五项目⑤ ThingsBoard 对接：IoT 计量 + L2 | `cd tools && python -m pytest thingsboard_pool -q` |
 | [`tools/context_provider.py`](tools/context_provider.py) | **COP 动态数据流**：context provider 抽象层 + ProviderRegistry 注册机制（未注册 fail-closed）+ ThingsBoard 适配 | `cd tools && python -m pytest tests/test_context_provider.py -q` |
 | [`tools/data_feed_gate.py`](tools/data_feed_gate.py) | **律三 v2 运行时门控**：数据流准入 + 新鲜度 SLA（陈旧/断流冻结，联动 NSFL 熔断） | `cd tools && python -m pytest tests -q` |
-| [`tools/stance_neutrality.py`](tools/stance_neutrality.py) + [`tools/stance_separation_check.py`](tools/stance_separation_check.py) | **三律守门**：机制核零立场静态检查（律一/律二；守门工具已就绪，CI 接入为阶段 2、须另行明示启用） | `cd tools && python stance_separation_check.py <cop.yaml…>`（空参即非 0 退出，非静默通过） |
+| [`tools/stance_neutrality.py`](tools/stance_neutrality.py) + [`tools/stance_separation_check.py`](tools/stance_separation_check.py) | **三律守门**：机制核零立场静态检查（律一/律二；守门工具已接入 CI，stance-gate 常驻 main 分支触发） | `cd tools && python stance_separation_check.py <cop.yaml…>`（空参即非 0 退出，非静默通过） |
 
 基座模块（同层）：`tdca_cognitive_distance.py`（定义 3.36/3.37，命题 3.10）/ `tdca_cognitive_state.py`（五维状态）/ `tdca_fuzzy_distance.py`（模糊层）。全量回归：`cd tools && python -m pytest -q`（详见 [`tools/README.md`](tools/README.md)）。
 
@@ -97,7 +97,7 @@ The mirror tracks the GitHub main repository. **The main repository remains auth
 
 思维协议（Cognitive Protocol, COP）是把人类默会知识编译为**可确权、可计价、可分润**的制度协议资产——「显影而非白箱化」的工程载体（[开源说明与调用规则 →](docs/cop-library/OPENING.md)）。
 
-**三律（硬约束，守门工具已就绪；CI 接入待阶段 2 另行明示启用）**
+**三律（硬约束，守门工具已接入 CI：stance-gate 常驻 main 分支触发）**
 
 | 律 | 内容 | 守门 |
 |---|---|---|
