@@ -15,7 +15,7 @@
   API（无需密钥、非商业用途免费），真实实时数据，provenance=real。
 
 用法: python tools/thingsboard_pool/pilot_m2_dataflow.py [--out <evidence.json>]
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

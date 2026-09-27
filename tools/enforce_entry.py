@@ -11,7 +11,7 @@
   python enforce_entry.py --list                 # 列出当前 L1 缔约者
 
 制度锚定: TDCA-OPC-COMMUNITY-001 + TDCA-ADMIT-TEMPLATE-001 + NSFL-V0.2
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

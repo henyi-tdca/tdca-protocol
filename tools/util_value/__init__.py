@@ -5,7 +5,7 @@
 NSFL-Declaration:
   - 只输出可观测下限（地板），禁止输出主观估值（天花板语义禁止）
   - 真实交易数据按来源标注；合成数据 SIMULATED，绝不冒充
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from .engine import (
     UtilValueService,

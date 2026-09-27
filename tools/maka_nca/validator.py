@@ -11,7 +11,7 @@
 NSFL-Declaration:
   - 正和判定为评测输出（SIMULATED 数据），不构成真实经济结算
   - 不修改 Maka 核心（双向赋能：独立插件包）
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

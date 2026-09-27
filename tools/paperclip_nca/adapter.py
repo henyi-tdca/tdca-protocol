@@ -13,7 +13,7 @@ M1a 功能:
 NSFL-Declaration:
   - 不修改 Paperclip 核心（仓库优先 + 双向赋能纪律）
   - 合成/演示数据标注 SIMULATED（ID92）
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

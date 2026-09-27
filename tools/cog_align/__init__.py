@@ -6,7 +6,7 @@ NSFL-Declaration:
   - 不试图消除认知差异（ID60）——只定位差异与对齐难度
   - 计算需真实数据；合成/评测场景输入按 ID92 标注 provenance
   - 禁止伪造认知状态数据
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from .engine import (
     CogAlignService,

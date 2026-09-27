@@ -16,7 +16,7 @@ M1a 功能:
 NSFL-Declaration:
   - 转换不修改 Maka 核心（仓库优先 + 双向赋能纪律，BIDIR-001）
   - 合成/演示数据标注 SIMULATED（ID92），不冒充真实运行数据
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

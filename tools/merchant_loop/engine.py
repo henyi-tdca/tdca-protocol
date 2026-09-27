@@ -17,7 +17,7 @@
   - 不进 CLS：双边消费交易（核销闭环不触发 CLS 逻辑）
   - 模拟态：真实资金流 e-CNY 接入前 provenance 默认 SIMULATED（15% 分润 NCA 记账口径同）
 
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

@@ -13,7 +13,7 @@ M1a 功能:
 NSFL-Declaration:
   - 不修改 ThingsBoard 核心（网关插件叠加——物理叠加层，BIDIR-001）
   - 设备流为合成/演示数据（ID92），真实接入需设备连接验证
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 

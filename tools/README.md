@@ -68,4 +68,4 @@ python -m pytest cog_align/tests util_value/tests value_services/tests maka_nca/
 - 交付报告：TDCA-M1-VALUE-SERVICES-001（M1 FROZEN）+ TDCA-M2-VALUE-SERVICES-001（M2 FROZEN）+ TDCA-M1-FIVE-PROJECTS-001（五项目 M1 FROZEN）
 
 ---
-SPDX-License-Identifier: TDCA-Internal（随 tdca-protocol 仓库许可发布）
+SPDX-License-Identifier: Apache-2.0（随 tdca-protocol 仓库许可发布）
