@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 自主 Fork 模块（TDCA-AUTOFORK-001 半自动全链）
 
 全链：扫描候选 → 五门标准判定 → 生成 Fork 材料（README 声明 + TDCA-Agreement.yaml）

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 评论模式 M1 测试（TDCA-HANDOFF-KIMI-ECOSCAN-COMMENT-M1-001）
 
 C-1 ECOACT fail-closed: 七字段缺一即拒（无存证不发送）

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 台账登记（DCD-ECOSCAN-001 M1 ledger）
 
 扫描/诊断/邀请全量落 NCA——可追溯、防重复、防轰炸（≤2 条/周/目标）。

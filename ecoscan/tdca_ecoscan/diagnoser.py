@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 候选诊断（DCD-ECOSCAN-001 M1 diagnoser）
 
 制度契合度评估：非侵入可挂载 / 可审计日志 / 分账痛点 / License 合规（AUDIT-001）。

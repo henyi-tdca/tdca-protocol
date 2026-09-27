@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · AutoForker 测试（TDCA-AUTOFORK-001）
 
 C-1 五门判定: 宽松许可过滤 / 契合分级（仅 A/B）

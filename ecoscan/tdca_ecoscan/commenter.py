@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 评论模式 M1（TDCA-HANDOFF-KIMI-ECOSCAN-COMMENT-M1-001）
 
 对他人仓库 issue/PR 发表评论邀请（POST /repos/{owner}/{repo}/issues/{n}/comments，

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 邀请函生成（DCD-ECOSCAN-001 M1 inviter）
 
 挂载/化合双轨话术（BIDIR-001 不留痕 + 礼貌邀请）+ NCA 存证编号。

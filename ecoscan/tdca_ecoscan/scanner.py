@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 雷达扫描（DCD-ECOSCAN-001 M1 scanner）
 
 GitHub API 关键词扫描 + 活跃过滤 + 增量更新。

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 生态雷达扫描与常态赋能引擎（DCD-ECOSCAN-001 M1 + M2）
 
 主动赋能基础设施——每日全景扫描开源仓库，提供 TDCA 赋能（挂载/化合双轨 + 调用即分润）。
