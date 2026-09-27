@@ -148,7 +148,8 @@ class CertL1:
     # ---- 汇总 ----
 
     def verdict(self) -> Dict[str, Any]:
-        passed = all(r["ok"] for r in self._results.values())
+        # D1 守卫（fail-closed）：结果为空 = 检查未跑，绝不等于通过
+        passed = bool(self._results) and all(r["ok"] for r in self._results.values())
         return {
             "cert_level": "L1",
             "passed": passed,
@@ -164,9 +165,12 @@ if __name__ == "__main__":  # pragma: no cover
     ap.add_argument("--selfcheck", action="store_true", help="官方实现自检（认证基准）")
     ap.add_argument("--endpoint", default=None, help="第三方实现 MCP 端点命令（如 python impl.py）")
     args = ap.parse_args()
+    # D3 接线：--selfcheck 与 --endpoint 互斥（自检=官方基线；端点=第三方实现），⛔ 不删除参数
+    if args.selfcheck and args.endpoint:
+        ap.error("--selfcheck 与 --endpoint 互斥：自检对官方基线，端点认证对第三方实现")
     cert = CertL1()
-    v = cert.verdict()
-    cert.run(endpoint=args.endpoint)
+    # D2：删除 run() 前的死赋值判定（其结果必被覆盖）
+    cert.run(endpoint=None if args.selfcheck else args.endpoint)
     v = cert.verdict()
     print(json.dumps(v, ensure_ascii=False, indent=2))
     print("[CERT-L1]", "PASS" if v["passed"] else "FAIL")
