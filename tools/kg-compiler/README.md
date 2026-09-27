@@ -91,3 +91,9 @@ FC-005 输出 prior_distribution:
 python -m pytest tests/ --cov --cov-report=term
 # 当前: 84 用例全部通过（实测 2026-09-06）, 各模块覆盖率 ≥91%
 ```
+
+### 测试口径
+
+- 本目录用例数 = **84**（仅源库 `tests/`，单份）。
+- 跑法：`cd tools/kg-compiler && python -m pytest`（口径由 `pytest.ini` 固定）。
+- 凡报用例数必须注明口径；与他处含副本目录的计数（可能为双份）不得混用。
