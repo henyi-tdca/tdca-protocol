@@ -178,6 +178,12 @@ def emit_diff(cid: str, decl_loc: str, impl_loc: str, dtype: str, excerpt: str) 
 # ---------------------------------------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:
+    # 中文默认编码（GBK/cp936）控制台兼容：输出统一 UTF-8、不可编码字符替换而非崩溃
+    # （本工具输出含 ｜ ↔ ⏎ … 等非 GBK 字符；实测 cp936 下 UnicodeEncodeError）
+    for _stream in (sys.stdout, sys.stderr):
+        if hasattr(_stream, "reconfigure"):
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+
     ap = argparse.ArgumentParser(
         prog="predecl_xcheck",
         description="预声明文本版 ↔ 实现版 开跑前互校（GSEQ-2919，只读、一对一）")

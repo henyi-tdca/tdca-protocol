@@ -248,3 +248,18 @@ def test_repeatable(sandbox):
     b = run_xcheck("--decl", decl, "--impl", impl)
     assert a.returncode == b.returncode == 1
     assert a.stdout == b.stdout
+
+
+# 中文默认编码（GBK/cp936）控制台兼容：子进程以 PYTHONIOENCODING=gbk 起，
+# 输出含 ｜ ↔ ⏎ … 等非 GBK 字符，不得 UnicodeEncodeError；
+# 修复口径＝输出统一 UTF-8（errors=replace），故子进程 stdout 按 UTF-8 可完整解码
+def test_gbk_console_no_crash(sandbox):
+    decl = write(sandbox["decl"], SIM_DECL_MIXED)
+    impl = write(sandbox["impl"], SIM_IMPL_MIXED)
+    gbk_env = dict(os.environ, PYTHONIOENCODING="gbk")
+    p = subprocess.run([sys.executable, str(XCHECK), "--decl", decl, "--impl", impl],
+                       capture_output=True, timeout=60, env=gbk_env)
+    assert p.returncode == 1  # 业务码：有差异（非崩溃）
+    out = p.stdout.decode("utf-8")  # 不抛异常即输出口径为 UTF-8
+    assert "UnicodeEncodeError" not in p.stderr.decode("utf-8", errors="replace")
+    assert "汇总" in out and "↔" in out
