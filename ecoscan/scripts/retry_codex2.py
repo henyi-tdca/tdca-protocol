@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Codex 目标补发邀请函（openai/codex 重试：Search API 未命中，静态注入真实数据补发）。
 
 数据来源: GitHub API 直接查询（GITHUB-LIVE，repo openai/codex 2026-08-23 05:01 UTC）。

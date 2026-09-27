@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · 邀请自动化流水线（DCD-ECOSCAN-001 M2 pipeline）
 
 全链自动化：候选（scanner）→ 诊断（diagnoser）→ 邀请函（inviter）→ 台账（ledger）。

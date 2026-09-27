@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · M1 测试（DCD-ECOSCAN-001 验收 A-1~A-5）
 
 A-1 雷达扫描: 关键词/活跃过滤正确

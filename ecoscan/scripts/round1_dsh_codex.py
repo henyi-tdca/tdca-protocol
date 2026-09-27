@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """DSH/Codex 首轮实测（TDCA-HANDOFF-M2-001 线 2 #5）——真实 GitHub 扫描。
 
 输出: research/ 或 reports/ 目录下 JSON 报告（GITHUB-LIVE 标注）。

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """tdca_ecoscan · M2 流水线测试（DCD-ECOSCAN-001 M2 验收 B-1~B-4）
 
 B-1 全链自动化: 候选→诊断→邀请→台账 一跑到底（scanner/diagnoser/inviter/ledger 串接）
