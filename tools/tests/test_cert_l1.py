@@ -8,8 +8,8 @@
   L-4 run(endpoint=stub)：① 四工具名全集合判定 ② 三态（PASS/REJECT/BLOCK，REJECT/BLOCK 走 error 信号）
       ③ nca_append → appended ④ nsfl_eval 三信号 WARN/BLOCK/FUSED ⑤ axiom6 完备性（checks==5）
   L-5 verdict：全 ok → passed=True；note 含 SIMULATED 标注；tests 计数正确
-  L-6 边界（如实记录现状语义，非期望断言）：空 _results 时 verdict().passed 为 True
-      —— 空结果集 all() 恒真，属现状行为，候选另出件（S-2 观察），不在本测试"修"
+  L-6 边界（D1 修复后）：空 _results 时 verdict().passed 为 False（fail-closed，没跑≠通过）
+      —— 随 cert_l1 三处缺陷修补单案更新（原「现状钉住」语义已修正）
 """
 import importlib.util
 import io
@@ -150,10 +150,13 @@ def test_run_fails_when_endpoint_silent(tmp_path):
     assert not cert.verdict()["passed"]
 
 
-# ---------- L-6（现状语义如实记录，S-2 观察候选，非期望） ----------
+# ---------- L-6（D1 修复后语义：fail-closed；原「现状钉住」用例随改法更新） ----------
 
-def test_verdict_empty_results_passes_by_current_semantics():
+def test_verdict_empty_results_fail_closed():
+    # D1（cert_l1 三处缺陷修补单案）：空结果 = 检查未跑，绝不等于通过
     cert = cert_l1.CertL1(tdcad_path="x")
     v = cert.verdict()
-    assert v["passed"] is True  # 现状：空结果集 all() 恒真——如实钉住，整改另出件
+    assert v["passed"] is False
     assert v["tests"] == 0
+    # 返回结构字段名不变（passed/tests/detail/note），仅取值正确性修正
+    assert set(v) == {"cert_level", "passed", "tests", "detail", "note"}
