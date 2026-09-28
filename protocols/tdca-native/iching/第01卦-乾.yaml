@@ -1,7 +1,7 @@
 COP-ID: ICHING-COP-01
 base_protocol: TDCA-CORE-20260815-01
 source_expert: zhouyi
-compiler: WorkBuddy (GSEQ-0802 周易六十四卦定时编译)
+compiler: 自动化工具 (GSEQ-0802 周易六十四卦定时编译)
 compiled_at: '2026-08-31T18:52:13.835060+08:00'
 stratum: 上经
 hexagram:
