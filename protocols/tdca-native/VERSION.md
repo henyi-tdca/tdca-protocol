@@ -13,7 +13,7 @@
 | TDCA-REASONIX-20260830-007 | 工程三协议 41 件 s5_validate（含立场分离 fail-closed） | 41/41 PASS |
 | 008 | 两轮裁定后重编；复验器新增三机检（constitution/负空间/F1 steps[0]） | 41/41 PASS |
 | 009 | 过程链（格式降级处置） | 如实留链 |
-| 010 | 正式批次编译（创始人「现在可以正式编译了」） | 41/41 s5 + 41/41 复验 PASS |
+| 010 | 正式批次编译（治理方批准令） | 41/41 s5 + 41/41 复验 PASS |
 | 011 | COPRevise 全库修订：A 组 44 旧化合补七原则字段（composition_policy/base_protocol/fusion_spec/负空间三硬禁令）+ B 组 16 补 bind_policy | 化合 60/60 + 原生 454/454 全合规 |
 | 012 | 逐字一致性修复：85 件 constitution 逐字=正典 | RR-002 复核通过（GSEQ-0755），唯一 FAIL 项关闭 |
 
