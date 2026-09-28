@@ -22,4 +22,4 @@ decision: |
     else:
       -> 提供改进建议，邀请重新提交
 topic: 开源社区冷启动·正和准入
-# provenance: deepseek-chat response_hash=16e685ae9a94875ae734e017a8733c246e40a5fbca8b8d17e8f9d91d55f485f1 | deepseek-chat response_hash=16e685ae9a94875ae734e017a8733c246e40a5fbca8b8d17e8f9d91d55f485f1 | 累计cost≈¥0.0011 tokens=641
+# provenance: external-llm response_hash=16e685ae9a94875ae734e017a8733c246e40a5fbca8b8d17e8f9d91d55f485f1 | external-llm response_hash=16e685ae9a94875ae734e017a8733c246e40a5fbca8b8d17e8f9d91d55f485f1 | 累计cost≈¥0.0011 tokens=641
