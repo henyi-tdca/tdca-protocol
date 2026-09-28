@@ -58,7 +58,7 @@ b.nsfl_eval("t1", "key-export")      # 熔断判定
 | 「公理 6 反函数可计算性」 | **已实例化 + 形式化证明**（TDCA-CORE-GO-AXIOM6-001）：f=Verify / f⁻=AuditVerify / g=RightInverse，四约束（完备/可靠/可还原/复杂度）证明完成，对应附录 E 定理 E.1~E.4 |
 | 「SM2 验签接口」 | **接口预留**：当前为哈希级完整性校验（VerifySignature），未实现密码学签名；SM2 待接入（SE 侧/TCN 侧） |
 | 「万级/十万级并发」 | 本机 -race 验证 + CI 线上跑测；数值为测试规模，非生产负载承诺 |
-| 全部数据/存证 | **SIMULATED（ID92）**：e-CNY 结算/税收通道/版权链三锚未接入，演示态定位 |
+| 全部数据/存证 | **SIMULATED**：e-CNY 结算/税收通道/版权链三锚未接入，演示态定位 |
 
 ## 制度纪律
 
