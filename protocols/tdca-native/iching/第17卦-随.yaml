@@ -25,7 +25,7 @@ soul:
   core: 泽雷随
   role: 思维协议 (易理决策类)
   category: 周易六十四卦 / 上经
-  generated_note: 现代组织/决策启示由 WorkBuddy 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
+  generated_note: 现代组织/决策启示由 自动化工具 生成（generated）；卦辞/大象为《周易》通行本原文引用（real）
 primitives:
 - name: suí
   method: 随
