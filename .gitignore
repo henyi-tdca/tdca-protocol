@@ -43,3 +43,6 @@ artifacts/
 TDCA-仓库现状评估报告-20260912.md
 docs/cognitive-compiler/cop-compiler/compiler_src/batch-output/
 docs/cop-library/stratagems/2026-08-28/
+
+# Lean 构建缓存（2026-09-29 追加；依据清理交办创始人「按推荐」采 a 案，经 PR 增规则）
+core-go/docs/formal-proofs/lean-tdca/.lake/
