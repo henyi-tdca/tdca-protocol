@@ -61,4 +61,4 @@ validation:
   passed: true
   issues: []
   primitive_count: 1
-  note: 由 WorkBuddy 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated
+  note: 由 自动化工具 依 GSEQ-0802 规范编译，卦辞/大象 real、启示/负空间 generated
