@@ -25,5 +25,5 @@
 
 ## 关联
 
-- 执行器：`ecoscan/` 的 AutoForker（五门判定 + 材料生成 + NCA 台账，半自动——创始人确认后才执行 Fork）
+- 执行器：`ecoscan/` 的 AutoForker（五门判定 + 材料生成 + NCA 台账，半自动——治理方确认后才执行 Fork）
 - 制度依据：TDCA-OPEN-COLLAB-001（挂载/分润）｜ BIDIR-001（只赋能不改码）｜ AUDIT-001（许可校验）
