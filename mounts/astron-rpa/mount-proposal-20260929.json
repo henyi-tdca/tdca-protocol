@@ -1,0 +1,37 @@
+{
+  "verdict": "REGISTERED",
+  "nca_id": "NCA-MOUNT-20260929-008",
+  "watermark_sha256_16": "87ba5853f275300e",
+  "proposal": {
+    "interface": "RPA 智能体框架（服务/API 面）（只读协议层引用声明）",
+    "registration_state": "registered_only",
+    "channel": {
+      "notice_url": "",
+      "notice_nca": "NCA-ECOACT-20260929-NTC-030",
+      "status": "大仓静默挂载：不发前置告知函（官方节点降调，2026-09-29 创始人甲案裁定）→ 事后公示（ACKNOWLEDGMENTS + NCA-ECOACT-20260929-NTC-030 替代前置告知）"
+    },
+    "tdca_side": {
+      "config_boundary": {
+        "write": false,
+        "upstream_code_change": false,
+        "network_send": false,
+        "proposals_only": true,
+        "profit_sharing_mode": "simulated",
+        "tax_rate_simulated": 0.15
+      },
+      "mou": {
+        "mode": "simulated",
+        "base_utility_sim": 1.0,
+        "tax_15pct_sim": 0.15,
+        "cashflow": "none (ID92 模拟态，不承诺打款)",
+        "stamped_at": "2026-09-29T04:10:00+00:00"
+      }
+    },
+    "upstream_side": {
+      "repo_full": "iflytek/astron-rpa",
+      "license_spdx": "Apache-2.0",
+      "code_change": "none"
+    },
+    "proposal_only": true
+  }
+}

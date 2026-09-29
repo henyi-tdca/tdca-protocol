@@ -1,0 +1,39 @@
+NCA-ID: NCA-MOUNT-20260929-003
+target: sooperset/mcp-atlassian
+action: propose_plugin_mount
+payload:
+  interface: MCP 服务器（Jira/Confluence 工具面）（只读协议层引用声明）
+  registration_state: registered_only
+  channel:
+    notice_url: 'https://github.com/sooperset/mcp-atlassian/discussions/1713'
+    notice_nca: NCA-ECOACT-20260929-NTC-023
+    status: 告知函 2026-09-29 经 Discussion #1713 发出，独立回读在架（NOTICE-20260929-023）
+  tdca_side:
+    config_boundary:
+      write: false
+      upstream_code_change: false
+      network_send: false
+      proposals_only: true
+      profit_sharing_mode: simulated
+      tax_rate_simulated: 0.15
+    mou:
+      mode: simulated
+      base_utility_sim: 1.0
+      tax_15pct_sim: 0.15
+      cashflow: none (ID92 模拟态，不承诺打款)
+      stamped_at: '2026-09-29T04:10:00+00:00'
+  upstream_side:
+    repo_full: sooperset/mcp-atlassian
+    license_spdx: MIT
+    code_change: none
+  proposal_only: true
+boundary:
+  write: false
+  upstream_code_change: false
+  network_send: false
+  proposals_only: true
+  profit_sharing_mode: simulated
+  tax_rate_simulated: 0.15
+stamped_at: '2026-09-29T04:10:00+00:00'
+integrity:
+  sha256_16: 08303ec071aeac41
