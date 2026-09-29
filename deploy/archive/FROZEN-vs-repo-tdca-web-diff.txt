@@ -1,5 +1,7 @@
 # FROZEN zip ⟷ 仓内 tdca-web/（#301 856 行版）逐件对照
 
+> 历史对照件：文内路径所指「仓内 tdca-web/」已归档（archive/tdca-web-856/），⛔ 本文件仅作历史留痕、内容不改；现行唯一正源＝true-source/tdca-web/（单一真源口径）。
+
 同	tdca-web/gateway/DEPLOY.md
 同	tdca-web/gateway/alembic.ini
 异	tdca-web/gateway/api_v1.py	zip 65796B / 仓 44473B

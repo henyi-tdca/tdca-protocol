@@ -16,10 +16,10 @@ cd /root/tdca && bash deploy/install.sh
 | 服务 | 镜像 | 职责 |
 |---|---|---|
 | `nginx` | nginx:alpine | 8080 → 门户静态 + `/api/v1/intent` 精确路由 nl + 其余 `/api/` 反代 gateway + `/mcp/` 反代 bridge |
-| `gateway` | Dockerfile.gateway | FROZEN 封板包（tdca-web-deploy，审查四层 PASS）原样入镜像：FastAPI 全周期 API（W0-W5 流程脚本 / 存证账本 / 鉴权 / db sqlite 内置种子） |
+| `gateway` | Dockerfile.gateway | 仓内正源 COPY `true-source/tdca-web` 入镜像构建：FastAPI 全周期 API（W0-W5 流程脚本 / 存证账本 / 鉴权 / db sqlite 内置种子） |
 | `mcp-bridge` | Dockerfile.mcp | 仓内 `tools/mcp_bridge`（stdio JSON-RPC）+ HTTP shim（`deploy/mcp/shim.py`），门户 MCP 实测用，存证落 docker 卷 |
 | `nl` | Dockerfile.nl | NL 意图导航边车（GSEQ-0645）：DeepSeek 真实算力（real 水印 + 费用回执）→ NSFL 预检 → 算力熔断（日¥2/月¥8）→ 任一环节失败自动降级 gateway 规则表；费用台账落 docker 卷 |
-| `web` | Dockerfile.web | M4 应用侧 SPA（GSEQ-0659）：封板 zip 内预构建 dist 提取入 nginx（零 npm 构建零代码改动），React Router 回退；主 nginx `location /` 反代至此（门户三栏仅精确根路径） |
+| `web` | Dockerfile.web | M4 应用侧 SPA（GSEQ-0659）：Dockerfile.web 多阶段 `npm ci && npm run build` 由 src 构建 dist 入 nginx，React Router 回退；主 nginx `location /` 反代至此（门户三栏仅精确根路径） |
 
 ## 路由面（主 nginx）
 
