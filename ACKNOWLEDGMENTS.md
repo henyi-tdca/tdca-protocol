@@ -24,6 +24,15 @@
 | [getzep/graphiti](https://github.com/getzep/graphiti) | Apache-2.0 | NCA-MOUNT-20260905-005 | 正常登记（告知函 #1838 已发，后按内部制度裁定撤回，无人工表态） |
 | [letta-ai/letta](https://github.com/letta-ai/letta) | Apache-2.0 | NCA-MOUNT-20260905-006 | **静默挂载**——经许可（Apache-2.0）静默挂载，零触碰对方仓，对方机器拒收前置告知故转事后公示（RULING-20260905-002） |
 | [microsoft/semantic-kernel](https://github.com/microsoft/semantic-kernel) | MIT | NCA-MOUNT-20260905-007 | 正常登记（告知函 Discussion #14380 在架 OPEN） |
+| [mark3labs/mcp-go](https://github.com/mark3labs/mcp-go) | MIT | NCA-MOUNT-20260929-001 | 正常登记（批1 严选；告知函 Discussion #1022 在架） |
+| [ModelEngine-Group/nexent](https://github.com/ModelEngine-Group/nexent) | MIT | NCA-MOUNT-20260929-002 | 正常登记（批1 严选；告知函 Issue #4033 在架） |
+| [sooperset/mcp-atlassian](https://github.com/sooperset/mcp-atlassian) | MIT | NCA-MOUNT-20260929-003 | 正常登记（批1 严选；告知函 Discussion #1713 在架） |
+| [ZSeven-W/openpencil](https://github.com/ZSeven-W/openpencil) | MIT | NCA-MOUNT-20260929-004 | 正常登记（批1 严选；告知函 Issue #250 在架） |
+| [Klavis-AI/klavis](https://github.com/Klavis-AI/klavis) | Apache-2.0 | NCA-MOUNT-20260929-005 | 正常登记（批1 严选；告知函 Discussion #1693 在架；上游停更 120 天仅标注） |
+| [apify/apify-mcp-server](https://github.com/apify/apify-mcp-server) | MIT | NCA-MOUNT-20260929-006 | **静默挂载**——批1 大仓甲案：官方节点降调，不发前置告知函，事后公示（NTC-028） |
+| [getsentry/XcodeBuildMCP](https://github.com/getsentry/XcodeBuildMCP) | MIT | NCA-MOUNT-20260929-007 | **静默挂载**——批1 大仓甲案：官方节点降调，不发前置告知函，事后公示（NTC-029） |
+| [iflytek/astron-rpa](https://github.com/iflytek/astron-rpa) | Apache-2.0 | NCA-MOUNT-20260929-008 | **静默挂载**——批1 大仓甲案：官方节点降调，不发前置告知函，事后公示（NTC-030） |
+| [netease-youdao/LobsterAI](https://github.com/netease-youdao/LobsterAI) | MIT | NCA-MOUNT-20260929-009 | **静默挂载**——批1 大仓甲案：官方节点降调，不发前置告知函，事后公示（NTC-031） |
 
 ---
 
