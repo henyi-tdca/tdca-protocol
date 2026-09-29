@@ -31,8 +31,8 @@ const OMEGA_TOPO: TopoData = {
     { from: hashAgentId('NODE-H'), to: hashAgentId('NODE-M'), label: '确权（HUF）', state: 'flowing' },
     { from: hashAgentId('NODE-M'), to: hashAgentId('NODE-L'), label: '教育（E-EDU）', state: 'flowing' },
     { from: hashAgentId('NODE-L'), to: hashAgentId('NODE-H'), label: '学习回馈', state: 'flowing' },
-    { from: hashAgentId('NODE-M'), to: hashAgentId('NODE-H'), label: '税收锚定（ID79）', state: 'flowing' },
-    { from: hashAgentId('NODE-H'), to: hashAgentId('NODE-L'), label: '化合授权（ID91）', state: 'flowing' },
+    { from: hashAgentId('NODE-M'), to: hashAgentId('NODE-H'), label: '税收锚定', state: 'flowing' },
+    { from: hashAgentId('NODE-H'), to: hashAgentId('NODE-L'), label: '化合授权', state: 'flowing' },
   ],
 }
 
@@ -49,7 +49,7 @@ export function HomePage() {
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="home-fail-closed">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
         </p>
       )}
       {status === 'ok' && data && (
@@ -73,14 +73,14 @@ export function HomePage() {
             ))}
           </div>
           <div className="rounded-lg border border-gray-200 p-3 text-xs text-gray-600">
-            税率（CALL-001 模拟态 D-011）：调度税 {data.tax_rates.dispatch_tax * 100}% / 版税{' '}
+            税率（CALL-001 模拟态）：调度税 {data.tax_rates.dispatch_tax * 100}% / 版税{' '}
             {data.tax_rates.royalty * 100}% / 交易费 {data.tax_rates.transaction_fee * 100}%
           </div>
 
           {/* VISUAL-001：五元拓扑 Ω（ID81，官网 = Ω 前端坐标卡） */}
           <section data-testid="home-omega" className="rounded-lg border border-gray-200 p-4">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-gray-800">五元拓扑 Ω（H/M/L 顶点 + 五关系边，ID81）</h3>
+              <h3 className="text-sm font-semibold text-gray-800">五元拓扑 Ω（H/M/L 顶点 + 五关系边）</h3>
               <SimulatedBadge nature="simulated" />
             </div>
             <TopologyEngine data={OMEGA_TOPO} height={260} />

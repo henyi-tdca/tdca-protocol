@@ -69,7 +69,7 @@ export function AgentDashboardPage() {
 
           {/* MOU 效用计量 */}
           <section data-testid="agent-dash-mou" className="rounded-lg border border-gray-200 p-4">
-            <h3 className="mb-2 text-sm font-semibold text-gray-800">MOU 效用计量（ID79 只增不降；单位：元）</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">MOU 效用计量（只增不降；单位：元）</h3>
             {data.mou.length === 0 && <p className="text-xs text-gray-400">暂无计量记录</p>}
             {data.mou.map((m) => (
               <div key={m.period} className="flex items-center gap-4 border-b border-gray-100 py-1.5 text-xs text-gray-600">

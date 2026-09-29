@@ -21,12 +21,12 @@ export function MarketPage() {
       title="配置权市场（L2）"
       dataSource="A-4 GET /api/v1/assets/five-orders + A-3 POST /api/v1/config-right/call"
       permission="公开读 / 调用须 DID"
-      description="配置权协议化流转市场——使用权/配置权可流转，所有权不流转（ID29 防混淆）。"
+      description="配置权协议化流转市场——使用权/配置权可流转，所有权不流转（防混淆）。"
     >
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="market-fail-closed">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
         </p>
       )}
       {status === 'ok' && data && (

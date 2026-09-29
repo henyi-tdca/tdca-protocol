@@ -66,7 +66,7 @@ export function AgentsPage() {
           {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
           {status === 'fail' && (
             <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="agents-fail-closed">
-              [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+              [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
             </p>
           )}
           {status === 'ok' && data && (

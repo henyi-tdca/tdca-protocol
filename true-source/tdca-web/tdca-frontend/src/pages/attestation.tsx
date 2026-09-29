@@ -82,7 +82,7 @@ export function AttestationOverviewPage() {
         {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
         {status === 'fail' && (
           <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="attest-overview-fail">
-            [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+            [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
           </p>
         )}
         {status === 'ok' && data && (
@@ -142,7 +142,7 @@ export function AttestationMetaPage() {
           <h3 className="mb-1 text-sm font-semibold text-gray-800">步骤 1 · 沙盒验证报告审阅（只读）</h3>
           <ul className="space-y-0.5 text-xs text-gray-600">
             <li>✓ NCA 审计轨迹：compile_for_scene → NCA-SBX-001（哈希完整）</li>
-            <li>✓ 税收锚定：MOU ¥1,200（ID79 进项+出项）</li>
+            <li>✓ 税收锚定：MOU ¥1,200（进项+出项）</li>
             <li>✓ 正和性验证：u_positive_sum PASS（θ=0.70）</li>
             <li>✓ L2-R8 核验 + 素材映射 10 冲突消解</li>
           </ul>
@@ -158,7 +158,7 @@ export function AttestationMetaPage() {
             className="w-32 rounded border border-gray-300 px-2 py-1 text-sm"
           />
           <span className="ml-2 text-xs text-gray-500">
-            {Number(activation) > 1.2 ? '✅ 达标（&gt;1.2）' : '⚠ 未达标（≤1.2 → 继续孵化或 HUF 特批，ID38）'}
+            {Number(activation) > 1.2 ? '✅ 达标（&gt;1.2）' : '⚠ 未达标（≤1.2 → 继续孵化或 HUF 特批）'}
           </span>
         </section>
 
@@ -199,7 +199,7 @@ export function AttestationMetaPage() {
         onOpenChange={setModal}
         onConfirm={confirm}
         title="HUF 签批 · 元函数初始确权"
-        description="出盒终裁：人类对智能体「存在合法性」的最终签署（ID21/ID33/ID71 慢系统）。AI 无权代行。"
+        description="出盒终裁：人类对智能体「存在合法性」的最终签署（慢系统）。AI 无权代行。"
       />
     </PageShell>
   )
@@ -230,7 +230,7 @@ export function AttestationDynamicPage() {
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="dynamic-fail">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
         </p>
       )}
       {status === 'ok' && data && (
@@ -289,7 +289,7 @@ export function AttestationDynamicPage() {
           setDeciding(null)
         }}
         title="HUF 签批 · 动态确权审批"
-        description={`审批请求 ${deciding?.id ?? ''}（决策：${deciding?.decision ?? ''}）。人类 HUF 决策，AI 无权代行（ID33）。`}
+        description={`审批请求 ${deciding?.id ?? ''}（决策：${deciding?.decision ?? ''}）。人类 HUF 决策，AI 无权代行。`}
       />
     </PageShell>
   )
@@ -306,12 +306,12 @@ export function AttestationHistoryPage() {
       title="确权历史（NCA 链跨代）"
       dataSource="A-11 GET /api/v1/attestation/history"
       permission="公开（制度即公开）"
-      description="Meta-Attestation-NCA 跨代追溯 + 拒绝事件高亮 + 延迟分析（ID91/ID56）。"
+      description="Meta-Attestation-NCA 跨代追溯 + 拒绝事件高亮 + 延迟分析。"
     >
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="history-fail">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
         </p>
       )}
       {status === 'ok' && data && (
