@@ -23,7 +23,7 @@ const STATUS_DOT: Record<string, string> = {
 const NSFL_LAYERS: { phase: string; layer: string; items: string[]; status: 'GREEN' | 'AMBER' | 'RED' }[] = [
   { phase: '编译期', layer: 'C1-C6', items: ['C1 编译规则检查', 'C4 注入防护', 'C6 负空间声明'], status: 'GREEN' },
   { phase: '运行期', layer: 'L1 / R5-R8', items: ['L1 运行时熔断（BLOCK/FUSE）', 'R5-R8 传感器分级（Safe/Warning/Blocked/Cryogenic）'], status: 'GREEN' },
-  { phase: '发布期', layer: 'Layer-8', items: ['Layer-8 校验器（M1 移交）', '供应链签名（待 D-010）'], status: 'AMBER' },
+  { phase: '发布期', layer: 'Layer-8', items: ['Layer-8 校验器（M1 移交）', '供应链签名（待裁决）'], status: 'AMBER' },
 ]
 
 /** L2 前置沙盒（制度化学反应釜）：SEA 五要件状态，未全绿不可入盒 */
@@ -40,7 +40,7 @@ export function SandboxPage() {
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="sandbox-fail-closed">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
         </p>
       )}
       {status === 'ok' && data && (
@@ -81,7 +81,7 @@ export function SandboxPage() {
 
           {/* VISUAL-002 P2-3：NSFL 三层防线状态机（编译期 → 运行期 → 发布期） */}
           <section data-testid="nsfl-layers" className="mt-4 rounded-lg border border-gray-200 p-4">
-            <h3 className="mb-3 text-sm font-semibold text-gray-800">NSFL 三层防线状态机（ID85：法律绝对负空间无补正 ⊗）</h3>
+            <h3 className="mb-3 text-sm font-semibold text-gray-800">NSFL 三层防线状态机（法律绝对负空间无补正 ⊗）</h3>
             <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
               {NSFL_LAYERS.map((layer, i) => (
                 <div key={layer.phase} className="flex flex-1 flex-col gap-3 md:flex-row md:items-center">

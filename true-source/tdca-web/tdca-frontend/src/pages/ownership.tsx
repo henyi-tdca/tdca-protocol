@@ -29,7 +29,7 @@ export function OwnershipPage() {
       title="所有权市场（L1 法定确权层）"
       dataSource="法定交易中心接口（外部）+ 登记簿只读"
       permission="公开读 / 确权操作须 HUF"
-      description="所有权不得在协议网络内流转（ID43）：确权路径向导 / 转让 / 登记簿公开查询。"
+      description="所有权不得在协议网络内流转：确权路径向导 / 转让 / 登记簿公开查询。"
     >
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">

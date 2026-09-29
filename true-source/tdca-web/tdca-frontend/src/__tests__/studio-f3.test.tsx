@@ -84,6 +84,6 @@ describe('F3 Agent Studio /studio', () => {
 
   it('化合衍生拓扑挂载（ID91 NCA 链继承可视化）', () => {
     renderStudio()
-    expect(screen.getByTestId('studio-compound')).toHaveTextContent('化合衍生（ID91')
+    expect(screen.getByTestId('studio-compound')).toHaveTextContent('化合衍生')
   })
 })

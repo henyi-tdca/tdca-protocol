@@ -111,7 +111,7 @@ describe('F1 橱窗层页面接线', () => {
     render(<TaxPage />)
     await waitFor(() => expect(screen.getByTestId('tax-mou')).toBeInTheDocument())
     expect(screen.getAllByTestId('mou-readout')).toHaveLength(3)
-    expect(screen.getByTestId('tax-irreducible')).toHaveTextContent('MOU 不可降（ID79）')
+    expect(screen.getByTestId('tax-irreducible')).toHaveTextContent('MOU 不可降')
   })
 
   it('知识学院：A-6 术语渲染 + 检索过滤（G-1）', async () => {

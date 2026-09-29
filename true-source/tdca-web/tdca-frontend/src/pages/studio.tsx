@@ -26,7 +26,7 @@ const NCA_CHAIN = ['Meta-Attestation-NCA-001', 'NCA-EDU-001', 'NCA-SBX-001', 'NC
 // ---- 创建向导五步（FRAMEWORK-001 §7.2）----
 const WIZARD_STEPS = [
   { key: 'intent', title: '意图声明', desc: '自然语言描述创建意图 → 辅助智能体解析为六要素草稿' },
-  { key: 'six', title: '六要素确认', desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + ID90 检查）' },
+  { key: 'six', title: '六要素确认', desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + 最小化合检查）' },
   { key: 'nsfl', title: '场景约束 + NSFL', desc: '场景约束声明 + 负空间边界（NSFL）' },
   { key: 'edu', title: '商学院培训/辅导', desc: '可选培训（tdca-ta）；未达标提示' },
   { key: 'huf', title: 'HUF 签署 → 沙盒', desc: '签署 Config-Right-Token → 沙盒（SEA 五要件）→ 出盒终裁（/attestation/meta）' },
@@ -134,7 +134,7 @@ export function StudioPage() {
         {/* 化合衍生（父→子 NCA 链，ID91） */}
         <section data-testid="studio-compound" className="rounded-lg border border-gray-200 p-4">
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-800">化合衍生（ID91：六要素继承 + NCA 链继承）</h3>
+            <h3 className="text-sm font-semibold text-gray-800">化合衍生（六要素继承 + NCA 链继承）</h3>
             <SimulatedBadge nature="simulated" />
           </div>
           <TopologyEngine data={COMPOUND_TOPO} height={260} />

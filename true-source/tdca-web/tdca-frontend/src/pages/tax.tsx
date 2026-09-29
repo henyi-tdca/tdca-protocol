@@ -42,7 +42,7 @@ export function TaxPage() {
   const mouBars = [
     { name: '进项（买/调用方）', 金额: mouInbound },
     { name: '出项（卖/被调用方）', 金额: mouOutbound },
-    { name: '总额（ID79）', 金额: Number(data?.mou_total) || 0 },
+    { name: '总额', 金额: Number(data?.mou_total) || 0 },
   ]
 
   return (
@@ -50,12 +50,12 @@ export function TaxPage() {
       title="税收仪表盘（L3 效用计量）"
       dataSource="A-2 GET /api/v1/tax/mou/{agent_id} + WS tax_mou"
       permission="公开（只读）"
-      description="每次调用产生 MOU 税收锚定（ID79）：计税/预缴/MOU 归零只读看板。"
+      description="每次调用产生 MOU 税收锚定：计税/预缴/MOU 归零只读看板。"
     >
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="tax-fail-closed">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染（ID91/ID85）
+          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
         </p>
       )}
       {status === 'ok' && data && (
@@ -67,15 +67,15 @@ export function TaxPage() {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <MouReadout label="MOU 进项（买/调用方）" amount={mouInbound} />
             <MouReadout label="MOU 出项（卖/被调用方）" amount={mouOutbound} />
-            <MouReadout label="MOU 总额（ID79 硬下限 ≥0）" amount={Number(data.mou_total) || 0} minThreshold={0} />
+            <MouReadout label="MOU 总额（硬下限 ≥0）" amount={Number(data.mou_total) || 0} minThreshold={0} />
           </div>
           <div
             data-testid="tax-irreducible"
             className={`rounded-lg border p-3 text-sm ${data.mou_irreducible ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-red-200 bg-red-50 text-red-700'}`}
           >
             {data.mou_irreducible
-              ? 'MOU 不可降（ID79）：税款不得绕过预缴，正和性判定不受损害'
-              : '⚠ MOU 可降——违反 ID79（结算应拒绝）'}
+              ? 'MOU 不可降：税款不得绕过预缴，正和性判定不受损害'
+              : '⚠ MOU 可降——违反 MOU 不可降（结算应拒绝）'}
           </div>
 
           {/* VISUAL-001：MOU 双柱图（recharts） */}
@@ -117,7 +117,7 @@ export function TaxPage() {
           {/* VISUAL-001：Shapley 分账饼图（ID43，模拟态） */}
           <section data-testid="tax-shapley-chart" className="rounded-lg border border-gray-200 p-4">
             <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold text-gray-800">
-              Shapley 分账（多主体税后分配，ID43） <SimulatedBadge nature="simulated" />
+              Shapley 分账（多主体税后分配） <SimulatedBadge nature="simulated" />
             </h3>
             <div className="flex items-center gap-4">
               <PieChart width={200} height={200}>

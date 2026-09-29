@@ -160,7 +160,7 @@ async function request<T>(
     const raw = (await res.json()) as RawEnvelope
     const verdict = verifyWatermark(raw)
     if (verdict !== 'ok' && !opts.tolerateMissingWatermark) {
-      return { ok: false, reason: 'watermark_missing', detail: 'NCA 水印缺失，拒绝渲染（ID91）' }
+      return { ok: false, reason: 'watermark_missing', detail: 'NCA 水印缺失，拒绝渲染' }
     }
     const nature: DataNature = raw.data_nature === 'real' ? 'real' : 'simulated' // ID92：非 real 一律模拟标注
     const data = (raw.data ?? raw) as T

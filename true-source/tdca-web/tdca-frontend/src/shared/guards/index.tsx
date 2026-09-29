@@ -77,7 +77,7 @@ export function MouReadout({ label, amount, minThreshold = 0 }: MouReadoutProps)
       </span>
       {violated && (
         <span className="text-xs font-medium text-red-600" data-testid="mou-violation">
-          MOU 硬下限违反（&lt; {minThreshold}）——结算拒绝（ID79）
+          MOU 硬下限违反（&lt; {minThreshold}）——结算拒绝
         </span>
       )}
     </div>
@@ -198,7 +198,7 @@ export function CompoundCheck({ conditions }: CompoundCheckProps) {
   const allMet = conditions.every((c) => c.met)
   return (
     <div data-testid="compound-check" data-blocked={!allMet} className="rounded-lg border border-gray-200 bg-white p-3">
-      <div className="mb-2 text-sm font-medium text-gray-800">ID90 最小化合 · 调用前三条件</div>
+      <div className="mb-2 text-sm font-medium text-gray-800">最小化合 · 调用前三条件</div>
       <ul className="space-y-1">
         {conditions.map((c) => (
           <li key={c.id} data-condition={c.id} className="flex items-center gap-2 text-xs">
