@@ -1,0 +1,22 @@
+{
+  "state": "FUSED",
+  "since": "2026-08-11T10:47:38Z",
+  "last_transition": {
+    "from": "ACTIVE",
+    "to": "FUSED",
+    "reason": "NSFL 熔断: SCENE-PHY-001",
+    "ts": "2026-08-11T10:47:38Z"
+  },
+  "transition_nca_ref": null,
+  "fuse_info": {
+    "type": "PHYSICAL",
+    "sc_phy_id": "SCENE-PHY-001",
+    "irreversible": true
+  },
+  "sign": {
+    "alg": "SM2",
+    "pubkey_ref": "TDCA-PUBKEY-C582D1D5-0",
+    "value": "mock-sm2:ae3170c6b69dc0c2",
+    "signed_at": "2026-08-11T10:47:38Z"
+  }
+}

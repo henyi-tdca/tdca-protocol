@@ -1,0 +1,20 @@
+# TDCA-MOU 模拟阶段示例（Pre-Est）
+# Granted-By: TDCA-PRINCIPLE-MOU-001
+# NSFL-Declaration: 模拟数据标记 [SIMULATED]，不参与激活系数计算
+MOU-ID: "TDCA-MOU-20260801-001"
+Token-Ref: "TDCA-CRT-20260730-001"
+NCA-Ref: "TDCA-NCA-20260730-001"
+Recorded-At: "2026-08-01T10:00:00Z"
+Operator: "Reasonix"
+
+Tax-In: null
+Tax-Out: null
+Actual-Total: null
+
+Pre-Est: 1000.00
+Pre-Est-Status: "[SIMULATED]"
+
+Activation-Coefficient: null
+
+Granted-By: "TDCA-PRINCIPLE-MOU-001"
+Audit-Trail: "记录由 TDCAMOURecorder 生成于 2026-08-01T10:00:00Z"

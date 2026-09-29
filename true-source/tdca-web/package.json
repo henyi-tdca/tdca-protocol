@@ -1,0 +1,9 @@
+{
+  "name": "tdca-web",
+  "private": true,
+  "version": "1.0.0",
+  "description": "TDCA 官网一体服务（gateway API + 前端 dist 静态托管，uvicorn 单进程）",
+  "scripts": {
+    "dev": "python gateway/scripts/serve.py"
+  }
+}

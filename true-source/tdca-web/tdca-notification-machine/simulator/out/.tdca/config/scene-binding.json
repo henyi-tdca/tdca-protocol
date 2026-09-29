@@ -1,0 +1,30 @@
+{
+  "tdca_version": "v3.1.2",
+  "scene_type": "notification-machine",
+  "physical_anchor": {
+    "tdid": "TDID-0A3A640CD926F8EB9D5742BBC582D1D5",
+    "puf_hash": "sha256:4fafcd79b95388decfaeaaa181af0d0bfeb0b93e56ee8552fe248bfda68a35c3",
+    "five_anchor": [
+      "address",
+      "line",
+      "hardware",
+      "cost",
+      "subject"
+    ]
+  },
+  "scene_nsfl_ext": [
+    "SCENE-PHY-001",
+    "SCENE-PHY-002",
+    "SCENE-PHY-003"
+  ],
+  "scene_review": [
+    "REV-PHY-001",
+    "REV-PHY-002",
+    "REV-PHY-003"
+  ],
+  "compound_ref": null,
+  "sign": {
+    "alg": "SM2",
+    "value": "mock"
+  }
+}

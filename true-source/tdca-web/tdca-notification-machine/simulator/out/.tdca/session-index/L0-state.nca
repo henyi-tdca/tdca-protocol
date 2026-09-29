@@ -1,0 +1,16 @@
+{
+  "si_id": "TDCA-SI-CHIP-C582D1D5-0001",
+  "layer": "L0",
+  "constitutional_digest": {
+    "version": "TDCA-CONST-v3.1.2",
+    "delta_items": []
+  },
+  "integrity": {
+    "sm3_full": "sm3:sim",
+    "sha256_full": "sha256:sim"
+  },
+  "sign": {
+    "alg": "SM2",
+    "value": "mock"
+  }
+}

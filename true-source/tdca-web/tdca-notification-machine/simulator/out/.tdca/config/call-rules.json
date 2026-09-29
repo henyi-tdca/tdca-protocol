@@ -1,0 +1,13 @@
+{
+  "call_type": "mixed",
+  "tax_rates": {
+    "dispatch_tax": 0.02,
+    "royalty": 0.075
+  },
+  "mou_mode": "simulated",
+  "nsfl_version": "V0.2",
+  "sign": {
+    "alg": "SM2",
+    "value": "mock"
+  }
+}

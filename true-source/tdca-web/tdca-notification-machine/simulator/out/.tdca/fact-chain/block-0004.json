@@ -1,0 +1,13 @@
+{
+  "index": 4,
+  "timestamp": "2026-08-11T10:47:38Z",
+  "payload_hash": "sha256:b6b45b2791586ead2e4509621b6bb8840156da3b96d08198e2f6de7a0568968b",
+  "prev_hash": "sha256:058180848115623a765ec5f98278ae6540c8929b0c41e21d48706fb13e4e4d83",
+  "payload_ref": "FactHash_4",
+  "sign": {
+    "alg": "SM2",
+    "pubkey_ref": "TDCA-PUBKEY-C582D1D5-0",
+    "value": "mock-sm2:6b45b2791586ead2",
+    "signed_at": "2026-08-11T10:47:38Z"
+  }
+}

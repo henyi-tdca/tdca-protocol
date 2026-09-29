@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tdca-toolchain"
+version = "1.0.0"
+description = "TDCA 协议配置网络工具链（Token/NCA/MOU/Verify）"
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+tdca-tool = "tdca_tool:main"
+
+[tool.setuptools]
+packages = ["tdca_toolchain"]
