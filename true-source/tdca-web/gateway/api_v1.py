@@ -181,7 +181,7 @@ def tax_mou(agent_id: str):
 
 @router.get("/tax/nca-history")
 def tax_nca_history():
-    """A-2: 税收事件历史（tax_events 最近 50 条，ID80 事件溯源）。"""
+    """A-2: 税收事件历史（tax_events 最近 50 条，事件溯源）。"""
     try:
         with get_session() as s:
             rows = s.query(M.TaxEvent).order_by(M.TaxEvent.ts.desc()).limit(50).all()
@@ -371,7 +371,7 @@ class NcaVerifyRequest(BaseModel):
 
 @router.post("/audit/nca-verify")
 def audit_nca_verify(req: NcaVerifyRequest):
-    """A-7: NCA 哈希校验 + nca_chain 在链核验（ID91）。"""
+    """A-7: NCA 哈希校验 + nca_chain 在链核验。"""
     computed = hashlib.sha256(req.payload.encode("utf-8")).hexdigest() if req.payload else ""
     match = bool(req.nca_hash) and (req.nca_hash == computed or req.nca_hash.startswith("sha256:" + computed[:32]))
     on_chain = False
@@ -679,7 +679,7 @@ class DynamicAttestationRequest(BaseModel):
 
 @router.post("/attestation/dynamic")
 def attestation_dynamic(req: DynamicAttestationRequest, request: Request):
-    """A-11: 动态确权审批（ID33 OTA 需 HUF；四操作：批准/修改后批准/拒绝/延后），落库。"""
+    """A-11: 动态确权审批（OTA 需 HUF；四操作：批准/修改后批准/拒绝/延后），落库。"""
     status = {
         "approve": "APPROVED",
         "approve_modified": "APPROVED_MODIFIED",
