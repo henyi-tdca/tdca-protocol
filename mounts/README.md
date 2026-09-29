@@ -36,6 +36,23 @@
 > **静默挂载两项（langchain / letta）**：经许可（MIT / Apache-2.0）静默挂载——零触碰对方仓，对方机器拒收前置告知（bot 自动关闭，无人工表态）故转事后公示（RULING-20260905-002）。
 > 通道状态如实记录：servers / python-sdk / typescript-sdk / graphiti 四项告知函发出后同日按内部制度裁定主动撤回（not_planned），无上游人工表态；semantic-kernel 告知函在架 OPEN。
 
+## 在架挂载 · 批 1（2026-09-29 · 11 项严选 · 9 项已施工入仓）
+
+| 目录 | 上游项目 | 对接面 | License | 分类 | 存证 |
+|---|---|---|---|---|---|
+| [mcp-go/](mcp-go/) | mark3labs/mcp-go（#1022） | MCP Go SDK（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-001 |
+| [nexent/](nexent/) | ModelEngine-Group/nexent（#4033） | 智能体运行框架（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-002 |
+| [mcp-atlassian/](mcp-atlassian/) | sooperset/mcp-atlassian（#1713） | MCP 服务器（Jira/Confluence 工具面，只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-003 |
+| [openpencil/](openpencil/) | ZSeven-W/openpencil（#250） | 开放创作工具（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-004 |
+| [klavis/](klavis/) | Klavis-AI/klavis（#1693） | AI 集成平台（MCP 托管面，只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260929-005 |
+| [apify-mcp-server/](apify-mcp-server/) | apify/apify-mcp-server | MCP 服务器（Actor 工具面，只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260929-006 |
+| [xcodebuildmcp/](xcodebuildmcp/) | getsentry/XcodeBuildMCP | MCP 服务器（Xcode 构建工具面，只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260929-007 |
+| [astron-rpa/](astron-rpa/) | iflytek/astron-rpa | RPA 智能体框架（只读协议层引用声明） | Apache-2.0 | share-enabled · **静默挂载** | NCA-MOUNT-20260929-008 |
+| [lobsterai/](lobsterai/) | netease-youdao/LobsterAI | AI 应用框架（只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260929-009 |
+
+> **批 1 通道状态（2026-09-29）**：前五项告知函当日发出并独立回读在架（NTC-021~025、026、027）；后四项为大仓静默挂载（官方节点降调·甲案），不发前置告知函，事后公示落 ACKNOWLEDGMENTS + NTC-028~031。
+> **维护态标注**：klavis（停更 120 天）／godot-mcp（166 天）／mcp-playwright（290 天）——仅标注非淘汰，活跃度周复核另裁。批 1 在册 11 项中 godot-mcp / mcp-playwright 两项暂未施工入仓（见回报）。
+
 ## 纪律
 
 不声称上游背书 ｜ 算力零提及 ｜ 分润模拟态标注（ID92）｜ 婉拒分润即止。入仓产物沿用仓库根许可（MIT + TDCA 附注）；引用上游项目保持其自身 License 声明。

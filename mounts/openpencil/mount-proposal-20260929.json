@@ -1,0 +1,37 @@
+{
+  "verdict": "REGISTERED",
+  "nca_id": "NCA-MOUNT-20260929-004",
+  "watermark_sha256_16": "d96e854308338509",
+  "proposal": {
+    "interface": "开放创作工具（公开接口语义）（只读协议层引用声明）",
+    "registration_state": "registered_only",
+    "channel": {
+      "notice_url": "https://github.com/ZSeven-W/openpencil/issues/250",
+      "notice_nca": "NCA-ECOACT-20260929-NTC-025",
+      "status": "告知函 2026-09-29 经 Issue #250 发出（该仓未开讨论区），独立回读在架（NOTICE-20260929-025）"
+    },
+    "tdca_side": {
+      "config_boundary": {
+        "write": false,
+        "upstream_code_change": false,
+        "network_send": false,
+        "proposals_only": true,
+        "profit_sharing_mode": "simulated",
+        "tax_rate_simulated": 0.15
+      },
+      "mou": {
+        "mode": "simulated",
+        "base_utility_sim": 1.0,
+        "tax_15pct_sim": 0.15,
+        "cashflow": "none (ID92 模拟态，不承诺打款)",
+        "stamped_at": "2026-09-29T04:10:00+00:00"
+      }
+    },
+    "upstream_side": {
+      "repo_full": "ZSeven-W/openpencil",
+      "license_spdx": "MIT",
+      "code_change": "none"
+    },
+    "proposal_only": true
+  }
+}

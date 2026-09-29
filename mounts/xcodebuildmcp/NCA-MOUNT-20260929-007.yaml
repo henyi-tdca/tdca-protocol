@@ -1,0 +1,39 @@
+NCA-ID: NCA-MOUNT-20260929-007
+target: getsentry/XcodeBuildMCP
+action: propose_plugin_mount
+payload:
+  interface: MCP 服务器（Xcode 构建工具面）（只读协议层引用声明）
+  registration_state: registered_only
+  channel:
+    notice_url: ''
+    notice_nca: NCA-ECOACT-20260929-NTC-029
+    status: 大仓静默挂载：不发前置告知函（官方节点降调，2026-09-29 创始人甲案裁定）→ 事后公示（ACKNOWLEDGMENTS + NCA-ECOACT-20260929-NTC-029 替代前置告知）
+  tdca_side:
+    config_boundary:
+      write: false
+      upstream_code_change: false
+      network_send: false
+      proposals_only: true
+      profit_sharing_mode: simulated
+      tax_rate_simulated: 0.15
+    mou:
+      mode: simulated
+      base_utility_sim: 1.0
+      tax_15pct_sim: 0.15
+      cashflow: none (ID92 模拟态，不承诺打款)
+      stamped_at: '2026-09-29T04:10:00+00:00'
+  upstream_side:
+    repo_full: getsentry/XcodeBuildMCP
+    license_spdx: MIT
+    code_change: none
+  proposal_only: true
+boundary:
+  write: false
+  upstream_code_change: false
+  network_send: false
+  proposals_only: true
+  profit_sharing_mode: simulated
+  tax_rate_simulated: 0.15
+stamped_at: '2026-09-29T04:10:00+00:00'
+integrity:
+  sha256_16: ea84118b569feac4
