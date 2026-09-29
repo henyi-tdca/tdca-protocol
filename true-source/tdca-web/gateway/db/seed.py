@@ -107,10 +107,10 @@ def seed():
         ])
         _ins(s, AssetOrder, [
             dict(order_no=1, name="效用权", description="场景效用函数调用权", asset_count=0),
-            dict(order_no=2, name="配置权", description="L2 配置权市场层（ID76）", asset_count=0),
-            dict(order_no=3, name="NCA 嵌套认知资产", description="调用即存证（ID91）", asset_count=0),
-            dict(order_no=4, name="MOU 税收锚定凭证", description="进项+出项（ID79）", asset_count=0),
-            dict(order_no=5, name="跨场景配置画像", description="多场景偏态档案（L-6 演进）", asset_count=0),
+            dict(order_no=2, name="配置权", description="L2 配置权市场层", asset_count=0),
+            dict(order_no=3, name="NCA 嵌套认知资产", description="调用即存证", asset_count=0),
+            dict(order_no=4, name="MOU 税收锚定凭证", description="进项+出项", asset_count=0),
+            dict(order_no=5, name="跨场景配置画像", description="多场景偏态档案", asset_count=0),
         ])
         # M2 扩充：通知机 MRCR 四角色 + eios 十端点（A-9/A-10 DB 实读数据源）
         _ins(s, Agent, [
@@ -138,7 +138,7 @@ def seed():
         # M2 扩充：确权待审队列 3 条（紧急度 urgent/normal/low）+ 已决历史 4 条
         _ins(s, AttestationRequest, [
             dict(request_id="DAR-001", agent_id="AGENT-GENIE", request_type="scene_extension",
-                 urgency="urgent", reason="申请扩展至跨场景配置画像场景（L-6 演进前置）",
+                 urgency="urgent", reason="申请扩展至跨场景配置画像场景（演进前置）",
                  status="pending", ts=_NOW),
             dict(request_id="DAR-002", agent_id="AGENT-SERVICE", request_type="compound_auth",
                  urgency="normal", reason="行业顾问场景申请复合授权（通知机+翻译市场）",
@@ -156,7 +156,7 @@ def seed():
                  urgency="urgent", reason="逼近法律绝对负空间边界（⊗）", status="rejected",
                  decided_by="HUF", nca_ref="NCA-SEED-003", ts=_NOW),
             dict(request_id="DAR-H-003", agent_id="AGENT-TRAINER", request_type="meta_child",
-                 urgency="low", reason="子体继承确权（ID91 跨代链）", status="approved",
+                 urgency="low", reason="子体继承确权（跨代链）", status="approved",
                  decided_by="HUF", nca_ref="NCA-SEED-003", ts=_NOW),
         ])
         _ins(s, TermsRegistry, [
