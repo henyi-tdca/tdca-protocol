@@ -1,7 +1,0 @@
-{
-  "scene_id": "scene-phy-notification",
-  "role": "NM-Operator",
-  "config_right_hash": "sha256:sim",
-  "binding_ref": "config/scene-binding.json",
-  "expires": null
-}
