@@ -6,7 +6,7 @@
 ## 一、TDCA 公共负空间（必须完整包含）
 
 {自动引用 TDCA-NSFL-v0.2 全部条款——见 tdca-public/constitution/NSFL-v0.2.md：
-三不可原则（AI-Blocked）/ 三可原则（Human-Only）/ 两层边界（ID85/86）/ 三档熔断}
+三不可原则（AI-Blocked）/ 三可原则（Human-Only）/ 两层边界（ID86）/ 三档熔断}
 
 ## 二、场景特定负空间（扩展）
 

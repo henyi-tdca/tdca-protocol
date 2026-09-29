@@ -1,7 +1,7 @@
 # TDCA 工具链（tdca-toolchain）
 
 > **版本：** 1.0.0  
-> **制度锚定：** TDCA-MEMO-006, TDCA-MEMO-008, TDCA-PRINCIPLE-MOU-001, ID79  
+> **制度锚定：** TDCA-MEMO-006, TDCA-MEMO-008, TDCA-PRINCIPLE-MOU-001  
 > **Function-Call-ID：** TDCA-FC-20260801-003
 
 ## 一、安装

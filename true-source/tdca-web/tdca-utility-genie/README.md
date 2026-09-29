@@ -1,7 +1,7 @@
 # TDCA 效用精灵（Utility Genie）
 
 > **版本：** 1.0.0  
-> **制度锚定：** ID24(效用精灵九大能力), ID84(协作停机定理), ID21(函数隐喻四定律), ID8(NIA-MACM 3.0), ID79(MOU原理), ID43(MCT原理)  
+> **制度锚定：** 效用精灵九大能力, 协作停机定理, 函数隐喻四定律, NIA-MACM 3.0, MOU原理, MCT原理  
 > **Function-Call-ID：** TDCA-FC-20260802-004
 
 ## 一、定位
@@ -17,10 +17,10 @@
 
 | 功能 | 类 | 制度锚定 | 回答的问题 |
 |------|-----|---------|-----------|
-| 正和满意解 | `PositiveSumSolver` | ID84 | 各方都满意的充分解是什么？ |
-| 反函数求解 | `InverseFunctionSolver` | ID21 | 给定效果目标，需要什么配置？ |
-| 能力塑造 | `AgentCapabilityShaper` | ID8 | 如何调整智能体的认知状态？ |
-| 交付确认 | `ContractDeliveryValidator` | ID79+ID43 | 合约执行是否达标且税收可验证？ |
+| 正和满意解 | `PositiveSumSolver` | 停机定理 | 各方都满意的充分解是什么？ |
+| 反函数求解 | `InverseFunctionSolver` | 反函数 | 给定效果目标，需要什么配置？ |
+| 能力塑造 | `AgentCapabilityShaper` | 能力塑造 | 如何调整智能体的认知状态？ |
+| 交付确认 | `ContractDeliveryValidator` | MOU+MCT | 合约执行是否达标且税收可验证？ |
 
 ## 三、安装与使用
 
@@ -75,10 +75,10 @@ solution = genie.solve_positive_sum(
 tdca-utility-genie/
 ├── tdca_utility_genie.py           # 主类
 ├── solvers/                        # 求解器
-│   ├── positive_sum_solver.py      #   正和满意解 (ID84)
-│   └── inverse_function_solver.py  #   反函数 (ID21)
-├── shapers/agent_capability_shaper.py  # 能力塑造 (ID8)
-├── validators/contract_delivery_validator.py  # 交付确认 (ID79+ID43)
+│   ├── positive_sum_solver.py      #   正和满意解
+│   └── inverse_function_solver.py  #   反函数
+├── shapers/agent_capability_shaper.py  # 能力塑造
+├── validators/contract_delivery_validator.py  # 交付确认
 ├── math_engines/                   # 数学引擎
 │   ├── optimization_engine.py      #   优化 (模拟退火/NSGA-II简化)
 │   ├── bayesian_engine.py          #   贝叶斯 (后验更新/EI)

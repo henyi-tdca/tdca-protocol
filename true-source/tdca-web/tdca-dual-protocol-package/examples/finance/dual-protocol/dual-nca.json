@@ -7,8 +7,8 @@
   "scene_version": "v1.0.0",
   "mou_anchor": {
     "status": "Simulated",
-    "note": "本化合产物为模拟态示范（D-011），不含真实税收/MOU 硬数据；真实锚定待 DCEP 接入",
-    "cbdc_anchor": "cbdc_anchor 参数（模拟态裁决 D-011）",
+    "note": "本化合产物为模拟态示范，不含真实税收/MOU 硬数据；真实锚定待 DCEP 接入",
+    "cbdc_anchor": "cbdc_anchor 参数（模拟态裁决）",
     "inbound_tax": null,
     "outbound_tax": null
   },

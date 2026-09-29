@@ -2,7 +2,7 @@
 # 版本: SCENE-CONSTRAINTS-v1.0.0
 # 关联 TDCA 约束: TDCA-CONST-v3.1.2 / UPDA-v2.0 / CALL-RULES V1.2
 # FC-ID: TDCA-FC-20260811-004-NOTIFICATION-MACHINE（层 3 场景化合，FC-SPEC §3.1）
-# ID92 模拟态标注: 本场景为模拟态示范（MOU 锚定 D-011）
+# ID92 模拟态标注: 本场景为模拟态示范（MOU 锚定）
 
 ## 一、场景目标函数扩展
 
@@ -24,11 +24,11 @@ scene_constraints:
     prior_distribution: "E-HW-1 定型规格 + TIMA-PHY-001 + CALL-RULES V1.2"
     config_boundary: "L2 配置权市场层；Config-Right-Token 不上芯片（澄清 A）"
     expected_allocation: ".tdca 固件元数据 + NCA-Lite 8 字段 + 全量 NCA 存证"
-    audit_trail: "fact-chain 事实哈希链 + NCA-Lite 链式关联（ID91 自反化合）"
+    audit_trail: "fact-chain 事实哈希链 + NCA-Lite 链式关联（自反化合）"
   items:
     - id: CON-001
       type: "PHY"
-      description: "PUF 密钥材料永不落盘/外传（信任锚底线 ID29）"
+      description: "PUF 密钥材料永不落盘/外传（信任锚底线）"
       severity: "CRITICAL"
       validation_rule: "SE 私钥不导出"
     - id: CON-002
@@ -38,7 +38,7 @@ scene_constraints:
       validation_rule: "SM2 验签"
     - id: CON-003
       type: "BIZ"
-      description: "MOU 归零规则不可绕过（ID79，T(y_t)>0 才有效）"
+      description: "MOU 归零规则不可绕过（T(y_t)>0 才有效）"
       severity: "CRITICAL"
       validation_rule: "CALL-RULES validate_mou"
     - id: CON-004

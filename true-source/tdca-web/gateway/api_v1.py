@@ -156,7 +156,7 @@ def system_overview():
 
 @router.get("/tax/mou/{agent_id}")
 def tax_mou(agent_id: str):
-    """A-2: MOU 锚定（mou_records 最新账期；无记录=零值明示，ID79 不可降）。"""
+    """A-2: MOU 锚定（mou_records 最新账期；无记录=零值明示，不可降）。"""
     try:
         with get_session() as s:
             row = (s.query(M.MouRecord).filter_by(agent_id=agent_id)
@@ -195,7 +195,7 @@ def tax_nca_history():
 
 @router.get("/tax/shapley/{call_id}")
 def tax_shapley(call_id: str):
-    """A-2: Shapley 分账观测（tax_events 按 call_id 聚合，ID43）。"""
+    """A-2: Shapley 分账观测（tax_events 按 call_id 聚合）。"""
     try:
         with get_session() as s:
             rows = s.query(M.TaxEvent).filter_by(call_id=call_id).all()
@@ -468,7 +468,7 @@ class GenieComputeRequest(BaseModel):
 def genie_compute(req: GenieComputeRequest, request: Request):
     """A-12: 自然语言治理数学计算（须登录会话）。平台真实推理 + 本地确定性数学 → real 级。
 
-    工具白名单：mou_compute（ID79 硬下限）/ shapley_allocate / bayes_update。
+    工具白名单：mou_compute（硬下限）/ shapley_allocate / bayes_update。
     Key 未配置 → 503 fail-closed（裁定④：不降级、不猜测）。
     """
     user = _require_session_user(request)  # 写路径强制 M3 会话（不接受 CRT 降级通道）
@@ -716,7 +716,7 @@ def attestation_dynamic(req: DynamicAttestationRequest, request: Request):
 
 @router.get("/attestation/history")
 def attestation_history(agent_id: Optional[str] = None):
-    """A-11: 确权历史查询（attestation_requests 已决 rows + NCA 链，ID91/ID56）。"""
+    """A-11: 确权历史查询（attestation_requests 已决 rows + NCA 链）。"""
     with get_session() as s:
         q = s.query(M.AttestationRequest).filter(M.AttestationRequest.status != "pending")
         if agent_id:

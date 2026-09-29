@@ -91,7 +91,7 @@ class DualNcaGenerator:
                 "Cache-Ratio": None,
                 "Inbound-Tax": None,
                 "Outbound-Tax": None,
-                "Note": "模拟态：真实税收锚定待 DCEP 接入（D-011）",
+                "Note": "模拟态：真实税收锚定待 DCEP 接入",
             },
             "Scene": {
                 "name": self.scene_name,

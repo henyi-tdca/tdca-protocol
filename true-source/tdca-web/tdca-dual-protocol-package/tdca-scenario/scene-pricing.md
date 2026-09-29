@@ -23,7 +23,7 @@ scene_pricing:
       description: "{维度说明}"
   mou_anchor:
     status: "Simulated"
-    note: "真实税收锚定待 DCEP 接入（模拟态裁决 D-011）"
+    note: "真实税收锚定待 DCEP 接入（模拟态裁决）"
 ```
 
 ## 三、定价约束
