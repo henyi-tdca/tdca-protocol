@@ -177,7 +177,7 @@
       <tr><th>意图</th><th>进入功能</th><th>门禁</th></tr>
       <tr><td>查询</td><td>存证链 / 熔断记录只读视图</td><td>免签批</td></tr>
       <tr><td>创建</td><td>NCA 存证起草</td><td>六要素校验</td></tr>
-      <tr><td>签批</td><td>DCD 待办裁决</td><td>人类签名权（ID71）</td></tr>
+      <tr><td>签批</td><td>DCD 待办裁决</td><td>人类签名权</td></tr>
     </table>
 
     <!-- M1.1 P0：存证起草沙盒（匿名可用，六要素校验，SIMULATED 草稿不落链） -->
@@ -195,7 +195,7 @@
         <option value="">— 请选择 —</option>
         <option>只读存证（不代执行业务）</option>
         <option>工具调用（限白名单工具）</option>
-        <option>签批申请（须人类签署，AI 无权代行 ID71）</option>
+        <option>签批申请（须人类签署，AI 无权代行）</option>
       </select>
       <label>⑤ 预期分配（产出与归属）</label>
       <input id="d-all" placeholder="例：草稿哈希归起草人；正式落链后入公共账本">
@@ -260,7 +260,7 @@
         <tr><td>链状态</td><td class="ok">080→087 全闭环（prev 哈希链式引用，无存证=未发生）</td></tr>
         <tr><td>今日 GSEQ</td><td>0601 / 0610 / 0612 / 0615 / 0617 / 0625（本页施工令）</td></tr>
         <tr><td>NSFL 熔断</td><td class="ok">预检在线：M2-3 实测 1 次端到端调用通过预检，存证 NCA-MCP-20260828-001（哈希 sha256:aad951d7…，0 熔断，成本 ¥0）</td></tr>
-        <tr><td>合规红线</td><td>协议层永久免费（ID77）｜法律禁止领域=绝对负空间（ID86）｜人类签名权（ID71）</td></tr>
+        <tr><td>合规红线</td><td>协议层永久免费｜法律禁止领域=绝对负空间｜人类签名权</td></tr>
         <tr><td>刷新节奏</td><td>链尾快照每周随 Weekly 刷新；<b class="ok">本页哨兵已接真实后端实时刷新</b>（/api/v1/tax/nca-history，30s 轮询）</td></tr>
       </table>
       <div id="live-tail" style="margin-top:8px;font-size:12px;color:var(--dim)">实时账本事件装载中…</div>
@@ -280,7 +280,7 @@
     "动作前过 NSFL 负空间预检（命中即熔断）"
   ],
   "optional": ["nca:chain 只读查询"],
-  "free": "协议层永久免费（ID77），轻量接入零成本",
+  "free": "协议层永久免费，轻量接入零成本",
   "constraint": "无 agent_card 完整披露能力 → 仅开放只读工具"
 }</pre>
     <table>
@@ -334,7 +334,7 @@
 <!-- B1-2 沙盒实验室区：SEA 宪法化口径（区别于左栏存证起草沙盒） -->
 <section class="assets" id="sandbox-zone">
   <h2>🧪 沙盒实验室区 <span class="tag">SEA 宪法化口径：L2-R8 / HUF / 可逆性</span><span class="tag">五要件实读 REAL</span></h2>
-  <p class="sub">本区为<b>沙盒准入实验室</b>，区别于左栏「存证起草沙盒」（匿名草稿演示、不落链）：此处面向真实场景入盒——SEA 五要件状态实时实读（/api/v1/sandbox/sea-status），入盒申请须登录会话，<b>出盒须人类签名（ID71，AI 无权代行）</b>。</p>
+  <p class="sub">本区为<b>沙盒准入实验室</b>，区别于左栏「存证起草沙盒」（匿名草稿演示、不落链）：此处面向真实场景入盒——SEA 五要件状态实时实读（/api/v1/sandbox/sea-status），入盒申请须登录会话，<b>出盒须人类签名（AI 无权代行）</b>。</p>
   <table>
     <tr><th>SEA 要件</th><th>状态</th><th>备注</th></tr>
     <tbody id="sea-body"><tr><td colspan="3" style="color:var(--dim)">SEA 五要件实读装载中…</td></tr></tbody>
@@ -694,7 +694,7 @@ const STATIC_HINT = '本端为静态门面（离线备用）。实时演示（NL
 const INTENTS = [
   ["查询存证链尾", "→ 意图识别：查询。进入【存证链尾只读视图】。（本地降级响应）", "/audit"],
   ["创建一条新存证", "→ 意图识别：创建。进入【NCA 起草】——六要素声明 + 人类签批。（本地降级响应）", "/attestation/dynamic"],
-  ["签批当前待办", "→ 意图识别：签批。进入【DCD 待办】——签批权为人类专属（ID71）。（本地降级响应）", "/attestation/dynamic"],
+  ["签批当前待办", "→ 意图识别：签批。进入【DCD 待办】——签批权为人类专属。（本地降级响应）", "/attestation/dynamic"],
   ["查看熔断记录", "→ 意图识别：查询。进入【NSFL 熔断记录】。（本地降级响应）", "/audit"],
   ["登录", "→ 意图识别：登录。进入【登录页】。（本地降级响应）", "/auth"]
 ];
@@ -908,7 +908,7 @@ async function draftCheck(){
     '  先验分布: ' + f['③ 先验分布'], '  配置权边界: ' + f['④ 配置权边界'],
     '  预期分配: ' + f['⑤ 预期分配'], '  审计轨迹: ' + f['⑥ 审计轨迹'],
     'data_provenance: simulated（ID92 标注：演示草稿，非链上存证）',
-    'Human-Signature: 正式落链须人类签署（ID71，AI 无权代行）',
+    'Human-Signature: 正式落链须人类签署（AI 无权代行）',
   ].join('\n');
   const h = await sha256hex(draft);
   out.style.display = 'block';
