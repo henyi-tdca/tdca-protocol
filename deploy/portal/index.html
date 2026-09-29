@@ -302,7 +302,7 @@
 <!-- B1-1 分层市场区：L3 所有权市场 × L2 配置权市场（资格=缔约后参与） -->
 <section class="assets" id="market-zone">
   <h2>🏛 分层市场区 <span class="tag">资格 = 缔约后参与</span><span class="tag">资产池实读 REAL · 市场框架 SIMULATED（ID92）</span></h2>
-  <p class="sub">双轨市场：L3 走中心化登记确权，L2 走分布式协议配置权（ID76 第三极权利——不拥有参数，只拥有场景化调用权）。参与须先
+  <p class="sub">双轨市场：L3 走中心化登记确权，L2 走分布式协议配置权（第三极权利——不拥有参数，只拥有场景化调用权）。参与须先
     <a href="https://github.com/henyi-tdca/tdca-protocol/issues/new/choose" target="_blank" style="color:var(--llm)">缔约加入 TDCA</a> 并登录账号会话。</p>
   <div class="asset-grid">
     <div class="asset-card">
@@ -333,7 +333,7 @@
 
 <!-- B1-2 沙盒实验室区：SEA 宪法化口径（区别于左栏存证起草沙盒） -->
 <section class="assets" id="sandbox-zone">
-  <h2>🧪 沙盒实验室区 <span class="tag">SEA 宪法化口径：L2-R8 / HUF / ID27</span><span class="tag">五要件实读 REAL</span></h2>
+  <h2>🧪 沙盒实验室区 <span class="tag">SEA 宪法化口径：L2-R8 / HUF / 可逆性</span><span class="tag">五要件实读 REAL</span></h2>
   <p class="sub">本区为<b>沙盒准入实验室</b>，区别于左栏「存证起草沙盒」（匿名草稿演示、不落链）：此处面向真实场景入盒——SEA 五要件状态实时实读（/api/v1/sandbox/sea-status），入盒申请须登录会话，<b>出盒须人类签名（ID71，AI 无权代行）</b>。</p>
   <table>
     <tr><th>SEA 要件</th><th>状态</th><th>备注</th></tr>
@@ -346,13 +346,13 @@
       <ul>
         <li>场景编译（SandboxCompilePipeline，fail-closed）</li>
         <li>负空间冲突检测（NSFL 边界，命中即熔断）</li>
-        <li>激活系数评估（门槛 &gt; 1.2，L-4 待真实场景数据）</li>
+        <li>激活系数评估（门槛 &gt; 1.2，待真实场景数据）</li>
       </ul>
     </div>
     <div class="asset-card">
       <h3>入盒申请</h3>
       <ul>
-        <li>口径：L2-R8 沙盒先行 / HUF 终裁 / ID27 可逆性</li>
+        <li>口径：L2-R8 沙盒先行 / HUF 终裁 / 可逆性</li>
         <li>申请 <code>sandbox/apply</code>：落库 + NCA 存证（TaskLodge），申请人=登录用户</li>
         <li>AMBER 项不阻塞预研，但阻塞入盒</li>
       </ul>
@@ -578,7 +578,7 @@
     <div class="asset-card">
       <h3>④ 计税 <span class="soon">模拟态规则</span></h3>
       <ul>
-        <li>MOU 税收锚定：进项 + 出项（ID79 硬下限）</li>
+        <li>MOU 税收锚定：进项 + 出项（硬下限）</li>
         <li>链账事件接线：<b class="ok">实时实读</b> /api/v1/tax/mou · /api/v1/tax/nca-history</li>
         <li>哨兵联动 → <a href="#sentinel">哨兵视图</a>（网关业务链 30s 轮询）</li>
       </ul>
