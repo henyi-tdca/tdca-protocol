@@ -1,5 +1,11 @@
-# M4-1 应用侧（SPA）镜像：由仓内正源 dist 构建（3180 第②段·部署改源；零 npm 构建）
+# M4-1 应用侧（SPA）镜像：由仓内正源 src 多阶段构建（3180 第②段·部署改源；GSEQ-0659 零本地构建之镜像内化版）
+# dist 不入库（S0-2）：镜像内 npm ci（锁定 package-lock）＋ build 直构（裁定⑤ dist 由 src 重建口径）
+FROM node:20-alpine AS fe-build
+COPY true-source/tdca-web/tdca-frontend /fe
+WORKDIR /fe
+RUN npm ci --no-audit --no-fund && npm run build
+
 FROM nginx:alpine
-COPY true-source/tdca-web/tdca-frontend/dist /usr/share/nginx/web
+COPY --from=fe-build /fe/dist /usr/share/nginx/web
 COPY deploy/web/web.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

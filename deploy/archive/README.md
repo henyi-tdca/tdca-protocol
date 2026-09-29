@@ -7,7 +7,7 @@
 ## 处置（2026-09-29）
 
 - 部署改源：`Dockerfile.gateway`／`Dockerfile.web` 改由仓内正源 `true-source/tdca-web/` 构建（随正源纳管 PR 入仓）。
-- 本包仅移动位置（`deploy/` → `deploy/archive/`），**字节未动**：md5 `6054aa91fb294c99…`（sha256 前 16，可对拍）。
+- 本包仅移动位置（`deploy/` → `deploy/archive/`），**字节未动**。指纹（2026-09-29 实测）：**md5 `47a9fd58475e33e0e160c7108a405686`**；sha256 前 16 `6054aa91fb294c99`（此前回报误将 sha256_16 标注为 md5，特此更正）。
 
 ## 与仓内两版之差异（详见 FROZEN-vs-repo-tdca-web-diff.txt）
 
