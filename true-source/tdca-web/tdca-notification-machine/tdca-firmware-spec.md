@@ -4,9 +4,9 @@
 > FC-ID: TDCA-FC-20260811-004-NOTIFICATION-MACHINE | 文档: tdca-firmware-spec.md
 > 版本: V1.0 | 状态: ✅ FROZEN
 > 承接: FC-SPEC V1.2（✅ FROZEN，TDCA-FOUNDER-001 冻结签批）| 轨道: 1/3（固件元数据格式规范细化）
-> 制度锚定: ID29/71/81/82/89/90 + NSFL-V0.2 + 国密合规（SM2/SM3/SM4）+ 三协议包基座（PACK-001 V1.3 / DUAL-PROTOCOL V1.1 / CALL-RULES V1.2）
+> 制度锚定: ID71/81/82/89/90 + NSFL-V0.2 + 国密合规（SM2/SM3/SM4）+ 三协议包基座（PACK-001 V1.3 / DUAL-PROTOCOL V1.1 / CALL-RULES V1.2）
 > 同构声明: 本规范与 PACK-001 `nca-template.yaml`（NCA 11 字段）及 `si-l1-template.json`（SI 模板）同构；与 TIMA-PHY-001 及 E-HW-1 硬件规格书对齐
-> ID92 模拟态标注: 本规范为系统设计文档，不构成真实配置权执行路径；MOU 锚定保持模拟态（D-011 cbdc_anchor 参数），真实 DCEP 接入后转硬数据
+> ID92 模拟态标注: 本规范为系统设计文档，不构成真实配置权执行路径；MOU 锚定保持模拟态（cbdc_anchor 参数），真实 DCEP 接入后转硬数据
 > 生成者: Reasonix Protocolizer（实现阶段）| 人类确认: ✅ TDCA-FOUNDER-001（2026-08-11，签批升版）
 
 ---
@@ -20,7 +20,7 @@
 - ❌ 不可触碰：PUF 密钥材料（永不落盘/外传）、人类签名权（归 TCN 慢系统承载）、配置权调度（Config-Right-Token 不上芯片）
 
 **核心设计原则**：
-1. **同构不降格**：芯片端 .tdca 与 PACK-001 SI/NCA 模板同构（制度同构跃进 ID82），裁剪仅限字段承载侧，不丢制度效力
+1. **同构不降格**：芯片端 .tdca 与 PACK-001 SI/NCA 模板同构（制度同构跃进），裁剪仅限字段承载侧，不丢制度效力
 2. **快慢分离**：芯片端 SE 硬件签名 = 快系统采集证据；TCN 侧全量 NCA 存证 + 人类签批 = 慢系统裁决（ID71）
 3. **链式防篡改**：事实哈希链（SHA-256 前块引用）+ SE SM2 签名 + eMMC 保护分区三重复合
 4. **负空间区分**：物理负空间（硬件 BLOCK，不可逆）与制度负空间（NSFL BLOCK/FUSED）触发器与动作语义严格区分（澄清 C）
@@ -40,7 +40,7 @@
 ├── nca-lite/                             # ③ 芯片端轻量 NCA 存证
 │   ├── fact/                             #    事实哈希上链记录
 │   ├── auth/                             #    通话确权记录
-│   └── mou/                              #    MOU 锚定记录（模拟态 D-011）
+│   └── mou/                              #    MOU 锚定记录（模拟态）
 ├── state.json                            # ④ 七状态机快照
 ├── fact-chain/                           # ⑤ 事实哈希链
 └── config/                               # ⑥ 配置
@@ -82,7 +82,7 @@
 | `scene_id` | string | 当前绑定场景（如 `scene-phy-notification`） | DUAL 场景制度 |
 | `role` | string | MRCR 角色（`NM-Operator`/`NM-Gov`/`NM-Fin`/`NM-Med`） | DUAL MRCR |
 | `config_right_hash` | string | 配置权哈希（TCN 侧 Config-Right-Token 的引用摘要——**Token 本体不上芯片**） | 澄清 A 裁剪 |
-| `binding_ref` | string | `config/scene-binding.json` 引用（化合产物指针） | ID90 化合 |
+| `binding_ref` | string | `config/scene-binding.json` 引用（化合产物指针） | 化合 |
 | `expires` | string\|null | 绑定过期时间（ISO8601，null=长期） | — |
 
 > L1-active.json 由固件 HMAC 完整性保护（非 SE 签名对象，见 §二签名对象清单）。
@@ -95,7 +95,7 @@
 |------|------|---------|
 | `nca-lite/fact/` | `fact` | 事实哈希上链（来电/通话/状态 → FactChain 追加） |
 | `nca-lite/auth/` | `auth` | 通话确权（商务确认函，化合判定前置） |
-| `nca-lite/mou/` | `mou` | MOU 锚定记录（模拟态 D-011） |
+| `nca-lite/mou/` | `mou` | MOU 锚定记录（模拟态） |
 | `nca-lite/service/` | `service` | 认证/服务事件（节点/品类认证——独立 type，人类裁决 2026-08-11，防 mou 语义漂移） |
 | `nca-lite/state/` | `state` | 七状态机转换存证 |
 
@@ -144,7 +144,7 @@
 |------|------|------|---------|
 | `call_type` | string | `disposable`/`compound`/`service` | call_rules_engine.CallType |
 | `tax_rates` | object | `{dispatch_tax: 0.02, royalty: 0.05}`（税率快照） | call_rules_engine.TaxRates |
-| `mou_mode` | string | `"simulated"`（D-011）| MOU-Anchor.Status |
+| `mou_mode` | string | `"simulated"`| MOU-Anchor.Status |
 | `mou_anchor` | object | `{status, total_cost_cny, inbound_tax, outbound_tax, note}` | nca-template MOU-Anchor |
 | `nsfl_version` | string | `V0.2` | Negative-Space-Check.NSFL-Version |
 
@@ -242,8 +242,8 @@ sign: {
 3. 人类签批归慢系统——ID71 慢系统裁决不可绕过
 
 **扩展字段裁剪说明**（PACK-001 nca-template.yaml 的 Scope + MOU-Anchor，REV-NM-001 违规 11）：
-- `Scope`（操作范围）：由 TCN 全量 NCA 承载（芯片端无独立操作范围主张，ID30 从属）
-- `MOU-Anchor`：由 config/call-rules.json 快照承载（mou_mode/mou_anchor，模拟态 D-011）
+- `Scope`（操作范围）：由 TCN 全量 NCA 承载（芯片端无独立操作范围主张，从属）
+- `MOU-Anchor`：由 config/call-rules.json 快照承载（mou_mode/mou_anchor，模拟态）
 
 ---
 
@@ -320,9 +320,9 @@ sign: {
 | `config/scene-binding.json` | §1.6 | SE SM2（SE-SIGN-5，制度裁决 2026-08-11） |
 | `config/call-rules.json` | §1.6 | SE SM2（SE-SIGN-5，制度裁决 2026-08-11） |
 
-### 6.4 与 ID89 三档熔断的映射（REV-NM-001 违规 7）
+### 6.4 三档熔断的映射（REV-NM-001 违规 7）
 
-| 负空间类型 | SCENE-PHY | 场景级动作 | ID89 生态三档映射 |
+| 负空间类型 | SCENE-PHY | 场景级动作 | 生态三档映射 |
 |-----------|-----------|-----------|------------------|
 | 物理负空间 | SCENE-PHY-001/003 | 硬件 BLOCK（不可逆） | Level-3 硬熔断（信任锚底线） |
 | 制度负空间 | SCENE-PHY-002 | NSFL BLOCK/FUSED | Level-1（警告）/ Level-2（可逆至 SUSPENDED）/ Level-3（FUSED 不可逆），按严重度由 TCN 慢系统确认 |
@@ -334,7 +334,7 @@ sign: {
 | 版本 | 日期 | 变更 | 状态 |
 |------|------|------|------|
 | V0.1-REV | 2026-08-11 | 六字段定义 + SE 签名流程（SM2/SM3/SM4 显式声明）+ NCA-Lite 8 字段与全量 NCA 11 字段映射表 + 负空间预检（物理/制度区分） | DRAFT（待 REV-NM-001） |
-| V0.2-REV | 2026-08-11 | 制度裁决 TDCA-NM-IMPL-20260811-001 落地：① NCA-Lite 字段集以 FC-SPEC 2.2 + nca-lite-mapping.md 为准（报告四.1 表降为附录 A 概念对照，防接口熵 ID82）② config/* 升 SE 签名（SE-SIGN-5）③ FC-SPEC 2.1 同步修订；REV-NM-001 12 项修复（service type 独立 / ID79 服务不豁免 / fuse_info 物理制度区分 / sm3_full 同步 / ID89 映射 / 扩展字段裁剪说明等） | ✅ REV-NM-001 CLOSED |
+| V0.2-REV | 2026-08-11 | 制度裁决 TDCA-NM-IMPL-20260811-001 落地：① NCA-Lite 字段集以 FC-SPEC 2.2 + nca-lite-mapping.md 为准（报告四.1 表降为附录 A 概念对照，防接口熵）② config/* 升 SE 签名（SE-SIGN-5）③ FC-SPEC 2.1 同步修订；REV-NM-001 12 项修复（service type 独立 / 服务不豁免 / fuse_info 物理制度区分 / sm3_full 同步 / 映射 / 扩展字段裁剪说明等） | ✅ REV-NM-001 CLOSED |
 | V1.0 | 2026-08-11 | 签批升版（TDCA-FOUNDER-001）：NCA-011 签批 → 规范 FROZEN；与 FC-SPEC V1.2 FROZEN、引擎 V1.0、模板包 V1.0 形成通知机协议包 V1.0 | ✅ FROZEN |
 
 > **制度裁决记录**（TDCA-NM-IMPL-20260811-001，2026-08-11）：人类裁定——① NCA-Lite 保持已固化 8 字段，报告表降为概念附录 ② config 采纳 SE 签名（信任强化）③ 轨道 2 + REV-NM-001 并行推进。
@@ -347,17 +347,17 @@ sign: {
 ## 附录 A：KIMI-012 概念对照表（非字段级定义）
 
 > 来源: 制度合伙人 KIMI-012 初审报告 TDCA-NM-IMPL-20260811-001 四.1 表（业务概念视角）
-> 定位: 人类裁决（2026-08-11）——字段集以正文 §三（FC-SPEC 2.2 + nca-lite-mapping.md）为准；本表为业务概念映射，**不构成字段级定义**，禁止解析器按此表实现（接口熵 ID82 防漂移）
+> 定位: 人类裁决（2026-08-11）——字段集以正文 §三（FC-SPEC 2.2 + nca-lite-mapping.md）为准；本表为业务概念映射，**不构成字段级定义**，禁止解析器按此表实现（接口熵防漂移）
 
 | 报告概念字段 | 全量 NCA 对应 | 概念裁剪逻辑 | 正文 §三 实际承载 |
 |------|------------|------------|----------------|
 | lite.identity | nca.creator_id + nca.asset_id | 合并为 TDID（物理身份即制度身份） | `signer`（Operator=SE SM2 硬件签名者） |
 | lite.timestamp | nca.created_at | 芯片端 UTC（快系统时间戳） | `ts` |
-| lite.scene_ref | nca.scene_binding | 场景模板指针（ID90 场景化比较） | `type` + `payload_ref`（场景归属由 TCN 关联） |
+| lite.scene_ref | nca.scene_binding | 场景模板指针（场景化比较） | `type` + `payload_ref`（场景归属由 TCN 关联） |
 | lite.call_type | nca.call_rules.call_type | 日抛/化合枚举（ID77 调用类型分轨） | `type`（fact/auth/mou/state/service，计量判定在轨道 2 引擎） |
-| lite.mou_status | nca.mou_anchor | 模拟态/真实态标志（ID79 MOU 归零） | `nsfl` + TCN 侧 MOU-Anchor（mou 类型记录） |
-| lite.payload_hash | nca.content_hash | SHA-256 事实哈希（ID78 边界可审计） | `hash` |
+| lite.mou_status | nca.mou_anchor | 模拟态/真实态标志（MOU 归零） | `nsfl` + TCN 侧 MOU-Anchor（mou 类型记录） |
+| lite.payload_hash | nca.content_hash | SHA-256 事实哈希（边界可审计） | `hash` |
 | lite.payload_ref | nca.audit_trail | 链式引用 TCN 全量（ID71 慢系统补全） | `payload_ref`（FactHash_n） |
-| lite.version | — | \"1.0\" 防协议漂移（ID82 接口熵=0） | `nca_lite.version = \"1.0\"` |
+| lite.version | — | \"1.0\" 防协议漂移（接口熵=0） | `nca_lite.version = \"1.0\"` |
 
 **概念表未覆盖（正文 §三 独有，制度关键）**：`nca_id`（存证编号）/ `prev_hash`（链式防篡改）/ `nsfl`（负空间触发标记）/ `nca_lite.version`（协议头）——不得因概念对照而裁剪。

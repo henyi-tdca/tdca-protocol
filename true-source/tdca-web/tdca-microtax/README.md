@@ -25,9 +25,9 @@
 | `microtax/positive_sum_integration.py` | **M-3** | 正和满意解税后集成：税后净额 → Shapley 分配 → MOU 归零验证 |
 | `tests/` | 验收 | 54 测试，覆盖率 99% |
 
-## 复用基座（ID90 最小化合，不新建平行体系）
+## 复用基座（最小化合，不新建平行体系）
 
-- `tdca-call-rules/engine/call_rules_engine.py` — `TaxRates`（2% / 7.5% / 0.75%，模拟态 D-011）
+- `tdca-call-rules/engine/call_rules_engine.py` — `TaxRates`（2% / 7.5% / 0.75%，模拟态）
 - `tdca-fos/tdca_adapters/mou_pipeline.py` — `MOUPipeline` / `SimulatedTaxAuthority`（M-3 集成目标）
 - `tdca-cscp/cscp_gateway/mou_escrow.py` — 预算 escrow（**非税收**，语义区分参照）
 
@@ -51,13 +51,13 @@ python -m pytest tests -q --cov=microtax --cov-report=term
 
 ## 纪律红线
 
-- **MOU 不可降（ID79）**: 未计税/计税额 ≤0 拒绝预缴（NSFL-TRIGGER）
+- **MOU 不可降**: 未计税/计税额 ≤0 拒绝预缴（NSFL-TRIGGER）
 - **托管隔离（F-4/BV-3）**: 适配器无 withdraw/transfer/refund/release 提款路径
-- **模拟态（ID92）**: `simulated=True` 显式标注（D-011 cbdc_anchor 参数）
+- **模拟态（ID92）**: `simulated=True` 显式标注（cbdc_anchor 参数）
 - **快慢分工（ID71）**: 计税 <10ms 快系统；预缴为智能合约托管慢系统语义
 
 ## 待办（M2 后遗留）
 
-- D-010 法学家基准 → 税率档位校准（模拟态转真实）
-- DCEP 接入 → 预缴转硬数据（ID33 OTA）
+- 法学家基准 → 税率档位校准（模拟态转真实）
+- DCEP 接入 → 预缴转硬数据（OTA）
 - 白皮书 Solidity `_withholdTax`/`_settle` 真实合约落地（模拟适配器已建，真实合约待 DCEP 前置）

@@ -38,7 +38,7 @@
 | FIN-NSFL-002 | 用户敏感数据明文存储 | CRITICAL | BLOCK |
 | FIN-NSFL-003 | 跨境数据传输 | CRITICAL | BLOCK（ID86 绝对负空间） |
 | FIN-NSFL-004 | 未通过等保测评的系统上线 | CRITICAL | BLOCK |
-| FIN-NSFL-005 | 算法歧视（信贷/保险定价） | BLOCKING | HUMAN_OVERRIDE（ID85 人类价值领地） |
+| FIN-NSFL-005 | 算法歧视（信贷/保险定价） | BLOCKING | HUMAN_OVERRIDE（人类价值领地） |
 
 ## 五、场景审查标准
 

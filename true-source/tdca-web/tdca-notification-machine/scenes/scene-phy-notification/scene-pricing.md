@@ -2,7 +2,7 @@
 # 版本: SCENE-PRICING-v1.0.0
 # 关联: CALL-RULES V1.2（TaxRates 三档：调度税 2%/版税 7.5%/交易费 0.75%）
 # FC-ID: TDCA-FC-20260811-004-NOTIFICATION-MACHINE（层 3 场景化合，FC-SPEC §4）
-# ID92 模拟态标注: 模拟态 D-011 cbdc_anchor 参数；真实 DCEP 接入后转硬数据
+# ID92 模拟态标注: 模拟态 cbdc_anchor 参数；真实 DCEP 接入后转硬数据
 
 ## 一、硬件调用类型 → 计量映射（FC-SPEC §4.1）
 
@@ -13,9 +13,9 @@
 | 跨节点迁移（TIMA-PHY-001） | 化合调用（COMPOUND） | 化合产物 | 调度税 + 版税 |
 | 节点认证/品类认证 | 服务调用（L2） | 年度合同 | 服务费（模拟 5%） |
 
-## 二、MOU 归零规则（ID79）
+## 二、MOU 归零规则
 
-- 硬件调用的可验证税收锚定 `T(y_t) > 0` 才有效（模拟态 D-011）
+- 硬件调用的可验证税收锚定 `T(y_t) > 0` 才有效（模拟态）
 - T(y_t) ≤ 0 → 调用价格强制归零（与 CALL-RULES `validate_mou` 一致）
 - 数字人民币硬件钱包：自动扣缴配置权调度税（白皮书 M3 里程碑，真实 DCEP 后转硬数据）
 
@@ -23,10 +23,10 @@
 
 ```yaml
 call_rules_snapshot:
-  dispatch_tax: 0.02      # 调度税（模拟态，D-010 校准后转真实）
+  dispatch_tax: 0.02      # 调度税（模拟态，校准后转真实）
   royalty: 0.075          # 版税（模拟态）
   transaction_fee: 0.0075 # 交易费（模拟态）
   service_fee: 0.05       # L2 服务费（模拟态）
-  mou_mode: "simulated"   # D-011
+  mou_mode: "simulated"
   nsfl_version: "V0.2"
 ```

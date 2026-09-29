@@ -2,11 +2,11 @@
 # 版本: SCENE-NSFL-v1.0.0
 # 关联 TDCA NSFL: TDCA-NSFL-v0.2
 # FC-ID: TDCA-FC-20260811-004-NOTIFICATION-MACHINE（层 3 场景化合，FC-SPEC §3.1/澄清 C）
-# ID92 模拟态标注: 本场景为模拟态示范（MOU 锚定 D-011）
+# ID92 模拟态标注: 本场景为模拟态示范（MOU 锚定）
 
 ## 一、TDCA 公共负空间（必须完整包含）
 
-引用 TDCA-NSFL-v0.2：三不可（AI-Blocked）/三可（Human-Only）/两层边界（ID85/86）/三档熔断。
+引用 TDCA-NSFL-v0.2：三不可（AI-Blocked）/三可（Human-Only）/两层边界（ID86）/三档熔断。
 
 ## 二、通知机特定负空间（SCENE-PHY-001~003）
 
