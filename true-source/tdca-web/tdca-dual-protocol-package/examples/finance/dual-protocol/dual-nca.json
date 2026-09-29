@@ -1,0 +1,16 @@
+{
+  "nca_id": "TDCA-NCA-DUAL-finance-v1.0.0",
+  "hash": "34e6e5b0d4fdbebf99f5b0473ea71db487e9002eaf96a2b14c15343a3cee5cfe",
+  "validation": "同构校验通过 + 最小化合判定通过",
+  "scene": "finance",
+  "tdca_version": "v3.1.2",
+  "scene_version": "v1.0.0",
+  "mou_anchor": {
+    "status": "Simulated",
+    "note": "本化合产物为模拟态示范（D-011），不含真实税收/MOU 硬数据；真实锚定待 DCEP 接入",
+    "cbdc_anchor": "cbdc_anchor 参数（模拟态裁决 D-011）",
+    "inbound_tax": null,
+    "outbound_tax": null
+  },
+  "data_nature": "simulated_demonstration"
+}
