@@ -1,8 +1,8 @@
 FROM python:3.12-slim
-# TDCA Gateway 镜像：FROZEN 封板包原样入镜像（零代码改动，GSEQ-0642）
+# TDCA Gateway 镜像：由仓内正源 true-source/tdca-web 构建（3180 第②段·部署改源）
+# FROZEN zip 已转归档（deploy/archive/），⛔ 不再作运行源（GSEQ-3180）
 RUN pip install --no-cache-dir fastapi "uvicorn>=0.52" sqlalchemy alembic httpx websockets
-COPY deploy/tdca-web-deploy.zip /tmp/pkg.zip
-RUN python -c "import zipfile; zipfile.ZipFile('/tmp/pkg.zip').extractall('/app')" && rm /tmp/pkg.zip
+COPY true-source/tdca-web /app/tdca-web
 WORKDIR /app/tdca-web/gateway
 ENV TDCA_HOST=0.0.0.0 TDCA_PORT=8000
 EXPOSE 8000
