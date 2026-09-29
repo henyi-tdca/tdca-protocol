@@ -21,16 +21,16 @@ class GenieAPI:
 
     # 能力清单（ID25 九大能力 + 派生端点）
     CAPABILITIES = {
-        'positive-sum': {'capability': '正和满意解', 'id': 'ID84', 'method': 'POST'},
-        'inverse': {'capability': '反函数求解', 'id': 'ID21', 'method': 'POST'},
-        'shape': {'capability': '能力塑造', 'id': 'ID8', 'method': 'POST'},
-        'validate-delivery': {'capability': '交付确认', 'id': 'ID79+ID43', 'method': 'POST'},
-        'shapley': {'capability': 'Shapley 分配', 'id': 'ID24', 'method': 'POST'},
-        'optimize': {'capability': '约束优化', 'id': 'ID24', 'method': 'POST'},
-        'measure': {'capability': '计量/因果推断', 'id': 'ID24', 'method': 'POST'},
-        'bayesian': {'capability': '贝叶斯更新', 'id': 'ID24', 'method': 'POST'},
-        'game-equilibrium': {'capability': '博弈均衡求解', 'id': 'ID24', 'method': 'POST'},
-        'cross-domain': {'capability': '跨域配置权映射', 'id': 'ID76/ID81', 'method': 'POST'},
+        'positive-sum': {'capability': '正和满意解', 'id': 'positive-sum', 'method': 'POST'},
+        'inverse': {'capability': '反函数求解', 'id': 'inverse', 'method': 'POST'},
+        'shape': {'capability': '能力塑造', 'id': 'shape', 'method': 'POST'},
+        'validate-delivery': {'capability': '交付确认', 'id': 'validate-delivery', 'method': 'POST'},
+        'shapley': {'capability': 'Shapley 分配', 'id': 'shapley', 'method': 'POST'},
+        'optimize': {'capability': '约束优化', 'id': 'optimize', 'method': 'POST'},
+        'measure': {'capability': '计量/因果推断', 'id': 'measure', 'method': 'POST'},
+        'bayesian': {'capability': '贝叶斯更新', 'id': 'bayesian', 'method': 'POST'},
+        'game-equilibrium': {'capability': '博弈均衡求解', 'id': 'game-equilibrium', 'method': 'POST'},
+        'cross-domain': {'capability': '跨域配置权映射', 'id': 'cross-domain', 'method': 'POST'},
     }
 
     def __init__(self):

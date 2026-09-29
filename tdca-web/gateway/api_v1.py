@@ -81,7 +81,7 @@ def _nca_watermark(payload: dict, nature: str = "simulated") -> dict:
 
 
 def _sim_note() -> str:
-    return "模拟态（ID92/D-011）：演示参数，真实锚定待 DCEP/法学家基准后转硬数据"
+    return "模拟态：演示参数，真实锚定待 DCEP/法学家基准后转硬数据"
 
 
 def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "simulated") -> str:
@@ -185,7 +185,7 @@ def tax_nca_history():
             rows = s.query(M.TaxEvent).order_by(M.TaxEvent.ts.desc()).limit(50).all()
         events = [{"event_id": r.event_id, "type": r.type, "ts": r.ts} for r in rows]
         return _nca_watermark({"events": events, "total": len(events),
-                               "note": "账本事件（ID80 事件溯源，O(n) 可审计）"},
+                               "note": "账本事件（事件溯源，O(n) 可审计）"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
         raise HTTPException(500, f"A-2 nca-history 失败: {e}")
@@ -202,7 +202,7 @@ def tax_shapley(call_id: str):
                   "type": r.type} for r in rows]
         return _nca_watermark({"call_id": call_id, "shapley": items or None,
                                "note": ("DB 实读" if items else "该调用暂无分账记录；")
-                                       + "Shapley 分账由结算链路（ID43）计算"},
+                                       + "Shapley 分账由结算链路计算"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
         raise HTTPException(500, f"A-2 shapley 失败: {e}")
@@ -312,22 +312,22 @@ def assets_five_orders():
     return _nca_watermark({
         "assets": [
             {"order": 1, "name": "效用权", "desc": "场景效用函数调用权", "count": 0},
-            {"order": 2, "name": "配置权", "desc": "L2 配置权市场层（ID76）", "count": 0},
-            {"order": 3, "name": "NCA 嵌套认知资产", "desc": "调用即存证（ID91）", "count": 0},
-            {"order": 4, "name": "MOU 税收锚定凭证", "desc": "进项+出项（ID79）", "count": 0},
-            {"order": 5, "name": "跨场景配置画像", "desc": "多场景偏态档案（L-6 演进）", "count": 0},
+            {"order": 2, "name": "配置权", "desc": "L2 配置权市场层", "count": 0},
+            {"order": 3, "name": "NCA 嵌套认知资产", "desc": "调用即存证", "count": 0},
+            {"order": 4, "name": "MOU 税收锚定凭证", "desc": "进项+出项", "count": 0},
+            {"order": 5, "name": "跨场景配置画像", "desc": "多场景偏态档案", "count": 0},
         ],
         "note": "五阶资产池为演示框架（模拟态），真实资产待生态接入" + _sim_note(),
     })
 
 
 _TERMS = [
-    {"term": "配置权", "id": "ID76", "def": "不拥有参数，只拥有场景化调用权（第三极权利）"},
-    {"term": "NCA", "id": "ID91", "def": "嵌套认知资产——调用即存证，结构可信+认知可信"},
-    {"term": "MOU", "id": "ID79", "def": "最低可见效用——进项税收+出项税收（硬下限）"},
-    {"term": "NSFL", "id": "ID85", "def": "负空间熔断——法律绝对负空间无补正（⊗）"},
+    {"term": "配置权", "def": "不拥有参数，只拥有场景化调用权（第三极权利）"},
+    {"term": "NCA", "id": "T-NCA", "def": "嵌套认知资产——调用即存证，结构可信+认知可信"},
+    {"term": "MOU", "id": "T-MOU", "def": "最低可见效用——进项税收+出项税收（硬下限）"},
+    {"term": "NSFL", "id": "T-NSFL", "def": "负空间熔断——法律绝对负空间无补正（⊗）"},
     {"term": "生态溢出", "id": "T-005", "def": "核心协作方外上下游税收增量（ϕ 系数）"},
-    {"term": "MRCR", "id": "ID54", "def": "多角色兼容性规则——场景隔离/独立审计"},
+    {"term": "MRCR", "id": "T-MRCR", "def": "多角色兼容性规则——场景隔离/独立审计"},
 ]
 
 
@@ -381,7 +381,7 @@ def audit_nca_verify(req: NcaVerifyRequest):
             on_chain = hit is not None
     return _nca_watermark({"nca_hash": req.nca_hash, "computed": "sha256:" + computed[:32],
                            "verified": match, "on_chain": on_chain,
-                           "note": "NCA 水印校验 + 在链核验（ID91）"})
+                           "note": "NCA 水印校验 + 在链核验"})
 
 
 # =====================================================================
@@ -406,7 +406,7 @@ def sandbox_sea_status():
             {"requirement": "任务书六要素", "status": "GREEN", "note": "TDCA-TASK-ECOCOG-001 FROZEN"},
             {"requirement": "前置核验（613 测试绿）", "status": "GREEN", "note": "全量回归通过"},
             {"requirement": "沙盒编译-核验闭环", "status": "GREEN", "note": "SandboxCompilePipeline 在位"},
-            {"requirement": "激活系数>1.2 门槛", "status": "AMBER", "note": "待真实场景数据（L-4）"},
+            {"requirement": "激活系数>1.2 门槛", "status": "AMBER", "note": "待真实场景数据"},
             {"requirement": "人类 HUF 终裁", "status": "GREEN", "note": "HUF 通道就绪"},
         ],
         "all_green": False,
@@ -541,7 +541,7 @@ def notifier_mrcr_status():
                           "audit_count": len(m.get_audit_trail("TDID-{}".format(role), m.scene))})
         return _nca_watermark({
             "roles": roles, "engine_tests": "23 + SIL 6 = 29 passed",
-            "note": "通知机 MRCR 四角色并发（L-7 CLOSED；真实心跳待设备接入）" + _sim_note(),
+            "note": "通知机 MRCR 四角色并发（真实心跳待设备接入）" + _sim_note(),
         })
     except Exception as e:
         raise HTTPException(500, f"A-9 notifier/mrcr-status 失败: {e}")
@@ -558,7 +558,7 @@ def eios_cluster_status():
             caps = [{"endpoint": r.endpoint, "capability": r.capability,
                      "id": r.agent_id, "status": r.status.upper()} for r in rows]
             return _nca_watermark({
-                "cluster": caps, "note": "eios 端点（DB 实读，ID25 九大能力）",
+                "cluster": caps, "note": "eios 端点（DB 实读，九大能力）",
             }, nature=_nature_of([r.data_provenance for r in rows]))
         from genie_api import GenieAPI
         api = GenieAPI()
@@ -572,7 +572,7 @@ def eios_cluster_status():
             caps.append({"endpoint": ep, "capability": meta["capability"],
                          "id": meta["id"], "status": status})
         return _nca_watermark({
-            "cluster": caps, "note": "eios GenieAPI 十端点（ID25 九大能力）；B-1 接口名已修复",
+            "cluster": caps, "note": "eios GenieAPI 十端点（九大能力）；B-1 接口名已修复",
         })
     except Exception as e:
         raise HTTPException(500, f"A-10 eios/cluster-status 失败: {e}")
@@ -614,7 +614,7 @@ def attestation_meta(req: MetaAttestationRequest):
         "huf_irreducible": True,
         "six_elements_count": len(req.six_elements),
         "nca_ref": nca_ref,
-        "note": "元函数初始确权（沙盒出盒终裁，ID21 人人皆函数；HUF 签署）" + _sim_note(),
+        "note": "元函数初始确权（沙盒出盒终裁，人人皆函数；HUF 签署）" + _sim_note(),
     })
 
 
@@ -779,7 +779,7 @@ _INTENT_TABLE = [
     {"keys": ["税", "mou", "账单", "分账", "进项", "出项"],
      "route": "/tax", "title": "税收仪表盘",
      "action": "查询",
-     "guide": ["查看 MOU 进项 / 出项 / 合计三卡", "MOU 只增不降（ID79 硬下限）", "下方案件流水可逐条核对"]},
+     "guide": ["查看 MOU 进项 / 出项 / 合计三卡", "MOU 只增不降（硬下限）", "下方案件流水可逐条核对"]},
     {"keys": ["账本", "审计", "流水", "透明"],
      "route": "/audit", "title": "审计透明（公共账本）",
      "action": "查询",
@@ -807,7 +807,7 @@ _INTENT_TABLE = [
     {"keys": ["集群", "端点", "智能体列表", "能力"],
      "route": "/agents", "title": "智能体集群",
      "action": "查询",
-     "guide": ["十端点能力表（ID25 九大能力 + 派生）", "状态列 READY 即可分发"]},
+     "guide": ["十端点能力表（九大能力 + 派生）", "状态列 READY 即可分发"]},
     {"keys": ["治理", "熔断", "huf", "签署", "升版"],
      "route": "/governance", "title": "治理中心",
      "action": "签批",

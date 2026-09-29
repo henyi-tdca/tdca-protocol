@@ -145,7 +145,7 @@ def _legal_global_conflicts(scene_a: SceneNSFL, scene_b: SceneNSFL,
                 continue
             c = Conflict(ns_type=NS_Type.LEGAL, rule_a=la, rule_b=rb,
                          severity=Severity.HIGH, resolution=Resolution.FORBID,
-                         reason=f"L0 全局基底: A LEGAL × B {rb.rule_id} → 强制冲突（ID86 绝对熔断）")
+                         reason=f"L0 全局基底: A LEGAL × B {rb.rule_id} → 强制冲突（绝对熔断）")
             conflicts.append(c)
     for lb in legal_b:
         for ra in scene_a.rules:
@@ -153,7 +153,7 @@ def _legal_global_conflicts(scene_a: SceneNSFL, scene_b: SceneNSFL,
                 continue
             c = Conflict(ns_type=NS_Type.LEGAL, rule_a=lb, rule_b=ra,
                          severity=Severity.HIGH, resolution=Resolution.FORBID,
-                         reason=f"L0 全局基底: B LEGAL × A {ra.rule_id} → 强制冲突（ID86 绝对熔断）")
+                         reason=f"L0 全局基底: B LEGAL × A {ra.rule_id} → 强制冲突（绝对熔断）")
             conflicts.append(c)
 
 
