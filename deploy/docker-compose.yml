@@ -8,6 +8,9 @@ services:
       TDCA_GATEWAY_TOKEN: "${TDCA_GATEWAY_TOKEN:?token required}"
       MOONSHOT_API_KEY: "${MOONSHOT_API_KEY:-}"
       DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
+      DATABASE_URL: "sqlite:////data/tdca.db"
+    volumes:
+      - tdca-db:/data
     restart: always
   mcp-bridge:
     build:
@@ -44,5 +47,6 @@ services:
       - web
     restart: always
 volumes:
+  tdca-db:
   mcp-evidence:
   nl-evidence:
