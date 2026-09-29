@@ -54,3 +54,9 @@ rm -f /etc/ssh/sshd_config.d/00-tdca.conf; usermod -p '*' root; systemctl restar
 4. **门户/静态目录替换后必 `docker compose restart nginx`**（目录替换致挂载失效 404 教训）
 5. **gateway 容器重建必带 db 保拷回植 + create_all**（db 在容器内、非卷挂载，重建即回种子态）：保拷 → 重建 → 回植 → `restart` → `exec gateway python -c "from db import get_engine, Base; import db.models; Base.metadata.create_all(get_engine())"`
 6. **部署后回归**：portal 200 ／ `/api/v1/assets/five-orders` 200（种子库在位）／ `auth/me` 401（鉴权不回退）
+
+## 部署改源与对账（GSEQ-3180，2026-09-29 起）
+
+- **运行源＝仓内正源**：gateway/web 镜像由 `true-source/tdca-web/` 构建；FROZEN zip 转归档（`deploy/archive/`），⛔ 不再作源。
+- **部署后必对账**：`python deploy/reconcile.py collect --out remote.json`（SSH 取线上指纹）→ `python deploy/reconcile.py compare --remote remote.json`；FAIL 即停手查因，⛔ 不得部署/不得结案。
+- **部署登记**：每次部署登记所用 commit 与构建产物指纹（无登记＝未部署）。
