@@ -15,6 +15,10 @@
 | B 智库研究 | 4 | researcher / literature / critic / concept-proposer |
 | C 运维金融 | 4 | archive / **cls-officer**（结算）/ **cls-risk-officer**（风控）/ **insurance-officer**（保险）|
 
+归型分布：A 13／B 10／C 0／待定 3（按 §二 明细表 26 行逐行点算；#24~#26 归型待定）
+
+> 口径核对：标题计数 26 ＝ 三类小计 18＋4＋4 ＝ §二 明细表实有 26 行，三者一致。
+
 ## 二、全量明细表
 
 | # | 智能体 | 类型 | runAs | 归型 | 职能 | 输出仓/调用库 |
