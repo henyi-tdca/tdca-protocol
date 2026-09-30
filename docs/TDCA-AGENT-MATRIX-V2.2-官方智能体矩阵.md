@@ -15,7 +15,7 @@
 | B 智库研究 | 4 | researcher / literature / critic / concept-proposer |
 | C 运维金融 | 4 | archive / **cls-officer**（结算）/ **cls-risk-officer**（风控）/ **insurance-officer**（保险）|
 
-归型分布：A 13／B 10／C 0／待定 3（按 §二 明细表 26 行逐行点算；#24~#26 归型待定）
+归型分布：A 14／B 9／C 0／待定 3（按 §二 明细表 26 行逐行点算；#6 examiner 依输出仓统一口径归 A，#24~#26 归型待定）
 
 > 口径核对：标题计数 26 ＝ 三类小计 18＋4＋4 ＝ §二 明细表实有 26 行，三者一致。
 
@@ -28,7 +28,7 @@
 | 3 | tdca-contract-coder | 执行型 | subagent | A | 智能合约工程（宪法/经济模型→C01-C16）| tdca-contract-output/ |
 | 4 | tdca-economist | 执行型 | subagent | A | 经济计算（MOU/Shapley/UPDA/五维，数据性质标注）| tdca-economist-output/ |
 | 5 | tdca-entropy-guard | 执行型 | subagent | A | 接口熵检查（ID82）| tdca-entropy-guard-output/ |
-| 6 | tdca-examiner | 执行型 | subagent | B | 考核测评（教材出题/评分/学习路径）| tdca-examiner-output/ |
+| 6 | tdca-examiner | 执行型 | subagent | A | 考核测评（教材出题/评分/学习路径）| tdca-examiner-output/ |
 | 7 | tdca-glossarian | 只读 | subagent | B | 术语检索（TERMS-001 精确查询）| 只读咨询 |
 | 8 | tdca-industry-advisor | 执行型 | subagent | B | 行业落地（行业→方案匹配+缺口诊断）| — |
 | 9 | tdca-kg-qa | 只读 | subagent | B | 知识图谱问答（KG 推理链，Mermaid）| 只读咨询 |
