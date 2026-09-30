@@ -42,6 +42,11 @@
 | 21 | tdca-concept-proposer | 研究型 | subagent | A | 概念提案（定义+冲突检测+登记模板）| research/concepts/ |
 | 22 | tdca-archive | 运维型 | inline | B | 归档整理（会话步骤 0：扫描/去重/分类/索引）| 桌面归档文件夹 |
 | 23 | tdca-cls-officer | 金融型 | inline | B | **金融闭环结算官**（TDCA 官方闭环结算服务，调度税运维）| 调用 tdca-cls（25 绿）+ tdca-microtax（183 绿）|
+| 24 | tdca-scenario-architect | 待定 | 待定 | 待定 | 场景体系架构规划与场景画布设计（场景构建全量理论知识＋五步法/S-Right）| 待定 |
+| 25 | tdca-cls-risk-officer | 待定 | 待定 | 待定 | 清算风控（T-036/T-037 熔断治理）| 待定 |
+| 26 | tdca-insurance-officer | 待定 | 待定 | 待定 | 保险金兜底机制 | 待定 |
+
+> 注：#24~#26 各字段照在册记载填入——§一 总览与 §六 演进段有载者照录，三处（§一/§六/技能注册件）皆无载者填「待定」（技能注册件位于官方知识库 tdca-official-kb/，不在本仓）；归型随字段齐备情况判定，现按待定登记。
 
 ## 三、调用关系图
 
