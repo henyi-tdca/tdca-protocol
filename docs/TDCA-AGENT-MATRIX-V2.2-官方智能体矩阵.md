@@ -17,31 +17,31 @@
 
 ## 二、全量明细表
 
-| # | 智能体 | 类型 | runAs | 职能 | 输出仓/调用库 |
-|---|--------|------|-------|------|--------------|
-| 1 | tdca-code-reviewer | 执行型 | subagent | 代码审查（制度+技术 10 项清单）| tdca-code-reviewer-output/ |
-| 2 | tdca-compliance-auditor | 执行型 | subagent | 制度合规审查（宪法/TERMS/NSFL 逐条）| tdca-compliance-output/ |
-| 3 | tdca-contract-coder | 执行型 | subagent | 智能合约工程（宪法/经济模型→C01-C16）| tdca-contract-output/ |
-| 4 | tdca-economist | 执行型 | subagent | 经济计算（MOU/Shapley/UPDA/五维，数据性质标注）| tdca-economist-output/ |
-| 5 | tdca-entropy-guard | 执行型 | subagent | 接口熵检查（ID82）| tdca-entropy-guard-output/ |
-| 6 | tdca-examiner | 执行型 | subagent | 考核测评（教材出题/评分/学习路径）| tdca-examiner-output/ |
-| 7 | tdca-glossarian | 只读 | subagent | 术语检索（TERMS-001 精确查询）| 只读咨询 |
-| 8 | tdca-industry-advisor | 执行型 | subagent | 行业落地（行业→方案匹配+缺口诊断）| — |
-| 9 | tdca-kg-qa | 只读 | subagent | 知识图谱问答（KG 推理链，Mermaid）| 只读咨询 |
-| 10 | tdca-mou-anchor | 执行型 | subagent | MOU 锚定（税收→MOU 全流程，模拟显式）| tdca-mou-anchor-output/ |
-| 11 | tdca-notary | 执行型 | subagent | NCA 存证（生成/链式验证/追溯）| tdca-notary-output/ |
-| 12 | tdca-ota-manager | 执行型 | subagent | OTA 版本管理（软宪法升级/回滚）| — |
-| 13 | tdca-pricer | 执行型 | subagent | 配置权定价（P_C=ψ(ERI,MOU,Shapley,irrep)）| tdca-pricer-output/ |
-| 14 | tdca-scenario-designer | 执行型 | subagent | 场景设计（画布/边界/负空间预检/S-Right）| tdca-scenario-designer-output/ |
-| 15 | tdca-ta | 执行型 | subagent | 商学院助教（批改/答疑/进度，E-EDU 联动）| — |
-| 16 | tdca-tax-officer | 执行型 | subagent | **税务官**（微交付税收全流程：计税/预缴/聚合/结算/争议/NCA）| 调用 tdca-microtax 库（183 绿）|
-| 17 | tdca-trainer | 只读 | subagent | 官方培训导师（概念/术语/宪法/经济模型/场景）| 只读咨询 |
-| 18 | tdca-researcher | 研究型 | subagent | 理论生成（NSFL/MEMO 预检→DRAFT 草案）| research/theories/ |
-| 19 | tdca-literature | 研究型 | subagent | 文献综述（溯源链强制+SIMULATED 标注）| research/papers/ |
-| 20 | tdca-critic | 研究型 | subagent | 批判审查（证伪≥1/红队≥2/最严厉反驳）| research/critique/ |
-| 21 | tdca-concept-proposer | 研究型 | subagent | 概念提案（定义+冲突检测+登记模板）| research/concepts/ |
-| 22 | tdca-archive | 运维型 | inline | 归档整理（会话步骤 0：扫描/去重/分类/索引）| 桌面归档文件夹 |
-| 23 | tdca-cls-officer | 金融型 | inline | **金融闭环结算官**（TDCA 官方闭环结算服务，调度税运维）| 调用 tdca-cls（25 绿）+ tdca-microtax（183 绿）|
+| # | 智能体 | 类型 | runAs | 归型 | 职能 | 输出仓/调用库 |
+|---|--------|------|-------|------|------|--------------|
+| 1 | tdca-code-reviewer | 执行型 | subagent | A | 代码审查（制度+技术 10 项清单）| tdca-code-reviewer-output/ |
+| 2 | tdca-compliance-auditor | 执行型 | subagent | A | 制度合规审查（宪法/TERMS/NSFL 逐条）| tdca-compliance-output/ |
+| 3 | tdca-contract-coder | 执行型 | subagent | A | 智能合约工程（宪法/经济模型→C01-C16）| tdca-contract-output/ |
+| 4 | tdca-economist | 执行型 | subagent | A | 经济计算（MOU/Shapley/UPDA/五维，数据性质标注）| tdca-economist-output/ |
+| 5 | tdca-entropy-guard | 执行型 | subagent | A | 接口熵检查（ID82）| tdca-entropy-guard-output/ |
+| 6 | tdca-examiner | 执行型 | subagent | B | 考核测评（教材出题/评分/学习路径）| tdca-examiner-output/ |
+| 7 | tdca-glossarian | 只读 | subagent | B | 术语检索（TERMS-001 精确查询）| 只读咨询 |
+| 8 | tdca-industry-advisor | 执行型 | subagent | B | 行业落地（行业→方案匹配+缺口诊断）| — |
+| 9 | tdca-kg-qa | 只读 | subagent | B | 知识图谱问答（KG 推理链，Mermaid）| 只读咨询 |
+| 10 | tdca-mou-anchor | 执行型 | subagent | A | MOU 锚定（税收→MOU 全流程，模拟显式）| tdca-mou-anchor-output/ |
+| 11 | tdca-notary | 执行型 | subagent | A | NCA 存证（生成/链式验证/追溯）| tdca-notary-output/ |
+| 12 | tdca-ota-manager | 执行型 | subagent | B | OTA 版本管理（软宪法升级/回滚）| — |
+| 13 | tdca-pricer | 执行型 | subagent | A | 配置权定价（P_C=ψ(ERI,MOU,Shapley,irrep)）| tdca-pricer-output/ |
+| 14 | tdca-scenario-designer | 执行型 | subagent | A | 场景设计（画布/边界/负空间预检/S-Right）| tdca-scenario-designer-output/ |
+| 15 | tdca-ta | 执行型 | subagent | B | 商学院助教（批改/答疑/进度，E-EDU 联动）| — |
+| 16 | tdca-tax-officer | 执行型 | subagent | A | **税务官**（微交付税收全流程：计税/预缴/聚合/结算/争议/NCA）| 调用 tdca-microtax 库（183 绿）|
+| 17 | tdca-trainer | 只读 | subagent | B | 官方培训导师（概念/术语/宪法/经济模型/场景）| 只读咨询 |
+| 18 | tdca-researcher | 研究型 | subagent | A | 理论生成（NSFL/MEMO 预检→DRAFT 草案）| research/theories/ |
+| 19 | tdca-literature | 研究型 | subagent | A | 文献综述（溯源链强制+SIMULATED 标注）| research/papers/ |
+| 20 | tdca-critic | 研究型 | subagent | A | 批判审查（证伪≥1/红队≥2/最严厉反驳）| research/critique/ |
+| 21 | tdca-concept-proposer | 研究型 | subagent | A | 概念提案（定义+冲突检测+登记模板）| research/concepts/ |
+| 22 | tdca-archive | 运维型 | inline | B | 归档整理（会话步骤 0：扫描/去重/分类/索引）| 桌面归档文件夹 |
+| 23 | tdca-cls-officer | 金融型 | inline | B | **金融闭环结算官**（TDCA 官方闭环结算服务，调度税运维）| 调用 tdca-cls（25 绿）+ tdca-microtax（183 绿）|
 
 ## 三、调用关系图
 
