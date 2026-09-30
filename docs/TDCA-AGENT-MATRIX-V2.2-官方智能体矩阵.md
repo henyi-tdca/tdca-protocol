@@ -1,6 +1,6 @@
-# TDCA 官方智能体矩阵（V2.2 · 全量）
+# TDCA 官方智能体矩阵（V2.3 · 全量）
 
-> 文档标识: TDCA-AGENT-MATRIX-V2.2 | 编制: 2026-08-15 | 状态: ACTIVE
+> 文档标识: TDCA-AGENT-MATRIX-V2.3 | 编制: 2026-08-15 | 升版: 2026-10-01 | 状态: ACTIVE
 > 定位: TDCA 官方创设智能体集群能力底座（**26 个**）——含类型/职能/调用关系/备案
 > 依据: 各 SKILL.md 注册 + 系统 Skills 索引 + 记忆 tdca-agent-matrix（V1：16 个）+ 新创设（archive/cls-officer/研究型 4/保险官/清算风控官/**scenario-architect 场景架构师**）
 > 术语基线: 注册表 V2.1（T-001~T-109）
@@ -119,5 +119,5 @@
 ## 六、备案与演进
 
 - **备案**：tdca-official-kb/skills/skill-tdca-<name>.md（官方知识库，只读引用）
-- **演进**：V1（16 个）→ V2.0（23 个）→ **V2.2（26 个）**——新增 archive（归档）/ 研究型 4（researcher/literature/critic/concept-proposer）/ **cls-officer（金融闭环结算官，2026-08-14 生效）** / **scenario-architect（场景架构师，2026-08-15）**——拥有场景构建全量理论知识（注册表 V2.1 T-040~T-109 + R-SCENE-1~6 + SCTPF/四机制/ECS）与场景画布设计能力（五步法/S-Right），面向场景体系架构规划；配套工具 **scenario-incubator（场景孵化器）**：场景创新并行试错（A8 第 22 条沙盒宽容，simulated=True）
-- **待创设候选**：保险官（保险金兜底机制）/ 清算风控官（T-036/T-037 熔断治理）——按需 DCD 立项
+- **演进**：V1（16 个）→ V2.0（23 个）→ **V2.2（26 个）**——新增 archive（归档）/ 研究型 4（researcher/literature/critic/concept-proposer）/ **cls-officer（金融闭环结算官，2026-08-14 生效）** / **scenario-architect（场景架构师，2026-08-15）**——拥有场景构建全量理论知识（注册表 V2.1 T-040~T-109 + R-SCENE-1~6 + SCTPF/四机制/ECS）与场景画布设计能力（五步法/S-Right），面向场景体系架构规划；配套工具 **scenario-incubator（场景孵化器）**：场景创新并行试错（A8 第 22 条沙盒宽容，simulated=True）→ **V2.3（26 个，2026-10-01）**：新增 **runClass 归型字段**（A＝可独当一面／B＝须被编排／C＝化合产物，取值域含「待定」）；**insurance-officer（保险官）／cls-risk-officer（清算风控官）正式入册**（原列「待创设候选」，现移至明细表 #25/#26，候选清空）
+- **待创设候选**：（空——原列两项均已创设入册，见 V2.3 沿革）
