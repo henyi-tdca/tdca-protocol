@@ -21,6 +21,7 @@
 本项目在国内开源平台提供同步镜像，便于国内访问：
 
 - **AtomGit**（开放原子开源基金会）：https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
+- **Gitee**：https://gitee.com/siweihanshuzhineng_0/tdca-protocol
 
 镜像与 GitHub 主仓同源；**以主仓为准**，镜像可能存在短暂同步延迟。
 
