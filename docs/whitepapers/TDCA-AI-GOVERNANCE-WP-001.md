@@ -117,7 +117,7 @@ TDCA（可信数字协作架构）是多智能体协作的**制度协议层**—
 
 | 实证 | 结果 |
 |---|---|
-| 测试基线 | **613 项全绿**（NCA-VERIFY-613-001） |
+| 测试基线 | **613 项全绿**（验证基线存证件） |
 | 成本实证 | **¥168 / 33.5 亿 token / 11 天**（平台截屏佐证，传统 2~3 人月成本相差三个数量级） |
 | 沙盒案例 | 《孙子兵法·计篇》真实治理流程实跑（含出盒 3 轮）+ 酒店淡季 Shapley 动态分配（MOU 增值税全额锚定） |
 | 制度即代码闭环 | CASE-003 暴露"校准 BATNA 至 φ"漏洞 → 立项规则 → **φ<BATNA 拦截器代码落地**（只读拦截 + fail-closed）——漏洞从制度文本到可执行代码全链闭环 |
@@ -252,7 +252,7 @@ TDCA (Trusted Digital Collaboration Architecture) is an **institutional protocol
 
 | Evidence | Result |
 |---|---|
-| Test baseline | **613 tests green** (NCA-VERIFY-613-001) |
+| Test baseline | **613 tests green** (验证基线存证件) |
 | Cost evidence | **¥168 / 3.35B tokens / 11 days** (platform screenshot corroborated; three orders of magnitude below a traditional 2–3 person-month build) |
 | Sandbox cases | Real multi-agent governance run of *The Art of War* (including 3 exit-re-entry rounds) + hotel off-season dynamic Shapley allocation (MOU VAT fully anchored) |
 | Governance-as-code loop | CASE-003 exposed the "calibrate BATNA to φ" flaw → rule charter → **φ<BATNA interceptor shipped as code** (read-only interception + fail-closed) — the flaw closed end-to-end from institutional text to executable code |

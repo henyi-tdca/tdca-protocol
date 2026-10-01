@@ -2,7 +2,7 @@
 
 > 文档标识: TDCA-MATH-WP-REV-001 | 版本: **V1.0-FROZEN** | 日期: 2026-08-23 | 状态: ✅ **FROZEN（人类签批冻结，2026-08-23）**
 > 编制: TDCA 制度层（融合最新开发成果：公理 6 实例化 + 可执行机验验证器 + 外部审查闭环）
-> 基线: TDCA-FUNCTION-WP-002（V2.0-FROZEN，函数白皮书）｜ TDCA-FUNCTION-WP-002-APPX-E（公理化基础）｜ TDCA-CORE-GO-AXIOM6-001（实例化证明）｜ 注册表 V2.3（T-114~T-118）
+> 基线: TDCA-FUNCTION-WP-002（V2.0-FROZEN，函数白皮书）｜ TDCA-FUNCTION-WP-002-APPX-E（公理化基础）｜ TDCA-CORE-GO-AXIOM6-001（实例化证明）｜ 注册表 V2.3
 > 性质: **修订本**——在 V2.0 基础上增补「公理 6 从文本公理化 → 工程实例化 → 可执行机验」的完整闭环，并回应外部审查（公理/命题注释高估实现）
 
 ---
@@ -125,7 +125,7 @@ F_TDCA 可计算 / 九算子可计算 / 正和可判定 / UPDA 收敛 / Shapley 
 
 **残余边界（诚实标注）**：
 - SM2 验签：接口预留，当前哈希级完整性校验（未实现密码学签名）——公理 6 不依赖密码学签名（验证器为确定性重算）
-- Lean/Isabelle 机验：本机工具链不可用，当前为 Go 可执行断言级机验（ID92 SIMULATED）；证明器版待工具链升级
+- Lean/Isabelle 机验：本机工具链不可用，当前为 Go 可执行断言级机验（SIMULATED）；证明器版待工具链升级
 
 ---
 
@@ -158,7 +158,7 @@ F_TDCA 可计算 / 九算子可计算 / 正和可判定 / UPDA 收敛 / Shapley 
 | 定理 E.1~E.4 | 同上 §E.3 |
 | 实例化四约束证明 | TDCA-CORE-GO-AXIOM6-001 §二 |
 | 机验实现 | core-go/pkg/enforce/axiom6.go + axiom6_verify.go |
-| 术语登记 | 注册表 T-114（f⁻）/ T-115（g）|
+| 术语登记 | 注册表（f⁻ / g 两项）|
 | 外部审查 | TDCA-EXTERNAL-REVIEW-RESPONSE-001（术语高估 → 已闭环）|
 
 ---

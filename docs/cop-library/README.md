@@ -1,9 +1,9 @@
 # TDCA 思维协议策略库（cop-library）
 
 > **权威源声明**：本库为**运用/展示层**；原生协议权威库（单一事实源）= [`protocols/tdca-native/`](../../protocols/tdca-native/)（含七原则声明、F1.5/F1.5b 正典锚与 MANIFEST 快照）。两库内容如有差异，以 protocols/tdca-native 为准。
-> 数据性质（ID92）：制度编译产物。审查闭环：化合 60/60 + 原生全合规（批 007~012，GSEQ-0755 复核通过）。
+> 数据性质：制度编译产物。审查闭环：化合 60/60 + 原生全合规（批 007~012，复核通过）。
 
-## 本库构成（2026-08-30 全量同步，GSEQ-0759）
+## 本库构成（2026-08-30 全量同步）
 
 - **现状口径（2026-09-13 实扫）**：**530 COP**（原生 470 + 化合 60）——以 [COP-MANIFEST-2026-09-13](COP-MANIFEST-2026-09-13.md) 为唯一现状依据。历史口径（备查）：旧版 353 → 2026-08-30 全量同步 515（原生 455 + 化合 60，7 共同家族内容更新 + 5 新家族新增：chengyu / marxism / microeconomics / engineering-three / emissary）。
 - 家族目录：`compositions/ scenario/ stratagems/ hundred_schools/ games/ mechanism_design/ microeconomics/ marxism/ chengyu/ engineering-three/ emissary/ tdca_core/ simulations/`。
