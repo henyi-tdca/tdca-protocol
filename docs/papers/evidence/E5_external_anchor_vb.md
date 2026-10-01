@@ -1,12 +1,12 @@
 # E5 · 外部锚定（VB 锚定解除 · 真实台账）
 
-> 实证编号: E5 ｜ 对应 GSEQ: 0840 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E5 + NCA-COLDSTART-EXP-20260831-094653
+> 实证编号: E5 ｜ 对应批次：冷启动实证批 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E5 + 冷启动实验存证件
 > 数据性质: **real**（冷启动真实 5122 tok 台账 + 实核在库 COP 基准）
 > 论证: 「锚定」有真实外部信号，非自证
 
 ## 一、VB 锚定解除（real）
 
-来源：`NCA-COLDSTART-EXP-20260831-094653.json`
+来源：`冷启动实验存证件.json`
 
 ```json
 "vb_anchor": {
@@ -38,7 +38,7 @@
 
 | 数据项 | 路径 |
 |---|---|
-| 冷启动真实台账 | `docs/cognitive-compiler/coldstart/NCA-COLDSTART-EXP-20260831-094653.json` |
+| 冷启动真实台账 | `docs/cognitive-compiler/coldstart/冷启动实验存证件.json` |
 | 麦肯锡基准 | 同上 `vb_anchor.mckinsey_sha256_8=e8655643` |
 | 三十六计/周易在库 | `stratagems/`（36）、`protocols/tdca-native/iching/`（2） |
 

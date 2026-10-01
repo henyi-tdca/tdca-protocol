@@ -1,6 +1,6 @@
 # E2 · 计量层可验证性（真实运行值）
 
-> 实证编号: E2 ｜ 对应 GSEQ: 0840 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E2
+> 实证编号: E2 ｜ 对应批次：冷启动实证批 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E2
 > 数据性质: **real**（ledger.py --verify 实跑输出，2026-09-01）
 > 纪律: 全部为真实 verify 结果；置信度分级如实标注
 
@@ -26,7 +26,7 @@
 
 ## 三、置信度分级 · Level A 真实记录（real）
 
-- ledger 内 **关联 Level A 真实计量 = 1 条（seq1）**：`NCA-COLDSTART-EXP-20260831-094653`，`linked_meter.confidence="A"`，source=`replay-from-NCA-COLDSTART-EXP-20260831-094653（real 2026-08-31 DeepSeek usage）`。
+- ledger 内 **关联 Level A 真实计量 = 1 条（seq1）**：`冷启动实验存证件`，`linked_meter.confidence="A"`，source=`replay-from-冷启动实验存证件（real 2026-08-31 DeepSeek usage）`。
 - MET-001 落实：仅 Level A（真计量+source_hash）可关联入账本；Level B/C 拒入。
 - ⚠️ 口径留痕：规范 E2 文本列 Level A 为「seq1/seq4-6/seq11」，但本端 ledger real verify 仅 seq1 带 confidence=A 关联计量；seq4-6 为 Reasonix 裁决条目（linked_meter=null），seq11 为 REAL 税锚条目（非 Level A 计量关联）。**论文引用 Level A 时请以本 real 值（seq1）为准**，seq4-6/seq11 标记建议核实或改为「REAL 税锚条目」。
 

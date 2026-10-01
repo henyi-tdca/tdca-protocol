@@ -12,14 +12,14 @@
 | 编号 | TDCA-REGISTER-CONTRACT-001 |
 | 版本 | V1.0 ｜ 生效：2026-08-29 |
 | 状态 | DRAFT-待审（按 FROZEN 原样上架，发布不改变起草状态） |
-| 物理落位 | [`docs/register-contract/`](../register-contract/)（PR #53 · GSEQ-0669 在架，本区为索引不复制） |
+| 物理落位 | [`docs/register-contract/`](../register-contract/)（PR #53 在架，本区为索引不复制） |
 | 中文人读版 | [`TDCA-REGISTER-CONTRACT-001-zh.md`](../register-contract/TDCA-REGISTER-CONTRACT-001-zh.md) ｜ sha256 `ee33e2c86735249e01bf32f0fe563c9ad5f511e55e78acf5611b6ceb518ddbf9` |
 | 英文人读版 | [`TDCA-REGISTER-CONTRACT-001-en.md`](../register-contract/TDCA-REGISTER-CONTRACT-001-en.md) ｜ sha256 `7018e356acbb9b62fe52e7ee19b660ca3e1d0db62f79565c276d8aea4be0c101` |
 | 机读版 | [`TDCA-REGISTER-CONTRACT-001-machine.json`](../register-contract/TDCA-REGISTER-CONTRACT-001-machine.json) ｜ sha256 `f7648624c7b77de34fbfd06356f33a2e3b52c350ab4431f20012f61b752c7b89` |
 
-- 人机双版本原则（GSEQ-0666）：人读版（中/英）供人类阅读与同意，机读版供智能体校验与声明；同一版本号，三件套哈希可溯源。
+- 人机双版本原则：人读版（中/英）供人类阅读与同意，机读版供智能体校验与声明；同一版本号，三件套哈希可溯源。
 - 中英九条逐条对应（TERMS-001 术语口径）；机读版 9 条 clauses 与人读版条款一致，JSON 可解析。
-- 起草依据：TDCA-REGULATION-DRAFTING-001（GSEQ-0667 分工：Reasonix 起草 → Kimi 发布）；发布存证：GSEQ-0991/0992。
+- 起草依据：TDCA-REGULATION-DRAFTING-001（分工：Reasonix 起草 → Kimi 发布）；发布存证：两批次已登记。
 
 ### 2. 其他在架制度件（索引）
 

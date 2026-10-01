@@ -198,9 +198,9 @@ Acknowledgments and AI-tool statement: During this research, AI tools including 
 ## 7. Pre-Submission Checklist (not part of paper body — author-side)
 
 - [x] **Target journal (finalized): *AI and Ethics* (Springer)** — apply the *AI and Ethics* LaTeX/Word template (Springer Nature) and its reference style at submission; the IEEE numbered style [1]–[24] may be retained or switched per the journal's author guidelines (confirm at submission).
-- [x] **De-identify provenance**: internal provenance IDs/GSEQ-NCA replaced with public-repository references (Appendix A); real hashes/values intact (GSEQ-0916).
-- [x] **Related-work expansion**: 5 peer-reviewed/preprint citations (Shapley 1953; Christiano et al. NeurIPS 2017; Bai et al. 2022; Xi et al. 2023; Wooldridge & Jennings 1995) added to §2.1, IEEE [20]–[24] (GSEQ-0921).
-- [x] **Verify vendor claims**: Microsoft Entra Agent ID (2026 GA), AWS Bedrock AgentCore (core GA Oct 2025; governance components 2026), Google Gemini Enterprise Agent Platform (Cloud Next 2026) re-confirmed against latest official docs (GSEQ-0916).
+- [x] **De-identify provenance**: internal provenance IDs/GSEQ-NCA replaced with public-repository references (Appendix A); real hashes/values intact .
+- [x] **Related-work expansion**: 5 peer-reviewed/preprint citations (Shapley 1953; Christiano et al. NeurIPS 2017; Bai et al. 2022; Xi et al. 2023; Wooldridge & Jennings 1995) added to §2.1, IEEE [20]–[24] .
+- [x] **Verify vendor claims**: Microsoft Entra Agent ID (2026 GA), AWS Bedrock AgentCore (core GA Oct 2025; governance components 2026), Google Gemini Enterprise Agent Platform (Cloud Next 2026) re-confirmed against latest official docs .
 - [x] **Ethics/IRB**: no human-subject data; all run data is synthetic/self-generated.
 
 ---
