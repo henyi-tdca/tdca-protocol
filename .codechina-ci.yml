@@ -1,0 +1,7 @@
+stages:
+  - test
+
+probe:
+  stage: test
+  script:
+    - echo "codechina-ci probe ok"
