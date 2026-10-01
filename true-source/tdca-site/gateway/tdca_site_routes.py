@@ -232,6 +232,18 @@ def join_status(token: str):
             "data_nature": "simulated"}
 
 
+@router.get("/join/list", dependencies=[Depends(check_gate)])
+def join_list(reviewer: str = Depends(require_reviewer)):
+    """审核列表（内部面）：只回脱敏摘要，不回令牌哈希/联系方式原文之外字段。"""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT id, channel, applicant_kind, display_name, status, nsfl_result,"
+        " reviewer_note, created_at FROM join_requests"
+        " ORDER BY id DESC LIMIT 200").fetchall()
+    conn.close()
+    return {"items": [dict(r) for r in rows], "data_nature": "simulated"}
+
+
 # ════════════════════════════════════════════════════════════════════════════
 # 2) 三阶流转（人审；每次 approve 复验 nsfl_scan ＋ C-1）
 # ════════════════════════════════════════════════════════════════════════════

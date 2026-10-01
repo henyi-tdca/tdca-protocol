@@ -1,34 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import Markdown from 'react-markdown'
-import { siteGet, getGate, setGate, GateRequired, FAMILIES } from '../lib/siteApi'
-
-function GatePrompt({ onOk }: { onOk: () => void }) {
-  const [v, setV] = useState(getGate())
-  return (
-    <div className="mx-auto max-w-sm py-24 text-center">
-      <h2 className="text-xl font-bold mb-2">口令门</h2>
-      <p className="text-sm text-muted-foreground mb-4">请输入内部访问口令（仅本次会话有效）</p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          setGate(v)
-          onOk()
-        }}
-        className="flex gap-2"
-      >
-        <input
-          type="password"
-          value={v}
-          onChange={(e) => setV(e.target.value)}
-          className="flex-1 rounded border px-3 py-2 text-sm"
-          placeholder="x-tdca-site-gate"
-        />
-        <button className="rounded bg-primary px-4 py-2 text-sm text-primary-foreground">进入</button>
-      </form>
-    </div>
-  )
-}
+import { siteGet, GateRequired, FAMILIES } from '../lib/siteApi'
+import GatePrompt from '../components/GatePrompt'
 
 function useGated<T>(fn: () => Promise<T>, deps: unknown[]) {
   const [data, setData] = useState<T | null>(null)
