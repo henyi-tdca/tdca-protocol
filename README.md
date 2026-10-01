@@ -23,7 +23,7 @@
 - **AtomGit**（开放原子开源基金会）：https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
 - **Gitee**：https://gitee.com/siweihanshuzhineng_0/tdca-protocol
 
-镜像与 GitHub 主仓同源；**以主仓为准**，镜像可能存在短暂同步延迟。
+镜像与主仓（AtomGit）同源；**以主仓为准**，镜像可能存在短暂同步延迟。GitHub 线冻结在案。
 
 A synchronized mirror is available on AtomGit (OpenAtom Foundation):
 https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
