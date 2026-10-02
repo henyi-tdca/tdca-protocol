@@ -1,0 +1,2 @@
+T3-SHUFFLE | head=e6836e2a984ad1727d0ab555bdcdcdb29a0e0600
+SHUFFLE | invariant=True | fwd_sha=5b79c311d061c1f0d02eff8d909a4fc89a2e3a28be5025a92abe4495675bb492 | rev_sha=5b79c311d061c1f0d02eff8d909a4fc89a2e3a28be5025a92abe4495675bb492
