@@ -57,3 +57,7 @@ import TDCA.CoordReopen
 -- ——负空间不可逾越（熔断是映射行为）＋ 熔断可判定（fail-closed），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（G1–G4）。
 import TDCA.Guard
+-- 开放问题 P-3（2026-10-02）：新增 `import TDCA.Axiom6General`
+-- ——公理 6 推广（抽象四约束 ＋ NCA 链与 NSFL 熔断器两实例；像集裁剪解张力），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（P3-1–P3-4）。
+import TDCA.Axiom6General
