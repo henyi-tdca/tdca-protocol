@@ -53,3 +53,7 @@ import TDCA.CoordThreshold
 -- ——COORD-5 回议发散（构造性必要性方向：重开无界 ⟹ 无静默轮），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（R1–R3）。
 import TDCA.CoordReopen
+-- 证明总纲 M-5 ＋ 开放问题 P-6（2026-10-02）：新增 `import TDCA.Guard`
+-- ——负空间不可逾越（熔断是映射行为）＋ 熔断可判定（fail-closed），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（G1–G4）。
+import TDCA.Guard

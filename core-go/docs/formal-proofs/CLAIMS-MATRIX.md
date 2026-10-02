@@ -52,6 +52,11 @@
 | C-11 | 记录通道熵界：**结构（文法）层**的描述长度增长为对数并趋于饱和；**观测数据**的信息量不受治理影响 | [proof: pending] —— **首轮代理度量**（结构层对数形态 12/12；数据层线性 10/12）；属**模型层**，**非物理定律主张**；样本为合成场景数据（SIMULATED） |
 | C-12 | 化合保持性（复合与嵌套下反射广义逆的存在与保持） | [proof: pending] —— **条件于建模假设 `L-ε`（每步耦合误差一致有界）**：**该假设不是数学定理、无法被证明**；若 `L-ε` 不成立，则本项降为**条件形态**（`conditional`）。**不得**读作「无条件成立」；**对应 P-12**（纲领承重分支） |
 | C-13 | 通知机（Notification Machine）设计层可形式化性质：① 七状态机：`lean-tdca/TDCA/Admission.lean` 本机已机验（迁移完备／熔断终态／降级·暂停出边受限，sorry=0）；CI 机验通道落地中（lean-verify.yml `lean-tdca` job，首跑未跑）② FactChain（链式哈希单调性 / 不可篡改）③ SE 签名（签名可验证性；与公理 6 的 `f` / `f⁻` 对同构）④ NCA-Lite（轻量存证的完备性 / 一致性） | [proof: pending] —— **SIMULATED**（设计层为模拟态，未见实物实现） |
+C-14 | COORD-1 协商拓扑计数（对等式 C(n)=0+1+…+(n−1)；中枢式 n−1；单调性；下界） | lean-tdca/TDCA/Coord.lean | 本机机验（920 jobs／EXIT=0／sorry=0） | C1~C3；抽象计数骨架层；不标绝对安全
+C-15 | COORD-2 硬阈值二分类必存误分带（离散收窄版：阈值带 ＋ 类型翻转） | lean-tdca/TDCA/CoordThreshold.lean | 本机机验（921 jobs／EXIT=0／sorry=0） | D1~D3；连续版需测度论·另列；不标绝对安全
+C-16 | COORD-5 回议发散（构造性必要性方向：重开无界 ⟹ 不存在静默轮） | lean-tdca/TDCA/CoordReopen.lean | 本机机验（922 jobs／EXIT=0／sorry=0） | R1~R3；反方向需排中律／期望发散需概率论；不标绝对安全
+C-17 | M-5 负空间不可逾越（触发即不在定义域／熔断是映射行为／化合不剥离合规前置） | lean-tdca/TDCA/Guard.lean | 本机机验（923 jobs／EXIT=0／sorry=0） | G1~G4；真实 C₁₆ 与触发判据属制度与工程层；不标绝对安全
+C-18 | P-6 熔断可判定性（判定正确性 ＋ fail-closed ＋ 二值完备） | 同上（Guard.lean） | 同上 | 同上
 
 > 附注（归级偏离说明）：初拟时曾考虑新增 Tier B 条目；按上表纪律，Tier B 须「绑定证明文件 + 适用边界声明」——本批内容**尚待证明器机验**，故**不列 Tier B**，统一归 Tier C。
 >
