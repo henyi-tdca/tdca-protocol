@@ -45,3 +45,7 @@ import TDCA.FastSlow
 -- ——COORD-1 协商拓扑计数（递归计数 ＋ 基线实例 ＋ 单调性 ＋ 下界），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C1–C3）。
 import TDCA.Coord
+-- 协调原理簇第一批之二（2026-10-02）：新增 `import TDCA.CoordThreshold`
+-- ——COORD-2 硬阈值二分类必存误分带（离散收窄版：阈值带 ＋ 类型翻转），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（D1–D3）。
+import TDCA.CoordThreshold
