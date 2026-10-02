@@ -98,3 +98,7 @@ import TDCA.SceneScope
 -- ——COORD-3 协调天花板（严格递增 ＋ 凹性 ＋ 天花板与无天花板分界），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C3-1–C3-4）。
 import TDCA.CoordCeiling
+-- 协调原理簇第二批之二（2026-10-02）：新增 import TDCA.CoordLayering
+-- ——COORD-4 分层最优性（最优层数存在 ＋ 切换成本线性下界 ＋ 收益判定），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C4-1–C4-4）。
+import TDCA.CoordLayering
