@@ -59,6 +59,7 @@ C-17 | M-5 负空间不可逾越（触发即不在定义域／熔断是映射行
 C-18 | P-6 熔断可判定性（判定正确性 ＋ fail-closed ＋ 二值完备） | 同上（Guard.lean） | 同上 | 同上
 C-19 | P-3 公理 6 推广：抽象三约束（完备／可靠／右逆）⟹ 审计通过 ⟺ 记录在像内（且域内）；NCA 链（只增不减）与 NSFL 熔断器（像集裁剪）两实例同形 | lean-tdca/TDCA/Axiom6General.lean | 本机机验（924 jobs／EXIT=0／sorry=0） | P3-1~P3-3；两实例为零依赖简化载体（非真实实现）；⚠️ 复杂度约束（第 4 条）不本件（照 C-12 属 conditional）；不标绝对安全
 C-20 | M-3 化合保持性：五可保持（＋可迭代归纳面）与 ε 累积线性上界（ε(n) = n·ε） | lean-tdca/TDCA/ComposePreserve.lean | 本机机验（925 jobs／EXIT=0／sorry=0） | M3-1~M3-3；⚠️ ε 以 Nat 承载（零依赖简化载体，真数版另列）；阈值／权重属策略层；不标绝对安全
+C-21 | M-4 分形归纳主定理（一般骨架）：可持续 ⟺ （基例 ∧ 各步） | lean-tdca/TDCA/FractalInduction.lean | 本机机验（926 jobs／EXIT=0／sorry=0） | M4-1~M4-3；条件于 ID-96（以一般形态承载，其内容另件）；⚠️ L4 宏观层为 conditional 扩展·不绑入；不标绝对安全
 
 > 附注（归级偏离说明）：初拟时曾考虑新增 Tier B 条目；按上表纪律，Tier B 须「绑定证明文件 + 适用边界声明」——本批内容**尚待证明器机验**，故**不列 Tier B**，统一归 Tier C。
 >
