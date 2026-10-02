@@ -74,3 +74,7 @@ import TDCA.FractalInduction
 -- （充分／必要／充要 ＋ 缺失面 ＋ 百亿规模面 ＋ 边界引用），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（P7-1–P7-3）。
 import TDCA.P7FiveAll
+-- 证明总纲 M-7 ＋ 开放问题 P-8（2026-10-02）：新增 import TDCA.Constitution
+-- ——宪法一致性与定义域非空（见证构造 ＋ 律一内核性 ＋ 律二注入不改内核 ＋ 一致面），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C1–C4）。
+import TDCA.Constitution
