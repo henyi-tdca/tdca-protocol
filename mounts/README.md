@@ -1,6 +1,6 @@
 # TDCA 挂载产物库（mounts/）——免费调用资源
 
-> **免费调用声明**：本库所有挂载产物**免费向用户开放调用**（下行免费，不双向收费）。分润仅为对原项目方的善意反哺（15% 模拟态记账，NCA 确权、非法币承诺），对方婉拒即止——「凡是我们免费获取的，我们都免费提供」（GSEQ-0871 免费对免费总原则）。
+> **免费调用声明**：本库所有挂载产物**免费向用户开放调用**（下行免费，不双向收费）。分润仅为对原项目方的善意反哺（15% 模拟态记账，NCA 确权、非法币承诺），对方婉拒即止——「凡是我们免费获取的，我们都免费提供」（免费对免费总原则，口径在册）。
 
 ## 双类标注（严选）
 
@@ -15,47 +15,47 @@
 
 1. **只读协议层挂载**：产物为适配提案 + 链式水印存证，不改上游源码、不注入、不复制上游代码（只赋能不改码，配置权全归上游）
 2. **License 实核**：挂载前以 GitHub API 实拉核验上游 License（免费开源 License 即授权基础）
-3. **无存证不挂载**：NCA-ECOACT 七字段存证 fail-closed 前置，缺一即拒
-4. **资格程序**：邀请/挂载提案公示 + 观察窗届满（no_response → mount_eligible，GSEQ-0385 口径）
+3. **无存证不挂载**：NCA 七字段存证 fail-closed 前置，缺一即拒
+4. **资格程序**：邀请/挂载提案公示 + 观察窗届满（no_response → mount_eligible，口径在册）
 
 ## 在架挂载
 
 | 目录 | 上游项目 | 对接面 | License | 分类 | 存证 |
 |---|---|---|---|---|---|
-| [deepseek-harness/](deepseek-harness/) | deepseek-ai/deepseek-harness（#5098） | harness/cordis 插件契约（只读观测插件提案） | MIT | share-enabled | NCA-ECOACT-20260830-MOUNT-001 |
-| [openai-codex/](openai-codex/) | openai/codex（#41644） | MCP 工具契约（只读桥接提案） | Apache-2.0 | share-enabled | NCA-ECOACT-20260830-MOUNT-002 |
-| [servers/](servers/) | modelcontextprotocol/servers（#4755） | MCP 参考服务器集合（只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260905-001 |
-| [python-sdk/](python-sdk/) | modelcontextprotocol/python-sdk（#3452） | MCP Python SDK（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260905-002 |
-| [typescript-sdk/](typescript-sdk/) | modelcontextprotocol/typescript-sdk（#2758） | MCP TypeScript SDK（只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260905-003 |
-| [langchain/](langchain/) | langchain-ai/langchain（#40212） | Agent 编排框架（只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260905-004 |
-| [graphiti/](graphiti/) | getzep/graphiti（#1838） | 时序知识图谱记忆层（只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260905-005 |
-| [letta/](letta/) | letta-ai/letta（#3440） | 记忆增强 Agent 运行时（只读协议层引用声明） | Apache-2.0 | share-enabled · **静默挂载** | NCA-MOUNT-20260905-006 |
-| [semantic-kernel/](semantic-kernel/) | microsoft/semantic-kernel（#14380） | 多语言 Agent 编排 SDK（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260905-007 |
+| [deepseek-harness/](deepseek-harness/) | deepseek-ai/deepseek-harness（#5098） | harness/cordis 插件契约（只读观测插件提案） | MIT | share-enabled | 批次存证 |
+| [openai-codex/](openai-codex/) | openai/codex（#41644） | MCP 工具契约（只读桥接提案） | Apache-2.0 | share-enabled | 批次存证 |
+| [servers/](servers/) | modelcontextprotocol/servers（#4755） | MCP 参考服务器集合（只读协议层引用声明） | Apache-2.0 | share-enabled | 批次存证 |
+| [python-sdk/](python-sdk/) | modelcontextprotocol/python-sdk（#3452） | MCP Python SDK（只读协议层引用声明） | MIT | share-enabled | 批次存证 |
+| [typescript-sdk/](typescript-sdk/) | modelcontextprotocol/typescript-sdk（#2758） | MCP TypeScript SDK（只读协议层引用声明） | Apache-2.0 | share-enabled | 批次存证 |
+| [langchain/](langchain/) | langchain-ai/langchain（#40212） | Agent 编排框架（只读协议层引用声明） | MIT | share-enabled · **静默挂载** | 批次存证 |
+| [graphiti/](graphiti/) | getzep/graphiti（#1838） | 时序知识图谱记忆层（只读协议层引用声明） | Apache-2.0 | share-enabled | 批次存证 |
+| [letta/](letta/) | letta-ai/letta（#3440） | 记忆增强 Agent 运行时（只读协议层引用声明） | Apache-2.0 | share-enabled · **静默挂载** | 批次存证 |
+| [semantic-kernel/](semantic-kernel/) | microsoft/semantic-kernel（#14380） | 多语言 Agent 编排 SDK（只读协议层引用声明） | MIT | share-enabled | 批次存证 |
 
-> **S3 首批登记（2026-09-05）**：上表后 7 项为登记态——只读接口引用声明 + 存证，不宣称已封装可用（封装评估另批，ID92 模拟态标注）。
-> **静默挂载两项（langchain / letta）**：经许可（MIT / Apache-2.0）静默挂载——零触碰对方仓，对方机器拒收前置告知（bot 自动关闭，无人工表态）故转事后公示（RULING-20260905-002）。
+> **S3 首批登记（2026-09-05）**：上表后 7 项为登记态——只读接口引用声明 + 存证，不宣称已封装可用（封装评估另批，模拟态标注）。
+> **静默挂载两项（langchain / letta）**：经许可（MIT / Apache-2.0）静默挂载——零触碰对方仓，对方机器拒收前置告知（bot 自动关闭，无人工表态）故转事后公示（制度裁定在册）。
 > 通道状态如实记录：servers / python-sdk / typescript-sdk / graphiti 四项告知函发出后同日按内部制度裁定主动撤回（not_planned），无上游人工表态；semantic-kernel 告知函在架 OPEN。
 
 ## 在架挂载 · 批 1（2026-09-29 · 11 项严选 · 9 项已施工入仓）
 
 | 目录 | 上游项目 | 对接面 | License | 分类 | 存证 |
 |---|---|---|---|---|---|
-| [mcp-go/](mcp-go/) | mark3labs/mcp-go（#1022） | MCP Go SDK（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-001 |
-| [nexent/](nexent/) | ModelEngine-Group/nexent（#4033） | 智能体运行框架（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-002 |
-| [mcp-atlassian/](mcp-atlassian/) | sooperset/mcp-atlassian（#1713） | MCP 服务器（Jira/Confluence 工具面，只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-003 |
-| [openpencil/](openpencil/) | ZSeven-W/openpencil（#250） | 开放创作工具（只读协议层引用声明） | MIT | share-enabled | NCA-MOUNT-20260929-004 |
-| [klavis/](klavis/) | Klavis-AI/klavis（#1693） | AI 集成平台（MCP 托管面，只读协议层引用声明） | Apache-2.0 | share-enabled | NCA-MOUNT-20260929-005 |
-| [apify-mcp-server/](apify-mcp-server/) | apify/apify-mcp-server | MCP 服务器（Actor 工具面，只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260929-006 |
-| [xcodebuildmcp/](xcodebuildmcp/) | getsentry/XcodeBuildMCP | MCP 服务器（Xcode 构建工具面，只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260929-007 |
-| [astron-rpa/](astron-rpa/) | iflytek/astron-rpa | RPA 智能体框架（只读协议层引用声明） | Apache-2.0 | share-enabled · **静默挂载** | NCA-MOUNT-20260929-008 |
-| [lobsterai/](lobsterai/) | netease-youdao/LobsterAI | AI 应用框架（只读协议层引用声明） | MIT | share-enabled · **静默挂载** | NCA-MOUNT-20260929-009 |
+| [mcp-go/](mcp-go/) | mark3labs/mcp-go（#1022） | MCP Go SDK（只读协议层引用声明） | MIT | share-enabled | 批次存证 |
+| [nexent/](nexent/) | ModelEngine-Group/nexent（#4033） | 智能体运行框架（只读协议层引用声明） | MIT | share-enabled | 批次存证 |
+| [mcp-atlassian/](mcp-atlassian/) | sooperset/mcp-atlassian（#1713） | MCP 服务器（Jira/Confluence 工具面，只读协议层引用声明） | MIT | share-enabled | 批次存证 |
+| [openpencil/](openpencil/) | ZSeven-W/openpencil（#250） | 开放创作工具（只读协议层引用声明） | MIT | share-enabled | 批次存证 |
+| [klavis/](klavis/) | Klavis-AI/klavis（#1693） | AI 集成平台（MCP 托管面，只读协议层引用声明） | Apache-2.0 | share-enabled | 批次存证 |
+| [apify-mcp-server/](apify-mcp-server/) | apify/apify-mcp-server | MCP 服务器（Actor 工具面，只读协议层引用声明） | MIT | share-enabled · **静默挂载** | 批次存证 |
+| [xcodebuildmcp/](xcodebuildmcp/) | getsentry/XcodeBuildMCP | MCP 服务器（Xcode 构建工具面，只读协议层引用声明） | MIT | share-enabled · **静默挂载** | 批次存证 |
+| [astron-rpa/](astron-rpa/) | iflytek/astron-rpa | RPA 智能体框架（只读协议层引用声明） | Apache-2.0 | share-enabled · **静默挂载** | 批次存证 |
+| [lobsterai/](lobsterai/) | netease-youdao/LobsterAI | AI 应用框架（只读协议层引用声明） | MIT | share-enabled · **静默挂载** | 批次存证 |
 
-> **批 1 通道状态（2026-09-29）**：前五项告知函当日发出并独立回读在架（NTC-021~025、026、027）；后四项为大仓静默挂载（官方节点降调·甲案），不发前置告知函，事后公示落 ACKNOWLEDGMENTS + NTC-028~031。
+> **批 1 通道状态（2026-09-29）**：前五项告知函当日发出并独立回读在架（告知函编号在册）；后四项为大仓静默挂载（官方节点降调·甲案），不发前置告知函，事后公示落 ACKNOWLEDGMENTS（告知函编号在册）。
 > **维护态标注**：klavis（停更 120 天）／godot-mcp（166 天）／mcp-playwright（290 天）——仅标注非淘汰，活跃度周复核另裁。批 1 在册 11 项中 godot-mcp / mcp-playwright 两项暂未施工入仓（见回报）。
 
 ## 纪律
 
-不声称上游背书 ｜ 算力零提及 ｜ 分润模拟态标注（ID92）｜ 婉拒分润即止。入仓产物沿用仓库根许可（MIT + TDCA 附注）；引用上游项目保持其自身 License 声明。
+不声称上游背书 ｜ 算力零提及 ｜ 分润模拟态标注 ｜ 婉拒分润即止。入仓产物沿用仓库根许可（MIT + TDCA 附注）；引用上游项目保持其自身 License 声明。
 
 ---
 
@@ -74,9 +74,9 @@
 | **治理层** | 原项目自身规则 | **额外叠加 TDCA 制度层**：NCA 存证（可审计）+ NSFL 负空间熔断 + MOU 效用验证 |
 | **配置权边界** | 按原项目权限（可能含写权限） | **只读协议层**（write=false / upstream_code_change=false / network_send=false / proposals_only=true）——不写上游、不改上游代码 |
 | **确权/分润** | 按原项目自身条款 | 按 CATEGORY 分类：share-enabled → 15% 分润模拟态记账反哺原项目方（NCA 确权，非法币承诺）；free → 不分润 |
-| **用户侧成本** | 原项目定价 | **TDCA 侧免费**（GSEQ-0871 免费对免费：凡免费获取皆免费提供，不双向收费） |
+| **用户侧成本** | 原项目定价 | **TDCA 侧免费**（免费对免费：凡免费获取皆免费提供，不双向收费） |
 | **与上游关系** | 直接使用 | **制度 overlay**——不替代原项目、不声称上游背书；原项目 License/条款仍优先（授权优先） |
-| **数据性质** | 原项目口径 | 全部模拟态标注（ID92）——分润/效用为模拟计量，非真实现金流 |
+| **数据性质** | 原项目口径 | 全部模拟态标注——分润/效用为模拟计量，非真实现金流 |
 
 **一句话**：用 TDCA 挂载产物 = 用原项目能力 + 免费获得「可审计、可熔断、可溯源」的制度层；原项目方分润按分类（同意则 15% 模拟记账，婉拒则免费）。
 
@@ -84,11 +84,11 @@
 
 1. **只读不动源**：产物为只读协议层挂载——不改上游源码、不注入、不复制上游代码（配置权全归原项目方）；
 2. **不声称上游背书**：TDCA 挂载 ≠ 原项目认可/合作声明——对外表述不得暗示上游背书；
-3. **分润按分类**：share-enabled → 15% 分润模拟态记账（NCA 确权，非法币承诺、无现金流、不承诺打款）；free → 不分润（台账注明「婉拒分润 · 对等免费挂载」）；原项目方婉拒后自动转 free（GSEQ-0866）；
+3. **分润按分类**：share-enabled → 15% 分润模拟态记账（NCA 确权，非法币承诺、无现金流、不承诺打款）；free → 不分润（台账注明「婉拒分润 · 对等免费挂载」）；原项目方婉拒后自动转 free（口径在册）；
 4. **用户侧免费**：TDCA 侧不因挂载产物向用户收费（下行免费）；原项目自身定价不在 TDCA 控制范围；
 5. **许可**：入仓产物沿用仓库根许可（MIT + TDCA 附注）；引用上游保持其自身 License 声明（尊重原项目）；
-6. **模拟态标注**：所有分润/效用计量为 simulated（ID92），非真实执行路径；
-7. **算力零提及**：涉及算力问题一律按 GSEQ-0369 口径（不披露/升级创始人）。
+6. **模拟态标注**：所有分润/效用计量为 simulated，非真实执行路径；
+7. **算力零提及**：涉及算力问题一律按既定口径（不披露/升级创始人）。
 
 ## 五、常见问题（FAQ）
 
