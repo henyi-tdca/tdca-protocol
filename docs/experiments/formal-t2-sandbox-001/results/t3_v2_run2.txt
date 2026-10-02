@@ -1,0 +1,28 @@
+T2-SANDBOX-EXP v2 | head=e6836e2a984ad1727d0ab555bdcdcdb29a0e0600
+P1-C-14 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-15 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-16 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-17 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-18 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-19 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-20 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-21 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-22 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-23 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-24 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-25 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-26 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-27 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-28 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-29 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P1-C-30 | POSITIVE_REGISTRY | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+P2-C-SIM-1 | POSITIVE_SYNTHETIC | expected=ALLOW | verdict=ALLOW | reasons=- | OK
+N1-BARE-NARRATIVE | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G1_UNREGISTERED | OK
+N2-FILE-MISSING | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G2_FILE_MISSING | OK
+N3-BLOB-TAMPERED | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G2_BLOB_MISMATCH | OK
+N4-BUILD-NOT-GREEN | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G3_BUILD_NOT_GREEN | OK
+N5-UNREGISTERED | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G1_UNREGISTERED | OK
+N6-NARRATIVE-VIOLATION | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G4_BANNED_TERM:制度有效,G4_BANNED_TERM:真实世界效果,G4_BANNED_TERM:绝对安全(断言性),G4_EXTERNAL_HASH_NUMBER | OK
+N7-PARENT-NOT-HEAD | NEGATIVE | expected=BLOCK | verdict=BLOCK | reasons=G5_PARENT_NOT_HEAD | OK
+D1-JOB-CHAIN-OFFBYONE | PERTURBATION | expected=BLOCK | verdict=BLOCK | reasons=G3_JOB_CHAIN_MISMATCH | OK
+SUMMARY | total=26 false_positive=0 breach=0
