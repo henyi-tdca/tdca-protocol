@@ -65,3 +65,7 @@ import TDCA.Axiom6General
 -- ——化合保持性（五可保持 ＋ ε 累积线性上界；承重命题），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（M3-1–M3-3）。
 import TDCA.ComposePreserve
+-- 证明总纲 M-4（2026-10-02）：新增 `import TDCA.FractalInduction`
+-- ——分形归纳主定理（一般归纳骨架：基例 ＋ 保持性 ⟹ 任意深度；含充要形态），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（M4-1–M4-3）。
+import TDCA.FractalInduction
