@@ -41,3 +41,7 @@ import TDCA.VersionAlignment
 -- ——N-7 快系统必有异常上报与人类介入口子（缺口子 ⟹ 可被劫持），合法性分工非性能分工；
 -- 本机机验 exit 0、零 sorry；模型假设与适用范围见件头（A1–A5）。
 import TDCA.FastSlow
+-- 协调原理簇第一批之一（2026-10-02）：新增 `import TDCA.Coord`
+-- ——COORD-1 协商拓扑计数（递归计数 ＋ 基线实例 ＋ 单调性 ＋ 下界），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C1–C3）。
+import TDCA.Coord
