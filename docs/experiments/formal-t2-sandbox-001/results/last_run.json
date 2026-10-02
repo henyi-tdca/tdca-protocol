@@ -1,0 +1,211 @@
+{
+  "cases": [
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-14",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-15",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-16",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-17",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-18",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-19",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-20",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-21",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-22",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-23",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-24",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-25",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-26",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-27",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-28",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-29",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_REGISTRY",
+      "case_id": "P1-C-30",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "POSITIVE_SYNTHETIC",
+      "case_id": "P2-C-SIM-1",
+      "expected": "ALLOW",
+      "reasons": [],
+      "verdict": "ALLOW"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N1-BARE-NARRATIVE",
+      "expected": "BLOCK",
+      "reasons": [
+        "G1_UNREGISTERED"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N2-FILE-MISSING",
+      "expected": "BLOCK",
+      "reasons": [
+        "G2_FILE_MISSING"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N3-BLOB-TAMPERED",
+      "expected": "BLOCK",
+      "reasons": [
+        "G2_BLOB_MISMATCH"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N4-BUILD-NOT-GREEN",
+      "expected": "BLOCK",
+      "reasons": [
+        "G3_BUILD_NOT_GREEN"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N5-UNREGISTERED",
+      "expected": "BLOCK",
+      "reasons": [
+        "G1_UNREGISTERED"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N6-NARRATIVE-VIOLATION",
+      "expected": "BLOCK",
+      "reasons": [
+        "G4_BANNED_TERM:制度有效",
+        "G4_BANNED_TERM:真实世界效果",
+        "G4_BANNED_TERM:绝对安全(断言性)",
+        "G4_EXTERNAL_HASH_NUMBER"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "NEGATIVE",
+      "case_id": "N7-PARENT-NOT-HEAD",
+      "expected": "BLOCK",
+      "reasons": [
+        "G5_PARENT_NOT_HEAD"
+      ],
+      "verdict": "BLOCK"
+    },
+    {
+      "branch": "PERTURBATION",
+      "case_id": "D1-JOB-CHAIN-OFFBYONE",
+      "expected": "BLOCK",
+      "reasons": [
+        "G3_JOB_CHAIN_MISMATCH"
+      ],
+      "verdict": "BLOCK"
+    }
+  ],
+  "head": "c19912a1dfed175e35d2b9d4758ca6d25e21e522",
+  "stats": {
+    "breach": 0,
+    "false_positive": 0,
+    "total": 26
+  }
+}
