@@ -31,7 +31,12 @@ NAME_LIST_FILE = SCRIPT_DIR / "denylist_names.txt"
 FAMILIES: dict[str, list[str]] = {
     "whitepaper":  ["tdca-protocol/docs/whitepapers"],
     "paper":       ["tdca-protocol/docs/papers"],
-    "regulation":  ["tdca-protocol/docs/regulations"],
+    "regulation":  ["tdca-protocol/docs/regulations",
+                    "tdca-protocol/docs/register-contract",
+                    "tdca-protocol/docs/identity",
+                    "tdca-protocol/gov-kit/TERMS.md",
+                    "tdca-protocol/mounts/README.md",
+                    "tdca-protocol/docs/settlement/insurance"],
     "cop-library": ["tdca-protocol/docs/cop-library"],
     "weekly":      ["weekly", "周刊"],
 }
@@ -105,7 +110,8 @@ def collect(root: Path, check_only: bool, out: Path | None) -> Manifest:
             base = root / d
             if not base.exists():
                 continue
-            for f in sorted(base.rglob("*")):
+            candidates = [base] if base.is_file() else base.rglob("*")
+            for f in sorted(candidates):
                 if f.suffix.lower() not in ALLOWED_SUFFIX or not f.is_file():
                     continue
                 rel = f.relative_to(root).as_posix()

@@ -3,7 +3,7 @@
   "version": "V1.0",
   "status": "DRAFT-待审",
   "effective": "2026-08-29",
-  "drafted_by": "Reasonix (TDCA-REGULATION-DRAFTING-001)",
+  "drafted_by": "institutional-drafting-group (drafting basis on file)",
   "language": "zh-CN / en (human), machine-readable envelope",
   "human_text_authoritative": true,
   "human_versions": {
@@ -63,7 +63,7 @@
     },
     {
       "id": "3",
-      "topic": "数据性质 ID92",
+      "topic": "数据性质",
       "key": "REAL/SIMULATED labelling mandatory; no impersonation"
     },
     {
@@ -73,17 +73,17 @@
     },
     {
       "id": "5",
-      "topic": "负空间与熔断 ID86/NSFL",
+      "topic": "负空间与熔断",
       "key": "legal negative space absolute; fail-closed on hit"
     },
     {
       "id": "6",
-      "topic": "人类签名权 ID71",
+      "topic": "人类签名权",
       "key": "human-only signing; agent contracting requires owner authorization"
     },
     {
       "id": "7",
-      "topic": "协议层免费 ID77",
+      "topic": "协议层免费",
       "key": "protocol layer permanently free; value-added services separately priced"
     },
     {
@@ -97,5 +97,5 @@
       "key": "violations suspend/terminate; evidence retained; test instance (unfiled), no formal public claim"
     }
   ],
-  "notes": "Machine envelope authored by Kimi per REGISTER-002 M3 (Reasonix source JSON absent from sync); human texts authoritative. Published hash supersedes pending c5ea6270 per instruction fallback clause."
+  "notes": "Machine envelope authored per authoring milestone M3 (source JSON absent from sync); human texts authoritative."
 }

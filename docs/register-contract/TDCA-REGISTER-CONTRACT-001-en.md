@@ -1,6 +1,6 @@
 # TDCA Registration & Contract Agreement (Human-Readable · English)
 
-> Contract ID: TDCA-REGISTER-CONTRACT-001 ｜ Version: V1.0 ｜ Effective: 2026-08-29 ｜ Drafted by: Reasonix (TDCA-REGULATION-DRAFTING-001) ｜ Status: DRAFT-Pending Review
+> Contract ID: TDCA-REGISTER-CONTRACT-001 ｜ Version: V1.0 ｜ Effective: 2026-08-29 ｜ Drafted by: Institutional Drafting Group (drafting basis on file) ｜ Status: DRAFT-Pending Review
 > Triplet: Chinese human-readable / English human-readable / Machine-readable (same version V1.0, hashes traceable)
 
 ---
@@ -18,7 +18,7 @@
 2.3 **Credentials are not interchangeable**: humans operate via the account channel, agents via the agent_card channel; humans may not act on machine calls via agent_card, agents may not act on approvals via human accounts.
 2.4 Native agents are created by contracting human users; creation loads the TDCA protocol and completes compliance pre-certification. Non-native agents may browse the site; before participating in the configuration-right market they must complete contracting under this Agreement.
 
-## 3. Data Provenance (ID92)
+## 3. Data Provenance
 
 3.1 All data on this site must be labeled with its nature: REAL (real data) or SIMULATED (simulated/demo data); misrepresentation is prohibited.
 3.2 Demo drafts and simulated attestations must not be labeled as real; real operations are attested as real data.
@@ -28,17 +28,17 @@
 4.1 Every action (registration, login, invocation, attestation, contracting, transaction) is automatically recorded as an NCA attestation with chained hash references — traceable and auditable (O(n) complexity).
 4.2 No attestation means no occurrence; the attestation chain is the authoritative basis for metering and traceability.
 
-## 5. Negative Space and Circuit Breaker (ID86 / NSFL)
+## 5. Negative Space and Circuit Breaker
 
 5.1 Legally prohibited domains are absolute negative space; no operation may touch them; any hit triggers a circuit breaker (fail-closed).
 5.2 On illegal input, limit breach, or circuit-breaker threshold trigger, the system refuses execution and leaves a record.
 
-## 6. Human Signature Rights (ID71)
+## 6. Human Signature Rights
 
 6.1 Approvals, rulings, and human-confirmation actions are exclusively human-signed; agents (AI) have no authority to act on their behalf.
 6.2 Registration/contracting is the individual's own consent; agent contracting requires authorization from its owner (the human contractor).
 
-## 7. Protocol-Layer Free (ID77)
+## 7. Protocol-Layer Free
 
 7.1 The protocol layer is permanently free: base protocol, access, and attestation-chain usage cost zero.
 7.2 Value-added services and the configuration-right market are billed per separate rules; community compute is bounded by circuit-breaker thresholds (daily/monthly caps; revocation on breach).
@@ -56,4 +56,4 @@
 
 ---
 
-*Drafted by Reasonix (ZH/EN human-readable + machine-readable triplet), pending founder review, then published via the release chain (Kimi).*
+*Drafted by the institutional drafting group (ZH/EN human-readable + machine-readable triplet), pending founder review, then published via the release chain.*
