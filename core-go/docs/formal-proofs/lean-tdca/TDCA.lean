@@ -61,3 +61,7 @@ import TDCA.Guard
 -- ——公理 6 推广（抽象四约束 ＋ NCA 链与 NSFL 熔断器两实例；像集裁剪解张力），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（P3-1–P3-4）。
 import TDCA.Axiom6General
+-- 证明总纲 M-3（2026-10-02）：新增 `import TDCA.ComposePreserve`
+-- ——化合保持性（五可保持 ＋ ε 累积线性上界；承重命题），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（M3-1–M3-3）。
+import TDCA.ComposePreserve
