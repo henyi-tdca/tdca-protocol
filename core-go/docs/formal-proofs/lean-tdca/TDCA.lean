@@ -49,3 +49,7 @@ import TDCA.Coord
 -- ——COORD-2 硬阈值二分类必存误分带（离散收窄版：阈值带 ＋ 类型翻转），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（D1–D3）。
 import TDCA.CoordThreshold
+-- 协调原理簇第一批之三（2026-10-02）：新增 `import TDCA.CoordReopen`
+-- ——COORD-5 回议发散（构造性必要性方向：重开无界 ⟹ 无静默轮），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（R1–R3）。
+import TDCA.CoordReopen
