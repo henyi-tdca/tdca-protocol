@@ -94,3 +94,7 @@ import TDCA.CogDist
 -- ——场景形成机制可形式化子集之两栏边界与见证方向（零依赖机验面；前件 SceneEmergence 为 M-8 子集）；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（S1–S4）。
 import TDCA.SceneScope
+-- 协调原理簇第二批之一（2026-10-02）：新增 import TDCA.CoordCeiling
+-- ——COORD-3 协调天花板（严格递增 ＋ 凹性 ＋ 天花板与无天花板分界），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C3-1–C3-4）。
+import TDCA.CoordCeiling
