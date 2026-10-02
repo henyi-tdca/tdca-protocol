@@ -82,3 +82,7 @@ import TDCA.Constitution
 -- ——归责映射可机验子集（结构面：传递性 ＋ 层级单调 ＋ 方向单向与分层隔离 ＋ 无环），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A3）。
 import TDCA.Attribution
+-- 证明总纲 M-6 ＋ 开放问题 P-9（2026-10-02）：新增 import TDCA.Anchor
+-- ——三锚不动点（不动子空间 ＋ 可迭代 ＋ 三锚齐备 ＋ 契约必要性；整体条件形态），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（E1–E4）。
+import TDCA.Anchor
