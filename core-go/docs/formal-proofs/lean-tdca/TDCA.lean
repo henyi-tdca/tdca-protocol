@@ -102,3 +102,7 @@ import TDCA.CoordCeiling
 -- ——COORD-4 分层最优性（最优层数存在 ＋ 切换成本线性下界 ＋ 收益判定），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C4-1–C4-4）。
 import TDCA.CoordLayering
+-- 协调原理簇第二批之三（2026-10-02）：新增 import TDCA.CoordLoop
+-- ——COORD-6 错觉循环不动点（离散情形：自增强 ⟹ 一致压缩率 ＋ 单调 ＋ 有限步收敛 ＋ 唯一不动点），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C6-1–C6-4）。
+import TDCA.CoordLoop
