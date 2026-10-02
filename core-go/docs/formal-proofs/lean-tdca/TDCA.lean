@@ -90,3 +90,7 @@ import TDCA.Anchor
 -- ——认知距离不对称（命题 3.10）之机验面：可达性不对称之必要面与充分面 ＋ 不对称传递，零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（D1–D4）。
 import TDCA.CogDist
+-- 开放问题 P-13（2026-10-02）：新增 import TDCA.SceneScope
+-- ——场景形成机制可形式化子集之两栏边界与见证方向（零依赖机验面；前件 SceneEmergence 为 M-8 子集）；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（S1–S4）。
+import TDCA.SceneScope
