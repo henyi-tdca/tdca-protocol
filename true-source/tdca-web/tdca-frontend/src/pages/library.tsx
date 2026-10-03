@@ -105,7 +105,12 @@ export function LibraryPage() {
                           ? 'border-blue-600 bg-blue-50 text-blue-800'
                           : 'border-gray-200 bg-white text-blue-600 hover:bg-blue-50'}`}
                     onClick={() => openable && onPick(it.slug)}>
-                    <span className="block truncate font-medium">{it.title || it.slug}</span>
+                    <span className="block truncate font-medium">
+                      {it.title || it.slug}
+                      {!openable && (
+                        <span className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">在建中</span>
+                      )}
+                    </span>
                     <span className={`block truncate text-xs ${openable ? 'text-gray-400' : 'text-gray-300'}`}>{it.slug}</span>
                   </button>
                 </li>

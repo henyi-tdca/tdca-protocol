@@ -28,6 +28,8 @@ export function layerForPath(pathname: string): LayerKey {
 export interface NavItem {
   to: string
   label: string
+  /** 在建中角标：内容未完全入站／尚未入站（2026-10-04 创始人明示标注） */
+  badge?: string
 }
 export const APP_NAV: { group: string; items: NavItem[] }[] = [
   {
@@ -36,10 +38,10 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/', label: '首页' },
       { to: '/about', label: '关于' },
       { to: '/ownership', label: '所有权' },
-      { to: '/market', label: '配置权市场' },
+      { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
       { to: '/sandbox', label: '沙盒' },
       { to: '/tax', label: '税收' },
-      { to: '/academy', label: '学院' },
+      { to: '/academy', label: '学院', badge: '在建中' }, // 教材/模拟器/考核未入站，现仅名词库
       { to: '/audit', label: '审计' },
       { to: '/governance', label: '治理' },
       { to: '/library', label: '文库' },
@@ -49,7 +51,7 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
     group: '观测',
     items: [
       { to: '/agents', label: '智能体集群' },
-      { to: '/notifier', label: '通知机' },
+      { to: '/notifier', label: '通知机', badge: '在建中' }, // WS 实时通道令牌未通（4401），仅静态状态页
     ],
   },
   { group: '作业', items: [{ to: '/studio', label: 'Agent Studio' }] },
@@ -60,11 +62,11 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/workbuddy', label: 'WorkBuddy' },
       { to: '/cluster', label: '集群编排' },
       { to: '/formal', label: '形式化入站' },
-      { to: '/toolshelf', label: '工具货架' },
+      { to: '/toolshelf', label: '工具货架', badge: '在建中' }, // 组一 8 件已上；组二 10 件呈现方式另议未上
       { to: '/anchors', label: '模拟锚' },
       { to: '/ops', label: '运维端' },
       { to: '/ownership-registry', label: '权属登记' },
-      { to: '/market-sim', label: '规范与沙盒链' },
+      { to: '/market-sim', label: '规范与沙盒链', badge: '在建中' }, // 两件规范未入册（端点 503 fail-closed）
     ],
   },
   {
@@ -224,6 +226,11 @@ function ShellInner() {
                   }
                 >
                   {item.label}
+                  {item.badge && (
+                    <span data-testid={`nav-badge-${item.to}`} className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">
+                      {item.badge}
+                    </span>
+                  )}
                 </NavLink>
               ))}
             </span>
