@@ -5,6 +5,7 @@
 // 复用: PageShell / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 
@@ -19,11 +20,16 @@ const FAMILY_TABS: { key: string; label: string }[] = [
   { key: 'whitepaper', label: '白皮书' },
   { key: 'paper', label: '论文与实证' },
   { key: 'cop-library', label: '产物库' },
+  { key: 'regulation', label: '制度规范' },
 ]
 
 export function LibraryPage() {
+  const [params] = useSearchParams()
   const [families, setFamilies] = useState<FamilyView[]>([])
-  const [family, setFamily] = useState('whitepaper')
+  const [family, setFamily] = useState(
+    ['whitepaper', 'paper', 'cop-library', 'regulation'].includes(params.get('family') ?? '')
+      ? (params.get('family') as string)
+      : 'whitepaper')
   const [items, setItems] = useState<ItemView[]>([])
   const [detail, setDetail] = useState<DetailView | null>(null)
   const [err, setErr] = useState('')
@@ -53,10 +59,10 @@ export function LibraryPage() {
 
   return (
     <PageShell
-      title="内容区文库（白皮书 · 论文 · 产物库）"
+      title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"
-      description="站点入站令·甲/乙内容区：只读索引＋正文阅读；以在册仓库为唯一权威源，本站不复制不改写。">
+      description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；以在册仓库为唯一权威源，本站不复制不改写。">
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           {FAMILY_TABS.map((t) => (

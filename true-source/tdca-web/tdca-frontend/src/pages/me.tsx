@@ -15,8 +15,13 @@ interface MeData {
   my_agents: { agent_id: string; name: string; five_role: string | null; status: string; attestation_state: string; audit_count: number; data_provenance: string }[]
   my_pending_sign: { request_id: string; agent_id: string; request_type: string; urgency: string | null; reason: string | null; ts: string }[]
   my_decided: { request_id: string; agent_id: string; status: string; ts: string }[]
-  my_sandbox: { apply_id: string; result: string | null; ts: string }[]
+  my_sandbox: { apply_id: string; result: string | null; sea_snapshot?: string; ts: string }[]
   my_governance: { op: string; fuse_state: string | null; ts: string }[]
+  my_assets?: { order_no: number; name: string; description: string | null; asset_count: number; data_provenance: string }[]
+  my_grants?: { grant_id: string; subject_agent: string; scene_constraint: string; asset_order: string; status: string; nca_ref: string | null }[]
+  my_config_records?: { run_id: string; result: string; asset_summary: string | null; scene: string | null; price_points: number | null; nca_ref: string | null; ts: string }[]
+  my_points?: { balance: number; data_provenance: string; note: string }
+  my_nca?: { nca_id: string; action: string; artifact_path: string | null; sha256_8: string | null; ts: string }[]
   note: string
 }
 
@@ -98,6 +103,73 @@ export function MePage() {
               ))}
             </section>
           )}
+
+          {/* 资产 / 积分 / 配置权持有（2026-10-04 创始人明示补齐） */}
+          <section className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div data-testid="me-assets" className="rounded-lg border border-gray-200 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-gray-800">资产（五阶形态目录）</h3>
+              {(data.my_assets ?? []).length === 0 && <p className="text-xs text-gray-400">暂无目录</p>}
+              {(data.my_assets ?? []).map((a) => (
+                <div key={a.order_no} className="border-b border-gray-50 py-1 text-xs text-gray-600">
+                  第{a.order_no}阶 · {a.name}
+                  <span className="ml-1 text-gray-400">{a.description ?? ''}（{a.asset_count} 件）</span>
+                  {a.data_provenance !== 'real' && <SimulatedBadge nature={a.data_provenance as 'simulated'} />}
+                </div>
+              ))}
+              <p className="mt-1 text-[11px] text-gray-400">目录为全站共用形态索引；个人持有见「配置权持有」。</p>
+            </div>
+            <div data-testid="me-points" className="rounded-lg border border-gray-200 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-gray-800">我的积分（站内）</h3>
+              <div className="text-2xl font-bold text-gray-800">{data.my_points?.balance ?? 0}</div>
+              <p className="mt-1 text-[11px] text-gray-400">
+                {data.my_points?.note ?? '最小链结算记账'}
+                {(data.my_points?.data_provenance ?? 'simulated') !== 'real' && (
+                  <SimulatedBadge nature={(data.my_points?.data_provenance ?? 'simulated') as 'simulated'} />
+                )}
+              </p>
+              <p className="mt-1 text-[11px] text-gray-400">口径：本人为出让方的最小链要约报价合计。</p>
+            </div>
+            <div data-testid="me-grants" className="rounded-lg border border-gray-200 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-gray-800">我的场景配置权持有</h3>
+              {(data.my_grants ?? []).length === 0 && (
+                <p className="text-xs text-gray-400">暂无持有——配置类调用须先凭授权件过 P2 准入闸门</p>
+              )}
+              {(data.my_grants ?? []).map((g) => (
+                <div key={g.grant_id} className="border-b border-gray-50 py-1 text-xs text-gray-600">
+                  <span className="font-mono">{g.grant_id}</span> · {g.subject_agent} · {g.status}
+                  <span className="block text-[11px] text-gray-400">场景：{g.scene_constraint} ｜ {g.nca_ref ?? ''}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 配置记录 + 我的 NCA 存证 */}
+          <section className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            <div data-testid="me-config-records" className="rounded-lg border border-gray-200 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-gray-800">我的配置记录（最小链）</h3>
+              {(data.my_config_records ?? []).length === 0 && (
+                <p className="text-xs text-gray-400">暂无记录——去 <Link to="/market-sim" className="text-emerald-700 underline">规范索引与沙盒最小链</Link> 跑一条最小链</p>
+              )}
+              {(data.my_config_records ?? []).map((r) => (
+                <div key={r.run_id} className="border-b border-gray-50 py-1 text-xs text-gray-600">
+                  <span className="font-mono">{r.run_id}</span> · {r.result === 'settled' ? '✅ 已结算' : '❌ 未通过'} · {r.price_points ?? 0} 积分
+                  <span className="block text-[11px] text-gray-400">{r.asset_summary} ｜ {r.scene} ｜ {r.ts.slice(0, 19).replace('T', ' ')}</span>
+                </div>
+              ))}
+              <SimulatedBadge nature="simulated" />
+            </div>
+            <div data-testid="me-nca" className="rounded-lg border border-gray-200 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-gray-800">我的 NCA 存证（最近 20 条）</h3>
+              {(data.my_nca ?? []).length === 0 && <p className="text-xs text-gray-400">暂无以个人身份落链的存证</p>}
+              {(data.my_nca ?? []).map((n) => (
+                <div key={n.nca_id} className="border-b border-gray-50 py-1 text-xs text-gray-600">
+                  <span className="font-mono text-[11px]">{n.nca_id}</span> · {n.action}
+                  <span className="block truncate text-[11px] text-gray-400">{n.artifact_path} ｜ sha256_8={n.sha256_8} ｜ {n.ts.slice(0, 19).replace('T', ' ')}</span>
+                </div>
+              ))}
+              <Link to="/audit" className="mt-1 inline-block text-[11px] text-emerald-700 underline">审计透明页查全链 →</Link>
+            </div>
+          </section>
 
           {/* 我批过的 + 沙盒 + 治理（三栏） */}
           <section className="grid grid-cols-1 gap-3 lg:grid-cols-3">

@@ -3,6 +3,8 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: F1 /sandbox 沙盒准入（A-5 SEA 五要件）
 // 约束矩阵: FRAMEWORK-001 §四 /sandbox（L2 前置）+ A-5 契约 + ID92
 // =============================================================================
+import { useEffect, useState } from 'react'
+import { api } from '@/api/client'
 import { useApiGet } from '@/shared/useApi'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
@@ -29,6 +31,24 @@ const NSFL_LAYERS: { phase: string; layer: string; items: string[]; status: 'GRE
 /** L2 前置沙盒（制度化学反应釜）：SEA 五要件状态，未全绿不可入盒 */
 export function SandboxPage() {
   const { status, data, nature } = useApiGet<SeaStatusData>('/api/v1/sandbox/sea-status')
+  const [sceneIds, setSceneIds] = useState('SCN-A, SCN-B')
+  const [budget, setBudget] = useState('9000')
+  const [boundary, setBoundary] = useState('SCOPE-PHY-001')
+  const [applyMsg, setApplyMsg] = useState('')
+  const [expanded, setExpanded] = useState('')
+  const { status: meStatus, data: meData } = useApiGet<{ my_sandbox?: { apply_id: string; result: string | null; sea_snapshot: string; ts: string }[] }>('/api/v1/me/dashboard')
+
+  const onApply = async () => {
+    setApplyMsg('')
+    const ids = sceneIds.split(/[,，\s]+/).map((x) => x.trim()).filter(Boolean)
+    if (ids.length === 0) { setApplyMsg('请至少填一个场景 ID'); return }
+    const r = await api.post<{ sandbox_id: string; nca_ref: string; note: string }>(
+      '/api/v1/sandbox/apply',
+      { scene_ids: ids, pcr_budget: Number(budget) || 0, nsfl_boundary: boundary })
+    setApplyMsg(r.ok
+      ? `已受理 ${r.data.sandbox_id}（存证 ${r.data.nca_ref}）——出盒须人类签名`
+      : `申请失败：${r.reason}（须登录）`)
+  }
 
   return (
     <PageShell
@@ -105,6 +125,47 @@ export function SandboxPage() {
                 </div>
               ))}
             </div>
+          </section>
+
+          {/* 入盒申请（A-5；带填写示例）＋我的申请全文 */}
+          <section data-testid="sandbox-apply" className="mt-4 rounded-lg border border-gray-200 p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">入盒申请（A-5 沙盒编译-核验闭环）</h3>
+            <div className="flex flex-wrap items-center gap-2">
+              <input className="min-w-64 flex-1 rounded border border-gray-300 px-2 py-1 text-sm"
+                placeholder="场景 ID 列表（如：SCN-A, SCN-B——逗号分隔）"
+                value={sceneIds} onChange={(e) => setSceneIds(e.target.value)} />
+              <input className="w-36 rounded border border-gray-300 px-2 py-1 text-sm"
+                placeholder="PCR 预算（如：9000）"
+                value={budget} onChange={(e) => setBudget(e.target.value)} />
+              <input className="w-40 rounded border border-gray-300 px-2 py-1 text-sm"
+                placeholder="NSFL 边界（如：SCOPE-PHY-001）"
+                value={boundary} onChange={(e) => setBoundary(e.target.value)} />
+              <button className="rounded bg-emerald-600 px-3 py-1 text-sm text-white hover:bg-emerald-700"
+                onClick={onApply}>申请入盒</button>
+            </div>
+            {applyMsg && <p role="status" className="mt-2 text-xs text-gray-600">{applyMsg}</p>}
+            <SimulatedBadge nature="simulated" />
+            <span className="ml-2 text-xs text-gray-500">申请落库 sandbox_applications，SEA 快照全文如下（谁的数据谁可见）</span>
+
+            {meStatus === 'ok' && (meData?.my_sandbox?.length ?? 0) > 0 && (
+              <ul className="mt-3 space-y-1" data-testid="sandbox-my-applies">
+                {meData?.my_sandbox?.map((a) => (
+                  <li key={a.apply_id} className="text-xs text-gray-600">
+                    <button
+                      className="font-medium text-blue-600 underline"
+                      onClick={() => setExpanded(expanded === a.apply_id ? '' : a.apply_id)}>
+                      {a.apply_id}
+                    </button>
+                    {' '}· {a.result ?? 'pending'} · {a.ts.slice(0, 19).replace('T', ' ')}
+                    {expanded === a.apply_id && (
+                      <pre className="mt-1 whitespace-pre-wrap rounded bg-gray-50 p-2 text-[11px] text-gray-700">
+                        {a.sea_snapshot}
+                      </pre>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         </div>
       )}

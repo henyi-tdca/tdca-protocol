@@ -6,6 +6,7 @@
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
@@ -88,6 +89,11 @@ export function MarketSimPage() {
             {specs.map((s) => (
               <li key={s.key}>
                 {s.present ? '【已收录】' : '【未入册】'}{s.name}（{s.doc_id}）
+                {s.present && (
+                  <Link to="/library?family=regulation" className="ml-2 text-sm font-medium text-blue-600 underline">
+                    读全文 →
+                  </Link>
+                )}
                 {s.version && (
                   <span data-testid={`ms-version-${s.key}`}>
                     {' '}件内版本：{s.version}
@@ -108,13 +114,13 @@ export function MarketSimPage() {
 
         <section data-testid="ms-chain">
           <h2>沙盒最小链（发布→准入审查→撮合→结算）</h2>
-          <input placeholder="出让方主体引用" value={seller}
+          <input placeholder="出让方主体引用（如：my-agent-01——须与 P2 授权件 subject_agent 一致）" value={seller}
             onChange={(e) => setSeller(e.target.value)} />
-          <input placeholder="标的摘要（五阶资产形态）" value={asset}
+          <input placeholder="标的摘要·五阶资产形态（如：第2阶 数据资产包-写生场景）" value={asset}
             onChange={(e) => setAsset(e.target.value)} />
-          <input placeholder="场景（按授权件场景约束比对）" value={scene}
+          <input placeholder="场景（如：scene-painting-01——按授权件场景约束比对）" value={scene}
             onChange={(e) => setScene(e.target.value)} />
-          <input placeholder="报价（站内积分·SIMULATED）" value={price}
+          <input placeholder="报价·站内积分 SIMULATED（如：1200）" value={price}
             onChange={(e) => setPrice(e.target.value)} />
           <button onClick={onChain}>跑最小链</button>
           {msg && <p role="status">{msg}</p>}

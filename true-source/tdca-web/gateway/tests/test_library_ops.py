@@ -74,6 +74,9 @@ def test_family_closed_set(_docs_table):
     h = _auth("libtester01")
     r = client.get("/api/v1/library/unknown", headers=h)
     assert r.status_code == 404
+    # 2026-10-04 创始人明示：regulation（制度规范）入闭集——须可列（不再 404）
+    r = client.get("/api/v1/library/regulation", headers=h)
+    assert r.status_code == 200, r.text[:200]
 
 
 def test_list_and_detail(_docs_table):

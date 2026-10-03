@@ -123,11 +123,11 @@ export function OwnershipRegistryPage() {
 
         <section data-testid="or-register">
           <h2>权属登记</h2>
-          <input placeholder="登记对象（表达形式）" value={title}
+          <input placeholder="登记对象·表达形式（如：智能体生成绘画《渡口》数字图）" value={title}
             onChange={(e) => setTitle(e.target.value)} />
-          <input placeholder="权利人引用" value={owner}
+          <input placeholder="权利人引用（如：did:tdca:founder 或本账号用户名）" value={owner}
             onChange={(e) => setOwner(e.target.value)} />
-          <input placeholder="生成来源谱系（必填）" value={lineage}
+          <input placeholder="生成来源谱系·必填（如：agent-001 × 场景写生 × 2026-10）" value={lineage}
             onChange={(e) => setLineage(e.target.value)} />
           <select value={branch} onChange={(e) => setBranch(e.target.value)}
             aria-label="法域分支">
@@ -137,23 +137,23 @@ export function OwnershipRegistryPage() {
             <option value="data">数字结构化→数据法</option>
             <option value="trademark">标识→商标法</option>
           </select>
-          <input placeholder="场景（选填——无场景不拒登记）" value={scene}
+          <input placeholder="场景·选填（如：scene-painting-01；无场景不拒登记）" value={scene}
             onChange={(e) => setScene(e.target.value)} />
           <button onClick={onRegister}>登记</button>
         </section>
 
         <section data-testid="or-amend">
           <h2>权属变更</h2>
-          <input placeholder="record_id" value={amendId}
+          <input placeholder="record_id（如：OWR-20261004-a1b2c3）" value={amendId}
             onChange={(e) => setAmendId(e.target.value)} />
-          <input placeholder="变更附言" value={amendNote}
+          <input placeholder="变更附言（如：权利人更名，附新引用）" value={amendNote}
             onChange={(e) => setAmendNote(e.target.value)} />
           <button onClick={onAmend}>变更</button>
         </section>
 
         <section data-testid="or-cancel">
           <h2>权属注销</h2>
-          <input placeholder="record_id" value={cancelId}
+          <input placeholder="record_id（如：OWR-20261004-a1b2c3）" value={cancelId}
             onChange={(e) => setCancelId(e.target.value)} />
           <button onClick={onCancel}>注销</button>
           {msg && <p role="status">{msg}</p>}
