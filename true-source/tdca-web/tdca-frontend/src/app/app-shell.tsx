@@ -53,6 +53,20 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
   },
   { group: '作业', items: [{ to: '/studio', label: 'Agent Studio' }] },
   {
+    // 站点一期（P1~P9）：名目照在册 PAGE_META 元数据（pages.tsx），仅挂导航入口，不改制度语义
+    group: '站点一期',
+    items: [
+      { to: '/workbuddy', label: 'WorkBuddy' },
+      { to: '/cluster', label: '集群编排' },
+      { to: '/formal', label: '形式化入站' },
+      { to: '/toolshelf', label: '工具货架' },
+      { to: '/anchors', label: '模拟锚' },
+      { to: '/ops', label: '运维端' },
+      { to: '/ownership-registry', label: '权属登记' },
+      { to: '/market-sim', label: '规范与沙盒链' },
+    ],
+  },
+  {
     group: '确权',
     items: [
       { to: '/attestation', label: '确权中心' },
