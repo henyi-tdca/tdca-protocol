@@ -45,6 +45,7 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/audit', label: '审计' },
       { to: '/governance', label: '治理' },
       { to: '/library', label: '文库' },
+      { to: '/announcements', label: '公告栏' }, // 对外公告区：空栏为常态，内容须创始人逐次明示后发布
     ],
   },
   {
@@ -62,7 +63,8 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/workbuddy', label: 'WorkBuddy' },
       { to: '/cluster', label: '集群编排' },
       { to: '/formal', label: '形式化入站' },
-      { to: '/toolshelf', label: '工具货架', badge: '在建中' }, // 组一 8 件已上；组二 10 件呈现方式另议未上
+      { to: '/toolshelf', label: '工具货架' }, // 组一 8 件已上；组二 10 件已以智能体形态呈现于「智能体区」
+      { to: '/agent-shelf', label: '智能体区' }, // 组二 10 件智能体形态呈现（呈现≠注册，准入另走流程）
       { to: '/anchors', label: '模拟锚' },
       { to: '/ops', label: '运维端' },
       { to: '/ownership-registry', label: '权属登记' },

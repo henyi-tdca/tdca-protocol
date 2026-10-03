@@ -47,6 +47,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/ownership-registry', title: '权属登记管理（P8a）', layer: 'L0', dataSource: 'A-19 /api/v1/ownership/*（登记／变更／注销／查询）', permission: '登录 DID', description: '登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引；四条不公开负空间 fail-closed。' },
   { path: '/market-sim', title: '规范索引与沙盒最小链（P9）', layer: 'L0', dataSource: 'A-20 /api/v1/regulations/* + A-21 /api/v1/market-sim/*', permission: '登录 DID', description: '规范索引入口（版本读件内不硬编码）＋最小链：发布→准入→撮合→结算，全程 SIMULATED，NCA 全链留痕。' },
   { path: '/library', title: '内容区文库（白皮书 · 论文 · 产物库 · 制度规范）', layer: 'L0', dataSource: 'A-22 GET /api/v1/library/*（docs 表只读面）', permission: '登录 DID', description: '内容区只读索引＋正文阅读：whitepapers/papers/cop-library/regulations；以在册仓库为唯一权威源。' },
+  { path: '/agent-shelf', title: '智能体区（组二 10 件呈现）', layer: 'L0', dataSource: '静态呈现面（呈现 ≠ 注册）', permission: '登录 DID', description: '组二 10 件以智能体形态呈现：每条只列名称／一句用途／形态；注册与准入另走在册流程，本区不代办。' },
+  { path: '/announcements', title: '公告栏', layer: 'L0', dataSource: 'A-23 GET /api/v1/announcements/list（公开读）', permission: '公开', description: '站点对外公告区：公告内容经创始人明示后由运营发布；空栏为常态，不预置内容。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -89,6 +91,8 @@ import { OpsPage } from './ops'
 import { OwnershipRegistryPage } from './ownership-registry'
 import { MarketSimPage } from './market-sim'
 import { LibraryPage } from './library'
+import { AgentShelfPage } from './agent-shelf'
+import { AnnouncementsPage } from './announcements'
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -121,6 +125,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/ownership-registry': OwnershipRegistryPage,
   '/market-sim': MarketSimPage,
   '/library': LibraryPage,
+  '/agent-shelf': AgentShelfPage,
+  '/announcements': AnnouncementsPage,
 }
 
 export function renderPage(meta: PageMeta) {
