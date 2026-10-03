@@ -13,7 +13,7 @@ import { LayerIndicator, type LayerKey } from './layer-indicator'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 import { useAuth } from './auth-context'
 import { IntentBar } from './intent-bar'
-import { SESSION_EXPIRED_EVENT } from '@/api/client'
+import { AUTH_REQUIRED_EVENT, SESSION_EXPIRED_EVENT, sessionToken } from '@/api/client'
 
 /** 路由 → 四层架构层级映射（FRAMEWORK-001 §八·C.3） */
 export function layerForPath(pathname: string): LayerKey {
@@ -143,8 +143,37 @@ function ShellInner() {
     window.addEventListener(SESSION_EXPIRED_EVENT, onExpired)
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired)
   }, [])
+  // 匿名 401/403 引导：未登录访问受保护内容 → 提示条引导登录（不静默空页）；登录成功后隐藏
+  const [authRequired, setAuthRequired] = useState(false)
+  useEffect(() => {
+    function onAuthRequired() {
+      setAuthRequired(true)
+    }
+    window.addEventListener(AUTH_REQUIRED_EVENT, onAuthRequired)
+    return () => window.removeEventListener(AUTH_REQUIRED_EVENT, onAuthRequired)
+  }, [])
+  useEffect(() => {
+    // 路由切换时复核：已有会话则收起提示条
+    if (authRequired && sessionToken()) setAuthRequired(false)
+  }, [location.pathname, authRequired])
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 font-sans">
+      {authRequired && !sessionToken() && (
+        <div data-testid="auth-required-banner" className="border-b border-blue-200 bg-blue-50">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
+            <span className="text-xs text-blue-800">
+              站点一期各页的制度规则与业务内容需登录后可见（注册即 viewer 只读账号）。
+            </span>
+            <button
+              data-testid="auth-required-login"
+              className="rounded bg-blue-700 px-2 py-1 text-[11px] text-white hover:bg-blue-800"
+              onClick={() => navigate('/auth', { state: { from: location.pathname } })}
+            >
+              去登录
+            </button>
+          </div>
+        </div>
+      )}
       {sessionExpiredFrom !== null && (
         <div data-testid="session-expired-banner" className="border-b border-red-200 bg-red-50">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
