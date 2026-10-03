@@ -61,6 +61,10 @@ app.include_router(ws_router)
 from api_v1 import router as api_v1_router  # noqa: E402
 app.include_router(api_v1_router)
 
+# A-12: P1 WorkBuddy 上站（/api/v1/workbuddy/*——会话鉴权 + DB 持久化 + NCA 落链；不改 FROZEN 子应用）
+from workbuddy_ops import router as workbuddy_ops_router  # noqa: E402
+app.include_router(workbuddy_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）
