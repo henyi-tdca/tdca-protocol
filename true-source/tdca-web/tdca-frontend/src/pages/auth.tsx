@@ -41,7 +41,9 @@ export function AuthPage() {
     if (res.ok) {
       setSessionToken(res.data.token)
       login(did, res.data.token) // 登录态上下文联动（受保护路由放行）
-      navigate(from, { replace: true })
+      // 整页重载：已挂载页面只在 mount 时取数，SPA 回跳不触发 refetch → 登录后整载保证各页数据新鲜
+      const target = from && from.startsWith('/') ? `/#${from}` : '/'
+      window.location.assign(target)
     } else {
       setLoginMsg(res.status === 401 ? '用户名或密码错误' : `登录失败（${res.status ?? res.reason}）`)
     }

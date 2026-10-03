@@ -69,7 +69,8 @@ export function RegisterPage() {
       if (res.ok) {
         setSessionToken(res.data.token)
         login('TDID-H-0001', res.data.token) // 人机面：注册即人类账号身份
-        navigate('/me', { replace: true })
+        // 整页重载：保证登录后各页取数新鲜（同 auth.tsx 口径）
+        window.location.assign('/#/me')
       } else if (res.status === 409) {
         setMsg('该用户名已被注册，请换一个')
       } else if (res.status === 429) {
