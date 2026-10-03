@@ -28,7 +28,7 @@ export interface ApiSuccess<T> {
 }
 export interface ApiFailure {
   ok: false
-  reason: 'watermark_missing' | 'fail_closed' | 'http_error'
+  reason: 'watermark_missing' | 'fail_closed' | 'http_error' | 'unauthorized' | 'forbidden'
   status?: number
   detail?: string
 }
@@ -58,6 +58,9 @@ const EXPIRED_KEY = 'tdca:session:expired'
 
 /** 会话过期/被踢事件（app-shell 监听 → 明确提示，不自动跳转，页面表单状态原样保留） */
 export const SESSION_EXPIRED_EVENT = 'tdca:session-expired'
+
+/** 匿名 401/403 事件（app-shell 监听 → 「内容需登录后可见」引导条，不静默） */
+export const AUTH_REQUIRED_EVENT = 'tdca:auth-required'
 
 export function sessionToken(): string | null {
   return sessionStorage.getItem(SESSION_KEY)
@@ -154,8 +157,17 @@ async function request<T>(
       body: method === 'POST' ? JSON.stringify(body ?? {}) : undefined,
     })
     if (!res.ok) {
-      if (res.status === 401 || res.status === 403) handleSessionRejected(ses) // M3 会话失效拦截
-      return { ok: false, reason: 'http_error', status: res.status } // fail-closed：不猜测、不默认
+      if (res.status === 401 || res.status === 403) {
+        if (ses) {
+          handleSessionRejected(ses) // M3 会话失效拦截
+        } else {
+          // 匿名被拒：广播登录引导事件（app-shell 出提示条），不静默空页
+          window.dispatchEvent(new CustomEvent(AUTH_REQUIRED_EVENT))
+        }
+      }
+      // fail-closed：不猜测、不默认；401/403 给明确 reason 供页面内联提示
+      const reason = res.status === 401 ? 'unauthorized' : res.status === 403 ? 'forbidden' : 'http_error'
+      return { ok: false, reason, status: res.status }
     }
     const raw = (await res.json()) as RawEnvelope
     const verdict = verifyWatermark(raw)
