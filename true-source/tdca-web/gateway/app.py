@@ -101,6 +101,10 @@ app.include_router(regulations_ops_router)
 from market_sim_ops import router as market_sim_ops_router  # noqa: E402
 app.include_router(market_sim_ops_router)
 
+# A-22: 内容区文库（/api/v1/library/*——whitepapers/papers/cop-library 只读面；family 闭集；登录 DID）
+from library_ops import router as library_ops_router  # noqa: E402
+app.include_router(library_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）

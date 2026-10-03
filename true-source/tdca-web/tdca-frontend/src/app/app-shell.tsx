@@ -42,6 +42,7 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/academy', label: '学院' },
       { to: '/audit', label: '审计' },
       { to: '/governance', label: '治理' },
+      { to: '/library', label: '文库' },
     ],
   },
   {
