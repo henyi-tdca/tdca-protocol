@@ -89,6 +89,9 @@ export function MarketSimPage() {
             {specs.map((s) => (
               <li key={s.key}>
                 {s.present ? '【已收录】' : '【未入册】'}{s.name}（{s.doc_id}）
+                {!s.present && (
+                  <span className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">在建中</span>
+                )}
                 {s.present && (
                   <Link to="/library?family=regulation" className="ml-2 text-sm font-medium text-blue-600 underline">
                     读全文 →
