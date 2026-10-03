@@ -38,29 +38,29 @@ export function ClusterPage() {
 
   const onRegister = async () => {
     setMsg('')
-    const r = await api.post<{ data: GrantView }>('/api/v1/cluster/grant/register', {
+    const r = await api.post<GrantView>('/api/v1/cluster/grant/register', {
       subject_agent: subject, scene_constraint: scene,
       asset_order: Number(order), full_composition: true,
       legal_signer: signer, signature: hwSig,
     })
     if (!r.ok) { setMsg(`登记失败：${r.reason}`); return }
-    setGrant(r.data.data)
+    setGrant(r.data)
     setMsg('授权件已登记（首授）')
   }
 
   const onCheck = async () => {
     setMsg('')
-    const r = await api.post<{ data: { verdict: string } }>(
+    const r = await api.post<{ verdict: string }>(
       '/api/v1/cluster/admission/check', { agent_id: agentId, call_type: 'config' })
-    setVerdict(r.ok ? `准入判定：${r.data.data.verdict}` : `准入拒绝：${r.reason}`)
+    setVerdict(r.ok ? `准入判定：${r.data.verdict}` : `准入拒绝：${r.reason}`)
   }
 
   const onLineage = async () => {
     setMsg('')
-    const r = await api.get<{ data: { lineage: LineageView[] } }>(
+    const r = await api.get<{ lineage: LineageView[] }>(
       `/api/v1/cluster/lineage/${agentId}`)
     if (!r.ok) { setMsg(`谱系查询失败：${r.reason}`); return }
-    setLineage(r.data.data.lineage)
+    setLineage(r.data.lineage)
   }
 
   return (

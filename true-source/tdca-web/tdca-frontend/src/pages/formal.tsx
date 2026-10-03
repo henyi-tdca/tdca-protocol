@@ -31,22 +31,22 @@ export function FormalPage() {
   const [badge, setBadge] = useState<{ suite: string; status: string; run_id: string } | null>(null)
 
   const load = async () => {
-    const r = await api.get<{ data: { conclusions: ConclusionView[] } }>(
+    const r = await api.get<{ conclusions: ConclusionView[] }>(
       '/api/v1/formal/conclusion/list')
-    if (r.ok) setRows(r.data.data.conclusions)
-    const b = await api.get<{ data: { suite: string; status: string; run_id: string } }>(
+    if (r.ok) setRows(r.data.conclusions)
+    const b = await api.get<{ suite: string; status: string; run_id: string }>(
       '/api/v1/ci/badge?suite=gateway-regression')
-    if (b.ok) setBadge(b.data.data)
+    if (b.ok) setBadge(b.data)
   }
   useEffect(() => { void load() }, [])
 
   const onSubmit = async () => {
     setMsg('')
-    const r = await api.post<{ data: { conclusion_id: string } }>(
+    const r = await api.post<{ conclusion_id: string }>(
       '/api/v1/formal/conclusion',
       { claim_text: claim, data_nature: nature, scope_note: scope })
     if (!r.ok) { setMsg(`入站失败：${r.reason}`); return }
-    setMsg(`已入站：${r.data.data.conclusion_id}（入站 ≠ 入主仓 ≠ 对外）`)
+    setMsg(`已入站：${r.data.conclusion_id}（入站 ≠ 入主仓 ≠ 对外）`)
     setClaim(''); setScope('')
     void load()
   }

@@ -41,21 +41,21 @@ export function AnchorsPage() {
   const [note, setNote] = useState('')
 
   const load = async () => {
-    const r = await api.get<{ data: AnchorStatus }>('/api/v1/anchor/status')
-    if (r.ok) setStatus(r.data.data)
-    const e = await api.get<{ data: { events: CEvent[] } }>('/api/v1/anchor/copyright-events')
-    if (e.ok) setEvents(e.data.data.events)
+    const r = await api.get<AnchorStatus>('/api/v1/anchor/status')
+    if (r.ok) setStatus(r.data)
+    const e = await api.get<{ events: CEvent[] }>('/api/v1/anchor/copyright-events')
+    if (e.ok) setEvents(e.data.events)
   }
   useEffect(() => { void load() }, [])
 
   const onSubmit = async () => {
     setMsg('')
-    const r = await api.post<{ data: { event_id: string; template_ref: string } }>(
+    const r = await api.post<{ event_id: string; template_ref: string }>(
       '/api/v1/anchor/copyright-event',
       { event_type: eventType, work_title: title, owner_ref: owner,
         source_lineage: lineage, note })
     if (!r.ok) { setMsg(`事件登记失败：${r.reason}`); return }
-    setMsg(`已落 NCA 链：${r.data.data.event_id}（${r.data.data.template_ref}；三锚全 SIMULATED）`)
+    setMsg(`已落 NCA 链：${r.data.event_id}（${r.data.template_ref}；三锚全 SIMULATED）`)
     setTitle(''); setLineage(''); setNote('')
     void load()
   }

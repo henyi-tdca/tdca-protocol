@@ -43,18 +43,18 @@ export function ToolshelfPage() {
   const [tplMsg, setTplMsg] = useState('')
 
   const load = async () => {
-    const r = await api.get<{ data: { tools: ToolView[] } }>('/api/v1/toolshelf/list')
-    if (r.ok) setRows(r.data.data.tools)
+    const r = await api.get<{ tools: ToolView[] }>('/api/v1/toolshelf/list')
+    if (r.ok) setRows(r.data.tools)
   }
   useEffect(() => { void load() }, [])
 
   const onRegister = async () => {
     setMsg('')
-    const r = await api.post<{ data: { tool_id: string } }>(
+    const r = await api.post<{ tool_id: string }>(
       '/api/v1/toolshelf/register',
       { name, category, requires_grant: requiresGrant })
     if (!r.ok) { setMsg(`上架失败：${r.reason}`); return }
-    setMsg(`已上架：${r.data.data.tool_id}`)
+    setMsg(`已上架：${r.data.tool_id}`)
     setName('')
     void load()
   }
@@ -62,17 +62,15 @@ export function ToolshelfPage() {
   const onTemplate = async () => {
     setTplMsg('')
     const r = await api.get<{
-      data: {
-        version: string
-        version_source: string
-        effective_status: string
-        effective_source: string
-        authority: string
-        files: { lang: string; filename: string; content: string; sha256_8: string }[]
-      }
+      version: string
+      version_source: string
+      effective_status: string
+      effective_source: string
+      authority: string
+      files: { lang: string; filename: string; content: string; sha256_8: string }[]
     }>('/api/v1/toolshelf/template/auth-contract')
     if (!r.ok) { setTplMsg(`模板加载失败：${r.reason}`); return }
-    setTpl(r.data.data)
+    setTpl(r.data)
   }
 
   const download = (filename: string, content: string) => {

@@ -55,49 +55,49 @@ export function WorkbuddyPage() {
       setExecMsg('DSL 非合法 JSON')
       return
     }
-    const d = await post<{ data: { workflow_id: string; nca_ref: string } }>(
+    const d = await post<{ workflow_id: string; nca_ref: string }>(
       '/api/v1/workbuddy/workflow/create', { workflow_template: tpl })
     if ('error' in d) { setExecMsg(`创建失败：${d.error}`); return }
-    setCreated(d.data)
+    setCreated(d)
   }
 
   const onExecute = async () => {
     if (!created) return
     setExecMsg('')
-    const d = await post<{ data: ExecView }>('/api/v1/workbuddy/workflow/execute', {
+    const d = await post<ExecView>('/api/v1/workbuddy/workflow/execute', {
       workflow_id: created.workflow_id, human_signature: signature,
     })
     if ('error' in d) { setExecMsg(`执行被拒：${d.error}（人类签名权不可绕过）`); return }
-    setExecView(d.data)
-    setStatusId(d.data.execution_id)
+    setExecView(d)
+    setStatusId(d.execution_id)
   }
 
   const onStatus = async () => {
-    const r = await api.get<{ data: ExecView }>(`/api/v1/workbuddy/workflow/status?execution_id=${encodeURIComponent(statusId)}`)
-    setStatusView(r.ok ? r.data.data : null)
+    const r = await api.get<ExecView>(`/api/v1/workbuddy/workflow/status?execution_id=${encodeURIComponent(statusId)}`)
+    setStatusView(r.ok ? r.data : null)
     if (!r.ok) setExecMsg(`状态查询失败：${r.reason}`)
   }
 
   const onSigRequest = async () => {
-    const d = await post<{ data: { signature_request_id: string } }>('/api/v1/workbuddy/signature/request', {
+    const d = await post<{ signature_request_id: string }>('/api/v1/workbuddy/signature/request', {
       workflow_id: created?.workflow_id ?? '', gate_id: 'GATE-workflow-complete',
       description: '工作流人类签名门禁',
     })
     if ('error' in d) { setExecMsg(`签名请求失败：${d.error}`); return }
-    setSigReqId(d.data.signature_request_id)
+    setSigReqId(d.signature_request_id)
   }
 
   const onSigConfirm = async () => {
-    const d = await post<{ data: { verified: boolean; tx_hash: string } }>('/api/v1/workbuddy/signature/confirm', {
+    const d = await post<{ verified: boolean; tx_hash: string }>('/api/v1/workbuddy/signature/confirm', {
       request_id: sigReqId, hardware_signature: hwSig,
     })
     if ('error' in d) { setExecMsg(`签名确认被拒：${d.error}`); return }
-    setExecMsg(`签名已确认 tx=${d.data.tx_hash}`)
+    setExecMsg(`签名已确认 tx=${d.tx_hash}`)
   }
 
   const onLogIntegrity = async () => {
-    const r = await api.get<{ data: typeof logInt }>('/api/v1/workbuddy/log-integrity')
-    if (r.ok && r.data.data) setLogInt(r.data.data)
+    const r = await api.get<NonNullable<typeof logInt>>('/api/v1/workbuddy/log-integrity')
+    if (r.ok && r.data) setLogInt(r.data)
   }
 
   const statusColor = (s?: string) =>

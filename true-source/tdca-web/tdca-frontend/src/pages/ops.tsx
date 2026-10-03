@@ -31,30 +31,30 @@ export function OpsPage() {
   const [ticketId, setTicketId] = useState('')
 
   const load = async () => {
-    const r = await api.get<{ data: { red_lines: RedLine[] } }>('/api/v1/ops/redlines')
-    if (r.ok) setRedlines(r.data.data.red_lines)
-    const t = await api.get<{ data: { tickets: Ticket[] } }>('/api/v1/ops/tickets')
-    if (t.ok) setTickets(t.data.data.tickets)
+    const r = await api.get<{ red_lines: RedLine[] }>('/api/v1/ops/redlines')
+    if (r.ok) setRedlines(r.data.red_lines)
+    const t = await api.get<{ tickets: Ticket[] }>('/api/v1/ops/tickets')
+    if (t.ok) setTickets(t.data.tickets)
   }
   useEffect(() => { void load() }, [])
 
   const onFeedback = async () => {
     setMsg('')
-    const r = await api.post<{ data: { ticket_id: string } }>(
+    const r = await api.post<{ ticket_id: string }>(
       '/api/v1/ops/feedback', { title, description: desc })
     if (!r.ok) { setMsg(`反馈失败：${r.reason}`); return }
-    setMsg(`已入池：${r.data.data.ticket_id}（INTAKE）`)
+    setMsg(`已入池：${r.data.ticket_id}（INTAKE）`)
     setTitle(''); setDesc('')
     void load()
   }
 
   const act = async (path: string) => {
     setMsg('')
-    const r = await api.post<{ data: { status: string; redline_hit?: string[] } }>(
+    const r = await api.post<{ status: string; redline_hit?: string[] }>(
       path, { ticket_id: ticketId })
     if (!r.ok) { setMsg(`操作失败：${r.reason}`); return }
-    setMsg(`${path.split('/').pop()} → ${r.data.data.status}` +
-      (r.data.data.redline_hit ? `（命中：${r.data.data.redline_hit.join('、')}）` : ''))
+    setMsg(`${path.split('/').pop()} → ${r.data.status}` +
+      (r.data.redline_hit ? `（命中：${r.data.redline_hit.join('、')}）` : ''))
     void load()
   }
 

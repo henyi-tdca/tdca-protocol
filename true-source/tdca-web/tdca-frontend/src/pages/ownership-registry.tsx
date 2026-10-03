@@ -54,12 +54,12 @@ export function OwnershipRegistryPage() {
   const [cancelId, setCancelId] = useState('')
 
   const loadRules = async () => {
-    const r = await api.get<{ data: RuleView }>('/api/v1/ownership/rules')
-    if (r.ok) setRules(r.data.data)
+    const r = await api.get<RuleView>('/api/v1/ownership/rules')
+    if (r.ok) setRules(r.data)
   }
   const loadRecords = async () => {
-    const r = await api.get<{ data: { records: RecordView[] } }>('/api/v1/ownership/query')
-    if (r.ok) setRecords(r.data.data.records)
+    const r = await api.get<{ records: RecordView[] }>('/api/v1/ownership/query')
+    if (r.ok) setRecords(r.data.records)
   }
   useEffect(() => {
     void loadRules()
@@ -68,12 +68,12 @@ export function OwnershipRegistryPage() {
 
   const onRegister = async () => {
     setMsg('')
-    const r = await api.post<{ data: { record_id: string } }>(
+    const r = await api.post<{ record_id: string }>(
       '/api/v1/ownership/register',
       { work_title: title, owner_ref: owner, source_lineage: lineage,
         jurisdiction_branch: branch, scene })
     if (!r.ok) { setMsg(`登记失败：${r.reason}`); return }
-    setMsg(`已登记：${r.data.data.record_id}（场景非必须；未载明不影响登记）`)
+    setMsg(`已登记：${r.data.record_id}（场景非必须；未载明不影响登记）`)
     setTitle(''); setOwner(''); setLineage(''); setScene('')
     void loadRecords()
   }
