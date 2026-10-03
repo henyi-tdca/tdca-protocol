@@ -40,6 +40,7 @@ from typing import Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict
+from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix="/api/v1")
@@ -1055,6 +1056,23 @@ def me_dashboard(request: Request):
         gov = (s.query(M.GovernanceEvent)
                .filter(M.GovernanceEvent.operator == me)
                .order_by(M.GovernanceEvent.ts.desc()).limit(20).all())
+        # 我的配置记录（最小链要约，seller_ref=本人）＋站内积分合计（SIMULATED）
+        config_records = []
+        my_points = 0
+        for r in (s.query(M.MarketSimRun)
+                  .order_by(M.MarketSimRun.created_at.desc()).limit(100).all()):
+            try:
+                offer = json.loads(r.offer_json)
+            except Exception:
+                offer = {}
+            if offer.get("seller_ref") != me:
+                continue
+            my_points += int(offer.get("price_points") or 0)
+            config_records.append({"run_id": r.run_id, "result": r.result,
+                                   "asset_summary": offer.get("asset_summary"),
+                                   "scene": offer.get("scene"),
+                                   "price_points": offer.get("price_points"),
+                                   "nca_ref": r.nca_ref, "ts": r.created_at})
         # REGISTER-002 缺口⑤（GSEQ-0671）：本人最近一条注册缔约存证（前端可展示/自查落链）
         last_reg = (s.query(M.NcaChain)
                     .filter(M.NcaChain.actor == me, M.NcaChain.action.like("user_register%"))
@@ -1079,10 +1097,33 @@ def me_dashboard(request: Request):
             "my_decided": [{"request_id": r.request_id, "agent_id": r.agent_id,
                             "status": r.status, "ts": r.ts} for r in decided],
             "my_sandbox": [{"apply_id": a.apply_id, "result": a.result,
-                            "ts": a.ts} for a in sandbox],
+                            "sea_snapshot": a.sea_snapshot, "ts": a.ts} for a in sandbox],
             "my_governance": [{"op": g.op, "fuse_state": g.fuse_state,
                                "ts": g.ts} for g in gov],
-            "note": "个人后台（谁的数据谁可见；simulated 行已按口径标注）",
+            # 2026-10-04 创始人明示补齐栏目：资产/积分/配置权持有/配置记录/NCA
+            "my_assets": [{"order_no": a.order_no, "name": a.name,
+                           "description": a.description, "asset_count": a.asset_count,
+                           "data_provenance": a.data_provenance}
+                          for a in s.query(M.AssetOrder).order_by(M.AssetOrder.order_no).all()],
+            "my_grants": [{"grant_id": g.grant_id, "subject_agent": g.subject_agent,
+                           "scene_constraint": g.scene_constraint,
+                           "asset_order": g.asset_order, "status": g.status,
+                           "nca_ref": g.nca_ref}
+                          for g in (s.query(M.AuthGrant)
+                                    .filter(or_(M.AuthGrant.legal_signer == me,
+                                                M.AuthGrant.subject_agent.in_(ids or ["\0"])))
+                                    .order_by(M.AuthGrant.status).all())],
+            "my_config_records": config_records,
+            "my_points": {"balance": my_points,
+                          "data_provenance": "simulated",
+                          "note": "站内积分（最小链结算记账；期一 SIMULATED，非真实清算）"},
+            "my_nca": [{"nca_id": n.nca_id, "action": n.action,
+                        "artifact_path": n.artifact_path, "sha256_8": n.sha256_8,
+                        "ts": n.ts}
+                       for n in (s.query(M.NcaChain).filter(M.NcaChain.actor == me)
+                                 .order_by(M.NcaChain.ts.desc()).limit(20).all())],
+            "note": "个人后台（谁的数据谁可见；simulated 行已按口径标注；资产目录为全站五阶形态，"
+                    "积分/最小链为 SIMULATED）",
         }, nature="real")
 
 

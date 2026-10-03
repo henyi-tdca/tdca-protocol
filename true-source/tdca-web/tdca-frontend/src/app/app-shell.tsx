@@ -115,14 +115,14 @@ function AuthStatus() {
       <NavLink
         to="/auth"
         data-testid="auth-login-link"
-        className="rounded border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs font-medium text-white hover:bg-slate-700"
+        className="shrink-0 whitespace-nowrap rounded border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs font-medium text-white hover:bg-slate-700"
       >
         登录（DID）
       </NavLink>
     )
   }
   return (
-    <span data-testid="auth-status" className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1">
+    <span data-testid="auth-status" className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1">
       <span className="text-xs font-medium text-emerald-800">🔐 {did}</span>
       <button data-testid="auth-logout" className="text-[10px] text-emerald-600 underline hover:text-emerald-800" onClick={logout}>
         登出
