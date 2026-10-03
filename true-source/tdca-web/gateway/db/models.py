@@ -327,3 +327,89 @@ class SignatureRequest(Base):
         CheckConstraint("status IN ('pending','signed')", name="ck_sig_status"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_sig_prov"),
     )
+
+
+class AuthGrant(Base):
+    """17. 授权件登记（P2 准入闸门：配置类调用须授权件机验——四要件逐条核验，
+    智能体不得代签代持；parent_grant_id 承载多层转授链）。"""
+
+    __tablename__ = "auth_grants"
+    grant_id: Mapped[str] = mapped_column(Text, primary_key=True)  # AG-xxx
+    subject_agent: Mapped[str] = mapped_column(Text, nullable=False)
+    scene_constraint: Mapped[str] = mapped_column(Text, nullable=False)  # 要件①场景约束
+    asset_order: Mapped[int] = mapped_column(Integer, nullable=False)    # 要件②五阶资产形态 1~5
+    full_composition: Mapped[int] = mapped_column(Integer, nullable=False, default=0)  # 要件③全构成已授权
+    legal_signer: Mapped[str] = mapped_column(Text, nullable=False)      # 要件④法律主体签名
+    signature: Mapped[str] = mapped_column(Text, nullable=False)         # 模拟硬件签 ≥8 字符
+    parent_grant_id: Mapped[str | None] = mapped_column(Text)            # 转授链上级（首授=NULL）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("asset_order BETWEEN 1 AND 5", name="ck_grant_order"),
+        CheckConstraint("full_composition IN (0,1)", name="ck_grant_full"),
+        CheckConstraint("status IN ('active','revoked')", name="ck_grant_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_grant_prov"),
+        Index("idx_grant_subject", "subject_agent"),
+    )
+
+
+class LineageEntry(Base):
+    """18. 谱系账本（P2：授权谱系——授权件＋多层转授链全量留痕，只增不改）。"""
+
+    __tablename__ = "lineage_entries"
+    entry_id: Mapped[str] = mapped_column(Text, primary_key=True)  # LE-xxx
+    agent_id: Mapped[str] = mapped_column(Text, nullable=False)
+    kind: Mapped[str] = mapped_column(Text, nullable=False)  # grant/subgrant/revoke
+    grant_id: Mapped[str | None] = mapped_column(Text)
+    parent_grant_id: Mapped[str | None] = mapped_column(Text)  # 链上级（谱系追溯）
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    ts: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("kind IN ('grant','subgrant','revoke')", name="ck_lineage_kind"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_lineage_prov"),
+        Index("idx_lineage_agent", "agent_id"),
+    )
+
+
+class FormalConclusion(Base):
+    """19. 形式化与实验线结论入站（P3：只做结论面——不转公式、不引数值、不带内部编号；
+    数据性质显式标注；入站 ≠ 入主仓 ≠ 对外）。"""
+
+    __tablename__ = "formal_conclusions"
+    conclusion_id: Mapped[str] = mapped_column(Text, primary_key=True)  # FC-xxx
+    claim_text: Mapped[str] = mapped_column(Text, nullable=False)       # 结论面（纯文字）
+    data_nature: Mapped[str] = mapped_column(Text, nullable=False)      # formal-proved/simulated/assessed
+    scope_note: Mapped[str | None] = mapped_column(Text)                # 适用边界（条件形态须载明）
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("data_nature IN ('formal-proved','simulated','assessed')",
+                        name="ck_fc_nature"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_fc_prov"),
+    )
+
+
+class ToolItem(Base):
+    """20. 工具货架（P4：站内工具/模板目录——编译器、适配器等；requires_grant 标记配置类）。"""
+
+    __tablename__ = "tool_items"
+    tool_id: Mapped[str] = mapped_column(Text, primary_key=True)  # TL-xxx
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(Text, nullable=False)   # compiler/adapter/template/other
+    description: Mapped[str | None] = mapped_column(Text)
+    version: Mapped[str | None] = mapped_column(Text)
+    requires_grant: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="available")
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("category IN ('compiler','adapter','template','other')",
+                        name="ck_tool_cat"),
+        CheckConstraint("requires_grant IN (0,1)", name="ck_tool_grant"),
+        CheckConstraint("status IN ('available','offline')", name="ck_tool_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_tool_prov"),
+    )

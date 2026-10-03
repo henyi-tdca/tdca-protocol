@@ -39,6 +39,9 @@ export const PAGE_META: PageMeta[] = [
   { path: '/me', title: '个人后台（我的）', layer: 'L0', dataSource: 'M5 GET /api/v1/me/dashboard', permission: '须登录（谁的数据谁可见）', description: '我的智能体 / 签批待办 / 我批过的 / 沙盒申请 / 治理操作，一屏聚合。' },
   { path: '/agents/:id', title: '智能体后台', layer: 'L0', dataSource: 'M5 GET /api/v1/agents/{id}/dashboard', permission: '公开读（归属人脱敏）', description: '每一只智能体的画像 / MOU 计量 / 税单 / 签章记录 / NCA 存证，一页看全。' },
   { path: '/workbuddy', title: 'WorkBuddy 人机协作工作台', layer: 'L0', dataSource: 'A-12 /api/v1/workbuddy/*（P5 引擎 + DB 持久化 + NCA 落链）', permission: '登录 DID（执行须人类签名）', description: '跨场景工作流：创建 → 签名门禁执行 → 状态/NCA 全链可查；智能体不得代签。' },
+  { path: '/cluster', title: '集群编排与准入闸门（P2）', layer: 'L0', dataSource: 'A-13 /api/v1/cluster/*（授权件四要件机验 + 谱系账本）', permission: '登录 DID（登记须法律主体签名）', description: '授权件登记与多层转授链；配置类调用须凭有效授权件——可信联通 ≠ 可信协作，仅握手不成立。' },
+  { path: '/formal', title: '形式化与实验线结论入站（P3）', layer: 'L0', dataSource: 'A-14 /api/v1/formal/*（只做结论面）', permission: '登录 DID', description: '只收结论面：不转公式、不引数值、不带内部编号；数据性质显式标注；入站 ≠ 入主仓 ≠ 对外。' },
+  { path: '/toolshelf', title: '工具货架（P4）', layer: 'L0', dataSource: 'A-15 /api/v1/toolshelf/*（工具/模板目录）', permission: '登录 DID（上架须 operator）', description: '站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -73,6 +76,9 @@ import { MePage } from './me'
 import { RegisterPage } from './register'
 import { AgentDashboardPage } from './agent-dashboard'
 import { WorkbuddyPage } from './workbuddy'
+import { ClusterPage } from './cluster'
+import { FormalPage } from './formal'
+import { ToolshelfPage } from './toolshelf'
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -97,6 +103,9 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/me': MePage,
   '/agents/:id': AgentDashboardPage,
   '/workbuddy': WorkbuddyPage,
+  '/cluster': ClusterPage,
+  '/formal': FormalPage,
+  '/toolshelf': ToolshelfPage,
 }
 
 export function renderPage(meta: PageMeta) {
