@@ -65,6 +65,18 @@ app.include_router(api_v1_router)
 from workbuddy_ops import router as workbuddy_ops_router  # noqa: E402
 app.include_router(workbuddy_ops_router)
 
+# A-13: P2 集群编排 + 准入闸门（/api/v1/cluster/*——授权件四要件机验 + 配置类调用闸门 + 谱系账本）
+from cluster_ops import router as cluster_ops_router  # noqa: E402
+app.include_router(cluster_ops_router)
+
+# A-14: P3 形式化与实验线结论入站（/api/v1/formal/*——只做结论面；入站 ≠ 入主仓 ≠ 对外）
+from formal_ops import router as formal_ops_router  # noqa: E402
+app.include_router(formal_ops_router)
+
+# A-15: P4 工具货架（/api/v1/toolshelf/*——工具/模板目录；配置类须过准入闸门）
+from toolshelf_ops import router as toolshelf_ops_router  # noqa: E402
+app.include_router(toolshelf_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）
