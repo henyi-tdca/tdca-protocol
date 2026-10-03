@@ -70,3 +70,70 @@ def tool_register(req: ToolRegister, request: Request):
                            "category": req.category,
                            "requires_grant": req.requires_grant,
                            "note": "工具已上架（配置类调用须凭授权件过准入闸门）"})
+# 模板区：授权件模板（AMEND-002 更正两件——引用在仓《授权件模板》三件，不复制正文）
+# 唯一权威源 = docs/regulations/ 之 TDCA-TEMPLATE-AUTH-001（中／英／机读）；
+# ⛔ 与 docs/register-contract/ 之 TDCA-OWNER-CONTRACT-AUTH-001（所有者缔约授权书）
+#    名近而用途不同，不可互替——本端不引用后者。
+# 版本：读件内真实值（机读版 version 字段，现 V0.1-DRAFT），⛔ 不硬编码；
+# 「生效」另以在仓注记件为准（TDCA-TEMPLATE-AUTH-001-生效注记.md → V1.0-FROZEN），
+# 两者分别标注来源，⛔ 不得合并成单一字样。
+# =====================================================================
+
+from pathlib import Path as _Path  # noqa: E402
+import re as _re  # noqa: E402
+
+_TEMPLATE_DIR = _Path(__file__).resolve().parents[3] / "docs" / "regulations"
+_TEMPLATE_FILES = (
+    ("zh", "TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md"),
+    ("en", "TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V0.1-DRAFT）.md"),
+    ("machine", "TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V0.1-DRAFT）.yaml"),
+)
+_EFFECTIVE_NOTE = "TDCA-TEMPLATE-AUTH-001-生效注记.md"
+
+
+def _version_from_machine(machine_text: str) -> str:
+    """读件内真实版本（机读版 version 字段）——⛔ 不硬编码。"""
+    m = _re.search(r"^version:\s*(\S+)", machine_text, _re.MULTILINE)
+    return m.group(1) if m else "UNKNOWN（机读版缺 version 字段——如实报，不猜）"
+
+
+def _effective_from_note() -> dict:
+    """生效信息取自仓注记件（V1.0-FROZEN·范围期一内部运行）；缺件如实报。"""
+    fpath = _TEMPLATE_DIR / _EFFECTIVE_NOTE
+    if not fpath.is_file():
+        return {"effective": "UNKNOWN", "source": f"docs/regulations/{_EFFECTIVE_NOTE}（缺失）"}
+    m = _re.search(r"(V\d+\.\d+-FROZEN)", fpath.read_text(encoding="utf-8"))
+    return {"effective": m.group(1) if m else "UNKNOWN",
+            "source": f"docs/regulations/{_EFFECTIVE_NOTE}"}
+
+
+@router.get("/template/auth-contract")
+def template_auth_contract(request: Request):
+    """授权件模板（四要件＋固定格式八字段）——实时引用在仓三件，可查看/可下载。"""
+    _require_session_user(request)
+    import hashlib
+    files = []
+    version = None
+    for lang, fname in _TEMPLATE_FILES:
+        fpath = _TEMPLATE_DIR / fname
+        if not fpath.is_file():
+            raise HTTPException(503, f"TEMPLATE_UNAVAILABLE: 在仓件缺失 {fname}"
+                                     "（不另存副本——修复仓内件后方可引用）")
+        raw = fpath.read_bytes()
+        text = raw.decode("utf-8")
+        if lang == "machine":
+            version = _version_from_machine(text)
+        files.append({"lang": lang, "filename": fname, "content": text,
+                      "sha256_8": hashlib.sha256(raw).hexdigest()[:8],
+                      "bytes": len(raw)})
+    effective = _effective_from_note()
+    return _nca_watermark({
+        "template": "授权件模板（四要件：场景约束／五阶资产形态／全构成已授权／法律主体签名）",
+        "version": version,
+        "version_source": "机读版件内 version 字段（逐字读取，非硬编码）",
+        "effective_status": effective["effective"],
+        "effective_source": effective["source"] + "（GSEQ-3626 创始人签批；范围＝期一内部运行）",
+        "authority": "docs/regulations/（在仓《授权件模板》TDCA-TEMPLATE-AUTH-001 三件为唯一权威源；"
+                     "与 TDCA-OWNER-CONTRACT-AUTH-001 所有者缔约授权书不可互替，本端不引用后者）",
+        "files": files,
+        "note": "引用在仓、逐字一致；⛔ 不自创字段；智能体不得代签、不得代持代填"})
