@@ -45,13 +45,13 @@ export function MarketSimPage() {
   const [price, setPrice] = useState('0')
 
   const loadSpecs = async () => {
-    const r = await api.get<{ data: { regulations: SpecEntry[] } }>(
+    const r = await api.get<{ regulations: SpecEntry[] }>(
       '/api/v1/regulations/index')
-    if (r.ok) setSpecs(r.data.data.regulations)
+    if (r.ok) setSpecs(r.data.regulations)
   }
   const loadRuns = async () => {
-    const r = await api.get<{ data: { runs: RunView[] } }>('/api/v1/market-sim/chains')
-    if (r.ok) setRuns(r.data.data.runs)
+    const r = await api.get<{ runs: RunView[] }>('/api/v1/market-sim/chains')
+    if (r.ok) setRuns(r.data.runs)
   }
   useEffect(() => {
     void loadSpecs()
@@ -60,12 +60,12 @@ export function MarketSimPage() {
 
   const onChain = async () => {
     setMsg('')
-    const r = await api.post<{ data: RunView }>('/api/v1/market-sim/chain', {
+    const r = await api.post<RunView>('/api/v1/market-sim/chain', {
       seller_ref: seller, asset_summary: asset, scene,
       price_points: Number(price) || 0,
     })
     setMsg(r.ok
-      ? `最小链 ${r.data.data.run_id}：${r.data.data.result}（${r.data.data.steps.length} 步留痕）`
+      ? `最小链 ${r.data.run_id}：${r.data.result}（${r.data.steps.length} 步留痕）`
       : `最小链失败：${r.reason}`)
     if (r.ok) { setSeller(''); setAsset(''); setScene(''); void loadRuns() }
   }
