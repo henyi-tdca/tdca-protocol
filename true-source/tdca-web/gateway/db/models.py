@@ -413,3 +413,70 @@ class ToolItem(Base):
         CheckConstraint("status IN ('available','offline')", name="ck_tool_status"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_tool_prov"),
     )
+
+
+class CiRun(Base):
+    """21. CI 手动触发机验记录（P5：手动入口先行——lake build＋core-go 测试＋网关回归；
+    绿灯徽章供 P3 页面展示；自动门禁待官方 CI 白名单，期一后半再补）。"""
+
+    __tablename__ = "ci_runs"
+    run_id: Mapped[str] = mapped_column(Text, primary_key=True)  # CI-xxx
+    suite: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(Text, nullable=False)    # PASS/FAIL/ERROR
+    exit_code: Mapped[int | None] = mapped_column(Integer)
+    detail: Mapped[str | None] = mapped_column(Text)             # 输出尾部留痕
+    operator: Mapped[str | None] = mapped_column(Text)
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    started_at: Mapped[str] = mapped_column(Text, nullable=False)
+    finished_at: Mapped[str | None] = mapped_column(Text)
+    __table_args__ = (
+        CheckConstraint("status IN ('PASS','FAIL','ERROR')", name="ck_ci_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ci_prov"),
+        Index("idx_ci_suite", "suite"),
+    )
+
+
+class CopyrightEvent(Base):
+    """22. 权属登记事件（P6：登记／变更／注销——跑在版权链模拟锚（NCA 链）上；
+    ⛔ 转让／许可不在一期（归 8b）；全程 SIMULATED）。"""
+
+    __tablename__ = "copyright_events"
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)  # CE-xxx
+    event_type: Mapped[str] = mapped_column(Text, nullable=False)
+    work_title: Mapped[str] = mapped_column(Text, nullable=False)
+    owner_ref: Mapped[str] = mapped_column(Text, nullable=False)
+    source_lineage: Mapped[str | None] = mapped_column(Text)   # 生成来源谱系（登记必填）
+    note: Mapped[str | None] = mapped_column(Text)
+    template_ref: Mapped[str | None] = mapped_column(Text)     # CRIGHT-EVENT-001~003
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("event_type IN ('register','amend','cancel')", name="ck_ce_type"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ce_prov"),
+        Index("idx_ce_type", "event_type"),
+    )
+
+
+class OpsTicket(Base):
+    """23. 运维工单（P7：反馈→红线分类→提案→沙盒→上线；触碰红线升 ESCALATED_DCD；
+    上线 NCA 存证＋reconcile 对账可回滚）。"""
+
+    __tablename__ = "ops_tickets"
+    ticket_id: Mapped[str] = mapped_column(Text, primary_key=True)  # OPS-xxx
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="INTAKE")
+    redline_hit: Mapped[str | None] = mapped_column(Text)   # 命中的红线名目（升 DCD 依据）
+    classifier_note: Mapped[str | None] = mapped_column(Text)
+    proposal: Mapped[str | None] = mapped_column(Text)
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('INTAKE','CLASSIFIED','PROPOSED','SANDBOXED',"
+                        "'RELEASED','ESCALATED_DCD')", name="ck_ops_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ops_prov"),
+        Index("idx_ops_status", "status"),
+    )

@@ -126,10 +126,22 @@ def main() -> int:
     p = sub.add_parser("compare", help="线上 ⟷ 仓内树比对")
     p.add_argument("--remote", default="remote-fingerprints.json")
     p.add_argument("--tree", default="true-source/tdca-web")
+    p.add_argument("--ledger", default="",
+                   help="例行化落账：比对结果追加写入 JSONL 台账（只增不改；P5 对账例行化）")
     args = ap.parse_args()
     if args.cmd == "collect":
         return collect_remote(args.ssh, args.identity, args.out)
-    return compare(args.remote, args.tree)
+    rc = compare(args.remote, args.tree)
+    if args.ledger:
+        from datetime import datetime, timezone
+        entry = {"ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                 "cmd": "compare", "remote": args.remote, "tree": args.tree,
+                 "result": {0: "PASS", 1: "FAIL"}.get(rc, "ERROR"),
+                 "note": "对账 FAIL 即停手回报（例行化：每次部署后必跑）"}
+        with open(args.ledger, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        print(f"已落账 → {args.ledger}")
+    return rc
 
 
 if __name__ == "__main__":

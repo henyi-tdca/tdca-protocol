@@ -1,0 +1,94 @@
+# =============================================================================
+# TDCA 版权事件模板（登记／变更／注销）· 期一内部运行件
+# 性质：P6 先立之「版权事件模板」——⛔ 不以既有 5 模板冒充；版权类合约模板的执行验证环境
+# 口径：版权事件一律收为「权属登记事件」＝登记／变更／注销；
+#       ⛔ 转让／许可不在一期（标为后续·归 8b）；全程 SIMULATED 硬标注，⛔ 不冒充真实锚
+# 锚：跑在版权链模拟锚（NCA 链）上；结算＝站内积分模拟；税务＝金税四期功能模拟
+# =============================================================================
+smart_contracts:
+  version: TDCA-CONTRACTS-v1.0
+  repo: REPO-004
+  data_nature: SIMULATED
+  scope: 期一内部运行（测试云·⛔ 不对公网）
+  constitutional_base: TDCA-META-003 / TDCA-CONST-v3.1.2
+  note: 本件为事件模板（登记／变更／注销三类权属登记事件的字段与执行口径）；
+        合约层执行验证待事件模板获批后另立，⛔ 不以本件冒充合约模板。
+  templates:
+  - contract_id: CRIGHT-EVENT-001
+    name: 版权事件模板·登记
+    type: COPYRIGHT_OWNERSHIP_REGISTRATION
+    anchor: 权属登记事件＝登记（本期口径 6）
+    purpose: 元函数等具表达形式作品的权属登记事件：确立登记簿条目与 NCA 存证
+    simulated_anchor: 版权链＝NCA 链（站内模拟）；结算＝站内积分；税务＝金税四期功能模拟
+    fields:
+    - name: work_title
+      type: string
+      required: true
+      note: 作品／元函数名称（具表达形式即可登记）
+    - name: owner_ref
+      type: string
+      required: true
+      note: 权属主体引用（法律主体；智能体不得代持）
+    - name: source_lineage
+      type: string
+      required: true
+      note: 生成来源谱系（8a 口径：须载；无场景不拒登记）
+    - name: event_ts
+      type: iso8601-utc
+      required: true
+    functions:
+    - name: register
+      effect: 登记簿＋NCA 链存证（模拟锚）
+      fail_closed: true
+  - contract_id: CRIGHT-EVENT-002
+    name: 版权事件模板·变更
+    type: COPYRIGHT_OWNERSHIP_AMENDMENT
+    anchor: 权属登记事件＝变更（本期口径 6）
+    purpose: 已登记条目之变更（名称更正／谱系补充等权属信息维护）
+    simulated_anchor: 版权链＝NCA 链（站内模拟）；结算＝站内积分；税务＝金税四期功能模拟
+    fields:
+    - name: work_title
+      type: string
+      required: true
+    - name: owner_ref
+      type: string
+      required: true
+    - name: amendment_note
+      type: string
+      required: true
+      note: 变更事由（如实载明）
+    - name: event_ts
+      type: iso8601-utc
+      required: true
+    functions:
+    - name: amend
+      effect: 变更记录＋NCA 链存证（模拟锚）
+      fail_closed: true
+  - contract_id: CRIGHT-EVENT-003
+    name: 版权事件模板·注销
+    type: COPYRIGHT_OWNERSHIP_CANCELLATION
+    anchor: 权属登记事件＝注销（本期口径 6）
+    purpose: 登记条目注销（协作终结类处置在册留痕，历史不抹除）
+    simulated_anchor: 版权链＝NCA 链（站内模拟）；结算＝站内积分；税务＝金税四期功能模拟
+    fields:
+    - name: work_title
+      type: string
+      required: true
+    - name: owner_ref
+      type: string
+      required: true
+    - name: cancellation_note
+      type: string
+      required: true
+    - name: event_ts
+      type: iso8601-utc
+      required: true
+    functions:
+    - name: cancel
+      effect: 注销记录＋NCA 链存证（模拟锚）；条目失效，历史留存
+      fail_closed: true
+  deferred:
+  - name: 转让
+    route: 后续·归 8b（权利处分，⛔ 本期不做）
+  - name: 许可
+    route: 后续·归 8b（权利处分，⛔ 本期不做）
