@@ -1,0 +1,114 @@
+# TDCA-TEMPLATE-AUTH-001 · 授权件模板（机读版 · V0.1-DRAFT）
+# ⚠️ 人读版为语义权威；冲突时以人读版为准（不得反向以机读版改语义）
+template_id: TDCA-TEMPLATE-AUTH-001
+version: V0.1-DRAFT
+status: DRAFT            # ⚠️ 未生效：须四步程序全过 + 创始人签批
+effective_from: null     # 签批后回填
+authority:
+  human_readable: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT）.md
+  conflict_rule: 人读版为语义权威；机读版不得反向改语义
+locale:
+  zh: present
+  en: pending            # ⚠️ 英文人读版待出（双版本义务）
+  machine: present
+
+# 一、固定格式八字段（依《TDCA 注册登记制度》第十二条 + P0-3 备注）
+fixed_format:
+  - key: F1
+    name: 提交主体
+    required: true
+    actor: legal_entity_only        # 法律主体；智能体不代填
+  - key: F2
+    name: 被授权方
+    required: true
+    note: 多层转授逐层单列
+  - key: F3
+    name: 场景
+    required: true
+    note: 授权登记场景必须；未列明场景不在授权范围
+  - key: F4
+    name: 权限范围
+    required: true
+    forbidden: 负空间动作
+  - key: F5
+    name: 期限
+    required: true
+    blank_policy: 不设期限须显式写明（不得留空）
+    default_value: pending        # ⚠️ 待创始人定
+  - key: F6
+    name: 层级
+    required: true
+    required_when: 转授
+    max_layers: pending           # ⚠️ 待创始人定
+  - key: F7
+    name: 分成
+    required: true
+    ratio: pending                # ⚠️ 待创始人定（本侧不代填数值）
+  - key: F8
+    name: 撤销条件
+    required: true
+    revoke_signature: legal_entity_self   # 撤销须本人签署
+
+# 二、四要件（缺一不成立）
+four_requirements:
+  - id: R1
+    name: 场景约束
+    bound_to: F3
+    required: true
+  - id: R2
+    name: 五阶资产形态
+    required: true
+    scope: 未列明之阶不得据本件主张
+    levels: [一阶_效用权, 二阶_配置权, 三阶_NCA嵌套认知资产, 四阶_MOU税收锚定凭证, 五阶_跨场景配置画像]
+  - id: R3
+    name: 全构成已授权
+    required: true
+    reservation_policy: 有保留须显式列明；保留即未达全构成 ⟹ 按未授权处置
+  - id: R4
+    name: 法律主体签名
+    required: true
+    form_enum: [电子签名, 授权码]
+    signed_by: 本人
+    agent_forbidden: [代签, 代持, 代填]
+    evidence: 签名事件落 NCA 存证
+
+# 三、枚举域（越域 ⟹ 机验不通过）
+enums:
+  data_provenance: [REAL, SIMULATED]
+  auth_status: [待生效, 有效, 已变更, 已撤销, 已到期]
+  public_fields: [权属信息, 授权信息, 授权状态, 获取方式]
+  delivery_style: [规范式, 自定义式]
+
+# 四、闸门规则（fail-closed）
+gates:
+  - rule: 无授权登记件 ⟹ 不可调用、不可配置
+  - rule: 自有亦须件（无论产权自有或他有）
+  - rule: 四要件缺一 ⟹ 授权不成立
+  - rule: 调用或引用动作落 NCA 存证
+  - rule: 多层转授任一环失效 ⟹ 其下游全部失效
+  - rule: 授权件失效（撤销／要件缺损）⟹ 准入拒绝
+exceptions:
+  - scope: 沙盒内
+    exempt: true
+  - scope: 演练
+    exempt: true
+  - scope: 出盒
+    exempt: false
+    requires: 必须取得授权
+
+# 五、待定项（⚠️ 一律留空，归创始人）
+pending_founder:
+  - 分成比例与对价形式
+  - 期限默认值
+  - 层级上限与逐层要件
+  - 授权码有效期（一次性／可复用）
+
+# 六、校验约定
+validation:
+  missing_or_blank_or_out_of_enum: 不通过
+  extraneous_field: 不通过（八字固定格式不得增删）
+  custom_clause: 以智能合约约定；不得写入主体八字段
+boundaries:
+  external_effect: none      # 内部协议层授权；不构成对外法律文件
+  credentials_in_template: forbidden
+  personal_names_in_template: forbidden
