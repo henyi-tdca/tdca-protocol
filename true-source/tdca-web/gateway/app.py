@@ -89,6 +89,18 @@ app.include_router(anchor_ops_router)
 from ops_ops import router as ops_ops_router  # noqa: E402
 app.include_router(ops_ops_router)
 
+# A-19: P8a 权属登记管理（/api/v1/ownership/*——登记／变更／注销／查询；四条不公开负空间 fail-closed）
+from ownership_ops import router as ownership_ops_router  # noqa: E402
+app.include_router(ownership_ops_router)
+
+# A-20: P9 规范索引区（/api/v1/regulations/*——只列名目与索引入口；版本读件内不硬编码）
+from regulations_ops import router as regulations_ops_router  # noqa: E402
+app.include_router(regulations_ops_router)
+
+# A-21: P9 配置权市场沙盒最小链（/api/v1/market-sim/*——发布→准入→撮合→结算；SIMULATED＋NCA 留痕）
+from market_sim_ops import router as market_sim_ops_router  # noqa: E402
+app.include_router(market_sim_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）

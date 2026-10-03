@@ -458,6 +458,54 @@ class CopyrightEvent(Base):
     )
 
 
+class OwnershipRecord(Base):
+    """24. 权属登记记录（P8a 一期段：登记／变更／注销／查询——权属侧；
+    登记二分之本面只做「归谁」，授权侧归 8b；入口＝凡具表达形式者皆可登记；
+    须载生成来源谱系；场景非必须；法域四支仅为索引分支，⛔ 不代作法律判定）。"""
+
+    __tablename__ = "ownership_records"
+    record_id: Mapped[str] = mapped_column(Text, primary_key=True)  # OR-xxx
+    work_title: Mapped[str] = mapped_column(Text, nullable=False)   # 登记对象（表达形式）
+    owner_ref: Mapped[str] = mapped_column(Text, nullable=False)    # 权利人引用
+    expression_form: Mapped[str | None] = mapped_column(Text)       # 表达形式描述（可空）
+    jurisdiction_branch: Mapped[str] = mapped_column(
+        Text, nullable=False, default="unspecified")                # copyright/patent/data/trademark/unspecified
+    source_lineage: Mapped[str] = mapped_column(Text, nullable=False)  # 生成来源谱系（登记必填）
+    scene: Mapped[str | None] = mapped_column(Text)                 # 场景（⛔ 非必须；无场景不得拒登记）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="registered")
+    note: Mapped[str | None] = mapped_column(Text)
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("jurisdiction_branch IN ('copyright','patent','data',"
+                        "'trademark','unspecified')", name="ck_own_branch"),
+        CheckConstraint("status IN ('registered','amended','cancelled')",
+                        name="ck_own_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_own_prov"),
+        Index("idx_own_owner", "owner_ref"),
+    )
+
+
+class MarketSimRun(Base):
+    """25. 配置权市场沙盒最小链运行记录（P9：发布→准入审查→撮合→结算，
+    全程 SIMULATED 硬标注；准入审查复用 P2 授权件机验结果，⛔ 不重做）。"""
+
+    __tablename__ = "market_sim_runs"
+    run_id: Mapped[str] = mapped_column(Text, primary_key=True)  # MS-xxx
+    offer_json: Mapped[str] = mapped_column(Text, nullable=False)   # 发布要约（JSON）
+    steps_json: Mapped[str] = mapped_column(Text, nullable=False)   # 逐步留痕（含 NCA refs）
+    result: Mapped[str] = mapped_column(Text, nullable=False)       # settled / denied
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("result IN ('settled','denied')", name="ck_msim_result"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_msim_prov"),
+    )
+
+
 class OpsTicket(Base):
     """23. 运维工单（P7：反馈→红线分类→提案→沙盒→上线；触碰红线升 ESCALATED_DCD；
     上线 NCA 存证＋reconcile 对账可回滚）。"""
