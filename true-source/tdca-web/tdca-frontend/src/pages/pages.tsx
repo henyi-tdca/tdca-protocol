@@ -44,6 +44,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/toolshelf', title: '工具货架（P4）', layer: 'L0', dataSource: 'A-15 /api/v1/toolshelf/*（工具/模板目录）', permission: '登录 DID（上架须 operator）', description: '站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。' },
   { path: '/anchors', title: '模拟外部锚与版权事件（P6）', layer: 'L0', dataSource: 'A-17 /api/v1/anchor/*（三锚 SIMULATED；事件落 NCA 链）', permission: '登录 DID', description: '版权链（NCA 链）／结算（站内积分）／税务（金税四期功能）全站内模拟；版权事件＝登记／变更／注销。' },
   { path: '/ops', title: '站点运维端（P7）', layer: 'L0', dataSource: 'A-18 /api/v1/ops/*（红线八项分类器；NCA 存证＋对账）', permission: '登录 DID（操作须 operator）', description: '应用测试期运维工作台：反馈→红线分类→提案→沙盒→上线；触碰根本制度即升 DCD，运维端无权处置。' },
+  { path: '/ownership-registry', title: '权属登记管理（P8a）', layer: 'L0', dataSource: 'A-19 /api/v1/ownership/*（登记／变更／注销／查询）', permission: '登录 DID', description: '登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引；四条不公开负空间 fail-closed。' },
+  { path: '/market-sim', title: '规范索引与沙盒最小链（P9）', layer: 'L0', dataSource: 'A-20 /api/v1/regulations/* + A-21 /api/v1/market-sim/*', permission: '登录 DID', description: '规范索引入口（版本读件内不硬编码）＋最小链：发布→准入→撮合→结算，全程 SIMULATED，NCA 全链留痕。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -83,6 +85,8 @@ import { FormalPage } from './formal'
 import { ToolshelfPage } from './toolshelf'
 import { AnchorsPage } from './anchors'
 import { OpsPage } from './ops'
+import { OwnershipRegistryPage } from './ownership-registry'
+import { MarketSimPage } from './market-sim'
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -112,6 +116,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/toolshelf': ToolshelfPage,
   '/anchors': AnchorsPage,
   '/ops': OpsPage,
+  '/ownership-registry': OwnershipRegistryPage,
+  '/market-sim': MarketSimPage,
 }
 
 export function renderPage(meta: PageMeta) {

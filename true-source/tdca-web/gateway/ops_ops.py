@@ -20,6 +20,8 @@ from pydantic import BaseModel, ConfigDict
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+# P9 同源一致：红线第八项（登记制度）索引入口与 /api/v1/regulations/index 同 helper
+from regulations_ops import regulation_index_entry  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/ops", tags=["ops"])
 
@@ -42,21 +44,32 @@ RED_LINES = [
     {"key": "registry", "name": "登记制度",
      "keywords": ["登记制度", "注册登记制度"],
      "index": "在册《TDCA 注册登记制度》（V1.0-FROZEN）为唯一权威源——"
-              "其物理落位不在本仓（docs/regulations/ 索引区未收录，见制度总册）；"
+              "索引入口与 /api/v1/regulations/index 同源"
+              "（docs/regulations/ 收录状态动态读取）；"
               "本端只列名目与索引入口，⛔ 不重写正文、⛔ 不复制另存"},
 ]
 _REDLINE_INDEX = {r["key"]: r for r in RED_LINES}
 
 
+def _redline_index(r: dict) -> str:
+    """索引入口：第八项（登记制度）与规范索引区同源动态读取（⛔ 不硬编码收录状态）。"""
+    if r["key"] == "registry":
+        entry = regulation_index_entry("registration_registry")
+        return (f"在册《TDCA 注册登记制度》（V1.0-FROZEN）为唯一权威源——"
+                f"索引入口与 /api/v1/regulations/index 同源"
+                f"（docs/regulations/ 收录状态：{'已收录' if entry['present'] else '未收录'}）；"
+                f"本端只列名目与索引入口，⛔ 不重写正文、⛔ 不复制另存")
+    return r.get("index", "名目在册（本端只列名目与索引入口）")
+
+
 @router.get("/redlines")
 def redlines(request: Request):
-    """红线八项目录（名目＋索引入口；第八项依在册制度件索引，不重写正文）。"""
+    """红线八项目录（名目＋索引入口；第八项与规范索引区同源，不重写正文）。"""
     _require_session_user(request)
     return _nca_watermark({
         "count": len(RED_LINES),
         "red_lines": [{"key": r["key"], "name": r["name"],
-                       "index": r.get("index", "名目在册（本端只列名目与索引入口）")}
-                      for r in RED_LINES],
+                       "index": _redline_index(r)} for r in RED_LINES],
         "note": "触碰任一红线即升 DCD，运维端无权处置（⛔ 名目写死，不改增删）"})
 
 
