@@ -37,9 +37,9 @@ _REGULATIONS_DIR = _TEMPLATE_DIR  # docs/regulations/（索引区唯一落点）
 _REGULATIONS = [
     {"key": "template_auth", "name": "《授权件模板》", "doc_id": "TDCA-TEMPLATE-AUTH-001"},
     {"key": "registration_registry", "name": "《TDCA 注册登记制度》",
-     "doc_id": "TDCA-REG-REGISTRY（入册件号以转交件为准）"},
+     "doc_id": "TDCA-SPEC-REGISTER-OF-RIGHTS-001"},
     {"key": "config_market", "name": "《配置权市场规范》",
-     "doc_id": "TDCA-REG-MARKET（入册件号以转交件为准）"},
+     "doc_id": "TDCA-SPEC-CONFIGMARKET-001"},
 ]
 
 _KEYWORD_BY_KEY = {
@@ -87,19 +87,23 @@ def regulation_index_entry(key: str) -> dict:
         entry["effective_status"] = eff["effective"]
         entry["effective_source"] = eff["source"] + "（GSEQ-3626 创始人签批）"
     elif present:
-        # 通用读取：机读版 version 字段＋生效注记件（对将来入册两件同口径生效）
+        # 通用读取：机读版 version 字段＋生效凭据件（签批落地件/生效注记件，
+        # 照 AUTH 先例：件内版本与生效状态分源标注——正文原样入仓、⛔ 不回改件内字样）
         machine = next((f for f in files if f["filename"].endswith(".yaml")), None)
         if machine:
             entry["version"] = _version_from_machine(
                 (_REGULATIONS_DIR / machine["filename"]).read_text(encoding="utf-8"))
             entry["version_source"] = "机读版件内 version 字段（逐字读取，非硬编码）"
-        note = next((f for f in files if "生效注记" in f["filename"]), None)
+        note = next((f for f in files
+                     if ("签批落地件" in f["filename"] or "生效注记" in f["filename"])),
+                    None)
         if note:
             m = re.search(r"(V\d+\.\d+-FROZEN)",
                           (_REGULATIONS_DIR / note["filename"])
                           .read_text(encoding="utf-8"))
             entry["effective_status"] = m.group(1) if m else "UNKNOWN"
-            entry["effective_source"] = f"docs/regulations/{note['filename']}"
+            entry["effective_source"] = (f"docs/regulations/{note['filename']}"
+                                         "（签批落地件；范围期一内部运行）")
     return entry
 
 
