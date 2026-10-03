@@ -75,7 +75,15 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/attestation/history', label: '确权历史' },
     ],
   },
-  // /auth 认证入口待 F-2 阶段接入（F0 15 路由不含）
+  {
+    // 账户（F-2 接缝落地）：名目照在册 PAGE_META 元数据（/auth /register /me）
+    group: '账户',
+    items: [
+      { to: '/auth', label: '登录' },
+      { to: '/register', label: '注册' },
+      { to: '/me', label: '我的' },
+    ],
+  },
 ]
 
 function DidSwitcher() {
