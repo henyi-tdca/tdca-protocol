@@ -528,3 +528,20 @@ class OpsTicket(Base):
         CheckConstraint(_PROVENANCE_CHECK, name="ck_ops_prov"),
         Index("idx_ops_status", "status"),
     )
+
+
+class Announcement(Base):
+    """26. 公告栏（对外公告区：标题／日期／正文；初始空栏——⛔ 不预置内容；
+    发布须 operator／founder 且内容须经创始人明示；发布落 NCA 存证链）。"""
+
+    __tablename__ = "announcements"
+    announcement_id: Mapped[str] = mapped_column(Text, primary_key=True)  # AN-xxx
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)               # 正文（纯文字）
+    published_by: Mapped[str | None] = mapped_column(Text)                # 发布账号（内部面）
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    published_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ann_prov"),
+    )

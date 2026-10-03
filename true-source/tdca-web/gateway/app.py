@@ -105,6 +105,10 @@ app.include_router(market_sim_ops_router)
 from library_ops import router as library_ops_router  # noqa: E402
 app.include_router(library_ops_router)
 
+# A-23: 公告栏（/api/v1/announcements/*——对外公告区；公开读；发布须 operator/founder 且经创始人明示；NCA 存证）
+from announcements_ops import router as announcements_ops_router  # noqa: E402
+app.include_router(announcements_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）
