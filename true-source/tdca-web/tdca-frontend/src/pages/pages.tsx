@@ -42,6 +42,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/cluster', title: '集群编排与准入闸门（P2）', layer: 'L0', dataSource: 'A-13 /api/v1/cluster/*（授权件四要件机验 + 谱系账本）', permission: '登录 DID（登记须法律主体签名）', description: '授权件登记与多层转授链；配置类调用须凭有效授权件——可信联通 ≠ 可信协作，仅握手不成立。' },
   { path: '/formal', title: '形式化与实验线结论入站（P3）', layer: 'L0', dataSource: 'A-14 /api/v1/formal/*（只做结论面）', permission: '登录 DID', description: '只收结论面：不转公式、不引数值、不带内部编号；数据性质显式标注；入站 ≠ 入主仓 ≠ 对外。' },
   { path: '/toolshelf', title: '工具货架（P4）', layer: 'L0', dataSource: 'A-15 /api/v1/toolshelf/*（工具/模板目录）', permission: '登录 DID（上架须 operator）', description: '站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。' },
+  { path: '/anchors', title: '模拟外部锚与版权事件（P6）', layer: 'L0', dataSource: 'A-17 /api/v1/anchor/*（三锚 SIMULATED；事件落 NCA 链）', permission: '登录 DID', description: '版权链（NCA 链）／结算（站内积分）／税务（金税四期功能）全站内模拟；版权事件＝登记／变更／注销。' },
+  { path: '/ops', title: '站点运维端（P7）', layer: 'L0', dataSource: 'A-18 /api/v1/ops/*（红线八项分类器；NCA 存证＋对账）', permission: '登录 DID（操作须 operator）', description: '应用测试期运维工作台：反馈→红线分类→提案→沙盒→上线；触碰根本制度即升 DCD，运维端无权处置。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -79,6 +81,8 @@ import { WorkbuddyPage } from './workbuddy'
 import { ClusterPage } from './cluster'
 import { FormalPage } from './formal'
 import { ToolshelfPage } from './toolshelf'
+import { AnchorsPage } from './anchors'
+import { OpsPage } from './ops'
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -106,6 +110,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/cluster': ClusterPage,
   '/formal': FormalPage,
   '/toolshelf': ToolshelfPage,
+  '/anchors': AnchorsPage,
+  '/ops': OpsPage,
 }
 
 export function renderPage(meta: PageMeta) {

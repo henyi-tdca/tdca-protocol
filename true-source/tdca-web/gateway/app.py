@@ -77,6 +77,18 @@ app.include_router(formal_ops_router)
 from toolshelf_ops import router as toolshelf_ops_router  # noqa: E402
 app.include_router(toolshelf_ops_router)
 
+# A-16: P5 CI 手动触发入口（/api/v1/ci/*——lake build＋core-go＋网关回归；绿灯徽章入 P3 页面）
+from ci_ops import router as ci_ops_router  # noqa: E402
+app.include_router(ci_ops_router)
+
+# A-17: P6 模拟外部锚与版权事件（/api/v1/anchor/*——三锚 SIMULATED 硬标注；权属登记事件落 NCA 链）
+from anchor_ops import router as anchor_ops_router  # noqa: E402
+app.include_router(anchor_ops_router)
+
+# A-18: P7 站点运维端（/api/v1/ops/*——红线八项分类器；触碰升 DCD；上线 NCA 存证＋对账可回滚）
+from ops_ops import router as ops_ops_router  # noqa: E402
+app.include_router(ops_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）

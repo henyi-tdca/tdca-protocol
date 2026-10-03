@@ -28,11 +28,15 @@ export function FormalPage() {
   const [scope, setScope] = useState('')
   const [msg, setMsg] = useState('')
   const [rows, setRows] = useState<ConclusionView[]>([])
+  const [badge, setBadge] = useState<{ suite: string; status: string; run_id: string } | null>(null)
 
   const load = async () => {
     const r = await api.get<{ data: { conclusions: ConclusionView[] } }>(
       '/api/v1/formal/conclusion/list')
     if (r.ok) setRows(r.data.data.conclusions)
+    const b = await api.get<{ data: { suite: string; status: string; run_id: string } }>(
+      '/api/v1/ci/badge?suite=gateway-regression')
+    if (b.ok) setBadge(b.data.data)
   }
   useEffect(() => { void load() }, [])
 
@@ -56,6 +60,11 @@ export function FormalPage() {
       <section data-testid="formal-ingest">
         <h2>结论入站</h2>
         <SimulatedBadge nature="simulated" />
+        {badge && (
+          <p data-testid="ci-badge">机验徽章（{badge.suite}）：
+            <strong>{badge.status === 'PASS' ? '绿灯' : badge.status}</strong>
+            {badge.run_id ? ` · ${badge.run_id}` : ''}</p>
+        )}
         <div>
           <textarea
             aria-label="结论面文字"
