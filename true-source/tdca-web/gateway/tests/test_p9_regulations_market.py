@@ -72,19 +72,28 @@ def test_index_template_auth_present():
     assert "content" not in str(tpl["files"][0].keys())
 
 
-def test_index_two_specs_missing_reported():
+def test_index_two_specs_present_after_deposit():
+    """入册后：两件规范 present，版本读件内 V0.1-DRAFT、生效读签批落地件 V1.0-FROZEN。"""
     h = _auth()
     r = client.get("/api/v1/regulations/index", headers=h)
     by_key = {x["key"]: x for x in r.json()["data"]["regulations"]}
-    for key in ("registration_registry", "config_market"):
-        assert by_key[key]["present"] is False
-        assert "未入册" in by_key[key]["note"]
+    for key, doc_id in (("registration_registry", "TDCA-SPEC-REGISTER-OF-RIGHTS-001"),
+                        ("config_market", "TDCA-SPEC-CONFIGMARKET-001")):
+        assert by_key[key]["present"] is True
+        assert by_key[key]["doc_id"] == doc_id
+        assert by_key[key]["version"] == "V0.1-DRAFT"          # 件内真实值
+        assert by_key[key]["effective_status"] == "V1.0-FROZEN"  # 签批落地件
+        assert "签批落地件" in by_key[key]["effective_source"]
+        assert by_key[key]["version_source"] != by_key[key]["effective_source"]
 
 
-def test_spec_missing_503_fail_closed():
+def test_spec_config_market_present_and_sright_basis():
     h = _auth()
     r = client.get("/api/v1/regulations/spec/config_market", headers=h)
-    assert r.status_code == 503 and "SPEC_UNAVAILABLE" in r.text
+    assert r.status_code == 200
+    d = r.json()["data"]["spec"]
+    assert d["present"] is True and d["version"] == "V0.1-DRAFT"
+    assert len(d["files"]) == 4  # 中／英／机读＋签批落地件
     r2 = client.get("/api/v1/regulations/spec/moon", headers=h)
     assert r2.status_code == 404
 
