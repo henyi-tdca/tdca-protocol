@@ -9,7 +9,7 @@ import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 
 interface FamilyView { family: string; name: string; count: number }
-interface ItemView { slug: string; title: string; synced_at: string }
+interface ItemView { slug: string; title: string; synced_at: string; has_content?: boolean }
 interface DetailView {
   family: string; slug: string; title: string; body_md: string
   source_path: string; synced_at: string; note?: string
@@ -82,20 +82,29 @@ export function LibraryPage() {
 
         <div className="grid gap-3 md:grid-cols-3">
           <ul className="space-y-1 md:col-span-1" data-testid="lib-list">
-            {items.map((it) => (
-              <li key={it.slug}>
-                <button
-                  data-testid={`lib-item-${it.slug}`}
-                  className={`w-full rounded-md border px-2 py-1.5 text-left text-sm ${
-                    detail?.slug === it.slug
-                      ? 'border-blue-600 bg-blue-50 text-blue-800'
-                      : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'}`}
-                  onClick={() => onPick(it.slug)}>
-                  <span className="block truncate font-medium">{it.title || it.slug}</span>
-                  <span className="block truncate text-xs text-gray-400">{it.slug}</span>
-                </button>
-              </li>
-            ))}
+            {items.map((it) => {
+              const openable = it.has_content !== false
+              const active = detail?.slug === it.slug
+              return (
+                <li key={it.slug}>
+                  <button
+                    data-testid={`lib-item-${it.slug}`}
+                    data-openable={openable}
+                    disabled={!openable}
+                    title={openable ? '点击读正文' : '该件暂无可直接阅读的正文'}
+                    className={`w-full rounded-md border px-2 py-1.5 text-left text-sm ${
+                      !openable
+                        ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-400'
+                        : active
+                          ? 'border-blue-600 bg-blue-50 text-blue-800'
+                          : 'border-gray-200 bg-white text-blue-600 hover:bg-blue-50'}`}
+                    onClick={() => openable && onPick(it.slug)}>
+                    <span className="block truncate font-medium">{it.title || it.slug}</span>
+                    <span className={`block truncate text-xs ${openable ? 'text-gray-400' : 'text-gray-300'}`}>{it.slug}</span>
+                  </button>
+                </li>
+              )
+            })}
             {items.length === 0 && !err && (
               <li className="text-sm text-gray-400">本族暂无已入站件</li>
             )}
@@ -116,7 +125,7 @@ export function LibraryPage() {
               </article>
             ) : (
               <p className="rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-400">
-                ← 点左侧件名读正文（只读面；权威源以在册仓库为准）
+                ← 点左侧件名读正文（蓝字＝可直接阅读；灰显＝暂无可读正文。只读面；权威源以在册仓库为准）
               </p>
             )}
           </div>

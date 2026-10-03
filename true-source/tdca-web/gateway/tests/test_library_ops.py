@@ -54,6 +54,8 @@ def _docs_table():
         synced_at TEXT NOT NULL DEFAULT (datetime('now')))""")
     conn.execute("INSERT OR REPLACE INTO docs (family, slug, title, body_md, source_path)"
                  " VALUES ('whitepaper', 'WP-TEST-001', '测试白皮书', '正文甲', 'docs/x.md')")
+    conn.execute("INSERT OR REPLACE INTO docs (family, slug, title, body_md, source_path)"
+                 " VALUES ('whitepaper', 'WP-TEST-EMPTY', '占位件（无正文）', '', 'docs/y.md')")
     conn.commit()
     conn.close()
     yield
@@ -79,7 +81,9 @@ def test_list_and_detail(_docs_table):
     r = client.get("/api/v1/library/whitepaper", headers=h)
     assert r.status_code == 200, r.text[:200]
     d = r.json()["data"]
-    assert any(i["slug"] == "WP-TEST-001" for i in d["items"])
+    flags = {i["slug"]: i["has_content"] for i in d["items"]}
+    assert flags.get("WP-TEST-001") is True
+    assert flags.get("WP-TEST-EMPTY") is False
 
     r = client.get("/api/v1/library/whitepaper/WP-TEST-001", headers=h)
     assert r.status_code == 200, r.text[:200]

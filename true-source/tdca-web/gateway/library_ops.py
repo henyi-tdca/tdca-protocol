@@ -24,8 +24,8 @@ _FAMILIES: dict[str, str] = {
     "cop-library": "产物库（cop-library）",
 }
 
-_SEL_LIST = text("SELECT slug, title, synced_at FROM docs"
-                 " WHERE family = :family ORDER BY slug")
+_SEL_LIST = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
+                 " FROM docs WHERE family = :family ORDER BY slug")
 _SEL_DETAIL = text("SELECT slug, title, body_md, source_path, data_nature, synced_at"
                    " FROM docs WHERE family = :family AND slug = :slug")
 _SEL_COUNTS = text("SELECT family, COUNT(*) AS n FROM docs GROUP BY family")
@@ -67,7 +67,8 @@ def library_list(family: str, request: Request):
         raise HTTPException(503, "LIBRARY_FAIL_CLOSED: 内容库不可用（docs 表缺失或损坏）")
     return _nca_watermark(
         {"family": family, "name": _FAMILIES[family],
-         "items": [{"slug": r.slug, "title": r.title, "synced_at": r.synced_at} for r in rows]},
+         "items": [{"slug": r.slug, "title": r.title, "synced_at": r.synced_at,
+                    "has_content": bool(r.body_chars and r.body_chars > 0)} for r in rows]},
         nature="real")
 
 
