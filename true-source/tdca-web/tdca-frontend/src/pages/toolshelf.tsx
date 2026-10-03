@@ -32,6 +32,15 @@ export function ToolshelfPage() {
   const [name, setName] = useState('')
   const [category, setCategory] = useState('compiler')
   const [requiresGrant, setRequiresGrant] = useState(false)
+  const [tpl, setTpl] = useState<{
+    version: string
+    version_source: string
+    effective_status: string
+    effective_source: string
+    authority: string
+    files: { lang: string; filename: string; content: string; sha256_8: string }[]
+  } | null>(null)
+  const [tplMsg, setTplMsg] = useState('')
 
   const load = async () => {
     const r = await api.get<{ data: { tools: ToolView[] } }>('/api/v1/toolshelf/list')
@@ -48,6 +57,31 @@ export function ToolshelfPage() {
     setMsg(`已上架：${r.data.data.tool_id}`)
     setName('')
     void load()
+  }
+
+  const onTemplate = async () => {
+    setTplMsg('')
+    const r = await api.get<{
+      data: {
+        version: string
+        version_source: string
+        effective_status: string
+        effective_source: string
+        authority: string
+        files: { lang: string; filename: string; content: string; sha256_8: string }[]
+      }
+    }>('/api/v1/toolshelf/template/auth-contract')
+    if (!r.ok) { setTplMsg(`模板加载失败：${r.reason}`); return }
+    setTpl(r.data.data)
+  }
+
+  const download = (filename: string, content: string) => {
+    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }))
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -84,6 +118,31 @@ export function ToolshelfPage() {
         </label>
         <button onClick={onRegister}>上架</button>
         {msg && <p role="status">{msg}</p>}
+      </section>
+      <section data-testid="toolshelf-template">
+        <h2>模板区 · 授权件模板</h2>
+        <p>唯一权威源＝在仓《授权件模板》TDCA-TEMPLATE-AUTH-001（引用在仓、逐字一致；与所有者缔约授权书不可互替）。</p>
+        <button onClick={onTemplate}>查看模板</button>
+        {tplMsg && <p role="status">{tplMsg}</p>}
+        {tpl && (
+          <div>
+            <p data-testid="tpl-version">件内版本：{tpl.version}（{tpl.version_source}）</p>
+            <p data-testid="tpl-effective">生效：{tpl.effective_status}（{tpl.effective_source}）</p>
+            <p>{tpl.authority}</p>
+            <ul>
+              {tpl.files.map((f) => (
+                <li key={f.lang}>
+                  [{f.lang}] {f.filename}（sha256_8：{f.sha256_8}）
+                  <button onClick={() => download(f.filename, f.content)}>下载</button>
+                  <details>
+                    <summary>查看</summary>
+                    <pre>{f.content}</pre>
+                  </details>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
     </PageShell>
   )
