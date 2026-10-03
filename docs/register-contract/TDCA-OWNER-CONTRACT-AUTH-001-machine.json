@@ -1,0 +1,97 @@
+{
+  "contract_id": "TDCA-OWNER-CONTRACT-AUTH-001",
+  "version": "V1.0",
+  "status": "DRAFT-待审",
+  "effective": "on-founder-signoff",
+  "drafted_by": "institutional-drafting-group (drafting basis on file)",
+  "language": "zh-CN / en (human), machine-readable envelope",
+  "human_text_authoritative": true,
+  "human_versions": {
+    "zh": {
+      "file": "TDCA-OWNER-CONTRACT-AUTH-001-zh.md",
+      "sha256": "8236e15f26097958d33ed5cdce747f6d027abb31ce6c9fec3b571ee89c4e63f6"
+    },
+    "en": {
+      "file": "TDCA-OWNER-CONTRACT-AUTH-001-en.md",
+      "sha256": "07272680ebc67f42f9348bebd39ce2941ed6244b460309594bc74cb865585326"
+    }
+  },
+  "purpose": "owner authorization instrument template: a contracting human (legal entity) authorizes a specific agent/node to act within the TDCA protocol configuration network",
+  "four_elements": {
+    "scene_constraints": {
+      "required": true,
+      "semantics": "authorization reaches only the listed scenes of attribution; unlisted scenes are out of scope; acting beyond scenes is unauthorized",
+      "field": "scenes_of_attribution",
+      "type": "list[string]",
+      "empty_means": "void (fail-closed)"
+    },
+    "five_tier_asset_forms": {
+      "required": true,
+      "enum": [
+        "utility_right",
+        "configuration_right",
+        "nca_nested_cognitive_asset",
+        "mou_tax_anchored_voucher",
+        "cross_scene_configuration_profile"
+      ],
+      "labels": {
+        "utility_right": "效用权（场景效用函数调用权）",
+        "configuration_right": "配置权（L2 配置权市场层）",
+        "nca_nested_cognitive_asset": "NCA 嵌套认知资产（调用即存证）",
+        "mou_tax_anchored_voucher": "MOU 税收锚定凭证（进项+出项）",
+        "cross_scene_configuration_profile": "跨场景配置画像（多场景偏态档案）"
+      },
+      "unlisted_tiers": "may not be claimed under this instrument"
+    },
+    "full_composition_authorized": {
+      "required": true,
+      "semantics": "authorization covers the full composition of listed assets in listed scenes; no undisclosed reservation, hidden deduction, or additional restriction",
+      "declaration_field": "no_undisclosed_reservation",
+      "reservation_handling": "any reservation must be explicitly listed; a reservation fails the full-composition requirement and is treated as unauthorized"
+    },
+    "legal_entity_signature": {
+      "required": true,
+      "signer": "legal entity (human) personally",
+      "agent_proxy": {
+        "sign_on_behalf": false,
+        "hold_on_behalf": false,
+        "fill_on_behalf": false
+      },
+      "attestation": "signature event attested on NCA chain, verifiable on-chain"
+    }
+  },
+  "admission_linkage": {
+    "owner_auth_reference": {
+      "used_by": "non-native agent registration (identity_type=external)",
+      "reference_fields": ["contract_id", "version", "triplet_sha256"],
+      "gateway_verification": ["id_exists", "version_match", "hash_consistent", "status_valid"]
+    },
+    "config_call_gate": "configuration-type calls require a valid instrument; revoked or defective instruments are rejected fail-closed",
+    "sub_authorization_chain": "every layer must hold a valid instrument; any failed link invalidates all downstream links"
+  },
+  "negative_space": {
+    "no_transfer": "the negative space does not transfer with authorization; fundamental negative space is an absolute boundary",
+    "enforcement": "fail-closed circuit breaker with trace"
+  },
+  "revocation": {
+    "revoked_by": "legal entity (human) personally, signed revocation statement",
+    "effect_on_new_actions": "void",
+    "effect_on_history": "historical attestations retained (attestation chain not deleted upon deregistration)"
+  },
+  "termination": "instrument terminates automatically when the authorized party identity is TERMINATED (node-level)",
+  "data_provenance": {
+    "labeling_required": true,
+    "allowed": ["REAL", "SIMULATED"],
+    "attestation_on_reference": ["referencing_subject", "ts", "element_version_hash", "action_type"]
+  },
+  "effect_disclaimer": "internal protocol-layer authorization only; no external legal instrument; no administrative license, official qualification, regulatory recognition, or government endorsement",
+  "clauses": [
+    {"id": "1", "topic": "授权范围与效力", "key": "authorization void unless all four elements complete; fail-closed"},
+    {"id": "2", "topic": "授权四要件", "key": "scene constraints / five-tier asset forms / full composition / legal-entity signature; agent proxy signing, holding, filling forbidden"},
+    {"id": "3", "topic": "授权与准入衔接", "key": "owner_auth reference machine-verified; config calls gated; sub-authorization chain cascades"},
+    {"id": "4", "topic": "数据性质与存证", "key": "REAL/SIMULATED labeling; NCA attestation on every reference"},
+    {"id": "5", "topic": "负空间与熔断", "key": "negative space does not transfer; fail-closed"},
+    {"id": "6", "topic": "撤销与终止", "key": "personal signed revocation; history retained; auto-terminate on node TERMINATED"},
+    {"id": "7", "topic": "机读校验", "key": "fields map one-to-one with four elements; human text prevails; missing/empty/out-of-enum fails"}
+  ]
+}

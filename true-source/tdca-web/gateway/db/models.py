@@ -271,3 +271,59 @@ class UserIdentity(Base):
         CheckConstraint("identity_type IN ('native','external')", name="ck_user_identities_type"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_user_identities_prov"),
     )
+
+
+class WorkflowDef(Base):
+    """14. 工作流定义（P1 WorkBuddy 上站：POST /api/v1/workbuddy/workflow/create 落库；DSL JSON 全量）。"""
+
+    __tablename__ = "workflow_defs"
+    workflow_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    owner_username: Mapped[str | None] = mapped_column(ForeignKey("users.username"))
+    dsl_json: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="PENDING_HUMAN_GATE")
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (CheckConstraint(_PROVENANCE_CHECK, name="ck_wfdef_prov"),)
+
+
+class WorkflowRun(Base):
+    """15. 工作流执行记录（execute 落库：状态/步骤/NCA 全链可追溯；端到端 <10s 硬指标留痕）。"""
+
+    __tablename__ = "workflow_runs"
+    execution_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    workflow_id: Mapped[str] = mapped_column(ForeignKey("workflow_defs.workflow_id"), nullable=False)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="RUNNING")
+    current_step: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    nsfl_status: Mapped[str] = mapped_column(Text, nullable=False, default="CLEAR")
+    nca_refs_json: Mapped[str | None] = mapped_column(Text)
+    results_json: Mapped[str | None] = mapped_column(Text)
+    elapsed_ms: Mapped[float | None] = mapped_column(REAL)
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    started_at: Mapped[str] = mapped_column(Text, nullable=False)
+    finished_at: Mapped[str | None] = mapped_column(Text)
+    __table_args__ = (
+        CheckConstraint("status IN ('RUNNING','COMPLETED','BLOCKED','FAILED')", name="ck_wfrun_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_wfrun_prov"),
+    )
+
+
+class SignatureRequest(Base):
+    """16. 人类签名请求（signature/request→confirm 全链留痕；硬件签名模拟校验 ≥8 字符，自动化签名熔断）。"""
+
+    __tablename__ = "signature_requests"
+    request_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    workflow_id: Mapped[str | None] = mapped_column(Text)
+    gate_id: Mapped[str] = mapped_column(Text, nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    applicant: Mapped[str | None] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    tx_hash: Mapped[str | None] = mapped_column(Text)
+    nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    signed_at: Mapped[str | None] = mapped_column(Text)
+    __table_args__ = (
+        CheckConstraint("status IN ('pending','signed')", name="ck_sig_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_sig_prov"),
+    )

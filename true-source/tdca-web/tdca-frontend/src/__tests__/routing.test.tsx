@@ -40,8 +40,8 @@ function renderAt(path: string) {
 }
 
 describe('F0-A2 路由骨架（15 路由 + 404）', () => {
-  it('20 路由全部可达且渲染对应页面标题（15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about）', () => {
-    expect(PAGE_META).toHaveLength(20)
+  it('21 路由全部可达且渲染对应页面标题（15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about + P1 /workbuddy）', () => {
+    expect(PAGE_META).toHaveLength(21)
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
       expect(screen.getByRole('heading', { name: meta.title })).toBeInTheDocument()

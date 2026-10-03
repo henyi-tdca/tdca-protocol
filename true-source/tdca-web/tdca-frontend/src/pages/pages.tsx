@@ -38,6 +38,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/register', title: '注册（人类账号）', layer: 'L0', dataSource: 'M4 POST /api/v1/auth/register', permission: '公开', description: '注册即 viewer 只读账号（人机面）；注册存证落 NCA 链，成功自动登录进个人后台。' },
   { path: '/me', title: '个人后台（我的）', layer: 'L0', dataSource: 'M5 GET /api/v1/me/dashboard', permission: '须登录（谁的数据谁可见）', description: '我的智能体 / 签批待办 / 我批过的 / 沙盒申请 / 治理操作，一屏聚合。' },
   { path: '/agents/:id', title: '智能体后台', layer: 'L0', dataSource: 'M5 GET /api/v1/agents/{id}/dashboard', permission: '公开读（归属人脱敏）', description: '每一只智能体的画像 / MOU 计量 / 税单 / 签章记录 / NCA 存证，一页看全。' },
+  { path: '/workbuddy', title: 'WorkBuddy 人机协作工作台', layer: 'L0', dataSource: 'A-12 /api/v1/workbuddy/*（P5 引擎 + DB 持久化 + NCA 落链）', permission: '登录 DID（执行须人类签名）', description: '跨场景工作流：创建 → 签名门禁执行 → 状态/NCA 全链可查；智能体不得代签。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -71,6 +72,7 @@ import { AuthPage } from './auth'
 import { MePage } from './me'
 import { RegisterPage } from './register'
 import { AgentDashboardPage } from './agent-dashboard'
+import { WorkbuddyPage } from './workbuddy'
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -94,6 +96,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/register': RegisterPage,
   '/me': MePage,
   '/agents/:id': AgentDashboardPage,
+  '/workbuddy': WorkbuddyPage,
 }
 
 export function renderPage(meta: PageMeta) {
