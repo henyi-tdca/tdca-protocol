@@ -106,3 +106,11 @@ import TDCA.CoordLayering
 -- ——COORD-6 错觉循环不动点（离散情形：自增强 ⟹ 一致压缩率 ＋ 单调 ＋ 有限步收敛 ＋ 唯一不动点），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C6-1–C6-4）。
 import TDCA.CoordLoop
+-- 形式化线第三批（2026-10-05）：新增 import TDCA.TruthSpace
+-- —— 三空间真值 L1 子集（互斥／合取封闭／无补），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（T-1–T-4／A-1–A-3）。
+import TDCA.TruthSpace
+-- 形式化线第三批（2026-10-05）：新增 import TDCA.EconEmbed
+-- —— 成本正定性（条件化；正性公理为显式前提，⛔ 不进内核作定理），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（E-1–E-3）。
+import TDCA.EconEmbed
