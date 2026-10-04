@@ -17,9 +17,13 @@ interface ClusterData {
 type AttestState = 'valid' | 'expiring' | 'invalid'
 
 const FIVE_PANELS: { key: string; name: string; desc: string; attestation: AttestState }[] = [
+  // 批级
   { key: 'Trainer', name: '培训导师', desc: '学术交流 / 考核测评 / 学习路径（tdca-trainer）', attestation: 'valid' },
+  // 批级
   { key: 'Executor', name: '执行官', desc: '任务执行 / 交付闭环（tdca-executor）', attestation: 'valid' },
+  // 批级
   { key: 'Auditor', name: '审查官', desc: '代码审查 / 合规审计（tdca-code-reviewer）', attestation: 'valid' },
+  // 批级
   { key: 'Service', name: '服务官', desc: '行业顾问 / 落地匹配（tdca-industry-advisor）', attestation: 'expiring' },
   { key: 'Genie', name: '效用精灵', desc: '正和满意解 / 效用计量（tdca-utility-genie）', attestation: 'valid' },
 ]
