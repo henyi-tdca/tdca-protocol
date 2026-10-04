@@ -23,6 +23,79 @@ const FAMILY_TABS: { key: string; label: string }[] = [
   { key: 'regulation', label: '制度规范' },
 ]
 
+// 产物库族内子库分组（slug 前缀 <子库>--；批一在册件无此前缀，归入说明件与代表件）
+const COP_SUB_NAMES: Record<string, string> = {
+  chengyu: '成语库',
+  compositions: '化合库',
+  emissary: '特使库',
+  'engineering-three': '工程三协议',
+  games: '博弈库',
+  hundred_schools: '诸子百家',
+  marxism: '马克思主义库',
+  microeconomics: '微观经济学库',
+  simulations: '模拟推演',
+  stratagems: '三十六计',
+}
+const COP_SUB_ORDER = Object.keys(COP_SUB_NAMES)
+
+interface CopGroup { key: string; name: string; items: ItemView[] }
+
+function groupCopItems(items: ItemView[]): CopGroup[] {
+  const byKey = new Map<string, ItemView[]>()
+  for (const it of items) {
+    const i = it.slug.indexOf('--')
+    const key = i > 0 ? it.slug.slice(0, i) : '_legacy'
+    const arr = byKey.get(key) ?? []
+    arr.push(it)
+    byKey.set(key, arr)
+  }
+  const groups: CopGroup[] = []
+  if (byKey.has('_legacy')) {
+    groups.push({ key: '_legacy', name: '说明件与代表件（批一在册）', items: byKey.get('_legacy')! })
+  }
+  for (const k of COP_SUB_ORDER) {
+    if (byKey.has(k)) {
+      groups.push({ key: k, name: `${COP_SUB_NAMES[k]}（${k}）`, items: byKey.get(k)! })
+    }
+  }
+  for (const k of byKey.keys()) {
+    if (k !== '_legacy' && !(k in COP_SUB_NAMES)) {
+      groups.push({ key: k, name: k, items: byKey.get(k)! })
+    }
+  }
+  return groups
+}
+
+function CopItem({ it, detail, onPick }: {
+  it: ItemView; detail: DetailView | null; onPick: (slug: string) => void
+}) {
+  const openable = it.has_content !== false
+  const active = detail?.slug === it.slug
+  const btn = (
+    <button
+      data-testid={`lib-item-${it.slug}`}
+      data-openable={openable}
+      disabled={!openable}
+      title={openable ? '点击读正文' : '该件暂无可直接阅读的正文'}
+      className={`w-full rounded-md border px-2 py-1.5 text-left text-sm ${
+        !openable
+          ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-400'
+          : active
+            ? 'border-blue-600 bg-blue-50 text-blue-800'
+            : 'border-gray-200 bg-white text-blue-600 hover:bg-blue-50'}`}
+      onClick={() => openable && onPick(it.slug)}>
+      <span className="block truncate font-medium">
+        {it.title || it.slug}
+        {!openable && (
+          <span className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">在建中</span>
+        )}
+      </span>
+      <span className={`block truncate text-xs ${openable ? 'text-gray-400' : 'text-gray-300'}`}>{it.slug}</span>
+    </button>
+  )
+  return <li>{btn}</li>
+}
+
 export function LibraryPage() {
   const [params] = useSearchParams()
   const [families, setFamilies] = useState<FamilyView[]>([])
@@ -62,7 +135,7 @@ export function LibraryPage() {
       title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"
-      description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；以在册仓库为唯一权威源，本站不复制不改写。">
+      description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。">
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           {FAMILY_TABS.map((t) => (
@@ -87,35 +160,22 @@ export function LibraryPage() {
         {err && <p className="rounded bg-red-50 p-3 text-sm text-red-600" role="alert">{err}</p>}
 
         <div className="grid gap-3 md:grid-cols-3">
-          <ul className="space-y-1 md:col-span-1" data-testid="lib-list">
-            {items.map((it) => {
-              const openable = it.has_content !== false
-              const active = detail?.slug === it.slug
-              return (
-                <li key={it.slug}>
-                  <button
-                    data-testid={`lib-item-${it.slug}`}
-                    data-openable={openable}
-                    disabled={!openable}
-                    title={openable ? '点击读正文' : '该件暂无可直接阅读的正文'}
-                    className={`w-full rounded-md border px-2 py-1.5 text-left text-sm ${
-                      !openable
-                        ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-400'
-                        : active
-                          ? 'border-blue-600 bg-blue-50 text-blue-800'
-                          : 'border-gray-200 bg-white text-blue-600 hover:bg-blue-50'}`}
-                    onClick={() => openable && onPick(it.slug)}>
-                    <span className="block truncate font-medium">
-                      {it.title || it.slug}
-                      {!openable && (
-                        <span className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">在建中</span>
-                      )}
-                    </span>
-                    <span className={`block truncate text-xs ${openable ? 'text-gray-400' : 'text-gray-300'}`}>{it.slug}</span>
-                  </button>
-                </li>
-              )
-            })}
+          <ul className="max-h-[70vh] space-y-1 overflow-auto md:col-span-1" data-testid="lib-list">
+            {family === 'cop-library'
+              ? groupCopItems(items).map((g) => (
+                  <li key={g.key} className="pt-2 first:pt-0">
+                    <p className="px-1 pb-1 text-xs font-semibold text-gray-500">
+                      {g.name}
+                      <span className="ml-1 font-normal text-gray-400">{g.items.length} 件</span>
+                    </p>
+                    <ul className="space-y-1">
+                      {g.items.map((it) => (
+                        <CopItem key={it.slug} it={it} detail={detail} onPick={onPick} />
+                      ))}
+                    </ul>
+                  </li>
+                ))
+              : items.map((it) => <CopItem key={it.slug} it={it} detail={detail} onPick={onPick} />)}
             {items.length === 0 && !err && (
               <li className="text-sm text-gray-400">本族暂无已入站件</li>
             )}
