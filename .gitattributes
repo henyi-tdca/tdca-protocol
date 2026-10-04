@@ -1,0 +1,30 @@
+# TDCA 行尾统一声明
+# 口径：文本类统一 LF；二进制类显式标记（不强制转换）。
+# 影响面：只影响此后新增与改写的件；历史件行尾不回溯（另案，不动）。
+* text=auto eol=lf
+
+# 文本类显式 LF
+*.md    text eol=lf
+*.py    text eol=lf
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.go    text eol=lf
+*.lean  text eol=lf
+
+# 二进制类（显式标记，不转换）
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.zip   binary
+*.gz    binary
+*.woff  binary
+*.woff2 binary
+*.pptx  binary
+*.docx  binary
+*.xlsx  binary
