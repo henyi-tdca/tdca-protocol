@@ -50,17 +50,20 @@ function groupCopItems(items: ItemView[]): CopGroup[] {
     byKey.set(key, arr)
   }
   const groups: CopGroup[] = []
-  if (byKey.has('_legacy')) {
-    groups.push({ key: '_legacy', name: '说明件与代表件（批一在册）', items: byKey.get('_legacy')! })
+  // 批一在册件：无 <子库>-- 前缀者，加上批一自起 ad-hoc 前缀者（如 COMPOSITION-REPORT--*），
+  // 一律归入「说明件与代表件」组，不做伪子库分组。
+  const legacyItems = [
+    ...(byKey.get('_legacy') ?? []),
+    ...[...byKey.keys()]
+      .filter((k) => k !== '_legacy' && !(k in COP_SUB_NAMES))
+      .flatMap((k) => byKey.get(k)!),
+  ]
+  if (legacyItems.length > 0) {
+    groups.push({ key: '_legacy', name: '说明件与代表件（批一在册）', items: legacyItems })
   }
   for (const k of COP_SUB_ORDER) {
     if (byKey.has(k)) {
       groups.push({ key: k, name: `${COP_SUB_NAMES[k]}（${k}）`, items: byKey.get(k)! })
-    }
-  }
-  for (const k of byKey.keys()) {
-    if (k !== '_legacy' && !(k in COP_SUB_NAMES)) {
-      groups.push({ key: k, name: k, items: byKey.get(k)! })
     }
   }
   return groups
