@@ -22,7 +22,7 @@
    **这解释了为何 M-4 不宜只依赖兼容条件版**；规范代表元版（`L3b`）在迭代场景可能更贴切。
    → 本观察**呈裁定包**（见交付报告 §四），**不擅自改裁定**。
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 namespace TDCA.MetaInverse
 
