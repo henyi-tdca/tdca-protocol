@@ -12,7 +12,7 @@
     · 本骨架**不重复**既有 Go 断言（9 项 PASS）与框架级证明（定理 E.1~E.4）；
       其增量在于**独立的第二通道**（Lean）与**可机验的泛化陈述**。
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import TDCA.Basic
 
 namespace TDCA.MetaInverse
