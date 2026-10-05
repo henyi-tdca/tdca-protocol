@@ -17,13 +17,13 @@ definitions:
     fee: 'charged'
 
 rules:
-  - id: R1
+  - id: rule-1
     title: 'Keep apart'
     text: 'Encounter and Matchmaking are different and do not substitute for each other. Matchmaking is charged; the Encounter itself is not. No encounter entry fee or traffic fee.'
-  - id: R2
+  - id: rule-2
     title: 'Record only the fact'
     text: 'An Encounter records only occurred / did not occur. No true/false (fake) encounter distinction.'
-  - id: R3
+  - id: rule-3
     title: 'No skipping'
     text: 'Flow is Discovery -> Encounter -> Handshake. No configuration right may be invoked before the handshake; enforced by the system.'
 
