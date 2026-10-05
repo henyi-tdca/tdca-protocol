@@ -118,3 +118,7 @@ import TDCA.EconEmbed
 -- ——PRP-ATT-001 制度吸引子（离散收窄版：压缩前提 ⟹ 吸引子唯一 ＋ 全局收敛 ＋ 步数界 ＋ 偏差不增），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A5）。
 import TDCA.Attractor
+-- 形式化线第三批 批 2 之序 P2-2（2026-10-05）：新增 import TDCA.TruthSpaceL2
+-- ——PRP-TRI-001 之 L2（样本代数构成海廷代数·逐式穷举：格公理／有界非退化／分配律／海廷伴随／伪补一致），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（M1–M6）。
+import TDCA.TruthSpaceL2
