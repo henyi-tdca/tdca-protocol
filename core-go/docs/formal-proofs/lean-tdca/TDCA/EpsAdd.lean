@@ -14,7 +14,7 @@
   依据：M-3 方案设计§二 承重处澄清 + §七 F2′ 回退条件 + §十二 外部审阅处置
   本版变更（M3-b）：`eps_accumulation` 由 `sorry` → **证明尝试**（义务 L5）；新增 import 一条。
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
