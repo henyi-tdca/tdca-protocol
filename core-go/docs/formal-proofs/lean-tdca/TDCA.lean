@@ -122,3 +122,7 @@ import TDCA.Attractor
 -- ——PRP-TRI-001 之 L2（样本代数构成海廷代数·逐式穷举：格公理／有界非退化／分配律／海廷伴随／伪补一致），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（M1–M6）。
 import TDCA.TruthSpaceL2
+-- 另案 F-3（2026-10-05）：新增 import TDCA.FractalScene
+-- ——场景分形嵌套形式化（收窄版：二元嵌套·层数判据·生成器加一层），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（F1–F5）。
+import TDCA.FractalScene
