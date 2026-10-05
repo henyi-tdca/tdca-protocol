@@ -16,7 +16,7 @@
   ⚠️ **半判定性诚实边界（场景侧既有声明）**：`D_S` 不可枚举/无界 ⟹「**不存在** `s'`」**不可有限步证否**；
      本文件**只形式化「见证方向」**（F-4）；跃迁充分性因此表述为「**（存在见证时）⟹ `D_c`**」。
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 namespace TDCA.MetaInverse
 
