@@ -114,3 +114,7 @@ import TDCA.TruthSpace
 -- —— 成本正定性（条件化；正性公理为显式前提，⛔ 不进内核作定理），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（E-1–E-3）。
 import TDCA.EconEmbed
+-- 形式化线第三批 批 2 之序 P2-1（2026-10-05）：新增 import TDCA.Attractor
+-- ——PRP-ATT-001 制度吸引子（离散收窄版：压缩前提 ⟹ 吸引子唯一 ＋ 全局收敛 ＋ 步数界 ＋ 偏差不增），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A5）。
+import TDCA.Attractor
