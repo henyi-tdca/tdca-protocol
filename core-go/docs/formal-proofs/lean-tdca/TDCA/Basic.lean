@@ -15,7 +15,7 @@
    · **不标「绝对安全」**：本骨架刻画「重算比对」的完备/可靠与广义逆的代数性质，
      不含对真实制度行为的强断言；外部接口与真实数据皆为模型外因素。
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 namespace TDCA.MetaInverse
 
