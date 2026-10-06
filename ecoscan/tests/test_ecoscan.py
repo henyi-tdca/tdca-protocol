@@ -16,9 +16,15 @@ from tdca_ecoscan.ledger import EcoLedger
 from tdca_ecoscan.scanner import EcoScanner, ScanTarget
 
 
+_DEFAULT_PUSHED = object()  # 哨兵：区分「未传」与「显式 None」
+
+
 def _repo(full="deepseek-ai/harness", stars=33000, lic="MIT",
           desc="everything-is-plugin agent framework with append-only session logs",
-          pushed="2026-08-20T00:00:00Z", kw=("agent", "harness")):
+          pushed=_DEFAULT_PUSHED, kw=("agent", "harness")):
+    if pushed is _DEFAULT_PUSHED:
+        # 相对时间（W-8）：不再硬编码绝对日期，杜绝时间依赖之脆弱测试
+        pushed = (datetime.now(timezone.utc) - timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%SZ")
     return {"repo_full": full, "stars": stars, "license_spdx": lic,
             "description": desc, "pushed_at": pushed, "keywords": list(kw)}
 
@@ -135,7 +141,8 @@ class TestDiagnoser:
         t = EcoScanner().scan_static([
             {"repo_full": "deepseek-ai/deepseek-harness", "stars": 185601,
              "license_spdx": "MIT", "description": "DeepSeek Harness: Everything is a Plugin.",
-             "pushed_at": "2026-08-20T00:00:00Z", "keywords": ["deepseek harness"]}])[0]
+             "pushed_at": (datetime.now(timezone.utc) - timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+             "keywords": ["deepseek harness"]}])[0]
         p = d.diagnose(t)
         assert p.tier == TIER_A
         assert p.fit_score >= 0.75
