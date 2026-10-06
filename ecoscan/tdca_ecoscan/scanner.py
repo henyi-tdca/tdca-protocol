@@ -15,14 +15,17 @@ from urllib.parse import quote
 
 @dataclass(frozen=True)
 class ScanTarget:
-    """扫描候选仓库。"""
-    repo_full: str              # owner/repo
+    """扫描候选仓库（来源适配层 W-1：新增三字段均带默认，旧字段与旧构造方式不变）。"""
+    repo_full: str              # owner/repo（非仓来源时为来源标识）
     stars: int
     license_spdx: Optional[str]
     pushed_at: Optional[str]
     description: Optional[str]
     keywords: List[str]
     url: str
+    source_type: Optional[str] = None      # 来源类型（github/dataset/model/saas/portal/page）
+    evidence_ref: Optional[str] = None     # 工件级证据引用（核验层填写）
+    permalink: Optional[str] = None        # 可复核之固定链接
 
     def to_dict(self) -> dict:
         return {
@@ -33,6 +36,9 @@ class ScanTarget:
             "description": self.description,
             "keywords": self.keywords,
             "url": self.url,
+            "source_type": self.source_type,
+            "evidence_ref": self.evidence_ref,
+            "permalink": self.permalink,
         }
 
 
