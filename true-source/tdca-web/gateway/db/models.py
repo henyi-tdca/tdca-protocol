@@ -404,6 +404,7 @@ class ToolItem(Base):
     version: Mapped[str | None] = mapped_column(Text)
     requires_grant: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     status: Mapped[str] = mapped_column(Text, nullable=False, default="available")
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
     created_at: Mapped[str] = mapped_column(Text, nullable=False)
     __table_args__ = (
