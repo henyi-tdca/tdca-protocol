@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import json
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Dict, Optional
 from urllib.parse import urlparse
@@ -135,21 +136,30 @@ class CogAlignAPIHandler(BaseHTTPRequestHandler):
         pass
 
 
-def create_server(port: int = 8123, host: str = "127.0.0.1",
+# 绑定地址可配（环境变量 TDCA_COG_ALIGN_BIND 覆盖；缺省回环，默认行为不变）
+_BIND_ENV = "TDCA_COG_ALIGN_BIND"
+
+
+def create_server(port: int = 8123, host: Optional[str] = None,
                   notary_dir: Optional[str] = None,
                   auto_notarize: bool = True) -> HTTPServer:
-    """创建 cog_align 评测服务（零依赖 HTTP 服务）。"""
+    """创建 cog_align 评测服务（零依赖 HTTP 服务）。
+
+    绑定地址取值序：host 参数 → 环境变量 TDCA_COG_ALIGN_BIND → 回环缺省。
+    """
+    bind_host = host or os.environ.get(_BIND_ENV) or "127.0.0.1"
     CogAlignAPIHandler.service = CogAlignService()
     CogAlignAPIHandler.notary = CogAlignNotary(target_dir=notary_dir)
     CogAlignAPIHandler.auto_notarize = auto_notarize
-    return HTTPServer((host, port), CogAlignAPIHandler)
+    return HTTPServer((bind_host, port), CogAlignAPIHandler)
 
 
 if __name__ == "__main__":
     import sys
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8123
     server = create_server(port=port)
-    print(f"cog_align API 服务已启动: http://127.0.0.1:{port}/api/v1/cog-align/health")
+    bound_host, bound_port = server.server_address[0], server.server_address[1]
+    print(f"cog_align API 服务已启动: http://{bound_host}:{bound_port}/api/v1/cog-align/health")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
