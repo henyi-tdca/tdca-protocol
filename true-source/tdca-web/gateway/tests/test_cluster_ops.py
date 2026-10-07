@@ -116,11 +116,25 @@ def test_admission_config_denied_then_admitted():
     h = _auth()
     r = client.post("/api/v1/cluster/admission/check",
                     json={"agent_id": "agent-cl-003", "call_type": "config"}, headers=h)
-    assert r.status_code == 403 and "仅握手不成立" in r.text
+    assert r.status_code == 403 and "G-2" in r.text  # 未附权属成件即拦（fail-closed）
+    # 备齐 G-2~G-5 成件（走站点登记端点）
+    ow = client.post("/api/v1/ownership/register",
+                     json={"work_title": "集群编排测试资产", "owner_ref": "cltester01",
+                           "source_lineage": "cluster 闸门测试"}, headers=h)
+    assert ow.status_code == 201, ow.text
+    ar = client.post("/api/v1/authorization/register",
+                     json={"asset_ref": "五族资产·测试", "grantee_ref": "被授权方·测试",
+                           "scene": "生产交付",
+                           "req_scene": True, "req_five_forms": True,
+                           "req_full_grant": True, "req_legal_signature": True}, headers=h)
+    assert ar.status_code == 201, ar.text
     client.post("/api/v1/cluster/grant/register",
                 json=_grant_payload(subject_agent="agent-cl-003"), headers=h)
     r2 = client.post("/api/v1/cluster/admission/check",
-                     json={"agent_id": "agent-cl-003", "call_type": "config"}, headers=h)
+                     json={"agent_id": "agent-cl-003", "call_type": "config",
+                           "ownership_record_id": ow.json()["data"]["record_id"],
+                           "authorization_record_id": ar.json()["data"]["record_id"]},
+                     headers=h)
     assert r2.status_code == 200 and r2.json()["data"]["verdict"] == "ADMITTED"
 
 
