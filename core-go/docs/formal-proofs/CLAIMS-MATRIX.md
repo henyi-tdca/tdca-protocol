@@ -16,7 +16,6 @@
 > （`constraint2_soundness`）／约束 3 可还原性·甲′（`constraint3_right_inverse`，三前提）。
 > ⚠️ 适用范围＝抽象层（`D` 为有限类型），⛔ 不重复 Go 通道的制度实例，⛔ 不得据以表述制度层结论；
 > ⛔ 本注仅增列证明器通道，不改 Go 通道结论与其适用范围。
-| A-2 | 定理 E.1~E.4（存在性/唯一性/右逆充要/NSFL 联动） | `TDCA-FUNCTION-WP-002-APPX-E`（FROZEN） | 框架级（机验待 P-1） | 集合论标准框架；X 可数前置 |
 | A-3 | 命题 P4a：C < q(1−p)R ⟹ T_process 严格占优（原 B-3） | `research/papers/formal/TDCA-P4a-Corollary2-Lean4-Candidate-V1.2.lean`（研究侧引用·不入库，与 P-3/P-4「artifacts 不进主仓」同源） + `core-go/docs/formal-proofs/lean/TDCA/ExPostTrust.lean` | ✅ `lake env lean` 零 error（PR #127 / 机验通道）；模型假设：单次协作、C 由 A 承担；**不标"绝对安全"** |
 | A-4 | 推论 2：α ↑ ⟹ e_B* ↓（攫取问题的比较静态，原 B-4） | 同上 | ✅ `lake env lean` 零 error + `sorry` = 0（PR #128 后机验）；模型假设与适用范围见件头 |
 | A-5 | N-1 失效半径有界性：信任链单点失效向下传导、向上隔离，不全局重置，既有记录不失效 | `lean-tdca/TDCA/FailureRadius.lean`（`isolation` / `no_global_reset` / `downward_reaches` / `prior_records_survive` 等） | ✅ 本机已机验（Lean 4.34.0-rc2，sorry=0）；CI 机验通道落地中（lean-verify.yml `lean-tdca` job，首跑未跑）；模型假设：A1 信任链＝分支有限集合、向下传导＝分支内位置序号增大方向；A2 失效事件带在链证据（无链外失效）；A3/A4 affected／survives 定义即刻画；A5 不建模跨分支共享状态；适用范围＝抽象骨架层，密钥轮换／重锚等动态属工程层；**不标"绝对安全"** |
@@ -33,6 +32,7 @@
 |---|---|---|---|
 | B-1 | 命题 3.10 认知距离不对称（d_cognitive(a,b) ≠ d_cognitive(b,a)） | 权威锚 AUTHORITY-CONSTITUTION L2582-2585（定义引用） | 🔶 无独立证明文件——**P-5 开放问题**（吸引专家） |
 | B-2 | 定理 2.2 配置权右逆（φ(g(φ(x)))=φ(x)） | TDCA-FUNCTION-WP-002 §2（证明框架） | 🔶 框架级，未机验 |
+| B-3 | 定理 E.1~E.4（存在性/唯一性/右逆充要/NSFL 联动） | `TDCA-FUNCTION-WP-002-APPX-E`（FROZEN） | 🔶 框架级（机验待 P-1）；适用边界：集合论标准框架、X 可数前置（原 Tier A 之 A-2，归级更正——左列归级照右列机验口径更正，数学内容与证明引用不动） |
 | B-5 | 分层归责预判：智能体 = 可归责第一节点，委托人 = 最终责任主体（路径三） | WP-MATERIALISM-001 V1.2 §2.2.2 | 🔶 模型层预判，非事实层断言；随 §2.2.2.6 四信号检验，证伪则修订 |
 
 ## 三、Tier C · 进行中/未定稿（[proof: pending]，不挂公理名）
