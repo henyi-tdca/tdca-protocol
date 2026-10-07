@@ -68,6 +68,7 @@ export const APP_NAV: { group: string; items: NavItem[] }[] = [
       { to: '/anchors', label: '模拟锚' },
       { to: '/ops', label: '运维端' },
       { to: '/ownership-registry', label: '权属登记' },
+      { to: '/authorization-registry', label: '授权登记' },
       { to: '/market-sim', label: '规范与沙盒链', badge: '在建中' }, // 两件规范未入册（端点 503 fail-closed）
     ],
   },
