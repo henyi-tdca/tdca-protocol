@@ -35,7 +35,8 @@ def tool_list(request: Request, category: str = ""):
         "count": len(rows),
         "tools": [{"tool_id": r.tool_id, "name": r.name, "category": r.category,
                    "description": r.description, "version": r.version,
-                   "requires_grant": bool(r.requires_grant), "status": r.status}
+                   "requires_grant": bool(r.requires_grant), "status": r.status,
+                   "nca_ref": r.nca_ref}
                   for r in rows],
         "note": "工具货架（内部目录；requires_grant=true 的配置类工具须过准入闸门）"})
 
@@ -60,16 +61,18 @@ def tool_register(req: ToolRegister, request: Request):
     if req.category not in ("compiler", "adapter", "template", "other"):
         raise HTTPException(400, "category 须为 compiler / adapter / template / other")
     tid = f"TL-{uuid.uuid4().hex[:10]}"
+    nca_ref = _nca_append("TOOL_REGISTER", user["username"],
+                          artifact_path=f"toolshelf:{tid}")
     with get_sessionmaker().begin() as s:
         s.add(M.ToolItem(
             tool_id=tid, name=req.name.strip(), category=req.category,
             description=req.description or None, version=req.version or None,
             requires_grant=1 if req.requires_grant else 0,
-            status="available", created_at=_utc()))
+            status="available", nca_ref=nca_ref, created_at=_utc()))
     return _nca_watermark({"tool_id": tid, "name": req.name.strip(),
-                           "category": req.category,
+                           "category": req.category, "nca_ref": nca_ref,
                            "requires_grant": req.requires_grant,
-                           "note": "工具已上架（配置类调用须凭授权件过准入闸门）"})
+                           "note": "工具已上架（NCA 存证；配置类调用须凭授权件过准入闸门）"})
 # 模板区：授权件模板（AMEND-002 更正两件——引用在仓《授权件模板》三件，不复制正文）
 # 唯一权威源 = docs/regulations/ 之 TDCA-TEMPLATE-AUTH-001（中／英／机读）；
 # ⛔ 与 docs/register-contract/ 之 TDCA-OWNER-CONTRACT-AUTH-001（所有者缔约授权书）
