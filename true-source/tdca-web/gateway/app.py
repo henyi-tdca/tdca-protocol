@@ -109,6 +109,11 @@ app.include_router(library_ops_router)
 from announcements_ops import router as announcements_ops_router  # noqa: E402
 app.include_router(announcements_ops_router)
 
+# A-24: P8b 授权登记管理（/api/v1/authorization/*——登记／变更／注销／查询／操作＋公开查四字段；
+# 四要件缺一即拒；四条不公开负空间 fail-closed；签名须本人、智能体不代持代填）
+from authorization_ops import router as authorization_ops_router  # noqa: E402
+app.include_router(authorization_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）

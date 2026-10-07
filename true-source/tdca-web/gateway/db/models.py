@@ -545,3 +545,35 @@ class Announcement(Base):
     __table_args__ = (
         CheckConstraint(_PROVENANCE_CHECK, name="ck_ann_prov"),
     )
+
+
+class AuthorizationRecord(Base):
+    """26. 授权登记记录（P8b 一期段：登记／变更／注销／查询／操作——授权侧；
+    登记二分之本面只做「谁能怎么用」；四要件（场景约束／五阶资产形态／全构成已授权／
+    法律主体签名）缺一即拒；授权件模板八字段以 template_fields 透传存证；
+    签名＝电子签名与授权码皆须本人，智能体不代持、不代填；公开面仅四字段）。"""
+
+    __tablename__ = "authorization_records"
+    record_id: Mapped[str] = mapped_column(Text, primary_key=True)  # AR-xxx
+    asset_ref: Mapped[str] = mapped_column(Text, nullable=False)    # 授权对象引用
+    grantee_ref: Mapped[str] = mapped_column(Text, nullable=False)  # 被授权方引用
+    scene: Mapped[str] = mapped_column(Text, nullable=False)        # 场景（四要件①载体）
+    req_scene: Mapped[bool] = mapped_column(nullable=False, default=False)          # ① 场景约束
+    req_five_forms: Mapped[bool] = mapped_column(nullable=False, default=False)     # ② 五阶资产形态
+    req_full_grant: Mapped[bool] = mapped_column(nullable=False, default=False)     # ③ 全构成已授权
+    req_legal_signature: Mapped[bool] = mapped_column(nullable=False, default=False)  # ④ 法律主体签名
+    scope_note: Mapped[str | None] = mapped_column(Text)            # 权限范围说明（⛔ 不代定取值）
+    term_note: Mapped[str | None] = mapped_column(Text)             # 期限说明（⛔ 不代定取值）
+    template_fields: Mapped[str] = mapped_column(Text, nullable=False, default="{}")  # 模板八字段 JSON
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    note: Mapped[str | None] = mapped_column(Text)
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('pre-accepted','active','amended','cancelled')",
+                        name="ck_authz_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_authz_prov"),
+        Index("idx_authz_grantee", "grantee_ref"),
+    )
