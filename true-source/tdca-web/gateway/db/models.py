@@ -578,3 +578,53 @@ class AuthorizationRecord(Base):
         CheckConstraint(_PROVENANCE_CHECK, name="ck_authz_prov"),
         Index("idx_authz_grantee", "grantee_ref"),
     )
+
+
+class MarketListing(Base):
+    """29. 配置权市场挂出件（管理面 A-1/A-3/A-4：挂出／状态变更／下架；
+    先有成件闸门（权属成件＋授权成件＋四要件齐；例外仅沙盒演练显式标记）；
+    初始条件必公开；下架不溯及已生成授权件；操作限权属登记人本人）。"""
+
+    __tablename__ = "market_listings"
+    listing_id: Mapped[str] = mapped_column(Text, primary_key=True)  # ML-xxx
+    owner_ref: Mapped[str] = mapped_column(Text, nullable=False)     # 权属登记人本人
+    ownership_record_id: Mapped[str] = mapped_column(Text, nullable=False)   # 权属成件
+    authorization_record_id: Mapped[str] = mapped_column(Text, nullable=False, default="")  # 授权成件（沙盒例外空）
+    asset_summary: Mapped[str] = mapped_column(Text, nullable=False)
+    scene: Mapped[str] = mapped_column(Text, nullable=False)
+    scope_note: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    term_note: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    initial_conditions: Mapped[str] = mapped_column(Text, nullable=False)  # 初始条件（必公开）
+    sandbox_flag: Mapped[int] = mapped_column(nullable=False, default=0)   # 沙盒例外显式标记
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    published_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('active','paused','delisted')", name="ck_ml_status"),
+        CheckConstraint("sandbox_flag IN (0,1)", name="ck_ml_sandbox"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ml_prov"),
+        Index("idx_ml_owner", "owner_ref"),
+        Index("idx_ml_status", "status"),
+    )
+
+
+class MarketListingEvent(Base):
+    """30. 挂出件事件留痕（双留痕：事件表＋NCA；publish／pause／resume／delist
+    各记原态与新态；操作人限权属登记人本人）。"""
+
+    __tablename__ = "market_listing_events"
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)    # MLE-xxx
+    listing_id: Mapped[str] = mapped_column(Text, nullable=False)
+    action: Mapped[str] = mapped_column(Text, nullable=False)        # publish/pause/resume/delist
+    from_status: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    to_status: Mapped[str] = mapped_column(Text, nullable=False)
+    operator: Mapped[str] = mapped_column(Text, nullable=False)
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("action IN ('publish','pause','resume','delist')", name="ck_mle_action"),
+        CheckConstraint("to_status IN ('active','paused','delisted')", name="ck_mle_to"),
+        Index("idx_mle_listing", "listing_id"),
+    )
