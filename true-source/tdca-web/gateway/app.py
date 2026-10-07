@@ -114,6 +114,12 @@ app.include_router(announcements_ops_router)
 from authorization_ops import router as authorization_ops_router  # noqa: E402
 app.include_router(authorization_ops_router)
 
+# A-25: 配置权市场「管理」面（/api/v1/market-admin/*——挂出／查询／状态变更／下架；
+# 先有成件＋四要件合取闸门（例外仅沙盒演练）；限权属登记人本人；下架不溯及授权件；
+# 公开面四字段；每操作落 NCA＋事件双留痕）
+from market_admin_ops import router as market_admin_ops_router  # noqa: E402
+app.include_router(market_admin_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）
