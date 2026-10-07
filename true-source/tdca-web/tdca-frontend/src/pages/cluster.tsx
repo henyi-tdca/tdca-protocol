@@ -35,6 +35,9 @@ export function ClusterPage() {
   const [agentId, setAgentId] = useState('')
   const [verdict, setVerdict] = useState('')
   const [lineage, setLineage] = useState<LineageView[]>([])
+  const [owId, setOwId] = useState('')
+  const [arId, setArId] = useState('')
+  const [sandbox, setSandbox] = useState(false)
 
   const onRegister = async () => {
     setMsg('')
@@ -51,7 +54,11 @@ export function ClusterPage() {
   const onCheck = async () => {
     setMsg('')
     const r = await api.post<{ verdict: string }>(
-      '/api/v1/cluster/admission/check', { agent_id: agentId, call_type: 'config' })
+      '/api/v1/cluster/admission/check', {
+        agent_id: agentId, call_type: 'config',
+        ownership_record_id: owId, authorization_record_id: arId,
+        sandbox,
+      })
     setVerdict(r.ok ? `准入判定：${r.data.verdict}` : `准入拒绝：${r.reason}`)
   }
 
@@ -88,8 +95,14 @@ export function ClusterPage() {
         {msg && <p role="status">{msg}</p>}
       </section>
       <section data-testid="cluster-admission">
-        <h2>准入闸门（配置类调用）</h2>
+        <h2>准入闸门（配置类调用 · G-1~G-5 合取）</h2>
         <input placeholder="智能体标识" value={agentId} onChange={(e) => setAgentId(e.target.value)} />
+        <input placeholder="权属登记成件 ID（G-2）" value={owId} onChange={(e) => setOwId(e.target.value)} />
+        <input placeholder="授权登记成件 ID（G-3~G-5）" value={arId} onChange={(e) => setArId(e.target.value)} />
+        <label>
+          <input type="checkbox" checked={sandbox} onChange={(e) => setSandbox(e.target.checked)} />
+          沙盒／演练例外（出盒须授权）
+        </label>
         <button onClick={onCheck}>准入判定</button>
         <button onClick={onLineage}>谱系查询</button>
         {verdict && <p role="status">{verdict}</p>}
