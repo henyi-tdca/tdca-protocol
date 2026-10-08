@@ -1161,6 +1161,54 @@ def me_nca(request: Request, page: int = 1, limit: int = 20, action: str = ""):
     }, nature="real")
 
 
+class PasswordChangeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")   # 未知字段 fail-closed 拒绝
+    old_password: str = ""
+    new_password: str = ""
+
+
+@router.post("/me/password")
+def me_password(req: PasswordChangeRequest, request: Request):
+    """改密（仅本人；2026-10-09 最小实现令）：旧密核验 → 新密强度（沿用注册口径）→
+    吊销本人其它会话（revoked=1 既有语义，当前会话保留）→ NCA 落链。
+    ⛔ 不加字段、不动表结构；哈希/盐/迭代数不入件不入响应。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    with get_session() as s:
+        user = s.get(M.User, me)
+        if user is None:
+            raise HTTPException(401, "用户不存在")  # fail-closed
+        if not verify_password(req.old_password, user.salt, user.iterations,
+                               user.password_hash):
+            raise HTTPException(401, "旧密码错误")
+    new_pw = req.new_password
+    if (len(new_pw) < 8 or not any(c.isalpha() for c in new_pw)
+            or not any(c.isdigit() for c in new_pw)):
+        raise HTTPException(400, "密码强度不足：至少 8 位且同时包含字母与数字")
+    ph, salt, iters = hash_password(new_pw)
+    current_hash = hashlib.sha256(
+        request.headers.get("authorization", "").strip().encode("utf-8")).hexdigest()
+    revoked_n = 0
+    with get_sessionmaker().begin() as s:
+        user = s.get(M.User, me)
+        user.password_hash = ph
+        user.salt = salt
+        user.iterations = iters
+        # 吊销本人其它会话（保留当前会话；既有 revoked=1 语义）
+        for sess in s.query(M.AuthSession).filter(
+                M.AuthSession.username == me, M.AuthSession.revoked == 0):
+            if sess.token_hash != current_hash:
+                sess.revoked = 1
+                revoked_n += 1
+    nca_ref = _nca_append("user_password_change", me,
+                          artifact_path=f"auth://me/password-change/{me}", prov="real")
+    return _nca_watermark({
+        "changed": True, "username": me, "other_sessions_revoked": revoked_n,
+        "nca_ref": nca_ref,
+        "note": "密码已更换；本人其它会话已吊销（当前会话保留）；落 NCA 存证链",
+    }, nature="real")
+
+
 @router.get("/agents/{agent_id}/dashboard")
 def agent_dashboard(agent_id: str, request: Request):
     """M5 智能体后台：注册画像 + MOU 计量 + 税单 + 签章记录 + 关联存证（公开读，归属人脱敏）。"""
