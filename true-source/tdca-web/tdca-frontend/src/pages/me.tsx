@@ -4,6 +4,7 @@
 // 约束矩阵: M5-PLAN §三.1（六区块）+ 裁定②（只见自己名下）+ ID92（simulated 标注）
 // 预期分配: MePage（会话卡 + 签批待办红签置顶 + 我的智能体 + 我批过的 + 沙盒 + 治理）
 // 批 1 扩充（2026-10-09 用户控制台 P1）: 频道直达条 + AI 意图导航 + 权属栏 + 准入判定历史 + 活动产物分页
+// 改密入口（2026-10-09 最小实现令）: 账户安全卡（页内改密，调在册 POST /api/v1/me/password；仅本人、NCA 落链）
 // =============================================================================
 import { useState } from 'react'
 import { Link } from 'react-router'
@@ -132,6 +133,72 @@ function AssistantBox() {
   )
 }
 
+/** 账户安全 · 修改密码（2026-10-09 最小实现令）：页内改密，调在册 POST /api/v1/me/password。
+ *  旧密核验/新密强度/吊销本人其它会话/NCA 落链皆在服务端；前端只做入口与提示，不新增依赖。 */
+function PasswordChangeCard() {
+  const [oldPw, setOldPw] = useState('')
+  const [newPw, setNewPw] = useState('')
+  const [confirmPw, setConfirmPw] = useState('')
+  const [msg, setMsg] = useState('')
+  const [ok, setOk] = useState(false)
+  const [busy, setBusy] = useState(false)
+
+  const submit = async () => {
+    if (busy) return
+    setMsg('')
+    setOk(false)
+    if (!oldPw || !newPw) { setMsg('旧密码与新密码均不得为空'); return }
+    if (newPw.length < 8 || !/[A-Za-z]/.test(newPw) || !/\d/.test(newPw)) {
+      setMsg('密码强度不足：至少 8 位且同时包含字母与数字')
+      return
+    }
+    if (newPw !== confirmPw) { setMsg('两次输入的新密码不一致'); return }
+    setBusy(true)
+    try {
+      const r = await api.post<{ changed: boolean; other_sessions_revoked: number; nca_ref: string; note: string }>(
+        '/api/v1/me/password', { old_password: oldPw, new_password: newPw })
+      if (r.ok) {
+        setOk(true)
+        setMsg(`密码已更换（本人其它会话已吊销 ${r.data.other_sessions_revoked} 个，当前会话保留）；存证 ${r.data.nca_ref}`)
+        setOldPw('')
+        setNewPw('')
+        setConfirmPw('')
+      } else if (r.status === 400) {
+        setMsg('密码强度不足：至少 8 位且同时包含字母与数字')
+      } else if (r.status === 401) {
+        setMsg('旧密码核验未通过（HTTP 401）；按现网会话语义本地会话可能已被清退，请重新登录后再试')
+      } else {
+        setMsg(`改密失败（HTTP ${r.status ?? '未知'}），请稍后重试`)
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const inputCls = 'rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm'
+  return (
+    <section data-testid="me-pwd" className="rounded-lg border border-gray-200 bg-white p-4">
+      <h3 className="mb-2 text-sm font-semibold text-gray-800">账户安全 · 修改密码</h3>
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+        <input type="password" data-testid="me-pwd-old" value={oldPw} onChange={(e) => setOldPw(e.target.value)}
+               placeholder="当前密码" autoComplete="current-password" className={inputCls} />
+        <input type="password" data-testid="me-pwd-new" value={newPw} onChange={(e) => setNewPw(e.target.value)}
+               placeholder="新密码（至少 8 位，含字母与数字）" autoComplete="new-password" className={inputCls} />
+        <input type="password" data-testid="me-pwd-confirm" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)}
+               placeholder="再输一遍新密码" autoComplete="new-password" className={inputCls} />
+      </div>
+      <div className="mt-2 flex flex-wrap items-center gap-3">
+        <button onClick={() => void submit()} disabled={busy} data-testid="me-pwd-submit"
+                className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm text-white disabled:opacity-50">
+          {busy ? '提交中…' : '更换密码'}
+        </button>
+        <span className="text-[11px] text-gray-400">仅本人可改本人密码；改后本人其它会话吊销（当前会话保留）；写动作落 NCA 存证链。</span>
+      </div>
+      {msg && <p data-testid="me-pwd-msg" className={`mt-2 text-xs ${ok ? 'text-emerald-700' : 'text-amber-700'}`}>{msg}</p>}
+    </section>
+  )
+}
+
 /** M5 个人后台：谁的数据谁可见（须登录；未登录自动引导） */
 export function MePage() {
   const { status, data } = useApiGet<MeData>('/api/v1/me/dashboard')
@@ -208,6 +275,9 @@ export function MePage() {
               {data.pending_count > 0 && <Link to="/attestation/dynamic" className="text-xs font-medium text-red-700 underline">去签批 →</Link>}
             </div>
           </section>
+
+          {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}
+          <PasswordChangeCard />
 
           {/* 运营管理入口（仅 operator/founder 可见；后端闸门照守，前端只是入口） */}
           {(data.session.role === 'operator' || data.session.role === 'founder') && (
