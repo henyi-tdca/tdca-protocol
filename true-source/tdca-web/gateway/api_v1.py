@@ -32,15 +32,18 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
+import sqlite3
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix="/api/v1")
@@ -55,7 +58,7 @@ for _sub in ("tdca-microtax", "tdca-ns-runtime", "tdca-notification-machine",
         sys.path.insert(0, str(_p))
 
 # ---- M2：DB 访问（惰性工厂；测试经 DATABASE_URL 隔离）----
-from db import get_session, get_sessionmaker  # noqa: E402
+from db import get_engine, get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 
 
@@ -86,19 +89,73 @@ def _sim_note() -> str:
     return "模拟态：演示参数，真实锚定待 DCEP/法学家基准后转硬数据"
 
 
+_NCA_LOG = logging.getLogger("tdca.nca")
+_NCA_APPEND_MAX_TRIES = 4   # 1 次正写 + 3 次 BUSY 退避重试（NCA-ATOMIC-001）
+
+
 def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "simulated") -> str:
-    """写路径通用：向 nca_chain 追加一条存证（链式 prev_nca 自动取最新）。"""
+    """写路径通用：向 nca_chain 追加一条存证（链式 prev_nca 自动取最新）。
+
+    NCA-ATOMIC-001 原子性整改（只防新断，不重接历史断链）：
+      · 原始连接显式 BEGIN IMMEDIATE + BUSY 退避重试——"取尾号→落本行"成
+        串行临界区，并发写者不再读到同一快照（防 prev 悬空/分叉的新增）；
+      · 尾号按插入序（rowid）取，弃 ts DESC（同秒批量记录 ts 相同，取尾不可靠）；
+      · 落库后检测"同 prev 被多条引用"（链分叉）即 NCA_FORK_ALERT 告警——
+        日志级、不阻断写入（辅改 B 替代项：不建唯一索引、不动表结构）。
+    """
     import secrets
     nonce = secrets.token_hex(8)   # 同秒同参重复写入防主键碰撞（M3 测试实证）
-    with get_sessionmaker().begin() as s:
-        last = s.query(M.NcaChain).order_by(M.NcaChain.ts.desc()).first()
-        nca_id = "NCA-WEB-" + hashlib.sha256(
-            (action + actor + _utc() + nonce
-             + (last.nca_id if last else "GENESIS")).encode()).hexdigest()[:12]
-        s.add(M.NcaChain(nca_id=nca_id, prev_nca=last.nca_id if last else "GENESIS",
-                         action=action, actor=actor, artifact_path=artifact_path,
-                         sha256_8=hashlib.sha256(artifact_path.encode()).hexdigest()[:8] if artifact_path else None,
-                         data_provenance=prov, ts=_utc()))
+    engine = get_engine()
+    nca_id: Optional[str] = None
+    last_err: Optional[Exception] = None
+    for attempt in range(_NCA_APPEND_MAX_TRIES):
+        raw = cur = None
+        try:
+            raw = engine.raw_connection()
+            dbapi = raw.dbapi_connection
+            cur = dbapi.cursor()
+            cur.execute("BEGIN IMMEDIATE")   # 写锁在事务起点持有（取号+落库一体）
+            row = cur.execute(
+                "SELECT nca_id FROM nca_chain ORDER BY rowid DESC LIMIT 1").fetchone()
+            tail = row[0] if row else "GENESIS"
+            nca_id = "NCA-WEB-" + hashlib.sha256(
+                (action + actor + _utc() + nonce + tail).encode()).hexdigest()[:12]
+            cur.execute(
+                "INSERT INTO nca_chain (nca_id, prev_nca, action, actor, artifact_path,"
+                " sha256_8, data_provenance, ts) VALUES (?,?,?,?,?,?,?,?)",
+                (nca_id, tail, action, actor, artifact_path or None,
+                 hashlib.sha256(artifact_path.encode()).hexdigest()[:8] if artifact_path else None,
+                 prov, _utc()))
+            dbapi.commit()
+            break
+        except sqlite3.OperationalError as e:
+            last_err = e
+            if "locked" not in str(e).lower():
+                raise
+            time.sleep(min(0.05 * (2 ** attempt), 0.4) + secrets.randbelow(50) / 1000.0)
+        finally:
+            if cur is not None:
+                cur.close()
+            if raw is not None:
+                try:
+                    raw.dbapi_connection.rollback()
+                except Exception:
+                    pass
+                raw.close()
+    else:
+        raise last_err  # type: ignore[misc]   # 重试耗尽：fail-closed，不写半条
+    # 分叉告警（不阻断）：同 prev 重复 = 链分叉；告警本身失败也不得影响主流程
+    try:
+        with get_sessionmaker().begin() as s:
+            dups = (s.query(M.NcaChain.prev_nca, func.count())
+                    .filter(M.NcaChain.prev_nca != "GENESIS")
+                    .group_by(M.NcaChain.prev_nca)
+                    .having(func.count() > 1).all())
+        if dups:
+            _NCA_LOG.warning("NCA_FORK_ALERT duplicate-prev groups=%d detail=%s",
+                             len(dups), [(p, c) for p, c in dups[:5]])
+    except Exception:
+        _NCA_LOG.exception("NCA_FORK_ALERT check failed")
     return nca_id
 
 
