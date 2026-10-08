@@ -3,8 +3,11 @@
 // FC-ID: KIMI-WEB-DB-TASK-001-M5 | 目标函数: /me 个人后台（人类用户一屏聚合）
 // 约束矩阵: M5-PLAN §三.1（六区块）+ 裁定②（只见自己名下）+ ID92（simulated 标注）
 // 预期分配: MePage（会话卡 + 签批待办红签置顶 + 我的智能体 + 我批过的 + 沙盒 + 治理）
+// 批 1 扩充（2026-10-09 用户控制台 P1）: 频道直达条 + AI 意图导航 + 权属栏 + 准入判定历史 + 活动产物分页
 // =============================================================================
+import { useState } from 'react'
 import { Link } from 'react-router'
+import { api } from '@/api/client'
 import { useApiGet } from '@/shared/useApi'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
@@ -19,6 +22,7 @@ interface MeData {
   my_governance: { op: string; fuse_state: string | null; ts: string }[]
   my_assets?: { order_no: number; name: string; description: string | null; asset_count: number; data_provenance: string }[]
   my_grants?: { grant_id: string; subject_agent: string; scene_constraint: string; asset_order: string; status: string; nca_ref: string | null }[]
+  my_ownership?: { record_id: string; work_title: string; jurisdiction_branch: string; status: string; nca_ref: string | null; data_provenance: string; created_at: string }[]
   my_config_records?: { run_id: string; result: string; asset_summary: string | null; scene: string | null; price_points: number | null; nca_ref: string | null; ts: string }[]
   my_points?: { balance: number; data_provenance: string; note: string }
   my_nca?: { nca_id: string; action: string; artifact_path: string | null; sha256_8: string | null; ts: string }[]
@@ -27,6 +31,8 @@ interface MeData {
 
 const ROLE_LABEL: Record<string, string> = { founder: '创始人', operator: '运营者', viewer: '访客' }
 const RESULT_LABEL: Record<string, string> = { admitted: '✅ 已入盒', denied: '❌ 未通过', pending: '⏳ 待审' }
+/** 权属状态标注（P8a 既有口径：registered/amended/cancelled） */
+const OWNERSHIP_STATUS: Record<string, string> = { registered: '🟢 已登记', amended: '🟡 已变更', cancelled: '⚫ 已注销' }
 
 /** 运营面入口（operator/founder 可见）：直达已在架的运营操作页（2026-10-09 管理员账户配套） */
 const OPERATOR_LINKS = [
@@ -35,9 +41,125 @@ const OPERATOR_LINKS = [
   { to: '/announcements', name: '公告栏', desc: '公告查看；发布面随用户控制台 P1 排期' },
 ] as const
 
+/** 频道直达条（批 1 P1）：站内主要频道一键直达（路由以 pages.tsx 注册为准） */
+const CHANNEL_LINKS = [
+  { to: '/', name: '首页' },
+  { to: '/market', name: '市场' },
+  { to: '/cluster', name: '集群' },
+  { to: '/toolshelf', name: '货架' },
+  { to: '/library', name: '文库' },
+  { to: '/announcements', name: '公告' },
+  { to: '/ops', name: '运维' },
+  { to: '/sandbox', name: '沙盒' },
+  { to: '/audit', name: '审计' },
+] as const
+
+interface IntentResult {
+  matched: boolean
+  route: string
+  title: string
+  action: string
+  guide: string[]
+  alternatives?: { route: string; title: string }[]
+}
+
+/** AI 意图导航（批 1 P1）：只接在册 /api/v1/intent 规则表（确定性关键词匹配），零模型外呼、行为可审计 */
+function AssistantBox() {
+  const [q, setQ] = useState('')
+  const [res, setRes] = useState<IntentResult | null>(null)
+  const [err, setErr] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const submit = async () => {
+    const query = q.trim()
+    if (!query || busy) return
+    setBusy(true)
+    try {
+      const qs = new URLSearchParams({ q: query })
+      const r = await api.get<IntentResult>(`/api/v1/intent?${qs}`)
+      if (r.ok) {
+        setRes(r.data)
+        setErr(false)
+      } else {
+        setErr(true) // fail-closed：不猜测，提示走频道直达条
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+  return (
+    <section data-testid="me-assistant" className="rounded-lg border border-indigo-200 bg-indigo-50 p-4">
+      <h3 className="mb-2 text-sm font-semibold text-indigo-900">AI 助手 · 站内导航</h3>
+      <div className="flex gap-2">
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && void submit()}
+          placeholder="说你要做什么，例如：我要登记权属 / 查我的存证 / 去工具货架"
+          data-testid="me-assistant-input"
+          className="flex-1 rounded-md border border-indigo-200 bg-white px-3 py-1.5 text-sm"
+        />
+        <button
+          onClick={() => void submit()}
+          disabled={busy}
+          data-testid="me-assistant-go"
+          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+        >
+          {busy ? '匹配中…' : '直达'}
+        </button>
+      </div>
+      <p className="mt-1 text-[11px] text-indigo-700">规则表匹配、零模型外呼、可审计；命中给直达与操作指引。</p>
+      {err && <p className="mt-2 text-xs text-amber-700" data-testid="me-assistant-err">意图服务暂不可用，请走上方频道直达条。</p>}
+      {res && (
+        <div className="mt-2 rounded-md bg-white p-3 text-sm" data-testid="me-assistant-result">
+          <div className="font-medium text-gray-800">{res.title}</div>
+          <Link to={res.route} data-testid="me-assistant-route" className="mt-1 inline-block text-xs font-medium text-emerald-700 underline">
+            直达 {res.route} →
+          </Link>
+          <ul className="mt-1 list-disc pl-5 text-xs text-gray-600">
+            {res.guide.map((g, i) => <li key={i}>{g}</li>)}
+          </ul>
+          {(res.alternatives ?? []).length > 0 && (
+            <div className="mt-1 text-[11px] text-gray-500">
+              备选：
+              {(res.alternatives ?? []).map((a) => (
+                <Link key={a.route} to={a.route} className="ml-2 text-emerald-700 underline">{a.title}</Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
+
 /** M5 个人后台：谁的数据谁可见（须登录；未登录自动引导） */
 export function MePage() {
   const { status, data } = useApiGet<MeData>('/api/v1/me/dashboard')
+  // 活动产物分页（批 1 P1）：dashboard 摘要之外经 /me/nca 追加分页明细，单一口径（按 nca_id 去重保险）
+  const [ncaMore, setNcaMore] = useState<NonNullable<MeData['my_nca']>>([])
+  const [ncaPage, setNcaPage] = useState(1)
+  const [ncaTotal, setNcaTotal] = useState<number | null>(null)
+  const [ncaLoading, setNcaLoading] = useState(false)
+  const ncaSeen = new Set<string>()
+  const ncaItems = [...(data?.my_nca ?? []), ...ncaMore].filter((n) =>
+    ncaSeen.has(n.nca_id) ? false : (ncaSeen.add(n.nca_id), true))
+  const loadMoreNca = async () => {
+    if (ncaLoading) return
+    setNcaLoading(true)
+    try {
+      const r = await api.get<{ total: number; items: NonNullable<MeData['my_nca']> }>(`/api/v1/me/nca?page=${ncaPage + 1}&limit=20`)
+      if (r.ok) {
+        setNcaMore((prev) => [...prev, ...(r.data.items ?? [])])
+        setNcaTotal(typeof r.data.total === 'number' ? r.data.total : null)
+        setNcaPage((p) => p + 1)
+      }
+    } finally {
+      setNcaLoading(false)
+    }
+  }
+  // 判定历史（集群准入闸门）：只列 CLUSTER_ADMIT* 三类判定（DENY/SANDBOX/ADMIT）
+  const admitItems = (data?.my_nca ?? []).filter((n) => n.action.startsWith('CLUSTER_ADMIT'))
+  const admitLabel = (a: string) => (a === 'CLUSTER_ADMIT' ? '✅ 准入' : a.endsWith('_SANDBOX') ? '🧪 沙盒放行' : '❌ 未准入')
 
   return (
     <PageShell
@@ -55,6 +177,15 @@ export function MePage() {
       )}
       {status === 'ok' && data && (
         <div className="space-y-5">
+          {/* 频道直达条（批 1 P1） */}
+          <nav data-testid="me-channels" className="flex flex-wrap gap-2">
+            {CHANNEL_LINKS.map((c) => (
+              <Link key={c.to} to={c.to} data-testid={`me-ch-${c.to === '/' ? 'home' : c.to.slice(1)}`}
+                    className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs text-gray-600 hover:border-emerald-400 hover:text-emerald-700">
+                {c.name}
+              </Link>
+            ))}
+          </nav>
           {/* 会话卡 + 红签待办 */}
           <section className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <div data-testid="me-session" className="rounded-lg border border-gray-200 bg-white p-4">
@@ -94,6 +225,9 @@ export function MePage() {
               <p className="mt-2 text-[11px] text-emerald-700">公告发布、CI 触发等更多运营操作面随「用户控制台」P1 排期；权限以服务端角色闸为准。</p>
             </section>
           )}
+
+          {/* AI 意图导航（零模型外呼；接在册 /api/v1/intent） */}
+          <AssistantBox />
 
           {/* 我的智能体 */}
           <section data-testid="me-agents" className="rounded-lg border border-gray-200 p-4">
@@ -167,6 +301,41 @@ export function MePage() {
             </div>
           </section>
 
+          {/* 我的权属登记（P8a · 后端已按本人过滤，此处只渲染本人栏） */}
+          <section data-testid="me-ownership" className="rounded-lg border border-gray-200 p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">我的权属登记（{data.my_ownership?.length ?? 0}）</h3>
+            {(data.my_ownership ?? []).length === 0 && (
+              <p className="text-xs text-gray-400">暂无登记——去 <Link to="/ownership-registry" className="text-emerald-700 underline">权属登记管理</Link> 登记第一件</p>
+            )}
+            {(data.my_ownership ?? []).length > 0 && (
+              <table className="w-full text-sm">
+                <tbody>
+                  {(data.my_ownership ?? []).map((o) => (
+                    <tr key={o.record_id} data-record={o.record_id} className="border-b border-gray-100">
+                      <td className="py-1.5 font-mono text-[11px] text-gray-500">{o.record_id}</td>
+                      <td className="py-1.5 text-xs text-gray-700">{o.work_title}</td>
+                      <td className="py-1.5 text-xs text-gray-500">{o.jurisdiction_branch}</td>
+                      <td className="py-1.5 text-xs text-gray-500">{OWNERSHIP_STATUS[o.status] ?? o.status}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            <Link to="/ownership-registry" className="mt-1 inline-block text-[11px] text-emerald-700 underline">登记 / 变更 / 注销 →</Link>
+          </section>
+
+          {/* 判定历史（集群准入闸门：只列 CLUSTER_ADMIT* 判定，摘要与 /me/nca 明细同链） */}
+          <section data-testid="me-admits" className="rounded-lg border border-gray-200 p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">我的准入判定（{admitItems.length}）</h3>
+            {admitItems.length === 0 && <p className="text-xs text-gray-400">暂无判定记录</p>}
+            {admitItems.map((n) => (
+              <div key={n.nca_id} data-action={n.action} className="border-b border-gray-50 py-1 text-xs text-gray-600">
+                {admitLabel(n.action)} · <span className="font-mono text-[11px] text-gray-400">{n.nca_id}</span>
+                <span className="block text-[11px] text-gray-400">{n.ts.slice(0, 19).replace('T', ' ')}</span>
+              </div>
+            ))}
+          </section>
+
           {/* 配置记录 + 我的 NCA 存证 */}
           <section className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             <div data-testid="me-config-records" className="rounded-lg border border-gray-200 p-4">
@@ -183,15 +352,29 @@ export function MePage() {
               <SimulatedBadge nature="simulated" />
             </div>
             <div data-testid="me-nca" className="rounded-lg border border-gray-200 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-gray-800">我的 NCA 存证（最近 20 条）</h3>
-              {(data.my_nca ?? []).length === 0 && <p className="text-xs text-gray-400">暂无以个人身份落链的存证</p>}
-              {(data.my_nca ?? []).map((n) => (
+              <h3 className="mb-2 text-sm font-semibold text-gray-800">
+                我的活动产物 / NCA 存证（已显 {ncaItems.length}{ncaTotal !== null ? ` ／ 共 ${ncaTotal} 条` : ''}）
+              </h3>
+              {ncaItems.length === 0 && <p className="text-xs text-gray-400">暂无以个人身份落链的存证</p>}
+              {ncaItems.map((n) => (
                 <div key={n.nca_id} className="border-b border-gray-50 py-1 text-xs text-gray-600">
                   <span className="font-mono text-[11px]">{n.nca_id}</span> · {n.action}
                   <span className="block truncate text-[11px] text-gray-400">{n.artifact_path} ｜ sha256_8={n.sha256_8} ｜ {n.ts.slice(0, 19).replace('T', ' ')}</span>
                 </div>
               ))}
-              <Link to="/audit" className="mt-1 inline-block text-[11px] text-emerald-700 underline">审计透明页查全链 →</Link>
+              <div className="mt-2 flex items-center gap-3">
+                {(ncaTotal === null || ncaItems.length < ncaTotal) && (
+                  <button
+                    onClick={() => void loadMoreNca()}
+                    disabled={ncaLoading}
+                    data-testid="me-nca-more"
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1 text-xs text-gray-600 hover:border-emerald-400 disabled:opacity-50"
+                  >
+                    {ncaLoading ? '加载中…' : '加载更多'}
+                  </button>
+                )}
+                <Link to="/audit" className="text-[11px] text-emerald-700 underline">审计透明页查全链 →</Link>
+              </div>
             </div>
           </section>
 
