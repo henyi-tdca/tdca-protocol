@@ -99,6 +99,32 @@ describe('M5 双后台', () => {
     expect(screen.queryByTestId('me-register-nca')).toBeNull()
   })
 
+  it('/me 运营者角色 → 渲染运营管理入口（货架/工单/公告三直达）', async () => {
+    mockByUrl({
+      '/api/v1/me/dashboard': {
+        ...ME_PAYLOAD,
+        session: { ...ME_PAYLOAD.session, role: 'operator' },
+      },
+    })
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-operator')).toBeTruthy())
+    expect(screen.getByTestId('me-op-link-toolshelf')).toBeTruthy()
+    expect(screen.getByTestId('me-op-link-ops')).toBeTruthy()
+    expect(screen.getByTestId('me-op-link-announcements')).toBeTruthy()
+  })
+
+  it('/me 访客角色 → 不渲染运营管理入口', async () => {
+    mockByUrl({
+      '/api/v1/me/dashboard': {
+        ...ME_PAYLOAD,
+        session: { ...ME_PAYLOAD.session, role: 'viewer' },
+      },
+    })
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-session')).toBeTruthy())
+    expect(screen.queryByTestId('me-operator')).toBeNull()
+  })
+
   it('/agents/:id 渲染：画像 + MOU 合计（分→元）+ 脱敏归属', async () => {
     mockByUrl({ '/api/v1/agents/AGENT-GENIE/dashboard': AGENT_PAYLOAD })
     render(

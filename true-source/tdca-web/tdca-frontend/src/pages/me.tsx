@@ -28,6 +28,13 @@ interface MeData {
 const ROLE_LABEL: Record<string, string> = { founder: '创始人', operator: '运营者', viewer: '访客' }
 const RESULT_LABEL: Record<string, string> = { admitted: '✅ 已入盒', denied: '❌ 未通过', pending: '⏳ 待审' }
 
+/** 运营面入口（operator/founder 可见）：直达已在架的运营操作页（2026-10-09 管理员账户配套） */
+const OPERATOR_LINKS = [
+  { to: '/toolshelf', name: '工具货架', desc: '上架工具（register 面已建，须 operator）' },
+  { to: '/ops', name: '运维工单', desc: '建单 / 红线查看（四面已建，须 operator）' },
+  { to: '/announcements', name: '公告栏', desc: '公告查看；发布面随用户控制台 P1 排期' },
+] as const
+
 /** M5 个人后台：谁的数据谁可见（须登录；未登录自动引导） */
 export function MePage() {
   const { status, data } = useApiGet<MeData>('/api/v1/me/dashboard')
@@ -70,6 +77,23 @@ export function MePage() {
               {data.pending_count > 0 && <Link to="/attestation/dynamic" className="text-xs font-medium text-red-700 underline">去签批 →</Link>}
             </div>
           </section>
+
+          {/* 运营管理入口（仅 operator/founder 可见；后端闸门照守，前端只是入口） */}
+          {(data.session.role === 'operator' || data.session.role === 'founder') && (
+            <section data-testid="me-operator" className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-emerald-900">运营管理（{ROLE_LABEL[data.session.role]}）</h3>
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                {OPERATOR_LINKS.map((l) => (
+                  <Link key={l.to} to={l.to} data-testid={`me-op-link-${l.to.slice(1)}`}
+                        className="block rounded-md border border-emerald-200 bg-white p-3 hover:border-emerald-400">
+                    <div className="text-sm font-medium text-emerald-800">{l.name} →</div>
+                    <div className="mt-0.5 text-[11px] text-gray-500">{l.desc}</div>
+                  </Link>
+                ))}
+              </div>
+              <p className="mt-2 text-[11px] text-emerald-700">公告发布、CI 触发等更多运营操作面随「用户控制台」P1 排期；权限以服务端角色闸为准。</p>
+            </section>
+          )}
 
           {/* 我的智能体 */}
           <section data-testid="me-agents" className="rounded-lg border border-gray-200 p-4">
