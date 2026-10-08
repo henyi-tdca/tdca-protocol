@@ -1114,6 +1114,15 @@ def me_dashboard(request: Request):
                                                 M.AuthGrant.subject_agent.in_(ids or ["\0"])))
                                     .order_by(M.AuthGrant.status).all())],
             "my_config_records": config_records,
+            # 2026-10-09 批 1：权属栏（本人过滤；摘要口径与 /me/nca 明细单一口径）
+            "my_ownership": [{"record_id": r.record_id, "work_title": r.work_title,
+                              "jurisdiction_branch": r.jurisdiction_branch,
+                              "status": r.status, "nca_ref": r.nca_ref,
+                              "data_provenance": r.data_provenance,
+                              "created_at": r.created_at}
+                             for r in (s.query(M.OwnershipRecord)
+                                       .filter(M.OwnershipRecord.owner_ref == me)
+                                       .order_by(M.OwnershipRecord.created_at.desc()).all())],
             "my_points": {"balance": my_points,
                           "data_provenance": "simulated",
                           "note": "站内积分（最小链结算记账；期一 SIMULATED，非真实清算）"},
@@ -1123,8 +1132,33 @@ def me_dashboard(request: Request):
                        for n in (s.query(M.NcaChain).filter(M.NcaChain.actor == me)
                                  .order_by(M.NcaChain.ts.desc()).limit(20).all())],
             "note": "个人后台（谁的数据谁可见；simulated 行已按口径标注；资产目录为全站五阶形态，"
-                    "积分/最小链为 SIMULATED）",
+                    "积分/最小链为 SIMULATED；权属栏本人过滤）",
         }, nature="real")
+
+
+@router.get("/me/nca")
+def me_nca(request: Request, page: int = 1, limit: int = 20, action: str = ""):
+    """P1 控制台：本人 NCA 存证分页明细（actor=本人强制过滤；摘要走 /me/dashboard 最近 20，
+    明细走本端分页——单一口径不两处各算；action 精确过滤可空）。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    if page < 1:
+        raise HTTPException(400, "page 须 ≥1")
+    if limit < 1 or limit > 100:
+        raise HTTPException(400, "limit 须 1~100")
+    with get_session() as s:
+        q = s.query(M.NcaChain).filter(M.NcaChain.actor == me)
+        if action:
+            q = q.filter(M.NcaChain.action == action)
+        total = q.count()
+        rows = (q.order_by(M.NcaChain.ts.desc())
+                .offset((page - 1) * limit).limit(limit).all())
+    return _nca_watermark({
+        "total": total, "page": page, "limit": limit,
+        "items": [{"nca_id": n.nca_id, "action": n.action,
+                   "artifact_path": n.artifact_path, "sha256_8": n.sha256_8,
+                   "ts": n.ts} for n in rows],
+    }, nature="real")
 
 
 @router.get("/agents/{agent_id}/dashboard")
@@ -1179,6 +1213,47 @@ _INTENT_TABLE = [
      "action": "查询",
      "guide": ["须登录（未登录自动引导登录页）", "我的智能体 / 签批待办（红签置顶）一屏聚合",
                "点任意智能体可进它的专属后台"]},
+    # ── 2026-10-09 批 1 控制台补词（人类通道专用）──
+    {"keys": ["我的资产", "五阶资产", "资产管理"],
+     "route": "/me", "title": "我的 · 资产（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页资产栏：五阶形态目录", "个人持有见配置权持有栏"]},
+    {"keys": ["我的权属", "权属登记", "产权"],
+     "route": "/me", "title": "我的 · 权属（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页权属栏：本人权属件（登记/变更/注销状态）", "登记操作直达权属登记面"]},
+    {"keys": ["我的授权", "配置权", "授权件"],
+     "route": "/me", "title": "我的 · 授权（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页授权持有栏：授权件与状态", "五操作（预收权/实时/追加/变更/多层级）直达授权登记面"]},
+    {"keys": ["我的积分", "积分"],
+     "route": "/me", "title": "我的 · 积分（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页积分栏（SIMULATED 明示）", "口径：本人为出让方的最小链要约报价合计"]},
+    {"keys": ["我的存证", "活动产物", "操作记录", "存证查询"],
+     "route": "/me", "title": "我的 · 活动产物（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页活动产物栏：本人 NCA 分页明细", "可按动作过滤，链上可查可验"]},
+    {"keys": ["工具货架", "上架", "货架"],
+     "route": "/toolshelf", "title": "工具货架",
+     "action": "操作",
+     "guide": ["须登录；上架须 operator", "逐项上架，三条准入逐件过闸"]},
+    {"keys": ["运维", "工单", "红线"],
+     "route": "/ops", "title": "运维工单",
+     "action": "操作",
+     "guide": ["须登录；操作须 operator", "建单 / 红线查看 / 反馈 / 分类"]},
+    {"keys": ["公告", "通知"],
+     "route": "/announcements", "title": "公告栏",
+     "action": "查询",
+     "guide": ["对外公告区，公开可读", "空栏为常态"]},
+    {"keys": ["集群", "准入", "判定", "编排"],
+     "route": "/cluster", "title": "集群编排与准入",
+     "action": "操作",
+     "guide": ["须登录", "五门合取判定，fail-closed", "沙盒例外：已缔约即可演练"]},
+    {"keys": ["沙盒", "演练", "入盒"],
+     "route": "/sandbox", "title": "沙盒演练",
+     "action": "操作",
+     "guide": ["须登录（注册即缔约）", "沙盒内配置不入正式账本", "出盒须初始确权"]},
     {"keys": ["智能体后台", "这只智能体", "该智能体", "智能体详情", "它的税单"],
      "route": "/agents", "title": "智能体后台（选一只进入）",
      "action": "查询",
