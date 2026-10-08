@@ -15,6 +15,7 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import sys
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 # 跨项目路径注入（与各子应用保持一致）
@@ -39,8 +40,18 @@ _BRIDGE_DIR = _ROOT / "tdca-bridge"
 if _BRIDGE_DIR.is_dir() and str(_BRIDGE_DIR) not in sys.path:
     sys.path.insert(0, str(_BRIDGE_DIR))
 
+@asynccontextmanager
+async def _lifespan(_app):
+    # NCA-ATOMIC 辅改 B：服务启动即对现有 prev_nca 计数打内存基线快照
+    # （告警「只报新增」基线差口径；不入库、不建表；快照失败首写惰性回退）
+    from api_v1 import init_nca_fork_baseline
+    init_nca_fork_baseline()
+    yield
+
+
 app = FastAPI(title="TDCA Unified API Gateway", version="V1.0",
-              description="5CC 阶段 1 统一网关：聚合 D-2 / CSCP / Workbuddy / Translator / P3 + bridge")
+              description="5CC 阶段 1 统一网关：聚合 D-2 / CSCP / Workbuddy / Translator / P3 + bridge",
+              lifespan=_lifespan)
 
 # bridge 挂载必须在 app 创建之后（修复：原位置在 app 定义前，NameError 被 except 静默吞掉导致 bridge 全 404）
 try:

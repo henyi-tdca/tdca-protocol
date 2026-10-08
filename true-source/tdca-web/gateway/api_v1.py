@@ -91,6 +91,26 @@ def _sim_note() -> str:
 
 _NCA_LOG = logging.getLogger("tdca.nca")
 _NCA_APPEND_MAX_TRIES = 4   # 1 次正写 + 3 次 BUSY 退避重试（NCA-ATOMIC-001）
+_NCA_FORK_BASELINE: Optional[Dict[str, int]] = None   # 启动基线快照（辅改 B「只报新增」；不入库不建表）
+
+
+def init_nca_fork_baseline() -> None:
+    """服务启动：对现有 prev_nca 计数打内存基线快照。
+
+    基线差口径：此后仅当某 prev 计数超过其基线时才告警（历史分叉不刷告警）；
+    不入库、不建表；快照失败保持 None，首个写路径惰性重取（fail-soft，不拒服）。
+    """
+    global _NCA_FORK_BASELINE
+    try:
+        with get_sessionmaker().begin() as s:
+            rows = (s.query(M.NcaChain.prev_nca, func.count())
+                    .filter(M.NcaChain.prev_nca != "GENESIS")
+                    .group_by(M.NcaChain.prev_nca).all())
+        _NCA_FORK_BASELINE = {p: c for p, c in rows}
+        _NCA_LOG.info("NCA fork baseline snapshot: prevs=%d", len(_NCA_FORK_BASELINE))
+    except Exception:
+        _NCA_LOG.exception("NCA fork baseline snapshot failed; lazy fallback at first write")
+        _NCA_FORK_BASELINE = None
 
 
 def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "simulated") -> str:
@@ -100,8 +120,9 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
       · 原始连接显式 BEGIN IMMEDIATE + BUSY 退避重试——"取尾号→落本行"成
         串行临界区，并发写者不再读到同一快照（防 prev 悬空/分叉的新增）；
       · 尾号按插入序（rowid）取，弃 ts DESC（同秒批量记录 ts 相同，取尾不可靠）；
-      · 落库后检测"同 prev 被多条引用"（链分叉）即 NCA_FORK_ALERT 告警——
-        日志级、不阻断写入（辅改 B 替代项：不建唯一索引、不动表结构）。
+      · 落库后检测"同 prev 计数超启动基线"（新增链分叉）即 NCA_FORK_ALERT
+        告警——日志级、不阻断写入、「只报新增」基线差口径（辅改 B 替代项：
+        不建唯一索引、不动表结构、不入库不建表）。
     """
     import secrets
     nonce = secrets.token_hex(8)   # 同秒同参重复写入防主键碰撞（M3 测试实证）
@@ -144,16 +165,28 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
                 raw.close()
     else:
         raise last_err  # type: ignore[misc]   # 重试耗尽：fail-closed，不写半条
-    # 分叉告警（不阻断）：同 prev 重复 = 链分叉；告警本身失败也不得影响主流程
+    # 分叉告警（不阻断，「只报新增」基线差口径）：仅当某 prev 计数超过其
+    # 启动基线时才告警；基线随现值上浮，同批分叉不重复刷。告警失败不影响主流程。
     try:
+        global _NCA_FORK_BASELINE
         with get_sessionmaker().begin() as s:
+            if _NCA_FORK_BASELINE is None:   # 启动快照失败的惰性回退
+                rows = (s.query(M.NcaChain.prev_nca, func.count())
+                        .filter(M.NcaChain.prev_nca != "GENESIS")
+                        .group_by(M.NcaChain.prev_nca).all())
+                _NCA_FORK_BASELINE = {p: c for p, c in rows}
             dups = (s.query(M.NcaChain.prev_nca, func.count())
                     .filter(M.NcaChain.prev_nca != "GENESIS")
                     .group_by(M.NcaChain.prev_nca)
                     .having(func.count() > 1).all())
-        if dups:
-            _NCA_LOG.warning("NCA_FORK_ALERT duplicate-prev groups=%d detail=%s",
-                             len(dups), [(p, c) for p, c in dups[:5]])
+        base = _NCA_FORK_BASELINE
+        new_forks = [(p, c) for p, c in dups if c > base.get(p, 1)]
+        if new_forks:
+            _NCA_LOG.warning("NCA_FORK_ALERT new-fork groups=%d detail=%s",
+                             len(new_forks), new_forks[:5])
+        for p, c in dups:
+            if c > base.get(p, 1):
+                base[p] = c
     except Exception:
         _NCA_LOG.exception("NCA_FORK_ALERT check failed")
     return nca_id

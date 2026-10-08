@@ -6,7 +6,7 @@
                         （同 prev 批内不重复；恰一条锚到批外旧尾；沿 prev 走 n 步内必出批且无环）
   取尾按插入序          → test_tail_by_insertion_order
                         （同秒双写后后者 prev=前者 id，而非同 ts 歧义行）
-  同 prev 重复即告警    → test_fork_alert_on_duplicate_prev（NCA_FORK_ALERT，不阻断写入）
+  同 prev 重复即告警      → test_fork_alert_baseline_diff（基线差：历史不告警／超基线告警／上浮不重复刷）
 """
 import logging
 import uuid
@@ -63,16 +63,30 @@ def test_tail_by_insertion_order():
     assert pb == pa                                # 后者必链前者（插入序取尾）
 
 
-def test_fork_alert_on_duplicate_prev(caplog):
+def test_fork_alert_baseline_diff(caplog):
+    """基线差口径：启动基线已含的分叉（历史）不告警；计数超基线（新增）才告警；告警后基线上浮不重复刷。"""
     tag = uuid.uuid4().hex[:8]
     with get_sessionmaker().begin() as s:
         tail = (s.query(M.NcaChain).order_by(desc(column("rowid"))).first())
-        base = tail.nca_id if tail else "GENESIS"
-        for t in ("a", "b"):                     # 直接种一对同 prev 分叉（模拟旧并发缺陷产物）
-            s.add(M.NcaChain(nca_id=f"TEST-FORK-{tag}-{t}", prev_nca=base,
+        base_prev = tail.nca_id if tail else "GENESIS"
+        for t in ("a", "b"):                     # 先种一对同 prev 分叉（计 2）
+            s.add(M.NcaChain(nca_id=f"TEST-FORK-{tag}-{t}", prev_nca=base_prev,
                              action="TEST_FORK_SEED", actor="test", ts="2026-10-09T00:00:00+00:00",
                              data_provenance="simulated"))
+    api_v1.init_nca_fork_baseline()              # 模拟服务启动：基线吸收该分叉对
     with caplog.at_level(logging.WARNING, logger=_LOG):
-        nid = api_v1._nca_append("TEST_AFTER_FORK", "test")   # 告警不阻断：写仍成功
-    assert nid
+        nid = api_v1._nca_append("TEST_AFTER_FORK", "test")
+    assert nid                                   # 写仍成功（不阻断）
+    assert not any("NCA_FORK_ALERT" in r.getMessage() for r in caplog.records)  # 历史分叉不告警
+    with get_sessionmaker().begin() as s:        # 同 prev 再加一条（计 3 > 基线 2）→ 新增告警
+        s.add(M.NcaChain(nca_id=f"TEST-FORK-{tag}-c", prev_nca=base_prev,
+                         action="TEST_FORK_SEED", actor="test", ts="2026-10-09T00:01:00+00:00",
+                         data_provenance="simulated"))
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger=_LOG):
+        api_v1._nca_append("TEST_AFTER_FORK2", "test")
     assert any("NCA_FORK_ALERT" in r.getMessage() for r in caplog.records)
+    caplog.clear()                               # 基线已上浮：再写不重复刷
+    with caplog.at_level(logging.WARNING, logger=_LOG):
+        api_v1._nca_append("TEST_AFTER_FORK3", "test")
+    assert not any("NCA_FORK_ALERT" in r.getMessage() for r in caplog.records)
