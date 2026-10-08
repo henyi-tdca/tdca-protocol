@@ -118,4 +118,97 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     await waitFor(() => expect(screen.getByTestId('me-channels')).toBeTruthy())
     expect(container.querySelectorAll('[data-testid^="me-ch-"]').length).toBe(9)
   })
+
+  // ---- 页内改密入口（2026-10-09 最小实现令；随本件并入，未新建测试文件） ----
+  const PWD_OK = { changed: true, username: 'tester', other_sessions_revoked: 2, nca_ref: 'NCA-PWD-001', note: '密码已更换' }
+
+  const fetchMockPwd = (postStatus = 200, postPayload: unknown = PWD_OK) =>
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.includes('/api/v1/me/dashboard')) {
+        return { ok: true, status: 200, json: async () => envelope(ME_PAYLOAD) } as Response
+      }
+      if (url.includes('/api/v1/me/password')) {
+        return {
+          ok: postStatus >= 200 && postStatus < 300,
+          status: postStatus,
+          json: async () => (postStatus < 300 ? envelope(postPayload) : { detail: '服务端拒绝' }),
+        } as Response
+      }
+      return { ok: false, status: 404, json: async () => ({ detail: 'not found' }) } as Response
+    })
+
+  const pwdCalls = (f: ReturnType<typeof fetchMockPwd>) =>
+    f.mock.calls.filter((c) => String(c[0]).includes('/api/v1/me/password'))
+
+  it('改密正例：提交打 POST /api/v1/me/password（body 旧密/新密两字段），成功提示含存证号并清空输入', async () => {
+    const f = fetchMockPwd()
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'new-pass-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'new-pass-1' } })
+    fireEvent.click(screen.getByTestId('me-pwd-submit'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('NCA-PWD-001'))
+    const calls = pwdCalls(f)
+    expect(calls.length).toBe(1)
+    expect(String(calls[0][0])).toContain('/api/v1/me/password')
+    expect((calls[0][1] as RequestInit).method).toBe('POST')
+    expect(JSON.parse(String((calls[0][1] as RequestInit).body))).toEqual({ old_password: 'old-pass-1', new_password: 'new-pass-1' })
+    expect((screen.getByTestId('me-pwd-old') as HTMLInputElement).value).toBe('')
+    expect((screen.getByTestId('me-pwd-new') as HTMLInputElement).value).toBe('')
+  })
+
+  it('改密弱密前端拦截：不发请求，提示强度口径（至少 8 位且含字母与数字）', async () => {
+    const f = fetchMockPwd()
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'short1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'short1' } })
+    fireEvent.click(screen.getByTestId('me-pwd-submit'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('至少 8 位'))
+    expect(pwdCalls(f).length).toBe(0)
+  })
+
+  it('改密两次新密码不一致：不发请求，提示不一致', async () => {
+    const f = fetchMockPwd()
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
+    fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'abc12346' } })
+    fireEvent.click(screen.getByTestId('me-pwd-submit'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('不一致'))
+    expect(pwdCalls(f).length).toBe(0)
+  })
+
+  it('改密服务端 400：照服务端口径提示强度不足（fail-closed 不猜测）', async () => {
+    const f = fetchMockPwd(400)
+    mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
+    fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'abc12345' } })
+    fireEvent.click(screen.getByTestId('me-pwd-submit'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('至少 8 位'))
+    expect(pwdCalls(f).length).toBe(1)
+  })
+
+  it('改密服务端 401：提示旧密码核验未通过（现网会话语义可能清退本地会话）', async () => {
+    const f = fetchMockPwd(401)
+    mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'wrong-old-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
+    fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'abc12345' } })
+    fireEvent.click(screen.getByTestId('me-pwd-submit'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('旧密码核验未通过'))
+  })
 })
