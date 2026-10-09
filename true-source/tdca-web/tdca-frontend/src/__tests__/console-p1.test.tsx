@@ -233,4 +233,87 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     expect(container.querySelector('[data-testid="me-pending-card"]')).toBeTruthy()
     expect(screen.getByTestId('me-pending-card').textContent).toContain('0 件')
   })
+
+  // ---- 登录会话（可增项第 1 件：看＋踢本人会话）----
+  const SESS_ROWS = [
+    { sid: 'sid-current-01', created_at: '2026-10-09T08:00:00+00:00', expires_at: '2026-10-09T10:00:00+00:00', is_current: true, is_revoked: false, is_expired: false },
+    { sid: 'sid-old-000002', created_at: '2026-10-08T08:00:00+00:00', expires_at: '2026-10-08T10:00:00+00:00', is_current: false, is_revoked: true, is_expired: false },
+  ]
+
+  const fetchMockSess = (revokeStatus = 200, revokeAllStatus = 200) =>
+    vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.includes('/api/v1/me/dashboard')) {
+        return { ok: true, status: 200, json: async () => envelope(ME_PAYLOAD) } as Response
+      }
+      if (url.includes('/api/v1/me/sessions/revoke-all')) {
+        return {
+          ok: revokeAllStatus >= 200 && revokeAllStatus < 300,
+          status: revokeAllStatus,
+          json: async () => (revokeAllStatus < 300
+            ? envelope({ revoked: 1, nca_ref: 'NCA-SA-001', note: '本人全部会话已吊销' })
+            : { detail: '服务端拒绝' }),
+        } as Response
+      }
+      if (url.includes('/api/v1/me/sessions/revoke')) {
+        return {
+          ok: revokeStatus >= 200 && revokeStatus < 300,
+          status: revokeStatus,
+          json: async () => (revokeStatus < 300
+            ? envelope({ revoked: true, sid: 'sid-current-01', nca_ref: 'NCA-SR-001', note: '指定会话已吊销' })
+            : { detail: '会话不存在或已失效' }),
+        } as Response
+      }
+      if (url.includes('/api/v1/me/sessions')) {
+        return { ok: true, status: 200, json: async () => envelope({ sessions: SESS_ROWS }) } as Response
+      }
+      return { ok: false, status: 404, json: async () => ({ detail: 'not found' }) } as Response
+    })
+
+  it('登录会话卡（看）：列表渲染 sid/时间/状态标记；已吊销行禁用吊销钮；全部吊销与「退出登录」文案区分', async () => {
+    vi.stubGlobal('fetch', fetchMockSess())
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    const card = screen.getByTestId('me-sessions')
+    expect(card.textContent).toContain('sid-current-01')
+    expect(card.textContent).toContain('sid-old-000002')
+    expect(card.textContent).toContain('当前会话')
+    expect(card.textContent).toContain('已吊销')
+    expect(card.textContent).toContain('退出登录')          // 文案区分说明在位
+    expect(screen.getByTestId('me-sess-revoke-all')).toBeTruthy()
+    // 当前行可吊销；已吊销历史行禁用
+    expect((screen.getByTestId('me-sess-revoke-sid-current-01') as HTMLButtonElement).disabled).toBe(false)
+    expect((screen.getByTestId('me-sess-revoke-sid-old-000002') as HTMLButtonElement).disabled).toBe(true)
+  })
+
+  it('登录会话卡（踢指定正例）：POST /me/sessions/revoke body 恰 {sid}，成功后提示并刷新列表', async () => {
+    const f = fetchMockSess()
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    fireEvent.click(screen.getByTestId('me-sess-revoke-sid-current-01'))
+    await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('指定会话已吊销'))
+    const calls = f.mock.calls.filter((c) => String(c[0]).includes('/api/v1/me/sessions/revoke') && !String(c[0]).includes('revoke-all'))
+    expect(calls.length).toBe(1)
+    expect(JSON.parse(String(calls[0][1]?.body))).toEqual({ sid: 'sid-current-01' })
+  })
+
+  it('登录会话卡（踢指定 404）：提示「会话不存在或已失效」（不可见处理口径如实透出）', async () => {
+    vi.stubGlobal('fetch', fetchMockSess(404))
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    fireEvent.click(screen.getByTestId('me-sess-revoke-sid-current-01'))
+    await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('会话不存在或已失效'))
+  })
+
+  it('登录会话卡（踢全部）：POST /me/sessions/revoke-all 空体，提示含「请重新登录」（当前会话已废，不再刷新列表）', async () => {
+    const f = fetchMockSess(200, 200)
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    fireEvent.click(screen.getByTestId('me-sess-revoke-all'))
+    await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('请重新登录'))
+    const calls = f.mock.calls.filter((c) => String(c[0]).includes('/api/v1/me/sessions/revoke-all'))
+    expect(calls.length).toBe(1)
+    expect(JSON.parse(String(calls[0][1]?.body))).toEqual({})
+  })
 })

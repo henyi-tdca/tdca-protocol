@@ -6,8 +6,9 @@
 // 批 1 扩充（2026-10-09 用户控制台 P1）: 频道直达条 + AI 意图导航 + 权属栏 + 准入判定历史 + 活动产物分页
 // 改密入口（2026-10-09 最小实现令）: 账户安全卡（页内改密，调在册 POST /api/v1/me/password；仅本人、NCA 落链）
 // 账户管理栏目（2026-10-09 件A＋B0）: 账户信息＋修改密码＋忘记密码指引聚合一栏（B0 零后端：无自助重置，联系站点管理员人工重置）
+// 登录会话（2026-10-09 可增项第 1 件）: 账户管理栏内「登录会话」卡（GET /me/sessions · revoke · revoke-all；看＋踢本人会话）
 // =============================================================================
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { api } from '@/api/client'
 import { useApiGet } from '@/shared/useApi'
@@ -201,6 +202,122 @@ function PasswordChangeCard() {
   )
 }
 
+interface SessionRow {
+  sid: string
+  created_at: string
+  expires_at: string
+  is_current: boolean
+  is_revoked: boolean
+  is_expired: boolean
+}
+
+/** 登录会话（2026-10-09 可增项第 1 件）：看＋踢本人会话（GET /me/sessions · revoke · revoke-all）。
+ *  单活会话制（登录即挤下线），历史会话只读留痕；与「退出登录」（仅结束当前）文案区分。 */
+function SessionsCard() {
+  const [items, setItems] = useState<SessionRow[] | null>(null)
+  const [msg, setMsg] = useState('')
+  const [ok, setOk] = useState(false)
+  const [busy, setBusy] = useState(false)
+
+  const load = async () => {
+    const r = await api.get<{ sessions: SessionRow[] }>('/api/v1/me/sessions')
+    if (r.ok) {
+      setItems(r.data.sessions ?? [])
+      setMsg('')
+      setOk(true)
+    } else {
+      setItems(null)
+      setMsg(`会话列表加载失败（HTTP ${r.status ?? '未知'}），请稍后重试`)
+      setOk(false)
+    }
+  }
+  useEffect(() => { void load() }, [])   // 挂载加载一次；写动作后手动刷新
+
+  const revoke = async (sid: string) => {
+    if (busy) return
+    setBusy(true)
+    try {
+      const r = await api.post<{ revoked: boolean }>('/api/v1/me/sessions/revoke', { sid })
+      if (r.ok) {
+        await load()               // 先刷新列表（load 成功会清 msg），后落提示
+        setOk(true)
+        setMsg('指定会话已吊销')
+      } else if (r.status === 404) {
+        await load()
+        setOk(false)
+        setMsg('会话不存在或已失效')
+      } else {
+        setOk(false)
+        setMsg(`吊销失败（HTTP ${r.status ?? '未知'}）`)
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const revokeAll = async () => {
+    if (busy) return
+    setBusy(true)
+    try {
+      const r = await api.post<{ revoked: number }>('/api/v1/me/sessions/revoke-all', {})
+      if (r.ok) {
+        setOk(false)
+        setMsg(`已全部吊销 ${r.data.revoked} 个会话（含当前）——本会话已失效，请重新登录`)
+        // 当前会话已死，不再刷新列表（刷新必 401）
+      } else {
+        setOk(false)
+        setMsg(`操作失败（HTTP ${r.status ?? '未知'}）`)
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const badge = (s: SessionRow) =>
+    s.is_current ? <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] text-emerald-700">当前会话</span>
+    : s.is_revoked ? <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">已吊销</span>
+    : s.is_expired ? <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">已过期</span>
+    : <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">有效</span>
+  const fmt = (iso: string) => iso.slice(0, 19).replace('T', ' ')
+
+  return (
+    <section data-testid="me-sessions" className="rounded-lg border border-gray-200 bg-white p-4">
+      <h3 className="mb-2 text-sm font-semibold text-gray-800">登录会话</h3>
+      <p className="mb-2 text-[11px] text-gray-400">仅本账户可见；单活会话制（登录即挤下线），历史会话只读留痕；标识为不可逆指纹，不含任何可登录材料。</p>
+      {items === null && !msg && <p className="text-xs text-gray-400">加载中…</p>}
+      {items !== null && (
+        <table className="w-full text-sm">
+          <tbody>
+            {items.map((s) => (
+              <tr key={s.sid} data-sid={s.sid} className="border-b border-gray-100">
+                <td className="py-1.5 font-mono text-[11px] text-gray-400">{s.sid}</td>
+                <td className="py-1.5 text-xs text-gray-500">创建 {fmt(s.created_at)}<span className="block text-[11px] text-gray-400">到期 {fmt(s.expires_at)}</span></td>
+                <td className="py-1.5">{badge(s)}</td>
+                <td className="py-1.5 text-right">
+                  <button onClick={() => void revoke(s.sid)} disabled={busy || s.is_revoked || s.is_expired}
+                          data-testid={`me-sess-revoke-${s.sid}`}
+                          className="rounded-md border border-gray-300 bg-white px-2 py-0.5 text-xs text-gray-600 hover:border-red-400 hover:text-red-600 disabled:opacity-40">
+                    吊销
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <div className="mt-2 flex flex-wrap items-center gap-3">
+        <button onClick={() => void revokeAll()} disabled={busy}
+                data-testid="me-sess-revoke-all"
+                className="rounded-md border border-red-300 bg-white px-3 py-1 text-xs text-red-600 hover:bg-red-50 disabled:opacity-40">
+          全部吊销（含当前，强制退出登录）
+        </button>
+        <span className="text-[11px] text-gray-400">与「退出登录」不同：退出仅结束当前会话；全部吊销令本人所有会话立即失效。</span>
+      </div>
+      {msg && <p data-testid="me-sessions-msg" className={`mt-2 text-xs ${ok ? 'text-emerald-700' : 'text-amber-700'}`}>{msg}</p>}
+    </section>
+  )
+}
+
 /** M5 个人后台：谁的数据谁可见（须登录；未登录自动引导） */
 export function MePage() {
   const { status, data } = useApiGet<MeData>('/api/v1/me/dashboard')
@@ -285,6 +402,10 @@ export function MePage() {
             {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}
             <div className="mt-3">
               <PasswordChangeCard />
+            </div>
+            {/* 登录会话（可增项第 1 件：看＋踢本人会话；与「退出登录」文案区分） */}
+            <div className="mt-3">
+              <SessionsCard />
             </div>
           </section>
 

@@ -1257,6 +1257,96 @@ class PasswordChangeRequest(BaseModel):
     new_password: str = ""
 
 
+class SessionRevokeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")   # 未知字段 fail-closed 拒绝
+    sid: str = ""
+
+
+def _session_sid(token_hash: str) -> str:
+    """会话展示指纹（吊销标识）：sha256(token_hash) 前 12 位。
+    不可逆、不可用于登录取值、不暴露 token_hash 本身；仅作列表-吊销对照键。"""
+    return hashlib.sha256(token_hash.encode("utf-8")).hexdigest()[:12]
+
+
+@router.get("/me/sessions")
+def me_sessions(request: Request):
+    """会话管理·看（2026-10-09 可增项第 1 件）：列本人会话——创建/到期/是否当前/
+    是否已失效（revoked 或过期）。⛔ 不返回 token/token_hash 任何值（标识用 sid 指纹）。
+    勘察实况：单活会话制（登录即挤旧），历史 revoked 行只读留痕、照常列出。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    current_hash = hashlib.sha256(
+        request.headers.get("authorization", "").strip().encode("utf-8")).hexdigest()
+    now = datetime.now(timezone.utc)
+    items = []
+    with get_session() as s:
+        rows = (s.query(M.AuthSession)
+                .filter(M.AuthSession.username == me)
+                .order_by(M.AuthSession.created_at.desc()).all())
+        for r in rows:
+            items.append({
+                "sid": _session_sid(r.token_hash),
+                "created_at": r.created_at,
+                "expires_at": r.expires_at,
+                "is_current": r.token_hash == current_hash,
+                "is_revoked": r.revoked == 1,
+                "is_expired": datetime.fromisoformat(r.expires_at) <= now,
+            })
+    return _nca_watermark({
+        "sessions": items,
+        "note": "仅列本人会话；单活会话制（登录即挤下线），历史会话只读留痕；"
+                "标识 sid 为 token_hash 的 sha256 指纹，不含任何可登录材料",
+    }, nature="real")
+
+
+@router.post("/me/sessions/revoke")
+def me_session_revoke(req: SessionRevokeRequest, request: Request):
+    """会话管理·踢（指定会话）：sid 指纹命中本人未吊销会话 → revoked=1（既有语义）。
+    他人会话或不存在 → 404（不可见处理，⛔ 不泄漏存在性）；⛔ 不删行、不动表。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    sid = req.sid.strip()
+    if not sid:
+        raise HTTPException(400, "sid 不可为空")
+    with get_sessionmaker().begin() as s:
+        row = None
+        for r in s.query(M.AuthSession).filter(
+                M.AuthSession.username == me, M.AuthSession.revoked == 0).all():
+            if _session_sid(r.token_hash) == sid:
+                row = r
+                break
+        if row is None:
+            raise HTTPException(404, "会话不存在或已失效")
+        row.revoked = 1
+    nca_ref = _nca_append("user_session_revoke", me,
+                          artifact_path=f"auth://me/session-revoke/{me}", prov="real")
+    return _nca_watermark({
+        "revoked": True, "sid": sid, "nca_ref": nca_ref,
+        "note": "指定会话已吊销（revoked=1 既有语义，不删行）",
+    }, nature="real")
+
+
+@router.post("/me/sessions/revoke-all")
+def me_session_revoke_all(request: Request):
+    """会话管理·踢（全部）：吊销本人全部会话（含当前）＝强制退出登录。
+    revoked=1 既有语义；⛔ 不删行、不动表；落 NCA（⛔ 不含 token 值）。
+    当前会话自下一请求起 401（validate_session revoked 语义，S-3 实测口径）。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    revoked_n = 0
+    with get_sessionmaker().begin() as s:
+        for r in s.query(M.AuthSession).filter(
+                M.AuthSession.username == me, M.AuthSession.revoked == 0).all():
+            r.revoked = 1
+            revoked_n += 1
+    nca_ref = _nca_append("user_session_revoke_all", me,
+                          artifact_path=f"auth://me/session-revoke-all/{me}", prov="real")
+    return _nca_watermark({
+        "revoked": revoked_n, "nca_ref": nca_ref,
+        "note": "本人全部会话已吊销（含当前，强制退出登录）；本会话自下一请求起失效",
+    }, nature="real")
+
+
 @router.post("/me/password")
 def me_password(req: PasswordChangeRequest, request: Request):
     """改密（仅本人；2026-10-09 最小实现令）：旧密核验 → 新密强度（沿用注册口径）→
