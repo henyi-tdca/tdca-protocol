@@ -1,0 +1,21 @@
+# TDCA-MOU 实际数据阶段示例（真实税收）
+# Granted-By: TDCA-PRINCIPLE-MOU-001
+# NSFL-Declaration: 税收数据为真实经济事实记录，不可伪造
+MOU-ID: "TDCA-MOU-20260801-002"
+Token-Ref: "TDCA-CRT-20260730-001"
+NCA-Ref: "TDCA-NCA-20260730-001"
+Recorded-At: "2026-08-01T12:00:00Z"
+Operator: "Reasonix"
+
+Tax-In: 500.00
+Tax-Out: 300.00
+Actual-Total: 800.00
+
+Pre-Est: null
+Pre-Est-Status: null
+
+Activation-Coefficient: 2.0
+# 公式: (Actual-Total 800 + 就业社保 0) / 政府 PCR 投入 400 = 2.0
+
+Granted-By: "TDCA-PRINCIPLE-MOU-001"
+Audit-Trail: "记录由 TDCAMOURecorder 生成于 2026-08-01T12:00:00Z"

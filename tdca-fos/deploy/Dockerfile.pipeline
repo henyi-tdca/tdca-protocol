@@ -1,0 +1,19 @@
+# ============================================================================
+# TDCA-FOS REPO-003 七库联动管道镜像
+# 制度锚定: TDCA-KG-001 §4.4 | ID91 | FC: TDCA-FC-20260804-006-M3
+# SPDX-License-Identifier: TDCA-Internal
+# ============================================================================
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY tdca_pipeline/ tdca_pipeline/
+COPY tdca_kb/ tdca_kb/
+COPY tdca_graph/ tdca_graph/
+COPY tdca_nca/ tdca_nca/
+COPY tdca_adapters/ tdca_adapters/
+
+CMD ["python", "-c", "from tdca_pipeline.sync_engine import SevenRepoSyncEngine; print('TDCA pipeline worker ready')"]

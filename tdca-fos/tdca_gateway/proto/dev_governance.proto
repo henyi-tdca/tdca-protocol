@@ -1,0 +1,143 @@
+// ============================================================================
+// TDCA-Gateway gRPC 接口 — DevCluster → Governance Cluster 查询网关
+// 制度锚定: TDCA-KG-001 §3.4 / §5.2 | ID82 接口熵
+// 版本: V1.0 | 状态: M1-CONTRACT（M3 服务实现）| FC: TDCA-FC-20260804-006
+// NSFL-Declaration: 所有响应必须携带 NCA 引用（ID91）
+// SPDX-License-Identifier: TDCA-Internal
+// ============================================================================
+syntax = "proto3";
+
+package tdca.gateway;
+
+// 制度约束查询服务 — 供 DevCluster 调用
+service TDCAKnowledgeGraph {
+    rpc GetDevelopmentConstraints(ConstraintQuery) returns (ConstraintSet);
+    rpc GetPrincipleDependencyChain(PrincipleQuery) returns (DependencyChain);
+    rpc GetNSFLImpact(NSFLImpactQuery) returns (NSFLImpactReport);
+    rpc VerifyFunctionSpecCompleteness(FunctionSpecQuery) returns (CompletenessReport);
+    rpc CheckMRCRCompatibility(MRCRQuery) returns (MRCRReport);
+    rpc GetGraphVersionDiff(VersionQuery) returns (VersionDiff);
+}
+
+message ConstraintQuery {
+    string target_role_id = 1;      // 如 "Constitution-Trainer"
+    string target_cluster = 2;      // "GOVERNANCE" 或 "DEV"
+    string developer_model = 3;     // "DeepSeek-V4"
+    string scene_id = 4;            // 开发场景 ID
+}
+
+message ConstraintSet {
+    repeated Principle principles = 1;
+    repeated Constitution articles = 2;
+    repeated NSFLRule nsfl_rules = 3;
+    repeated FunctionSpec function_specs = 4;
+    float interface_entropy_budget = 5;  // 必须为 0
+    bool human_signature_required = 6;   // 慢系统标记
+}
+
+message Principle {
+    string id = 1;
+    string name = 2;
+    int32 priority = 3;
+    string formalization = 4;
+}
+
+message Constitution {
+    int32 article = 1;
+    string title = 2;
+    string text = 3;
+    string enforcement_level = 4;
+}
+
+message NSFLRule {
+    string id = 1;
+    string type = 2;
+    string pattern = 3;
+    string level = 4;
+}
+
+message FunctionSpec {
+    string objective = 1;
+    repeated string constraints = 2;
+    string prior = 3;
+    string config_right = 4;
+    string allocation = 5;
+    string audit_trail = 6;
+    string protocolizer = 7;
+}
+
+message PrincipleQuery {
+    string principle_id = 1;
+    bool include_dependencies = 2;
+}
+
+message DependencyChain {
+    repeated Principle chain = 1;
+    int32 depth = 2;
+}
+
+message NSFLImpactQuery {
+    string scene_id = 1;
+}
+
+message NSFLImpactReport {
+    repeated NSFLRule applicable_rules = 1;
+    bool blocked = 2;
+    string alt_path = 3;
+}
+
+message FunctionSpecQuery {
+    string role_id = 1;
+}
+
+message CompletenessReport {
+    bool has_objective = 1;
+    bool has_constraints = 2;
+    bool has_prior = 3;
+    bool has_config_right = 4;
+    bool has_allocation = 5;
+    bool has_audit_trail = 6;
+    bool complete = 7;
+}
+
+message MRCRQuery {
+    string agent_id = 1;
+    repeated string scene_ids = 2;
+}
+
+message MRCRReport {
+    bool isolated = 1;
+    repeated string violations = 2;
+}
+
+message VersionQuery {
+    string from_version = 1;
+    string to_version = 2;
+}
+
+message VersionDiff {
+    repeated string changed_nodes = 1;
+    string merkle_root = 2;
+    string ota_trigger = 3;
+}
+
+// NCA 生成约定：所有响应必须携带 NCA 引用
+message NCAReference {
+    string nca_id = 1;
+    string seal = 2;
+    int64 mou_contribution = 3;
+}
+
+// 统一响应包装器
+message TDCAResponse {
+    oneof payload {
+        ConstraintSet constraint_set = 1;
+        DependencyChain dependency_chain = 2;
+        NSFLImpactReport nsfl_impact = 3;
+        CompletenessReport completeness = 4;
+        MRCRReport mrcr = 5;
+        VersionDiff version_diff = 6;
+    }
+    NCAReference nca = 10;  // 强制 NCA 字段
+    string version = 11;     // OTA 版本号
+}

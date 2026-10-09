@@ -1,0 +1,6 @@
+# 16 智能体 IRP 注册表（AGENT-TASK-008-IMPL 示例，完整 16 条由 config.yaml 生成）
+agents:
+  - {agent: entropy-guard,  eios_type: AUDITOR,  dims: [interface_entropy, nsfl_scan], forbid: [contract.compile, contract.deploy, nsfl.fuse]}
+  - {agent: notary,         eios_type: AUDITOR,  dims: [nca, chain_verify, trace],     forbid: [contract.deploy, mou.anchor_real, contract.compile]}
+  - {agent: contract-coder, eios_type: EXECUTOR, dims: [const_encoding, mou_anchor],   forbid: [contract.deploy, nsfl.fuse, mou.anchor_real]}
+  # 其余 13 条按各自 tdca-official-kb/agents/*-config.yaml 的 verbs/approval_required 生成

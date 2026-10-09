@@ -1,0 +1,28 @@
+# TDCA 效用精灵 — 商户优化示例
+# 制度锚定: ID84(正和) + ID21(反函数)
+# 场景: 商户月收入提升目标 → 反推资源配置
+
+target: 商户月收入增加 10000 元
+求解类型: 反函数求解 (InverseFunctionSolver)
+
+配置空间:
+  bounds:
+    compute_power: [0.0, 100.0]      # 算力资源
+    model_calls: [0.0, 10000.0]      # 模型调用次数
+    coordination_agents: [1.0, 10.0] # 协调智能体数量
+  hard_constraints:
+    - "model_calls <= 10000"
+
+效用函数: f(config) = compute_power * 50 + model_calls * 0.3 + coordination_agents * 200
+成本函数: c(config) = compute_power * 2 + model_calls * 0.01 + coordination_agents * 100
+
+目标效用: 10000.0
+容差: 0.05
+
+预期结果:
+  - config_vector: 满足 f(X) ≥ 10000 且成本最小的资源配置
+  - feasibility: feasible (若配置空间无法达成则 infeasible + NSFL)
+
+制度备注:
+  - 反函数求解结果必须在配置权边界内
+  - 多解时选择总成本最小

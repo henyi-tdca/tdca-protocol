@@ -1,0 +1,34 @@
+# merchant_loop · 消费权益函数模板示例（DCD-MERCHANT-LOOP-001 M1）
+# 发布即契约（NS-007 六要素声明）；数据性质 SIMULATED（ID92）
+schema: TDCA-MERCHANT-LOOP-BENEFIT-001
+benefit_id: B-EXAMPLE-001
+merchant_id: M-EXAMPLE-CAFE
+merchant_name: 示例咖啡（SIMULATED）
+title: 到店消费 9 折 + 即时小额让利
+
+# 权益参数（discount 与 rebate 至少一者）
+discount:
+  rate: 0.10            # 9 折（折扣深度 10%）
+rebate:
+  rate: 0.03            # 即时小额让利 3%
+  cap: 10.0             # 单笔让利上限（元）
+
+valid_from: "2026-09-01"
+valid_until: "2026-12-31"
+stores:
+  - STORE-CAFE-001
+  - STORE-CAFE-002
+conditions:
+  min_spend: 20.0       # 最低消费（元）
+  hours: "08:00-20:00"
+
+budget_ceiling: 10000.0  # ≤ 历史广告/折扣预算（预算平移约束）
+scene_type: dine         # 场景维度（dine/retail/service/entertainment/other——接 CCA D_scene）
+
+# NS-007 六要素声明
+objective: 以不超过历史营销预算的成本驱动到店真实消费核销
+constraint: 双边消费交易不进 CLS；无资产/无杠杆/无升值承诺；逐笔即时让利
+prior: 预算平移自历史广告/折扣/佣金预算，不新增投入
+config_boundary: 商家-消费者双边权益；核销真实性三方证据（LBS/小票/商家确认）
+distribution: 让利直接归消费者；平台服务费按调度税口径模拟态记账
+audit: 每笔核销 NCA 存证（NCA-MERCHANTLOOP-*）；ROI 三情景模拟测算
