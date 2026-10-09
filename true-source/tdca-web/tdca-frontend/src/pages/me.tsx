@@ -17,7 +17,8 @@ import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 
 interface MeData {
-  session: { username: string; role: string; expires_at: string; last_register_nca_id?: string | null }
+  session: { username: string; role: string; expires_at: string; last_register_nca_id?: string | null
+             created_at?: string | null; created_at_display?: string | null; created_at_parse_ok?: boolean }
   pending_count: number
   my_agents: { agent_id: string; name: string; five_role: string | null; status: string; attestation_state: string; audit_count: number; data_provenance: string }[]
   my_pending_sign: { request_id: string; agent_id: string; request_type: string; urgency: string | null; reason: string | null; ts: string }[]
@@ -442,13 +443,33 @@ export function MePage() {
           <section data-testid="me-account" className="rounded-lg border border-gray-200 bg-white p-4">
             <h3 className="mb-2 text-sm font-semibold text-gray-800">账户管理</h3>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {/* 账户信息（可增项第 3 件：「当前登录」卡升级版；只展示不编辑） */}
               <div data-testid="me-session" className="rounded-lg border border-gray-200 bg-white p-4">
-                <div className="text-xs text-gray-500">当前登录</div>
+                <div className="text-xs text-gray-500">账户信息</div>
                 <div className="mt-1 text-lg font-semibold text-gray-800">
                   {data.session.username}
                   <span className="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{ROLE_LABEL[data.session.role] ?? data.session.role}</span>
                 </div>
+                <div className="mt-1 text-xs text-gray-400" data-testid="me-acct-created">
+                  {data.session.created_at_parse_ok && data.session.created_at_display
+                    ? <>建号时间 {data.session.created_at_display}（+08）</>
+                    : data.session.created_at
+                      ? <>建号时间原值 <span className="font-mono">{data.session.created_at}</span>（无法解析，如实展示未转换）</>
+                      : '建号时间：无记录（如实展示，未猜测）'}
+                </div>
                 <div className="mt-1 text-xs text-gray-400">会话有效至 {data.session.expires_at.slice(0, 19).replace('T', ' ')}</div>
+                <div className="mt-2 flex flex-wrap gap-2" data-testid="me-acct-links">
+                  <button type="button" data-testid="me-acct-links-sessions"
+                          className="rounded-md border border-gray-200 px-2 py-1 text-[11px] text-gray-500 hover:border-emerald-400 hover:text-emerald-700"
+                          onClick={() => document.querySelector('[data-testid="me-sessions"]')?.scrollIntoView({ behavior: 'smooth' })}>
+                    登录会话 →
+                  </button>
+                  <button type="button" data-testid="me-acct-links-usage"
+                          className="rounded-md border border-gray-200 px-2 py-1 text-[11px] text-gray-500 hover:border-emerald-400 hover:text-emerald-700"
+                          onClick={() => document.querySelector('[data-testid="me-usage"]')?.scrollIntoView({ behavior: 'smooth' })}>
+                    用量统计 →
+                  </button>
+                </div>
                 {data.session.last_register_nca_id && (
                   <div data-testid="me-register-nca" className="mt-1 text-xs text-gray-400">
                     最近缔约存证 <span className="font-mono text-gray-500">{data.session.last_register_nca_id}</span>
