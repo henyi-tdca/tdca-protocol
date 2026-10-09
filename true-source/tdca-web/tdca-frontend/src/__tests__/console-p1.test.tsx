@@ -185,7 +185,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     expect(pwdCalls(f).length).toBe(0)
   })
 
-  it('改密服务端 400：照服务端口径提示强度不足（fail-closed 不猜测）', async () => {
+  it('改密服务端 400（旧密错误口径）：提示旧密码核验未通过，不触发会话清退语义', async () => {
     const f = fetchMockPwd(400)
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
     vi.stubGlobal('fetch', f)
@@ -195,11 +195,11 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
     fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'abc12345' } })
     fireEvent.click(screen.getByTestId('me-pwd-submit'))
-    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('至少 8 位'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('旧密码核验未通过'))
     expect(pwdCalls(f).length).toBe(1)
   })
 
-  it('改密服务端 401：提示旧密码核验未通过（现网会话语义可能清退本地会话）', async () => {
+  it('改密服务端 401（会话面）：提示会话已失效、引导重新登录', async () => {
     const f = fetchMockPwd(401)
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
     vi.stubGlobal('fetch', f)
@@ -209,6 +209,6 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
     fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'abc12345' } })
     fireEvent.click(screen.getByTestId('me-pwd-submit'))
-    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('旧密码核验未通过'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('会话已失效'))
   })
 })

@@ -1261,7 +1261,9 @@ class PasswordChangeRequest(BaseModel):
 def me_password(req: PasswordChangeRequest, request: Request):
     """改密（仅本人；2026-10-09 最小实现令）：旧密核验 → 新密强度（沿用注册口径）→
     吊销本人其它会话（revoked=1 既有语义，当前会话保留）→ NCA 落链。
-    ⛔ 不加字段、不动表结构；哈希/盐/迭代数不入件不入响应。"""
+    ⛔ 不加字段、不动表结构；哈希/盐/迭代数不入件不入响应。
+    返码口径（2026-10-09 评估件落地）：旧密错=400（401 会被前端客户端误作
+    会话失效清退本地令牌）；「用户不存在」=401 与未登录=401 保持不动（真会话面）。"""
     v = _require_session_user(request)
     me = v["username"]
     with get_session() as s:
@@ -1270,7 +1272,7 @@ def me_password(req: PasswordChangeRequest, request: Request):
             raise HTTPException(401, "用户不存在")  # fail-closed
         if not verify_password(req.old_password, user.salt, user.iterations,
                                user.password_hash):
-            raise HTTPException(401, "旧密码错误")
+            raise HTTPException(400, "旧密码错误")   # 返码口径：应用层凭据错→400（401 保留给会话面）
     new_pw = req.new_password
     if (len(new_pw) < 8 or not any(c.isalpha() for c in new_pw)
             or not any(c.isdigit() for c in new_pw)):
