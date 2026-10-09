@@ -1,0 +1,266 @@
+# ============================================================================
+# TDCA-TP 本体论 — TDCA 思维协议完整机器可读版本（V1.0）
+# 制度锚定: TDCA-KG-001 §2.2 / §2.3 / §3.2 | TDCA-TypeSystem-Confirmation-001 §2.1
+# 版本: TDCA-TP-v1.0 | 状态: M1-CODED | FC: TDCA-FC-20260804-006
+# NSFL-Declaration: 本文件为制度本体，节点/边类型枚举不可修改（TypeSystem §9.3 同级）
+# SPDX-License-Identifier: TDCA-Internal
+# ============================================================================
+ontology:
+  version: "TDCA-TP-v1.0"
+  constitutional_base: "TDCA-CONST-v3.1.2"
+  confirmed_by: "TDCA-TypeSystem-Confirmation-001"
+
+  # === 节点类型（Node Types）— TDCA-KG-001 §2.2 ===
+  node_types:
+    # ---- 制度层 ----
+    Principle:
+      description: "TDCA 制度原理（ID 编号制）"
+      properties:
+        - id: "string"          # "ID29"
+        - name: "string"
+        - category: "enum"      # [INSTITUTIONAL, TECHNICAL, ECONOMIC, COGNITIVE]
+        - priority: "int"       # 1-5, 5 为宪法级
+        - dependencies: "[string]"
+        - contradictions: "[string]"
+        - formalization: "string"
+    Constitution:
+      description: "宪法十六条条目"
+      properties:
+        - article: "int"        # 1-16
+        - title: "string"
+        - text: "string"
+        - enforcement_level: "enum"   # [HARD, SOFT, GUIDANCE]
+        - applicable_scenes: "[string]"
+        - ota_version: "string"
+    NSFLRule:
+      description: "负空间函数语言规则"
+      properties:
+        - id: "string"
+        - type: "enum"          # [ETHICAL, LEGAL, EMOTIONAL, BELIEF, TECHNICAL]
+        - pattern: "string"     # ⊗ 操作符匹配模式
+        - level: "enum"         # [HARD, SOFT]
+        - alt_path: "string"
+        - human_override: "bool"
+
+    # ---- 技术层 ----
+    FunctionSpec:
+      description: "函数语料六要素"
+      properties:
+        - objective: "string"
+        - constraints: "[Constraint]"
+        - prior: "PriorDeclaration"
+        - config_right: "ConfigRightDeclaration"
+        - allocation: "Allocation"
+        - audit_trail: "AuditDeclaration"
+        - protocolizer: "string"
+    AgentRole:
+      description: "智能体角色定义"
+      properties:
+        - role_id: "string"
+        - eios_type: "enum"     # [TRAINER, EXECUTOR, AUDITOR, SERVICE, UTILITY_GENIE]
+        - cluster: "enum"       # [GOVERNANCE, DEV]
+        - allowed_operations: "[string]"
+        - disallowed_operations: "[string]"
+        - model_assignment: "string"
+    CodeModule:
+      description: "代码模块节点（技术维度）"
+
+    # ---- 经济层 ----
+    AssetClass:
+      description: "五阶资产类别"
+      properties:
+        - tier: "int"           # 1-5
+        - name: "string"        # IP/知识/交换/场景权重/认知NCA
+        - pricing_dimension: "[enum]"  # [UTILITY, TIME, CONFIG]
+        - min_config_unit: "string"
+    MOUAnchor:
+      description: "税收锚定点"
+      properties:
+        - transaction_id: "string"
+        - tax_in: "int64"
+        - tax_out: "int64"
+        - timestamp: "int64"
+        - proof: "string"       # 数字人民币哈希
+
+    # ---- 拓扑层 ----
+    TopologyNode:
+      description: "五元拓扑空间节点"
+      properties:
+        - node_id: "string"
+        - node_type: "enum"     # [H, M, L]
+        - coordinates: "[float64]"
+        - physical_notifier: "string"
+    RelationEdge:
+      description: "五元关系边"
+      properties:
+        - edge_type: "enum"     # [H-H, H-M, H-L, M-L, L-L]
+        - source: "string"
+        - target: "string"
+        - weight: "float64"
+        - audit_trail: "string"
+
+    # ---- 认知层 ----
+    NCA:
+      description: "嵌套认知资产"
+      properties:
+        - nca_id: "string"
+        - type: "enum"          # [COGNITIVE, INSTITUTIONAL, TECHNICAL, ECONOMIC]
+        - layer: "int"
+        - parent_nca: "string"
+        - seal: "string"
+        - mou_contribution: "int64"
+    CognitiveState:
+      description: "五维认知状态向量"
+      properties:
+        - agent_id: "string"
+        - A: "float64"          # 可用性
+        - D: "float64"          # 可靠性
+        - L: "float64"          # 可学习性
+        - C: "float64"          # 合规性
+        - SC: "float64"         # 场景一致性
+        - version: "int64"      # CRDT 版本
+
+  # === 边类型（Edge Types）— TDCA-KG-001 §2.2 ===
+  edge_types:
+    DERIVES_FROM:
+      source: ["Principle", "Constitution"]
+      target: ["Principle", "FunctionSpec", "NSFLRule"]
+      properties:
+        - derivation_type: "enum"   # [LOGICAL, EMPIRICAL, ANALOGICAL]
+        - proof: "string"
+    ENFORCES:
+      source: ["Constitution"]
+      target: ["FunctionSpec", "AgentRole"]
+      properties:
+        - enforcement_level: "enum"
+        - violation_penalty: "string"
+    IMPLEMENTS:
+      source: ["FunctionSpec"]
+      target: ["AgentRole", "CodeModule"]
+      properties:
+        - implementation_fidelity: "float64"
+        - interface_entropy: "float64"   # 必须为 0（ID82）
+    COMPILES_TO:
+      source: ["AgentRole"]
+      target: ["CodeModule"]
+      properties:
+        - compiler: "string"
+        - protocolizer_audit: "string"
+    PRICES:
+      source: ["AssetClass"]
+      target: ["MOUAnchor"]
+      properties:
+        - pricing_model: "string"
+        - shapley_allocation: "[float64]"
+    GENERATES:
+      source: ["AgentRole"]
+      target: ["NCA"]
+      properties:
+        - generation_mode: "enum"   # [SINGLE, COLLABORATIVE, NESTED]
+    CONNECTS:
+      source: ["TopologyNode"]
+      target: ["TopologyNode"]
+      properties:
+        - path_type: "enum"         # [DIRECT, RELAY, MULTI-HOP]
+        - latency_ms: "int64"
+    NESTS:
+      source: ["NCA"]
+      target: ["NCA"]
+      properties:
+        - nest_level: "int"
+        - compound_type: "enum"     # [COGNITIVE, INSTITUTIONAL, TECHNICAL]
+    REFINES:
+      source: ["NCA"]
+      target: ["NCA"]
+      properties:
+        - refinement_complexity: "enum"  # [SIMPLE, MODERATE, COMPLEX]
+        - resubmit_deadline: "int64"
+
+  # === 五维图结构映射 — TDCA-KG-001 §3.2 ===
+  dimensions:
+    institutional:
+      nodes: ["Principle", "Constitution", "NSFLRule", "UPDA", "IADP-TEA"]
+      edges: ["DERIVES_FROM", "ENFORCES", "CONTRADICTS", "SUPERSEDES"]
+    technical:
+      nodes: ["FunctionSpec", "AgentRole", "CodeModule", "API", "TestCase"]
+      edges: ["IMPLEMENTS", "COMPILES_TO", "DEPENDS_ON", "TESTS"]
+    economic:
+      nodes: ["AssetClass", "MOUAnchor", "Transaction", "Market", "TaxRecord"]
+      edges: ["PRICES", "GENERATES", "TRADES", "TAXES"]
+    topological:
+      nodes: ["TopologyNode", "Notifier", "Scene"]
+      edges: ["CONNECTS", "BOUND_TO", "PROXIMITY"]
+    cognitive:
+      nodes: ["NCA", "CognitiveState", "Memory", "Inference", "Belief"]
+      edges: ["NESTS", "REFINES", "RECALLS", "INFERRES"]
+
+  # === 推理规则（Inference Rules）— TDCA-KG-001 §2.3 ===
+  inference_rules:
+    - name: "ExceptionDetection"
+      principle: "ID38"
+      severity: "CRITICAL"
+      trigger: |
+        MATCH (p:Principle {id: $principle_id})
+        WHERE p.priority = 5 AND $draft_text CONTAINS "绕过" + p.name
+        RETURN p
+    - name: "InterfaceEntropyZero"
+      principle: "TDCA-PRINCIPLE-INTERFACE-ENTROPY-001"
+      severity: "CRITICAL"
+      trigger: |
+        MATCH (fs:FunctionSpec)-[:COMPILES_TO]->(cm:CodeModule)
+        WHERE cm.compiler = "DeepSeek-V4"
+        RETURN fs, cm
+    - name: "MRCRSceneIsolation"
+      principle: "ID54"
+      severity: "WARNING"
+      trigger: |
+        MATCH (a1:AgentRole)-[:HOLDS_ROLE]->(s1:Scene),
+              (a1)-[:HOLDS_ROLE]->(s2:Scene)
+        WHERE s1 <> s2
+        RETURN a1, s1, s2
+    - name: "MOUContinuousVerification"
+      principle: "ID79"
+      severity: "WARNING"
+      trigger: |
+        MATCH (m:MOUAnchor)
+        WHERE m.timestamp > $window_start AND m.timestamp < $window_end
+        WITH COUNT(m) AS mou_count, $window_days AS total_days
+        WHERE mou_count < total_days * 0.93
+        RETURN mou_count, total_days
+    - name: "NCANestingDepth"
+      principle: "SPEC-002"
+      severity: "INFO"
+      trigger: |
+        MATCH path = (n:NCA)-[:NESTS*]->(m:NCA)
+        WITH n, LENGTH(path) AS depth
+        WHERE depth > 10
+        RETURN n, depth
+
+  # === 核心查询模式 — TDCA-KG-001 §5.3 ===
+  query_patterns:
+    get_required_principles: |
+      MATCH (role:AgentRole {role_id: $role_id})-[:REQUIRES]->(p:Principle)
+      RETURN p.id, p.name, p.priority, p.formalization
+      ORDER BY p.priority DESC
+    detect_contradictions: |
+      MATCH (p1:Principle)-[:CONTRADICTS]->(p2:Principle)
+      WHERE p1.id IN $required_principles AND p2.id IN $required_principles
+      RETURN p1.id, p2.id, "CONTRADICTION_DETECTED" AS alert
+    get_nsfl_rules: |
+      MATCH (role:AgentRole {role_id: $role_id})-[:MUST_OBEY]->(n:NSFLRule)
+      RETURN n.id, n.type, n.pattern, n.level
+    verify_spec_completeness: |
+      MATCH (role:AgentRole {role_id: $role_id})-[:DEFINED_BY]->(fs:FunctionSpec)
+      RETURN fs.objective IS NOT NULL AS has_objective,
+             fs.constraints IS NOT NULL AS has_constraints,
+             fs.prior IS NOT NULL AS has_prior,
+             fs.config_right IS NOT NULL AS has_config_right,
+             fs.allocation IS NOT NULL AS has_allocation,
+             fs.audit_trail IS NOT NULL AS has_audit_trail
+    nsfl_on_path: |
+      MATCH path = (dev:AgentRole {role_id: $dev_role})-[:COMPILES_TO]->
+                   (role:AgentRole {role_id: $target_role})
+      WITH relationships(path) AS rels
+      UNWIND rels AS rel
+      WHERE rel.nsfl_triggered = true
+      RETURN rel.nsfl_rule_id, rel.timestamp, "NEGATIVE_SPACE_ON_PATH" AS alert

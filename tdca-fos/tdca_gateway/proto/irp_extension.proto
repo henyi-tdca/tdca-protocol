@@ -1,0 +1,57 @@
+// ============================================================================
+// TDCA IRP 跨库协议 gRPC 扩展 — 16 智能体矩阵接入（AGENT-DEPLOY-001-FOLLOWUP TASK-008）
+// 制度锚定: TypeSystem-Confirmation-001 §5.1/§5.2 | ID24 跨主体 | ID91 NCA | ID82
+// 版本: V1.0 | 状态: COMPILED-CONTRACT | SPDX-License-Identifier: TDCA-Internal
+// NSFL-Declaration: IRPCross* 调用必须携带配置权七元组 + 皈依验证；断链/违例拒绝
+// ============================================================================
+syntax = "proto3";
+
+package tdca.irp;
+
+// 配置权调用七元组（TypeSystem §5.1）
+message IRPConfigRightCall {
+  string who = 1;     // 智能体 DID
+  string what = 2;    // 目标库/节点
+  int64  when = 3;    // 时间戳
+  string how = 4;     // query | invoke | verify
+  double share = 5;   // 0-1
+  string cfg = 6;     // 配置参数哈希
+  int64  tax = 7;     // 预扣税收（MOU 贡献）
+}
+
+message IRPQueryRequest {
+  string agent_id = 1;
+  string target_repo = 2;
+  string query = 3;
+  IRPConfigRightCall config_right = 4;
+  repeated string nca_trace = 5;  // NCA 追溯链
+}
+
+message IRPInvokeRequest {
+  string agent_id = 1;
+  string target_repo = 2;
+  string operation = 3;
+  string payload = 4;
+  IRPConfigRightCall config_right = 5;
+  repeated string nca_trace = 6;
+}
+
+message IRPVerifyRequest {
+  string agent_id = 1;
+  string nca_id = 2;
+  repeated string nca_trace = 3;
+}
+
+message IRPResponse {
+  string status = 1;        // OK | FUSE | FAILED_PRECONDITION
+  string result = 2;
+  string nca_reference = 3; // ID91 强制
+  int64  mou_contribution = 4;
+}
+
+// IRP 跨库服务 — 16 智能体经此接入七库
+service IRPGateway {
+  rpc IRPCrossQuery(IRPQueryRequest) returns (IRPResponse);
+  rpc IRPCrossInvoke(IRPInvokeRequest) returns (IRPResponse);
+  rpc IRPCrossVerify(IRPVerifyRequest) returns (IRPResponse);
+}
