@@ -30,13 +30,9 @@
 
 ## 四、敏感面（入仓前复扫）与脱敏更正（DEPS4-MERGE-001 追加）
 
-- **已脱敏（2026-10-10，创始人令 TDCA-HANDOFF-EXEC-ARTIFACT-DEPS4-MERGE-001）**：
-  - `tdca-fos/TDCA-NCA-SYSTEM-SCHEMA-001-NCA体系制度机读规范.yaml` 4 处路径值改占位符（`%APPDATA%…`→`<APPDATA>…`、`Desktop/TDCA归档文件夹…`→`<Desktop>/TDCA归档文件夹…`、两处含用户名之本机绝对路径→`<工作区>/.tdca-nca/` 与 `<Desktop>/TDCA-MEMO-006-Workspace/.tdca-nca/`）。**该件因此偏离包清单哈希**，理由：脱敏（去用户名与用户目录前缀），偏离仅此 4 处路径值，其余一字未动。
-  - `tdca-fos/TDCA-NCA-LIFECYCLE-STANDARD-001_NCA登记存证归档检索审查规范.md` 逐行自查：所指行已是占位/相对形态（`<Desktop>…`、`global-workspace…`），无用户名残留，**未改、不偏离清单**。
-  - 自查另发现 `tdca-fos/TDCA-NCA-SYSTEM-STANDARD-001-NCA体系制度规范.md` L17 含工作区相对路径片段（`开发会话文件/.tdca-nca/`，无用户名与用户目录前缀）；因脱敏令限定两件，**未代改**，报创始人备裁。
-- 本机路径串（脱敏前原状，既有内容、非本次引入）：
-  - `tdca-fos/TDCA-NCA-SYSTEM-SCHEMA-001-NCA体系制度机读规范.yaml` L36/L40：`C:/Users/22850/Desktop/…`（含用户名 22850）
-  - `tdca-fos/TDCA-NCA-SYSTEM-STANDARD-001-NCA体系制度规范.md` L17：`开发会话文件/.tdca-nca/`
+- **已脱敏①（2026-10-10，DEPS4-MERGE-001）**：`TDCA-NCA-SYSTEM-SCHEMA-001…yaml` 4 处路径值改占位符（含用户名之本机绝对路径两处 → `<工作区>/.tdca-nca/`、`<Desktop>/TDCA-MEMO-006-Workspace/.tdca-nca/`；同件另两处统一占位 `%APPDATA%…`→`<APPDATA>…`、`Desktop/TDCA归档文件夹…`→`<Desktop>/…`）。**该件因此偏离包清单哈希**，理由：脱敏（去用户名与用户目录前缀），偏离仅此 4 处路径值，其余一字未动。
+- **自查未改（DEPS4-MERGE-001）**：`TDCA-NCA-LIFECYCLE-STANDARD-001_NCA登记存证归档检索审查规范.md` 所指行已是占位/相对形态（`<Desktop>…`、`global-workspace…`），无用户名残留，未改、不偏离清单。
+- **已脱敏②（2026-10-10，DEPS4-001-002）**：`TDCA-NCA-SYSTEM-STANDARD-001…md` L17 一处含本机中文目录名之相对片段（无用户名、无用户目录前缀）→ `<工作区>/.tdca-nca/`；**该件因此偏离包清单哈希**（理由同①）。同案清理：本注记早先版本曾误抄入一行带用户名之本机路径原值（L38），本次已清除、只留形态记载。
 - tdca-toolchain 的 TOKEN 命中均为配置权令牌示例／测试样例／环境变量读取／子命令误报，非凭据。
 - 排除件之外的凭据形态：0；外部 IP：0；人名：0。
 

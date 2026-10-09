@@ -14,7 +14,7 @@
 2. 本规范为 NCA 体系**单一权威文本**；既有 LIFECYCLE/CODING 规范作为子规范引用，冲突以本规范为准
 3. 三库层次（防撞车关键）：
    - **Reasonix 双库**：工作区 `.tdca-nca/` ↔ 桌面归档 `.tdca-nca/`（REGISTRY 双库一致，MD5 校验）
-   - **WorkBuddy A 库**（运行权威）：`开发会话文件/.tdca-nca/`——唯一权威 NCA_DIR（TC.NCA_DIR 指向）
+   - **WorkBuddy A 库**（运行权威）：`<工作区>/.tdca-nca/`——唯一权威 NCA_DIR（TC.NCA_DIR 指向）
    - **WorkBuddy B 库**（历史归档）：`TDCA-MEMO-006/.tdca-nca/`——冻结只读，历史存证（含 155-159）不删
    - 引用标注：跨库引用须标来源（A=运行/B=归档），审计先确认库来源
 
