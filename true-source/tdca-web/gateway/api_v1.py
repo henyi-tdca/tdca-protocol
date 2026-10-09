@@ -1125,6 +1125,25 @@ def _owner_display(s, owner_username: Optional[str]) -> Optional[str]:
     return _ROLE_LABEL.get(u.role if u else "", "用户")
 
 
+_USAGE_TZ = timezone(timedelta(hours=8))     # +08（本项目明示日界口径）
+_USAGE_DEFAULT_DAYS = 30                     # 窗口默认取值（执行侧裁，回报载明）
+_USAGE_MAX_DAYS = 90                         # 窗口上限（防全表拉取）
+
+
+def _fmt_plus8(raw: Optional[str]) -> tuple:
+    """ISO-8601 文本 → (+08 'YYYY-MM-DD HH:MM:SS', True)；缺失/不可解析 → (None, False)。
+    降级口径：不猜测不伪造，原值由调用方如实带出。"""
+    if not raw:
+        return None, False
+    try:
+        dt = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(_USAGE_TZ).strftime("%Y-%m-%d %H:%M:%S"), True
+    except (ValueError, TypeError, OverflowError):
+        return None, False
+
+
 @router.get("/me/dashboard")
 def me_dashboard(request: Request):
     """M5 个人后台：六区块一次聚合（我的智能体/签批待办/我批过的/沙盒申请/治理操作/会话）。"""
@@ -1169,12 +1188,20 @@ def me_dashboard(request: Request):
                     .order_by(M.NcaChain.ts.desc()).first())
         # GSEQ-0700：身份三要素机读（identity_type/owner_auth；agent_card 全量经 nca-verify 链上核验）
         ident = s.get(M.UserIdentity, me)
+        # 账户信息栏升级版（可增项第 3 件）：users.created_at 现值如实带出（只读），
+        # +08 展示值由 _fmt_plus8 解析；缺失/不可解析 ⟹ 原值如实、display=null、parse_ok=false
+        u = s.get(M.User, me)
+        created_raw = u.created_at if u else None
+        created_disp, created_ok = _fmt_plus8(created_raw)
         return _nca_watermark({
             "session": {"username": me, "role": v["role"], "expires_at": v["expires_at"],
                         "last_register_nca_id": last_reg.nca_id if last_reg else None,
                         "identity_type": ident.identity_type if ident else None,
                         "owner_auth": ident.owner_auth if ident else None,
-                        "agent_card_persisted": bool(ident and ident.agent_card_json)},
+                        "agent_card_persisted": bool(ident and ident.agent_card_json),
+                        "created_at": created_raw,
+                        "created_at_display": created_disp,
+                        "created_at_parse_ok": created_ok},
             "pending_count": len(pending),
             "my_agents": [{"agent_id": a.agent_id, "name": a.name,
                            "five_role": a.five_role, "status": a.status,
@@ -1347,9 +1374,7 @@ def me_session_revoke_all(request: Request):
     }, nature="real")
 
 
-_USAGE_TZ = timezone(timedelta(hours=8))     # +08（本项目明示日界口径）
-_USAGE_DEFAULT_DAYS = 30                     # 窗口默认取值（执行侧裁，回报载明）
-_USAGE_MAX_DAYS = 90                         # 窗口上限（防全表拉取）
+_USAGE_TZ = timezone(timedelta(hours=8))     # +08（本项目明示日界口径；定义上移至 me 系端点共用）
 
 
 @router.get("/me/usage")
