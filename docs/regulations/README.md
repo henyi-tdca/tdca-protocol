@@ -26,7 +26,7 @@
 | 规范 | 落位 | 说明 |
 |---|---|---|
 | gov-kit 使用条款 | [`gov-kit/TERMS.md`](../../gov-kit/TERMS.md) | 治理工具包知识产权与调用条款（模拟态计费口径） |
-| 双轨身份规范 | [`docs/identity/`](../identity/) | 人类账号 ↔ agent_card 凭证不互换（TDCA-AGENT-DUAL-IDENTITY-001） |
+| 双轨身份规范 | [`docs/identity/`](../identity/) | 人类账号 ↔ agent_card 凭证不互换（TDCA-AGENT-DUAL-IDENTITY-001）；本体在册（智库侧 · V1.3-CONFIRMED），仓内落位待入仓（现目录仅身份声明实例） |
 | 挂载产物库规则 | [`mounts/README.md`](../../mounts/README.md) | 挂载产物免费调用声明 + share-enabled / free 双类标注 |
 
 ## 待发布
