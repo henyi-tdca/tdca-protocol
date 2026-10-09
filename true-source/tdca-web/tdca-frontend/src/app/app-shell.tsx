@@ -129,7 +129,7 @@ function AuthStatus() {
   return (
     <span data-testid="auth-status" className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1">
       <span className="text-xs font-medium text-emerald-800">🔐 {did}</span>
-      <button data-testid="auth-logout" className="text-[10px] text-emerald-600 underline hover:text-emerald-800" onClick={logout}>
+      <button data-testid="auth-logout" className="border-0 bg-transparent px-1 py-0 text-[10px] text-emerald-600 underline hover:bg-transparent hover:text-emerald-800" onClick={logout}>
         登出
       </button>
     </span>

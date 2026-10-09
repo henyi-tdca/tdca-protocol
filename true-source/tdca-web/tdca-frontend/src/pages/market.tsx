@@ -124,9 +124,9 @@ function MyListings({ refreshKey, onChanged }: { refreshKey: number; onChanged: 
           <div className="mt-1 text-gray-500">场景 {l.scene}｜初始条件：{l.initial_conditions}</div>
           {l.status !== 'delisted' && (
             <div className="mt-2 flex gap-2">
-              {l.status === 'active' && <button className="rounded border px-2 py-0.5" onClick={() => act(l.listing_id, 'pause')}>暂停</button>}
-              {l.status === 'paused' && <button className="rounded border px-2 py-0.5" onClick={() => act(l.listing_id, 'resume')}>恢复</button>}
-              <button className="rounded border border-red-200 px-2 py-0.5 text-red-600" onClick={() => act(l.listing_id, 'delist')}>下架（不溯及授权件）</button>
+              {l.status === 'active' && <button className="rounded border border-gray-300 bg-white px-2 py-0.5 text-gray-700 hover:bg-gray-50" onClick={() => act(l.listing_id, 'pause')}>暂停</button>}
+              {l.status === 'paused' && <button className="rounded border border-gray-300 bg-white px-2 py-0.5 text-gray-700 hover:bg-gray-50" onClick={() => act(l.listing_id, 'resume')}>恢复</button>}
+              <button className="rounded border border-red-200 bg-white px-2 py-0.5 text-red-600 hover:bg-red-50" onClick={() => act(l.listing_id, 'delist')}>下架（不溯及授权件）</button>
             </div>
           )}
         </div>
