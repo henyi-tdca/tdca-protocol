@@ -164,9 +164,10 @@ function PasswordChangeCard() {
         setNewPw('')
         setConfirmPw('')
       } else if (r.status === 400) {
-        setMsg('密码强度不足：至少 8 位且同时包含字母与数字')
+        // 前端已先校强度（不通过不发请求）→ 到达服务端的 400 即「旧密码错误」口径（2026-10-09 评估件落地）
+        setMsg('旧密码核验未通过（HTTP 400）：请核对当前密码后重试')
       } else if (r.status === 401) {
-        setMsg('旧密码核验未通过（HTTP 401）；按现网会话语义本地会话可能已被清退，请重新登录后再试')
+        setMsg('会话已失效（HTTP 401），请重新登录后再试')
       } else {
         setMsg(`改密失败（HTTP ${r.status ?? '未知'}），请稍后重试`)
       }
