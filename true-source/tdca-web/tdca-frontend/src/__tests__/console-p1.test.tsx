@@ -222,10 +222,12 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     const accountEl = screen.getByTestId('me-account')
     expect(accountEl.querySelector('[data-testid="me-session"]')).toBeTruthy()
     expect(accountEl.querySelector('[data-testid="me-pwd"]')).toBeTruthy()
-    // 忘记密码指引（B0 零后端文案口径）
+    // 忘记密码指引（B0 零后端文案口径；管理员邮箱为创始人明示的站点公示联系方式）
     const guide = screen.getByTestId('me-account-guide')
     expect(guide.textContent).toContain('联系站点管理员人工重置')
     expect(guide.textContent).toContain('无自助重置通道')
+    expect(guide.textContent).toContain('xuantan0703@agent.qq.com')
+    expect(guide.querySelector('a[href="mailto:xuantan0703@agent.qq.com"]')).toBeTruthy()
     // 待签批卡移出栏目但仍渲染（红签口径不变）
     expect(accountEl.querySelector('[data-testid="me-pending-card"]')).toBeNull()
     expect(container.querySelector('[data-testid="me-pending-card"]')).toBeTruthy()
