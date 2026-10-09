@@ -8,7 +8,7 @@
   /me/nca action 过滤 → test_p1_me_nca_action_filter
   /me/nca 参数校验 fail-closed → test_p1_me_nca_param_guard
 """
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
@@ -107,3 +107,76 @@ def test_p1_me_nca_param_guard():
     tok = _mkuser("p1-nca-page")
     assert client.get("/api/v1/me/nca?page=0", headers=_h(tok)).status_code == 400
     assert client.get("/api/v1/me/nca?limit=101", headers=_h(tok)).status_code == 400
+
+
+# =====================================================================
+# 用量统计 v1（可增项第 2 件）：GET /me/usage 本人 NCA 按日计数聚合
+# 口径：actor==本人；+08 日界；窗口默认 30 天上限 90；纯 SELECT 零写
+# =====================================================================
+
+_USAGE_ACTOR = "p1-usage-a"
+
+
+def test_p1_me_usage_unauth_401():
+    assert client.get("/api/v1/me/usage").status_code == 401
+
+
+def test_p1_me_usage_daily_tz_and_actor_exclusion():
+    tok = _mkuser(_USAGE_ACTOR)
+    now_utc = datetime.now(timezone.utc)
+    # +08 日界实证：同一 +08 日的 00:30 与 23:30（分属两个不同 UTC 日）须归并到同一 date
+    d08 = (now_utc + timedelta(hours=8)).date()
+    tz8 = timezone(timedelta(hours=8))
+    ts_a = datetime(d08.year, d08.month, d08.day, 0, 30, tzinfo=tz8).astimezone(timezone.utc)
+    ts_b = datetime(d08.year, d08.month, d08.day, 23, 30, tzinfo=tz8).astimezone(timezone.utc)
+    assert ts_a.date() != ts_b.date()          # 前提自检：确属两个 UTC 日
+    _mk_nca("NCA-U-A1", _USAGE_ACTOR, "user_action_x", ts_a.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _mk_nca("NCA-U-A2", _USAGE_ACTOR, "user_action_x", ts_b.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _mk_nca("NCA-U-A3", _USAGE_ACTOR, "user_action_y", ts_b.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    # 排除规则：非用户形态 actor 与他人 actor 不计入「本人」
+    _mk_nca("NCA-U-G1", "gateway:internal", "sys_op", ts_b.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _mk_nca("NCA-U-B1", "p1-usage-b", "user_action_x", ts_b.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    r = client.get("/api/v1/me/usage", headers=_h(tok))
+    assert r.status_code == 200, r.text[:200]
+    d = r.json()["data"]
+    row = next(x for x in d["daily"] if x["date"] == d08.isoformat())
+    assert row["count"] == 3                   # +08 日界归并实证（两 UTC 日 → 同一 +08 日）
+    assert row["by_action"] == {"user_action_x": 2, "user_action_y": 1}
+    assert d["total"] == 3
+    assert d["timezone"] == "+08"
+    acts = {a for x in d["daily"] for a in x["by_action"]}
+    assert "sys_op" not in acts                # gateway: 形态排除
+    assert all(x["count"] == sum(x["by_action"].values()) for x in d["daily"])
+    assert d["data_provenance"] == "simulated"  # _mk_nca 行全 simulated（ID92 明示口径）
+
+
+def test_p1_me_usage_window_and_param_guard():
+    tok = _mkuser(_USAGE_ACTOR)
+    old = (datetime.now(timezone.utc) - timedelta(days=40)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    _mk_nca("NCA-U-OLD1", _USAGE_ACTOR, "old_action", old)
+    d = client.get("/api/v1/me/usage", headers=_h(tok)).json()["data"]
+    assert "old_action" not in {a for x in d["daily"] for a in x["by_action"]}  # 默认 30 天窗口外
+    d60 = client.get("/api/v1/me/usage?days=60", headers=_h(tok)).json()["data"]
+    assert "old_action" in {a for x in d60["daily"] for a in x["by_action"]}    # days=60 收入
+    assert client.get("/api/v1/me/usage?days=0", headers=_h(tok)).status_code == 400
+    assert client.get("/api/v1/me/usage?days=91", headers=_h(tok)).status_code == 400
+
+
+def test_p1_me_usage_readonly_and_shape():
+    tok = _mkuser(_USAGE_ACTOR)
+    with get_session() as s:
+        n_before = s.query(M.NcaChain).count()
+        cols_before = [c.name for c in M.NcaChain.__table__.columns]
+    r = client.get("/api/v1/me/usage", headers=_h(tok))
+    assert r.status_code == 200
+    with get_session() as s:
+        n_after = s.query(M.NcaChain).count()
+        cols_after = [c.name for c in M.NcaChain.__table__.columns]
+    assert n_before == n_after                 # 零写证明：调用前后链行数相等
+    assert cols_before == cols_after           # 未新增表列
+    d = r.json()["data"]
+    assert set(d.keys()) == {"days", "timezone", "actor_filter", "total",
+                             "daily", "data_provenance", "note"}
+    assert all(set(x.keys()) == {"date", "count", "by_action"} for x in d["daily"])
+    body_keys = set(d.keys()) | {k for x in d["daily"] for k in x.keys()}
+    assert not ({"token", "token_hash", "password", "salt"} & body_keys)   # 不含凭据字段
