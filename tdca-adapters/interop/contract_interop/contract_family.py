@@ -34,9 +34,8 @@ from typing import Any, Dict, List, Optional, Tuple
 import yaml
 
 _WS = Path(__file__).resolve().parents[1]
-_REPO_ROOT = Path(__file__).resolve().parents[3]  # 仓内惯例：以仓库根定位 docs/ 权威源件
-# 权威源可注入：默认指向仓内单一事实源 docs/contracts/（缺失则构造时明确报错，见 README 依赖契约）
-DEFAULT_TEMPLATES = _REPO_ROOT / "docs" / "contracts" / "contract-templates-v1.0.yaml"
+# 权威源可注入：默认在**包外层目录**查找同名模板集（缺失则构造时明确报错，见 README 依赖契约）
+DEFAULT_TEMPLATES = _WS / "contract-templates-v1.0.yaml"
 
 # 交互动作 → 首选模板（映射依据：内化白皮书 §4.1 交互日志=税收事件触发器）
 ACTION_TEMPLATE_HINTS: Dict[str, str] = {
