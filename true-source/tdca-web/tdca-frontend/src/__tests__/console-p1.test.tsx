@@ -211,4 +211,24 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     fireEvent.click(screen.getByTestId('me-pwd-submit'))
     await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('会话已失效'))
   })
+
+  it('账户管理栏目（件A）：标题在位，账户信息/忘记密码指引/改密卡同栏聚合，待签批独立成卡不丢', async () => {
+    mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
+    const { container } = render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-account')).toBeTruthy())
+    // 栏目标题
+    expect(screen.getByTestId('me-account').textContent).toContain('账户管理')
+    // 三件套同栏：账户信息（me-session）与改密卡（me-pwd）都在栏目节点内
+    const accountEl = screen.getByTestId('me-account')
+    expect(accountEl.querySelector('[data-testid="me-session"]')).toBeTruthy()
+    expect(accountEl.querySelector('[data-testid="me-pwd"]')).toBeTruthy()
+    // 忘记密码指引（B0 零后端文案口径）
+    const guide = screen.getByTestId('me-account-guide')
+    expect(guide.textContent).toContain('联系站点管理员人工重置')
+    expect(guide.textContent).toContain('无自助重置通道')
+    // 待签批卡移出栏目但仍渲染（红签口径不变）
+    expect(accountEl.querySelector('[data-testid="me-pending-card"]')).toBeNull()
+    expect(container.querySelector('[data-testid="me-pending-card"]')).toBeTruthy()
+    expect(screen.getByTestId('me-pending-card').textContent).toContain('0 件')
+  })
 })
