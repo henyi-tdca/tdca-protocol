@@ -109,7 +109,7 @@ export function AuthPage() {
                 key={r}
                 data-testid={`auth-role-${r}`}
                 data-active={role === r}
-                className={`rounded border px-3 py-1.5 text-xs ${role === r ? 'border-slate-800 bg-slate-800 text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+                className={`rounded border px-3 py-1.5 text-xs ${role === r ? 'border-slate-800 bg-slate-800 text-white' : 'border-blue-600 bg-blue-600 text-white hover:bg-blue-700'}`}
                 onClick={() => setRole(r)}
               >
                 {r} · {r === 'H' ? '人类' : r === 'M' ? '智能体' : '学习体'}
