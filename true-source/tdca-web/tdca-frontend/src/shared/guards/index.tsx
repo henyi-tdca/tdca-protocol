@@ -113,7 +113,7 @@ export function HufModal({ open, onOpenChange, onConfirm, title = 'HUF 人类最
         <div className="flex justify-end gap-2">
           <button
             data-testid="huf-cancel"
-            className="rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
             onClick={() => onOpenChange(false)}
           >
             取消（中止操作）
