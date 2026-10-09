@@ -212,6 +212,20 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('会话已失效'))
   })
 
+  it('改密服务端 403（中间件会话无效/已吊销）：与 401 同口径提示会话已失效（F-1/F-2，消除双口径）', async () => {
+    const f = fetchMockPwd(403)
+    mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
+    vi.stubGlobal('fetch', f)
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
+    fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'wrong-old-1' } })
+    fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
+    fireEvent.change(screen.getByTestId('me-pwd-confirm'), { target: { value: 'abc12345' } })
+    fireEvent.click(screen.getByTestId('me-pwd-submit'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).toContain('会话已失效'))
+    await waitFor(() => expect(screen.getByTestId('me-pwd-msg').textContent).not.toContain('稍后重试'))
+  })
+
   it('账户管理栏目（件A）：标题在位，账户信息/忘记密码指引/改密卡同栏聚合，待签批独立成卡不丢', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
     const { container } = render(<MemoryRouter><MePage /></MemoryRouter>)
