@@ -170,8 +170,9 @@ function PasswordChangeCard() {
       } else if (r.status === 400) {
         // 前端已先校强度（不通过不发请求）→ 到达服务端的 400 即「旧密码错误」口径（2026-10-09 评估件落地）
         setMsg('旧密码核验未通过（HTTP 400）：请核对当前密码后重试')
-      } else if (r.status === 401) {
-        setMsg('会话已失效（HTTP 401），请重新登录后再试')
+      } else if (r.status === 401 || r.status === 403) {
+        // F-1/F-2（2026-10-10）：403（中间件会话无效/已吊销）与会话失效同口径，消除「页面稍后重试 vs 全局会话已失效」双口径
+        setMsg('会话已失效（HTTP 401/403），请重新登录后再试')
       } else {
         setMsg(`改密失败（HTTP ${r.status ?? '未知'}），请稍后重试`)
       }

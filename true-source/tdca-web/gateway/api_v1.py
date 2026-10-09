@@ -853,14 +853,20 @@ class LoginRequest(BaseModel):
 
 
 @router.post("/auth/login")
-def auth_login(req: LoginRequest):
-    """M3: 登录（PBKDF2 校验 → 签发 TDCA-SES 会话；单会话制，旧会话即吊销）。"""
+def auth_login(req: LoginRequest, request: Request):
+    """M3: 登录（PBKDF2 校验 → 签发 TDCA-SES 会话；单会话制，旧会话即吊销）。
+    F-5（2026-10-10）：失败登录计入 IP|用户名 滑动窗限流（只计失败，成功不耗额度；
+    超限 429 fail-closed，文案仍不区分账号不存在/口令错）。"""
+    rate_key = f"{_client_ip(request)}|{req.username}"
+    if not _login_rate_ok(rate_key):
+        raise HTTPException(429, f"登录尝试过于频繁（每账号每 IP 每小时 ≤{_LOGIN_MAX} 次），请稍后再试")
     with get_session() as s:
         user = s.get(M.User, req.username)
         ok = user is not None and verify_password(
             req.password, user.salt, user.iterations, user.password_hash)
         role = user.role if user else None
     if not ok:
+        _login_rate_record(rate_key)
         raise HTTPException(401, "用户名或密码错误")
     token, expires_at = issue_session(req.username)
     return _nca_watermark({
@@ -917,6 +923,27 @@ _USERNAME_RE = _re.compile(r"^[A-Za-z0-9_-]{3,32}$")   # 白名单字符集（NS
 _REGISTER_WINDOW_S = 3600
 _REGISTER_MAX = int(os.environ.get("TDCA_REGISTER_MAX_PER_HOUR", "5"))  # 轻量防滥用（可配置）
 _register_hits: Dict[str, List[float]] = {}            # 进程内限流（单容器部署口径）
+
+# F-5（2026-10-10 立项）：登录口防爆破限流——注册口已有同构件，登录口原缺（免码公开面可爆破）。
+# 键 = IP|用户名（双键：防同 IP 扫多账号，也防分布式对单账号爆破）；只计失败（成功登录不耗额度）。
+_LOGIN_WINDOW_S = 3600
+_LOGIN_MAX = int(os.environ.get("TDCA_LOGIN_MAX_PER_HOUR", "10"))  # 每账号每 IP 每小时（可配置）
+_login_hits: Dict[str, List[float]] = {}               # 进程内（与注册限流同口径）
+
+
+def _login_rate_record(key: str) -> None:
+    """记录一次失败登录（滑动窗前先裁剪）。"""
+    now = _time.time()
+    hits = [t for t in _login_hits.get(key, []) if now - t < _LOGIN_WINDOW_S]
+    hits.append(now)
+    _login_hits[key] = hits
+
+
+def _login_rate_ok(key: str) -> bool:
+    """同一 IP|用户名 滑动窗口限流：60 分钟内失败 ≤_LOGIN_MAX 次。"""
+    now = _time.time()
+    hits = [t for t in _login_hits.get(key, []) if now - t < _LOGIN_WINDOW_S]
+    return len(hits) < _LOGIN_MAX
 
 
 class RegisterRequest(BaseModel):
