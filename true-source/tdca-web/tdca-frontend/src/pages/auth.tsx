@@ -93,7 +93,7 @@ export function AuthPage() {
         </button>
         {/* 忘记密码指引（件 B0：零后端文案口径——无自助重置通道，人工重置） */}
         <p data-testid="auth-forgot-hint" className="text-[11px] leading-4 text-gray-500">
-          忘记密码？本站点无自助重置通道，请携带用户名联系站点管理员人工重置后重新登录。
+          忘记密码？本站点无自助重置通道，请携带用户名联系站点管理员人工重置（<a href="mailto:xuantan0703@agent.qq.com" className="text-emerald-700 underline">xuantan0703@agent.qq.com</a>）后重新登录。
         </p>
       </div>
       <div className="mb-2 max-w-md text-[10px] uppercase tracking-wide text-gray-400">降级通道：DID 模拟态登录（保留）</div>
