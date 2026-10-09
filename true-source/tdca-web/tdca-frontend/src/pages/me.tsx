@@ -277,7 +277,7 @@ export function MePage() {
               <div data-testid="me-account-guide" className="rounded-lg border border-gray-200 bg-white p-4">
                 <div className="text-xs text-gray-500">忘记密码</div>
                 <p className="mt-1 text-xs text-gray-600">
-                  本站点无自助重置通道：请携带用户名联系站点管理员人工重置；重置后该账户全部会话失效，须使用新密码重新登录。
+                  本站点无自助重置通道：请携带用户名联系站点管理员人工重置（<a href="mailto:xuantan0703@agent.qq.com" className="text-emerald-700 underline">xuantan0703@agent.qq.com</a>）；重置后该账户全部会话失效，须使用新密码重新登录。
                 </p>
                 <p className="mt-1 text-[11px] text-gray-400">记得密码只想更换？直接用下方「账户安全 · 修改密码」。</p>
               </div>
