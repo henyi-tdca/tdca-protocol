@@ -37,7 +37,7 @@ import os
 import sqlite3
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -1345,6 +1345,57 @@ def me_session_revoke_all(request: Request):
         "revoked": revoked_n, "nca_ref": nca_ref,
         "note": "本人全部会话已吊销（含当前，强制退出登录）；本会话自下一请求起失效",
     }, nature="real")
+
+
+_USAGE_TZ = timezone(timedelta(hours=8))     # +08（本项目明示日界口径）
+_USAGE_DEFAULT_DAYS = 30                     # 窗口默认取值（执行侧裁，回报载明）
+_USAGE_MAX_DAYS = 90                         # 窗口上限（防全表拉取）
+
+
+@router.get("/me/usage")
+def me_usage(request: Request, days: int = _USAGE_DEFAULT_DAYS):
+    """用量统计 v1（2026-10-09 可增项第 2 件）：本人 NCA 按日计数聚合（纯 SELECT）。
+    口径（勘察结论照办）：actor 恰等于会话用户名者计入——gateway:…/HUF:… 等非用户
+    形态不属「本人」名下，一律排除；ts 为 UTC ISO 文本，日界＝+08（先解析转 +08 再取日，
+    聚合与展示同口径）；窗口默认 30 天、上限 90，越界 400 fail-closed。
+    ⛔ 零写库、零新表、不落 NCA；data_provenance 按行聚合明示（ID92 SIMULATED 照守）。
+    形状二择一取①（新只读端点）：/me/dashboard 既有字段一律不动。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    if days < 1 or days > _USAGE_MAX_DAYS:
+        raise HTTPException(400, f"days 须为 1~{_USAGE_MAX_DAYS} 的整数")
+    window_start = datetime.now(timezone.utc) - timedelta(days=days)
+    daily: Dict[str, Dict[str, object]] = {}
+    provs: List[str] = []
+    with get_session() as s:
+        rows = s.query(M.NcaChain).filter(M.NcaChain.actor == me).all()
+        for r in rows:
+            try:
+                ts = datetime.fromisoformat(r.ts.replace("Z", "+00:00"))
+            except ValueError:
+                continue            # 非 ISO 行不计入（fail-closed 不猜测）
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
+            if ts < window_start:
+                continue
+            day = ts.astimezone(_USAGE_TZ).date().isoformat()
+            cell = daily.setdefault(day, {"count": 0, "by_action": {}})
+            cell["count"] = int(cell["count"]) + 1
+            ba = cell["by_action"]
+            ba[r.action] = ba.get(r.action, 0) + 1
+            provs.append(r.data_provenance)
+    nature = _nature_of(provs)
+    return _nca_watermark({
+        "days": days,
+        "timezone": "+08",
+        "actor_filter": "actor == 会话用户名（gateway:…/HUF:… 等非用户形态不计入）",
+        "total": sum(int(c["count"]) for c in daily.values()),
+        "daily": [{"date": d, "count": int(c["count"]),
+                   "by_action": dict(sorted(c["by_action"].items()))}
+                  for d, c in sorted(daily.items(), reverse=True)],
+        "data_provenance": nature,
+        "note": "本人 NCA 存证按日计数（+08 日界，窗口默认 30 天）；纯只读聚合，零写库、不落 NCA",
+    }, nature=nature)
 
 
 @router.post("/me/password")
