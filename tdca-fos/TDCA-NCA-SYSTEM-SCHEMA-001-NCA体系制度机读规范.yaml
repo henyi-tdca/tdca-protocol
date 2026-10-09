@@ -26,18 +26,18 @@ libraries:
   reasonix_dual:
     runtime:
       role: 运行库
-      path: "%APPDATA%/reasonix/global-workspace/.tdca-nca/"
+      path: "<APPDATA>/reasonix/global-workspace/.tdca-nca/"
     archive:
       role: 归档镜像
-      path: "Desktop/TDCA归档文件夹/.tdca-nca/"
+      path: "<Desktop>/TDCA归档文件夹/.tdca-nca/"
     rule: "REGISTRY 双库 MD5 一致"
   workbuddy_A:
     role: 运行权威（唯一权威 NCA_DIR）
-    path: "C:/Users/22850/Desktop/开发会话文件/.tdca-nca/"
+    path: "<工作区>/.tdca-nca/"
     tc_nca_dir: true
   workbuddy_B:
     role: 历史归档（冻结只读，不删）
-    path: "C:/Users/22850/Desktop/TDCA-MEMO-006-Workspace/.tdca-nca/"
+    path: "<Desktop>/TDCA-MEMO-006-Workspace/.tdca-nca/"
     note: "623 件历史含 155-159 见证链；引用标注来源=B 归档"
   audit_rule: "跨库引用须标来源（A=运行/B=归档/Reasonix 双库）；审计先确认库来源"
 

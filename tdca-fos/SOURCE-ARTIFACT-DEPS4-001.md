@@ -28,9 +28,13 @@
 - `tdca-toolchain`：配置权令牌（TDCA-CRT-*）生成／验证链工具（sbx/ns NCA 与多签流程配套）。
 - `tdca-fos`：NCA 体系制度件与部署参考（其中 `deploy/docker-compose.yml` 已按 §二 排除，其余 deploy 参考件 Dockerfile×2、PRODUCTION.md 入仓）。
 
-## 四、敏感面（入仓前复扫）
+## 四、敏感面（入仓前复扫）与脱敏更正（DEPS4-MERGE-001 追加）
 
-- 本机路径串 2 件（既有内容、非本次引入，按交办不代改，脱敏与否待创始人定）：
+- **已脱敏（2026-10-10，创始人令 TDCA-HANDOFF-EXEC-ARTIFACT-DEPS4-MERGE-001）**：
+  - `tdca-fos/TDCA-NCA-SYSTEM-SCHEMA-001-NCA体系制度机读规范.yaml` 4 处路径值改占位符（`%APPDATA%…`→`<APPDATA>…`、`Desktop/TDCA归档文件夹…`→`<Desktop>/TDCA归档文件夹…`、两处含用户名之本机绝对路径→`<工作区>/.tdca-nca/` 与 `<Desktop>/TDCA-MEMO-006-Workspace/.tdca-nca/`）。**该件因此偏离包清单哈希**，理由：脱敏（去用户名与用户目录前缀），偏离仅此 4 处路径值，其余一字未动。
+  - `tdca-fos/TDCA-NCA-LIFECYCLE-STANDARD-001_NCA登记存证归档检索审查规范.md` 逐行自查：所指行已是占位/相对形态（`<Desktop>…`、`global-workspace…`），无用户名残留，**未改、不偏离清单**。
+  - 自查另发现 `tdca-fos/TDCA-NCA-SYSTEM-STANDARD-001-NCA体系制度规范.md` L17 含工作区相对路径片段（`开发会话文件/.tdca-nca/`，无用户名与用户目录前缀）；因脱敏令限定两件，**未代改**，报创始人备裁。
+- 本机路径串（脱敏前原状，既有内容、非本次引入）：
   - `tdca-fos/TDCA-NCA-SYSTEM-SCHEMA-001-NCA体系制度机读规范.yaml` L36/L40：`C:/Users/22850/Desktop/…`（含用户名 22850）
   - `tdca-fos/TDCA-NCA-SYSTEM-STANDARD-001-NCA体系制度规范.md` L17：`开发会话文件/.tdca-nca/`
 - tdca-toolchain 的 TOKEN 命中均为配置权令牌示例／测试样例／环境变量读取／子命令误报，非凭据。
