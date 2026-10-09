@@ -5,6 +5,7 @@
 // 预期分配: MePage（会话卡 + 签批待办红签置顶 + 我的智能体 + 我批过的 + 沙盒 + 治理）
 // 批 1 扩充（2026-10-09 用户控制台 P1）: 频道直达条 + AI 意图导航 + 权属栏 + 准入判定历史 + 活动产物分页
 // 改密入口（2026-10-09 最小实现令）: 账户安全卡（页内改密，调在册 POST /api/v1/me/password；仅本人、NCA 落链）
+// 账户管理栏目（2026-10-09 件A＋B0）: 账户信息＋修改密码＋忘记密码指引聚合一栏（B0 零后端：无自助重置，联系站点管理员人工重置）
 // =============================================================================
 import { useState } from 'react'
 import { Link } from 'react-router'
@@ -254,31 +255,45 @@ export function MePage() {
               </Link>
             ))}
           </nav>
-          {/* 会话卡 + 红签待办 */}
-          <section className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <div data-testid="me-session" className="rounded-lg border border-gray-200 bg-white p-4">
-              <div className="text-xs text-gray-500">当前登录</div>
-              <div className="mt-1 text-lg font-semibold text-gray-800">
-                {data.session.username}
-                <span className="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{ROLE_LABEL[data.session.role] ?? data.session.role}</span>
-              </div>
-              <div className="mt-1 text-xs text-gray-400">会话有效至 {data.session.expires_at.slice(0, 19).replace('T', ' ')}</div>
-              {data.session.last_register_nca_id && (
-                <div data-testid="me-register-nca" className="mt-1 text-xs text-gray-400">
-                  最近缔约存证 <span className="font-mono text-gray-500">{data.session.last_register_nca_id}</span>
-                  （注册即缔约已落 NCA 链，可经审计透明页自查在链）
+          {/* 账户管理栏目（件 A：账户信息＋修改密码＋忘记密码指引；2026-10-09 令） */}
+          <section data-testid="me-account" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">账户管理</h3>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div data-testid="me-session" className="rounded-lg border border-gray-200 bg-white p-4">
+                <div className="text-xs text-gray-500">当前登录</div>
+                <div className="mt-1 text-lg font-semibold text-gray-800">
+                  {data.session.username}
+                  <span className="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{ROLE_LABEL[data.session.role] ?? data.session.role}</span>
                 </div>
-              )}
+                <div className="mt-1 text-xs text-gray-400">会话有效至 {data.session.expires_at.slice(0, 19).replace('T', ' ')}</div>
+                {data.session.last_register_nca_id && (
+                  <div data-testid="me-register-nca" className="mt-1 text-xs text-gray-400">
+                    最近缔约存证 <span className="font-mono text-gray-500">{data.session.last_register_nca_id}</span>
+                    （注册即缔约已落 NCA 链，可经审计透明页自查在链）
+                  </div>
+                )}
+              </div>
+              {/* 忘记密码指引（件 B0：零后端文案口径——无自助重置通道，人工重置） */}
+              <div data-testid="me-account-guide" className="rounded-lg border border-gray-200 bg-white p-4">
+                <div className="text-xs text-gray-500">忘记密码</div>
+                <p className="mt-1 text-xs text-gray-600">
+                  本站点无自助重置通道：请携带用户名联系站点管理员人工重置；重置后该账户全部会话失效，须使用新密码重新登录。
+                </p>
+                <p className="mt-1 text-[11px] text-gray-400">记得密码只想更换？直接用下方「账户安全 · 修改密码」。</p>
+              </div>
             </div>
-            <div data-testid="me-pending-card" className={`rounded-lg border p-4 ${data.pending_count > 0 ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-white'}`}>
-              <div className="text-xs text-gray-500">待我签批</div>
-              <div className={`mt-1 text-2xl font-bold ${data.pending_count > 0 ? 'text-red-700' : 'text-gray-700'}`}>{data.pending_count} 件</div>
-              {data.pending_count > 0 && <Link to="/attestation/dynamic" className="text-xs font-medium text-red-700 underline">去签批 →</Link>}
+            {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}
+            <div className="mt-3">
+              <PasswordChangeCard />
             </div>
           </section>
 
-          {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}
-          <PasswordChangeCard />
+          {/* 红签待办（独立成卡，紧随账户管理；红签口径不变） */}
+          <section data-testid="me-pending-card" className={`rounded-lg border p-4 ${data.pending_count > 0 ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-white'}`}>
+            <div className="text-xs text-gray-500">待我签批</div>
+            <div className={`mt-1 text-2xl font-bold ${data.pending_count > 0 ? 'text-red-700' : 'text-gray-700'}`}>{data.pending_count} 件</div>
+            {data.pending_count > 0 && <Link to="/attestation/dynamic" className="text-xs font-medium text-red-700 underline">去签批 →</Link>}
+          </section>
 
           {/* 运营管理入口（仅 operator/founder 可见；后端闸门照守，前端只是入口） */}
           {(data.session.role === 'operator' || data.session.role === 'founder') && (
