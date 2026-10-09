@@ -1632,15 +1632,20 @@ _INTENT_TABLE = [
 def intent_route(q: str = ""):
     """意图导航：自然语言 → 功能页 + 操作指引（确定性关键词规则表，可审计，零外部依赖）。"""
     text = q.strip().lower()
-    best, best_hits, alts = None, 0, []
+    best, best_key, alts = None, None, []
     for item in _INTENT_TABLE:
-        hits = sum(1 for k in item["keys"] if k in text)
+        matched = [k for k in item["keys"] if k in text]   # 命中定义不变（k in text ＋计数）
+        hits = len(matched)
         if hits > 0:
-            alts.append({"route": item["route"], "title": item["title"], "hits": hits})
-            if hits > best_hits:
-                best, best_hits = item, hits
+            longest = max(len(k) for k in matched)          # 命中键中最长者长度
+            alts.append({"route": item["route"], "title": item["title"],
+                         "hits": hits, "longest": longest})
+            # 裁决（2026-10-09 可增项第 4 件）：命中数 ↓、最长命中键 ↓，仍并列维持表序（严格 >，先到先得）
+            if best is None or (hits, longest) > best_key:
+                best, best_key = item, (hits, longest)
+    # 备选与最优同一裁决规则；稳定排序保证全并列时维持表序兜底
     alts = sorted((a for a in alts if not best or a["route"] != best["route"]),
-                  key=lambda a: -a["hits"])[:2]
+                  key=lambda a: (-a["hits"], -a["longest"]))[:2]
     if best is None:
         return _nca_watermark({
             "matched": False, "route": "/", "title": "首页 KPI 总览", "action": "查询",
