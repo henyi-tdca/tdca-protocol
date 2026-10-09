@@ -87,7 +87,7 @@ export function StudioPage() {
               <button
                 key={a.key}
                 data-testid={`life-action-${a.key}`}
-                className="rounded border border-gray-300 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-100"
+                className="rounded border border-blue-600 bg-blue-600 px-2.5 py-1 text-xs text-white hover:bg-blue-700"
                 onClick={() => setActionModal(a.label)}
               >
                 {a.label}（HUF）
