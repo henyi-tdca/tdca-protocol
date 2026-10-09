@@ -355,4 +355,40 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     render(<MemoryRouter><MePage /></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-usage-msg').textContent).toContain('加载失败'))
   })
+
+  // ---- 账户信息栏升级版（可增项第 3 件：当前登录卡 → 账户信息卡；只展示不编辑）----
+  const ACCT_PAYLOAD = {
+    ...ME_PAYLOAD,
+    session: { ...ME_PAYLOAD.session, created_at: '2026-10-09T16:00:00+00:00',
+               created_at_display: '2026-10-10 00:00:00', created_at_parse_ok: true },
+  }
+
+  it('账户信息卡（看）：用户名/角色中文标签/建号时间 +08；入口指向登录会话与用量统计；无编辑控件', async () => {
+    mockByUrl({ '/api/v1/me/dashboard': ACCT_PAYLOAD, '/api/v1/me/usage': USAGE_PAYLOAD })
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-acct-created').textContent).toContain('2026-10-10 00:00:00'))
+    const card = screen.getByTestId('me-session')
+    expect(card.textContent).toContain('账户信息')
+    expect(card.textContent).toContain('tester')
+    expect(card.textContent).toContain('访客')            // 角色中文标签沿用
+    expect(screen.getByTestId('me-acct-created').textContent).toContain('+08')
+    expect(screen.getByTestId('me-acct-links-sessions')).toBeTruthy()   // 入口：登录会话卡
+    expect(screen.getByTestId('me-acct-links-usage')).toBeTruthy()      // 入口：用量统计卡
+    // 无编辑控件：卡内零 input/textarea/select；无改用户名/邮箱类文案
+    expect(card.querySelectorAll('input, textarea, select').length).toBe(0)
+    expect(card.textContent).not.toContain('修改用户名')
+    expect(card.textContent).not.toContain('邮箱')
+  })
+
+  it('账户信息卡（降级）：created_at 不可解析 ⟹ 原值如实展示并注明（不猜测不伪造）', async () => {
+    mockByUrl({ '/api/v1/me/dashboard': { ...ME_PAYLOAD,
+      session: { ...ME_PAYLOAD.session, created_at: 'not-a-date',
+                 created_at_display: null, created_at_parse_ok: false } },
+      '/api/v1/me/usage': USAGE_PAYLOAD })
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-acct-created').textContent).toContain('not-a-date'))
+    const el = screen.getByTestId('me-acct-created')
+    expect(el.textContent).toContain('无法解析')
+    expect(el.textContent).not.toContain('2026-10-10')   // 未伪造 +08 值
+  })
 })

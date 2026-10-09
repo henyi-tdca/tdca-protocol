@@ -9,6 +9,7 @@
   /me/nca 参数校验 fail-closed → test_p1_me_nca_param_guard
 """
 from datetime import datetime, timedelta, timezone
+import json
 
 from fastapi.testclient import TestClient
 
@@ -180,3 +181,62 @@ def test_p1_me_usage_readonly_and_shape():
     assert all(set(x.keys()) == {"date", "count", "by_action"} for x in d["daily"])
     body_keys = set(d.keys()) | {k for x in d["daily"] for k in x.keys()}
     assert not ({"token", "token_hash", "password", "salt"} & body_keys)   # 不含凭据字段
+
+
+# =====================================================================
+# 账户信息栏升级版（可增项第 3 件）：/me/dashboard session 段新增 created_at 系字段
+# 口径：users.created_at 现值如实带出；+08 展示；缺失/不可解析如实降级不猜测；
+#       只增不改、零写、未新增写端点；⛔ password_hash/salt/token 不落响应
+# =====================================================================
+
+def _mkuser_at(username: str, created_at: str, role: str = "viewer") -> str:
+    ph, salt, iters = hash_password(f"pw-{username}")
+    with get_sessionmaker().begin() as s:
+        if s.get(M.User, username) is None:
+            s.add(M.User(username=username, password_hash=ph, salt=salt,
+                         iterations=iters, role=role, created_at=created_at))
+    r = client.post("/api/v1/auth/login", json={"username": username, "password": f"pw-{username}"})
+    assert r.status_code == 200, r.text[:200]
+    return r.json()["data"]["token"]
+
+
+def test_p1_me_accountinfo_created_at_plus8():
+    """+08 口径实证：UTC 16:00 → 次日 +08 00:00:00；原值如实带出；无凭据字段。"""
+    tok = _mkuser_at("p1-acct-a", "2026-10-09T16:00:00+00:00")
+    r = client.get("/api/v1/me/dashboard", headers=_h(tok))
+    assert r.status_code == 200
+    sess = r.json()["data"]["session"]
+    assert sess["created_at"] == "2026-10-09T16:00:00+00:00"   # 原值如实
+    assert sess["created_at_display"] == "2026-10-10 00:00:00"  # +08 跨日
+    assert sess["created_at_parse_ok"] is True
+    body = json.dumps(r.json())
+    assert "password_hash" not in body and "salt" not in body
+    assert "token" not in sess and "token_hash" not in sess
+
+
+def test_p1_me_accountinfo_created_at_degrade():
+    """不可解析 ⟹ display=null、parse_ok=false、原值如实（不猜测不伪造）。"""
+    tok = _mkuser_at("p1-acct-bad", "not-a-date")
+    r = client.get("/api/v1/me/dashboard", headers=_h(tok))
+    sess = r.json()["data"]["session"]
+    assert sess["created_at"] == "not-a-date"
+    assert sess["created_at_display"] is None
+    assert sess["created_at_parse_ok"] is False
+
+
+def test_p1_me_accountinfo_readonly_and_no_write_endpoint():
+    tok = _mkuser_at("p1-acct-ro", "2026-10-09T00:00:00Z")
+    with get_session() as s:
+        n_before = s.query(M.User).count()
+        cols_before = [c.name for c in M.User.__table__.columns]
+    r = client.get("/api/v1/me/dashboard", headers=_h(tok))
+    assert r.status_code == 200
+    with get_session() as s:
+        n_after = s.query(M.User).count()
+        cols_after = [c.name for c in M.User.__table__.columns]
+    assert n_before == n_after               # 零写证明：行数相等
+    assert cols_before == cols_after         # 未加列
+    # 未新增写端点：/api/v1/me 系 POST 路径集合与上批一致（恰三件，本件零新增）
+    spec = app.openapi()
+    me_posts = sorted(p for p, ops in spec["paths"].items() if "post" in ops and "/me/" in p)
+    assert me_posts == ["/api/v1/me/password", "/api/v1/me/sessions/revoke", "/api/v1/me/sessions/revoke-all"]
