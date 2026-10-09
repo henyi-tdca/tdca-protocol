@@ -460,12 +460,12 @@ export function MePage() {
                 <div className="mt-1 text-xs text-gray-400">会话有效至 {data.session.expires_at.slice(0, 19).replace('T', ' ')}</div>
                 <div className="mt-2 flex flex-wrap gap-2" data-testid="me-acct-links">
                   <button type="button" data-testid="me-acct-links-sessions"
-                          className="rounded-md border border-gray-200 px-2 py-1 text-[11px] text-gray-500 hover:border-emerald-400 hover:text-emerald-700"
+                          className="rounded-md border border-blue-600 bg-blue-600 px-2 py-1 text-[11px] text-white hover:bg-blue-700"
                           onClick={() => document.querySelector('[data-testid="me-sessions"]')?.scrollIntoView({ behavior: 'smooth' })}>
                     登录会话 →
                   </button>
                   <button type="button" data-testid="me-acct-links-usage"
-                          className="rounded-md border border-gray-200 px-2 py-1 text-[11px] text-gray-500 hover:border-emerald-400 hover:text-emerald-700"
+                          className="rounded-md border border-blue-600 bg-blue-600 px-2 py-1 text-[11px] text-white hover:bg-blue-700"
                           onClick={() => document.querySelector('[data-testid="me-usage"]')?.scrollIntoView({ behavior: 'smooth' })}>
                     用量统计 →
                   </button>

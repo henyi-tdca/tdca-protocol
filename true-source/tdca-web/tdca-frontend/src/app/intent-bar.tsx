@@ -100,7 +100,7 @@ export function IntentBar() {
                 <button
                   key={a.route}
                   onClick={() => go(a.route)}
-                  className="ml-1 text-slate-600 underline hover:text-slate-900"
+                  className="ml-1 bg-transparent text-slate-600 underline hover:text-slate-900"
                 >
                   {a.title}
                 </button>
