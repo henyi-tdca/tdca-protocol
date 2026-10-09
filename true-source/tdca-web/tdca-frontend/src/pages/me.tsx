@@ -7,6 +7,7 @@
 // 改密入口（2026-10-09 最小实现令）: 账户安全卡（页内改密，调在册 POST /api/v1/me/password；仅本人、NCA 落链）
 // 账户管理栏目（2026-10-09 件A＋B0）: 账户信息＋修改密码＋忘记密码指引聚合一栏（B0 零后端：无自助重置，联系站点管理员人工重置）
 // 登录会话（2026-10-09 可增项第 1 件）: 账户管理栏内「登录会话」卡（GET /me/sessions · revoke · revoke-all；看＋踢本人会话）
+// 用量统计（2026-10-09 可增项第 2 件）: 账户管理栏内「用量统计」卡（GET /me/usage 本人 NCA 按日计数，+08 日界）
 // =============================================================================
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
@@ -318,6 +319,71 @@ function SessionsCard() {
   )
 }
 
+interface UsageDay {
+  date: string
+  count: number
+  by_action: Record<string, number>
+}
+
+interface UsageData {
+  days: number
+  timezone: string
+  total: number
+  daily: UsageDay[]
+  data_provenance: string
+}
+
+/** 用量统计（2026-10-09 可增项第 2 件）：本人 NCA 按日计数聚合（GET /me/usage，纯只读）。
+ *  +08 日界口径与展示一致；data_nature 非 real 必显 SIMULATED 角标（ID92）。 */
+function UsageCard() {
+  const [data, setData] = useState<UsageData | null>(null)
+  const [msg, setMsg] = useState('')
+  useEffect(() => {
+    void (async () => {
+      const r = await api.get<UsageData>('/api/v1/me/usage')
+      if (r.ok) {
+        setData(r.data)
+        setMsg('')
+      } else {
+        setData(null)
+        setMsg(`用量统计加载失败（HTTP ${r.status ?? '未知'}），请稍后重试`)
+      }
+    })()
+  }, [])
+  return (
+    <section data-testid="me-usage" className="rounded-lg border border-gray-200 bg-white p-4">
+      <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800">
+        用量统计
+        {data && data.data_provenance !== 'real' && <SimulatedBadge nature="simulated" />}
+      </h3>
+      <p className="mb-2 text-[11px] text-gray-400">本人 NCA 存证按日计数（日界 {data?.timezone ?? '+08'}，近 {data?.days ?? 30} 天）；仅本人名下记录计入。</p>
+      {data === null && !msg && <p className="text-xs text-gray-400">加载中…</p>}
+      {data !== null && (
+        <>
+          <div className="text-sm text-gray-700">近 {data.days} 天共 <span className="text-lg font-bold text-gray-800">{data.total}</span> 条</div>
+          {data.daily.length === 0 && <p className="mt-1 text-xs text-gray-400">窗口内暂无本人存证记录</p>}
+          {data.daily.length > 0 && (
+            <table className="mt-1 w-full text-sm">
+              <tbody>
+                {data.daily.map((x) => (
+                  <tr key={x.date} data-date={x.date} className="border-b border-gray-100">
+                    <td className="py-1.5 font-mono text-[11px] text-gray-500">{x.date}</td>
+                    <td className="py-1.5 text-xs text-gray-700">{x.count} 条</td>
+                    <td className="py-1.5 text-right text-[11px] text-gray-400">
+                      {Object.entries(x.by_action).map(([a, n]) => `${a}×${n}`).join(' ｜ ')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
+      )}
+      {msg && <p data-testid="me-usage-msg" className="mt-2 text-xs text-amber-700">{msg}</p>}
+    </section>
+  )
+}
+
 /** M5 个人后台：谁的数据谁可见（须登录；未登录自动引导） */
 export function MePage() {
   const { status, data } = useApiGet<MeData>('/api/v1/me/dashboard')
@@ -406,6 +472,10 @@ export function MePage() {
             {/* 登录会话（可增项第 1 件：看＋踢本人会话；与「退出登录」文案区分） */}
             <div className="mt-3">
               <SessionsCard />
+            </div>
+            {/* 用量统计（可增项第 2 件：本人 NCA 按日计数，+08 日界） */}
+            <div className="mt-3">
+              <UsageCard />
             </div>
           </section>
 

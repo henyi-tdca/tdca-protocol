@@ -272,7 +272,8 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('登录会话卡（看）：列表渲染 sid/时间/状态标记；已吊销行禁用吊销钮；全部吊销与「退出登录」文案区分', async () => {
     vi.stubGlobal('fetch', fetchMockSess())
     render(<MemoryRouter><MePage /></MemoryRouter>)
-    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    // 等列表行渲染（骨架常驻，须等数据到达后再断言行）
+    await waitFor(() => expect(screen.getByTestId('me-sess-revoke-sid-current-01')).toBeTruthy())
     const card = screen.getByTestId('me-sessions')
     expect(card.textContent).toContain('sid-current-01')
     expect(card.textContent).toContain('sid-old-000002')
@@ -289,7 +290,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     const f = fetchMockSess()
     vi.stubGlobal('fetch', f)
     render(<MemoryRouter><MePage /></MemoryRouter>)
-    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    await waitFor(() => expect(screen.getByTestId('me-sess-revoke-sid-current-01')).toBeTruthy())
     fireEvent.click(screen.getByTestId('me-sess-revoke-sid-current-01'))
     await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('指定会话已吊销'))
     const calls = f.mock.calls.filter((c) => String(c[0]).includes('/api/v1/me/sessions/revoke') && !String(c[0]).includes('revoke-all'))
@@ -300,7 +301,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('登录会话卡（踢指定 404）：提示「会话不存在或已失效」（不可见处理口径如实透出）', async () => {
     vi.stubGlobal('fetch', fetchMockSess(404))
     render(<MemoryRouter><MePage /></MemoryRouter>)
-    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    await waitFor(() => expect(screen.getByTestId('me-sess-revoke-sid-current-01')).toBeTruthy())
     fireEvent.click(screen.getByTestId('me-sess-revoke-sid-current-01'))
     await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('会话不存在或已失效'))
   })
@@ -309,11 +310,49 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     const f = fetchMockSess(200, 200)
     vi.stubGlobal('fetch', f)
     render(<MemoryRouter><MePage /></MemoryRouter>)
-    await waitFor(() => expect(screen.getByTestId('me-sessions')).toBeTruthy())
+    await waitFor(() => expect(screen.getByTestId('me-sess-revoke-all')).toBeTruthy())
     fireEvent.click(screen.getByTestId('me-sess-revoke-all'))
     await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('请重新登录'))
     const calls = f.mock.calls.filter((c) => String(c[0]).includes('/api/v1/me/sessions/revoke-all'))
     expect(calls.length).toBe(1)
     expect(JSON.parse(String(calls[0][1]?.body))).toEqual({})
+  })
+
+  // ---- 用量统计（可增项第 2 件：本人 NCA 按日计数，+08 日界）----
+  const USAGE_PAYLOAD = {
+    days: 30, timezone: '+08', total: 3,
+    daily: [
+      { date: '2026-10-09', count: 2, by_action: { user_action_x: 2 } },
+      { date: '2026-10-08', count: 1, by_action: { user_action_y: 1 } },
+    ],
+    data_provenance: 'simulated',
+  }
+
+  it('用量统计卡（看）：日计数/总数/+08 口径渲染；simulated 数据显 SIMULATED 角标（ID92）', async () => {
+    mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD, '/api/v1/me/usage': USAGE_PAYLOAD })
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-usage').textContent).toContain('近 30 天共'))
+    const card = screen.getByTestId('me-usage')
+    expect(card.textContent).toContain('近 30 天共')
+    expect(card.textContent).toContain('3')
+    expect(card.textContent).toContain('2026-10-09')
+    expect(card.textContent).toContain('user_action_x×2')
+    expect(card.textContent).toContain('+08')
+    expect(card.querySelector('[data-testid="simulated-badge"]')).toBeTruthy()
+  })
+
+  it('用量统计卡（加载失败）：接口非 2xx 出内联提示（fail-closed 不猜测）', async () => {
+    mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      if (url.includes('/api/v1/me/usage')) {
+        return { ok: false, status: 401, json: async () => ({ detail: '未登录' }) } as Response
+      }
+      if (url.includes('/api/v1/me/dashboard')) {
+        return { ok: true, status: 200, json: async () => envelope(ME_PAYLOAD) } as Response
+      }
+      return { ok: false, status: 404, json: async () => ({ detail: 'not found' }) } as Response
+    }))
+    render(<MemoryRouter><MePage /></MemoryRouter>)
+    await waitFor(() => expect(screen.getByTestId('me-usage-msg').textContent).toContain('加载失败'))
   })
 })
