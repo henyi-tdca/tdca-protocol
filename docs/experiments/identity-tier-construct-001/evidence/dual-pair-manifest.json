@@ -1,0 +1,8 @@
+{
+ "pair_id": "TDCA-REG-IDENTITY-TIER-001-DUAL",
+ "note": "沙盒位成对引用（字节级照录在册双版本，⛔ 不改在册件一字）",
+ "human_readable": "evidence/REG-human-readable.md",
+ "machine_readable": "evidence/REG-machine-readable.yaml",
+ "human_readable_sha256": "92dce8a83eef411d9cc095cf97da55c507b50ddbc467514b39e2091ecb5fabb1",
+ "machine_readable_sha256": "f7c08d3d0e765be7fdaff6fc7c295537a54d9d8a51c328a2fd42ecdb794c910e"
+}
