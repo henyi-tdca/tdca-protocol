@@ -1,0 +1,106 @@
+# 《身份可信等级认定条例》机读版 · V0.3 增量（AMEND-1）
+# 件号: TDCA-REG-IDENTITY-TIER-001-COMPILED-AMEND-1 ｜ 版本: V0.3-PENDING-SIGNATURE ｜ 日期: 2026-10-11（+08）
+# 编制: Reasonix（智库 · L1-SI-132）
+# 性质: 条例机读版之增量（并入三项口径）；⛔ 未生效（须签批）；⛔ 非对外
+# 合并读: 基数件 = V1.0 机读件；如有冲突以本增量为准；⛔ 不回改基数件一字
+
+reg_id: 'TDCA-REG-IDENTITY-TIER-001'
+compiled_version: 'V0.3-AMEND-1'
+status: 'PENDING-SIGNATURE'
+effective_condition: '转正四步齐备（已成）＋ 创始人签批'
+date: '2026-10-11'
+timezone: '+08'
+side: 'reasonix'
+session: 'L1-SI-132'
+basis_ruling: 'TDCA-RULING-SRTA-TIER-CRITERIA-002'
+basis_tamper: 'TDCA-SECURITY-TAMPER-001'
+
+merge:
+  base_compiled: 'TDCA-REG-IDENTITY-TIER-001-COMPILED-《身份可信等级认定条例》机读版（V1.0·待签批·含免责注记）.yaml'
+  base_human_sha256_16: '92DCE8A83EEF411D'
+  precedence: '本增量与基数件冲突时以本增量为准'
+
+pair:
+  human_doc: 'TDCA-REG-IDENTITY-TIER-001-AMEND-1-条例V0.3追加件（并入可采信即可验证不可篡改·可信信息自带于锚数据·外部先做我方复核评审承认）.md'
+  human_sha256_16: '581F80881D6B0489'
+  machine_doc: 'TDCA-REG-IDENTITY-TIER-001-COMPILED-AMEND-1-机读版增量yaml（并入三项口径·待签批）.yaml'
+  cross_ref: '两件哈希并列于同批 NCA 存证 ⟹ 互指成立'
+
+# ── 口径一：可采信 ＝ 可验证 ＋ 不可篡改（第 17 条）
+admissibility:
+  article: 17
+  definition: '法律可采信之证据 ＝ 可被验证 且 不可被篡改'
+  evidence_rule:
+    verifiable: true
+    immutable: true
+  carriers_in_register:
+    tamper_anchors:
+      - '哈希锚定（可验证）'
+      - '权威治理（签批 · 不可随意更）'
+      - '外部锚（外部存证）'
+      - '行为一致性（篡改致行为偏离 · 可检测）'
+    chain: 'NCA 链（哈希链 ＋ 无存证不执行）'
+  judge: 'self'                    # 判者 ＝ 我方单方判定
+  nature: '在册既有表述之援引；⛔ 不构成本侧法律意见'
+  overrides: 'N-22 判准已定；⛔ 退出待点定/待签批；⛔ 不另出解释文件（日后需细化另案）'
+
+# ── 口径二：可信信息自带于锚数据本身（第 18 条）
+credible_info_selfproof:
+  article: 18
+  principle: '数据自带其信息数据；可信与否由该锚数据自身携带之信息是否可验证、不可篡改决定'
+  external_supplement_threshold: null      # ⛔ 不设外部补料门槛
+  self_proving_required: true
+  ip_only:
+    self_proving: false                    # 仅 IP 不能自证
+    reason: '可共享 / 可动态分配 / 可经代理或网络地址转换 ⟹ 可验证与不可篡改皆不成立'
+    outcome: 'ALERT（待补）'
+    note: '判告警之由 ＝ 不能自证；⛔ 非"材料不够多"'
+  tiers_unchanged: true                    # 四档判据不变
+  tiers_meaning: '四档之分 ＝ 自证能力强弱之分'
+  overrides: 'N-29 清单保留；最低要件判据已定、⛔ 无留白；附表四末行更正为"判据已定"'
+
+# ── 口径三：评审与承认（第 19 条 · 细化第 8 条）
+review_and_recognition:
+  article: 19
+  external_side: '外部可信等级首先由外部机构完成；我侧 ⛔ 不代其定'
+  our_side: '我方之处置 ＝ 承认与否（单向判定）'
+  review_required: true
+  recognition_requires: '我方复核评审'
+  reviewer: 'TDCA'                         # 评审主体 ＝ 我方
+  review_content: '该锚能否提供「锚定根物理变迁」之可验证且不可篡改之证据'
+  no_auto_same_tier: true
+  no_batch_inclusion: true
+  procedure_detail: '我方内部程序（按制度流程办；默认＋可改）'
+  gates:
+    gate1: '过根检查并定级 ＝ 评审'
+    gate2: '入网另须加载协议'
+    interchangeable: false
+    order_default: 'gate1 -> gate2'
+  overrides: 'N-20 主体已定（我方）；⛔ 退出待签批；仅程序细则归我方'
+
+# ── 读法更正（追加制 · ⛔ 不回改 V1.0）
+read_overrides:
+  - {target: '第 7 条第 3 项', was: '核验要件待点定', now: '判据已定（第 18 条）；仅技术字段形态归我方自办'}
+  - {target: '第 8 条', was: '须评审定级 · 一事一议（主体未明）', now: '主体 ＝ 我方（第 19 条）；内容 ＝ 可验证不可篡改之证据'}
+  - {target: '第 12 条', was: '可信信息取值留签批', now: '最低要件判据已定（第 18 条）；⛔ 无留白'}
+  - {target: '附表一 N-22', was: '判准与判者不代拟', now: '已定（第 17 条）；删除该行'}
+  - {target: '附表一 N-20', was: '评审主体与程序（涉职权）', now: '主体已定（第 19 条）；仅程序细则归我方'}
+  - {target: '附表三 末行', was: '最低要件留白', now: '判据已定'}
+  - {target: '附表五 deadline', was: '取值留签批', now: '默认：不设固定期限，告警持续有效直至补足或作废（默认＋可改）'}
+
+# ── 待签批（收窄版 · 取代 V1.0 附表一/附表六之待签批部分）
+pending_signature:
+  - {no: 1, item: '本条例生效签批', owner: 'founder', type: 'signature'}
+  - {no: 2, item: '一切对外（含条例名称与档名之对外使用）', owner: 'founder', type: 'external'}
+  - {no: 3, item: '数值类：告警期限 / 风险⟷档位对应表数值', owner: 'reasonix', mode: '默认＋可改'}
+  - {no: 4, item: '条例编号', owner: 'reasonix', mode: '按在册件号体例办'}
+closed_by_this_amend:
+  - 'N-22 可采信判准'
+  - 'N-20 评审主体'
+  - '可信信息最低要件'
+
+disclaimer:
+  - '本增量为机读版；如有疑义以人读追加件为准'
+  - '本条例尚未生效（须签批）'
+  - '本增量不代定数值；不代拟法律意见（判准系在册表述之援引）'
+  - '零对外；不推送、不合并、不部署、不登录、不转交、不代署'
