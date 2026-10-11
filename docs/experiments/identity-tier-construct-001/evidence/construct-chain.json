@@ -1,0 +1,77 @@
+{
+ "entries": [
+  {
+   "seq": 1,
+   "prev_hash": "GENESIS",
+   "payload": {
+    "kind": "construct-step",
+    "subject_ref": "CONSTRUCT-001-S-1",
+    "summary": "W-1 档位定义表＋W-2 判定引擎（Q-1/2′/13–18 全过）"
+   },
+   "entry_hash": "b7d27a8cc84ce836614c8e0555f1205c4fdd200f5940e65cf59e2692023858e2",
+   "attestation_id": "NCA-60EC5795568E",
+   "at": "2026-10-11T17:22:12.527563+08:00"
+  },
+  {
+   "seq": 2,
+   "prev_hash": "b7d27a8cc84ce836614c8e0555f1205c4fdd200f5940e65cf59e2692023858e2",
+   "payload": {
+    "kind": "construct-step",
+    "subject_ref": "CONSTRUCT-001-S-2",
+    "summary": "W-3 门一＋W-4 门二（Q-3′/4/5/6 全过）"
+   },
+   "entry_hash": "ce60648b816e51d479b7c4dcff17447c56f87264c6929c00483bf78dc2fcbdee",
+   "attestation_id": "NCA-34FFF6563A53",
+   "at": "2026-10-11T17:22:12.528129+08:00"
+  },
+  {
+   "seq": 3,
+   "prev_hash": "ce60648b816e51d479b7c4dcff17447c56f87264c6929c00483bf78dc2fcbdee",
+   "payload": {
+    "kind": "construct-step",
+    "subject_ref": "CONSTRUCT-001-S-3",
+    "summary": "W-5 告警＋W-6 存证（Q-10/19/20/21 全过）"
+   },
+   "entry_hash": "5c34ca265d07979680948b7218eafe61afdd0dc5940d83a1f13459ffe64723eb",
+   "attestation_id": "NCA-3C9165C1B6F1",
+   "at": "2026-10-11T17:22:12.528129+08:00"
+  },
+  {
+   "seq": 4,
+   "prev_hash": "5c34ca265d07979680948b7218eafe61afdd0dc5940d83a1f13459ffe64723eb",
+   "payload": {
+    "kind": "construct-step",
+    "subject_ref": "CONSTRUCT-001-S-4",
+    "summary": "W-7 公开面＋W-8 断言复跑（Q-8/9/11/12 全过；21 条全跑 21/21＋21/21）"
+   },
+   "entry_hash": "3f773bc80564d8fbd2318d316a027f15bb4347f6a6163aa1fc259a5dc49234a2",
+   "attestation_id": "NCA-78EBE04DC9A2",
+   "at": "2026-10-11T17:22:12.528129+08:00"
+  },
+  {
+   "seq": 5,
+   "prev_hash": "3f773bc80564d8fbd2318d316a027f15bb4347f6a6163aa1fc259a5dc49234a2",
+   "payload": {
+    "kind": "verdict",
+    "subject_ref": "CONSTRUCT-001-S5",
+    "summary": "判 PASS｜合规 21/21｜对抗 21/21｜差值 0"
+   },
+   "entry_hash": "8b36ad259e2eb02560a399df550c3b22b32170f6e17751fa6d3be9eeab5f3810",
+   "attestation_id": "NCA-88845314C6F1",
+   "at": "2026-10-11T17:22:12.528129+08:00"
+  },
+  {
+   "seq": 6,
+   "prev_hash": "8b36ad259e2eb02560a399df550c3b22b32170f6e17751fa6d3be9eeab5f3810",
+   "payload": {
+    "kind": "amendment-notes",
+    "subject_ref": "CONSTRUCT-001-AMEND-NOTES",
+    "summary": "令面补正令四笔注记并入（B-1~B-4，只改注记口径，判定逻辑零改动；21/21+21/21 复跑一致）"
+   },
+   "entry_hash": "1295a446cdf21c00d744a290ae3cf44574a4ff6b0c38c78c2732b8b0ad62c156",
+   "attestation_id": "NCA-694B5F4E23C3",
+   "at": "2026-10-11T18:07:17.725216+08:00"
+  }
+ ],
+ "verify": true
+}
