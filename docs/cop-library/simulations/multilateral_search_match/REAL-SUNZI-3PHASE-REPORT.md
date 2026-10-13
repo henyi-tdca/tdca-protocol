@@ -62,7 +62,7 @@
 > 沙盒 mou_ok=True, 现在才真实调NLP + 真实发射NCA + 真实落盘COP。
 - 真实调 zh-nlp MCP: proper=["孙子", "兵者", "大事", "死生", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
 - 真实调 zh-nlp MCP: classical_tokens=["孙子", "兵者", "国", "大事", "死生", "事", "校", "情", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
-- 真实落盘: 回填 `C:\Users\22850\Desktop\TDCA-MEMO-006-Workspace\.tdca-protocol\cognitive-compiler\hundred_schools\sunzi\sunzi_real\第01篇-计篇-real.yaml` 的 coalition_nca=TDCA-REASONIX-20260816-008 + mou_ok + 沙盒元信息
+- 真实落盘: 回填 `<本机工作区>\.tdca-protocol\cognitive-compiler\hundred_schools\sunzi\sunzi_real\第01篇-计篇-real.yaml` 的 coalition_nca=TDCA-REASONIX-20260816-008 + mou_ok + 沙盒元信息
 - 联盟承诺 NCA: `TDCA-REASONIX-20260816-008`
 - 计篇生产 NCA: `TDCA-REASONIX-20260816-009`
 
