@@ -2,7 +2,7 @@
 # ⚠️ 人读版为语义权威；冲突时以人读版为准（不得反向以机读版改语义）
 template_id: TDCA-TEMPLATE-AUTH-001
 version: V0.1-DRAFT
-status: DRAFT            # ⚠️ 未生效：须四步程序全过 + 创始人签批
+status: DRAFT            # ⚠️ 未生效：须四步程序全过 + 授权方签批
 effective_from: null     # 签批后回填
 authority:
   human_readable: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT）.md
@@ -34,16 +34,16 @@ fixed_format:
     name: 期限
     required: true
     blank_policy: 不设期限须显式写明（不得留空）
-    default_value: pending        # ⚠️ 待创始人定
+    default_value: pending        # ⚠️ 待授权方定
   - key: F6
     name: 层级
     required: true
     required_when: 转授
-    max_layers: pending           # ⚠️ 待创始人定
+    max_layers: pending           # ⚠️ 待授权方定
   - key: F7
     name: 分成
     required: true
-    ratio: pending                # ⚠️ 待创始人定（本侧不代填数值）
+    ratio: pending                # ⚠️ 待授权方定（本侧不代填数值）
   - key: F8
     name: 撤销条件
     required: true
@@ -96,7 +96,7 @@ exceptions:
     exempt: false
     requires: 必须取得授权
 
-# 五、待定项（⚠️ 一律留空，归创始人）
+# 五、待定项（⚠️ 一律留空，归授权方）
 pending_founder:
   - 分成比例与对价形式
   - 期限默认值
