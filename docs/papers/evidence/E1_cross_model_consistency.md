@@ -27,8 +27,8 @@
 | 数据项 | 文件路径 |
 |---|---|
 | 三十六计 36 COP | `TDCA-MEMO-006-Workspace/.tdca-protocol/cognitive-compiler/stratagems/第NN计-*.yaml` |
-| 周易 2 COP + 进度 | `开发会话文件/tdca-protocol/protocols/tdca-native/iching/第01卦-乾.yaml`、`第02卦-坤.yaml`、`progress.yaml` |
-| 冷启动真实台账 | `开发会话文件/tdca-protocol/docs/cognitive-compiler/coldstart/冷启动实验存证件.json` |
+| 周易 2 COP + 进度 | `<本机工作区>/tdca-protocol/protocols/tdca-native/iching/第01卦-乾.yaml`、`第02卦-坤.yaml`、`progress.yaml` |
+| 冷启动真实台账 | `<本机工作区>/tdca-protocol/docs/cognitive-compiler/coldstart/冷启动实验存证件.json` |
 | 麦肯锡基准 sha8 | 同上 json `vb_anchor.mckinsey_sha256_8=e8655643` |
 
 *E1 完。下接 E6（模型无关性·纯本地编译）。*
