@@ -72,6 +72,11 @@ export default function Home() {
             <Link to="/register" className="hover:text-foreground">注册</Link>
             <Link to="/auth" className="hover:text-foreground">登录</Link>
             <Link to="/me" className="hover:text-foreground">我的</Link>
+            {/* FRONTEND-MERGE 批3（智能体面）：四入口照旧版标签（智能体集群/Agent Studio/WorkBuddy/智能体区） */}
+            <Link to="/agents" className="hover:text-foreground">智能体集群</Link>
+            <Link to="/studio" className="hover:text-foreground">Agent Studio</Link>
+            <Link to="/workbuddy" className="hover:text-foreground">WorkBuddy</Link>
+            <Link to="/agent-shelf" className="hover:text-foreground">智能体区</Link>
           </nav>
         </div>
       </header>
