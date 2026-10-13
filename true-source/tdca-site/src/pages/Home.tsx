@@ -90,6 +90,8 @@ export default function Home() {
             <Link to="/market" className="hover:text-foreground">配置权市场（在建中）</Link>
             <Link to="/market-sim" className="hover:text-foreground">规范与沙盒链（在建中）</Link>
             <Link to="/tax" className="hover:text-foreground">税收仪表盘</Link>
+            <Link to="/library" className="hover:text-foreground">文库</Link>
+            <Link to="/academy" className="hover:text-foreground">学院（在建中）</Link>
           </nav>
         </div>
       </header>
