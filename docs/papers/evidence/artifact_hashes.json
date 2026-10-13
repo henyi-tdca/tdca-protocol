@@ -7,7 +7,7 @@
     "root_cause": "GSEQ-0840 collection hashed an in-memory re-serialization (or stale working copy), not the raw on-disk file bytes. The recorded values matched NO on-disk copy of any of the 38 files. Recomputed here directly from the canonical source files cited in E1.",
     "canonical_sources": {
       "stratagems_36": "TDCA-MEMO-006-Workspace/.tdca-protocol/cognitive-compiler/stratagems/*.yaml",
-      "iching_2": "开发会话文件/tdca-protocol/protocols/tdca-native/iching/第01卦-乾.yaml, 第02卦-坤.yaml"
+      "iching_2": "<本机工作区>/tdca-protocol/protocols/tdca-native/iching/第01卦-乾.yaml, 第02卦-坤.yaml"
     },
     "authoritative_crosscheck": "Disk-recomputed values match Reasonix-provided authoritative values: 第01卦-乾 sha256_16=910fa1a9, 第02卦-坤 sha256_16=7bc18e9b, 第01计-瞒天过海 sha256_16=e45a9a31. (GSEQ-0841)",
     "verification": "Re-run sha256sum on the canonical source files reproduces every value below. 'verifiable by re-run' now holds."
