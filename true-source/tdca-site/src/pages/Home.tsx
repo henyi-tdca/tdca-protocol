@@ -92,6 +92,10 @@ export default function Home() {
             <Link to="/tax" className="hover:text-foreground">税收仪表盘</Link>
             <Link to="/library" className="hover:text-foreground">文库</Link>
             <Link to="/academy" className="hover:text-foreground">学院（在建中）</Link>
+            <Link to="/toolshelf" className="hover:text-foreground">工具货架</Link>
+            <Link to="/notifier" className="hover:text-foreground">通知机（在建中）</Link>
+            <Link to="/sandbox" className="hover:text-foreground">沙盒</Link>
+            <Link to="/ops" className="hover:text-foreground">运维端</Link>
           </nav>
         </div>
       </header>
