@@ -25,6 +25,10 @@ import { OwnershipRegistryPage } from './pages/OwnershipRegistryPage'
 import { AuthorizationRegistryPage } from './pages/AuthorizationRegistryPage'
 import { AttestationOverviewPage, AttestationMetaPage, AttestationDynamicPage, AttestationHistoryPage } from './pages/AttestationPage'
 import { AnchorsPage } from './pages/AnchorsPage'
+import { AuditPage } from './pages/AuditPage'
+import { GovernancePage } from './pages/GovernancePage'
+import { FormalPage } from './pages/FormalPage'
+import { ClusterPage } from './pages/ClusterPage'
 
 export default function App() {
   return (
@@ -58,6 +62,10 @@ export default function App() {
         <Route path="/attestation/dynamic" element={<AttestationDynamicPage />} />
         <Route path="/attestation/history" element={<AttestationHistoryPage />} />
         <Route path="/anchors" element={<AnchorsPage />} />
+        <Route path="/audit" element={<AuditPage />} />
+        <Route path="/governance" element={<GovernancePage />} />
+        <Route path="/formal" element={<FormalPage />} />
+        <Route path="/cluster" element={<ClusterPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthProvider>
