@@ -3,7 +3,7 @@
 > 性质声明: 本跑 = **TDCA 机制真实实跑 + 真实平台资源参与**。与模拟版(run_sunzi_collab.py)的本质区别见文末。
 
 ## 1. 真实 MCP 连接器调用 (中文语义与情报NLP所 · zh-nlp)
-- server: `C:\Users\22850\Desktop\TDCA-MEMO-006-Workspace\.tdca-protocol\cognitive-compiler\simulations\multilateral_search_match\zh_nlp_mcp_server.py` (stdio JSON-RPC, jieba 0.42.1 真实分词)
+- server: `<本机工作区>\.tdca-protocol\cognitive-compiler\simulations\multilateral_search_match\zh_nlp_mcp_server.py` (stdio JSON-RPC, jieba 0.42.1 真实分词)
 - 真实返回 proper(专名) = ["孙子", "兵者", "大事", "死生", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
 - 真实返回 classical_tokens(古文实词) = ["孙子", "兵者", "国", "大事", "死生", "事", "校", "情", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
 - 这说明: 编排器在流水线内**真实握手并调用了平台上的 NLP 连接器**, 非占位数据。
