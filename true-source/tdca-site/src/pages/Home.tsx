@@ -77,6 +77,12 @@ export default function Home() {
             <Link to="/studio" className="hover:text-foreground">Agent Studio</Link>
             <Link to="/workbuddy" className="hover:text-foreground">WorkBuddy</Link>
             <Link to="/agent-shelf" className="hover:text-foreground">智能体区</Link>
+            {/* FRONTEND-MERGE 批4（登记与存证面）：五入口（确权三子面经 /attestation 总览内链可达） */}
+            <Link to="/ownership" className="hover:text-foreground">所有权</Link>
+            <Link to="/ownership-registry" className="hover:text-foreground">权属登记</Link>
+            <Link to="/authorization-registry" className="hover:text-foreground">授权登记</Link>
+            <Link to="/attestation" className="hover:text-foreground">确权中心</Link>
+            <Link to="/anchors" className="hover:text-foreground">模拟锚</Link>
           </nav>
         </div>
       </header>
