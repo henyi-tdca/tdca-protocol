@@ -36,11 +36,11 @@
 - 准入 NCA(成员): CA-01→TDCA-REASONIX-20260827-005, CA-02→TDCA-REASONIX-20260827-006
 - 多成员联盟 NCA(CoalitionCommit): `TDCA-REASONIX-20260827-007` (成员数=2)
 - 联盟级生产 NCA(COPCompile): `TDCA-REASONIX-20260827-008`
-- 贡献物(联盟归属): `C:/Users/22850/Desktop/开发会话文件/tdca-protocol\docs\cognitive-compiler\coldstart\community\M3B-联盟贡献COP.yaml`
+- 贡献物(联盟归属): `<本机工作区>/tdca-protocol\docs\cognitive-compiler\coldstart\community\M3B-联盟贡献COP.yaml`
 
 ## 4. 验收判定 (M3b)
 - 多成员联盟 NCA 落链(≥2 成员): ✅ (2 成员, CoalitionCommit `TDCA-REASONIX-20260827-007`)
-- 贡献物联盟归属: ✅ (C:/Users/22850/Desktop/开发会话文件/tdca-protocol\docs\cognitive-compiler\coldstart\community\M3B-联盟贡献COP.yaml 多成员归属字段)
+- 贡献物联盟归属: ✅ (<本机工作区>/tdca-protocol\docs\cognitive-compiler\coldstart\community\M3B-联盟贡献COP.yaml 多成员归属字段)
 - mixed 标注: ✅ (data_provenance=mixed, 自报 res/batna 未确权)
 - **M3b 验收: ✅ 达成**
 
