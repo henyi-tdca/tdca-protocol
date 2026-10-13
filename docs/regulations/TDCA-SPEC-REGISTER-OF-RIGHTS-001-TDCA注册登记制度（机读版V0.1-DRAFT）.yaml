@@ -7,7 +7,7 @@ version: V0.1-DRAFT
 status: DRAFT
 effective_from: null
 draft_basis: TDCA-RULING-TDCRA-REG-001 及 AMEND-001 至 012（权属登记与授权登记二分及历次追加口径）
-draft_source: 授权方 2026-10-03 逐字口径汇集（中文人读版附一 · 八条）
+draft_source: 2026-10-03 本框逐字口径汇集（中文人读版附一 · 八条）
 authority:
   human_readable_zh: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md
   human_readable_en: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md
@@ -195,7 +195,7 @@ chapter9_interfaces:
 # 十、口径来源（指针 · 逐字见中文人读版附一）
 source_positions:
   count: 8
-  location: 中文人读版附一（授权方 2026-10-03 逐字摘录）
+  location: 中文人读版附一（2026-10-03 逐字摘录）
   policy: 逐字以人读版为准；机读版不另立新语义
 
 # 十一、待授权方定（一律留空 · 本侧不代定）
