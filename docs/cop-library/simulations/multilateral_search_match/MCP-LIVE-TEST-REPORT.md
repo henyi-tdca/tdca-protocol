@@ -100,7 +100,7 @@ V = value_base × coverage × (0.5 + 0.5 × 互补系数)
 ## 六、可复现命令
 
 ```bash
-PY="C:/Users/22850/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
+PY="<本机工具目录>/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
 cd .../simulations/multilateral_search_match
 
 # A 组: 真实 MCP 源 + 默认比配
