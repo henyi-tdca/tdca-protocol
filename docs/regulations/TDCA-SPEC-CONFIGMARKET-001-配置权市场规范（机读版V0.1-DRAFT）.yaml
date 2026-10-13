@@ -1,9 +1,9 @@
 # TDCA-SPEC-CONFIGMARKET-001 · 配置权市场规范（机读版 · V0.1-DRAFT）
 # ⚠️ 人读版为语义权威；冲突时以人读版为准（⛔ 不得反向以机读版改语义）
-# ⚠️ 未生效：须四步程序全过 + 创始人签批
+# ⚠️ 未生效：须四步程序全过 + 授权方签批
 spec_id: TDCA-SPEC-CONFIGMARKET-001
 version: V0.1-DRAFT
-status: DRAFT            # ⚠️ 未生效：须四步程序全过 + 创始人签批
+status: DRAFT            # ⚠️ 未生效：须四步程序全过 + 授权方签批
 effective_from: null     # 签批后回填
 draft_basis: TDCA-CHECK-P9-RECONCILE-001          # P9 对表件
 draft_source: A 类主件《TDCA 协议配置网络市场管理规范及用户须知》V1.0（2026-06-11 · 桌面归档「制度合规与安全治理」）  # 以 A 类主件为底稿重写
@@ -24,7 +24,7 @@ chapter1_general:
   - id: A2
     title: 适用范围
     text: 适用于本站点内部运行（期一 · 内部真跑）
-    note: 对外上线另须创始人明示（归公示面之生效与撤回）
+    note: 对外上线另须授权方明示（归公示面之生效与撤回）
   - id: A3
     title: 两条根本口径
     items:
@@ -88,7 +88,7 @@ chapter3_authorization:
   - id: A15
     title: 多层级
     text: 多层级授权逐层皆须件、逐层皆须签
-    pending: 层数上限待创始人定
+    pending: 层数上限待授权方定
   - id: A16
     title: 操作层
     operations: [预收权, 实时授权, 追加授权, 许可变更, 多层级授权]
@@ -126,7 +126,7 @@ chapter5_market_ops:
   - n: 3
     item: 定价与估值
     text: 定价以正和效用与税收锚定为锚（不锚定价格利润）；费用照录旧件并标待核
-    pending: 费率归创始人
+    pending: 费率归授权方
   - n: 4
     item: 结算与分配
     text: 结算 SIMULATED 沙盒态（期一）；分配依在册（Shapley 口径依在册件 · 本侧不代定算法）
@@ -138,7 +138,7 @@ chapter5_market_ops:
   - n: 6
     item: 争议与退出
     text: 争议 TDCA 只调和（记录／存证／登记；不审判、不处置、不代追偿）；责任实体归执法机构；退出与清退承旧件
-    pending: 「裁决」措辞取舍（归创始人）
+    pending: 「裁决」措辞取舍（归授权方）
 
 # 六、与在册制度之衔接
 chapter6_interfaces:
@@ -170,7 +170,7 @@ chapter7_external_migration:
     external: 外部确权机构（法定交易中心）
     current_self_sufficient: 登记制
     migration_slot: 确权动作外移
-    condition: 外部接通（时点归创始人）
+    condition: 外部接通（时点归授权方）
   - id: 2
     external: 四方代表联签
     current_self_sufficient: 法律主体签名 + 双方一致签批
@@ -204,7 +204,7 @@ chapter8_misc:
     text: 本规范属规范级 · 硬约束 ⟹ 须人机双版本（中／英／机读三件套）；手册／指引／指南类附件仅人读
   - id: S2
     title: 生效
-    text: 本稿 DRAFT · 未生效；须四步程序全过 + 创始人签批后生效
+    text: 本稿 DRAFT · 未生效；须四步程序全过 + 授权方签批后生效
     note: 未签批前分类器一律升 DCD（保守兜底）
   - id: S3
     title: 体例
@@ -251,9 +251,9 @@ chapter9_attachments:
     position: 原则件（族内后出者）
 attachment_effect: 附件不入册为规范本体；与本体冲突者以本体为准；附件不得单独被援引为制度依据
 
-# 十、待创始人明示（一律留空 · 本侧不代定）
+# 十、待授权方明示（一律留空 · 本侧不代定）
 pending_founder:
-  - 费率与服务费取值（旧件载按交易金额一定比例 · 由…定期审议并提前 30 日公示 ⟹ 比例与审议主体归创始人）
+  - 费率与服务费取值（旧件载按交易金额一定比例 · 由…定期审议并提前 30 日公示 ⟹ 比例与审议主体归授权方）
   - 五阶逐条对表结果之确认（与在册五阶是否一一对应）
   - 「争议与裁决」措辞（是否保留「裁决」字样 · 与在册「只调和」张力之处置）
   - 多层级授权层数上限与逐层要件（旧件未载）
@@ -263,10 +263,10 @@ pending_founder:
 validation:
   human_readable_precedence: 冲突以人读版为准
   machine_may_not_reverse_change_semantics: true
-  numbers_are_placeholders: true          # 旧件数值一律照录并标待创始人核
+  numbers_are_placeholders: true          # 旧件数值一律照录并标待授权方核
   math_content: 只指向附件（不转写公式）
 boundaries:
-  external_effect: none                   # 期一 · 内部真跑；对外上线另须创始人明示
+  external_effect: none                   # 期一 · 内部真跑；对外上线另须授权方明示
   credentials_in_spec: forbidden
   personal_names_in_spec: forbidden
   amendment_rule: 追加制；改动一律走 PR
