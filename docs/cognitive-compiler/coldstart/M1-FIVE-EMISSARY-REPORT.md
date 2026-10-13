@@ -17,7 +17,7 @@
 
 ## ③ 信使 (Messenger · mcp 连接器 load_core 邀请)
 - 输入: 向候选 MCP-EXT-01 发邀请 (load_core)
-- 输出: 机读证据 response(len=288) + sha256=d0fd85ef32eaff9a + source=mcp-external-stdio@C:\Users\22850\Desktop\TDCA-MEMO-006-Workspace\.tdca-protocol\cognitive-compiler\coldstart\mcp_external_agent_server.py
+- 输出: 机读证据 response(len=288) + sha256=d0fd85ef32eaff9a + source=mcp-external-stdio@<本机工作区>\.tdca-protocol\cognitive-compiler\coldstart\mcp_external_agent_server.py
 - tools/list 暴露: ['load_core', 'contribute_cop']
 
 ## ④ 谈判者 (Negotiator · M2 COP 响应, 模拟态口径)
@@ -29,7 +29,7 @@
 ## ⑤ 落地者 (Implementer · enforce_entry v2 准入→沙盒→生产)
 ## 1. 准入门 (admission_phase · v2 可转化准入 · 由 enforce_entry 指挥)
 > v2: 外部 agent 须持机读证据(response+sha256+source)过核验才准入发射 NCA; 本地候选 loaded_core=False 进入 PENDING_LOAD 零权利态(不发射NCA/不落盘/无联盟资格)。
-- ✅ v2 准入 **外部贡献者·协议编译器手(MCP)** -> 发射 NCA `TDCA-REASONIX-20260827-155` (证据源=mcp-external-stdio@C:\Users\22850\Desktop\TDCA-MEMO-006-Workspace\.tdca-protocol\cognitive-compiler\coldstart\mcp_external_agent_server.py)
+- ✅ v2 准入 **外部贡献者·协议编译器手(MCP)** -> 发射 NCA `TDCA-REASONIX-20260827-155` (证据源=mcp-external-stdio@<本机工作区>\.tdca-protocol\cognitive-compiler\coldstart\mcp_external_agent_server.py)
 
 ## 2. 沙盒迭代 (sandbox_phase · 真实重算, 不落盘 · 由 机制设计 指挥)
 > 沙盒闸门: 此阶段只计算, 不发射业务NCA、不写COP。'亏'被隔离在落盘之前。
@@ -48,7 +48,7 @@
 > 沙盒 mou_ok=True, 现在真实发射联盟NCA + 生产NCA, 关联合约贡献物。
 - 联盟承诺 NCA(缔约凭证): `TDCA-REASONIX-20260827-156`
 - 生产确权 NCA(贡献物确权): `TDCA-REASONIX-20260827-157`
-- 贡献物: `C:\Users\22850\Desktop\TDCA-MEMO-006-Workspace\.tdca-protocol\cognitive-compiler\coldstart\community\第01条-开源社区冷启动·正和准入.yaml`
+- 贡献物: `<本机工作区>\.tdca-protocol\cognitive-compiler\coldstart\community\第01条-开源社区冷启动·正和准入.yaml`
 
 ## ⑥ 验收判定 (M1)
 - 准入 NCA: TDCA-REASONIX-20260827-155
