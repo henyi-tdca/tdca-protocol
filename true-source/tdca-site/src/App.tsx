@@ -19,6 +19,12 @@ import { AgentDashboardPage } from './pages/AgentDashboard'
 import { AgentShelfPage } from './pages/AgentShelfPage'
 import { StudioPage } from './pages/StudioPage'
 import { WorkbuddyPage } from './pages/WorkbuddyPage'
+// FRONTEND-MERGE 批4（登记与存证面）：五面迁入（attestation 一件四面 → 四路）
+import { OwnershipPage } from './pages/OwnershipPage'
+import { OwnershipRegistryPage } from './pages/OwnershipRegistryPage'
+import { AuthorizationRegistryPage } from './pages/AuthorizationRegistryPage'
+import { AttestationOverviewPage, AttestationMetaPage, AttestationDynamicPage, AttestationHistoryPage } from './pages/AttestationPage'
+import { AnchorsPage } from './pages/AnchorsPage'
 
 export default function App() {
   return (
@@ -43,6 +49,15 @@ export default function App() {
         <Route path="/agent-shelf" element={<AgentShelfPage />} />
         <Route path="/studio" element={<StudioPage />} />
         <Route path="/workbuddy" element={<WorkbuddyPage />} />
+        {/* FRONTEND-MERGE 批4：登记与存证面八路（attestation 一件四面 → 四路；照复核件更正补 /anchors） */}
+        <Route path="/ownership" element={<OwnershipPage />} />
+        <Route path="/ownership-registry" element={<OwnershipRegistryPage />} />
+        <Route path="/authorization-registry" element={<AuthorizationRegistryPage />} />
+        <Route path="/attestation" element={<AttestationOverviewPage />} />
+        <Route path="/attestation/meta" element={<AttestationMetaPage />} />
+        <Route path="/attestation/dynamic" element={<AttestationDynamicPage />} />
+        <Route path="/attestation/history" element={<AttestationHistoryPage />} />
+        <Route path="/anchors" element={<AnchorsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthProvider>
