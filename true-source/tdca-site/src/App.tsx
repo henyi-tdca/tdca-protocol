@@ -8,21 +8,31 @@ import { OverviewPage } from './pages/Overview'
 import { AboutPage } from './pages/About'
 import { PagesIndexPage, NotFoundPage } from './pages/PagesIndex'
 import { AnnouncementsPage } from './pages/Announcements'
+// FRONTEND-MERGE 批2（身份与缔约）：register/auth/me 三面迁入＋AuthProvider 最小接线
+import { AuthProvider } from './lib/auth-context'
+import { RegisterPage } from './pages/Register'
+import { AuthPage } from './pages/AuthLogin'
+import { MePage } from './pages/MeConsole'
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/join" element={<Join />} />
-      <Route path="/review" element={<Review />} />
-      <Route path="/docs" element={<DocsHome />} />
-      <Route path="/docs/:family" element={<DocsIndex />} />
-      <Route path="/docs/:family/:slug" element={<DocDetail />} />
-      <Route path="/overview" element={<OverviewPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/pages" element={<PagesIndexPage />} />
-      <Route path="/announcements" element={<AnnouncementsPage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/join" element={<Join />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/me" element={<MePage />} />
+        <Route path="/review" element={<Review />} />
+        <Route path="/docs" element={<DocsHome />} />
+        <Route path="/docs/:family" element={<DocsIndex />} />
+        <Route path="/docs/:family/:slug" element={<DocDetail />} />
+        <Route path="/overview" element={<OverviewPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/pages" element={<PagesIndexPage />} />
+        <Route path="/announcements" element={<AnnouncementsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </AuthProvider>
   )
 }

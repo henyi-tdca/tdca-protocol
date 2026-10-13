@@ -68,6 +68,10 @@ export default function Home() {
             <Link to="/overview" className="hover:text-foreground">制度总览</Link>
             <Link to="/about" className="hover:text-foreground">关于</Link>
             <Link to="/announcements" className="hover:text-foreground">公告栏</Link>
+            {/* FRONTEND-MERGE 批2（身份与缔约）：三入口，Join 入口不动 */}
+            <Link to="/register" className="hover:text-foreground">注册</Link>
+            <Link to="/auth" className="hover:text-foreground">登录</Link>
+            <Link to="/me" className="hover:text-foreground">我的</Link>
           </nav>
         </div>
       </header>
