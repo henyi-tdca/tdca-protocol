@@ -83,6 +83,10 @@ export default function Home() {
             <Link to="/authorization-registry" className="hover:text-foreground">授权登记</Link>
             <Link to="/attestation" className="hover:text-foreground">确权中心</Link>
             <Link to="/anchors" className="hover:text-foreground">模拟锚</Link>
+            <Link to="/audit" className="hover:text-foreground">审计</Link>
+            <Link to="/governance" className="hover:text-foreground">治理</Link>
+            <Link to="/formal" className="hover:text-foreground">形式化入站</Link>
+            <Link to="/cluster" className="hover:text-foreground">集群编排</Link>
           </nav>
         </div>
       </header>
