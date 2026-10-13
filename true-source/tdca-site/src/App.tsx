@@ -13,6 +13,12 @@ import { AuthProvider } from './lib/auth-context'
 import { RegisterPage } from './pages/Register'
 import { AuthPage } from './pages/AuthLogin'
 import { MePage } from './pages/MeConsole'
+// FRONTEND-MERGE 批3（智能体面）：agents/agent-dashboard/agent-shelf/studio/workbuddy 五面迁入
+import { AgentsPage } from './pages/AgentsCluster'
+import { AgentDashboardPage } from './pages/AgentDashboard'
+import { AgentShelfPage } from './pages/AgentShelfPage'
+import { StudioPage } from './pages/StudioPage'
+import { WorkbuddyPage } from './pages/WorkbuddyPage'
 
 export default function App() {
   return (
@@ -31,6 +37,12 @@ export default function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/pages" element={<PagesIndexPage />} />
         <Route path="/announcements" element={<AnnouncementsPage />} />
+        {/* FRONTEND-MERGE 批3：智能体面五路（路由照存；不设登录门槛——照本批核可口径） */}
+        <Route path="/agents" element={<AgentsPage />} />
+        <Route path="/agents/:id" element={<AgentDashboardPage />} />
+        <Route path="/agent-shelf" element={<AgentShelfPage />} />
+        <Route path="/studio" element={<StudioPage />} />
+        <Route path="/workbuddy" element={<WorkbuddyPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthProvider>
