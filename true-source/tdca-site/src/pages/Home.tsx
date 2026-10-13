@@ -65,6 +65,9 @@ export default function Home() {
             <a href="#join" className="hover:text-foreground">缔约</a>
             <a href="#machine" className="hover:text-foreground">机器可读</a>
             <Link to="/docs" className="hover:text-foreground">文档库</Link>
+            <Link to="/overview" className="hover:text-foreground">制度总览</Link>
+            <Link to="/about" className="hover:text-foreground">关于</Link>
+            <Link to="/announcements" className="hover:text-foreground">公告栏</Link>
           </nav>
         </div>
       </header>
