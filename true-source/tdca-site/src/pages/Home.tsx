@@ -87,6 +87,9 @@ export default function Home() {
             <Link to="/governance" className="hover:text-foreground">治理</Link>
             <Link to="/formal" className="hover:text-foreground">形式化入站</Link>
             <Link to="/cluster" className="hover:text-foreground">集群编排</Link>
+            <Link to="/market" className="hover:text-foreground">配置权市场（在建中）</Link>
+            <Link to="/market-sim" className="hover:text-foreground">规范与沙盒链（在建中）</Link>
+            <Link to="/tax" className="hover:text-foreground">税收仪表盘</Link>
           </nav>
         </div>
       </header>

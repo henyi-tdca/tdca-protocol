@@ -29,6 +29,9 @@ import { AuditPage } from './pages/AuditPage'
 import { GovernancePage } from './pages/GovernancePage'
 import { FormalPage } from './pages/FormalPage'
 import { ClusterPage } from './pages/ClusterPage'
+import { MarketPage } from './pages/MarketPage'
+import { MarketSimPage } from './pages/MarketSimPage'
+import { TaxPage } from './pages/TaxPage'
 
 export default function App() {
   return (
@@ -66,6 +69,9 @@ export default function App() {
         <Route path="/governance" element={<GovernancePage />} />
         <Route path="/formal" element={<FormalPage />} />
         <Route path="/cluster" element={<ClusterPage />} />
+        <Route path="/market" element={<MarketPage />} />
+        <Route path="/market-sim" element={<MarketSimPage />} />
+        <Route path="/tax" element={<TaxPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthProvider>
