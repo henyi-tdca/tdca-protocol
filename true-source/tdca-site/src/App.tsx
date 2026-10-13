@@ -34,6 +34,10 @@ import { MarketSimPage } from './pages/MarketSimPage'
 import { TaxPage } from './pages/TaxPage'
 import { LibraryPage } from './pages/LibraryPage'
 import { AcademyPage } from './pages/AcademyPage'
+import { ToolshelfPage } from './pages/ToolshelfPage'
+import { NotifierPage } from './pages/NotifierPage'
+import { SandboxPage } from './pages/SandboxPage'
+import { OpsPage } from './pages/OpsPage'
 
 export default function App() {
   return (
@@ -76,6 +80,10 @@ export default function App() {
         <Route path="/tax" element={<TaxPage />} />
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/academy" element={<AcademyPage />} />
+        <Route path="/toolshelf" element={<ToolshelfPage />} />
+        <Route path="/notifier" element={<NotifierPage />} />
+        <Route path="/sandbox" element={<SandboxPage />} />
+        <Route path="/ops" element={<OpsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AuthProvider>
