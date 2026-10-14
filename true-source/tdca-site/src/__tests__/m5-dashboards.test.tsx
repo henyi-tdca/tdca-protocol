@@ -7,6 +7,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { MePage } from '@/pages/MeConsole'
+import { AuthProvider } from '@/lib/auth-context'
+// TEST-ADAPT-001：SessionsCard 消费 useAuth()（#162 起），裸渲染必崩——
+// 照单B已确立之 MemoryRouter 同款做法，补 AuthProvider 包裹（只补包裹，断言一字未动）。
 import { AgentDashboardPage } from '@/pages/AgentDashboard'
 // 注（TEST-FILES-UNIFY-001）：旧件自 @/pages/pages 导入 PAGE_META＋PAGE_COMPONENTS；新树注册表
 // （@/pages/PagesIndex）仅导出 PAGE_META（新壳路由直挂 App.tsx，无组件注册表）⟹ PAGE_COMPONENTS
@@ -69,13 +72,13 @@ describe('M5 双后台', () => {
   it('/me 未登录（401 fail）→ 登录引导提示', async () => {
     vi.stubGlobal('fetch', vi.fn(async () =>
       ({ ok: false, status: 401, json: async () => ({ detail: '未登录' }) }) as Response))
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-login-required')).toBeTruthy())
   })
 
   it('/me 登录后渲染：红签待办置顶 + 我的智能体行', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pending-card').textContent).toContain('2 件'))
     expect(screen.getByTestId('me-agents').textContent).toContain('Genie 效用精灵')
     expect(screen.getByTestId('me-pending-list').textContent).toContain('DAR-001')
@@ -89,13 +92,13 @@ describe('M5 双后台', () => {
         session: { ...ME_PAYLOAD.session, last_register_nca_id: 'NCA-WEB-test0123ab' },
       },
     })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-register-nca').textContent).toContain('NCA-WEB-test0123ab'))
   })
 
   it('/me 无注册存证（如种子 founder）→ 不渲染存证行', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-session')).toBeTruthy())
     expect(screen.queryByTestId('me-register-nca')).toBeNull()
   })
@@ -107,7 +110,7 @@ describe('M5 双后台', () => {
         session: { ...ME_PAYLOAD.session, role: 'operator' },
       },
     })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-operator')).toBeTruthy())
     expect(screen.getByTestId('me-op-link-toolshelf')).toBeTruthy()
     expect(screen.getByTestId('me-op-link-ops')).toBeTruthy()
@@ -121,7 +124,7 @@ describe('M5 双后台', () => {
         session: { ...ME_PAYLOAD.session, role: 'viewer' },
       },
     })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-session')).toBeTruthy())
     expect(screen.queryByTestId('me-operator')).toBeNull()
   })
