@@ -15,6 +15,7 @@ import { api } from '@/lib/client'
 import { useApiGet } from '@/lib/useApi'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
+import { useAuth } from '@/lib/auth-context'
 
 interface MeData {
   session: { username: string; role: string; expires_at: string; last_register_nca_id?: string | null
@@ -221,6 +222,7 @@ function SessionsCard() {
   const [msg, setMsg] = useState('')
   const [ok, setOk] = useState(false)
   const [busy, setBusy] = useState(false)
+  const { logout } = useAuth()   // SITE-THREE-FIXES-001-AMEND-1 处3：「退出登录」（仅清本地登录态；与会话吊销区分）
 
   const load = async () => {
     const r = await api.get<{ sessions: SessionRow[] }>('/api/v1/me/sessions')
@@ -309,6 +311,12 @@ function SessionsCard() {
         </table>
       )}
       <div className="mt-2 flex flex-wrap items-center gap-3">
+        {/* SITE-THREE-FIXES-001-AMEND-1 处3：退出登录（仅结束当前本地登录态）——与「全部吊销」（服务端动作）文案区分 */}
+        <button onClick={logout}
+                data-testid="me-sess-logout"
+                className="rounded-md border border-gray-300 bg-white px-3 py-1 text-xs text-gray-600 hover:border-emerald-400 hover:text-emerald-700">
+          退出登录
+        </button>
         <button onClick={() => void revokeAll()} disabled={busy}
                 data-testid="me-sess-revoke-all"
                 className="rounded-md border border-red-300 bg-white px-3 py-1 text-xs text-red-600 hover:bg-red-50 disabled:opacity-40">

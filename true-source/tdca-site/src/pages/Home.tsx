@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import {
   ArrowRight,
@@ -49,7 +50,70 @@ const stages = [
   },
 ]
 
+// SITE-THREE-FIXES-001 处1：原 30 条平铺导航分组收纳（⛔ 不删入口、不改路由表；队尾工具货架等全数落组）
+const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] = [
+  {
+    label: '门户',
+    items: [
+      { to: '/about', label: '关于' },
+      { to: '/announcements', label: '公告栏' },
+      { to: '/library', label: '知识库' },
+      { to: '/academy', label: '商学院（在建中）' },
+    ],
+  },
+  {
+    label: '智能体',
+    items: [
+      { to: '/agents', label: '智能体集群' },
+      { to: '/studio', label: 'Agent Studio' },
+      { to: '/workbuddy', label: 'WorkBuddy' },
+      { to: '/agent-shelf', label: '智能体区' },
+    ],
+  },
+  {
+    label: '登记与存证',
+    items: [
+      { to: '/ownership', label: '所有权' },
+      { to: '/ownership-registry', label: '权属登记' },
+      { to: '/authorization-registry', label: '授权登记' },
+      { to: '/attestation', label: '确权中心' },
+      { to: '/anchors', label: '模拟锚' },
+      { to: '/audit', label: '审计' },
+      { to: '/governance', label: '治理' },
+      { to: '/formal', label: '形式化入站' },
+      { to: '/cluster', label: '集群编排' },
+    ],
+  },
+  {
+    label: '市场与经济',
+    items: [
+      { to: '/market', label: '配置权市场（在建中）' },
+      { to: '/market-sim', label: '规范与沙盒链（在建中）' },
+      { to: '/tax', label: '税收仪表盘' },
+    ],
+  },
+  {
+    label: '工具与运维',
+    items: [
+      { to: '/toolshelf', label: '工具货架' },
+      { to: '/notifier', label: '通知机（在建中）' },
+      { to: '/sandbox', label: '沙盒' },
+      { to: '/ops', label: '运维端' },
+    ],
+  },
+]
+
 export default function Home() {
+  const [moreOpen, setMoreOpen] = useState(false)
+  const moreRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function onClickOutside(ev: MouseEvent) {
+      if (moreRef.current && !moreRef.current.contains(ev.target as Node)) setMoreOpen(false)
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [])
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
@@ -59,43 +123,52 @@ export default function Home() {
             <Network className="h-5 w-5" />
             TDCA
           </div>
-          <nav className="flex items-center gap-6 text-sm text-muted-foreground">
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <a href="#trinity" className="hover:text-foreground">三体</a>
             <a href="#stages" className="hover:text-foreground">合规前置</a>
             <a href="#join" className="hover:text-foreground">缔约</a>
             <a href="#machine" className="hover:text-foreground">机器可读</a>
             <Link to="/docs" className="hover:text-foreground">文档库</Link>
             <Link to="/overview" className="hover:text-foreground">制度总览</Link>
-            <Link to="/about" className="hover:text-foreground">关于</Link>
-            <Link to="/announcements" className="hover:text-foreground">公告栏</Link>
             {/* FRONTEND-MERGE 批2（身份与缔约）：三入口，Join 入口不动 */}
             <Link to="/register" className="hover:text-foreground">注册</Link>
             <Link to="/auth" className="hover:text-foreground">登录</Link>
             <Link to="/me" className="hover:text-foreground">我的</Link>
-            {/* FRONTEND-MERGE 批3（智能体面）：四入口照旧版标签（智能体集群/Agent Studio/WorkBuddy/智能体区） */}
-            <Link to="/agents" className="hover:text-foreground">智能体集群</Link>
-            <Link to="/studio" className="hover:text-foreground">Agent Studio</Link>
-            <Link to="/workbuddy" className="hover:text-foreground">WorkBuddy</Link>
-            <Link to="/agent-shelf" className="hover:text-foreground">智能体区</Link>
-            {/* FRONTEND-MERGE 批4（登记与存证面）：五入口（确权三子面经 /attestation 总览内链可达） */}
-            <Link to="/ownership" className="hover:text-foreground">所有权</Link>
-            <Link to="/ownership-registry" className="hover:text-foreground">权属登记</Link>
-            <Link to="/authorization-registry" className="hover:text-foreground">授权登记</Link>
-            <Link to="/attestation" className="hover:text-foreground">确权中心</Link>
-            <Link to="/anchors" className="hover:text-foreground">模拟锚</Link>
-            <Link to="/audit" className="hover:text-foreground">审计</Link>
-            <Link to="/governance" className="hover:text-foreground">治理</Link>
-            <Link to="/formal" className="hover:text-foreground">形式化入站</Link>
-            <Link to="/cluster" className="hover:text-foreground">集群编排</Link>
-            <Link to="/market" className="hover:text-foreground">配置权市场（在建中）</Link>
-            <Link to="/market-sim" className="hover:text-foreground">规范与沙盒链（在建中）</Link>
-            <Link to="/tax" className="hover:text-foreground">税收仪表盘</Link>
-            <Link to="/library" className="hover:text-foreground">知识库</Link>
-            <Link to="/academy" className="hover:text-foreground">商学院（在建中）</Link>
-            <Link to="/toolshelf" className="hover:text-foreground">工具货架</Link>
-            <Link to="/notifier" className="hover:text-foreground">通知机（在建中）</Link>
-            <Link to="/sandbox" className="hover:text-foreground">沙盒</Link>
-            <Link to="/ops" className="hover:text-foreground">运维端</Link>
+            {/* 处1：其余 24 入口分组收纳于「更多」（队尾工具货架/学院等全数落组，⛔ 不删入口、不改路由） */}
+            <div ref={moreRef} className="relative">
+              <button
+                type="button"
+                data-testid="nav-more"
+                onClick={() => setMoreOpen((o) => !o)}
+                className="rounded border px-2 py-0.5 hover:text-foreground"
+              >
+                更多 ▾
+              </button>
+              {moreOpen && (
+                <div
+                  data-testid="nav-more-panel"
+                  className="absolute right-0 z-40 mt-2 w-72 rounded-lg border border-gray-200 bg-white p-3 shadow-lg"
+                >
+                  {MORE_GROUPS.map((g) => (
+                    <div key={g.label} className="mb-2 last:mb-0">
+                      <div className="px-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">{g.label}</div>
+                      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                        {g.items.map((it) => (
+                          <Link
+                            key={it.to}
+                            to={it.to}
+                            onClick={() => setMoreOpen(false)}
+                            className="text-xs text-slate-600 hover:text-slate-900 hover:underline"
+                          >
+                            {it.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </header>

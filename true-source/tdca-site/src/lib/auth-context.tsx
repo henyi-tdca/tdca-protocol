@@ -5,7 +5,7 @@
 // 预期分配: AuthProvider + useAuth（isAuthenticated / did / token / login / logout）
 // =============================================================================
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
-import { setHufToken } from '@/lib/client'
+import { clearSessionToken, setHufToken } from '@/lib/client'
 
 export interface AuthState {
   isAuthenticated: boolean
@@ -39,6 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null)
         localStorage.removeItem(STORAGE_DID)
         localStorage.removeItem(STORAGE_TOKEN)
+        // SITE-THREE-FIXES-001-AMEND-1 处3：登出并清 B-4 写令牌（HUF）与会话令牌（TDCA-SES）
+        localStorage.removeItem('tdca_huf_token')
+        clearSessionToken()
       },
     }),
     [did, token],
