@@ -1,32 +1,30 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import Markdown from 'react-markdown'
-import { siteGet, GateRequired, FAMILIES } from '../lib/siteApi'
-import GatePrompt from '../components/GatePrompt'
+import { siteGet, FAMILIES } from '../lib/siteApi'
 
-function useGated<T>(fn: () => Promise<T>, deps: unknown[]) {
+function useLoaded<T>(fn: () => Promise<T>, deps: unknown[]) {
   const [data, setData] = useState<T | null>(null)
-  const [needGate, setNeedGate] = useState(false)
   const [error, setError] = useState<string>('')
   const load = () => {
+    setError('')
     fn().then(setData).catch((e) => {
-      if (e instanceof GateRequired) setNeedGate(true)
-      else setError(String(e))
+      setData(null)
+      setError(String(e instanceof Error ? e.message : e))
     })
   }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(load, deps)
-  return { data, needGate, error, retry: () => { setNeedGate(false); setError(''); load() } }
+  return { data, error, retry: () => { load() } }
 }
 
 export function DocsIndex() {
   const { family } = useParams()
   const fam = FAMILIES.find((f) => f.key === family)
-  const { data, needGate, error, retry } = useGated(
+  const { data, error } = useLoaded(
     () => siteGet<{ items: { slug: string; title: string; synced_at: string }[] }>(`/docs/${family}`),
     [family],
   )
-  if (needGate) return <GatePrompt onOk={retry} />
   if (error) return <div className="py-24 text-center text-destructive">加载失败：{error}</div>
   if (!data) return <div className="py-24 text-center text-muted-foreground">加载中…</div>
   return (
@@ -62,8 +60,7 @@ export default function DocsHome() {
         分工（SITE-THREE-FIXES-001）：文档库＝对外公约条例与操作文档；协议本体文献（白皮书 · 论文与实证 · 产物库 · 制度规范）请走「知识库」（/library，原名文库，路由不变）。
       </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
-        <strong>怎么进（两步）：</strong>① 浏览器弹出账号密码框时，填管理员发你的站点账号密码；
-        ② 若页面提示输入口令，向管理员索取后填上即可。无需注册，看完直接关。
+        <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按站点指令由系统生成，由站点管理员转交受邀者；到期失效，不回收。
       </p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {FAMILIES.map((f) => (
@@ -80,11 +77,10 @@ export default function DocsHome() {
 
 export function DocDetail() {
   const { family, slug } = useParams()
-  const { data, needGate, error, retry } = useGated(
+  const { data, error } = useLoaded(
     () => siteGet<{ title: string; body_md: string; source_path: string; synced_at: string }>(`/docs/${family}/${slug}`),
     [family, slug],
   )
-  if (needGate) return <GatePrompt onOk={retry} />
   if (error) return <div className="py-24 text-center text-destructive">加载失败：{error}</div>
   if (!data) return <div className="py-24 text-center text-muted-foreground">加载中…</div>
   return (

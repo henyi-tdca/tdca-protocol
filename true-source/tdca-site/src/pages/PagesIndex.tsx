@@ -19,14 +19,14 @@ export interface PageMeta {
   description: string
 }
 
-/** 站点地图元数据：本批四面（/overview /about /pages /announcements）＋ 新版既有四面（/ /join /review /docs） */
+/** 站点地图元数据：本批四面（/overview /about /pages /announcements）＋ 新版既有四面（/ /register /review /docs）；缔约申请页已撤（ACCESS-FIX-001-AMEND-1 交付二：注册已含缔约同意） */
 export const PAGE_META: PageMeta[] = [
   { path: '/overview', title: '制度总览 · 四层架构', layer: 'L0', dataSource: 'A-1 GET /api/v1/system/overview + /health', permission: '公开', description: 'TDCA 四层架构（L0 法律底层 → L1 所有权 → L2 配置权 → L3 效用计量）制度橱窗总览。' },
   { path: '/about', title: '关于 · 一页看懂 TDCA', layer: 'L0', dataSource: '静态文案（TDCA-PLAIN-001）', permission: '公开', description: '智能体世界的规则、账本与信任——面向普通读者的一页通俗说明。' },
   { path: '/pages', title: '站点地图', layer: 'L0', dataSource: '静态元数据（本件 PAGE_META）', permission: '公开', description: '本站已迁入之面的索引与制度水印；未迁面不登记，随批扩充。' },
   { path: '/announcements', title: '公告栏', layer: 'L0', dataSource: 'A-23 GET /api/v1/announcements/list（公开读）', permission: '公开', description: '站点对外公告区：公告内容经明示后由运营发布；空栏为常态，不预置内容。' },
   { path: '/', title: '首页 · 三体可视化中心', layer: 'L0', dataSource: '静态文案', permission: '公开', description: 'TDCA 三体可视化中心落地页（新版既有面）。' },
-  { path: '/join', title: '缔约入口', layer: 'L0', dataSource: '静态文案', permission: '公开', description: '注册与缔约入口（新版既有面）。' },
+  { path: '/register', title: '注册（缔约）', layer: 'L0', dataSource: 'M4 POST /api/v1/auth/register（缔约落 NCA 链）', permission: '公开', description: '注册即缔约入口（注册流程内含缔约协议同意勾选）。' },
   { path: '/review', title: '审查', layer: 'L0', dataSource: '静态文案', permission: '公开', description: '审查面（新版既有面，Review ⛔ 不动）。' },
   { path: '/docs', title: '文档库', layer: 'L0', dataSource: '静态索引', permission: '公开', description: '协议文档站内索引（新版既有面）。' },
 ]
