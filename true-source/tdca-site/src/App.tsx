@@ -1,7 +1,4 @@
 import { Routes, Route } from 'react-router'
-// SITE-THREE-FIXES-001-AMEND-1：旧壳两件全局补搬（处3 登录状态栏含登出 / 处4 全局意图直达栏）
-import { IntentBar } from './components/IntentBar'
-import { AuthStatus } from './components/AuthStatus'
 import Home from './pages/Home'
 import Join from './pages/Join'
 import DocsHome, { DocsIndex, DocDetail } from './pages/Docs'
@@ -41,17 +38,22 @@ import { ToolshelfPage } from './pages/ToolshelfPage'
 import { NotifierPage } from './pages/NotifierPage'
 import { SandboxPage } from './pages/SandboxPage'
 import { OpsPage } from './pages/OpsPage'
+// 批 2 骨架：全局壳（两轴）＋频道首页五件——仅加包裹层与新路由，现有路径不动
+import { SiteLayout } from './components/SiteLayout'
+import { ChannelHome } from './pages/ChannelHome'
 
 export default function App() {
   return (
     <AuthProvider>
-      {/* 全局条（SITE-THREE-FIXES-001-AMEND-1）：意图直达（左）＋登录状态/登出（右），各页均在 */}
-      <div className="flex items-center justify-between gap-2 border-b bg-background px-4 py-1.5">
-        <IntentBar />
-        <AuthStatus />
-      </div>
+      <SiteLayout>
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* 批 2：频道首页五路（新增，不改现有路径） */}
+        <Route path="/channel/portal" element={<ChannelHome channel="portal" />} />
+        <Route path="/channel/agents" element={<ChannelHome channel="agents" />} />
+        <Route path="/channel/registry" element={<ChannelHome channel="registry" />} />
+        <Route path="/channel/market" element={<ChannelHome channel="market" />} />
+        <Route path="/channel/tools" element={<ChannelHome channel="tools" />} />
         <Route path="/join" element={<Join />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
@@ -94,6 +96,7 @@ export default function App() {
         <Route path="/ops" element={<OpsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </SiteLayout>
     </AuthProvider>
   )
 }
