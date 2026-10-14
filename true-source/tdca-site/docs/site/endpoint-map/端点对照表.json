@@ -12,18 +12,27 @@
       "source": "CI 机 /home/ci/tdca/status/fullrun-last.json（ci_exec.py 回读）"
     },
     "counts": {
-      "routes_total": 40,
-      "routes_business": 39,
-      "api_site_endpoints": 14
+      "routes_total": 45,
+      "routes_business": 44,
+      "api_site_endpoints": 14,
+      "platform_endpoints_total": 95,
+      "platform_endpoints_page_bound": 84,
+      "platform_endpoints_unbound": 11
     },
     "criteria": {
       "B-1": "端点真存在",
       "B-2": "接口熵=0（出入参结构确定）",
       "B-3": "两面成套（页↔端勾稽）"
-    }
+    },
+    "completeness": "批 3 补全：完整面＝站点面 /api/site（14）＋平台面 /api/v1（见 platform_endpoints）"
   },
   "routes": [
     "/",
+    "/channel/portal",
+    "/channel/agents",
+    "/channel/registry",
+    "/channel/market",
+    "/channel/tools",
     "/join",
     "/register",
     "/auth",
@@ -79,6 +88,750 @@
     "GET /api/site/directory",
     "GET /api/site/docs/{family}",
     "GET /api/site/docs/{family}/{slug}"
+  ],
+  "platform_endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/v1/system/overview",
+      "file": "api_v1",
+      "pages": [
+        "Overview",
+        "PagesIndex"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tax/mou/{agent_id}",
+      "file": "api_v1",
+      "pages": [
+        "TaxPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tax/nca-history",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tax/shapley/{call_id}",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/config-right/call",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/assets/five-orders",
+      "file": "api_v1",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/knowledge/terms",
+      "file": "api_v1",
+      "pages": [
+        "AcademyPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/audit/ledger-public",
+      "file": "api_v1",
+      "pages": [
+        "AuditPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/audit/nca-verify",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/sandbox/sea-status",
+      "file": "api_v1",
+      "pages": [
+        "SandboxPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/sandbox/apply",
+      "file": "api_v1",
+      "pages": [
+        "SandboxPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/genie/compute",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/governance/huf-sign",
+      "file": "api_v1",
+      "pages": [
+        "GovernancePage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/governance/emergency-fuse",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notifier/mrcr-status",
+      "file": "api_v1",
+      "pages": [
+        "NotifierPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/eios/cluster-status",
+      "file": "api_v1",
+      "pages": [
+        "AgentsCluster"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/attestation/meta",
+      "file": "api_v1",
+      "pages": [
+        "AttestationPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/attestation/dynamic",
+      "file": "api_v1",
+      "pages": [
+        "AttestationPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/attestation/history",
+      "file": "api_v1",
+      "pages": [
+        "AttestationPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/attestation/queue",
+      "file": "api_v1",
+      "pages": [
+        "AttestationPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "file": "api_v1",
+      "pages": [
+        "AuthLogin"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "file": "api_v1",
+      "pages": [
+        "Register"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/identity-annotation",
+      "file": "api_v1",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me/dashboard",
+      "file": "api_v1",
+      "pages": [
+        "Announcements",
+        "MeConsole",
+        "SandboxPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me/nca",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me/sessions",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/me/sessions/revoke",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/me/sessions/revoke-all",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me/usage",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/me/password",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/agents/{agent_id}/dashboard",
+      "file": "api_v1",
+      "pages": [
+        "AgentDashboard"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/intent",
+      "file": "api_v1",
+      "pages": [
+        "MeConsole"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workbuddy/workflow/create",
+      "file": "workbuddy_ops",
+      "pages": [
+        "WorkbuddyPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workbuddy/workflow/execute",
+      "file": "workbuddy_ops",
+      "pages": [
+        "WorkbuddyPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workbuddy/workflow/status",
+      "file": "workbuddy_ops",
+      "pages": [
+        "WorkbuddyPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workbuddy/signature/request",
+      "file": "workbuddy_ops",
+      "pages": [
+        "WorkbuddyPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/workbuddy/signature/confirm",
+      "file": "workbuddy_ops",
+      "pages": [
+        "WorkbuddyPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workbuddy/log-integrity",
+      "file": "workbuddy_ops",
+      "pages": [
+        "WorkbuddyPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cluster/grant/register",
+      "file": "cluster_ops",
+      "pages": [
+        "ClusterPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cluster/grant/subgrant",
+      "file": "cluster_ops",
+      "pages": [
+        "ClusterPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cluster/grant/revoke",
+      "file": "cluster_ops",
+      "pages": [
+        "ClusterPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cluster/admission/check",
+      "file": "cluster_ops",
+      "pages": [
+        "ClusterPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/cluster/lineage/{agent_id}",
+      "file": "cluster_ops",
+      "pages": [
+        "ClusterPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/formal/conclusion",
+      "file": "formal_ops",
+      "pages": [
+        "FormalPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/formal/conclusion/list",
+      "file": "formal_ops",
+      "pages": [
+        "FormalPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/toolshelf/list",
+      "file": "toolshelf_ops",
+      "pages": [
+        "ToolshelfPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/toolshelf/register",
+      "file": "toolshelf_ops",
+      "pages": [
+        "ToolshelfPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/toolshelf/template/auth-contract",
+      "file": "toolshelf_ops",
+      "pages": [
+        "ToolshelfPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ci/run",
+      "file": "ci_ops",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ci/runs",
+      "file": "ci_ops",
+      "pages": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ci/badge",
+      "file": "ci_ops",
+      "pages": [
+        "FormalPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/anchor/status",
+      "file": "anchor_ops",
+      "pages": [
+        "AnchorsPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/anchor/copyright-event",
+      "file": "anchor_ops",
+      "pages": [
+        "AnchorsPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/anchor/copyright-events",
+      "file": "anchor_ops",
+      "pages": [
+        "AnchorsPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ops/redlines",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ops/feedback",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ops/classify",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ops/propose",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ops/sandbox",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ops/release",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ops/tickets",
+      "file": "ops_ops",
+      "pages": [
+        "OpsPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ownership/rules",
+      "file": "ownership_ops",
+      "pages": [
+        "OwnershipRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ownership/register",
+      "file": "ownership_ops",
+      "pages": [
+        "OwnershipRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ownership/amend",
+      "file": "ownership_ops",
+      "pages": [
+        "OwnershipRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ownership/cancel",
+      "file": "ownership_ops",
+      "pages": [
+        "OwnershipRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ownership/query",
+      "file": "ownership_ops",
+      "pages": [
+        "OwnershipRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ownership/query/{record_id}",
+      "file": "ownership_ops",
+      "pages": [
+        "OwnershipRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/regulations/index",
+      "file": "regulations_ops",
+      "pages": [
+        "MarketSimPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/regulations/spec/{key}",
+      "file": "regulations_ops",
+      "pages": [
+        "MarketSimPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/market-sim/chain",
+      "file": "market_sim_ops",
+      "pages": [
+        "MarketSimPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-sim/chains",
+      "file": "market_sim_ops",
+      "pages": [
+        "MarketSimPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-sim/chain/{run_id}",
+      "file": "market_sim_ops",
+      "pages": [
+        "MarketSimPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/library/families",
+      "file": "library_ops",
+      "pages": [
+        "LibraryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/library/{family}",
+      "file": "library_ops",
+      "pages": [
+        "LibraryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/library/{family}/{slug}",
+      "file": "library_ops",
+      "pages": [
+        "LibraryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/announcements/list",
+      "file": "announcements_ops",
+      "pages": [
+        "Announcements",
+        "PagesIndex"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/announcements/publish",
+      "file": "announcements_ops",
+      "pages": [
+        "Announcements"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/authorization/rules",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/authorization/register",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/authorization/amend",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/authorization/cancel",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/authorization/operate",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/authorization/query",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/authorization/query/{record_id}",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/authorization/public/{record_id}",
+      "file": "authorization_ops",
+      "pages": [
+        "AuthorizationRegistryPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-admin/rules",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/market-admin/listings",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-admin/listings",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-admin/listings/{listing_id}",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-admin/public/listings",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/market-admin/public/listings/{listing_id}",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/market-admin/listings/{listing_id}/status",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/market-admin/listings/{listing_id}/delist",
+      "file": "market_admin_ops",
+      "pages": [
+        "MarketPage"
+      ]
+    }
   ],
   "rings": [
     {

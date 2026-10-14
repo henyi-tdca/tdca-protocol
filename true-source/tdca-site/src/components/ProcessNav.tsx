@@ -1,6 +1,7 @@
-// 批 2 骨架：左侧协作流程竖列（14 环通俗名，可折叠，信息向）
-// 环名取对外通俗口径；「争议裁决」如实呈现（裁决权属司法，平台不代裁）
+// 批 2 骨架：左侧协作流程竖列（14 环通俗名，可折叠）
+// 批 3：环名接通协作流程汇总页锚点（/process#ring-N）；「争议裁决」如实呈现（裁决权属司法）
 import { useState } from 'react'
+import { Link } from 'react-router'
 
 const RINGS: { name: string; note?: string }[] = [
   { name: '发现' },
@@ -33,9 +34,11 @@ export function ProcessNav() {
       {open && (
         <ol className="space-y-0.5">
           {RINGS.map((r, i) => (
-            <li key={r.name} className="rounded px-2 py-1 text-xs text-muted-foreground">
-              {i + 1}. {r.name}
-              {r.note ? <span className="ml-1 text-[10px] opacity-70">（{r.note}）</span> : null}
+            <li key={r.name} className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted/60">
+              <Link to={`/process#ring-${i + 1}`} className="block">
+                {i + 1}. {r.name}
+                {r.note ? <span className="ml-1 text-[10px] opacity-70">（{r.note}）</span> : null}
+              </Link>
             </li>
           ))}
         </ol>
