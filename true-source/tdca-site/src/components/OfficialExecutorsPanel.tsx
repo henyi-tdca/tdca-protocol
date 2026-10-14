@@ -33,7 +33,8 @@ export function OfficialExecutorsPanel() {
             <p className="mt-1 text-xs text-gray-600">我是{e.role}。</p>
             <p className="mt-1 text-xs text-gray-600">我能干：{e.can}。</p>
             <p className="mt-1 text-xs text-gray-500">
-              怎么用：在线＝站内直接使用；离线＝本地部署（如实标注「本地部署」，离线能力是否对外另候明示）。
+              怎么用：在线＝站内直接使用；离线＝本地部署（站内如实标注「本地部署」；离线能力现时不对外，
+              与通知机实体可部署同一时点一并对外）。
             </p>
           </div>
         ))}
@@ -62,6 +63,7 @@ export function OfficialExecutorsPanel() {
         </div>
       </div>
       <p className="text-xs text-gray-500">
+        层次如实：制度规则（全体）⊃ 资产使用权限管理（其组成部分）；制度执行＝规则约束的落地动作——不是两套并列。
         与「我的账户 · 四把钥匙」同一套口径共轴：四把钥匙管身份与办事，授权码管资产；两线分面、存证不混。
       </p>
 
@@ -73,7 +75,8 @@ export function OfficialExecutorsPanel() {
           <li>固锚级待建：通知机现为模拟态，固锚级尚未落地——如实标「待建」，不对外声称。</li>
         </ul>
         <p className="mt-2 text-xs text-gray-500">
-          人类环节不隐：执行令牌由人类签发，授权件由法律主体本人签署（不得代签）。
+          执行令牌签发链：初始任务由人类签发；经人类签发时一并许可，执行体可向下一序列任务执行体签发子任务执行令牌；
+          无许可不得签发、不得分发任务。授权件由法律主体本人签署（不得代签）。
         </p>
       </div>
     </section>
