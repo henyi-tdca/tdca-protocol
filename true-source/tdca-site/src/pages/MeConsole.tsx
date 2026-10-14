@@ -14,6 +14,7 @@ import { Link } from 'react-router'
 import { api } from '@/lib/client'
 import { useApiGet } from '@/lib/useApi'
 import { PageShell } from '@/components/PageShell'
+import { IDENTITY_DISCLAIMER } from '@/components/IdentityMark'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 import { useAuth } from '@/lib/auth-context'
 import { AccountCredentialPanel } from '@/components/AccountCredentialPanel'
@@ -494,6 +495,22 @@ export function MePage() {
                   本站点无自助重置通道：请携带用户名联系站点管理员人工重置（<a href="mailto:xuantan0703@agent.qq.com" className="text-emerald-700 underline">xuantan0703@agent.qq.com</a>）；重置后该账户全部会话失效，须使用新密码重新登录。
                 </p>
                 <p className="mt-1 text-[11px] text-gray-400">记得密码只想更换？直接用下方「账户安全 · 修改密码」。</p>
+              </div>
+              {/* 当前锚与档位（可信锚点栏批 1：只述档名与事实；改锚人工受理） */}
+              <div data-testid="me-anchor" className="rounded-lg border border-gray-200 bg-white p-4">
+                <div className="text-xs text-gray-500">当前锚与档位</div>
+                <div className="mt-1 flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-medium text-gray-800">实名 ＋ 手机号锚</span>
+                  <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">记名级 · 待补</span>
+                  <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700">待建</span>
+                </div>
+                <p className="mt-1 text-[11px] text-gray-500">
+                  现物状态：实名与手机号锚定待建（目标档＝记名级，实名与手机号待补）；令牌面按未定档暂不发身份类令牌。
+                </p>
+                <p className="mt-1 text-[11px] text-gray-600">
+                  改锚：默认不可自助——须申请，由站点管理员人工受理，留痕并重新核验。
+                </p>
+                <p className="mt-1 text-[11px] text-gray-500">{IDENTITY_DISCLAIMER}</p>
               </div>
             </div>
             {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}

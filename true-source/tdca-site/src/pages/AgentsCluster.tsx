@@ -9,6 +9,7 @@ import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 import { TopologyEngine, hashAgentId, type TopoData } from '@/lib/TopologyEngine'
 import { OfficialExecutorsPanel } from '@/components/OfficialExecutorsPanel'
+import { IdentityMarkCard } from '@/components/IdentityMark'
 
 interface ClusterData {
   cluster: { endpoint: string; capability: string; id: string; status: string }[]
@@ -131,6 +132,12 @@ export function AgentsPage() {
             <SimulatedBadge nature="simulated" />
           </div>
           <TopologyEngine data={TOPO_DATA} height={320} />
+        </section>
+
+        {/* 身份标识（协作方查看处 · 可信锚点栏批 1：只上身份维，协作可信维待另批） */}
+        <section data-testid="agents-identity-mark" className="rounded-lg border border-gray-200 p-4">
+          <h3 className="mb-2 text-sm font-semibold text-gray-800">身份标识（协作方查看 · 身份维）</h3>
+          <IdentityMarkCard testid="collab-identity-card" heading="锚点身份标识" showPendingNote />
         </section>
 
         {/* 执行体批：官方执行体目录＋分野＋身份前置判据（追加呈现，现有区块不动） */}
