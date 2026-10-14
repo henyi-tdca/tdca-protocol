@@ -60,7 +60,7 @@ export default function DocsHome() {
         分工（SITE-THREE-FIXES-001）：文档库＝对外公约条例与操作文档；协议本体文献（白皮书 · 论文与实证 · 产物库 · 制度规范）请走「知识库」（/library，原名文库，路由不变）。
       </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
-        <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按站点指令由系统生成，由站点管理员转交受邀者；到期失效，不回收。
+        <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按 TDCA 管理方 指令由系统生成，由 TDCA 管理方 转交受邀者；到期失效，不回收。
       </p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {FAMILIES.map((f) => (
