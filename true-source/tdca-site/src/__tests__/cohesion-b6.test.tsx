@@ -31,12 +31,13 @@ describe('批 6：三项明示呈现更新', () => {
     expect(el).toContain('不得代签')
   })
 
-  it('离线能力现时不对外：与通知机实体可部署同一时点一并对外', () => {
+  it('离线能力现时不对外：公开面零出现（遮蔽 M-1/M-2 落地）', () => {
     renderAt('/agents')
     const dir = screen.getByTestId('executors-directory').textContent ?? ''
-    expect(dir).toContain('现时不对外')
-    expect(dir).toContain('通知机实体可部署')
-    expect(dir).toContain('本地部署')
+    expect(dir).not.toContain('离线')
+    expect(dir).not.toContain('本地部署')
+    expect(dir).not.toContain('通知机实体')
+    expect(dir).not.toContain('现时不对外')
   })
 
   it('分野层次写清：制度规则 ⊃ 资产用权管理；制度执行＝规则落地动作；不是两套并列', () => {
@@ -51,5 +52,10 @@ describe('批 6：三项明示呈现更新', () => {
   it('环 9 与分野共轴不矛盾：人类签发初始层仍可见', () => {
     renderAt('/process')
     expect(screen.getByTestId('ring-9').textContent).toContain('人类签发')
+  })
+
+  it('遮蔽 M-1 边界件：关于页不见「离线」字样', () => {
+    renderAt('/about')
+    expect(screen.getByTestId('page-shell').textContent).not.toContain('离线')
   })
 })

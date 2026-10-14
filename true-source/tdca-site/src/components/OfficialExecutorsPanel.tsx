@@ -32,10 +32,7 @@ export function OfficialExecutorsPanel() {
             <h3 className="text-xs font-semibold text-gray-800">{e.name} · 官方执行体</h3>
             <p className="mt-1 text-xs text-gray-600">我是{e.role}。</p>
             <p className="mt-1 text-xs text-gray-600">我能干：{e.can}。</p>
-            <p className="mt-1 text-xs text-gray-500">
-              怎么用：在线＝站内直接使用；离线＝本地部署（站内如实标注「本地部署」；离线能力现时不对外，
-              与通知机实体可部署同一时点一并对外）。
-            </p>
+            <p className="mt-1 text-xs text-gray-500">怎么用：在线＝站内直接使用。</p>
           </div>
         ))}
       </div>
@@ -68,11 +65,10 @@ export function OfficialExecutorsPanel() {
       </p>
 
       <div data-testid="identity-precursor" className="rounded-lg border border-gray-200 bg-white p-3">
-        <h3 className="text-xs font-semibold text-gray-800">令牌身份前置 · 三条判据</h3>
+        <h3 className="text-xs font-semibold text-gray-800">令牌身份前置 · 判据</h3>
         <ul className="mt-1 list-disc space-y-1 pl-5 text-xs text-gray-600">
           <li>先定身份、再发令牌：令牌签发须挂「身份确定」前置，身份未定不发令牌。</li>
           <li>令牌不得越其锚：令牌层级与锚档对应；现时之锚＝记名级（实名注册＋手机号锚定）⟹ 高权无限制面不发。</li>
-          <li>固锚级待建：通知机现为模拟态，固锚级尚未落地——如实标「待建」，不对外声称。</li>
         </ul>
         <p className="mt-2 text-xs text-gray-500">
           执行令牌签发链：初始任务由人类签发；经人类签发时一并许可，执行体可向下一序列任务执行体签发子任务执行令牌；
