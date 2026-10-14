@@ -1,4 +1,7 @@
 import { Routes, Route } from 'react-router'
+// SITE-THREE-FIXES-001-AMEND-1：旧壳两件全局补搬（处3 登录状态栏含登出 / 处4 全局意图直达栏）
+import { IntentBar } from './components/IntentBar'
+import { AuthStatus } from './components/AuthStatus'
 import Home from './pages/Home'
 import Join from './pages/Join'
 import DocsHome, { DocsIndex, DocDetail } from './pages/Docs'
@@ -42,6 +45,11 @@ import { OpsPage } from './pages/OpsPage'
 export default function App() {
   return (
     <AuthProvider>
+      {/* 全局条（SITE-THREE-FIXES-001-AMEND-1）：意图直达（左）＋登录状态/登出（右），各页均在 */}
+      <div className="flex items-center justify-between gap-2 border-b bg-background px-4 py-1.5">
+        <IntentBar />
+        <AuthStatus />
+      </div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/join" element={<Join />} />
