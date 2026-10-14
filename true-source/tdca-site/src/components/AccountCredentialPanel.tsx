@@ -26,8 +26,8 @@ export function AccountCredentialPanel() {
       note: '须强核身 · 现状待建（谁能取得属明示项，本站不代定）',
     },
     {
-      key: 'execution', face: '事务执行', token: '执行令牌', plain: '去办事（写操作与签批）',
-      stateful: '随登录联动签发', has: hufToken() !== null,
+      key: 'execution', face: '事务执行', token: '写操作钥匙（待建执行令牌之临时替代）', plain: '去办事（写操作与签批）',
+      stateful: '静态兜底（随浏览器存留）', has: hufToken() !== null,
       note: '由人类签发 · AI 无权代行',
     },
     {
