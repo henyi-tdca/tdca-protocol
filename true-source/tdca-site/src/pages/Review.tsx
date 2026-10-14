@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { siteGet, sitePost, GateRequired, getWriteToken, setWriteToken } from '../lib/siteApi'
-import GatePrompt from '../components/GatePrompt'
+import { siteGet, sitePost, getWriteToken, setWriteToken } from '../lib/siteApi'
 
 type JoinItem = {
   id: number
@@ -24,7 +23,6 @@ export default function Review() {
   const [reviewerSet, setReviewerSet] = useState(false)
   const [writeTokenInput, setWriteTokenInput] = useState(getWriteToken())
   const [items, setItems] = useState<JoinItem[] | null>(null)
-  const [needGate, setNeedGate] = useState(false)
   const [error, setError] = useState('')
   const [notes, setNotes] = useState<Record<number, string>>({})
   const [busy, setBusy] = useState<number | null>(null)
@@ -35,8 +33,7 @@ export default function Review() {
       setItems(d.items)
       setError('')
     } catch (e) {
-      if (e instanceof GateRequired) setNeedGate(true)
-      else setError(String(e instanceof Error ? e.message : e))
+      setError(String(e instanceof Error ? e.message : e))
     }
   }, [])
 
@@ -57,8 +54,6 @@ export default function Review() {
       setBusy(null)
     }
   }
-
-  if (needGate) return <GatePrompt onOk={() => { setNeedGate(false); if (reviewerSet) load() }} />
 
   if (!reviewerSet) {
     return (

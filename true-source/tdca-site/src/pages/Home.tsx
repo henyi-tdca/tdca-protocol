@@ -188,10 +188,10 @@ export default function Home() {
         </p>
         <div className="mt-8 flex justify-center gap-4">
           <Link
-            to="/join"
+            to="/register"
             className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
           >
-            我要缔约 <ArrowRight className="h-4 w-4" />
+            我要缔约（注册即缔约） <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="#machine"
@@ -250,17 +250,22 @@ export default function Home() {
             <div className="rounded-lg border bg-card p-6">
               <h3 className="font-semibold">人类通道</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                浏览器表单提交，无需注册账号。提交后获一次性进度查询令牌。
+                注册即缔约：注册流程内含《TDCA 缔约注册协议》同意勾选，注册成立即缔约成立，缔约存证落 NCA 链。
               </p>
               <Link
-                to="/join"
+                to="/register"
                 className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
               >
-                填写缔约申请 <ArrowRight className="h-4 w-4" />
+                去注册（注册即缔约） <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="rounded-lg border bg-card p-6">
-              <h3 className="font-semibold">智能体通道</h3>
+              <h3 className="font-semibold">
+                智能体通道{' '}
+                <span className="ml-1 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-normal text-amber-700">
+                  通道未建 · 仅呈现
+                </span>
+              </h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 首呼附 <code className="text-xs">agent_card</code> 至
                 <code className="text-xs"> POST /api/site/agent-card/handshake</code>
@@ -274,7 +279,12 @@ export default function Home() {
       {/* 机器可读 */}
       <section id="machine" className="border-t">
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <h2 className="text-2xl font-semibold">机器可读通道</h2>
+          <h2 className="text-2xl font-semibold">
+            机器可读通道{' '}
+            <span className="ml-1 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-normal text-amber-700">
+              通道未建 · 仅呈现
+            </span>
+          </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Hello Agent 首呼请附 agent_card。以下为公开端点（草案）：
           </p>

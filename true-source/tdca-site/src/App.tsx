@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router'
 import Home from './pages/Home'
-import Join from './pages/Join'
 import DocsHome, { DocsIndex, DocDetail } from './pages/Docs'
 import Review from './pages/Review'
 // FRONTEND-MERGE 批1（骨架与门户）：旧版 home/about/pages/announcements 四面迁入
@@ -58,7 +57,6 @@ export default function App() {
         <Route path="/channel/tools" element={<ChannelHome channel="tools" />} />
         {/* 批 3：协作流程汇总页（新增，不改现有路径） */}
         <Route path="/process" element={<ProcessOverviewPage />} />
-        <Route path="/join" element={<Join />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/me" element={<MePage />} />
