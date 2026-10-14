@@ -1,0 +1,397 @@
+{
+  "meta": {
+    "task": "L1SI143-SITE-BATCH1-ENDPOINT-MAP-001",
+    "generated_by": "对账-端点对照.py",
+    "site_head": "aa8217873fc4456b856fb02eb790453ad275cdfc",
+    "ci": {
+      "head": "aa8217873fc4456b856fb02eb790453ad275cdfc",
+      "compared_at": "20261014-130845",
+      "passed": 3106,
+      "failed": 0,
+      "suites": 58,
+      "source": "CI 机 /home/ci/tdca/status/fullrun-last.json（ci_exec.py 回读）"
+    },
+    "counts": {
+      "routes_total": 40,
+      "routes_business": 39,
+      "api_site_endpoints": 14
+    },
+    "criteria": {
+      "B-1": "端点真存在",
+      "B-2": "接口熵=0（出入参结构确定）",
+      "B-3": "两面成套（页↔端勾稽）"
+    }
+  },
+  "routes": [
+    "/",
+    "/join",
+    "/register",
+    "/auth",
+    "/me",
+    "/review",
+    "/docs",
+    "/docs/:family",
+    "/docs/:family/:slug",
+    "/overview",
+    "/about",
+    "/pages",
+    "/announcements",
+    "/agents",
+    "/agents/:id",
+    "/agent-shelf",
+    "/studio",
+    "/workbuddy",
+    "/ownership",
+    "/ownership-registry",
+    "/authorization-registry",
+    "/attestation",
+    "/attestation/meta",
+    "/attestation/dynamic",
+    "/attestation/history",
+    "/anchors",
+    "/audit",
+    "/governance",
+    "/formal",
+    "/cluster",
+    "/market",
+    "/market-sim",
+    "/tax",
+    "/library",
+    "/academy",
+    "/toolshelf",
+    "/notifier",
+    "/sandbox",
+    "/ops",
+    "*"
+  ],
+  "api_site_endpoints": [
+    "POST /api/site/join",
+    "GET /api/site/join/status",
+    "GET /api/site/join/list",
+    "POST /api/site/join/review",
+    "POST /api/site/agent-card/handshake",
+    "GET /api/site/agent-card/{card_id}",
+    "POST /api/site/meter",
+    "POST /api/site/credits",
+    "GET /api/site/credits/{member_id}",
+    "POST /api/site/notify-token",
+    "GET /api/site/weekly",
+    "GET /api/site/directory",
+    "GET /api/site/docs/{family}",
+    "GET /api/site/docs/{family}/{slug}"
+  ],
+  "rings": [
+    {
+      "no": 1,
+      "ring": "发现",
+      "inst": "生态雷达·相遇线专章",
+      "pages": [
+        "/agents",
+        "/agent-shelf"
+      ],
+      "endpoints": [
+        "GET /directory",
+        "GET /weekly"
+      ],
+      "endpoints_note": "名册摘要/周刊存档（公开只读面，无前端消费页，Home 以文档表呈现）；生态雷达＝ecoscan 机对机流水线",
+      "artifacts": [
+        "ecoscan/README.md（生态雷达流水线）",
+        "docs/regulations/TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md"
+      ],
+      "b1": "✓",
+      "b2": "✓（只读出参结构确定）",
+      "b3": "半（页有呈现、端点为公开读面无消费页）",
+      "freq": "高",
+      "freq_why": "名册页用户直达；生态扫描为制度硬核面",
+      "gap": "相遇专章无专属呈现页（制度有、站点面无）——候选缺口"
+    },
+    {
+      "no": 2,
+      "ring": "相遇",
+      "inst": "相遇线专章·身份管理制度",
+      "pages": [
+        "/about",
+        "/announcements",
+        "/pages"
+      ],
+      "endpoints": [],
+      "endpoints_note": "无专属端点（呈现面）",
+      "artifacts": [
+        "docs/regulations/TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md",
+        "governance/decisions/TDCA-AMEND-SRTA-IDMODES-001-身份管理四分法与兼容双向承认口径件（内部互认·外进内需内部承认·内出外需外部承认·兼容则双方都承认·护照免承认·含对前件之更正）.md"
+      ],
+      "b1": "N/A",
+      "b2": "N/A",
+      "b3": "半（页呈现制度、无端点配对）",
+      "freq": "中",
+      "freq_why": "公告/站点地图中频",
+      "gap": "身份管理制度四分法无专页；相遇专章签批记录件未在站点呈现——缺口"
+    },
+    {
+      "no": 3,
+      "ring": "握手",
+      "inst": "双轨身份·身份可信等级条例·智能体身份锚定通知机令牌",
+      "pages": [
+        "/join",
+        "/"
+      ],
+      "endpoints": [
+        "POST /agent-card/handshake",
+        "GET /agent-card/{card_id}",
+        "POST /notify-token"
+      ],
+      "endpoints_note": "对接卡握手/查询＋通知机令牌登记（智能体通道；通知机令牌登记即「智能体身份锚定通知机令牌」之端点落点）",
+      "artifacts": [
+        "governance/decisions/TDCA-AGENT-DUAL-IDENTITY-001-智能体双轨身份与界面区分原则.md",
+        "governance/documents/TDCA-REG-IDENTITY-TIER-001-《身份可信等级认定条例》（人读版·V1.0·待签批·四步齐备）.md",
+        "governance/decisions/TDCA-SIGNOFF-REG-IDENTITY-TIER-001-《身份可信等级认定条例》生效签批落地件（V1.0-FROZEN·含V0.2至V0.4追加件并入·创始人逐字生效·对外仍待明示）.md"
+      ],
+      "b1": "✓",
+      "b2": "✓（pydantic AgentCard 模型，出入参确定）",
+      "b3": "半（对接卡端点无前端消费页，Home 以文档表呈现）",
+      "freq": "高",
+      "freq_why": "缔约入口全站核心；握手为智能体首呼必经",
+      "gap": ""
+    },
+    {
+      "no": 4,
+      "ring": "谈判",
+      "inst": "场景配置权调用接口规范·配置权市场规范",
+      "pages": [
+        "/market",
+        "/market-sim"
+      ],
+      "endpoints": [],
+      "endpoints_note": "市场页调平台 /api/v1/market-admin/* 与 /api/v1/market-sim/*（非 /api/site）",
+      "artifacts": [
+        "docs/regulations/TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md",
+        "docs/regulations/TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-签批落地件（配置权市场规范与授权件模板生效·V1.0-FROZEN）.md"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批 /api/site 范围，结构以平台侧为准）",
+      "b3": "✓（页有调用、端有实现）",
+      "freq": "高",
+      "freq_why": "市场面用户高频；配置权为制度硬核",
+      "gap": "「场景配置权调用接口规范」件未定位（仓内仅见配置权市场规范）——工件缺口"
+    },
+    {
+      "no": 5,
+      "ring": "试错",
+      "inst": "沙盒宪法化·动态安全三空间循环机制",
+      "pages": [
+        "/sandbox"
+      ],
+      "endpoints": [],
+      "endpoints_note": "沙盒页调平台 /api/v1/sandbox/sea-status、/api/v1/sandbox/apply",
+      "artifacts": [
+        "docs/sbx-ops/TDCA-PRINCIPLE-DSA-001-动态安全三空间循环机制.md",
+        "docs/papers/TDCA-MONOGRAPH-IT-001.md（专著内沙盒宪法化论述）"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批范围）",
+      "b3": "✓（页有调用、端有实现）",
+      "freq": "高",
+      "freq_why": "沙盒页用户高频；负空间三阶为合规硬核",
+      "gap": "「沙盒宪法化」无独立制度件文件名（散见专著/DSA 件）——工件组织缺口（非缺失）"
+    },
+    {
+      "no": 6,
+      "ring": "验证",
+      "inst": "制度治理判据链·转正四步之沙盒验证",
+      "pages": [
+        "/sandbox",
+        "/attestation"
+      ],
+      "endpoints": [],
+      "endpoints_note": "验证页调平台 /api/v1/attestation/*",
+      "artifacts": [
+        "governance/decisions/TDCA-ASSERT-SRTA-IDENTITY-TIER-001-转正步三断言集与校验器件（Q-1至Q-21可机验断言·21条·合规集全过·对抗集21比21命中·含暴露力与可重复性）.md（转正四步之实作例）"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批范围）",
+      "b3": "✓",
+      "freq": "中",
+      "freq_why": "验证队列中频；判据链为制度硬核",
+      "gap": "「制度治理判据链」无独立在册件名（判据链实作散见断言集/相遇专章）——工件组织缺口（非缺失）"
+    },
+    {
+      "no": 7,
+      "ring": "签约",
+      "inst": "注册登记制度·授权件模板·缔约注册协议",
+      "pages": [
+        "/join",
+        "/register",
+        "/docs"
+      ],
+      "endpoints": [
+        "POST /join",
+        "GET /join/status",
+        "GET /join/list",
+        "POST /join/review",
+        "GET /docs/{family}",
+        "GET /docs/{family}/{slug}"
+      ],
+      "endpoints_note": "缔约申请/进度/审核列表/三阶流转（页↔端全勾稽）；文档目录两件为制度文本公开读面（Docs 页实调）",
+      "artifacts": [
+        "docs/regulations/TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md",
+        "docs/regulations/TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md",
+        "docs/register-contract/TDCA-REGISTER-CONTRACT-001-zh.md（缔约注册协议）"
+      ],
+      "b1": "✓",
+      "b2": "✓（JoinRequest/StageAdvance pydantic 模型）",
+      "b3": "✓（Join/Review/Docs 页实调）",
+      "freq": "高",
+      "freq_why": "缔约与注册为全站主链；登记制度为硬核",
+      "gap": ""
+    },
+    {
+      "no": 8,
+      "ring": "履约准备",
+      "inst": "编排存证·集群·运行环境与数据通约",
+      "pages": [
+        "/cluster",
+        "/ops",
+        "/agents/:id"
+      ],
+      "endpoints": [],
+      "endpoints_note": "集群页调平台 /api/v1/cluster/*；编排＝GK-11 编排闭环＋flow-orchestrator",
+      "artifacts": [
+        "gov-kit/GK-11-编排闭环.md",
+        "tdca-eios/docs/ASP-001.md（智能体调度协议·集群）",
+        "tdca-eios/docs/EIOS-ARCH-001.md"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批范围）",
+      "b3": "✓",
+      "freq": "中",
+      "freq_why": "集群/运维中频；编排存证为硬核",
+      "gap": "「运行环境与数据通约」件未定位（仓内仅见编排闭环与调度协议）——工件缺口"
+    },
+    {
+      "no": 9,
+      "ring": "履约",
+      "inst": "协作规范·执行令牌（人类签发）",
+      "pages": [
+        "/agents/:id",
+        "/studio"
+      ],
+      "endpoints": [],
+      "endpoints_note": "执行令牌＝网关 B-4 写鉴权 TDCA-CRT（gateway 中间件，人类签发通道）",
+      "artifacts": [],
+      "b1": "N/A",
+      "b2": "N/A",
+      "b3": "✗（执行令牌签发无页面承载；B-4 中间件为代码落点）",
+      "freq": "中",
+      "freq_why": "履约面中频；令牌签发为制度硬核",
+      "gap": "「协作规范」与「执行令牌签发」均无在册制度件名、无签发 UI 页——双缺口（制度件＋页面）"
+    },
+    {
+      "no": 10,
+      "ring": "交付",
+      "inst": "NCA 登记合一版（存证）",
+      "pages": [
+        "/attestation",
+        "/audit"
+      ],
+      "endpoints": [],
+      "endpoints_note": "存证/台账页调平台 /api/v1/attestation/*、/api/v1/audit/ledger-public",
+      "artifacts": [
+        "nca-generator/（NCA 生成器）",
+        "docs/register-contract/TDCA-REGISTER-CONTRACT-001-machine.json（机读登记件实例）"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批范围）",
+      "b3": "✓",
+      "freq": "中",
+      "freq_why": "存证台账中频；登记合一为硬核",
+      "gap": "「NCA 登记合一版」正本未定位（仓内见生成器与机读实例，合一版文本件未定位）——工件缺口"
+    },
+    {
+      "no": 11,
+      "ring": "验收",
+      "inst": "判据链·断言与校验器·四要件判定",
+      "pages": [
+        "/formal",
+        "/authorization-registry"
+      ],
+      "endpoints": [],
+      "endpoints_note": "形式化页调平台 /api/v1/formal/*、/api/v1/ci/badge",
+      "artifacts": [
+        "governance/decisions/TDCA-ASSERT-SRTA-IDENTITY-TIER-001-转正步三断言集与校验器件（Q-1至Q-21可机验断言·21条·合规集全过·对抗集21比21命中·含暴露力与可重复性）.md",
+        "docs/regulations/TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md（四要件来源）"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批范围）",
+      "b3": "✓",
+      "freq": "中",
+      "freq_why": "验收/授权登记中频；四要件为硬核",
+      "gap": ""
+    },
+    {
+      "no": 12,
+      "ring": "结算分配",
+      "inst": "统一结算规则·闭环结算·微交付税收",
+      "pages": [
+        "/tax"
+      ],
+      "endpoints": [
+        "POST /meter",
+        "POST /credits",
+        "GET /credits/{member_id}"
+      ],
+      "endpoints_note": "调用计量＋积分台账（仅智能体通道；积分＝模拟记账单位非法偿，期 1 不结算）；税页另调平台 /api/v1/tax/mou/*",
+      "artifacts": [
+        "gov-kit/GK-04-统一结算.md",
+        "docs/settlement/insurance/TDCA-INSURANCE-RULES-001-闭环结算保险金机制公开规则草案.md",
+        "true-source/tdca-web/tdca-microtax/README.md（微交付税收实作）"
+      ],
+      "b1": "✓（页调平台端点在册；/api/site credits 在网关）",
+      "b2": "✓（CreditEvent pydantic 模型）",
+      "b3": "✓（税页实调；credits 为智能体通道无页）",
+      "freq": "中",
+      "freq_why": "税收页中频；结算闭环为硬核",
+      "gap": ""
+    },
+    {
+      "no": 13,
+      "ring": "争议裁决",
+      "inst": "裁决权属司法（平台不代裁）",
+      "pages": [],
+      "endpoints": [],
+      "endpoints_note": "制度性无落点：裁决权属司法，平台不代裁（令面原文）；工程侧仅争议痕迹零动作（G3 联动件）",
+      "artifacts": [
+        "governance/decisions/TDCA-G3-IDENTITY-LINK-SYNC-001-身份桥接联动交付记录.md（AMEND-2：争议痕迹＋无司法文件⇒零动作，载体而非裁决落点）"
+      ],
+      "b1": "N/A",
+      "b2": "N/A",
+      "b3": "✗（无页面无端点，属制度性留白，非工程缺口）",
+      "freq": "低",
+      "freq_why": "低频事件；但制度定位须如实呈现",
+      "gap": "制度性无落点（如实，非缺口）"
+    },
+    {
+      "no": 14,
+      "ring": "信用及遗产管理",
+      "inst": "智能体治理（遗产继承与创建人消亡处置）·NCA 永续",
+      "pages": [
+        "/ownership",
+        "/ownership-registry"
+      ],
+      "endpoints": [],
+      "endpoints_note": "权属页调平台 /api/v1/ownership/*",
+      "artifacts": [
+        "governance/decisions/TDCA-G3-IDENTITY-LINK-SYNC-001-身份桥接联动交付记录.md（消亡/继承联动实作＋存证）"
+      ],
+      "b1": "✓（页调平台端点在册）",
+      "b2": "半（平台端点非本批范围）",
+      "b3": "半（联动实作为机通道，页仅权属呈现）",
+      "freq": "中",
+      "freq_why": "权属页中频；遗产处置为硬核但低频",
+      "gap": "TDCA-STD-AGENT-ID-002（遗产继承与创建人消亡处置·引用称在册生效）正本未定位于本仓——工件缺口；「NCA 永续」文本件未定位"
+    }
+  ],
+  "self_check": {
+    "claimed_endpoints_missing": [],
+    "pages_missing": []
+  }
+}
