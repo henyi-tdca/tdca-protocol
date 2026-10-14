@@ -28,7 +28,7 @@ async function siteFetch(path: string, init: RequestInit = {}): Promise<Response
     ...init,
     headers: {
       ...(getGate() ? { 'x-tdca-site-gate': getGate() } : {}),
-      ...(getWriteToken() ? { Authorization: `TDCA-CRT-${getWriteToken()}` } : {}),
+      ...(getWriteToken() ? { Authorization: `TDCA-CRT-${getWriteToken()}`, 'X-TDCA-Token-Type': 'execution' } : {}),
       ...(init.headers || {}),
     },
   })
