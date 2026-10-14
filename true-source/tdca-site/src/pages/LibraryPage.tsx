@@ -1,6 +1,6 @@
 // =============================================================================
 // TDCA 制度水印
-// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 内容区文库（/library 白皮书·论文·产物库）
+// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 内容区知识库（/library 白皮书·论文·产物库·制度规范）
 // 约束矩阵: 站点入站令·甲/乙——只读面；以在册仓库为唯一权威源；A-22 /api/v1/library/*
 // 复用: PageShell / api（会话令牌自动注入）
 // =============================================================================
@@ -120,7 +120,7 @@ export function LibraryPage() {
     setDetail(null); setErr('')
     void api.get<{ items: ItemView[] }>(`/api/v1/library/${family}`).then((r) => {
       if (r.ok) setItems(r.data.items)
-      else setErr(`文库加载失败：${r.reason}`)
+      else setErr(`知识库加载失败：${r.reason}`)
     })
   }, [family])
 
@@ -135,10 +135,10 @@ export function LibraryPage() {
 
   return (
     <PageShell
-      title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范）"
+      title="知识库（白皮书 · 论文与实证 · 产物库 · 制度规范）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"
-      description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。">
+      description="协议本体文献库（SITE-THREE-FIXES-001：文库改名知识库，路由仍 /library 不动）：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。与「文档库」（/docs，公约条例与操作文档）分工：本库收协议本体文献，文档库收对外公约条例与操作文档。">
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           {FAMILY_TABS.map((t) => (

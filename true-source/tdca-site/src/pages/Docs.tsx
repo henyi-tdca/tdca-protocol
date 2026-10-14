@@ -58,6 +58,9 @@ export default function DocsHome() {
       <p className="mt-2 text-sm text-muted-foreground">
         内部试运行版 · 白皮书 / 论文 / 公约条例 / COP 库四族内容已入库，点开即读
       </p>
+      <p className="mt-2 rounded-md border bg-muted/50 px-4 py-2 text-xs text-muted-foreground">
+        分工（SITE-THREE-FIXES-001）：文档库＝对外公约条例与操作文档；协议本体文献（白皮书 · 论文与实证 · 产物库 · 制度规范）请走「知识库」（/library，原名文库，路由不变）。
+      </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
         <strong>怎么进（两步）：</strong>① 浏览器弹出账号密码框时，填管理员发你的站点账号密码；
         ② 若页面提示输入口令，向管理员索取后填上即可。无需注册，看完直接关。
