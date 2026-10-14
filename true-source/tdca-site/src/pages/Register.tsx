@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { PageShell } from '@/components/PageShell'
+import { AnchorSelectSection } from '@/components/IdentityMark'
 import { useAuth } from '@/lib/auth-context'
 import { api, setSessionToken } from '@/lib/client'
 import { CONTRACT_EN_URL, CONTRACT_ID, CONTRACT_VERSION, CONTRACT_ZH_TEXT } from '@/lib/register-contract'
@@ -156,6 +157,7 @@ export function RegisterPage() {
         {confirm && password !== confirm && (
           <div className="text-xs text-red-700">两次输入的密码不一致</div>
         )}
+        <AnchorSelectSection />
         {msg && <div data-testid="register-msg" className="text-xs text-red-700">{msg}</div>}
         {!agreed && (
           <div data-testid="register-agree-hint" className="text-xs text-amber-700">
