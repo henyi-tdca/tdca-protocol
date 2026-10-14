@@ -8,6 +8,7 @@ import { useApiGet } from '@/lib/useApi'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 import { TopologyEngine, hashAgentId, type TopoData } from '@/lib/TopologyEngine'
+import { OfficialExecutorsPanel } from '@/components/OfficialExecutorsPanel'
 
 interface ClusterData {
   cluster: { endpoint: string; capability: string; id: string; status: string }[]
@@ -131,6 +132,9 @@ export function AgentsPage() {
           </div>
           <TopologyEngine data={TOPO_DATA} height={320} />
         </section>
+
+        {/* 执行体批：官方执行体目录＋分野＋身份前置判据（追加呈现，现有区块不动） */}
+        <OfficialExecutorsPanel />
       </div>
     </PageShell>
   )
