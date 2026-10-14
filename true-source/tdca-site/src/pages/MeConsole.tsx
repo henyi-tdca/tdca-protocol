@@ -14,6 +14,7 @@ import { Link } from 'react-router'
 import { api } from '@/lib/client'
 import { useApiGet } from '@/lib/useApi'
 import { PageShell } from '@/components/PageShell'
+import { IDENTITY_DISCLAIMER } from '@/components/IdentityMark'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 import { useAuth } from '@/lib/auth-context'
 import { AccountCredentialPanel } from '@/components/AccountCredentialPanel'
@@ -509,7 +510,7 @@ export function MePage() {
                 <p className="mt-1 text-[11px] text-gray-600">
                   改锚：默认不可自助——须申请，由站点管理员人工受理，留痕并重新核验。
                 </p>
-                <p className="mt-1 text-[11px] text-gray-500">本标识仅述锚点身份等级，供责任追溯参考；协作风险由协作方自担。</p>
+                <p className="mt-1 text-[11px] text-gray-500">{IDENTITY_DISCLAIMER}</p>
               </div>
             </div>
             {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}

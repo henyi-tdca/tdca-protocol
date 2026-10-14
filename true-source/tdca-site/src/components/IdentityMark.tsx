@@ -114,7 +114,7 @@ export function AnchorSelectSection() {
         </div>
       )}
       <div data-testid="anchor-summary" className="rounded border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] text-emerald-900">
-        已选：{cur.name}（{cur.tier}／{cur.status}）。所选锚将随缔约存证登记——登记通道随后端批次开通，本页仅作呈现与暂存。
+        已选：{cur.name}（{cur.tier}／{cur.status}）。本页仅作呈现；选择暂不生效，待登记通道开通后方随缔约存证记录。
       </div>
       <p className="text-[11px] text-gray-500">{IDENTITY_DISCLAIMER}</p>
     </div>
