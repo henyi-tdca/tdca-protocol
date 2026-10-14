@@ -5,7 +5,8 @@
   源 A = 前端路由（解析 src/App.tsx 的 path="..."）
   源 B = 后端 /api/site 端点（解析 gateway/tdca_site_routes.py 的 @router 装饰器）
   源 C = CI 判态（status/fullrun-last.json，只读引用，脚本内不取机——由执行侧回读填入 ci_head/ci_verdict）
-合成 = 14 环 ↔ 制度条映射（令面随附，原样采用）+ 页面绑定 + 工件路径（人工定位件，如实标注）
+  源 D = 平台面 /api/v1（批 3 补全：解析同仓 tdca-web/gateway 各路由器件，绑回站点页调用）
+合成 = 14 环 ↔ 制度条映射（批 1 令面随附，原样采用）+ 页面绑定 + 工件路径（人工定位件，如实标注）
 
 可复跑：纯本地解析，同一提交上两跑 diff 为空即证。零凭据、零网络、零仓内改动。
 """
@@ -14,7 +15,7 @@ import re
 import sys
 from pathlib import Path
 
-# 站点树定位：默认取本脚本所在仓库中的站点树（docs/site/endpoint-map/ → 站点树根四级上溯），
+# 站点树定位：默认取本脚本所在仓库中的站点树（docs/site/endpoint-map/ → 站点树根上三级），
 # 可用环境变量 TDCA_SITE_ROOT 覆盖；--out 指定产物目录（默认与本脚本同目录）。
 import argparse
 import os
@@ -22,6 +23,12 @@ import os
 _here = Path(__file__).resolve()
 SITE = Path(os.environ.get("TDCA_SITE_ROOT") or _here.parents[3])
 OUT = Path(os.environ.get("TDCA_SITE_OUT") or _here.parent)
+# 平台面网关在仓内兄弟树 tdca-web/gateway（批 3 完整面纳入 /api/v1）
+PLATFORM_GW = Path(os.environ.get("TDCA_PLATFORM_GW") or _here.parents[3].parent / "tdca-web" / "gateway")
+PLATFORM_OPS = ["api_v1", "workbuddy_ops", "cluster_ops", "formal_ops", "toolshelf_ops",
+                "ci_ops", "anchor_ops", "ops_ops", "ownership_ops", "regulations_ops",
+                "market_sim_ops", "library_ops", "announcements_ops", "authorization_ops",
+                "market_admin_ops"]
 
 def _parse_args(argv):
     p = argparse.ArgumentParser(description="批 1 端点对照表对账")
@@ -162,11 +169,37 @@ RINGS = [
      "gap": "TDCA-STD-AGENT-ID-002（遗产继承与创建人消亡处置·引用称在册生效）正本未定位于本仓——工件缺口；「NCA 永续」文本件未定位"},
 ]
 
+def parse_platform_endpoints():
+    """批 3 完整面：枚举平台面 /api/v1（api_v1.py + 业务路由器），返回 [{method,path,file}]。"""
+    out = []
+    for name in PLATFORM_OPS:
+        src = (PLATFORM_GW / f"{name}.py").read_text(encoding="utf-8")
+        m = re.search(r'APIRouter\((?:[^)]*?prefix="([^"]+)")?', src)
+        prefix = (m.group(1) if m and m.group(1) else "")
+        for d in re.finditer(r'@router\.(get|post|put|delete)\(\s*"([^"]+)"', src):
+            out.append({"method": d.group(1).upper(),
+                        "path": f"{prefix}{d.group(2)}", "file": name})
+    return out
+
+def page_bindings():
+    """站点页 → /api/v1 调用前缀绑定：{前缀: [页面件名]}（逐页 grep 归因）。"""
+    bind = {}
+    for f in sorted((SITE / "src" / "pages").glob("*.tsx")):
+        for m in set(re.findall(r"/api/v1/[a-z0-9/{}_.-]+", f.read_text(encoding="utf-8"))):
+            key = re.sub(r"[{}].*$", "*", m).rstrip("/")
+            bind.setdefault(key, set()).add(f.stem)
+    return {k: sorted(v) for k, v in bind.items()}
+
 def main():
     app = (SITE / "src" / "App.tsx").read_text(encoding="utf-8")
     gw = (SITE / "gateway" / "tdca_site_routes.py").read_text(encoding="utf-8")
     routes = parse_routes(app)
     eps = parse_endpoints(gw)
+    binds = page_bindings()
+    plat = parse_platform_endpoints()
+    for e in plat:
+        cand = [k for k in binds if e["path"].startswith(k)]
+        e["pages"] = sorted({p for k in cand for p in binds[k]})
 
     # 校验一：端点真存在（凡 RINGS 里列到的 /api/site 端点必须在网关解析结果内）
     ep_set = {f"{m} {p}" for m, p in eps}
@@ -189,11 +222,16 @@ def main():
             "site_head": CI_STATE["head"],
             "ci": CI_STATE,
             "counts": {"routes_total": len(routes), "routes_business": len([p for p in routes if p != "*"]),
-                       "api_site_endpoints": len(eps)},
+                       "api_site_endpoints": len(eps),
+                       "platform_endpoints_total": len(plat),
+                       "platform_endpoints_page_bound": sum(1 for e in plat if e["pages"]),
+                       "platform_endpoints_unbound": sum(1 for e in plat if not e["pages"])},
             "criteria": {"B-1": "端点真存在", "B-2": "接口熵=0（出入参结构确定）", "B-3": "两面成套（页↔端勾稽）"},
+            "completeness": "批 3 补全：完整面＝站点面 /api/site（14）＋平台面 /api/v1（见 platform_endpoints）",
         },
         "routes": routes,
         "api_site_endpoints": [f"{m} /api/site{p}" for m, p in eps],
+        "platform_endpoints": plat,
         "rings": RINGS,
         "self_check": {"claimed_endpoints_missing": missing, "pages_missing": miss_pages},
     }
@@ -201,7 +239,7 @@ def main():
         json.dumps(table, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # 人读五列表
-    md = ["# 制度条款 → 代码落点 · 端点对照表（批 1）", "",
+    md = ["# 制度条款 → 代码落点 · 端点对照表（批 1＋批 3 补全·完整面）", "",
           f"站点源提交 `{CI_STATE['head']}`｜CI {CI_STATE['passed']} passed / {CI_STATE['failed']} failed / {CI_STATE['suites']} suites｜"
           f"路由 {table['meta']['counts']['routes_total']} 条（业务 {table['meta']['counts']['routes_business']}）｜/api/site 端点 {len(eps)} 个", "",
           "| 制度条款（业务语言） | 页面（路由） | 端点 | 工件（仓内路径） | 状态（B-1／B-2／B-3） |",
@@ -220,12 +258,20 @@ def main():
     for r in RINGS:
         if r["gap"]:
             md.append(f"- 环{r['no']} {r['ring']}：{r['gap']}")
+    pb = sum(1 for e in plat if e["pages"])
+    md += ["", "## 平台面 /api/v1 候选端点清单（批 3 补全·完整面）",
+           f"端点总数 **{len(plat)}**；页↔端绑定 **{pb}**；无页绑定 **{len(plat) - pb}**（内部/智能体通道，如实标）",
+           "；".join(f"{name}×{sum(1 for e in plat if e['file'] == name)}" for name in PLATFORM_OPS), "",
+           "| 端点 | 源件 | 调用页面 |", "|---|---|---|"]
+    for e in plat:
+        md.append(f"| {e['method']} `{e['path']}` | {e['file']} | {'、'.join(e['pages']) or '—'} |")
     md += ["", "## 自检",
            f"- 所引 /api/site 端点未在网关解析命中：{missing or '无'}",
            f"- 所引页面未在路由表命中：{miss_pages or '无'}",
            f"- /api/site 端点全量（{len(eps)}）：" + "、".join(f"{m} /api/site{p}" for m, p in eps)]
     (OUT / "端点对照表.md").write_text("\n".join(md), encoding="utf-8")
     print(json.dumps({"routes": len(routes), "endpoints": len(eps),
+                      "platform_total": len(plat), "platform_bound": pb,
                       "missing_eps": missing, "missing_pages": miss_pages}, ensure_ascii=False))
 
 if __name__ == "__main__":

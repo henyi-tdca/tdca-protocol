@@ -41,6 +41,8 @@ import { OpsPage } from './pages/OpsPage'
 // 批 2 骨架：全局壳（两轴）＋频道首页五件——仅加包裹层与新路由，现有路径不动
 import { SiteLayout } from './components/SiteLayout'
 import { ChannelHome } from './pages/ChannelHome'
+// 批 3：协作流程汇总页（/process）——新增路由，现有路径不动
+import { ProcessOverviewPage } from './pages/ProcessOverview'
 
 export default function App() {
   return (
@@ -54,6 +56,8 @@ export default function App() {
         <Route path="/channel/registry" element={<ChannelHome channel="registry" />} />
         <Route path="/channel/market" element={<ChannelHome channel="market" />} />
         <Route path="/channel/tools" element={<ChannelHome channel="tools" />} />
+        {/* 批 3：协作流程汇总页（新增，不改现有路径） */}
+        <Route path="/process" element={<ProcessOverviewPage />} />
         <Route path="/join" element={<Join />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
