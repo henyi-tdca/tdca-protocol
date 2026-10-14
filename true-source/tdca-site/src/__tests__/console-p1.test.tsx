@@ -7,6 +7,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { MePage } from '@/pages/MeConsole'
+import { AuthProvider } from '@/lib/auth-context'
+// TEST-ADAPT-001：SessionsCard 消费 useAuth()（#162 起），裸渲染必崩——
+// 照单B已确立之 MemoryRouter 同款做法，补 AuthProvider 包裹（只补包裹，断言一字未动）。
 
 function envelope(payload: unknown, nature = 'real') {
   return { data: payload, nca_watermark: 'sha256:test', ts: '2026-10-09T00:00:00Z', data_nature: nature }
@@ -48,7 +51,7 @@ afterEach(() => { vi.unstubAllGlobals() })
 describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('权属栏渲染本人登记行＋状态标注（后端已本人过滤，前端照单渲染）', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
-    const { container } = render(<MemoryRouter><MePage /></MemoryRouter>)
+    const { container } = render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-ownership')).toBeTruthy())
     expect(screen.getByTestId('me-ownership').textContent).toContain('OR-SELF-001')
     expect(screen.getByTestId('me-ownership').textContent).toContain('自研引擎 V1')
@@ -67,7 +70,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
         ],
       },
     })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-admits')).toBeTruthy())
     const admits = screen.getByTestId('me-admits')
     expect(admits.querySelector('[data-action="CLUSTER_ADMIT_DENY"]')).toBeTruthy()
@@ -82,7 +85,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
       '/api/v1/me/dashboard': ME_PAYLOAD,
       '/api/v1/intent': { matched: true, route: '/toolshelf', title: '工具货架', action: '查询', guide: ['g1', 'g2'], alternatives: [] },
     })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-assistant')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-assistant-input'), { target: { value: '我要上架工具' } })
     fireEvent.click(screen.getByTestId('me-assistant-go'))
@@ -102,7 +105,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
         ],
       },
     })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-nca')).toBeTruthy())
     expect(screen.getByTestId('me-nca').textContent).not.toContain('NCA-2')
     fireEvent.click(screen.getByTestId('me-nca-more'))
@@ -114,7 +117,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
 
   it('频道直达条渲染九频道入口', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
-    const { container } = render(<MemoryRouter><MePage /></MemoryRouter>)
+    const { container } = render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-channels')).toBeTruthy())
     expect(container.querySelectorAll('[data-testid^="me-ch-"]').length).toBe(9)
   })
@@ -143,7 +146,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('改密正例：提交打 POST /api/v1/me/password（body 旧密/新密两字段），成功提示含存证号并清空输入', async () => {
     const f = fetchMockPwd()
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'new-pass-1' } })
@@ -162,7 +165,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('改密弱密前端拦截：不发请求，提示强度口径（至少 8 位且含字母与数字）', async () => {
     const f = fetchMockPwd()
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'short1' } })
@@ -175,7 +178,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('改密两次新密码不一致：不发请求，提示不一致', async () => {
     const f = fetchMockPwd()
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
@@ -189,7 +192,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     const f = fetchMockPwd(400)
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'old-pass-1' } })
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
@@ -203,7 +206,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     const f = fetchMockPwd(401)
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'wrong-old-1' } })
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
@@ -216,7 +219,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
     const f = fetchMockPwd(403)
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pwd')).toBeTruthy())
     fireEvent.change(screen.getByTestId('me-pwd-old'), { target: { value: 'wrong-old-1' } })
     fireEvent.change(screen.getByTestId('me-pwd-new'), { target: { value: 'abc12345' } })
@@ -228,7 +231,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
 
   it('账户管理栏目（件A）：标题在位，账户信息/忘记密码指引/改密卡同栏聚合，待签批独立成卡不丢', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD })
-    const { container } = render(<MemoryRouter><MePage /></MemoryRouter>)
+    const { container } = render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-account')).toBeTruthy())
     // 栏目标题
     expect(screen.getByTestId('me-account').textContent).toContain('账户管理')
@@ -285,7 +288,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
 
   it('登录会话卡（看）：列表渲染 sid/时间/状态标记；已吊销行禁用吊销钮；全部吊销与「退出登录」文案区分', async () => {
     vi.stubGlobal('fetch', fetchMockSess())
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     // 等列表行渲染（骨架常驻，须等数据到达后再断言行）
     await waitFor(() => expect(screen.getByTestId('me-sess-revoke-sid-current-01')).toBeTruthy())
     const card = screen.getByTestId('me-sessions')
@@ -303,7 +306,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('登录会话卡（踢指定正例）：POST /me/sessions/revoke body 恰 {sid}，成功后提示并刷新列表', async () => {
     const f = fetchMockSess()
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-sess-revoke-sid-current-01')).toBeTruthy())
     fireEvent.click(screen.getByTestId('me-sess-revoke-sid-current-01'))
     await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('指定会话已吊销'))
@@ -314,7 +317,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
 
   it('登录会话卡（踢指定 404）：提示「会话不存在或已失效」（不可见处理口径如实透出）', async () => {
     vi.stubGlobal('fetch', fetchMockSess(404))
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-sess-revoke-sid-current-01')).toBeTruthy())
     fireEvent.click(screen.getByTestId('me-sess-revoke-sid-current-01'))
     await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('会话不存在或已失效'))
@@ -323,7 +326,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
   it('登录会话卡（踢全部）：POST /me/sessions/revoke-all 空体，提示含「请重新登录」（当前会话已废，不再刷新列表）', async () => {
     const f = fetchMockSess(200, 200)
     vi.stubGlobal('fetch', f)
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-sess-revoke-all')).toBeTruthy())
     fireEvent.click(screen.getByTestId('me-sess-revoke-all'))
     await waitFor(() => expect(screen.getByTestId('me-sessions-msg').textContent).toContain('请重新登录'))
@@ -344,7 +347,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
 
   it('用量统计卡（看）：日计数/总数/+08 口径渲染；simulated 数据显 SIMULATED 角标（ID92）', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ME_PAYLOAD, '/api/v1/me/usage': USAGE_PAYLOAD })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-usage').textContent).toContain('近 30 天共'))
     const card = screen.getByTestId('me-usage')
     expect(card.textContent).toContain('近 30 天共')
@@ -366,7 +369,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
       }
       return { ok: false, status: 404, json: async () => ({ detail: 'not found' }) } as Response
     }))
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-usage-msg').textContent).toContain('加载失败'))
   })
 
@@ -379,7 +382,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
 
   it('账户信息卡（看）：用户名/角色中文标签/建号时间 +08；入口指向登录会话与用量统计；无编辑控件', async () => {
     mockByUrl({ '/api/v1/me/dashboard': ACCT_PAYLOAD, '/api/v1/me/usage': USAGE_PAYLOAD })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-acct-created').textContent).toContain('2026-10-10 00:00:00'))
     const card = screen.getByTestId('me-session')
     expect(card.textContent).toContain('账户信息')
@@ -399,7 +402,7 @@ describe('用户控制台 P1（me.tsx 扩充面）', () => {
       session: { ...ME_PAYLOAD.session, created_at: 'not-a-date',
                  created_at_display: null, created_at_parse_ok: false } },
       '/api/v1/me/usage': USAGE_PAYLOAD })
-    render(<MemoryRouter><MePage /></MemoryRouter>)
+    render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-acct-created').textContent).toContain('not-a-date'))
     const el = screen.getByTestId('me-acct-created')
     expect(el.textContent).toContain('无法解析')
