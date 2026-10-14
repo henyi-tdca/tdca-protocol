@@ -51,6 +51,54 @@ export function setHufToken(token: string): void {
 }
 
 // ---------------------------------------------------------------------------
+// 四令牌明型（批次：凭证面）：值形前缀 ↔ 类型，一看即辨；旧客户端共头不变、不静默失效
+// ---------------------------------------------------------------------------
+export type TokenKind = 'access' | 'identity' | 'execution' | 'authcode'
+
+const KIND_BY_PREFIX: Array<[string, TokenKind]> = [
+  ['TDCA-SES', 'access'],
+  ['TDCA-IDT', 'identity'],
+  ['TDCA-CRT', 'execution'],
+  ['TDCA-AUC', 'authcode'],
+]
+
+/** 由值形前缀判型；无前缀可辨者返回 null（旧形态值不硬猜） */
+export function tokenKindOf(value: string | null | undefined): TokenKind | null {
+  if (!value) return null
+  for (const [prefix, kind] of KIND_BY_PREFIX) {
+    if (value.startsWith(prefix)) return kind
+  }
+  return null
+}
+
+/** 随令牌同发的类型标记头：与 Authorization 并存，旧服务端不读此头即原样兼容 */
+export const TOKEN_TYPE_HEADER = 'X-TDCA-Token-Type'
+
+// 身份令牌车道（待建）：谁能取得身份令牌属明示项，本层不代定；仅留接口位与明型
+const IDENTITY_KEY = 'tdca_identity_token'
+export function identityToken(): string | null {
+  return localStorage.getItem(IDENTITY_KEY)
+}
+export function setIdentityToken(token: string): void {
+  localStorage.setItem(IDENTITY_KEY, token)
+}
+export function clearIdentityToken(): void {
+  localStorage.removeItem(IDENTITY_KEY)
+}
+
+// 授权码车道（待建）：属资产线，不等于授权本身；签发与核销另案
+const AUTHCODE_KEY = 'tdca_auth_code'
+export function authCode(): string | null {
+  return sessionStorage.getItem(AUTHCODE_KEY)
+}
+export function setAuthCode(code: string): void {
+  sessionStorage.setItem(AUTHCODE_KEY, code)
+}
+export function clearAuthCode(): void {
+  sessionStorage.removeItem(AUTHCODE_KEY)
+}
+
+// ---------------------------------------------------------------------------
 // M3 会话接缝（F-2）：TDCA-SES 会话令牌 + 401/403 拦截 + 草稿兜底
 // ---------------------------------------------------------------------------
 const SESSION_KEY = 'tdca_session_token'
@@ -150,6 +198,9 @@ async function request<T>(
   const ses = sessionToken() // M3：会话令牌优先；无会话且 HUF 写操作 → B-4 静态令牌兜底
   if (ses) headers.Authorization = ses
   else if (opts.needHuf) headers.Authorization = hufToken()
+  // 明型：随 Authorization 附类型标记头；旧服务端不读即原样兼容
+  const kind = tokenKindOf(ses ?? (opts.needHuf ? hufToken() : null))
+  if (kind) headers[TOKEN_TYPE_HEADER] = kind
   try {
     const res = await fetch(`${BASE}${path}`, {
       method,

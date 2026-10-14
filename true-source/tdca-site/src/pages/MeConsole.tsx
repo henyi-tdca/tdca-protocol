@@ -16,6 +16,7 @@ import { useApiGet } from '@/lib/useApi'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 import { useAuth } from '@/lib/auth-context'
+import { AccountCredentialPanel } from '@/components/AccountCredentialPanel'
 
 interface MeData {
   session: { username: string; role: string; expires_at: string; last_register_nca_id?: string | null
@@ -717,6 +718,8 @@ export function MePage() {
           </section>
         </div>
       )}
+      {/* 凭证批：账户四分面＋授权行权两段要素（追加呈现，现有区块不动） */}
+      <AccountCredentialPanel />
     </PageShell>
   )
 }
