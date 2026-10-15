@@ -51,29 +51,34 @@ export const COLLAB_TRUST_PENDING_NOTE =
 /** 当前账号档位如实标（有账号、未实名：目标档＝记名级，态＝待补） */
 export const CURRENT_TIER_LABEL = '记名级 · 待补'
 
-/** 注册页「选择你的身份锚」段：选项卡单选＋选中显摘要（本批仅呈现与本地暂存） */
-export function AnchorSelectSection() {
-  const [selected, setSelected] = useState<string>('realname-phone')
+/** 注册页「选择你的身份锚」段（批 2：选中态受控上提，随注册提交落存证；可后补不设门槛） */
+export function AnchorSelectSection({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (v: string) => void
+}) {
   const [showNote, setShowNote] = useState(false)
-  const cur = ANCHOR_OPTIONS.find((a) => a.key === selected) ?? ANCHOR_OPTIONS[1]
+  const cur = ANCHOR_OPTIONS.find((a) => a.key === value) ?? null
   return (
     <div data-testid="register-anchor" className="space-y-2 rounded border border-slate-200 bg-white p-3">
-      <div className="text-xs font-semibold text-gray-700">选择你的身份锚（注册即缔约之一环）</div>
+      <div className="text-xs font-semibold text-gray-700">选择你的身份锚（注册即缔约之一环，可后补）</div>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
         {ANCHOR_OPTIONS.map((a) => (
           <label
             key={a.key}
             data-testid={`anchor-opt-${a.key}`}
             className={`block cursor-pointer rounded border p-2.5 text-xs ${
-              selected === a.key ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 bg-white'
+              value === a.key ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 bg-white'
             }`}
           >
             <div className="flex items-center gap-2">
               <input
                 type="radio"
                 name="anchor-choice"
-                checked={selected === a.key}
-                onChange={() => setSelected(a.key)}
+                checked={value === a.key}
+                onChange={() => onChange(a.key)}
                 data-testid={`anchor-radio-${a.key}`}
               />
               <span className="font-medium text-gray-800">{a.name}</span>
@@ -108,13 +113,30 @@ export function AnchorSelectSection() {
           </label>
         ))}
       </div>
-      {cur.simulatedNote && showNote && (
+      <label
+        data-testid="anchor-opt-none"
+        className={`flex cursor-pointer items-center gap-2 rounded border px-2.5 py-2 text-xs ${
+          value === 'none' ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 bg-white'
+        }`}
+      >
+        <input
+          type="radio"
+          name="anchor-choice"
+          checked={value === 'none'}
+          onChange={() => onChange('none')}
+          data-testid="anchor-radio-none"
+        />
+        <span className="text-gray-700">暂不选择（可后补：不选亦可注册，默认记名级 · 待补）</span>
+      </label>
+      {cur?.simulatedNote && showNote && (
         <div data-testid="anchor-sim-note" className="rounded border border-purple-200 bg-purple-50 px-3 py-2 text-[11px] text-purple-800">
           {cur.simulatedNote}
         </div>
       )}
       <div data-testid="anchor-summary" className="rounded border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] text-emerald-900">
-        已选：{cur.name}（{cur.tier}／{cur.status}）。本页仅作呈现；选择暂不生效，待登记通道开通后方随缔约存证记录。
+        {cur
+          ? `已选：${cur.name}（${cur.tier}／${cur.status}）。所选锚将随本次注册落存证（仅锚段记录，不含任何身份明文取值）；实名与手机号核验由站点管理员人工受理后转为「已补」。`
+          : '暂不选择身份锚：不选亦可注册，未选者默认记名级 · 待补，日后可后补（后补同样落存证）。'}
       </div>
       <p className="text-[11px] text-gray-500">{IDENTITY_DISCLAIMER}</p>
     </div>

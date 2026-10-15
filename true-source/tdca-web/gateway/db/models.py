@@ -628,3 +628,36 @@ class MarketListingEvent(Base):
         CheckConstraint("to_status IN ('active','paused','delisted')", name="ck_mle_to"),
         Index("idx_mle_listing", "listing_id"),
     )
+
+
+class UserAnchor(Base):
+    """31. 用户身份锚表（L1SI145-ANCHOR-B2-001：注册选锚落存证＋人工受理核验）。
+
+    明文最小化硬约束：只落 anchor_kind 枚举引用与 *_present 布尔＋evidence_ref 引用，
+    ⛔ 绝不落真实姓名/手机号明文取值；选锚不产生权限、不发身份类令牌。
+    未选锚者注册时照常建一行（anchor_kind NULL＝未选如实，tier 记名级·态待补）。
+    """
+
+    __tablename__ = "user_anchors"
+    username: Mapped[str] = mapped_column(ForeignKey("users.username"), primary_key=True)
+    anchor_kind: Mapped[str | None] = mapped_column(Text)          # notifier|realname-phone；NULL=未选
+    anchor_tier: Mapped[str] = mapped_column(Text, nullable=False, default="记名级")
+    tier_state: Mapped[str] = mapped_column(Text, nullable=False, default="待补")   # 待补|已补
+    real_name_present: Mapped[int | None] = mapped_column(Integer)  # 核验后 1/0；未核 NULL
+    phone_present: Mapped[int | None] = mapped_column(Integer)      # 同上（非必填，可为 0）
+    evidence_ref: Mapped[str | None] = mapped_column(Text)          # 证据引用编号（⛔ 非明文）
+    verified_at: Mapped[str | None] = mapped_column(Text)
+    verifier: Mapped[str | None] = mapped_column(Text)              # 受理人账号
+    nca_ref: Mapped[str | None] = mapped_column(Text)               # 最近锚段存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("anchor_kind IN ('notifier','realname-phone')", name="ck_user_anchors_kind"),
+        CheckConstraint("anchor_tier IN ('固锚级','移锚级','记名级','未达门槛','未定档')",
+                        name="ck_user_anchors_tier"),
+        CheckConstraint("tier_state IN ('待补','已补')", name="ck_user_anchors_state"),
+        CheckConstraint("real_name_present IN (0,1)", name="ck_user_anchors_rn"),
+        CheckConstraint("phone_present IN (0,1)", name="ck_user_anchors_ph"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_user_anchors_prov"),
+    )

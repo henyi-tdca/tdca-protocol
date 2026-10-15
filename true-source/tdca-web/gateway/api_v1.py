@@ -956,6 +956,10 @@ class RegisterRequest(BaseModel):
     identity_type: str = "native"       # native（人机面默认）| external（非原生智能体，须带卡+授权）
     agent_card: Optional[dict] = None   # external 必填：agent_card 全量（持久化，链上可机验）
     owner_auth: str = ""                # external 必填：主人授权引用（如 TDCA-OWNER-CONTRACT-AUTH-001）
+    # L1SI145-ANCHOR-B2-001：注册选锚（可后补不设门槛；未选者默认记名级·待补）。
+    # 只收枚举引用，⛔ 不收任何身份明文取值；选锚不产生权限、不发身份类令牌。
+    anchor_kind: Optional[str] = None           # notifier|realname-phone；缺省/空=未选
+    anchor_evidence_ref: Optional[str] = None   # 证据引用编号（引用非值；须与 anchor_kind 同传）
 
 
 def _client_ip(request: Request) -> str:
@@ -1004,6 +1008,15 @@ def auth_register(req: RegisterRequest, request: Request):
             raise HTTPException(400, "external 身份必须携带 owner_auth（主人授权引用）")
     elif req.agent_card is not None or req.owner_auth.strip():
         raise HTTPException(400, "agent_card/owner_auth 仅 identity_type=external 时有效（native 身份经 Agent Studio 创建）")
+    # L1SI145-ANCHOR-B2-001：选锚枚举校验（fail-closed，未知值拒绝；引用只收编号不收明文取值）
+    anchor_kind = (req.anchor_kind or "").strip() or None
+    if anchor_kind is not None and anchor_kind not in ("notifier", "realname-phone"):
+        raise HTTPException(400, "anchor_kind 仅接受 notifier|realname-phone（可留空，未选默认记名级·待补）")
+    anchor_ref = (req.anchor_evidence_ref or "").strip() or None
+    if anchor_ref is not None and anchor_kind is None:
+        raise HTTPException(400, "anchor_evidence_ref 须与 anchor_kind 同传（未选锚不得携带证据引用）")
+    if anchor_ref is not None and len(anchor_ref) > 256:
+        raise HTTPException(400, "anchor_evidence_ref 过长（≤256 字符，引用编号）")
     ph, salt, iters = hash_password(pw)
     try:
         with get_sessionmaker().begin() as s:
@@ -1037,6 +1050,21 @@ def auth_register(req: RegisterRequest, request: Request):
             owner_auth=req.owner_auth.strip() or None,
             nca_ref=nca_id, data_provenance="real",
             created_at=now_iso, updated_at=now_iso))
+    # L1SI145-ANCHOR-B2-001：选锚落锚段存证（无存证不执行——存证失败即抛错，不建锚行）；
+    # 未选者也照常建一行（anchor_kind NULL 如实＋记名级·待补＝默认标记落点）。
+    _ANCHOR_TIER_BY_KIND = {"notifier": "固锚级", "realname-phone": "记名级"}
+    anchor_tier = _ANCHOR_TIER_BY_KIND.get(anchor_kind or "", "记名级")
+    anchor_nca = _nca_append(
+        "user_anchor_select", username,
+        artifact_path=(f"anchor://kind:{anchor_kind or 'none'}/tier:{anchor_tier}"
+                       f"/state:待补/ref:{anchor_ref or 'none'}"),
+        prov="real")
+    with get_sessionmaker().begin() as s:
+        now_iso = datetime.now(timezone.utc).isoformat()
+        s.add(M.UserAnchor(
+            username=username, anchor_kind=anchor_kind, anchor_tier=anchor_tier,
+            tier_state="待补", evidence_ref=anchor_ref, nca_ref=anchor_nca,
+            data_provenance="real", created_at=now_iso, updated_at=now_iso))
     token, expires_at = issue_session(username)   # 注册成功直接发登录会话（指令 §二.1 推荐口径）
     return _nca_watermark({
         "token": token, "username": username, "role": "viewer",
@@ -1047,6 +1075,9 @@ def auth_register(req: RegisterRequest, request: Request):
         "contract": {"contract_id": CONTRACT_ID, "version": CONTRACT_VERSION,
                      "zh_sha256": CONTRACT_ZH_SHA256, "en_sha256": CONTRACT_EN_SHA256,
                      "machine_sha256": CONTRACT_JSON_SHA256, "consent_ts": consent_ts},
+        "anchor": {"anchor_kind": anchor_kind, "anchor_tier": anchor_tier,
+                   "tier_state": "待补", "nca_ref": anchor_nca,
+                   "note": "选锚已随注册落锚段存证（未选者默认记名级·待补，可后补）；选锚不产生权限"},
         "note": "注册即缔约成立（默认 viewer 只读角色，operator 走升级流程，founder 仅种子保留；"
                 "已自动签发 2h 会话；缔约存证含协议版本+三件套哈希+同意时间戳；display_name 免迁移不落库）",
     }, nature="real")
@@ -1114,6 +1145,66 @@ def identity_annotation(req: IdentityAnnotationRequest, request: Request):
         "agent_card_persisted": req.identity_type == "external",
         "owner_auth": req.owner_auth.strip() or None, "nca_id": nca_id,
         "note": "身份补录完成（补录存证已落链；正常注册路径自动持久化，无需走本端点）",
+    }, nature="real")
+
+
+# =====================================================================
+# L1SI145-ANCHOR-B2-001：锚核验人工受理（founder/operator 专用，追加制留痕）
+# =====================================================================
+
+class AnchorVerifyRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    username: str
+    real_name_present: bool = False    # 只收有无（布尔），⛔ 不收明文取值
+    phone_present: bool = False        # 手机号非必填：present=False 如实落 0
+    evidence_ref: str = ""             # 证据引用编号（人工受理留痕载体，引用非值）
+
+
+@router.post("/me/anchor/verify")
+def me_anchor_verify(req: AnchorVerifyRequest, request: Request):
+    """锚核验人工受理：站点管理员线下核过实名/手机号后调用。
+
+    追加制：每次受理追加一条 user_anchor_verify 存证（原态→新态如实），再更新锚行；
+    明文最小化：只落 *_present 布尔＋evidence_ref 引用，⛔ 绝不收/不落明文取值；
+    fail-closed：无锚记录/无证据引用/角色不符一律拒绝。
+    """
+    v = _require_session_user(request)
+    if v["role"] not in ("founder", "operator"):
+        raise HTTPException(403, "锚核验受理仅 founder/operator 可执行（人工受理制度级操作）")
+    username = req.username.strip()
+    ref = req.evidence_ref.strip()
+    if not ref:
+        raise HTTPException(400, "evidence_ref 必填（核验证据引用编号，人工受理留痕载体）")
+    if len(ref) > 256:
+        raise HTTPException(400, "evidence_ref 过长（≤256 字符，引用编号）")
+    with get_sessionmaker().begin() as s:
+        if s.get(M.User, username) is None:
+            raise HTTPException(404, f"用户不存在: {username}")
+        row = s.get(M.UserAnchor, username)
+        if row is None:
+            raise HTTPException(404, f"该用户无锚记录（注册时未建锚行，异常态——请上报）")
+        prev_state = row.tier_state
+        nca_id = _nca_append(
+            "user_anchor_verify", v["username"],
+            artifact_path=(f"anchor://{username}/state:{prev_state}->已补"
+                           f"/ref:{ref}"
+                           f"/rn:{int(req.real_name_present)}/ph:{int(req.phone_present)}"),
+            prov="real")
+        now_iso = datetime.now(timezone.utc).isoformat()
+        row.tier_state = "已补"
+        row.real_name_present = 1 if req.real_name_present else 0
+        row.phone_present = 1 if req.phone_present else 0
+        row.evidence_ref = ref
+        row.verified_at = now_iso
+        row.verifier = v["username"]
+        row.nca_ref = nca_id
+        row.updated_at = now_iso
+    return _nca_watermark({
+        "username": username, "tier_state": "已补",
+        "real_name_present": bool(req.real_name_present),
+        "phone_present": bool(req.phone_present),
+        "evidence_ref": ref, "verifier": v["username"], "nca_id": nca_id,
+        "note": "锚核验受理完成（追加制存证已落链：原态如实→已补；明文最小化：只落有无布尔＋引用）",
     }, nature="real")
 
 
@@ -1215,6 +1306,8 @@ def me_dashboard(request: Request):
                     .order_by(M.NcaChain.ts.desc()).first())
         # GSEQ-0700：身份三要素机读（identity_type/owner_auth；agent_card 全量经 nca-verify 链上核验）
         ident = s.get(M.UserIdentity, me)
+        # L1SI145-ANCHOR-B2-001：本人锚行机读（无行=旧账号如实 null；只现有无布尔与核态，⛔ 不出明文取值）
+        anchor = s.get(M.UserAnchor, me)
         # 账户信息栏升级版（可增项第 3 件）：users.created_at 现值如实带出（只读），
         # +08 展示值由 _fmt_plus8 解析；缺失/不可解析 ⟹ 原值如实、display=null、parse_ok=false
         u = s.get(M.User, me)
@@ -1230,6 +1323,15 @@ def me_dashboard(request: Request):
                         "created_at_display": created_disp,
                         "created_at_parse_ok": created_ok},
             "pending_count": len(pending),
+            "user_anchor": ({
+                "anchor_kind": anchor.anchor_kind, "anchor_tier": anchor.anchor_tier,
+                "tier_state": anchor.tier_state,
+                "real_name_present": anchor.real_name_present,
+                "phone_present": anchor.phone_present,
+                "evidence_ref": anchor.evidence_ref,
+                "verified_at": anchor.verified_at, "verifier": anchor.verifier,
+                "nca_ref": anchor.nca_ref, "updated_at": anchor.updated_at,
+            } if anchor else None),
             "my_agents": [{"agent_id": a.agent_id, "name": a.name,
                            "five_role": a.five_role, "status": a.status,
                            "attestation_state": a.attestation_state,
