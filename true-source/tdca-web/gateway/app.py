@@ -131,6 +131,12 @@ app.include_router(authorization_ops_router)
 from market_admin_ops import router as market_admin_ops_router  # noqa: E402
 app.include_router(market_admin_ops_router)
 
+# A-26: 智能体通道 批1 身份与登记（/api/v1/agent-channel/*——登记即创建·未登记显幽灵态；
+# 主体/执行体二分；登记号为智能体侧标识（⛔ 非 TDID）；fail-closed 六步总闸；
+# 凭据只存指纹·人类会话内签发·锚无效不发令牌；草案五表只读不动）
+from agent_channel_ops import router as agent_channel_ops_router  # noqa: E402
+app.include_router(agent_channel_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）
