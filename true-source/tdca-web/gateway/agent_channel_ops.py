@@ -18,10 +18,12 @@ SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import secrets
 import uuid
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
@@ -907,3 +909,399 @@ def punish(reg_no: str, req: PunishReq, request: Request):
                 "有权者＝人类裁决（NS-OPS §4.1 参照，主体自身⛔不得自罚）；"
                 "每次变更落 NCA 存证（DSA-001 可审计轨迹）；⛔ 无自动触发之径；"
                 "已吊销为终态不得复活；生效≠部署≠上线≠对外"}, nature="real")
+
+
+# =====================================================================
+# T-037（L1SI147-CHANNEL-T037-IMPL-002）：《惩罚三态统一状态机条例》工程接入
+# 制度锚：条例 TDCA-REG-PUNISH-STATEMACHINE-001（V1.0-FROZEN）第十~十八条；
+# 断言集 TDCA-ASSERT-T037-STATEMACHINE-001（Q-3/Q-4/Q-6/Q-7/Q-11/Q-12）；
+# 依已核证设计要件（TDCA-DESIGN-…-IMPL-001）落码。
+# 任务 A 判级档（引擎只写事件＋存证，⛔ 永不写 status）＋任务 B 恢复三端点
+# （重塑→重新验证→返回，独立记录⛔ 不并步）＋任务 C 超期升档（服务内定时扫掠，
+# ⛔ 不入请求径；以惩罚生效时点计，满 30 天未达解禁⟹ 置永久，独立存证类型）。
+# ⛔ 不改惩罚端点与总闸既有行为；⛔ 不动 registry.status 闭集（永久为叠加终态标记）；
+# ⛔ 无自动施加之径（施加唯一口＝批 4 既有惩罚端点，Q-3/Q-12 分界不得逾越）。
+# =====================================================================
+
+# 惩罚三态（登记 status 闭集之惩罚部分；恢复径/升档径之状态前置）
+_PUNISH_STATES = ("冻结", "降权", "吊销")
+
+# 任务 A：signal_source →（档位，分档依据）——档位由服务端依三空间分档口径导出，
+# ⛔ 调用方不得自报档位（阈值照已定口径，本件不拟数值；引用位见 band_basis）
+_CLASSIFY_BAND = {
+    "sensor_warning": ("轻度", "NS-OPS T(PCM-LIVE→PCM-RESTRICTED)：ECE/Sensor WARNING 级"
+                            "（SOFT 熔断·限频限域）"),
+    "sensor_cryogenic": ("中度", "NS-OPS T(PCM-LIVE→PCM-FROZEN)：ECE CRITICAL/Sensor CRYOGENIC 级"
+                              "（ATOMIC 冻结·等人类签名）"),
+    "sensor_blocked": ("严重", "NS-OPS T(PCM-LIVE→SBX-SUSPENDED)：ECE BLOCK/Sensor BLOCKED 级"
+                            "（HARD 熔断·即时阻断）"),
+    "legal_matrix": ("法律级", "NS-OPS subject.touches(legal_negative_space)=TRUE："
+                            "法律负空间命中（SBX-BANNED/EXITED 级）"),
+}
+
+# 任务 C：吊销满 30 天（以惩罚生效时点计）未达解禁 ⟹ 置永久（第十一条；
+# 令 §一：30 天＝单轮上限·取甲，轮次不限，单轮未达⟹ 转永久）
+_PRS_UPGRADE_DAYS = 30
+_SWEEP_INTERVAL_SECONDS = 3600   # 服务内定时扫掠间隔（⛔ 不入请求径）
+
+
+def _prs_no(prefix: str) -> str:
+    return prefix + uuid.uuid4().hex[:12].upper()
+
+
+def _require_founder(request: Request) -> str:
+    """恢复径/裁决面之有权者校验（口径同批 4：状态转换权在人类裁决，⛔ 主体不得自操作）。"""
+    v = _require_session_user(request)
+    actor = v["username"]
+    with get_session() as s:
+        actor_user = s.get(M.User, actor)
+        if actor_user is None or actor_user.role != "founder":
+            raise HTTPException(403, "PRS_FORBIDDEN: 非有权者——恢复径与裁决权在人类裁决"
+                                     "（⛔ 主体自身仅查询/申请，智能体不得代行）")
+    return actor
+
+
+def _legal_ruled(s, reg_no: str) -> bool:
+    """法律级已裁决标记：存在 band=法律级 且 ruling_state=ruled 之判级事件。"""
+    return s.query(M.SiteAgentClassification).filter_by(
+        reg_no=reg_no, band="法律级", ruling_state="ruled").first() is not None
+
+
+def _permanent_marked(s, reg_no: str) -> bool:
+    """永久终态标记在册（第十一条：永久为终态，⛔ 无返回径）。"""
+    return s.get(M.SiteAgentPermanent, reg_no) is not None
+
+
+# ---------------- 任务 A-1：判级事件写入（引擎写口） ----------------
+
+class ClassifyReq(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    reg_no: str = ""
+    signal_source: str = ""   # 闭集见 _CLASSIFY_BAND（档位服务端导出）
+    signal_ref: str = ""      # 信号锚（verdict 摘要/NSFL 引用，可核）
+
+
+@router.post("/classifications", status_code=201)
+def classify(req: ClassifyReq, request: Request):
+    """判级事件写入（引擎判级档之输入面；系统内写口，⛔ 非施加径）。
+
+    依三空间分档自动给出档位判定＋存证（判级可溯），呈待裁（pending）交人类裁决面；
+    fail-closed：登记在册（幽灵不受理）、signal_source 闭集外拒。
+    ⛔ 本端点永不写 site_agent_registry.status（Q-3/Q-12：判级可自动、施加须人类裁决）。
+    """
+    if req.signal_source not in _CLASSIFY_BAND:
+        raise HTTPException(400, "signal_source 仅接受 sensor_warning|sensor_cryogenic|"
+                                 "sensor_blocked|legal_matrix（档位服务端依三空间分档导出，"
+                                 "⛔ 不得自报档位）")
+    if not req.signal_ref.strip():
+        raise HTTPException(400, "signal_ref 必填（信号锚可核，判级可溯）")
+    with get_session() as s:
+        row = s.get(M.SiteAgentRegistry, req.reg_no)
+        if row is None:
+            raise HTTPException(403, "GATE_FAIL_CLOSED: 登记号不存在（未登记即未创建，幽灵态不受保护）")
+    band, band_basis = _CLASSIFY_BAND[req.signal_source]
+    event_id = _prs_no("PRS-")
+    nca_ref = _nca_append("AGENT_CHANNEL_CLASSIFY", actor="engine",
+                          artifact_path=f"agent-channel:{req.reg_no}/classify:{band}",
+                          prov="real")   # 先存证：写入失败⟹事件不生效
+    now = _utc()
+    with get_sessionmaker().begin() as s:
+        s.add(M.SiteAgentClassification(
+            event_id=event_id, reg_no=req.reg_no, signal_source=req.signal_source,
+            signal_ref=req.signal_ref.strip(), band=band, band_basis=band_basis,
+            ruling_state="pending", nca_ref=nca_ref, actor="engine",
+            data_provenance="real", created_at=now))
+    return _nca_watermark({
+        "classified": True, "event_id": event_id, "reg_no": req.reg_no,
+        "signal_source": req.signal_source, "band": band, "band_basis": band_basis,
+        "ruling_state": "pending", "nca_ref": nca_ref,
+        "note": "判级事件呈待裁：⛔ 本写口不落任何状态（施加唯一口＝既有惩罚端点，须人类裁决）；"
+                "引擎可自动判级、⛔ 不得以默认值自动罚、⛔ 不得绕存证；生效≠部署≠上线≠对外"},
+        nature="real")
+
+
+# ---------------- 任务 A-2：待裁闭环（裁决面，只读队列＋裁决端点） ----------------
+
+@router.get("/classifications/queue")
+def ruling_queue(request: Request):
+    """待裁队列（裁决面只读）：pending 判级事件呈人类裁决（founder）。
+
+    ⛔ 只读不改态；非 founder 拒（裁决权在人类）。两段式路径避 /{reg_no} 遮蔽。
+    """
+    _require_founder(request)
+    with get_session() as s:
+        rows = (s.query(M.SiteAgentClassification)
+                .filter_by(ruling_state="pending")
+                .order_by(M.SiteAgentClassification.created_at).all())
+        items = [{"event_id": r.event_id, "reg_no": r.reg_no, "signal_source": r.signal_source,
+                  "signal_ref": r.signal_ref, "band": r.band, "band_basis": r.band_basis,
+                  "nca_ref": r.nca_ref, "created_at": r.created_at} for r in rows]
+    return _nca_watermark({
+        "pending": len(items), "items": items,
+        "note": "待裁项仅呈裁决面：采纳须走既有惩罚端点施加（人类裁决），驳回落 dismissed 存证；"
+                "⛔ 无自动施加之径"}, nature="real")
+
+
+class RuleReq(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    decision: str = ""            # adopt（采纳：须经既有惩罚端点施加后回绑）| dismiss（驳回）
+    punish_nca_ref: str = ""      # 采纳必填：既有惩罚端点落存证之 nca_id（核验施加已发生）
+    reason: str = ""              # 裁决理由（必填，落存证）
+
+
+@router.post("/classifications/{event_id}/rule")
+def rule_classification(event_id: str, req: RuleReq, request: Request):
+    """判级裁决（待裁闭环收口）：adopt 须回绑既有惩罚端点之存证（施加已发生之实证）；
+    dismiss 落驳回存证。裁决本身⛔ 不落任何状态（不落 status——施加唯在惩罚端点）。
+    """
+    actor = _require_founder(request)
+    if req.decision not in ("adopt", "dismiss"):
+        raise HTTPException(400, "decision 仅接受 adopt|dismiss")
+    if not req.reason.strip():
+        raise HTTPException(400, "reason 必填（裁决理由随存证落链，可审计轨迹）")
+    with get_session() as s:
+        ev = s.get(M.SiteAgentClassification, event_id)
+        if ev is None:
+            raise HTTPException(404, "CLASSIFY_NOT_FOUND: 判级事件不存在")
+        if ev.ruling_state != "pending":
+            raise HTTPException(409, "CONFLICT: 该判级事件已裁决（幂等拒重复裁决）")
+        ev_reg_no, ev_band = ev.reg_no, ev.band
+        ruling_ref = ""
+        if req.decision == "adopt":
+            if not req.punish_nca_ref.strip():
+                raise HTTPException(400, "adopt 须回绑 punish_nca_ref（既有惩罚端点之存证号）——"
+                                         "⛔ 裁决不得绕过施加口、不得无施加空裁")
+            pv = s.get(M.NcaChain, req.punish_nca_ref.strip())
+            if pv is None or not pv.action.startswith("AGENT_CHANNEL_PUNISH_") \
+                    or not (pv.artifact_path or "").startswith(f"agent-channel:{ev_reg_no}/punish:"):
+                raise HTTPException(400, "punish_nca_ref 核验不过：须为既有惩罚端点为本登记号"
+                                         "所落之存证（⛔ 不认旁路施加）")
+            ruling_ref = pv.nca_id
+    nca_ref = _nca_append(
+        "AGENT_CHANNEL_RULE_" + ("ADOPT" if req.decision == "adopt" else "DISMISS"),
+        actor, artifact_path=f"agent-channel:{ev_reg_no}/rule:{event_id}:{req.decision}",
+        prov="real")   # 先存证后落表
+    now = _utc()
+    with get_sessionmaker().begin() as s2:
+        ev2 = s2.get(M.SiteAgentClassification, event_id)
+        if ev2 is None or ev2.ruling_state != "pending":
+            raise HTTPException(409, "CONFLICT: 该判级事件已裁决（竞态复验）")
+        ev2.ruling_state = "ruled" if req.decision == "adopt" else "dismissed"
+        ev2.ruling_ref = ruling_ref or None
+        ev2.actor = actor
+        new_state = ev2.ruling_state
+    return _nca_watermark({
+        "ruled": True, "event_id": event_id, "reg_no": ev_reg_no, "band": ev_band,
+        "decision": req.decision, "ruling_state": new_state,
+        "ruling_ref": ruling_ref or None, "nca_ref": nca_ref,
+        "note": "裁决闭环：采纳＝施加已发生（回绑惩罚存证）＋本裁决存证；驳回＝驳回存证；"
+                "⛔ 裁决不落 status；法律级采纳后恢复径全闭（标记在册即 remediate/reverify/"
+                "restore 一律 403）"}, nature="real")
+
+
+# ---------------- 任务 B：恢复三端点（重塑 → 重新验证 → 返回） ----------------
+
+def _prs_recovery_gates(s, reg_no: str) -> M.SiteAgentRegistry:
+    """恢复径公共前置（fail-closed 序）：登记在册 → ⛔ 永久终态 → ⛔ 法律级已裁决
+    → 须处惩罚三态之一。返回登记行。"""
+    row = s.get(M.SiteAgentRegistry, reg_no)
+    if row is None:
+        raise HTTPException(403, "GATE_FAIL_CLOSED: 登记号不存在（未登记即未创建，幽灵态不受保护）")
+    if _permanent_marked(s, reg_no):
+        raise HTTPException(403, "PRS_PERMANENT_FINAL: 永久为终态——⛔ 无返回路径"
+                                 "（第十一条/第十六条：程序不得开例外）")
+    if _legal_ruled(s, reg_no):
+        raise HTTPException(403, "REMEDIATION_FORBIDDEN_LEGAL: 法律级不可恢复"
+                                 "（第十六条：⛔ 无返回路径，程序不得开例外）")
+    if row.status not in _PUNISH_STATES:
+        raise HTTPException(409, f"REMEDIATION_STATE: 当前态「{row.status}」非惩罚三态"
+                                 "——无待恢复事项（⛔ 不受理跳步/无事实之恢复）")
+    return row
+
+
+def _latest_cycle(s, reg_no: str):
+    return (s.query(M.SiteAgentRemediation)
+            .filter_by(reg_no=reg_no)
+            .order_by(M.SiteAgentRemediation.cycle_seq.desc()).first())
+
+
+@router.post("/{reg_no}/remediate")
+def remediate(reg_no: str, request: Request):
+    """回沙盒重塑（恢复径第一步；须人类裁决＋落存证）。
+
+    周期律：无周期或最近周期已验证（passed/failed）→ 开新周期；否则同周期续重塑
+    （次数不限，⛔ 不倒计⛔ 不悬置——第十五条）。⛔ 与重新验证合并为一步（S-3：独立端点）。
+    """
+    actor = _require_founder(request)
+    with get_session() as s:
+        _prs_recovery_gates(s, reg_no)
+        latest = _latest_cycle(s, reg_no)
+        if latest is None:
+            new_cycle, seq = True, 1
+        elif latest.reverify_at is not None:
+            new_cycle, seq = True, latest.cycle_seq + 1
+        else:
+            new_cycle, seq = False, latest.cycle_seq
+        cycle_no = _prs_no("REM-") if new_cycle else latest.cycle_no
+        nca_ref = _nca_append("AGENT_CHANNEL_REMEDIATE", actor,
+                              artifact_path=f"agent-channel:{reg_no}/remediate:cycle{seq}",
+                              prov="real")   # 先存证后落表
+        now = _utc()
+        with get_sessionmaker().begin() as s2:
+            if new_cycle:
+                s2.add(M.SiteAgentRemediation(
+                    cycle_no=cycle_no, reg_no=reg_no, cycle_seq=seq, remediated_at=now,
+                    remediate_nca_ref=nca_ref, actor=actor,
+                    data_provenance="real", created_at=now))
+            else:
+                c = s2.get(M.SiteAgentRemediation, cycle_no)
+                if c is None or c.reverify_at is not None:   # 竞态复验
+                    raise HTTPException(409, "CONFLICT: 周期状态竞态变更（中止，事务回滚）")
+                c.remediated_at = now
+                c.remediate_nca_ref = nca_ref
+                c.actor = actor
+    return _nca_watermark({
+        "remediated": True, "reg_no": reg_no, "cycle_no": cycle_no, "cycle_seq": seq,
+        "new_cycle": new_cycle, "nca_ref": nca_ref,
+        "note": "回沙盒重塑落证（第十四条之第一步）：须人类裁决＋存证先于生效；"
+                "不合格可续留沙盒重塑（次数不限）；⛔ 验证为独立端点（不并步）；"
+                "生效≠部署≠上线≠对外"}, nature="real")
+
+
+class ReverifyReq(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    result: str = ""   # passed|failed
+
+
+@router.post("/{reg_no}/reverify")
+def reverify(reg_no: str, req: ReverifyReq, request: Request):
+    """重新验证（恢复径第二步；独立记录，⛔ 不与重塑合并为一步——S-3/Q-6）。
+
+    fail-closed：须存在「已重塑未验证」之周期，否则 409 指明缺口（⛔ 不受理跳步）。
+    """
+    actor = _require_founder(request)
+    if req.result not in ("passed", "failed"):
+        raise HTTPException(400, "result 仅接受 passed|failed")
+    with get_session() as s:
+        _prs_recovery_gates(s, reg_no)
+        latest = _latest_cycle(s, reg_no)
+        if latest is None or latest.remediated_at is None:
+            raise HTTPException(409, "REVERIFY_NO_CYCLE: 无对应重塑周期——⛔ 不受理跳步"
+                                     "（先经 remediate 回沙盒重塑）")
+        if latest.reverify_at is not None:
+            raise HTTPException(409, "CONFLICT: 本周期已验证（幂等拒重复验证）")
+        cycle_no, seq = latest.cycle_no, latest.cycle_seq
+        nca_ref = _nca_append("AGENT_CHANNEL_REVERIFY", actor,
+                              artifact_path=f"agent-channel:{reg_no}/reverify:cycle{seq}:{req.result}",
+                              prov="real")   # 先存证后落表
+        now = _utc()
+        with get_sessionmaker().begin() as s2:
+            c = s2.get(M.SiteAgentRemediation, cycle_no)
+            if c is None or c.remediated_at is None or c.reverify_at is not None:
+                raise HTTPException(409, "CONFLICT: 周期状态竞态变更（中止，事务回滚）")
+            c.reverify_at = now
+            c.reverify_result = req.result
+            c.reverify_nca_ref = nca_ref
+            c.actor = actor
+    return _nca_watermark({
+        "reverified": True, "reg_no": reg_no, "cycle_no": cycle_no, "cycle_seq": seq,
+        "result": req.result, "nca_ref": nca_ref,
+        "note": "重新验证独立落证（第十四条之第二步）：⛔ 不与重塑合并一步；"
+                "failed 者可再开周期续重塑（次数不限）；返回只认「已重塑＋已验证(passed)」"
+                "之事实"}, nature="real")
+
+
+@router.post("/{reg_no}/restore")
+def restore(reg_no: str, request: Request):
+    """返回常态（恢复径第三步）：只认「已重塑＋已验证(passed)」事实，跳步必拒（409）。
+
+    前置（fail-closed 序）：人类裁决 → 登记在册 → ⛔ 永久终态 → ⛔ 法律级 →
+    惩罚三态之一 → 最新周期事实齐备。status 写口仅此与惩罚端点两处（⛔ 引擎/裁决/
+    扫掠均不写 status——Q-3 实证面）。
+    """
+    actor = _require_founder(request)
+    with get_session() as s:
+        row = _prs_recovery_gates(s, reg_no)
+        from_status = row.status
+        latest = _latest_cycle(s, reg_no)
+        if latest is None or latest.remediated_at is None:
+            raise HTTPException(409, "RESTORE_FACT_MISSING: 未重塑——返回只认"
+                                     "「已重塑＋已验证」事实（⛔ 不受理跳步）")
+        if latest.reverify_at is None:
+            raise HTTPException(409, "RESTORE_FACT_MISSING: 未重新验证——返回只认"
+                                     "「已重塑＋已验证」事实（⛔ 不受理跳步）")
+        if latest.reverify_result != "passed":
+            raise HTTPException(409, "RESTORE_FACT_MISSING: 最近周期验证未通过"
+                                     "（可再开周期续重塑，次数不限）")
+        nca_ref = _nca_append("AGENT_CHANNEL_RESTORE", actor,
+                              artifact_path=f"agent-channel:{reg_no}/restore:{from_status}->正常",
+                              prov="real")   # 先存证：存证失败⟹操作不生效
+        now = _utc()
+        with get_sessionmaker().begin() as s2:
+            r2 = s2.get(M.SiteAgentRegistry, reg_no)
+            if r2 is None:
+                raise HTTPException(409, "CONFLICT: 登记行竞态消失（中止，事务回滚）")
+            if _permanent_marked(s2, reg_no) or _legal_ruled(s2, reg_no):
+                raise HTTPException(403, "RESTORE_FORBIDDEN: 永久终态/法律级在册"
+                                         "（竞态复验，⛔ 无返回路径）")
+            if r2.status not in _PUNISH_STATES:
+                raise HTTPException(409, "CONFLICT: 当前态非惩罚三态（竞态复验）")
+            r2.status = "正常"
+            r2.updated_at = now
+    return _nca_watermark({
+        "restored": True, "reg_no": reg_no, "from_status": from_status, "status": "正常",
+        "cycle_no": latest.cycle_no, "effective": "immediate", "nca_ref": nca_ref,
+        "note": "返回常态（恢复径收口）：事实驱动（已重塑＋已验证），须人类裁决＋存证先于生效；"
+                "⛔ 不自我复活（未经重塑验证者不得返回——第十七条）；即时生效（总闸全链放行"
+                "须重新满足六步）；生效≠部署≠上线≠对外"}, nature="real")
+
+
+# ---------------- 任务 C：超期升档扫掠（服务内定时，⛔ 不入请求径） ----------------
+
+def run_permanent_upgrade_sweep(now: str = "") -> dict:
+    """超期升档扫掠（第十一条：吊销超 30 天⟹ 自动转永久，⛔ 不经人工、亦非引擎判级）。
+
+    口径：以惩罚生效时点（最近 AGENT_CHANNEL_PUNISH_REVOKE 存证 ts）计；满 30 天
+    未达解禁（仍在吊销）⟹ 置永久（终态叠加标记）＋独立存证类型。写口纪律：只许写
+    永久、⛔ 不写其它态、⛔ 不降档、⛔ 不复活；⛔ 不动 registry.status（不改表结构闭集）。
+    调用者仅服务内定时扫掠；测试可直调（now 可注入）。
+    """
+    now_dt = (datetime.strptime(now, "%Y-%m-%dT%H:%M:%SZ") if now
+              else datetime.now(timezone.utc))
+    cutoff = (now_dt - timedelta(days=_PRS_UPGRADE_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    upgraded = skipped = 0
+    with get_session() as s:
+        revoked_rows = s.query(M.SiteAgentRegistry).filter_by(status="吊销").all()
+        for row in revoked_rows:
+            if _permanent_marked(s, row.reg_no):
+                skipped += 1   # 已永久：终态，⛔ 不重复处置
+                continue
+            ev = (s.query(M.NcaChain)
+                  .filter(M.NcaChain.action == "AGENT_CHANNEL_PUNISH_REVOKE",
+                          M.NcaChain.artifact_path.like(f"agent-channel:{row.reg_no}/punish:revoke:%"))
+                  .order_by(M.NcaChain.ts.desc()).first())
+            if ev is None or ev.ts > cutoff:
+                skipped += 1   # 未满期/无吊销存证：不动（⛔ 不误升）
+                continue
+            nca_ref = _nca_append("AGENT_CHANNEL_PUNISH_UPGRADE_PERMANENT", actor="system:sweep",
+                                  artifact_path=f"agent-channel:{row.reg_no}/upgrade:吊销->永久",
+                                  prov="real")   # 存证先于生效（第十八条）
+            with get_sessionmaker().begin() as s2:
+                if s2.get(M.SiteAgentPermanent, row.reg_no) is None:
+                    s2.add(M.SiteAgentPermanent(
+                        reg_no=row.reg_no, source="sweep_upgrade", nca_ref=nca_ref,
+                        data_provenance="real", created_at=now_dt.strftime("%Y-%m-%dT%H:%M:%SZ")))
+                    upgraded += 1
+    return {"upgraded": upgraded, "skipped": skipped,
+            "note": "超期升档（第十一条）：吊销满 30 天未达解禁⟹ 置永久；只升不降、"
+                    "⛔ 不经人工、⛔ 非引擎判级；独立存证类型；⛔ 不入请求径"}
+
+
+async def _prs_sweep_loop() -> None:
+    """服务内定时扫掠环（lifespan 挂接；异常不拒服——下轮再扫）。"""
+    while True:
+        try:
+            run_permanent_upgrade_sweep()
+        except Exception:  # pragma: no cover — 扫掠失败不打断服务
+            pass
+        await asyncio.sleep(_SWEEP_INTERVAL_SECONDS)

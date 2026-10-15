@@ -770,6 +770,84 @@ class SiteAgentGrant(Base):
     )
 
 
+class SiteAgentClassification(Base):
+    """37. 站点智能体通道·判级事件表（T-037 任务 A：引擎判级档）。
+
+    引擎只写事件＋存证，⛔ 永不写 site_agent_registry.status（Q-3/Q-12）；
+    档位由服务端依三空间分档口径从 signal_source 导出（⛔ 调用方不得自报档位）；
+    呈待裁：ruling_state=pending→ruled|dismissed，裁决由 founder 人类会话落（采纳只走既有惩罚端点）。
+    """
+
+    __tablename__ = "site_agent_classification"
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)         # PRS-＋12 位十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    signal_source: Mapped[str] = mapped_column(Text, nullable=False)      # sensor_warning|sensor_cryogenic|sensor_blocked|legal_matrix
+    signal_ref: Mapped[str] = mapped_column(Text, nullable=False)         # 信号锚（verdict 摘要/NSFL 引用，可核）
+    band: Mapped[str] = mapped_column(Text, nullable=False)               # 轻度|中度|严重|法律级（服务端导出）
+    band_basis: Mapped[str] = mapped_column(Text, nullable=False)         # 分档依据（在册口径件号与条款位引用）
+    ruling_state: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    ruling_ref: Mapped[str | None] = mapped_column(Text)                  # 裁决回链（punish 存证号或驳回存证号）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                     # 判级存证回链
+    actor: Mapped[str | None] = mapped_column(Text)                       # 写入者（引擎＝engine；裁决＝founder 账户）
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("signal_source IN ('sensor_warning','sensor_cryogenic','sensor_blocked','legal_matrix')",
+                        name="ck_site_agent_classification_source"),
+        CheckConstraint("band IN ('轻度','中度','严重','法律级')", name="ck_site_agent_classification_band"),
+        CheckConstraint("ruling_state IN ('pending','ruled','dismissed')",
+                        name="ck_site_agent_classification_ruling"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_classification_prov"),
+    )
+
+
+class SiteAgentRemediation(Base):
+    """38. 站点智能体通道·恢复径周期表（T-037 任务 B：重塑／重新验证独立记录）。
+
+    每周期一行：remediate 落 remediated_at（同周期可续重塑，次数不限）；
+    reverify 独立落行字段（⛔ 不与重塑合并为一步，S-3）；restore 只认「已重塑＋已验证(passed)」事实。
+    ⛔ 无 TTL/悬置字段（不合格续留沙盒重塑，不倒计不悬置，第十五条）。
+    """
+
+    __tablename__ = "site_agent_remediation"
+    cycle_no: Mapped[str] = mapped_column(Text, primary_key=True)         # REM-＋12 位十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    cycle_seq: Mapped[int] = mapped_column(nullable=False)                # 主体内周期序（自 1 递增）
+    remediated_at: Mapped[str | None] = mapped_column(Text)               # 重塑时点（回沙盒重塑落）
+    remediate_nca_ref: Mapped[str | None] = mapped_column(Text)           # 重塑存证回链
+    reverify_at: Mapped[str | None] = mapped_column(Text)                 # 重新验证时点（独立记录）
+    reverify_result: Mapped[str | None] = mapped_column(Text)             # passed|failed
+    reverify_nca_ref: Mapped[str | None] = mapped_column(Text)            # 验证存证回链
+    actor: Mapped[str | None] = mapped_column(Text)                       # 操作 founder 账户
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("reverify_result IN ('passed','failed')", name="ck_site_agent_remediation_rev"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_remediation_prov"),
+    )
+
+
+class SiteAgentPermanent(Base):
+    """39. 站点智能体通道·永久终态标记表（T-037 任务 C：超期升档）。
+
+    吊销满 30 天（以惩罚生效时点计）未达解禁 ⟹ 置永久（第十一条：⛔ 不经人工、永久为终态）；
+    写口仅服务内定时扫掠（⛔ 不入请求径），只许写永久、⛔ 不写其它态、⛔ 不降档、⛔ 不复活；
+    标记在册即恢复径全闭（remediate/reverify/restore 一律 403，第十六条法律级口径一致）。
+    ⛔ 不动 registry.status 闭集（不改表结构闭集）：主体 status 保持吊销，本表为终态叠加标记。
+    """
+
+    __tablename__ = "site_agent_permanent"
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), primary_key=True)
+    source: Mapped[str] = mapped_column(Text, nullable=False, default="sweep_upgrade")  # 写口来源闭集
+    nca_ref: Mapped[str | None] = mapped_column(Text)                     # 升档存证回链（独立存证类型）
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("source IN ('sweep_upgrade')", name="ck_site_agent_permanent_source"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_permanent_prov"),
+    )
+
+
 class SiteAgentCallLedger(Base):
     """36. 站点智能体通道·计量表（批 3：聚合窗口落账，⛔ 不高频直写致锁）。
 
