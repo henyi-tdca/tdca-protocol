@@ -167,4 +167,53 @@ theorem p11_example_same_level : ¬ ReachesPos natUp 1 1 :=
 theorem p11_example_first_node : natLv 1 = 1 :=
   first_node_up natUp natLv p11_example_leveled (show natLv 0 = 0 from rfl) (show natUp 0 1 from rfl)
 
+/-! ## 八、良基（追加节 · 智能体定义骨架 P4 · 2026-10-16）
+    本节为追加节：⛔ 不回改上文任何行。复用 Leveled／up_level_lt（及基线 natUp／natLv）。
+    方向澄清（如实记录 · 三态合法）：以层级为秩函数，**良基成立的是委托方向**
+    （fun a b => up a b：沿委托层级严格递减，无环且链可终止——与 p11_no_cycle 互证）；
+    设计骨架所书之逆方向（fun a b => up b a：沿层级严格**递增**）在 Leveled 单一前提下
+    **不成立**（自然数链反例：attribution_wellFounded_inverse_refuted，refuted 终态）——
+    「上溯链」在无限层级下非良基；逆方向收敛须另立层级全局势界前提（本件不预设该前提）。
+    适用范围：抽象归责结构骨架层；不标「绝对安全」；对外表述限「本机机验」。 -/
+
+/-- 秩函数引理（委托方向）：层级有上界 n 者，其委托方向可达性（Acc）成立（对层级上界归纳）。 -/
+theorem acc_up_of_level_le (up : α → α → Prop) (level : α → Nat) (hl : Leveled up level) :
+    ∀ n a, level a ≤ n → Acc (fun x y => up x y) a := by
+  intro n
+  induction n with
+  | zero =>
+    intro a ha
+    constructor
+    intro b hb
+    have h1 := up_level_lt up level hl hb
+    have hlt : level b < 0 := by omega
+    exact (Nat.not_lt_zero _ hlt).elim
+  | succ n ih =>
+    intro a ha
+    constructor
+    intro b hb
+    have h1 := up_level_lt up level hl hb
+    exact ih b (by omega)
+
+/-- 主定理（委托方向）：以层级为秩函数，委托关系良基（链无环且可终止之形式化面；
+    与 p11_no_cycle 互证：无环 ＋ 层级递减 ⟹ 良基）。 -/
+theorem attribution_wellFounded (up : α → α → Prop) (level : α → Nat)
+    (hl : Leveled up level) : WellFounded (fun a b => up a b) :=
+  ⟨fun a => acc_up_of_level_le up level hl (level a) a (Nat.le_refl _)⟩
+
+/-- 副定理：任一点可终止（Acc 形态，NCA 追溯之结构面）。 -/
+theorem nca_trace_terminates (up : α → α → Prop) (level : α → Nat)
+    (hl : Leveled up level) (a : α) : Acc (fun a b => up a b) a :=
+  acc_up_of_level_le up level hl (level a) a (Nat.le_refl _)
+
+/-- 逆方向（设计骨架原书方向）不成立（refuted · 三态合法）：
+    自然数链 natUp 满足 Leveled（见 p11_example_leveled），
+    但 (fun a b => up b a) 存在无限严格递增链（0, 1, 2, …：每步 up i (i+1) 成立），
+    故非良基——「上溯链良基」须以层级全局势界为前提，单一 Leveled 前提不足。 -/
+theorem attribution_wellFounded_inverse_refuted :
+    ¬ WellFounded (fun a b => natUp b a) := by
+  intro hwf
+  have hacc := hwf.apply 0
+  exact Acc.rec (motive := fun _ _ => False) (fun x _ h2 => h2 (x + 1) rfl) hacc
+
 end TDCA.Attribution

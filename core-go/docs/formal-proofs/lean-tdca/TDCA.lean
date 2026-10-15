@@ -126,3 +126,10 @@ import TDCA.TruthSpaceL2
 -- ——场景分形嵌套形式化（收窄版：二元嵌套·层数判据·生成器加一层），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（F1–F5）。
 import TDCA.FractalScene
+-- 智能体定义骨架 P1（2026-10-16，交办 TDCA-HANDOFF-FORMAL-AGENT-DEFINITION-001）：新增 import TDCA.SubjectExclusion
+-- ——主体排他（封闭归纳式：调用主体限于智能体、离散资产不可调用；⛔ 弃用类型类写法），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A2）。
+import TDCA.SubjectExclusion
+-- 智能体定义骨架 P3（2026-10-16，交办同上）：新增 import TDCA.GateBound
+-- ——闸门有界误差（闸门收缩 ⟹ 误差一致有界含初值项 ＋ 无闸门线性累积对照；建模假设为显式字段），ℝ 承载件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A4）。
