@@ -793,3 +793,117 @@ def execute(req: ExecuteReq, request: Request):
         "note": "正空间执行登记通过：六步硬序①②③④全达＋授权件四要件机验＋存证落链；"
                 "计量数值 SIMULATED（方案 §六），执行事实／状态机／存证接真；"
                 "生效≠部署≠上线≠对外"}, nature="mixed")
+
+
+# =====================================================================
+# 批 4 块一（L1SI147-CHANNEL-B1-004）：工作台面接真——六步总闸实况查询（只读）
+# 供 /studio 工作台按实况呈现：六步状态如实（未达不虚报）＋授权件数＋计量（SIMULATED）。
+# ⛔ 只读端点：不改任何状态、不造旁路；人类会话内、仅登记主体本人可查。
+# =====================================================================
+
+@router.get("/gate/{reg_no}")
+def gate_status(reg_no: str, request: Request):
+    """工作台实况查询（面接真，只读）：六步总闸实况＋有效授权件数＋计量合计。
+
+    fail-closed：未登记／惩罚态 → 403；非登记主体本人 → 403（人类签名权不可绕）。
+    计量数值按方案标模拟（SIMULATED 水印）；六步状态如实呈现（⛔ 未达不虚报通过）。
+    """
+    v = _require_session_user(request)
+    actor = v["username"]
+    with get_session() as s:
+        row = gate_assert(s, reg_no)
+        if row.owner_username != actor:
+            raise HTTPException(403, "人类签名权不可绕：仅登记主体本人可查看其智能体通道实况")
+        gate = evaluate_gate(s, reg_no)
+        grants_active = s.query(M.SiteAgentGrant).filter_by(
+            reg_no=reg_no, status="active").count()
+        units_total = sum(u.units for u in s.query(M.SiteAgentCallLedger)
+                          .filter_by(reg_no=reg_no))
+    return _nca_watermark({
+        "reg_no": reg_no, "gate": gate, "grants_active": grants_active,
+        "metering": {"units_total": units_total, "data_nature": "simulated",
+                     "note": "SIMULATED 水印：计量数值按方案标模拟（聚合窗口 "
+                             f"{_LEDGER_WINDOW_MINUTES} 分钟）"},
+        "note": "工作台实况（只读）：六步状态如实呈现，未达不虚报；计量数值 SIMULATED；"
+                "生效≠部署≠上线≠对外"}, nature="mixed")
+
+
+# =====================================================================
+# 批 4 块二（L1SI147-CHANNEL-B1-004-RESUME）：惩罚三态执行器（人工裁决驱动）
+# 制度锚：T-037（tdca-cls Qualification：FROZEN/DEMOTED/REVOKED，REVOKED 禁新债务）；
+# NS-OPS §4.1 权限矩阵（REVIEW 仅作参照）：状态转换权在人类裁决委员会，主体自身仅查询/申请；
+# DSA-001：状态非二元、每步有制度硬条件与可审计轨迹。
+# 本批收窄：⛔ 自动触发/阈值/升级不在此（归 T-037 统一状态机提案另办）；⛔ 恢复径不实施（待整改/审查机制入册）。
+# =====================================================================
+
+# 三态映射（T-037 英文态 ⟷ 批 1 中文 status 闭集——⛔ 不改表结构）
+_PUNISH_ACTIONS = {
+    "freeze": ("冻结", "FROZEN"),
+    "demote": ("降权", "DEMOTED"),
+    "revoke": ("吊销", "REVOKED"),
+}
+
+
+class PunishReq(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    action: str = ""     # freeze（冻结/FROZEN）| demote（降权/DEMOTED）| revoke（吊销/REVOKED）
+    reason: str = ""     # 裁决理由（必填，落存证）
+
+
+@router.post("/{reg_no}/punishments")
+def punish(reg_no: str, req: PunishReq, request: Request):
+    """人工裁决驱动之三态执行器（有权者于人类会话内施加；⛔ 无自动触发之径）。
+
+    fail-closed 序：人类会话 → 有权者校验（founder＝人类裁决口径；照 NS-OPS 权限矩阵
+    主体自身仅查询/申请，⛔ 不得自罚，智能体不得代行）→ 登记在册（幽灵拒）→
+    吊销为终态（⛔ 不得再变更/复活）→ action/reason 校验 → 先存证后落表
+    （存证失败⟹操作不生效）→ status 落表即即时生效（总闸 gate_assert 与全链即时拒，批 1 已具）。
+    留痕：每次变更落 NCA 链（action 含前后态与裁决者）。
+    """
+    v = _require_session_user(request)
+    actor = v["username"]
+    with get_session() as s:
+        actor_user = s.get(M.User, actor)
+        if actor_user is None or actor_user.role != "founder":
+            raise HTTPException(403, "PUNISH_FORBIDDEN: 非有权者——三态施加权在人类裁决"
+                                     "（NS-OPS §4.1 权限矩阵：主体自身仅查询/申请，⛔ 不得自罚；"
+                                     "智能体不得代签代行）")
+        row = s.get(M.SiteAgentRegistry, reg_no)
+        if row is None:
+            raise HTTPException(403, "GATE_FAIL_CLOSED: 登记号不存在（未登记即未创建，幽灵态不受保护）")
+        if row.status == "吊销":
+            raise HTTPException(403, "PUNISH_FINAL: 已吊销为终态——⛔ 不得再变更（不得复活；"
+                                     "恢复径待整改/审查机制入册另批）")
+        if req.action not in _PUNISH_ACTIONS:
+            raise HTTPException(400, "action 仅接受 freeze|demote|revoke"
+                                     "（⛔ 自动触发/阈值不在本批，归 T-037 统一状态机提案另办）")
+        if not req.reason.strip():
+            raise HTTPException(400, "reason 必填（裁决理由随存证落链，可审计轨迹）")
+        target_cn, target_en = _PUNISH_ACTIONS[req.action]
+        if row.status == target_cn:
+            raise HTTPException(409, "CONFLICT: 已是目标态（幂等拒重复施加）")
+        from_status = row.status
+        nca_ref = _nca_append(
+            f"AGENT_CHANNEL_PUNISH_{req.action.upper()}", actor,
+            artifact_path=(f"agent-channel:{reg_no}/punish:{req.action}"
+                           f":{from_status}->{target_cn}({target_en})"),
+            prov="real")   # 先存证：写入失败⟹操作不生效（⛔ 不落半条、不得径改库绕过）
+        now = _utc()
+        with get_sessionmaker().begin() as s2:
+            r2 = s2.get(M.SiteAgentRegistry, reg_no)
+            if r2 is None:
+                raise HTTPException(409, "CONFLICT: 登记行竞态消失（中止，事务回滚）")
+            if r2.status == "吊销":
+                raise HTTPException(403, "PUNISH_FINAL: 已吊销为终态——⛔ 不得再变更（竞态复验）")
+            r2.status = target_cn
+            r2.updated_at = now
+    return _nca_watermark({
+        "punished": True, "reg_no": reg_no, "action": req.action,
+        "from_status": from_status, "status": target_cn,
+        "t037_state": target_en,
+        "effective": "immediate",   # 即时生效：总闸与全链即时拒（gate_assert，批 1 已具）
+        "nca_ref": nca_ref,
+        "note": "人工裁决驱动三态执行（T-037 硬锚：FROZEN/DEMOTED/REVOKED；吊销禁新债务）；"
+                "有权者＝人类裁决（NS-OPS §4.1 参照，主体自身⛔不得自罚）；"
+                "每次变更落 NCA 存证（DSA-001 可审计轨迹）；⛔ 无自动触发之径；"
+                "已吊销为终态不得复活；生效≠部署≠上线≠对外"}, nature="real")

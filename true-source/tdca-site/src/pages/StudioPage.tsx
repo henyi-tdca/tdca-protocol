@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 import { HufModal } from '@/lib/huf-modal'
+import { api } from '@/lib/client'
 import { LifecycleTimeline, DetailPanel, NCAChain, ExportButton, type LifecycleNode } from '@/components/LifecycleDashboard/LifecycleDashboard'
 import { TopologyEngine, hashAgentId, type TopoData } from '@/lib/TopologyEngine'
 
@@ -59,6 +60,30 @@ export function StudioPage() {
   const [wizardStep, setWizardStep] = useState(0)
   const [actionModal, setActionModal] = useState<string | null>(null)
   const [wizardModal, setWizardModal] = useState(false)
+
+  // ---- 批 4 块一：通道六步实况（只读接真；未达如实呈现，⛔ 不虚报通过）----
+  const [gateInput, setGateInput] = useState('')
+  const [gateView, setGateView] = useState<Record<string, unknown> | null>(null)
+  const [gateError, setGateError] = useState<string | null>(null)
+  const [gateLoading, setGateLoading] = useState(false)
+
+  async function queryGate() {
+    const regNo = gateInput.trim()
+    if (!regNo) return
+    setGateLoading(true)
+    setGateError(null)
+    const res = await api.get<Record<string, unknown>>(
+      `/api/v1/agent-channel/gate/${encodeURIComponent(regNo)}`)
+    setGateLoading(false)
+    if (!res.ok) {
+      setGateView(null)
+      setGateError(res.reason === 'forbidden' || res.reason === 'unauthorized'
+        ? '无权查看或登记不在册（fail-closed）'
+        : '实况暂不可用（fail-closed，不猜测数据）')
+      return
+    }
+    setGateView(res.data)
+  }
 
   return (
     <PageShell
@@ -141,6 +166,67 @@ export function StudioPage() {
           <p className="mt-2 text-xs text-gray-500">
             父体（PCM-LIVE）→ 选择化合场景 → 六要素继承 + 场景偏移 → 子体诞生（NCA 链继承父体）→ 自动进入生命周期起点。
           </p>
+        </section>
+
+        {/* 批 4 块一：通道六步实况（只读接真；未达如实呈现，⛔ 不虚报；计量 SIMULATED） */}
+        <section data-testid="channel-gate-section" className="rounded-lg border border-gray-200 p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-800">通道六步实况（接真）</h3>
+            <SimulatedBadge nature="simulated" />
+          </div>
+          <div className="mb-3 flex items-center gap-2">
+            <input
+              data-testid="channel-gate-input"
+              className="w-56 rounded border border-gray-300 px-2 py-1 text-xs"
+              placeholder="输入登记号查询实况"
+              value={gateInput}
+              onChange={(e) => setGateInput(e.target.value)}
+            />
+            <button
+              data-testid="channel-gate-query"
+              className="rounded bg-gray-700 px-2.5 py-1 text-xs text-white hover:bg-gray-800 disabled:opacity-50"
+              disabled={gateLoading || !gateInput.trim()}
+              onClick={() => void queryGate()}
+            >
+              {gateLoading ? '查询中…' : '查询实况'}
+            </button>
+          </div>
+          {gateError && (
+            <p data-testid="channel-gate-error" className="mb-2 text-xs text-red-600">{gateError}</p>
+          )}
+          {gateView && (
+            <div data-testid="channel-gate-steps">
+              {(() => {
+                const steps = (gateView.gate as { steps?: Record<string, { step: string; label: string; state: string }> })?.steps ?? {}
+                const LABEL: Record<string, string> = { satisfied: '已达', pending: '未达', failed: '未过' }
+                const CLS: Record<string, string> = {
+                  satisfied: 'bg-green-100 text-green-800 border-green-300',
+                  pending: 'bg-gray-100 text-gray-500 border-gray-300',
+                  failed: 'bg-red-100 text-red-700 border-red-300',
+                }
+                return (
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(steps).map(([key, s]) => (
+                      <span
+                        key={key}
+                        data-testid={`channel-gate-step-${key}`}
+                        className={`rounded border px-2 py-0.5 text-xs ${CLS[s.state] ?? CLS.pending}`}
+                      >
+                        {s.step} {s.label}·{LABEL[s.state] ?? s.state}
+                      </span>
+                    ))}
+                  </div>
+                )
+              })()}
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-600">
+                <span data-testid="channel-gate-grants">有效授权件：{String(gateView.grants_active ?? 0)} 件</span>
+                <span data-testid="channel-gate-units">计量合计（模拟）：{String((gateView.metering as { units_total?: number } | undefined)?.units_total ?? 0)}</span>
+                <span data-testid="channel-gate-admitted">
+                  总闸：{(gateView.gate as { admitted?: boolean } | undefined)?.admitted ? '六步全达' : '未全达'}
+                </span>
+              </div>
+            </div>
+          )}
         </section>
       </div>
 
