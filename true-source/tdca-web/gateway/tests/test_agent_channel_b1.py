@@ -113,7 +113,8 @@ def test_gate_fail_closed_positive_and_negative():
     assert gate["admitted"] is True and gate["ghost"] is False
     assert gate["steps"]["nca-evidence"]["state"] == "satisfied"   # 登记已落链
     assert gate["steps"]["token"]["state"] == "pending"
-    assert gate["steps"]["protocol-load"]["state"] == "pending_batch"  # 批 2 承接，如实不虚报
+    # 批 2 复核（令 -B2 §二）：①③④ 已接真，⛔ 不再报 pending_batch——未达报 pending
+    assert gate["steps"]["protocol-load"]["state"] == "pending"
     # 负例：吊销（惩罚三态之一）→ 总闸 403 全拒
     with get_session() as s:
         s.get(M.SiteAgentRegistry, reg_no).status = "吊销"
