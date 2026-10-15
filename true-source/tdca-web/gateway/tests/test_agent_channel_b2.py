@@ -8,7 +8,7 @@
   ④ sandbox 一正一负：passed → executable；failed → 步记 failed（⛔ 不得正空间执行）
   ⑤ 吊销即时性：revoke 后②步即 pending，后续步（ns-review）403 全拒
 另验：六步硬序不可跳（未加载发 token → 403；③未过进沙盒 → 403）；总闸 pending_batch 复核
-（①③④ 已接真不再报 pending_batch，⑤仍 pending_batch）；锚挂接（签发回执载锚口径）。
+（①③④ 批 2 接真不再报 pending_batch；⑤execute 批 3 接真——未达报 pending）；锚挂接（签发回执载锚口径）。
 """
 import pytest
 from fastapi.testclient import TestClient
@@ -269,16 +269,16 @@ def test_revoke_immediate_subsequent_denied():
     assert r.status_code == 403 and "STEP_ORDER" in r.text
 
 
-# ---------------------------------------------------------------- 总闸 pending_batch 复核
+# ---------------------------------------------------------------- 总闸 pending_batch 复核（批 3 收口）
 def test_gate_pending_batch_review_after_b2():
     _, hdr = _auth()
     reg_no = _register(hdr)
     with get_session() as s:
         gate = agent_channel_ops.evaluate_gate(s, reg_no)
-    # 批 2 复核：①③④ 已接真——未达报 pending（⛔ 不再报 pending_batch）；⑤仍 pending_batch
+    # 批 3 复核（令 -B3 §二）：⑤execute 已接真——未达报 pending（⛔ 不再报 pending_batch）
     for k in ("protocol-load", "ns-review", "sandbox"):
         assert gate["steps"][k]["state"] == "pending"
-    assert gate["steps"]["execute"]["state"] == "pending_batch"
+    assert gate["steps"]["execute"]["state"] == "pending"
 
 
 def test_full_chain_all_four_steps_satisfied():
@@ -287,7 +287,7 @@ def test_full_chain_all_four_steps_satisfied():
         gate = agent_channel_ops.evaluate_gate(s, reg_no)
     for k in ("protocol-load", "token", "ns-review", "sandbox", "nca-evidence"):
         assert gate["steps"][k]["state"] == "satisfied", k
-    assert gate["steps"]["execute"]["state"] == "pending_batch"   # 批 3 承接
+    assert gate["steps"]["execute"]["state"] == "pending"   # 批 3 已接真：未跑 execute 报 pending
 
 
 # ---------------------------------------------------------------- B2-FIX-001 补正加验
