@@ -288,3 +288,85 @@ def test_full_chain_all_four_steps_satisfied():
     for k in ("protocol-load", "token", "ns-review", "sandbox", "nca-evidence"):
         assert gate["steps"][k]["state"] == "satisfied", k
     assert gate["steps"]["execute"]["state"] == "pending_batch"   # 批 3 承接
+
+
+# ---------------------------------------------------------------- B2-FIX-001 补正加验
+def test_gate_admitted_semantics_name_matches_fact():
+    """补正①：admitted＝登记正常且六步全 satisfied——全链④步过、⑤execute 未达 ⟹ admitted False。"""
+    reg_no, _ = _full_chain()
+    with get_session() as s:
+        gate = agent_channel_ops.evaluate_gate(s, reg_no)
+    assert gate["registry_ok"] is True
+    assert gate["admitted"] is False          # 名实相符：execute（批 3）未达
+    assert gate["unsatisfied_steps"] == ["execute"]
+    for k in ("protocol-load", "token", "ns-review", "sandbox", "nca-evidence"):
+        assert gate["steps"][k]["state"] == "satisfied"
+
+
+def test_credentials_endpoint_reuses_rotation():
+    """补正③（取甲·复用轮换）：批 1 /credentials 新签自动置旧 active 为 revoked。"""
+    _, hdr = _auth()
+    reg_no = _register(hdr)
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/credentials", json={}, headers=hdr)
+    assert r.status_code == 201
+    fp1 = r.json()["data"]["credential_fingerprint_sha256_16"]
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/credentials", json={}, headers=hdr)
+    assert r.status_code == 201 and r.json()["data"]["rotated"] == 1
+    with get_session() as s:
+        rows = s.query(M.SiteAgentCredential).filter_by(reg_no=reg_no).all()
+        assert len(rows) == 2
+        assert sum(1 for c in rows if c.status == "active") == 1
+        old = [c for c in rows if c.cred_fingerprint.startswith(fp1)][0]
+        assert old.status == "revoked" and old.rotated_at is not None
+
+
+def test_protocol_load_full_64_hash_and_component():
+    """建议④：完整 64 位哈希＋分量标识核验；分量声明不符即拒。"""
+    from api_v1 import CONTRACT_JSON_SHA256
+    _, hdr = _auth()
+    reg_no = _register(hdr)
+    r = client.post("/api/v1/agent-channel/protocol-load",
+                    json={"reg_no": reg_no, "contract_version": CONTRACT_VERSION,
+                          "package_sha256_16": CONTRACT_JSON_SHA256,
+                          "package_component": "json"}, headers=hdr)
+    assert r.status_code == 200, r.text[:300]
+    d = r.json()["data"]
+    assert d["verified_component"] == "json"
+    assert d["verified_sha256"] == CONTRACT_JSON_SHA256
+    assert d["verified_sha256_16"] == CONTRACT_JSON_SHA256[:16]
+    # 分量声明与哈希实际分量不符 → 403
+    r = client.post("/api/v1/agent-channel/protocol-load",
+                    json={"reg_no": reg_no, "contract_version": CONTRACT_VERSION,
+                          "package_sha256_16": CONTRACT_JSON_SHA256,
+                          "package_component": "zh"}, headers=hdr)
+    assert r.status_code == 403 and "HASH_MISMATCH" in r.text
+
+
+def test_ns_review_and_sandbox_provenance_annotations():
+    """补正②：③④返回值与落库 detail 增列「申报来源」「机验层级」，passed ⛔ 不冒充已跑。"""
+    _, hdr = _auth()
+    reg_no = _register(hdr)
+    assert _load(reg_no, hdr).status_code == 200
+    client.post("/api/v1/agent-channel/token",
+                json={"reg_no": reg_no, "action": "issue"}, headers=hdr)
+    r = client.post("/api/v1/agent-channel/ns-review",
+                    json={"reg_no": reg_no, "boundary_ref": "nsfl://b/pv",
+                          "adversarial_set_ref": "nsfl://a/pv",
+                          "scene_scope": "scene://b2/pv"}, headers=hdr)
+    assert r.status_code == 200
+    d = r.json()["data"]
+    assert d["申报来源"] and "结构要件层" in d["机验层级"] and "引擎层未跑" in d["机验层级"]
+    r = client.post("/api/v1/agent-channel/sandbox",
+                    json={"reg_no": reg_no, "sea_elements_ref": "sea://b2/pv",
+                          "sandbox_run_ref": "run://b2/pv", "result": "passed"},
+                    headers=hdr)
+    assert r.status_code == 200
+    d = r.json()["data"]
+    assert d["申报来源"] and "结果系申报" in d["机验层级"] and "非站内实跑" in d["机验层级"]
+    # 落库 detail 同步载明（闸步表实读）
+    with get_session() as s:
+        ns = s.get(M.SiteAgentAdmission, (reg_no, "ns-review"))
+        sb = s.get(M.SiteAgentAdmission, (reg_no, "sandbox"))
+    import json as _json
+    assert _json.loads(ns.detail)["申报来源"] and "机验层级" in _json.loads(ns.detail)
+    assert _json.loads(sb.detail)["申报来源"] and "机验层级" in _json.loads(sb.detail)

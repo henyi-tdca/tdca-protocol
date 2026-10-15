@@ -127,9 +127,11 @@ def _require_prior_steps(s, reg_no: str, need_token: bool = True) -> None:
 def evaluate_gate(s, reg_no: str) -> dict:
     """六步总闸评估（fail-closed：一切未知/缺失即拒，如实报各步态）。
 
-    批 2 复核：①③④ 读闸步表（批 2 接真，⛔ 不再报 pending_batch）；
-    ②由凭据表 active 指纹派生；⑤execute 批 3 承接如实报 pending_batch；
-    ⑥登记存证已落链即 satisfied。状态闭集 satisfied/pending/failed/pending_batch。
+    语义（B2-FIX-001 补正①：名实相符）：`admitted` ＝ **登记正常 且 六步全 satisfied**；
+    登记面另留判据 `registry_ok`（在册且状态正常）；`unsatisfied_steps` 如实列缺口。
+    批 2 复核：①③④ 读闸步表（⛔ 不再报 pending_batch）；②由凭据表 active 指纹派生；
+    ⑤execute 批 3 承接如实报 pending_batch；⑥登记存证已落链即 satisfied。
+    状态闭集 satisfied/pending/failed/pending_batch。
     """
     row = s.get(M.SiteAgentRegistry, reg_no)
     if row is None:
@@ -137,22 +139,34 @@ def evaluate_gate(s, reg_no: str) -> dict:
                 "note": "未登记即未创建：幽灵态不受保护"}
     steps = {}
     for num, key, label in SIX_STEPS:
+        derived = None
         if key == "token":
             state = "satisfied" if _has_active_credential(s, reg_no) else "pending"
+            derived = "凭据表 active 指纹派生（单一事实源）"
         elif key == "execute":
             state = "pending_batch"   # 批 3 承接，如实不虚报
         elif key == "nca-evidence":
             state = "satisfied" if row.nca_ref else "pending"
+            derived = "登记存证回链派生（⑥随各步落链）"
         else:
             st = _step_state(s, reg_no, key)
             state = {"passed": "satisfied", "failed": "failed"}.get(st, "pending")
-        steps[key] = {"step": num, "label": label, "state": state}
+        step_info = {"step": num, "label": label, "state": state}
+        if derived:
+            step_info["derived"] = derived
+        steps[key] = step_info
     denied = row.status != "正常"
-    return {"admitted": not denied, "ghost": False, "reg_no": reg_no,
+    unsatisfied = [k for k, v in steps.items() if v["state"] != "satisfied"]
+    admitted = (not denied) and not unsatisfied
+    return {"admitted": admitted, "ghost": False, "reg_no": reg_no,
             "status": row.status,
+            "registry_ok": not denied,   # 登记面判据（独立于六步）
             "denied_reason": f"PUNISHMENT_STATE:{row.status}" if denied else None,
+            "unsatisfied_steps": unsatisfied or None,
             "steps": steps,
-            "note": "总闸 fail-closed：登记缺失/惩罚态/任一步未达即拒（六步不可跳不可互替）"}
+            "note": "总闸 fail-closed：admitted＝登记正常且六步全 satisfied（名实相符）；"
+                    "登记面判据另列 registry_ok；登记缺失/惩罚态/任一步未达即拒"
+                    "（六步不可跳不可互替）"}
 
 
 def gate_assert(s, reg_no: str) -> M.SiteAgentRegistry:
@@ -247,8 +261,10 @@ class CredentialReq(BaseModel):
 def issue_credential(reg_no: str, req: CredentialReq, request: Request):
     """智能体凭据签发（批 1 面；⛔ 人类会话内操作，智能体不得代签代持；锚无效不发令牌）。
 
-    通道内完整签发/轮换/吊销见 POST /api/v1/agent-channel/token（批 2，含六步前置与
-    签发即轮换口径）。fail-closed 序：人类会话 → 总闸 → 主体本人 → 锚有效 → 落指纹。
+    通道内完整签发/轮换/吊销见 POST /api/v1/agent-channel/token（批 2，含六步前置）。
+    B2-FIX-001 补正③（取甲·复用轮换）：本端点新签**自动置同智能体旧 active 为
+    revoked**（rotated_at 落时点），与 /token 同口径——⛔ 同智能体至多一 active 指纹。
+    fail-closed 序：人类会话 → 总闸 → 主体本人 → 锚有效 → 旧证轮换 → 落新指纹。
     """
     v = _require_session_user(request)
     actor = v["username"]
@@ -261,6 +277,8 @@ def issue_credential(reg_no: str, req: CredentialReq, request: Request):
             raise HTTPException(403, "ANCHOR_INVALID: 主体锚无效或未达定档"
                                      "（须 notifier＋固锚/移锚级＋已补）"
                                      "——锚无效不发令牌（fail-closed）")
+        old_actives = [c for c in s.query(M.SiteAgentCredential)
+                       .filter_by(reg_no=reg_no, status="active")]
     cred_value = "TDCA-AGT-" + secrets.token_urlsafe(32)
     fingerprint = hashlib.sha256(cred_value.encode("utf-8")).hexdigest()
     session_fp = hashlib.sha256(
@@ -271,17 +289,25 @@ def issue_credential(reg_no: str, req: CredentialReq, request: Request):
                           prov="real")
     now = _utc()
     with get_sessionmaker().begin() as s:
+        for c in old_actives:   # 复用轮换（B2-FIX-001③）：旧 active 全置 revoked
+            c2 = s.get(M.SiteAgentCredential, c.cred_no)
+            if c2 is None:
+                raise HTTPException(409, "CONFLICT: 旧凭据行竞态消失（轮换中止，事务回滚）")
+            c2.status = "revoked"
+            c2.rotated_at = now
         s.add(M.SiteAgentCredential(
             cred_no=cred_no, reg_no=reg_no, cred_fingerprint=fingerprint,
             status="active", issued_at=now, issuer_session=session_fp,
             nca_ref=nca_ref, data_provenance="real"))
     return _nca_watermark({
         "issued": True, "cred_no": cred_no, "reg_no": reg_no, "issued_at": now,
+        "rotated": len(old_actives),
         "credential": cred_value,     # 唯一回显一次；库内只存指纹
         "credential_fingerprint_sha256_16": fingerprint[:16],
-        "note": "凭据值仅此一次回显、⛔ 不入库（库内只存不可逆指纹）；吊销即时生效"
+        "note": "凭据值仅此一次回显、⛔ 不入库（库内只存不可逆指纹）；签发即轮换"
+                "（同智能体至多一 active，B2-FIX-001③）；吊销即时生效"
                 "（批 4 执行器承接）；人类会话内签发（⛔ 智能体不得代签代持）"
-                "；通道内轮换/吊销走 /token（批 2）"}, nature="real")
+                "；通道内六步前置签发/吊销走 /token（批 2）"}, nature="real")
 
 
 # =====================================================================
@@ -307,7 +333,25 @@ class ProtocolLoadReq(BaseModel):
     model_config = ConfigDict(extra="forbid")
     reg_no: str = ""
     contract_version: str = ""       # 须等于在册缔约协议版本
-    package_sha256_16: str = ""      # 协议包哈希短值（在册闭集核验）
+    package_sha256_16: str = ""      # 协议包哈希（B2-FIX-001 建议④：升完整 64 位；16 位短值兼容）
+    package_component: str = ""      # 可选分量标识 zh|en|json（如声明须与在册分量一致）
+
+
+# 在册协议分量全量哈希（分量标识 → sha256-64）
+_REGISTERED_PACKAGE_COMPONENTS = {
+    "zh": CONTRACT_ZH_SHA256, "en": CONTRACT_EN_SHA256, "json": CONTRACT_JSON_SHA256}
+
+
+def _match_package_hash(claimed: str, component: str) -> tuple[str, str] | None:
+    """协议包哈希在册核验：64 位全量比对（或 16 位短值前缀比对）；返回 (分量, 全量哈希) 或 None。"""
+    for comp, full in _REGISTERED_PACKAGE_COMPONENTS.items():
+        if component and comp != component:
+            continue
+        if len(claimed) == 64 and claimed == full:
+            return comp, full
+        if len(claimed) == 16 and full.startswith(claimed):
+            return comp, full
+    return None
 
 
 @router.post("/protocol-load")
@@ -315,7 +359,7 @@ def protocol_load(req: ProtocolLoadReq, request: Request):
     """① 通道本体＝协议加载验证：版本登记＋协议包哈希校验＋回执可机验凭证。
 
     通道定性（裁定）：通道＝协议加载验证，⛔ 非身份验证。
-    fail-closed：版本不符/哈希不符 → 403（未加载/哈希不符，⛔ 一切后续不可）。
+    fail-closed：版本不符/哈希不符/分量声明不符 → 403（未加载/哈希不符，⛔ 一切后续不可）。
     """
     actor, s = _subject_gate(req.reg_no, request)
     s.close()
@@ -323,27 +367,34 @@ def protocol_load(req: ProtocolLoadReq, request: Request):
         raise HTTPException(403, "PROTOCOL_VERSION_UNKNOWN: 协议版本未在册"
                                  "（fail-closed，未加载一切后续不可）")
     claimed = req.package_sha256_16.strip().lower()
-    if claimed not in _REGISTERED_PACKAGE_HASHES_16:
+    matched = _match_package_hash(claimed, req.package_component.strip().lower())
+    if matched is None:
         raise HTTPException(403, "PROTOCOL_HASH_MISMATCH: 协议包哈希不在册"
-                                 "（哈希不符 → ⛔ 一切后续不可）")
+                                 "（哈希不符/分量声明不符 → ⛔ 一切后续不可）")
+    matched_comp, full_hash = matched
     nca_ref = _nca_append("AGENT_CHANNEL_PROTOCOL_LOAD", actor,
                           artifact_path=(f"agent-channel:{req.reg_no}"
                                          f"/protocol:{CONTRACT_ID}:{CONTRACT_VERSION}"),
                           prov="real")
     receipt_core = {"loaded": True, "channel": "协议加载验证（⛔ 非身份验证）",
                     "contract_id": CONTRACT_ID, "contract_version": CONTRACT_VERSION,
-                    "verified_sha256_16": claimed, "nca_ref": nca_ref, "ts": _utc()}
+                    "verified_component": matched_comp,
+                    "verified_sha256": full_hash,
+                    "verified_sha256_16": full_hash[:16],
+                    "nca_ref": nca_ref, "ts": _utc()}
     receipt = "sha256:" + hashlib.sha256(json.dumps(
         receipt_core, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()[:32]
     _admission_set(req.reg_no, "protocol-load", "passed",
-                   result_ref=f"sha256_16:{claimed}",
+                   result_ref=f"sha256:{full_hash}",
                    detail=json.dumps({"contract_id": CONTRACT_ID,
-                                      "contract_version": CONTRACT_VERSION},
+                                      "contract_version": CONTRACT_VERSION,
+                                      "component": matched_comp},
                                      ensure_ascii=False, sort_keys=True),
                    nca_ref=nca_ref, actor=actor)
     return _nca_watermark({**receipt_core, "receipt_sha256_32": receipt,
-                           "note": "协议加载验证通过：版本与协议包哈希在册核验一致；"
-                                   "回执哈希＋NCA 存证双件可机验；⛔ 身份验证不在通道本体"},
+                           "note": "协议加载验证通过：版本、分量与协议包哈希（64 位全量）在册"
+                                   "核验一致；回执哈希＋NCA 存证双件可机验；"
+                                   "⛔ 身份验证不在通道本体"},
                           nature="real")
 
 
@@ -377,6 +428,9 @@ def token_manage(req: TokenReq, request: Request):
             with get_sessionmaker().begin() as s2:
                 for c in actives:
                     c2 = s2.get(M.SiteAgentCredential, c.cred_no)
+                    if c2 is None:
+                        raise HTTPException(409, "CONFLICT: 凭据行竞态消失"
+                                                 "（吊销中止，事务回滚）")
                     c2.status = "revoked"
                     c2.revoked_at = now
             return _nca_watermark({
@@ -386,6 +440,9 @@ def token_manage(req: TokenReq, request: Request):
                 nature="real")
         # issue / rotate（签发即轮换）
         anchor = s.get(M.UserAnchor, actor)
+        if anchor is None:
+            raise HTTPException(403, "ANCHOR_INVALID: 主体无锚记录"
+                                     "——锚无效不发令牌（fail-closed）")
         if not _anchor_valid(s, actor):
             raise HTTPException(403, "ANCHOR_INVALID: 主体锚无效或未达定档"
                                      "（须 notifier＋固锚/移锚级＋已补）"
@@ -407,6 +464,9 @@ def token_manage(req: TokenReq, request: Request):
         with get_sessionmaker().begin() as s2:
             for c in old_actives:   # 签发即轮换（默认口径）：旧 active 全置 revoked
                 c2 = s2.get(M.SiteAgentCredential, c.cred_no)
+                if c2 is None:
+                    raise HTTPException(409, "CONFLICT: 旧凭据行竞态消失"
+                                             "（轮换中止，事务回滚）")
                 c2.status = "revoked"
                 c2.rotated_at = now
             s2.add(M.SiteAgentCredential(
@@ -450,19 +510,27 @@ def ns_review(req: NsReviewReq, request: Request):
         missing = [k for k, v in (("boundary_ref", req.boundary_ref),
                                   ("adversarial_set_ref", req.adversarial_set_ref),
                                   ("scene_scope", req.scene_scope)) if not v.strip()]
+        申报来源 = "人类会话内申报（登记主体本人）"
+        机验层级_过 = ("结构要件层（闭集内机验通过）；引擎层未跑——NSFL 深度对抗判定归引擎"
+                       "（⛔ passed 不等于已过对抗）")
+        机验层级_拒 = "结构要件层未过（要件缺失）——拒绝入网；引擎层未跑"
         if missing:
             nca_ref = _nca_append("AGENT_CHANNEL_NS_REVIEW_FAIL", actor,
                                   artifact_path=f"agent-channel:{req.reg_no}/ns-review:rejected",
                                   prov="real")
             _admission_set(req.reg_no, "ns-review", "failed",
-                           detail=json.dumps({"missing": missing}, ensure_ascii=False),
+                           detail=json.dumps({"missing": missing,
+                                              "申报来源": 申报来源,
+                                              "机验层级": 机验层级_拒},
+                                             ensure_ascii=False),
                            nca_ref=nca_ref, actor=actor)
             raise HTTPException(400, f"NS_REVIEW_REJECTED: 负空间审查不过（要件缺失："
                                      f"{','.join(missing)}）——拒绝入网（fail-closed）")
         payload = {"boundary_ref": req.boundary_ref.strip(),
                    "adversarial_set_ref": req.adversarial_set_ref.strip(),
                    "scene_scope": req.scene_scope.strip(),
-                   "note": req.note.strip() or None}
+                   "note": req.note.strip() or None,
+                   "申报来源": 申报来源, "机验层级": 机验层级_过}
         nca_ref = _nca_append("AGENT_CHANNEL_NS_REVIEW", actor,
                               artifact_path=f"agent-channel:{req.reg_no}/ns-review:passed",
                               prov="real")
@@ -474,11 +542,13 @@ def ns_review(req: NsReviewReq, request: Request):
         s.close()
     return _nca_watermark({
         "verdict": "passed", "admitted_to_sandbox": True,
+        "申报来源": 申报来源, "机验层级": 机验层级_过,
         "components": {"nsfl_compiler": "PRESENT" if (_REPO_ROOT / _NSFL_COMPILER).is_dir()
                        else "MISSING"},
         "nca_ref": nca_ref,
         "note": "结构要件机验通过（闭集内确定性判定）；深度对抗判定归 NSFL 引擎，"
-                "组件在位如实报、⛔ 不冒充已跑对抗；未过即拒绝入网"}, nature="real")
+                "组件在位如实报、⛔ 不冒充已跑对抗（passed ≠ 已过对抗）；"
+                "未过即拒绝入网"}, nature="real")
 
 
 class SandboxReq(BaseModel):
@@ -505,6 +575,9 @@ def sandbox_verify(req: SandboxReq, request: Request):
         if missing:
             raise HTTPException(400, f"沙盒要件缺失：{','.join(missing)}（fail-closed）")
         passed = req.result == "passed"
+        申报来源 = "人类会话内申报（登记主体本人）"
+        机验层级 = ("结果系申报（沙盒运行号引用绑定，⛔ 非站内实跑；"
+                    "passed ≠ 已实跑沙盒）")
         nca_ref = _nca_append(
             "AGENT_CHANNEL_SANDBOX_PASS" if passed else "AGENT_CHANNEL_SANDBOX_FAIL",
             actor, artifact_path=f"agent-channel:{req.reg_no}/sandbox:{req.result}",
@@ -512,15 +585,18 @@ def sandbox_verify(req: SandboxReq, request: Request):
         _admission_set(req.reg_no, "sandbox", "passed" if passed else "failed",
                        result_ref=req.sandbox_run_ref.strip(),
                        detail=json.dumps({"sea_elements_ref": req.sea_elements_ref.strip(),
-                                          "sandbox_run_ref": req.sandbox_run_ref.strip()},
+                                          "sandbox_run_ref": req.sandbox_run_ref.strip(),
+                                          "申报来源": 申报来源, "机验层级": 机验层级},
                                          ensure_ascii=False, sort_keys=True),
                        nca_ref=nca_ref, actor=actor)
     finally:
         s.close()
     return _nca_watermark({
         "bound": True, "result": req.result, "executable": passed,
+        "申报来源": 申报来源, "机验层级": 机验层级,
         "nca_ref": nca_ref,
-        "note": ("沙盒验证通过：可进正空间执行（批 3 承接 execute＋计量）"
+        "note": ("沙盒验证申报登记通过（结果系申报，⛔ 非站内实跑）："
+                 "可进正空间执行（批 3 承接 execute＋计量）"
                  if passed else
-                 "沙盒未过：⛔ 不得正空间执行（fail-closed，闸步表已记 failed）")},
+                 "沙盒未过（结果系申报）：⛔ 不得正空间执行（fail-closed，闸步表已记 failed）")},
         nature="real")
