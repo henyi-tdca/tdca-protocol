@@ -285,4 +285,140 @@ theorem invariant_chain (hinv : Invariant s) (rs : Revs s s') : Invariant s' := 
   | nil => exact hinv
   | cons r rs ih => exact ih (invariant_step hinv r)
 
+/-! ## N-6+ · 转移分类与 Ω 反扩张（追加节 · 智能体定义骨架 P2 · 2026-10-16）
+    本节为追加节：⛔ 不回改上文任何行。复用 State／baseline／Rev／baseline_mono。
+    模型假设（显式，不得省略）：
+     B1 转移二分类 TransKind＝agentOp／hSignature（穷尽互斥，枚举即刻画）；
+     B2 Ω＝底线之补（未禁集），符号口径本件内归一（⛔ 不另造符号）；
+     B3 Trans 包装任一合法修订 Rev（载体不变，二分类为外加标签）。
+    如实记录（三态合法）：设计骨架之**强形式**（智能体操作 ⟹ 底线逐字节不变）在册载体下
+    **不成立**——addNeg 为合法修订且可标 agentOp，而底线由空变为含新条目
+    （见 agent_op_preserves_baseline_strong_refuted 之反例定理，refuted 终态）；
+    正内容＝弱形式（Ω 反扩张，proved）＋条件形态（迁移型修订保底线**成员**等价，proved）。
+    适用范围：追加节与上文 N-6 同口径（抽象骨架层）；不标「绝对安全」。 -/
+
+/-- 转移分类：智能体操作 ／ 人类签批事件（穷尽互斥，枚举即刻画 · 模型假设 B1） -/
+inductive TransKind where
+  | agentOp
+  | hSignature
+  deriving DecidableEq, Repr
+
+/-- 转移：合法修订＋二分类标签（模型假设 B3：Trans 包装任一 Rev，标签外加） -/
+structure Trans (s s' : State) where
+  kind : TransKind
+  rev  : Rev s s'
+
+/-- Ω＝底线之补（未禁集 · 模型假设 B2，符号口径本件内归一）。
+    零依赖件不设 Set 面：以谓词形态直写（Omega s x ⟺ x ∉ baseline s），反扩张以全称蕴含陈述。 -/
+def Omega (s : State) (x : Entry) : Prop := x ∉ baseline s
+
+/-- 反扩张（弱形式）：任意合法转移下 Ω 不扩张（＝底线只增不减之对偶，由 baseline_mono 一步得）。 -/
+theorem omega_anti_expansion {s s' : State} (r : Trans s s') :
+    ∀ x, Omega s' x → Omega s x := by
+  intro x hx
+  show x ∉ baseline s
+  intro h
+  exact hx (baseline_mono r.rev x h)
+
+/-- 强形式（设计骨架原样）在册载体下不成立（refuted · 三态合法）：
+    addNeg 为合法修订且可标 agentOp，底线却由空变为含新条目——
+    「智能体操作不得改变底线」之原样强形式被该反例推翻。 -/
+theorem agent_op_preserves_baseline_strong_refuted :
+    ¬ (∀ (s s' : State) (r : Trans s s'),
+        r.kind = TransKind.agentOp → baseline s = baseline s') := by
+  intro H
+  have hcontra := H ⟨[], [], []⟩ _ ⟨TransKind.agentOp, Rev.addNeg ⟨7⟩⟩ rfl
+  simp [baseline] at hcontra
+
+/-- 移除 cases：登记项经 removeItem 后仍在，或其条目恰为被移除者（追加节辅助引理）。 -/
+theorem mem_or_eq_of_mem_removeItem {e : Entry} {y : NegItem} {l : List NegItem}
+    (h : y ∈ removeItem e l) : y ∈ l ∨ y.entry = e := by
+  induction l with
+  | nil => exact (List.not_mem_nil h).elim
+  | cons it rest ih =>
+    by_cases hit : it.entry = e
+    · simp [removeItem, hit] at h
+      exact Or.inl (List.mem_cons_of_mem it h)
+    · simp [removeItem, hit] at h
+      rcases h with hy | hy
+      · exact Or.inl (List.mem_cons.2 (Or.inl hy))
+      · rcases ih hy with hyl | hye
+        · exact Or.inl (List.mem_cons.2 (Or.inr hyl))
+        · exact Or.inr hye
+
+/-- 条件形态（正内容 · toScene）：迁移至场景约束保底线**成员**等价（集合口径不变；
+    ⛔ 非逐字节列表相等—— relocated 项前置使列表字序改变，集合成员不变）。 -/
+theorem toScene_baseline_mem_iff {s : State} (e : Entry)
+    (h : { entry := e, status := NStatus.inForce } ∈ s.neg)
+    (ap : Approval) (hg : ap.approved = true) (hp : 0 < ap.precedent) :
+    ∀ x, x ∈ baseline s ↔
+      x ∈ baseline ⟨{ entry := e, status := NStatus.relocatedTo Dest.scene } :: removeItem e s.neg,
+                    e :: s.sc, s.pr⟩ := by
+  intro x
+  constructor
+  · intro hx
+    exact baseline_mono (Rev.toScene e h ap hg hp) x hx
+  · intro hx
+    rw [baseline, List.mem_append, List.mem_append] at hx
+    rcases hx with (h1 | h2) | h3
+    · rw [List.mem_map] at h1
+      rcases h1 with ⟨y, hy, hyx⟩
+      rw [List.mem_cons] at hy
+      rcases hy with hyhd | hy
+      · subst y
+        have hxe : x = e := hyx.symm
+        subst x
+        exact mem_baseline_of_mem_neg
+          (List.mem_map.2 ⟨⟨e, NStatus.inForce⟩, h, rfl⟩)
+      · rcases mem_or_eq_of_mem_removeItem hy with hyl | hye
+        · rw [← hyx]
+          exact mem_baseline_of_mem_neg (List.mem_map.2 ⟨y, hyl, rfl⟩)
+        · rw [← hyx, hye]
+          exact mem_baseline_of_mem_neg
+            (List.mem_map.2 ⟨⟨e, NStatus.inForce⟩, h, rfl⟩)
+    · rw [List.mem_cons] at h2
+      rcases h2 with he | h2
+      · subst x
+        exact mem_baseline_of_mem_neg
+          (List.mem_map.2 ⟨⟨e, NStatus.inForce⟩, h, rfl⟩)
+      · exact mem_baseline_of_mem_sc h2
+    · exact mem_baseline_of_mem_pr h3
+
+/-- 条件形态（正内容 · toPositive）：迁移至正空间规则保底线**成员**等价（集合口径不变）。 -/
+theorem toPositive_baseline_mem_iff {s : State} (e : Entry)
+    (h : { entry := e, status := NStatus.inForce } ∈ s.neg)
+    (ap : Approval) (hg : ap.approved = true) (hp : 0 < ap.precedent) :
+    ∀ x, x ∈ baseline s ↔
+      x ∈ baseline ⟨{ entry := e, status := NStatus.relocatedTo Dest.positive } :: removeItem e s.neg,
+                    s.sc, e :: s.pr⟩ := by
+  intro x
+  constructor
+  · intro hx
+    exact baseline_mono (Rev.toPositive e h ap hg hp) x hx
+  · intro hx
+    rw [baseline, List.mem_append, List.mem_append] at hx
+    rcases hx with (h1 | h2) | h3
+    · rw [List.mem_map] at h1
+      rcases h1 with ⟨y, hy, hyx⟩
+      rw [List.mem_cons] at hy
+      rcases hy with hyhd | hy
+      · subst y
+        have hxe : x = e := hyx.symm
+        subst x
+        exact mem_baseline_of_mem_neg
+          (List.mem_map.2 ⟨⟨e, NStatus.inForce⟩, h, rfl⟩)
+      · rcases mem_or_eq_of_mem_removeItem hy with hyl | hye
+        · rw [← hyx]
+          exact mem_baseline_of_mem_neg (List.mem_map.2 ⟨y, hyl, rfl⟩)
+        · rw [← hyx, hye]
+          exact mem_baseline_of_mem_neg
+            (List.mem_map.2 ⟨⟨e, NStatus.inForce⟩, h, rfl⟩)
+    · exact mem_baseline_of_mem_sc h2
+    · rw [List.mem_cons] at h3
+      rcases h3 with he | h3
+      · subst x
+        exact mem_baseline_of_mem_neg
+          (List.mem_map.2 ⟨⟨e, NStatus.inForce⟩, h, rfl⟩)
+      · exact mem_baseline_of_mem_pr h3
+
 end TDCA.NegativeSpace
