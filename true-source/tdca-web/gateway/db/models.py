@@ -661,3 +661,52 @@ class UserAnchor(Base):
         CheckConstraint("phone_present IN (0,1)", name="ck_user_anchors_ph"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_user_anchors_prov"),
     )
+
+
+class SiteAgentRegistry(Base):
+    """32. 站点智能体通道·登记表（L1SI147-CHANNEL-B1-001：登记即创建、未登记即未创建）。
+
+    主体与执行体二分：owner_username 为主体（人类账户）列，智能体执行体无财产；
+    智能体侧标识＝登记号 reg_no（⛔ 不叫 TDID、不自造编号体例）；
+    status＝正常＋惩罚三态（冻结／降权／吊销，批 4 执行器落表）。
+    """
+
+    __tablename__ = "site_agent_registry"
+    reg_no: Mapped[str] = mapped_column(Text, primary_key=True)          # 登记号（通道内唯一）
+    owner_username: Mapped[str] = mapped_column(ForeignKey("users.username"), nullable=False)
+    six_elements_ref: Mapped[str] = mapped_column(Text, nullable=False)  # 创世六要素引用
+    anchor_ref: Mapped[str | None] = mapped_column(Text)                 # 锚定项引用（user_anchors 锚段）
+    tier: Mapped[str] = mapped_column(Text, nullable=False, default="basic")  # 等第（取值域后续批次裁定）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="正常")
+    nca_ref: Mapped[str | None] = mapped_column(Text)                    # 登记存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('正常','冻结','降权','吊销')", name="ck_site_agent_registry_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_registry_prov"),
+    )
+
+
+class SiteAgentCredential(Base):
+    """33. 站点智能体通道·凭据族（⛔ 只存不可逆指纹，凭据值一律不入库）。
+
+    人类会话内签发（issuer_session 存会话指纹，⛔ 非会话值本身）；
+    吊销即时生效（批 4 执行器；status=revoked 即全库拒）。
+    """
+
+    __tablename__ = "site_agent_credential"
+    cred_no: Mapped[str] = mapped_column(Text, primary_key=True)
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    cred_fingerprint: Mapped[str] = mapped_column(Text, nullable=False)  # sha256 不可逆指纹
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    issued_at: Mapped[str] = mapped_column(Text, nullable=False)
+    rotated_at: Mapped[str | None] = mapped_column(Text)
+    revoked_at: Mapped[str | None] = mapped_column(Text)
+    issuer_session: Mapped[str | None] = mapped_column(Text)             # 签发人类会话指纹（⛔ 非值）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                    # 签发存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    __table_args__ = (
+        CheckConstraint("status IN ('active','revoked')", name="ck_site_agent_credential_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_credential_prov"),
+    )
