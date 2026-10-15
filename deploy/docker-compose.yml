@@ -1,5 +1,6 @@
 services:
   gateway:
+    image: deploy-gateway:frozen-1009
     build:
       context: ..
       dockerfile: deploy/Dockerfile.gateway
@@ -11,6 +12,9 @@ services:
       DATABASE_URL: "sqlite:////data/tdca.db"
     volumes:
       - tdca-db:/data
+      - /root/tdca/docs/regulations:/docs/regulations:ro
+      - /root/tdca-site/gateway-channel-cc0c5fd:/app/tdca-web/gateway:ro
+      - /root/tdca-site/gateway:/app/tdca-site/gateway:ro
     restart: always
   mcp-bridge:
     build:
@@ -34,12 +38,17 @@ services:
       dockerfile: deploy/Dockerfile.web
     restart: always
   nginx:
-    image: nginx:alpine
+    image: deploy-nginx:frozen-1009
     ports:
       - "8080:80"
+      - "80:88"
+      - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./portal:/usr/share/nginx/html:ro
+      - /root/tdca-site/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /root/tdca-site/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - /root/tdca-site/nginx/tls:/etc/nginx/tls:ro
+      - /root/tdca-site/dist:/usr/share/tdca-site:ro
+      - /root/tdca/deploy/portal:/usr/share/nginx/html:ro
     depends_on:
       - gateway
       - mcp-bridge
