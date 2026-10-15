@@ -46,7 +46,14 @@ async def _lifespan(_app):
     # （告警「只报新增」基线差口径；不入库、不建表；快照失败首写惰性回退）
     from api_v1 import init_nca_fork_baseline
     init_nca_fork_baseline()
-    yield
+    # T-037 任务 C：超期升档扫掠（服务内定时，⛔ 不入请求径；写口只许置永久）
+    import asyncio
+    from agent_channel_ops import _prs_sweep_loop
+    _sweep_task = asyncio.create_task(_prs_sweep_loop())
+    try:
+        yield
+    finally:
+        _sweep_task.cancel()
 
 
 app = FastAPI(title="TDCA Unified API Gateway", version="V1.0",
