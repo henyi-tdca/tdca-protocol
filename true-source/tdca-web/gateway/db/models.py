@@ -738,3 +738,54 @@ class SiteAgentAdmission(Base):
                         name="ck_site_agent_admission_state"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_admission_prov"),
     )
+
+
+class SiteAgentGrant(Base):
+    """35. 站点智能体通道·授权件表（批 3：四要件机验，缺一不成立；配置即侵权口径）。
+
+    照令七字段（grant_no/reg_no/scene_constraint/legal_signer/signature_ref/
+    parent_grant_no/status）＋detail 四要件机验明细（R2 五阶清单/R3 全构成声明/逐条判值）；
+    四要件依在册《授权件模板》（R1 场景约束/R2 五阶资产形态/R3 全构成已授权/R4 法律主体签名）；
+    人类会话内登记（⛔ 智能体不代签代持）；⛔ 不承接不动草案 auth_grants。
+    """
+
+    __tablename__ = "site_agent_grant"
+    grant_no: Mapped[str] = mapped_column(Text, primary_key=True)
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    scene_constraint: Mapped[str] = mapped_column(Text, nullable=False)   # R1（未列明场景不在授权范围）
+    legal_signer: Mapped[str] = mapped_column(Text, nullable=False)       # R4 法律主体签名者
+    signature_ref: Mapped[str] = mapped_column(Text, nullable=False)      # R4 签名事件引用（落 NCA）
+    parent_grant_no: Mapped[str | None] = mapped_column(
+        ForeignKey("site_agent_grant.grant_no"))                          # 转授上层件号
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    detail: Mapped[str | None] = mapped_column(Text)   # 四要件机验明细（JSON）
+    nca_ref: Mapped[str | None] = mapped_column(Text)  # 登记存证回链
+    actor: Mapped[str | None] = mapped_column(Text)    # 操作人类账户
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('active','revoked')", name="ck_site_agent_grant_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_grant_prov"),
+    )
+
+
+class SiteAgentCallLedger(Base):
+    """36. 站点智能体通道·计量表（批 3：聚合窗口落账，⛔ 不高频直写致锁）。
+
+    聚合窗口内同（登记号,端点,窗口起点）一行累计 units（窗口值施工取 60 秒，方案未定值）；
+    units 数值按方案标模拟（SIMULATED 水印）；provenance=mixed（落账事实真＋计量数值模拟）。
+    """
+
+    __tablename__ = "site_agent_call_ledger"
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), primary_key=True)
+    endpoint: Mapped[str] = mapped_column(Text, primary_key=True)     # execute 等正空间端点名
+    ts: Mapped[str] = mapped_column(Text, primary_key=True)           # 聚合窗口起点（ISO 分钟截断）
+    units: Mapped[int] = mapped_column(nullable=False, default=0)     # 窗口累计（数值模拟）
+    nca_anchor: Mapped[str | None] = mapped_column(Text)              # 本窗口最近存证锚
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="mixed")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_ledger_prov"),
+    )

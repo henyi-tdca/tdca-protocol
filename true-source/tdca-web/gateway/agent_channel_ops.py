@@ -130,8 +130,9 @@ def evaluate_gate(s, reg_no: str) -> dict:
     语义（B2-FIX-001 补正①：名实相符）：`admitted` ＝ **登记正常 且 六步全 satisfied**；
     登记面另留判据 `registry_ok`（在册且状态正常）；`unsatisfied_steps` 如实列缺口。
     批 2 复核：①③④ 读闸步表（⛔ 不再报 pending_batch）；②由凭据表 active 指纹派生；
-    ⑤execute 批 3 承接如实报 pending_batch；⑥登记存证已落链即 satisfied。
-    状态闭集 satisfied/pending/failed/pending_batch。
+    ⑤execute 批 3 接真读闸步表（passed→satisfied，⛔ 不再报 pending_batch）；
+    ⑥登记存证已落链即 satisfied。
+    状态闭集 satisfied/pending/failed。
     """
     row = s.get(M.SiteAgentRegistry, reg_no)
     if row is None:
@@ -143,13 +144,11 @@ def evaluate_gate(s, reg_no: str) -> dict:
         if key == "token":
             state = "satisfied" if _has_active_credential(s, reg_no) else "pending"
             derived = "凭据表 active 指纹派生（单一事实源）"
-        elif key == "execute":
-            state = "pending_batch"   # 批 3 承接，如实不虚报
         elif key == "nca-evidence":
             state = "satisfied" if row.nca_ref else "pending"
             derived = "登记存证回链派生（⑥随各步落链）"
         else:
-            st = _step_state(s, reg_no, key)
+            st = _step_state(s, reg_no, key)   # ①③④⑤ 批 3 起同读闸步表（⛔ 不再特判 pending_batch）
             state = {"passed": "satisfied", "failed": "failed"}.get(st, "pending")
         step_info = {"step": num, "label": label, "state": state}
         if derived:
@@ -600,3 +599,197 @@ def sandbox_verify(req: SandboxReq, request: Request):
                  if passed else
                  "沙盒未过（结果系申报）：⛔ 不得正空间执行（fail-closed，闸步表已记 failed）")},
         nature="real")
+
+
+# =====================================================================
+# 批 3（L1SI147-CHANNEL-B1-003）：交易接线——授权件四要件机验＋execute 正空间执行＋计量落账
+# 授权件表 site_agent_grant＋计量表 site_agent_call_ledger（迁移 0010）；
+# 四要件依在册《授权件模板》（R1 场景约束/R2 五阶资产形态/R3 全构成已授权/R4 法律主体签名）；
+# 核心 fail-closed：无授权件⟹拒（配置即侵权）、④未过⟹⛔不得执行、存证失败⟹操作不生效。
+# =====================================================================
+
+def _grant_no() -> str:
+    return "SGR-" + uuid.uuid4().hex[:12].upper()
+
+
+# R2 五阶资产形态闭集（《授权件模板》R2：未列明之阶不得据本件主张）
+_GRANT_TIERS = ("一阶", "二阶", "三阶", "四阶", "五阶")
+
+# 计量聚合窗口（方案 V2 §九 只要求设窗未定值：施工取 60 秒；窗口起点按 ISO 分钟截断）
+_LEDGER_WINDOW_MINUTES = 1
+_LEDGER_ENDPOINT_EXECUTE = "execute"
+
+
+def _ledger_window(ts: str) -> str:
+    """聚合窗口起点：ISO 分钟截断（ts 形如 YYYY-MM-DDTHH:MM:SSZ）。"""
+    return ts[:16]
+
+
+class GrantReq(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    scene_constraint: str = ""       # R1 场景（必填；未列明场景不在授权范围；多场景逗号分隔）
+    tiers_covered: str = ""          # R2 五阶清单（必填；如「一阶,三阶」，逐项须在五阶闭集）
+    full_composition: bool = False   # R3 全构成已授权声明（须 true；有保留即未达全构成）
+    legal_signer: str = ""           # R4 法律主体签名者（本人；⛔ 智能体不代签代持）
+    signature_ref: str = ""          # R4 签名事件引用（须落 NCA 的引用串）
+    parent_grant_no: str = ""        # 转授上层件号（可空）
+
+
+@router.post("/{reg_no}/grants", status_code=201)
+def issue_grant(reg_no: str, req: GrantReq, request: Request):
+    """授权件登记（四要件机验，缺一不成立；人类会话内，⛔ 智能体不代签代持）。
+
+    fail-closed 序：人类会话 → 总闸 → 主体本人 → 四要件逐条机验（缺件逐条拒）
+    → 存证（先存证后落表：存证失败⟹操作不生效）→ 落表 active＋机验明细 detail。
+    场景闭集口径：未列明场景不在授权范围（R1）；五阶未列明之阶不得据本件主张（R2）。
+    """
+    actor, s = _subject_gate(reg_no, request)
+    try:
+        missing = []
+        if not req.scene_constraint.strip():
+            missing.append("R1 场景约束缺失（scene_constraint 必填）")
+        tiers = [t.strip() for t in req.tiers_covered.replace("，", ",").split(",") if t.strip()]
+        if not tiers:
+            missing.append("R2 五阶清单缺失（tiers_covered 必填）")
+        else:
+            bad = [t for t in tiers if t not in _GRANT_TIERS]
+            if bad:
+                missing.append(f"R2 五阶清单越闭集：{','.join(bad)}")
+        if not req.full_composition:
+            missing.append("R3 全构成已授权声明缺失（有保留即未达全构成，须显式声明 true）")
+        if not req.legal_signer.strip():
+            missing.append("R4 法律主体签名者缺失（legal_signer 必填，⛔ 智能体不代签）")
+        if not req.signature_ref.strip():
+            missing.append("R4 签名事件引用缺失（signature_ref 必填，签名事件须落 NCA）")
+        if req.parent_grant_no.strip():
+            parent = s.get(M.SiteAgentGrant, req.parent_grant_no.strip())
+            if parent is None or parent.status != "active":
+                raise HTTPException(403, "GRANT_PARENT_INVALID: 转授上层件不存在或非 active"
+                                         "（多层转授逐层皆须件，任一环失效下游全失效）")
+        if missing:
+            raise HTTPException(400, "GRANT_REJECTED: 授权件四要件缺一不成立——"
+                                     + "；".join(missing) + "（fail-closed：无件不得配置）")
+        grant_no = _grant_no()
+        nca_ref = _nca_append("AGENT_CHANNEL_GRANT_ISSUE", actor,
+                              artifact_path=f"agent-channel:{reg_no}/grant:{grant_no}",
+                              prov="real")   # 先存证：写入失败⟹操作不生效（⛔ 不落半条）
+        detail = json.dumps({
+            "R1 场景约束": req.scene_constraint.strip(),
+            "R2 五阶资产形态": tiers,
+            "R3 全构成已授权": True,
+            "R4 法律主体签名": {"signer": req.legal_signer.strip(),
+                              "signature_ref": req.signature_ref.strip()},
+            "四要件判": {k: True for k in ("R1", "R2", "R3", "R4")},
+            "parent_grant_no": req.parent_grant_no.strip() or None,
+        }, ensure_ascii=False, sort_keys=True)
+        now = _utc()
+        with get_sessionmaker().begin() as s2:
+            s2.add(M.SiteAgentGrant(
+                grant_no=grant_no, reg_no=reg_no,
+                scene_constraint=req.scene_constraint.strip(),
+                legal_signer=req.legal_signer.strip(),
+                signature_ref=req.signature_ref.strip(),
+                parent_grant_no=req.parent_grant_no.strip() or None,
+                status="active", detail=detail, nca_ref=nca_ref, actor=actor,
+                data_provenance="real", created_at=now, updated_at=now))
+    finally:
+        s.close()
+    return _nca_watermark({
+        "granted": True, "grant_no": grant_no, "reg_no": reg_no, "status": "active",
+        "four_requirements": {"R1 场景约束": True, "R2 五阶资产形态": True,
+                              "R3 全构成已授权": True, "R4 法律主体签名": True},
+        "nca_ref": nca_ref,
+        "note": "授权件四要件机验通过（照在册《授权件模板》，缺一不成立）；"
+                "人类会话内登记（⛔ 智能体不代签代持）；生效≠部署≠上线≠对外；"
+                "无有效授权件即不得执行（配置即侵权口径）"}, nature="real")
+
+
+def _active_grant(s, reg_no: str, scene: str) -> "M.SiteAgentGrant | None":
+    """有效授权件机验（execute 前置）：active 且在册＋场景命中（R1：未列明场景不在授权范围）。"""
+    for g in s.query(M.SiteAgentGrant).filter_by(reg_no=reg_no, status="active"):
+        scenes = [x.strip() for seg in g.scene_constraint.replace("，", ",").split(";")
+                  for x in seg.split(",") if x.strip()]
+        if scene in scenes:
+            return g
+    return None
+
+
+class ExecuteReq(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    reg_no: str = ""        # 登记号
+    scene: str = ""         # 本次执行场景（须在授权件场景约束列明范围内）
+    action: str = ""        # 正空间动作（如实记录于闸步明细）
+    units: int = 1          # 计量单位（数值按方案标模拟，SIMULATED 水印）
+
+
+@router.post("/execute")
+def execute(req: ExecuteReq, request: Request):
+    """⑤ 正空间执行＋计量落账（fail-closed 全序：⛔ 不可跳不可互替）。
+
+    硬序：人类会话 → 总闸 → 主体本人 → ①②（须达）→ ③须过 → ④须过（未过⟹⛔不得执行）
+    → 授权件机验（无有效件⟹拒，配置即侵权；场景越界⟹拒，R1 未列明不在授权范围）
+    → 存证（先存证后落账：写入失败⟹操作不生效）→ 计量聚合落账（窗口内一行累计，
+    ⛔ 不高频直写致锁）→ 闸步表 execute 记 passed。
+    计量数值按方案标模拟（SIMULATED 水印）；执行事实／状态机／存证接真。
+    """
+    actor, s = _subject_gate(req.reg_no, request)
+    try:
+        _require_prior_steps(s, req.reg_no)      # ①②须达（吊销即时：无 active 凭据即拒）
+        if _step_state(s, req.reg_no, "ns-review") != "passed":
+            raise HTTPException(403, "STEP_ORDER: ③ 负空间审查未过——拒绝入网，"
+                                     "⛔ 不得正空间执行（fail-closed）")
+        if _step_state(s, req.reg_no, "sandbox") != "passed":
+            raise HTTPException(403, "STEP_ORDER: ④ 沙盒验证未过——⛔ 不得正空间执行（fail-closed）")
+        if not req.scene.strip():
+            raise HTTPException(403, "GRANT_SCENE_REQUIRED: 执行须声明场景"
+                                     "（R1 场景约束：未列明场景不在授权范围）")
+        grant = _active_grant(s, req.reg_no, req.scene.strip())
+        if grant is None:
+            raise HTTPException(403, "GRANT_REQUIRED: 无有效授权件（或无覆盖本场景的授权件）"
+                                     "——配置即侵权，无授权不得执行（fail-closed）")
+        申报来源 = "人类会话内发起（登记主体本人）"
+        机验层级 = ("授权件四要件机验层（结构要件闭集机验通过）；计量聚合落账层接真；"
+                    "实际算力执行不在站内（如实标注）")
+        nca_ref = _nca_append("AGENT_CHANNEL_EXECUTE", actor,
+                              artifact_path=(f"agent-channel:{req.reg_no}"
+                                             f"/execute:{grant.grant_no}:{req.scene.strip()}"),
+                              prov="real")   # 先存证：写入失败⟹操作不生效（⛔ 不落半条）
+        now = _utc()
+        window = _ledger_window(now)
+        with get_sessionmaker().begin() as s2:
+            row = s2.get(M.SiteAgentCallLedger,
+                         (req.reg_no, _LEDGER_ENDPOINT_EXECUTE, window))
+            if row is None:
+                s2.add(M.SiteAgentCallLedger(
+                    reg_no=req.reg_no, endpoint=_LEDGER_ENDPOINT_EXECUTE, ts=window,
+                    units=req.units, nca_anchor=nca_ref,
+                    data_provenance="mixed", created_at=now, updated_at=now))
+            else:
+                row.units += req.units
+                row.nca_anchor = nca_ref
+                row.updated_at = now
+        _admission_set(req.reg_no, "execute", "passed",
+                       result_ref=grant.grant_no,
+                       detail=json.dumps({"scene": req.scene.strip(),
+                                          "action": req.action.strip() or None,
+                                          "grant_no": grant.grant_no,
+                                          "ledger_window": window, "units": req.units,
+                                          "申报来源": 申报来源, "机验层级": 机验层级},
+                                         ensure_ascii=False, sort_keys=True),
+                       nca_ref=nca_ref, actor=actor)
+        with get_session() as s3:
+            gate = evaluate_gate(s3, req.reg_no)
+    finally:
+        s.close()
+    return _nca_watermark({
+        "executed": True, "reg_no": req.reg_no, "scene": req.scene.strip(),
+        "action": req.action.strip() or None, "grant_no": grant.grant_no,
+        "ledger": {"endpoint": _LEDGER_ENDPOINT_EXECUTE, "window": window,
+                   "units": req.units, "data_nature": "simulated",
+                   "note": "SIMULATED 水印：计量数值按方案标模拟（聚合窗口 "
+                           f"{_LEDGER_WINDOW_MINUTES} 分钟）"},
+        "申报来源": 申报来源, "机验层级": 机验层级,
+        "admission": "execute:passed", "gate": gate, "nca_ref": nca_ref,
+        "note": "正空间执行登记通过：六步硬序①②③④全达＋授权件四要件机验＋存证落链；"
+                "计量数值 SIMULATED（方案 §六），执行事实／状态机／存证接真；"
+                "生效≠部署≠上线≠对外"}, nature="mixed")
