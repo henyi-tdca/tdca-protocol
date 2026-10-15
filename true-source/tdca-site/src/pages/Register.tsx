@@ -35,6 +35,7 @@ export function RegisterPage() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [agreed, setAgreed] = useState(false)
+  const [anchorKind, setAnchorKind] = useState('realname-phone')   // 'none'=暂不选择（可后补）
   const [msg, setMsg] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -64,7 +65,11 @@ export function RegisterPage() {
     try {
       const res = await api.post<{ token: string; role: string; nca_id: string }>(
         '/api/v1/auth/register',
-        { username: name, password, agree_contract: true, contract_version: CONTRACT_VERSION },
+        {
+          username: name, password, agree_contract: true, contract_version: CONTRACT_VERSION,
+          // 批 2：所选锚随注册落存证；「暂不选择」不传 anchor_kind（后端默认记名级·待补）
+          ...(anchorKind !== 'none' ? { anchor_kind: anchorKind } : {}),
+        },
       )
       if (res.ok) {
         setSessionToken(res.data.token)
@@ -157,7 +162,7 @@ export function RegisterPage() {
         {confirm && password !== confirm && (
           <div className="text-xs text-red-700">两次输入的密码不一致</div>
         )}
-        <AnchorSelectSection />
+        <AnchorSelectSection value={anchorKind} onChange={setAnchorKind} />
         {msg && <div data-testid="register-msg" className="text-xs text-red-700">{msg}</div>}
         {!agreed && (
           <div data-testid="register-agree-hint" className="text-xs text-amber-700">

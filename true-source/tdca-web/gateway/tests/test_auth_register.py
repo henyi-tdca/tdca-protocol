@@ -132,8 +132,9 @@ def test_register_nca_chain_appended():
     r = _reg("reg-nca-1")
     assert r.status_code == 200
     nca_id = r.json()["data"]["nca_id"]
+    # L1SI145-ANCHOR-B2-001：注册现落两条存证——缔约＋锚段（未选锚者亦落锚段，如实记名级·待补）
     with get_session() as s:
-        assert s.query(M.NcaChain).count() == before + 1
+        assert s.query(M.NcaChain).count() == before + 2
         row = s.get(M.NcaChain, nca_id)   # ts 秒级精度下同秒多行，按返回存证号主键直查（确定性）
         assert row is not None
         assert row.action == "user_register_contract"
@@ -141,6 +142,14 @@ def test_register_nca_chain_appended():
         assert row.prev_nca                              # 链式衔接非空
         assert "TDCA-REGISTER-CONTRACT-001/V1.0" in row.artifact_path  # 缔约落链含协议版本
         assert "zh:ee33e2c8" in row.artifact_path and "en:7018e356" in row.artifact_path  # 双版本哈希
+        # 锚段存证：默认未选 → kind none／记名级／待补；锚行 nca_ref 回填同一存证号
+        arow = s.get(M.NcaChain, r.json()["data"]["anchor"]["nca_ref"])
+        assert arow is not None and arow.action == "user_anchor_select"
+        assert "anchor://kind:none/tier:记名级/state:待补" in arow.artifact_path
+        uarow = s.get(M.UserAnchor, "reg-nca-1")
+        assert uarow is not None and uarow.anchor_kind is None
+        assert uarow.anchor_tier == "记名级" and uarow.tier_state == "待补"
+        assert uarow.nca_ref == arow.nca_id
     _drop_user("reg-nca-1")
 
 
