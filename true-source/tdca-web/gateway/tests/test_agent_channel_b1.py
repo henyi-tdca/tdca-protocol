@@ -110,18 +110,23 @@ def test_gate_fail_closed_positive_and_negative():
     reg_no = _register(hdr)
     with get_session() as s:
         gate = agent_channel_ops.evaluate_gate(s, reg_no)
-    assert gate["admitted"] is True and gate["ghost"] is False
+    # B2-FIX-001 补正①（名实相符）：admitted＝登记正常且六步全 satisfied——
+    # 新登记六步未达 ⟹ admitted False；登记面判据 registry_ok＝True
+    assert gate["admitted"] is False and gate["ghost"] is False
+    assert gate["registry_ok"] is True
+    assert gate["unsatisfied_steps"]
     assert gate["steps"]["nca-evidence"]["state"] == "satisfied"   # 登记已落链
     assert gate["steps"]["token"]["state"] == "pending"
-    assert gate["steps"]["protocol-load"]["state"] == "pending_batch"  # 批 2 承接，如实不虚报
-    # 负例：吊销（惩罚三态之一）→ 总闸 403 全拒
+    # 批 2 复核（令 -B2 §二）：①③④ 已接真，⛔ 不再报 pending_batch——未达报 pending
+    assert gate["steps"]["protocol-load"]["state"] == "pending"
+    # 负例：吊销（惩罚三态之一）→ 登记面判据倒、admitted 必倒
     with get_session() as s:
         s.get(M.SiteAgentRegistry, reg_no).status = "吊销"
         s.commit()
     with get_session() as s:
-        row = s.get(M.SiteAgentRegistry, reg_no)
         gate = agent_channel_ops.evaluate_gate(s, reg_no)
     assert gate["admitted"] is False
+    assert gate["registry_ok"] is False
     assert gate["denied_reason"] == "PUNISHMENT_STATE:吊销"
     with get_session() as s:
         with pytest.raises(HTTPException) as ei:

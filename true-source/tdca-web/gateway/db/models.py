@@ -710,3 +710,31 @@ class SiteAgentCredential(Base):
         CheckConstraint("status IN ('active','revoked')", name="ck_site_agent_credential_status"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_credential_prov"),
     )
+
+
+class SiteAgentAdmission(Base):
+    """34. 站点智能体通道·闸步表（批 2：六步硬序之状态机落点，①③④ 批 2 接真、⑤批 3）。
+
+    每（登记号, 步）一行；状态闭集 passed／failed／pending——fail-closed 非 passed 即未达；
+    负空间未过/沙盒未过如实记 failed（拒绝入网／⛔ 不得正空间执行）；
+    ②token 步状态由凭据表 active 指纹派生，⛔ 不在本表落行（单一事实源）。
+    """
+
+    __tablename__ = "site_agent_admission"
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), primary_key=True)
+    step: Mapped[str] = mapped_column(Text, primary_key=True)   # protocol-load|ns-review|sandbox|execute
+    state: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    result_ref: Mapped[str | None] = mapped_column(Text)        # 结果引用（⛔ 非凭据值）
+    detail: Mapped[str | None] = mapped_column(Text)            # 要件绑定/申报摘要（JSON 文本）
+    nca_ref: Mapped[str | None] = mapped_column(Text)           # 本步存证回链
+    actor: Mapped[str | None] = mapped_column(Text)             # 操作人类账户
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("step IN ('protocol-load','ns-review','sandbox','execute')",
+                        name="ck_site_agent_admission_step"),
+        CheckConstraint("state IN ('passed','failed','pending')",
+                        name="ck_site_agent_admission_state"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_admission_prov"),
+    )
