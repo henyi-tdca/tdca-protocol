@@ -50,11 +50,13 @@ describe('二期改版批2块一：公域顶栏六入口', () => {
 
   it('公域导航零须登录操作栏目：作业／人机协作／确权中心总览／运维端／形式化入站不在公域', () => {
     const text = PUBLIC_NAV_TEXT().join('|')
-    for (const banned of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '授权登记', '模拟锚', '规范与沙盒链', '运维端', '形式化入站']) {
+    for (const banned of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '授权登记', '规范与沙盒链', '运维端', '形式化入站']) {
       expect(text).not.toContain(banned)
     }
     // 确权历史留公域（制度即公开）；登记两页导航入口留公域（查询公示面，操作面块三收口）
+    // 模拟锚依裁定落地件入公域（资源组，随块二落位）
     expect(text).toContain('确权历史')
+    expect(text).toContain('模拟锚')
   })
 
   it('资源组含机器可读面入口（raw 直开 /openapi.json）', () => {
@@ -75,9 +77,11 @@ describe('二期改版批2块一：私域归「我的」', () => {
       </MemoryRouter>,
     )
     const nav = screen.getByTestId('me-private-nav')
-    for (const label of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '授权登记', '规范与沙盒链', '模拟锚']) {
+    for (const label of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '授权登记', '规范与沙盒链']) {
       expect(nav.textContent).toContain(label)
     }
+    // 模拟锚已依裁定落地件移公域（资源组），⛔ 不再在私域
+    expect(nav.textContent).not.toContain('模拟锚')
   })
 
   it('公域页面无私域泄漏：首页不出现我的智能体／签批待办／凭据面板（验收五条）', () => {
@@ -100,7 +104,7 @@ describe('二期改版批2块一：/channel/* 五路极简入口（重定向保�
   })
 
   it.each([
-    ['/channel/portal', '首页 · 四层架构总览'],
+    ['/channel/portal', 'TDCA 三体可视化中心'],
     ['/channel/agents', '智能体集群观测'],
     ['/channel/registry', '权属登记管理（P8a）'],
     ['/channel/market', '配置权市场（L2）'],
@@ -124,6 +128,6 @@ describe('二期改版批2块一：帮助与联系薄占位', () => {
       </MemoryRouter>,
     )
     expect(screen.getByRole('heading', { name: '帮助与联系' })).toBeInTheDocument()
-    expect(screen.getByTestId('page-shell').textContent).toContain('帮助内容随文档库')
+    expect(screen.getByTestId('page-shell').textContent).toContain('复用文档库')
   })
 })

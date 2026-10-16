@@ -84,6 +84,8 @@ export const APP_NAV: NavEntry[] = [
     group: '资源',
     items: [
       { to: '/library', label: '文库' },
+      { to: '/docs', label: '文档库' }, // 裁点2终定：与文库并存（⛔ 不并线——端点不同、族不同）
+      { to: '/anchors', label: '模拟锚' }, // 裁定落地件：SIMULATED 模拟态展示＝官方资源呈现 ➜ 公域（随块二落位）
       { to: '/openapi.json', label: '机器可读面', raw: true }, // AMEND-1：对人的说明书（openapi 字段表）；字段明文人读页＝二期 P1
     ],
   },

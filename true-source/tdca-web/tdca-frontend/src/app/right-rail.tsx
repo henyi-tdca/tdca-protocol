@@ -26,7 +26,6 @@ const PRIVATE_NAV: { to: string; label: string }[] = [
   { to: '/ownership-registry', label: '权属登记' },
   { to: '/authorization-registry', label: '授权登记' },
   { to: '/market-sim', label: '规范与沙盒链' },
-  { to: '/anchors', label: '模拟锚' },
 ]
 
 /** 「我的」卡（批1骨架）：登录态摘要 + 快捷入口；批2块一加入私域栏目（申诉端 /me/appeal 随块三） */
