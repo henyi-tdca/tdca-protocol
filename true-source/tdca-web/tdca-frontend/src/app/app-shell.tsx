@@ -78,6 +78,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/attestation/history', label: '确权历史' }, // 制度即公开；总览/meta/dynamic 三路在私域「我的」
       { to: '/announcements', label: '公告栏' }, // 对外公告区：空栏为常态，内容须创始人逐次明示后发布
       { to: '/process', label: '流程总览' }, // 二期改版批2块三：14 环逐环四能（tdca-site ProcessOverview 移植）
+      { to: '/negativespace', label: '负空间' }, // B5 新增批项一：管「什么不能做」（原则与类别，⛔ 不列禁项词表）
     ],
   },
   {
