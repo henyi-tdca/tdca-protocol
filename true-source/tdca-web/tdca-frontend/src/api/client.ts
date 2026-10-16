@@ -166,8 +166,14 @@ async function request<T>(
         }
       }
       // fail-closed：不猜测、不默认；401/403 给明确 reason 供页面内联提示
+      // E-1（UX-PLAIN-001 批2）：解析后端错误原文（FastAPI detail），reason 保持兼容
+      let backendDetail: string | undefined
+      try {
+        const errBody = (await res.json()) as { detail?: unknown }
+        if (typeof errBody?.detail === 'string') backendDetail = errBody.detail
+      } catch { /* 非 JSON 错误体：detail 保持 undefined，回落 reason */ }
       const reason = res.status === 401 ? 'unauthorized' : res.status === 403 ? 'forbidden' : 'http_error'
-      return { ok: false, reason, status: res.status }
+      return { ok: false, reason, status: res.status, detail: backendDetail }
     }
     const raw = (await res.json()) as RawEnvelope
     const verdict = verifyWatermark(raw)
