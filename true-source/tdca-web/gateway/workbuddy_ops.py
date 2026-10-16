@@ -30,8 +30,8 @@ for _sub in ("tdca-workbuddy",):
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
-from api_v1 import (_nca_append, _nca_watermark, _require_session_user,  # noqa: E402
-                    _utc)
+from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
+                    _require_session_user, _utc)
 
 router = APIRouter(prefix="/api/v1/workbuddy", tags=["workbuddy"])
 
@@ -74,21 +74,42 @@ class CreateRequest(BaseModel):
 
 @router.post("/workflow/create", status_code=201)
 def wb_create(req: CreateRequest, request: Request):
-    """创建（DSL 校验 → WORM 落 CREATE → 定义落库 → 缔约存证）。"""
+    """创建（DSL 校验 → 归属判定【B6：任何副作用之前】→ WORM 落 CREATE → 定义落库 → 缔约存证）。
+
+    B6（TDCA-HANDOFF-SITE-UX-PLAIN-001-IMPL-001 批3，附条件三条，⛔ 缺一不可）：
+      条件1 归属判定（存在 & 属谁）置于任何副作用之前——⛔ 不落 WORM ⛔ 不追加 NCA ⛔ 不调 engine.create；
+      条件2 本人／founder 重建 ⟹ 幂等回成功但零新增（NCA／WORM 条数不变）；
+      条件3 撞他人 ID ⟹ 409＋归属提示（脱敏角色口径，⛔ 不暴露用户名）。
+    """
     user = _require_session_user(request)
     try:
         wf = WorkflowDSL.from_dict(req.workflow_template)
     except (KeyError, TypeError) as exc:
         raise HTTPException(400, f"DSL 无效: {exc}")
+    # 条件1：归属判定（纯读，⛔ 零副作用）——先判后写，堵住撞 ID 重复落 WORM/NCA
+    with get_session() as s_check:
+        existing = s_check.get(M.WorkflowDef, wf.workflow_id)
+        owner_disp = _owner_display(s_check, existing.owner_username) if existing else None
+    if existing is not None:
+        if existing.owner_username != user["username"] and user.get("role") != "founder":
+            raise HTTPException(409,
+                                "该 workflow_id 已存在且归属他人"
+                                f"（归属：{owner_disp}）——请更换 workflow_id，"
+                                "或由原创建人（或 founder）执行（本次请求零 WORM／零 NCA 落链）")
+        # 条件2：幂等路径——⛔ 不调 engine.create ⛔ 不追加 NCA，零新增
+        return _nca_watermark({
+            "workflow_id": existing.workflow_id, "status": existing.status,
+            "owner": user["username"], "nca_ref": existing.nca_ref,
+            "existed": True,
+            "note": "工作流已存在（幂等返回，零新增存证：NCA／WORM 条数不变）"})
     created = _engine.create(wf)
     nca_ref = _nca_append("WORKBUDDY_CREATE", user["username"],
                           artifact_path=f"workflow:{wf.workflow_id}")
     with get_sessionmaker().begin() as s:
-        if s.get(M.WorkflowDef, wf.workflow_id) is None:
-            s.add(M.WorkflowDef(
-                workflow_id=wf.workflow_id, owner_username=user["username"],
-                dsl_json=json.dumps(req.workflow_template, ensure_ascii=False),
-                status=created["status"], nca_ref=nca_ref, created_at=_utc()))
+        s.add(M.WorkflowDef(
+            workflow_id=wf.workflow_id, owner_username=user["username"],
+            dsl_json=json.dumps(req.workflow_template, ensure_ascii=False),
+            status=created["status"], nca_ref=nca_ref, created_at=_utc()))
     return _nca_watermark({**created, "owner": user["username"], "nca_ref": nca_ref,
                            "note": "工作流已创建（PENDING_HUMAN_GATE，执行须经人类签名门禁）"})
 
