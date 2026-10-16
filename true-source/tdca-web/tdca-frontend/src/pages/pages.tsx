@@ -60,6 +60,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/me/appeal', title: '申诉', layer: 'L0', dataSource: '—（受理面在建）', permission: '须登录（谁的事谁可见）', description: '惩罚三态申诉受理面：受理通道随制度入站开通，开通前不预置表单与渠道。' },
   // B5 新增批项一：负空间栏（公域新增，讲「什么不能做」——只讲原则与类别，⛔ 不列禁项词表）
   { path: '/negativespace', title: '负空间 · 什么不能做', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: 'TDCA 三空间之一：负空间管「什么不能做」——原则与类别级说明，拒绝清单的公众说明面。' },
+  // B5 新增批项四：运维「我的」（运维独立站点内 /ops 域新增——六栏只读占位；⛔ 不复用用户 /me 组件、不共路由）
+  { path: '/ops/me', title: '运维我的（站与服务的）', layer: 'L0', dataSource: '静态占位（六栏只读；功能面随运维制度分批接通）', permission: '登录 DID（运维身份；沿运维独立入口 tdca-ops 鉴权）', description: '运维管理员的「我的」：管站与服务的事——站务／服务／治理操作／审计与留痕／应急／账户六栏只读占位，与用户「我的」两套独立。' },
   // 二期改版批2块四：评审队列（裁点3 归运维分区，⛔ 不入公共导航；审核人标识＋写令牌只存本次会话）
   { path: '/review', title: '评审（缔约审核）', layer: 'L0', dataSource: '/api/site/join/*（只读队列＋审核写端点）', permission: '须登录＋审核身份（写令牌校验）', description: '缔约申请评审队列：放行／谢绝留痕；每次放行复核敏感词清单，触负即 409 拦截并留痕。' },
 ]
@@ -111,6 +113,7 @@ import { HelpPage } from './help'
 import { DocsHomePage, DocsIndexPage, DocDetailPage } from './docs'
 import { ProcessOverviewPage } from './process'
 import { NegativeSpacePage } from './negativespace'
+import { OpsMePage } from './ops-me'
 import { MeAppealPage } from './me-appeal'
 import { ReviewPage } from './review'
 export { DocsIndexPage, DocDetailPage }
@@ -153,6 +156,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/docs': DocsHomePage,
   '/process': ProcessOverviewPage,
   '/negativespace': NegativeSpacePage,
+  '/ops/me': OpsMePage,
   '/me/appeal': MeAppealPage,
   '/review': ReviewPage,
 }
