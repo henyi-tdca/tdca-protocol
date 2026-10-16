@@ -24,12 +24,18 @@ const LIFECYCLE_NODES: LifecycleNode[] = [
 const NCA_CHAIN = ['Meta-Attestation-NCA-001', 'NCA-EDU-001', 'NCA-SBX-001', 'NCA-MKT-001']
 
 // ---- 创建向导五步（FRAMEWORK-001 §7.2）----
+// plain＝人话一句（TDCA-PLAN-SITE-UX-PLAIN-001 A3；解释层，⛔ 不替换在册术语）
 const WIZARD_STEPS = [
-  { key: 'intent', title: '意图声明', desc: '自然语言描述创建意图 → 辅助智能体解析为六要素草稿' },
-  { key: 'six', title: '六要素确认', desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + 最小化合检查）' },
-  { key: 'nsfl', title: '场景约束 + NSFL', desc: '场景约束声明 + 负空间边界（NSFL）' },
-  { key: 'edu', title: '商学院培训/辅导', desc: '可选培训（tdca-ta）；未达标提示' },
-  { key: 'huf', title: 'HUF 签署 → 沙盒', desc: '签署 Config-Right-Token → 沙盒（SEA 五要件）→ 出盒终裁（/attestation/meta）' },
+  { key: 'intent', title: '意图声明', plain: '用大白话说清你想让这个智能体干什么。',
+    desc: '自然语言描述创建意图 → 辅助智能体解析为六要素草稿' },
+  { key: 'six', title: '六要素确认', plain: '把大白话翻译成机器可核验的六项指标（如目标函数＝它要优化什么）。',
+    desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + 最小化合检查）' },
+  { key: 'nsfl', title: '场景约束 + NSFL', plain: '划定它不许碰的边界，越界即熔断。',
+    desc: '场景约束声明 + 负空间边界（NSFL）' },
+  { key: 'edu', title: '商学院培训/辅导', plain: '上岗前培训（可选），没达标会如实提示。',
+    desc: '可选培训（tdca-ta）；未达标提示' },
+  { key: 'huf', title: 'HUF 签署 → 沙盒', plain: '你签字＝你为它负全责；签完它进沙盒试用。',
+    desc: '签署 Config-Right-Token → 沙盒（SEA 五要件）→ 出盒终裁（/attestation/meta）' },
 ]
 
 // ---- 化合衍生拓扑（父→子 NCA 链，ID91 继承）----
@@ -68,6 +74,12 @@ export function StudioPage() {
       description="智能体全生命周期：诞生→教育→沙盒→出盒终裁（/attestation/meta）→市场→化合衍生。"
     >
       <div className="space-y-5">
+        {/* A1 人话定位条（UX-PLAIN-001；解释层，制度术语照在册） */}
+        <section data-testid="studio-plain-intro" className="rounded-lg border border-blue-200 bg-blue-50/60 p-4 text-sm leading-6 text-gray-800">
+          <strong>这一页能干什么：</strong>在这里创建一个属于你的智能体——说清楚意图 → 确认六要素 → 你亲手 HUF 签署为它负责 → 它进沙盒试用，出盒须过终裁后才能正式上岗。
+          全程你主导，AI 只打下手；每一步的存证（NCA）都可事后核验。
+        </section>
+
         {/* 生命周期看板（复用 LifecycleDashboard + 时间轴动画增强） */}
         <section data-testid="studio-lifecycle" className="rounded-lg border border-gray-200 p-4">
           <div className="mb-2 flex items-center justify-between">
@@ -77,6 +89,11 @@ export function StudioPage() {
           <div className="lifecycle-anim" data-testid="lifecycle-anim">
             <LifecycleTimeline nodes={LIFECYCLE_NODES} onSelect={setSelected} />
           </div>
+          {/* A2 状态灯图例（UX-PLAIN-001） */}
+          <p className="mt-2 text-xs text-gray-600" data-testid="lifecycle-legend">
+            状态灯图例：<span className="text-green-700">● 绿＝该阶段已通过</span>（如沙盒＝试用期通过）；
+            <span className="text-amber-700">● 黄＝进行中/待办</span>。点任一阶段可看明细与它自己的存证号。
+          </p>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             <DetailPanel node={selected} />
             <NCAChain chain={NCA_CHAIN} />
@@ -110,6 +127,9 @@ export function StudioPage() {
               </span>
             ))}
           </div>
+          <p className="mb-1 text-sm font-medium text-blue-900" data-testid="wizard-plain">
+            {WIZARD_STEPS[wizardStep].plain}
+          </p>
           <p className="mb-3 text-sm text-gray-700" data-testid="wizard-desc">
             {WIZARD_STEPS[wizardStep].desc}
           </p>
@@ -129,6 +149,10 @@ export function StudioPage() {
               </button>
             )}
           </div>
+          {/* A4 签署后果说明（UX-PLAIN-001；措辞照智库更正：中性表述，不自造制度语） */}
+          <p className="mt-2 text-xs text-gray-600" data-testid="wizard-huf-note">
+            签署即生效；此后出盒须过终裁（/attestation/meta）。AI 无权替你签。
+          </p>
         </section>
 
         {/* 化合衍生（父→子 NCA 链，ID91） */}
@@ -138,7 +162,11 @@ export function StudioPage() {
             <SimulatedBadge nature="simulated" />
           </div>
           <TopologyEngine data={COMPOUND_TOPO} height={260} />
-          <p className="mt-2 text-xs text-gray-500">
+          {/* A5 人话一句（UX-PLAIN-001） */}
+          <p className="mt-2 text-xs text-gray-600" data-testid="compound-plain">
+            从这里能「生」出新智能体：六要素与存证链（NCA）继承父体——子体一出生就带着家谱，信用记录随链可查。
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
             父体（PCM-LIVE）→ 选择化合场景 → 六要素继承 + 场景偏移 → 子体诞生（NCA 链继承父体）→ 自动进入生命周期起点。
           </p>
         </section>
