@@ -25,7 +25,7 @@ const RAIL_BY_CONTEXT: { prefix: string; title: string; steps: RailStep[] }[] = 
   },
   {
     prefix: '/workbuddy',
-    title: 'WorkBuddy 作业流程',
+    title: '人机协作流程',
     steps: [
       { label: '① 创建工作流' },
       { label: '② 执行并观察' },
@@ -52,7 +52,7 @@ const DEFAULT_RAIL: { title: string; steps: RailStep[] } = {
   steps: [
     { label: '橱窗：公开可读面' },
     { label: '观测：集群与通知机' },
-    { label: '作业：Studio／WorkBuddy' },
+    { label: '作业与人机协作' },
     { label: '确权：签批与历史' },
   ],
 }

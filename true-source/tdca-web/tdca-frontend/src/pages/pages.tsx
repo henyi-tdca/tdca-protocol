@@ -29,7 +29,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/governance', title: '治理中心', layer: 'L0', dataSource: 'A-8 POST /api/v1/governance/huf-sign + emergency-fuse', permission: 'HUF 强制鉴权（B-4）', description: '四大治理操作：HUF 签批 / 动态确权队列 / 紧急熔断 / OTA。' },
   { path: '/agents', title: '智能体集群观测', layer: 'L0', dataSource: 'A-10 + WS handshake + 拓扑（tdca-topology-ui）', permission: '登录 DID', description: '五大智能体面板（Trainer/Executor/Auditor/Service/Genie）+ 确权状态灯 + 协作拓扑。' },
   { path: '/notifier', title: '通知机状态页', layer: 'L0', dataSource: 'A-9 GET /api/v1/notifier/mrcr-status + WS notifier', permission: '公开', description: '物理-数字坐标变换可视化：四角色灯 + MOU 汇总 + DUAL 校验 + 确权请求推送。' },
-  { path: '/studio', title: 'Agent Studio（作业）', layer: 'STUDIO', dataSource: '全生命周期 API + HUF 签批通道', permission: '登录 DID + HUF 签批', description: '智能体全生命周期：诞生→教育→沙盒→出盒终裁（/attestation/meta）→市场→化合衍生。' },
+  { path: '/studio', title: '作业（智能体全生命周期）', layer: 'STUDIO', dataSource: '全生命周期 API + HUF 签批通道', permission: '登录 DID + HUF 签批', description: '智能体全生命周期：诞生→教育→沙盒→出盒终裁（/attestation/meta）→市场→化合衍生。' },
   { path: '/attestation', title: '确权中心总览', layer: 'L0', dataSource: '确权 API（A-11 待补）+ WS attestation', permission: '登录 DID + HUF', description: '待审队列 + 最近事件 + 确权统计（元函数/动态/历史入口）。' },
   { path: '/attestation/meta', title: '元函数初始确权（出盒终裁）', layer: 'L0', dataSource: '确权 API + 沙盒验证报告', permission: 'HUF 强制', description: '沙盒验证后、进入配置权市场前的人类确权（先验证后背书，REV-002 修正）。' },
   { path: '/attestation/dynamic', title: '动态确权请求队列', layer: 'L0', dataSource: '确权 API + WS', permission: '登录 DID + HUF', description: '五类动态确权请求（场景扩展/认知演化/化合授权/负空间逼近/目标修正）紧急度排序。' },
@@ -38,7 +38,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/register', title: '注册（人类账号）', layer: 'L0', dataSource: 'M4 POST /api/v1/auth/register', permission: '公开', description: '注册即 viewer 只读账号（人机面）；注册存证落 NCA 链，成功自动登录进个人后台。' },
   { path: '/me', title: '个人后台（我的）', layer: 'L0', dataSource: 'M5 GET /api/v1/me/dashboard', permission: '须登录（谁的数据谁可见）', description: '我的智能体 / 签批待办 / 我批过的 / 沙盒申请 / 治理操作，一屏聚合。' },
   { path: '/agents/:id', title: '智能体后台', layer: 'L0', dataSource: 'M5 GET /api/v1/agents/{id}/dashboard', permission: '公开读（归属人脱敏）', description: '每一只智能体的画像 / MOU 计量 / 税单 / 签章记录 / NCA 存证，一页看全。' },
-  { path: '/workbuddy', title: 'WorkBuddy 人机协作工作台', layer: 'L0', dataSource: 'A-12 /api/v1/workbuddy/*（P5 引擎 + DB 持久化 + NCA 落链）', permission: '登录 DID（执行须人类签名）', description: '跨场景工作流：创建 → 签名门禁执行 → 状态/NCA 全链可查；智能体不得代签。' },
+  { path: '/workbuddy', title: '人机协作工作台', layer: 'L0', dataSource: 'A-12 /api/v1/workbuddy/*（P5 引擎 + DB 持久化 + NCA 落链）', permission: '登录 DID（执行须人类签名）', description: '跨场景工作流：创建 → 签名门禁执行 → 状态/NCA 全链可查；智能体不得代签。' },
   { path: '/cluster', title: '集群编排与准入闸门（P2）', layer: 'L0', dataSource: 'A-13 /api/v1/cluster/*（授权件四要件机验 + 谱系账本）', permission: '登录 DID（登记须法律主体签名）', description: '授权件登记与多层转授链；配置类调用须凭有效授权件——可信联通 ≠ 可信协作，仅握手不成立。' },
   { path: '/formal', title: '形式化与实验线结论入站（P3）', layer: 'L0', dataSource: 'A-14 /api/v1/formal/*（只做结论面）', permission: '登录 DID', description: '只收结论面：不转公式、不引数值、不带内部编号；数据性质显式标注；入站 ≠ 入主仓 ≠ 对外。' },
   { path: '/toolshelf', title: '工具货架（P4）', layer: 'L0', dataSource: 'A-15 /api/v1/toolshelf/*（工具/模板目录）', permission: '登录 DID（上架须 operator）', description: '站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。' },
@@ -50,6 +50,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/agent-shelf', title: '智能体区（组二 10 件呈现）', layer: 'L0', dataSource: '静态呈现面（呈现 ≠ 注册）', permission: '登录 DID', description: '组二 10 件以智能体形态呈现：每条只列名称／一句用途／形态；注册与准入另走在册流程，本区不代办。' },
   { path: '/announcements', title: '公告栏', layer: 'L0', dataSource: 'A-23 GET /api/v1/announcements/list（公开读）', permission: '公开', description: '站点对外公告区：公告内容经创始人明示后由运营发布；空栏为常态，不预置内容。' },
   { path: '/authorization-registry', title: '授权登记管理（P8b）', layer: 'L0', dataSource: 'A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）', permission: '登录 DID（公开查免会话）', description: '登记二分之授权侧：四要件缺一即拒；签名须本人、智能体不代持代填；公开面四字段；四条不公开负空间 fail-closed。' },
+  // 二期改版批2块一：公域顶栏第六入口「帮助与联系」——薄占位，内容随文档库「帮助」族入站（块二），联系块同批补入
+  { path: '/help', title: '帮助与联系', layer: 'L0', dataSource: '静态占位（帮助族入站前）', permission: '公开', description: '站点帮助与官方联系入口。帮助内容随文档库「帮助」族入站（块二）；论坛暂不落栏，先定位。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -95,6 +97,7 @@ import { LibraryPage } from './library'
 import { AgentShelfPage } from './agent-shelf'
 import { AnnouncementsPage } from './announcements'
 import { AuthorizationRegistryPage } from './authorization-registry'
+import { HelpPage } from './help'
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -130,6 +133,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/agent-shelf': AgentShelfPage,
   '/announcements': AnnouncementsPage,
   '/authorization-registry': AuthorizationRegistryPage,
+  '/help': HelpPage,
 }
 
 export function renderPage(meta: PageMeta) {

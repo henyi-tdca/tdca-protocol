@@ -68,7 +68,7 @@ export function StudioPage() {
 
   return (
     <PageShell
-      title="Agent Studio（作业）"
+      title="作业（智能体全生命周期）"
       dataSource="全生命周期 API + HUF 签批通道（模拟态）"
       permission="登录 DID + HUF 签批"
       description="智能体全生命周期：诞生→教育→沙盒→出盒终裁（/attestation/meta）→市场→化合衍生。"

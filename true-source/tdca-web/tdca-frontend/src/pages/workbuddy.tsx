@@ -134,7 +134,7 @@ export function WorkbuddyPage() {
 
   return (
     <PageShell
-      title="WorkBuddy 人机协作工作台"
+      title="人机协作工作台"
       dataSource="A-12 /api/v1/workbuddy/*（P5 引擎 + DB 持久化 + NCA 落链）"
       permission="登录 DID（会话鉴权 fail-closed；执行须人类签名）"
       description="跨场景工作流：创建 → 人类签名门禁执行 → 状态/NCA 全链可查。智能体不得代签。"

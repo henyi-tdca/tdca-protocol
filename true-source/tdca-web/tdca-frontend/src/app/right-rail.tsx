@@ -15,7 +15,21 @@ interface ChatMsg {
   route?: string
 }
 
-/** 「我的」卡（批1骨架）：登录态摘要 + 快捷入口（正式 MeConsole 移植批2/批3） */
+/** 私域栏目（二期改版批2块一）：属于我的操作权限的栏目在「我的」界面显示（⛔ 不入公域导航） */
+const PRIVATE_NAV: { to: string; label: string }[] = [
+  { to: '/studio', label: '作业' },
+  { to: '/workbuddy', label: '人机协作' },
+  { to: '/attestation', label: '确权中心' },
+  { to: '/attestation/meta', label: '元函数确权' },
+  { to: '/attestation/dynamic', label: '动态确权' },
+  { to: '/cluster', label: '集群编排' },
+  { to: '/ownership-registry', label: '权属登记' },
+  { to: '/authorization-registry', label: '授权登记' },
+  { to: '/market-sim', label: '规范与沙盒链' },
+  { to: '/anchors', label: '模拟锚' },
+]
+
+/** 「我的」卡（批1骨架）：登录态摘要 + 快捷入口；批2块一加入私域栏目（申诉端 /me/appeal 随块三） */
 function MeCard() {
   const { isAuthenticated, did } = useAuth()
   return (
@@ -30,6 +44,20 @@ function MeCard() {
         <NavLink to="/me" className="rounded bg-gray-100 px-2 py-1 text-gray-600 hover:bg-gray-200">我的</NavLink>
         <NavLink to="/auth" className="rounded bg-gray-100 px-2 py-1 text-gray-600 hover:bg-gray-200">登录</NavLink>
         <NavLink to="/register" className="rounded bg-gray-100 px-2 py-1 text-gray-600 hover:bg-gray-200">注册</NavLink>
+      </div>
+      <div data-testid="me-private-nav" className="mt-3 border-t border-gray-100 pt-2">
+        <p className="mb-1.5 text-[10px] font-medium tracking-wide text-gray-400">我的栏目（须登录／须角色）</p>
+        <div className="flex flex-wrap gap-1.5 text-[11px]">
+          {PRIVATE_NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className="rounded bg-indigo-50 px-2 py-1 text-indigo-700 hover:bg-indigo-100"
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
       </div>
     </section>
   )
