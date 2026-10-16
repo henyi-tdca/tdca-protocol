@@ -62,6 +62,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/negativespace', title: '负空间 · 什么不能做', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: 'TDCA 三空间之一：负空间管「什么不能做」——原则与类别级说明，拒绝清单的公众说明面。' },
   // B5 新增批项二：官方资产区（公域新增——工具在上（免费）‧ 产物在下（付费橱窗）；调用未开放态，⛔ 零支付集成）
   { path: '/official-assets', title: '官方资产区（官方工具 · 官方产物）', layer: 'L0', dataSource: '静态文案（站内审定口径）＋ 文库产物库只读面', permission: '公开', description: '官方资源同区并陈：官方工具九类（免费，官智与用户皆可用）在上；官方产物（付费取用，0.01 元/次计价）在下——取用入口暂未开放，仅橱窗与说明面。' },
+  // B5 新增批项三：存证（NCA）说明栏（公域新增——为什么存/怎么存/谁都要存；⛔ 栏内不展实际凭据或内部编号）
+  { path: '/nca-guide', title: '存证（NCA）说明', layer: 'L0', dataSource: '静态文案（站内审定口径，依在册 NCA 格式标准）', permission: '公开', description: 'NCA 存证格式＝全站唯一标准：每一场景皆存、官方与用户一致、人类与智能体一致——十三字段／带链／义务块六键／合规六条之公众说明面。' },
   // 二期改版批2块四：评审队列（裁点3 归运维分区，⛔ 不入公共导航；审核人标识＋写令牌只存本次会话）
   { path: '/review', title: '评审（缔约审核）', layer: 'L0', dataSource: '/api/site/join/*（只读队列＋审核写端点）', permission: '须登录＋审核身份（写令牌校验）', description: '缔约申请评审队列：放行／谢绝留痕；每次放行复核敏感词清单，触负即 409 拦截并留痕。' },
 ]
@@ -114,6 +116,7 @@ import { DocsHomePage, DocsIndexPage, DocDetailPage } from './docs'
 import { ProcessOverviewPage } from './process'
 import { NegativeSpacePage } from './negativespace'
 import { OfficialAssetsPage } from './official-assets'
+import { NcaGuidePage } from './nca-guide'
 import { MeAppealPage } from './me-appeal'
 import { ReviewPage } from './review'
 export { DocsIndexPage, DocDetailPage }
@@ -157,6 +160,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/process': ProcessOverviewPage,
   '/negativespace': NegativeSpacePage,
   '/official-assets': OfficialAssetsPage,
+  '/nca-guide': NcaGuidePage,
   '/me/appeal': MeAppealPage,
   '/review': ReviewPage,
 }
