@@ -103,3 +103,34 @@ describe('二期改版批2块三：登记两页两面分隔（未登录只见查
     expect(screen.getByTestId('ar-public')).toBeInTheDocument()
   })
 })
+
+describe('二期改版批2块四：运维分区（ops 管理员门＋评审页）', () => {
+  it('运维端：非管理员身份只见管理员门控提示（ACCESS-FIX-001-AMEND-1 交付三）', () => {
+    // /ops 非 PROTECTED；jsdom 无后端，/me/dashboard 拉取失败 → 非管理员 → 见门控
+    login()
+    renderAt('/ops')
+    expect(screen.getByTestId('ops-admin-only')).toBeInTheDocument()
+    expect(screen.queryByTestId('ops-redlines')).not.toBeInTheDocument()
+  })
+
+  it('评审页：未登录重定向登录页（PROTECTED）', () => {
+    renderAt('/review')
+    expect(screen.queryByTestId('review-gate')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /登录（DID）/ })).toBeInTheDocument()
+  })
+
+  it('评审页：登录态见审核门（审核人标识＋写令牌，均只存本次会话）', () => {
+    login()
+    renderAt('/review')
+    expect(screen.getByTestId('review-gate')).toBeInTheDocument()
+    expect(screen.getByTestId('review-reviewer')).toBeInTheDocument()
+    expect(screen.getByTestId('review-token')).toBeInTheDocument()
+    expect(screen.getByTestId('review-enter')).toBeInTheDocument()
+  })
+
+  it('评审页：⛔ 不入公共导航（运维分区独立入口）', async () => {
+    const { APP_NAV } = await import('@/app/app-shell')
+    const all = APP_NAV.flatMap((e) => (e.kind === 'link' ? [{ to: e.to }] : e.items))
+    expect(all.some((i) => i.to === '/review')).toBe(false)
+  })
+})

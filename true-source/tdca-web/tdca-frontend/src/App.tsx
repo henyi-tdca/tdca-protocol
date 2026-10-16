@@ -21,6 +21,7 @@ const PROTECTED = new Set([
   '/attestation/history',
   '/me',
   '/me/appeal',
+  '/review',
 ])
 
 export default function App() {
