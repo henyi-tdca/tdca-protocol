@@ -64,6 +64,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/official-assets', title: '官方资产区（官方工具 · 官方产物）', layer: 'L0', dataSource: '静态文案（站内审定口径）＋ 文库产物库只读面', permission: '公开', description: '官方资源同区并陈：官方工具九类（免费，官智与用户皆可用）在上；官方产物（付费取用，0.01 元/次计价）在下——取用入口暂未开放，仅橱窗与说明面。' },
   // B5 新增批项三：存证（NCA）说明栏（公域新增——为什么存/怎么存/谁都要存；⛔ 栏内不展实际凭据或内部编号）
   { path: '/nca-guide', title: '存证（NCA）说明', layer: 'L0', dataSource: '静态文案（站内审定口径，依在册 NCA 格式标准）', permission: '公开', description: 'NCA 存证格式＝全站唯一标准：每一场景皆存、官方与用户一致、人类与智能体一致——十三字段／带链／义务块六键／合规六条之公众说明面。' },
+  // B5 新增批项四：运维「我的」（运维独立站点内 /ops 域新增——六栏只读占位；⛔ 不复用用户 /me 组件、不共路由）
+  { path: '/ops/me', title: '运维我的（站与服务的）', layer: 'L0', dataSource: '静态占位（六栏只读；功能面随运维制度分批接通）', permission: '登录 DID（运维身份；沿运维独立入口 tdca-ops 鉴权）', description: '运维管理员的「我的」：管站与服务的事——站务／服务／治理操作／审计与留痕／应急／账户六栏只读占位，与用户「我的」两套独立。' },
   // 二期改版批2块四：评审队列（裁点3 归运维分区，⛔ 不入公共导航；审核人标识＋写令牌只存本次会话）
   { path: '/review', title: '评审（缔约审核）', layer: 'L0', dataSource: '/api/site/join/*（只读队列＋审核写端点）', permission: '须登录＋审核身份（写令牌校验）', description: '缔约申请评审队列：放行／谢绝留痕；每次放行复核敏感词清单，触负即 409 拦截并留痕。' },
 ]
@@ -117,6 +119,7 @@ import { ProcessOverviewPage } from './process'
 import { NegativeSpacePage } from './negativespace'
 import { OfficialAssetsPage } from './official-assets'
 import { NcaGuidePage } from './nca-guide'
+import { OpsMePage } from './ops-me'
 import { MeAppealPage } from './me-appeal'
 import { ReviewPage } from './review'
 export { DocsIndexPage, DocDetailPage }
@@ -161,6 +164,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/negativespace': NegativeSpacePage,
   '/official-assets': OfficialAssetsPage,
   '/nca-guide': NcaGuidePage,
+  '/ops/me': OpsMePage,
   '/me/appeal': MeAppealPage,
   '/review': ReviewPage,
 }

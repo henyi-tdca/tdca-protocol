@@ -5,6 +5,7 @@
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/api/client'
 import { useApiGet } from '@/shared/useApi'
 import { PageShell } from './PageShell'
@@ -71,6 +72,12 @@ export function OpsPage() {
       dataSource="A-18 /api/v1/ops/*（红线八项分类器；NCA 存证＋reconcile 对账）"
       permission="登录 DID（操作须 operator；管理面内容须管理员身份登录后可见）"
       description="应用测试期运维工作台：反馈→红线分类→提案→沙盒→上线；触碰根本制度即升 DCD，运维端无权处置。">
+      <p className="text-xs">
+        <Link to="/ops/me" data-testid="ops-me-entry" className="text-blue-600 underline hover:text-blue-800">
+          运维我的（站与服务的）→
+        </Link>
+        <span className="ml-2 text-gray-400">运维管理员个人面：六栏只读占位，与用户「我的」两套独立。</span>
+      </p>
       {!isAdmin ? (
         <section data-testid="ops-admin-only" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           须管理员身份登录后可见。一般用户请从「我的」进入个人面；本入口对所有人保持可见。
