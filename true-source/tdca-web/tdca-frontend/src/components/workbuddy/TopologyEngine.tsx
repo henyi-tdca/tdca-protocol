@@ -191,18 +191,18 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
   // B2：脱敏处理（聚合强关系边）
   const safeEdges = useMemo(() => aggregateStrongEdges(data.edges), [data])
 
-  // B3：坐标卡切换（物理 ↔ 智能体，300ms 过渡）
+  // B3：坐标卡切换（物理 ↔ 智能体，300ms 过渡）——创始人 2026-10-17 指示：上下切换（非左右），且不逾中屏（外层 overflow-hidden）
   const switchWorld = () => setWorld((w) => (w === 'agent' ? 'physical' : 'agent'))
-  const transform = world === 'agent' ? 'translateX(0)' : 'translateX(-100%)'
+  const transform = world === 'agent' ? 'translateY(0)' : 'translateY(-100%)'
 
   // B4：配置权协议流向（动态 dash 动画）
   const edgeColor = (s: string | undefined) =>
     s === 'fused' ? '#f43f5e' : s === 'idle' ? '#475569' : '#C9A45C'
 
   return (
-    <div className="relative" style={{ height }}>
-      {/* B3：物理/智能体世界坐标卡（双卡，300ms 过渡） */}
-      <div className="flex h-full transition-transform duration-300 ease-in-out" style={{ transform }}>
+    <div className="relative overflow-hidden" style={{ height }}>
+      {/* B3：物理/智能体世界坐标卡（双卡上下叠，300ms 过渡） */}
+      <div className="flex h-full flex-col transition-transform duration-300 ease-in-out" style={{ transform }}>
         {/* 智能体世界卡 */}
         <div className="h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#081222]">
           <svg className="h-full w-full">
