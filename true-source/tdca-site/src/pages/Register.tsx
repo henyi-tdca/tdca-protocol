@@ -11,7 +11,7 @@ import { PageShell } from '@/components/PageShell'
 import { AnchorSelectSection } from '@/components/IdentityMark'
 import { useAuth } from '@/lib/auth-context'
 import { api, setSessionToken } from '@/lib/client'
-import { CONTRACT_EN_URL, CONTRACT_ID, CONTRACT_VERSION, CONTRACT_ZH_TEXT } from '@/lib/register-contract'
+import { CONTRACT_EN_TEXT, CONTRACT_ID, CONTRACT_VERSION, CONTRACT_ZH_TEXT } from '@/lib/register-contract'
 
 const USERNAME_RE = /^[A-Za-z0-9_-]{3,32}$/
 
@@ -36,6 +36,7 @@ export function RegisterPage() {
   const [confirm, setConfirm] = useState('')
   const [agreed, setAgreed] = useState(false)
   const [anchorKind, setAnchorKind] = useState('realname-phone')   // 'none'=暂不选择（可后补）
+  const [showEn, setShowEn] = useState(false)   // 英文读本内嵌展开（2026-10-16：删 GitHub 外链，与中文同待遇）
   const [msg, setMsg] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -101,13 +102,26 @@ export function RegisterPage() {
         <div data-testid="register-contract" className="rounded border border-slate-200 bg-slate-50">
           <div className="flex items-center justify-between border-b border-slate-200 px-3 py-1.5">
             <span className="text-xs font-semibold text-slate-700">《TDCA 缔约注册协议》{CONTRACT_VERSION}</span>
-            <a href={CONTRACT_EN_URL} target="_blank" rel="noreferrer" className="text-xs text-emerald-700 underline">
-              English 版 →
-            </a>
+            <button
+              type="button"
+              data-testid="register-contract-en-toggle"
+              onClick={() => setShowEn((v) => !v)}
+              aria-expanded={showEn}
+            >
+              English 版 {showEn ? '▴' : '▾'}
+            </button>
           </div>
           <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap px-3 py-2 font-sans text-[11px] leading-relaxed text-slate-600">
             {CONTRACT_ZH_TEXT}
           </pre>
+          {showEn && (
+            <pre
+              data-testid="register-contract-en"
+              className="max-h-48 overflow-y-auto whitespace-pre-wrap border-t border-slate-200 px-3 py-2 font-sans text-[11px] leading-relaxed text-slate-600"
+            >
+              {CONTRACT_EN_TEXT}
+            </pre>
+          )}
         </div>
         <label data-testid="register-agree-wrap" className="flex items-start gap-2 rounded border border-emerald-200 bg-emerald-50 px-3 py-2">
           <input
