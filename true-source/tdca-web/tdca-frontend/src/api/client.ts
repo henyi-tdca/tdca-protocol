@@ -72,6 +72,18 @@ export function clearSessionToken(): void {
   sessionStorage.removeItem(SESSION_KEY)
 }
 
+/** 身份令牌（凭证四分面呈现用：账户管理面；现状待建，键位与 tdca-site 一致） */
+const IDENTITY_KEY = 'tdca_identity_token'
+export function identityToken(): string | null {
+  return localStorage.getItem(IDENTITY_KEY)
+}
+
+/** 授权码（凭证四分面呈现用：资产使用面；现状待建，键位与 tdca-site 一致） */
+const AUTHCODE_KEY = 'tdca_auth_code'
+export function authCode(): string | null {
+  return sessionStorage.getItem(AUTHCODE_KEY)
+}
+
 /** 草稿兜底（裁定③：被踢时数据不能丢）——表单页提交前 saveDraft，挂载时 loadDraft 回填 */
 export function saveDraft(route: string, data: unknown): void {
   sessionStorage.setItem(`tdca:draft:${route}`, JSON.stringify(data))
