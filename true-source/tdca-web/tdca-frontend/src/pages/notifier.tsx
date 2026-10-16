@@ -97,6 +97,24 @@ export function NotifierPage() {
       description="物理-数字坐标变换可视化：四角色灯 + MOU 汇总 + DUAL 校验 + 确权请求推送。"
     >
       <div className="space-y-5">
+        {/* 批2块二：通知机开通状态栏（创始人 10-14「原来有但没开通」——状态如实呈现，由 A-9 实测裁决） */}
+        <div
+          data-testid="notifier-service-status"
+          className={`flex items-center justify-between rounded-lg border px-4 py-2 text-sm ${
+            status === 'ok'
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+              : status === 'loading'
+                ? 'border-gray-200 bg-gray-50 text-gray-500'
+                : 'border-red-200 bg-red-50 text-red-700'
+          }`}
+        >
+          <span>
+            通知机服务状态：
+            {status === 'ok' ? '已开通（A-9 实测在线）' : status === 'loading' ? '探测中…' : '未开通或不可用（fail-closed，见下）'}
+          </span>
+          <SimulatedBadge nature={nature ?? 'simulated'} />
+        </div>
+
         {/* 四角色实时状态（A-9） */}
         <section data-testid="notifier-roles-section" className="rounded-lg border border-gray-200 p-4">
           <div className="mb-2 flex items-center justify-between">

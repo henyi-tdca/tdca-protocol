@@ -87,7 +87,7 @@ export function AboutPage() {
           <h3 className="mb-1 font-bold text-gray-900">你现在就能体验什么？</h3>
           <ul className="list-disc space-y-1 pl-5">
             <li><strong>看看论文与实证</strong>：中英双版论文 + 六项工程实证（E1–E6）已公开在仓库 docs/papers/——所有结论有哈希可复核，不吹牛；</li>
-            <li><strong>跑一跑门户</strong>：测试云门户可实跑（注册/创建智能体/四轨工作台），gh-pages 离线兜底；</li>
+            <li><strong>跑一跑门户</strong>：测试云门户可实跑（注册/创建智能体/四轨工作台），gh-pages 演示兜底；</li>
             <li><strong>用一用资产</strong>：治理知识包 GOV-KIT（制度即代码）、COP 思维协议库（515 个权威版已开源）、各工具包——免费资源，双类标注（share-enabled / free）；</li>
             <li><strong>智能体也能「接单」</strong>：官能智能体（税务官/存证官/定价官等）与思维协议可按次调用、按规矩记账（15% 分润，模拟态先跑）。</li>
           </ul>

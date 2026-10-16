@@ -8,7 +8,7 @@ import { Navigate, Route, Routes } from 'react-router'
 import { AppShell } from '@/app/app-shell'
 import { AuthProvider } from '@/app/auth-context'
 import { RequireAuth } from '@/app/route-guard'
-import { PAGE_META, NotFoundPage, renderPage } from '@/pages/pages'
+import { PAGE_META, NotFoundPage, renderPage, DocsIndexPage, DocDetailPage } from '@/pages/pages'
 
 /** 受保护路由（FRAMEWORK-001 §四：须登录 DID + HUF 鉴权）——未登录重定向 /auth */
 const PROTECTED = new Set([
@@ -40,6 +40,9 @@ export default function App() {
           <Route path="/channel/registry" element={<Navigate to="/ownership-registry" replace />} />
           <Route path="/channel/market" element={<Navigate to="/market" replace />} />
           <Route path="/channel/tools" element={<Navigate to="/toolshelf" replace />} />
+          {/* 二期改版批2块二：文档库两路参数路由（族列表／详情；首页 /docs 走 PAGE_META） */}
+          <Route path="/docs/:family" element={<DocsIndexPage />} />
+          <Route path="/docs/:family/:slug" element={<DocDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

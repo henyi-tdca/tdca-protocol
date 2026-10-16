@@ -19,7 +19,7 @@ export interface PageMeta {
 /** 15 路由骨架元数据（FRAMEWORK-001 §四；F1~F5 逐阶段接线） */
 export const PAGE_META: PageMeta[] = [
   { path: '/about', title: '关于 · 一页看懂 TDCA', layer: 'L0', dataSource: '静态文案（TDCA-PLAIN-001）', permission: '公开', description: '智能体世界的规则、账本与信任——面向普通读者的一页通俗说明。' },
-  { path: '/', title: '首页 · 四层架构总览', layer: 'L0', dataSource: 'A-1 GET /api/v1/system/overview + /health', permission: '公开', description: 'TDCA 四层架构（L0 法律底层 → L1 所有权 → L2 配置权 → L3 效用计量）制度橱窗总览。' },
+  { path: '/', title: 'TDCA 三体可视化中心', layer: 'L0', dataSource: 'A-1 GET /api/v1/system/overview + /health', permission: '公开', description: '正版门户首页：三体／合规前置三阶／双通道缔约／机器可读通道＋四层架构制度总览区并入。' },
   { path: '/ownership', title: '所有权市场（L1 法定确权层）', layer: 'L1', dataSource: '法定交易中心接口（外部）+ 登记簿只读', permission: '公开读 / 确权操作须 HUF', description: '所有权不得在协议网络内流转：确权路径向导 / 转让 / 登记簿公开查询。' },
   { path: '/market', title: '配置权市场（L2）', layer: 'L2', dataSource: 'A-3 POST /api/v1/config-right/call + A-4 GET /api/v1/assets/five-orders', permission: '公开读 / 调用须 DID', description: '配置权协议化流转市场——使用权/配置权可流转，所有权不流转（防混淆）。' },
   { path: '/sandbox', title: '沙盒准入（L2 前置反应釜）', layer: 'SANDBOX', dataSource: 'A-5 GET /api/v1/sandbox/sea-status + /cross-scene/*', permission: '公开读 / 入盒须 HUF', description: '沙盒 = 制度化学反应釜（CHEM-001~004）：SEA 五要件 + 激活系数 &gt;1.2 验证。' },
@@ -52,6 +52,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/authorization-registry', title: '授权登记管理（P8b）', layer: 'L0', dataSource: 'A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）', permission: '登录 DID（公开查免会话）', description: '登记二分之授权侧：四要件缺一即拒；签名须本人、智能体不代持代填；公开面四字段；四条不公开负空间 fail-closed。' },
   // 二期改版批2块一：公域顶栏第六入口「帮助与联系」——薄占位，内容随文档库「帮助」族入站（块二），联系块同批补入
   { path: '/help', title: '帮助与联系', layer: 'L0', dataSource: '静态占位（帮助族入站前）', permission: '公开', description: '站点帮助与官方联系入口。帮助内容随文档库「帮助」族入站（块二）；论坛暂不落栏，先定位。' },
+  // 二期改版批2块二：文档库（裁点2终定：与文库并存，⛔ 不并线——端点不同、族不同）
+  { path: '/docs', title: '文档库', layer: 'L0', dataSource: 'GET /api/site/docs/{family}（只读面）', permission: '公开', description: '制度／帮助二族：文档库＝怎么做；理论／白皮书等走知识库（/library）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -98,6 +100,8 @@ import { AgentShelfPage } from './agent-shelf'
 import { AnnouncementsPage } from './announcements'
 import { AuthorizationRegistryPage } from './authorization-registry'
 import { HelpPage } from './help'
+import { DocsHomePage, DocsIndexPage, DocDetailPage } from './docs'
+export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
 export const PAGE_COMPONENTS: Record<string, ComponentType> = {
@@ -134,6 +138,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/announcements': AnnouncementsPage,
   '/authorization-registry': AuthorizationRegistryPage,
   '/help': HelpPage,
+  '/docs': DocsHomePage,
 }
 
 export function renderPage(meta: PageMeta) {

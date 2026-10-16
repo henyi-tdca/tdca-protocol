@@ -5,6 +5,7 @@
 // =============================================================================
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { HomePage } from '@/pages/home'
 import { OwnershipPage } from '@/pages/ownership'
 import { MarketPage } from '@/pages/market'
@@ -48,7 +49,11 @@ describe('F1 橱窗层页面接线', () => {
       phi: 0.3,
       system: 'ECOCOG FROZEN',
     })
-    render(<HomePage />)
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>,
+    )
     await waitFor(() => expect(screen.getByTestId('home-kpi')).toBeInTheDocument())
     expect(screen.getByText('42')).toBeInTheDocument()
     expect(screen.getByText(/调度税 2%/)).toBeInTheDocument()
@@ -56,7 +61,11 @@ describe('F1 橱窗层页面接线', () => {
 
   it('首页：后端不可用 → fail-closed 提示（ID85）', async () => {
     mockApi('/api/v1/system/overview', {}, true)
-    render(<HomePage />)
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>,
+    )
     await waitFor(() => expect(screen.getByTestId('home-fail-closed')).toBeInTheDocument())
   })
 
