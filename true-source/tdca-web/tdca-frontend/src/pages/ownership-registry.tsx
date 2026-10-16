@@ -6,7 +6,9 @@
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/api/client'
+import { useAuth } from '@/app/auth-context'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 
@@ -41,6 +43,7 @@ const BRANCH_LABEL: Record<string, string> = {
 }
 
 export function OwnershipRegistryPage() {
+  const { isAuthenticated } = useAuth()
   const [rules, setRules] = useState<RuleView | null>(null)
   const [records, setRecords] = useState<RecordView[]>([])
   const [msg, setMsg] = useState('')
@@ -121,6 +124,9 @@ export function OwnershipRegistryPage() {
           </section>
         )}
 
+        {/* 二期改版批2块三：两面分隔——登记/变更/注销属私域办理面，未登录只见查询公示面 */}
+        {isAuthenticated ? (
+          <>
         <section data-testid="or-register">
           <h2>权属登记</h2>
           <input placeholder="登记对象·表达形式（如：智能体生成绘画《渡口》数字图）" value={title}
@@ -158,6 +164,13 @@ export function OwnershipRegistryPage() {
           <button onClick={onCancel}>注销</button>
           {msg && <p role="status">{msg}</p>}
         </section>
+          </>
+        ) : (
+          <section data-testid="or-login-gate" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
+            登记／变更／注销属登录后的办理面；当前为未登录状态，仅见查询公示面。
+            <Link to="/auth" className="ml-1 text-blue-700 underline hover:text-blue-900">登录后办理</Link>
+          </section>
+        )}
 
         <section data-testid="or-query">
           <h2>权属查询</h2>
