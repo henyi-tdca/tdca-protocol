@@ -34,7 +34,7 @@ export function OfficialAssetsPage() {
       title="官方资产区（官方工具 · 官方产物）"
       dataSource="静态文案（站内审定口径）＋ 文库产物库只读面"
       permission="公开"
-      description="官方资源同区并陈：工具在上（免费可用）、产物在下（付费取用）。一句话——工具随便用，产物要买，用起来官方才受益（配置调用计费）。"
+      description="官方资源同区并陈：工具在上（免费开放取用 · 官方智能体与用户皆可用）、产物在下（付费取用 · 取用须授权）。产物被配置调用时按 0.01 元／次计费。"
     >
       <div data-testid="official-assets-page" className="space-y-6">
         {/* ── 工具在上 ── */}
@@ -96,7 +96,7 @@ export function OfficialAssetsPage() {
         <section data-testid="revenue-structure">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">取用分层（三层收益结构）</h3>
           <ul className="space-y-1.5 text-xs text-gray-600">
-            <li><strong className="text-gray-800">官方工具</strong>——免费（让人用：官方智能体与用户皆可用）。</li>
+            <li><strong className="text-gray-800">官方工具</strong>——免费（开放取用：官方智能体与用户皆可用）。</li>
             <li><strong className="text-gray-800">官方产物</strong>——付费（增值服务产物，取用须授权）。</li>
             <li><strong className="text-gray-800">配置调用</strong>——计费：产物被配置调用时按调用计价（0.01 元/次），官方之间接受益；与配置权调度税分属两层、并行各收。</li>
           </ul>
