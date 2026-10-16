@@ -92,6 +92,17 @@ input[type="button"] {
   color: #ffffff;
 }
 
+/* 蓝底内一切后代强制白字（2026-10-16 创始人补令：「所有蓝色底都要白字，不然看不清」）：
+   可点件内嵌套带文字色类的子元素（如 span.text-slate-700）原会继承失效——
+   非分层声明优先于一切分层工具类，故 `a *` 即覆盖，无需 !important。 */
+a *,
+button *,
+[role="button"] *,
+input[type="submit"] *,
+input[type="button"] * {
+  color: #ffffff;
+}
+
 a:hover,
 button:hover:not(:disabled),
 [role="button"]:hover,
