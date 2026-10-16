@@ -13,6 +13,8 @@ import { LayerIndicator, type LayerKey } from './layer-indicator'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 import { useAuth } from './auth-context'
 import { IntentBar } from './intent-bar'
+import { ProcessRail } from './process-rail'
+import { RightRail } from './right-rail'
 import { AUTH_REQUIRED_EVENT, SESSION_EXPIRED_EVENT, sessionToken } from '@/api/client'
 
 /** 路由 → 四层架构层级映射（FRAMEWORK-001 §八·C.3） */
@@ -142,6 +144,9 @@ function ShellInner() {
   const layer = layerForPath(location.pathname)
   // M3 裁定③兜底：会话过期/被踢 → 明确提示横幅；不自动跳转，当前页面未提交内容原样保留
   const [sessionExpiredFrom, setSessionExpiredFrom] = useState<string | null>(null)
+  // 二期改版批1：小屏左右栏折叠开关（宽屏恒显）
+  const [showLeft, setShowLeft] = useState(false)
+  const [showRight, setShowRight] = useState(false)
   useEffect(() => {
     function onExpired(ev: Event) {
       setSessionExpiredFrom((ev as CustomEvent<{ from?: string }>).detail?.from ?? null)
@@ -240,12 +245,48 @@ function ShellInner() {
           ))}
         </nav>
       </header>
-      <div className="mx-auto mt-3 w-full max-w-6xl px-4">
+      <div className="mx-auto mt-3 w-full max-w-7xl px-4">
         <LayerIndicator current={layer} />
       </div>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
-        <Outlet />
-      </main>
+      {/*
+        二期改版批1：三栏版式（左流程栏／中内容／右我的+AI助手）。
+        小屏：左右栏默认折叠，点按钮展开为覆盖层（⛔ 不得因改版致移动端不可用）。
+      */}
+      <div className="mx-auto flex w-full max-w-7xl items-start gap-4 px-4 py-4">
+        <button
+          data-testid="rail-toggle-left"
+          onClick={() => setShowLeft((v) => !v)}
+          className="fixed bottom-4 left-4 z-50 rounded-full bg-slate-800 px-3 py-2 text-xs text-white shadow-lg lg:hidden"
+        >
+          {showLeft ? '收起流程' : '流程'}
+        </button>
+        <button
+          data-testid="rail-toggle-right"
+          onClick={() => setShowRight((v) => !v)}
+          className="fixed bottom-4 right-4 z-50 rounded-full bg-indigo-600 px-3 py-2 text-xs text-white shadow-lg lg:hidden"
+        >
+          {showRight ? '收起助手' : '我的·助手'}
+        </button>
+        <div
+          data-testid="rail-left"
+          className={`w-60 shrink-0 lg:sticky lg:top-24 lg:block ${
+            showLeft ? 'fixed inset-y-0 left-0 z-40 overflow-y-auto bg-gray-50 p-4' : 'hidden'
+          }`}
+        >
+          <ProcessRail />
+        </div>
+        <main data-testid="main-col" className="min-w-0 flex-1">
+          <Outlet />
+        </main>
+        <div
+          data-testid="rail-right"
+          className={`w-72 shrink-0 lg:sticky lg:top-24 lg:block ${
+            showRight ? 'fixed inset-y-0 right-0 z-40 overflow-y-auto bg-gray-50 p-4' : 'hidden'
+          }`}
+        >
+          <RightRail />
+        </div>
+      </div>
       <footer className="border-t border-gray-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-3 text-[10px] text-gray-400">
           术语基线：TDCA-TERMINOLOGY-REGISTRY V1.1（G-1）· 制度依据：宪法十六条 + UPDA-v2.0 + NSFL-V0.2 · 后端对接：gateway:8100（仅消费）
