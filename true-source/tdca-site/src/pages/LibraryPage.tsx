@@ -18,9 +18,10 @@ interface DetailView {
 
 const FAMILY_TABS: { key: string; label: string }[] = [
   { key: 'whitepaper', label: '白皮书' },
-  { key: 'paper', label: '论文与实证' },
-  { key: 'cop-library', label: '产物库' },
-  { key: 'regulation', label: '制度规范' },
+  { key: 'paper', label: '文献' },
+  { key: 'terms', label: '术语' },
+  { key: 'kg', label: '知识图谱' },
+  { key: 'cop-library', label: '思维协议产物' },
 ]
 
 // 产物库族内子库分组（slug 前缀 <子库>--；批一在册件无此前缀，归入说明件与代表件）
@@ -135,10 +136,10 @@ export function LibraryPage() {
 
   return (
     <PageShell
-      title="知识库（白皮书 · 论文与实证 · 产物库 · 制度规范）"
+      title="知识库（白皮书 · 文献 · 术语 · 知识图谱 · 思维协议产物）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"
-      description="协议本体文献库（SITE-THREE-FIXES-001：文库改名知识库，路由仍 /library 不动）：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。与「文档库」（/docs，公约条例与操作文档）分工：本库收协议本体文献，文档库收对外公约条例与操作文档。">
+      description="协议本体文献库（SITE-THREE-FIXES-001：文库改名知识库，路由仍 /library 不动）：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。分工（LIB-DOCS-SCOPE-001）：本库收理论／白皮书／术语／知识图谱／思维协议／文献；制度类（制度／条例／指引／章程／规则／办法／说明／示例／帮助）请走「文档库」（/docs）。">
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           {FAMILY_TABS.map((t) => (

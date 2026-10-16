@@ -32,7 +32,7 @@ export function DocsIndex() {
       <Link to="/docs" className="text-sm text-muted-foreground">← 全部文档</Link>
       <h1 className="mt-2 text-2xl font-bold">{fam?.label ?? family}（{data.items.length} 件）</h1>
       {data.items.length === 0 ? (
-        <p className="mt-6 text-muted-foreground">该族暂无入库文档（weekly 族源目录未建，留空在案）。</p>
+        <p className="mt-6 text-muted-foreground">该族暂无入库文档。</p>
       ) : (
         <ul className="mt-6 divide-y rounded-lg border">
           {data.items.map((d) => (
@@ -54,10 +54,10 @@ export default function DocsHome() {
     <div className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="text-2xl font-bold">文档库</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        内部试运行版 · 白皮书 / 论文 / 公约条例 / COP 库四族内容已入库，点开即读
+        内部试运行版 · 制度 / 帮助二族内容已入库，点开即读
       </p>
       <p className="mt-2 rounded-md border bg-muted/50 px-4 py-2 text-xs text-muted-foreground">
-        分工（SITE-THREE-FIXES-001）：文档库＝对外公约条例与操作文档；协议本体文献（白皮书 · 论文与实证 · 产物库 · 制度规范）请走「知识库」（/library，原名文库，路由不变）。
+        分工（LIB-DOCS-SCOPE-001）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，原名文库，路由不变）。
       </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
         <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按 TDCA 管理方 指令由系统生成，由 TDCA 管理方 转交受邀者；到期失效，不回收。

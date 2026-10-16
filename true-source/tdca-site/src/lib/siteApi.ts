@@ -40,8 +40,6 @@ export async function sitePost<T>(path: string, body: unknown, extraHeaders?: Re
 }
 
 export const FAMILIES: { key: string; label: string; desc: string }[] = [
-  { key: 'whitepaper', label: '白皮书', desc: '治理与认知基础设施白皮书' },
-  { key: 'paper', label: '论文', desc: '数学基础 / 函数白皮书 / 专著与实证证据' },
-  { key: 'regulation', label: '公约条例', desc: '对外公约与条例文本' },
-  { key: 'cop-library', label: 'COP 库', desc: '协议算子与场景编译件' },
+  { key: 'regulation', label: '制度', desc: '制度／条例／规则／办法／章程／指引' },
+  { key: 'help', label: '帮助', desc: '说明／示例／帮助' },
 ]

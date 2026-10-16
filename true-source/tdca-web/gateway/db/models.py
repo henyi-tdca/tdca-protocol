@@ -539,12 +539,14 @@ class Announcement(Base):
     announcement_id: Mapped[str] = mapped_column(Text, primary_key=True)  # AN-xxx
     title: Mapped[str] = mapped_column(Text, nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)               # 正文（纯文字）
+    category: Mapped[str] = mapped_column(Text, nullable=False, default="通知")  # LIB-DOCS-SCOPE-001 E：闭集四值（通知/信息公开/动态周报/资讯）
     published_by: Mapped[str | None] = mapped_column(Text)                # 发布账号（内部面）
     nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
     published_at: Mapped[str] = mapped_column(Text, nullable=False)
     __table_args__ = (
         CheckConstraint(_PROVENANCE_CHECK, name="ck_ann_prov"),
+        CheckConstraint("category IN ('通知','信息公开','动态周报','资讯')", name="ck_ann_category"),
     )
 
 

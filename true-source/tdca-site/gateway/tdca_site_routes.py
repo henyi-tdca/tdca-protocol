@@ -186,7 +186,7 @@ class JoinRequest(BaseModel):
     payload: dict = Field(default_factory=dict)
 
 
-@router.post("/join", status_code=201, dependencies=[Depends(check_gate)])
+@router.post("/join", status_code=201)
 def submit_join(body: JoinRequest, request: Request,
                 channel_meta: tuple = Depends(get_channel)):
     channel, agent_token = channel_meta
@@ -219,7 +219,7 @@ def submit_join(body: JoinRequest, request: Request,
             "data_nature": "simulated"}
 
 
-@router.get("/join/status", dependencies=[Depends(check_gate)])
+@router.get("/join/status")
 def join_status(token: str):
     conn = get_db()
     row = conn.execute(
@@ -232,7 +232,7 @@ def join_status(token: str):
             "data_nature": "simulated"}
 
 
-@router.get("/join/list", dependencies=[Depends(check_gate)])
+@router.get("/join/list")
 def join_list(reviewer: str = Depends(require_reviewer)):
     """审核列表（内部面）：只回脱敏摘要，不回令牌哈希/联系方式原文之外字段。"""
     conn = get_db()
@@ -253,7 +253,7 @@ class StageAdvance(BaseModel):
     note: str | None = None
 
 
-@router.post("/join/review", dependencies=[Depends(check_gate)])
+@router.post("/join/review")
 def review_join(body: StageAdvance, request: Request,
                 reviewer: str = Depends(require_reviewer)):
     conn = get_db()
@@ -311,7 +311,7 @@ class AgentCard(BaseModel):
     endpoint: str | None = None
 
 
-@router.post("/agent-card/handshake", status_code=201, dependencies=[Depends(check_gate)])
+@router.post("/agent-card/handshake", status_code=201)
 def agent_handshake(body: AgentCard):
     if not body.identity:
         raise HTTPException(422, "agent_card.identity required")
@@ -321,7 +321,7 @@ def agent_handshake(body: AgentCard):
         "INSERT INTO agent_cards (card_token_hash, card) VALUES (?,?)",
         (token_hash(raw_token),
          json.dumps({"identity": body.identity, "tier": "sandbox",
-                     "endpoints": ["/api/site/directory", "/api/site/weekly",
+                     "endpoints": ["/api/site/directory",
                                    "/api/site/meter", "/api/site/credits"]},
                     ensure_ascii=False)))
     conn.commit()
@@ -331,7 +331,7 @@ def agent_handshake(body: AgentCard):
             "token": raw_token, "data_nature": "simulated"}
 
 
-@router.get("/agent-card/{card_id}", dependencies=[Depends(check_gate)])
+@router.get("/agent-card/{card_id}")
 def get_agent_card(card_id: int):
     conn = get_db()
     row = conn.execute("SELECT card FROM agent_cards WHERE id = ? AND revoked_at IS NULL",
@@ -353,7 +353,7 @@ class MeterEvent(BaseModel):
     detail: dict = Field(default_factory=dict)
 
 
-@router.post("/meter", status_code=202, dependencies=[Depends(check_gate)])
+@router.post("/meter", status_code=202)
 def meter(event: MeterEvent, channel_meta: tuple = Depends(get_channel)):
     channel, agent_token = channel_meta
     if channel != "agent":
@@ -379,7 +379,7 @@ class CreditEvent(BaseModel):
     reason: str = Field(min_length=1, max_length=200)
 
 
-@router.post("/credits", status_code=202, dependencies=[Depends(check_gate)])
+@router.post("/credits", status_code=202)
 def credit(event: CreditEvent, channel_meta: tuple = Depends(get_channel)):
     channel, agent_token = channel_meta
     if channel != "agent":
@@ -395,7 +395,7 @@ def credit(event: CreditEvent, channel_meta: tuple = Depends(get_channel)):
             "notice": "积分=模拟记账单位（非法偿），期 1 不结算"}
 
 
-@router.get("/credits/{member_id}", dependencies=[Depends(check_gate)])
+@router.get("/credits/{member_id}")
 def credits_balance(member_id: int):
     conn = get_db()
     row = conn.execute(
@@ -414,7 +414,7 @@ class NotifyTokenRegister(BaseModel):
     token: str = Field(min_length=16)
 
 
-@router.post("/notify-token", status_code=202, dependencies=[Depends(check_gate)])
+@router.post("/notify-token", status_code=202)
 def register_notify_token(body: NotifyTokenRegister,
                           channel_meta: tuple = Depends(get_channel)):
     channel, agent_token = channel_meta
@@ -432,17 +432,14 @@ def register_notify_token(body: NotifyTokenRegister,
 # ════════════════════════════════════════════════════════════════════════════
 # 7) 公开只读面
 # ════════════════════════════════════════════════════════════════════════════
-@router.get("/weekly", dependencies=[Depends(check_gate)])
+# LIB-DOCS-SCOPE-001 D-1/D-2：weekly 归位公告栏——端点退役返 410 Gone 留档（零数据动作：
+# weekly 表 0 行；新周报日后直发公告栏，不复进 weekly）
+@router.get("/weekly")
 def weekly_latest():
-    conn = get_db()
-    rows = conn.execute(
-        "SELECT issue_no, title, published_at FROM weekly"
-        " ORDER BY published_at DESC LIMIT 20").fetchall()
-    conn.close()
-    return {"items": [dict(r) for r in rows], "data_nature": "simulated"}
+    raise HTTPException(410, "weekly retired: 周报呈现已归公告栏（LIB-DOCS-SCOPE-001 D-2）")
 
 
-@router.get("/directory", dependencies=[Depends(check_gate)])
+@router.get("/directory")
 def directory():
     conn = get_db()
     rows = conn.execute(
@@ -451,8 +448,18 @@ def directory():
     return {"items": [dict(r) for r in rows], "data_nature": "simulated"}
 
 
-@router.get("/docs/{family}", dependencies=[Depends(check_gate)])
+# LIB-DOCS-SCOPE-001 B：文档库族集闭集（与 library_ops._FAMILIES 各自定义 ⛔ 不互取；
+# 每周刊 weekly ⛔ 不入闭集（D-1 退役））；weekly 表 0 行只建族位 ⛔ 不造数据
+_DOCS_FAMILIES: dict[str, str] = {
+    "regulation": "制度／条例／规则／办法／章程／指引",
+    "help": "说明／示例／帮助",
+}
+
+
+@router.get("/docs/{family}")
 def docs_family(family: str):
+    if family not in _DOCS_FAMILIES:
+        raise HTTPException(404, f"FAMILY_UNKNOWN: family 须为 {' / '.join(_DOCS_FAMILIES)}")
     conn = get_db()
     rows = conn.execute(
         "SELECT slug, title, synced_at FROM docs WHERE family = ?", (family,)).fetchall()
@@ -460,8 +467,10 @@ def docs_family(family: str):
     return {"items": [dict(r) for r in rows], "data_nature": "simulated"}
 
 
-@router.get("/docs/{family}/{slug}", dependencies=[Depends(check_gate)])
+@router.get("/docs/{family}/{slug}")
 def docs_detail(family: str, slug: str):
+    if family not in _DOCS_FAMILIES:
+        raise HTTPException(404, f"FAMILY_UNKNOWN: family 须为 {' / '.join(_DOCS_FAMILIES)}")
     conn = get_db()
     row = conn.execute(
         "SELECT slug, title, body_md, source_path, data_nature, synced_at"
