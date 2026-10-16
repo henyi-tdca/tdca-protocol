@@ -15,6 +15,9 @@ import { api } from '@/api/client'
 import { useApiGet } from '@/shared/useApi'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
+import { IDENTITY_DISCLAIMER } from '@/shared/identity-mark'
+import { AccountCredentialPanel } from '@/components/AccountCredentialPanel'
+import { useAuth } from '@/app/auth-context'
 
 interface MeData {
   session: { username: string; role: string; expires_at: string; last_register_nca_id?: string | null
@@ -31,6 +34,10 @@ interface MeData {
   my_config_records?: { run_id: string; result: string; asset_summary: string | null; scene: string | null; price_points: number | null; nca_ref: string | null; ts: string }[]
   my_points?: { balance: number; data_provenance: string; note: string }
   my_nca?: { nca_id: string; action: string; artifact_path: string | null; sha256_8: string | null; ts: string }[]
+  user_anchor?: { anchor_kind: string | null; anchor_tier: string; tier_state: string
+                 real_name_present: number | null; phone_present: number | null
+                 evidence_ref: string | null; verified_at: string | null; verifier: string | null
+                 nca_ref: string | null; updated_at: string } | null
   note: string
 }
 
@@ -221,6 +228,7 @@ function SessionsCard() {
   const [msg, setMsg] = useState('')
   const [ok, setOk] = useState(false)
   const [busy, setBusy] = useState(false)
+  const { logout } = useAuth()   // SITE-THREE-FIXES-001-AMEND-1 处3：「退出登录」（仅清本地登录态；与会话吊销区分）
 
   const load = async () => {
     const r = await api.get<{ sessions: SessionRow[] }>('/api/v1/me/sessions')
@@ -309,6 +317,12 @@ function SessionsCard() {
         </table>
       )}
       <div className="mt-2 flex flex-wrap items-center gap-3">
+        {/* SITE-THREE-FIXES-001-AMEND-1 处3：退出登录（仅结束当前本地登录态）——与「全部吊销」（服务端动作）文案区分 */}
+        <button onClick={logout}
+                data-testid="me-sess-logout"
+                className="rounded-md border border-gray-300 bg-white px-3 py-1 text-xs text-gray-600 hover:border-emerald-400 hover:text-emerald-700">
+          退出登录
+        </button>
         <button onClick={() => void revokeAll()} disabled={busy}
                 data-testid="me-sess-revoke-all"
                 className="rounded-md border border-red-300 bg-white px-3 py-1 text-xs text-red-600 hover:bg-red-50 disabled:opacity-40">
@@ -383,6 +397,51 @@ function UsageCard() {
       )}
       {msg && <p data-testid="me-usage-msg" className="mt-2 text-xs text-amber-700">{msg}</p>}
     </section>
+  )
+}
+
+/** 当前锚与档位卡（批 2：消费 dashboard.user_anchor 真实锚行；批 3 自 tdca-site MeConsole 移植）。
+ *  只述档名/态名与「有无＋核态」布尔口径，⛔ 不显示真实姓名/手机号等任何明文取值。 */
+function MeAnchorCard({ anchor }: { anchor: NonNullable<MeData['user_anchor']> }) {
+  const ANCHOR_NAME: Record<string, string> = {
+    notifier: '通知机锚',
+    'realname-phone': '实名 ＋ 手机号锚',
+  }
+  const name = anchor.anchor_kind ? (ANCHOR_NAME[anchor.anchor_kind] ?? anchor.anchor_kind) : '未选择身份锚（可后补）'
+  const tierLabel = `${anchor.anchor_tier} · ${anchor.tier_state}`
+  const statusChip = !anchor.anchor_kind
+    ? { text: '待补', cls: 'bg-amber-100 text-amber-700' }
+    : anchor.anchor_kind === 'notifier'
+      ? { text: '模拟态 · 预留', cls: 'bg-purple-100 text-purple-700' }
+      : anchor.tier_state === '已补'
+        ? { text: '已核', cls: 'bg-emerald-100 text-emerald-700' }
+        : { text: '待核（人工受理）', cls: 'bg-amber-100 text-amber-700' }
+  // 有无口径：已补按布尔如实；待补统一如实标待补（⛔ 不猜测）
+  const presentLine = anchor.tier_state === '已补'
+    ? `真实姓名：${anchor.real_name_present ? '有 · 已核' : '无'}；手机号：${anchor.phone_present ? '有 · 已核' : '无（未提供，非必填）'}`
+    : '真实姓名与手机号：待补（站点管理员人工受理核验后转为「已补」，只记录有无，不记录取值）'
+  return (
+    <div data-testid="me-anchor" className="rounded-lg border border-gray-200 bg-white p-4">
+      <div className="text-xs text-gray-500">当前锚与档位</div>
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        <span className="text-sm font-medium text-gray-800">{name}</span>
+        <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{tierLabel}</span>
+        <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${statusChip.cls}`}>{statusChip.text}</span>
+      </div>
+      <p className="mt-1 text-[11px] text-gray-500" data-testid="me-anchor-present">{presentLine}</p>
+      {anchor.anchor_kind === 'notifier' && (
+        <p className="mt-1 text-[11px] text-purple-700">现为模拟态：演示性质，非已实机、非已可核；达标实机后方为可用之锚。</p>
+      )}
+      {anchor.evidence_ref && anchor.tier_state === '已补' && (
+        <p className="mt-1 text-[11px] text-gray-400">
+          核验留痕：受理 {anchor.verifier ?? '—'} · {anchor.verified_at ? anchor.verified_at.slice(0, 19).replace('T', ' ') : '—'}（+00）· 证据引用 <span className="font-mono">{anchor.evidence_ref}</span>
+        </p>
+      )}
+      <p className="mt-1 text-[11px] text-gray-600">
+        改锚：默认不可自助——须申请，由站点管理员人工受理，留痕并重新核验。
+      </p>
+      <p className="mt-1 text-[11px] text-gray-500">{IDENTITY_DISCLAIMER}</p>
+    </div>
   )
 }
 
@@ -486,6 +545,26 @@ export function MePage() {
                 </p>
                 <p className="mt-1 text-[11px] text-gray-400">记得密码只想更换？直接用下方「账户安全 · 修改密码」。</p>
               </div>
+              {/* 当前锚与档位（批 2：消费后端真实锚行；只现有无与核态，⛔ 不显示任何明文取值） */}
+              {data.user_anchor ? (
+                <MeAnchorCard anchor={data.user_anchor} />
+              ) : (
+                <div data-testid="me-anchor" className="rounded-lg border border-gray-200 bg-white p-4">
+                  <div className="text-xs text-gray-500">当前锚与档位</div>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-medium text-gray-800">实名 ＋ 手机号锚</span>
+                    <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">记名级 · 待补</span>
+                    <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700">待建</span>
+                  </div>
+                  <p className="mt-1 text-[11px] text-gray-500">
+                    现物状态：实名与手机号锚定待建（目标档＝记名级，实名与手机号待补）；令牌面按未定档暂不发身份类令牌。
+                  </p>
+                  <p className="mt-1 text-[11px] text-gray-600">
+                    改锚：默认不可自助——须申请，由站点管理员人工受理，留痕并重新核验。
+                  </p>
+                  <p className="mt-1 text-[11px] text-gray-500">{IDENTITY_DISCLAIMER}</p>
+                </div>
+              )}
             </div>
             {/* 账户安全 · 修改密码（最小实现令：页内改密入口） */}
             <div className="mt-3">
@@ -506,6 +585,24 @@ export function MePage() {
             <div className="text-xs text-gray-500">待我签批</div>
             <div className={`mt-1 text-2xl font-bold ${data.pending_count > 0 ? 'text-red-700' : 'text-gray-700'}`}>{data.pending_count} 件</div>
             {data.pending_count > 0 && <Link to="/attestation/dynamic" className="text-xs font-medium text-red-700 underline">去签批 →</Link>}
+          </section>
+
+          {/* 我的沟通（批 3：三分口径——申诉端＝私域；入口补建于「我的」界面，直达块三所建 /me/appeal 受理面） */}
+          <section data-testid="me-comm" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">我的沟通</h3>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link to="/me/appeal" data-testid="me-comm-appeal-entry"
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-700 hover:border-emerald-400 hover:text-emerald-700">
+                申诉（对惩罚处置：冻结／降权／吊销）→
+              </Link>
+              <Link to="/help" data-testid="me-comm-help"
+                    className="text-[11px] text-emerald-700 underline">
+                帮助与联系 →
+              </Link>
+            </div>
+            <p className="mt-2 text-[11px] text-gray-400">
+              申诉受理面（/me/appeal）在建中：受理范围、材料要件与办理时限以制度入站件为准，本站不预置、不代拟。
+            </p>
           </section>
 
           {/* 运营管理入口（仅 operator/founder 可见；后端闸门照守，前端只是入口） */}
@@ -709,6 +806,8 @@ export function MePage() {
           </section>
         </div>
       )}
+      {/* 凭证批：账户四分面＋授权行权两段要素（追加呈现，现有区块不动） */}
+      <AccountCredentialPanel />
     </PageShell>
   )
 }

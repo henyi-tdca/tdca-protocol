@@ -47,7 +47,7 @@ describe('F0-A2 路由骨架（15 路由 + 404）', () => {
       expect(screen.getByRole('heading', { name: meta.title })).toBeInTheDocument()
       unmount()
     }
-  })
+  }, 20000)   // 批3 flaky 加固①：37 路由全量渲染偶超默认 5s 时限（块四核证单 §三.1）；只加时限，不删不测不跳
 
   it('未知路由 404 兜底', () => {
     renderAt('/no-such-page-xyz')
