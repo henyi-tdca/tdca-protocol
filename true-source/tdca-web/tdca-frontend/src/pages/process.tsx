@@ -94,9 +94,9 @@ export function ProcessOverviewPage() {
   return (
     <PageShell
       title="流程总览（协作流程 14 环）"
-      dataSource="静态文案（智库审定口径）"
+      dataSource="静态文案（站内审定口径）"
       permission="公开"
-      description="十四个环节，从相遇到存续：每环列「是什么／如何行动／规则／后果」四能；承办呈现面＝站内已有服务/频道名（制度层承办执行体正式点名候智库另案，如实标注）。"
+      description="十四个环节，从相遇到存续：每环列「是什么／如何行动／规则／后果」四能；承办呈现面＝站内已有服务/频道名（制度层承办执行体正式点名候站内另案，如实标注）。"
     >
       <div data-testid="process-overview" className="space-y-4">
         {RINGS.map((r, i) => (
