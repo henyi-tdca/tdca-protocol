@@ -217,7 +217,7 @@ function ShellInner() {
       <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2">
           <HufBanner />
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <IntentBar />
             <AuthStatus />
             <DidSwitcher />
