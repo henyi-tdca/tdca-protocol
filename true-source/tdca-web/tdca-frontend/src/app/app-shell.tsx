@@ -97,22 +97,23 @@ export const APP_NAV: NavEntry[] = [
   },
 ]
 
+/** 拓扑空间切换（H/M/L）：创始人 2026-10-17 指示——上下排（竖叠），不逾中屏宽；不再是左右横排 */
 function DidSwitcher() {
   const { role, did, switchRole } = useDID()
   return (
-    <div data-testid="did-switcher" className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1">
+    <div data-testid="did-switcher" className="flex w-min flex-col gap-0.5 rounded-lg border border-gray-200 bg-white px-1.5 py-1">
       {(['H', 'M', 'L'] as DIDRole[]).map((r) => (
         <button
           key={r}
           data-role={r}
           data-active={role === r}
-          className={`rounded px-2 py-0.5 text-xs ${role === r ? 'bg-slate-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+          className={`whitespace-nowrap rounded px-2 py-0.5 text-left text-xs ${role === r ? 'bg-slate-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
           onClick={() => switchRole(r)}
         >
           {r}·{ROLE_LABELS[r].split('（')[0]}
         </button>
       ))}
-      <span className="ml-1 text-[10px] text-gray-400" data-testid="did-value">{did}</span>
+      <span className="text-[9px] leading-tight text-gray-400" data-testid="did-value">{did}</span>
     </div>
   )
 }
