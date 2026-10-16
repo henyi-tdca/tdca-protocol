@@ -77,6 +77,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/notifier', label: '通知机', badge: '在建中' }, // WS 实时通道令牌未通（4401），仅静态状态页
       { to: '/attestation/history', label: '确权历史' }, // 制度即公开；总览/meta/dynamic 三路在私域「我的」
       { to: '/announcements', label: '公告栏' }, // 对外公告区：空栏为常态，内容须创始人逐次明示后发布
+      { to: '/process', label: '流程总览' }, // 二期改版批2块三：14 环逐环四能（tdca-site ProcessOverview 移植）
     ],
   },
   {

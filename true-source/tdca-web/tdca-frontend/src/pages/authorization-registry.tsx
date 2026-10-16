@@ -6,7 +6,9 @@
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/api/client'
+import { useAuth } from '@/app/auth-context'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 
@@ -43,6 +45,7 @@ const OP_LABEL: Record<string, string> = {
 const PUBLIC_KEYS = ['权属信息', '授权信息', '授权状态', '获取方式'] as const
 
 export function AuthorizationRegistryPage() {
+  const { isAuthenticated } = useAuth()
   const [rules, setRules] = useState<RuleView | null>(null)
   const [records, setRecords] = useState<RecordView[]>([])
   const [msg, setMsg] = useState('')
@@ -158,6 +161,9 @@ export function AuthorizationRegistryPage() {
           </section>
         )}
 
+        {/* 二期改版批2块三：两面分隔——登记/操作/变更/注销/明细查询属私域办理面，未登录仅见登记口径＋公开查（免会话四字段） */}
+        {isAuthenticated ? (
+          <>
         <section data-testid="ar-register">
           <h2>授权登记</h2>
           <input placeholder="授权对象引用（如：deploy/core-go 等五族资产）" value={asset}
@@ -215,21 +221,6 @@ export function AuthorizationRegistryPage() {
           {msg && <p role="status">{msg}</p>}
         </section>
 
-        <section data-testid="ar-public">
-          <h2>公开查（免会话 · 仅四字段）</h2>
-          <input placeholder="record_id（如：AR-a1b2c3d4e5）" value={pubId}
-            onChange={(e) => setPubId(e.target.value)} />
-          <button onClick={onPublicQuery}>公开查</button>
-          {pubView && (
-            <ul data-testid="ar-public-view">
-              {PUBLIC_KEYS.map((k) => (
-                <li key={k}>{k}：{String(pubView[k] ?? '—')}</li>
-              ))}
-              <li>状态：{pubView.status}</li>
-            </ul>
-          )}
-        </section>
-
         <section data-testid="ar-query">
           <h2>授权查询</h2>
           <ul>
@@ -244,6 +235,28 @@ export function AuthorizationRegistryPage() {
               </li>
             ))}
           </ul>
+        </section>
+          </>
+        ) : (
+          <section data-testid="ar-login-gate" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
+            登记／操作／变更／注销／明细查询属登录后的办理面；当前为未登录状态，仅见登记口径与公开查（免会话，仅四字段）。
+            <Link to="/auth" className="ml-1 text-blue-700 underline hover:text-blue-900">登录后办理</Link>
+          </section>
+        )}
+
+        <section data-testid="ar-public">
+          <h2>公开查（免会话 · 仅四字段）</h2>
+          <input placeholder="record_id（如：AR-a1b2c3d4e5）" value={pubId}
+            onChange={(e) => setPubId(e.target.value)} />
+          <button onClick={onPublicQuery}>公开查</button>
+          {pubView && (
+            <ul data-testid="ar-public-view">
+              {PUBLIC_KEYS.map((k) => (
+                <li key={k}>{k}：{String(pubView[k] ?? '—')}</li>
+              ))}
+              <li>状态：{pubView.status}</li>
+            </ul>
+          )}
         </section>
       </div>
     </PageShell>

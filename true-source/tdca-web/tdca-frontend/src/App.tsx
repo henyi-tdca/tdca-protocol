@@ -20,6 +20,7 @@ const PROTECTED = new Set([
   '/attestation/dynamic',
   '/attestation/history',
   '/me',
+  '/me/appeal',
 ])
 
 export default function App() {
