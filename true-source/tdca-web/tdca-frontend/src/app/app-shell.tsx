@@ -32,65 +32,65 @@ export interface NavItem {
   label: string
   /** 在建中角标：内容未完全入站／尚未入站（2026-10-04 创始人明示标注） */
   badge?: string
+  /** raw＝站内原始资源（如 /openapi.json 机读面）：<a> 直开，⛔ 不走 SPA 路由（避免 404 兜底吞掉） */
+  raw?: boolean
 }
-export const APP_NAV: { group: string; items: NavItem[] }[] = [
+
+/**
+ * 二期改版批2块一：公域顶栏六入口（照终定稿 §二块一）。
+ * 公域只留公开栏目；须登录／须角色栏目移入右栏「我的」（PRIVATE_NAV，见 right-rail）；
+ * 运维分区（运维端／形式化入站／集群准入闸门／评审）⛔ 不入公共导航，独立入口属块四。
+ */
+export type NavEntry =
+  | { kind: 'link'; to: string; label: string }
+  | { kind: 'group'; group: string; items: NavItem[] }
+
+export const APP_NAV: NavEntry[] = [
+  { kind: 'link', to: '/', label: '首页' },
   {
-    group: '橱窗',
+    kind: 'group',
+    group: '生态',
     items: [
-      { to: '/', label: '首页' },
-      { to: '/about', label: '关于' },
-      { to: '/ownership', label: '所有权' },
-      { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
-      { to: '/sandbox', label: '沙盒' },
-      { to: '/tax', label: '税收' },
+      { to: '/agents', label: '智能体集群' }, // 展示面：官方智能体观测橱窗（照终定稿保留于公域）
+      { to: '/agent-shelf', label: '智能体区' }, // 展示面：组二 10 件呈现（呈现≠注册）
+      { to: '/toolshelf', label: '工具货架' }, // 展示面：浏览公开
       { to: '/academy', label: '学院', badge: '在建中' }, // 教材/模拟器/考核未入站，现仅名词库
+    ],
+  },
+  {
+    kind: 'group',
+    group: '市场',
+    items: [
+      { to: '/ownership', label: '所有权' }, // 公开读 / 确权操作须 HUF
+      { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
+      { to: '/tax', label: '税收' },
+      { to: '/sandbox', label: '沙盒' }, // 公开读 / 入盒须 HUF
+    ],
+  },
+  {
+    kind: 'group',
+    group: '制度与透明',
+    items: [
+      { to: '/about', label: '关于' },
+      { to: '/governance', label: '治理' }, // HUF 强制鉴权（B-4）；操作唤起签批，⛔ 不内嵌凭据面
       { to: '/audit', label: '审计' },
-      { to: '/governance', label: '治理' },
-      { to: '/library', label: '文库' },
+      { to: '/notifier', label: '通知机', badge: '在建中' }, // WS 实时通道令牌未通（4401），仅静态状态页
+      { to: '/attestation/history', label: '确权历史' }, // 制度即公开；总览/meta/dynamic 三路在私域「我的」
       { to: '/announcements', label: '公告栏' }, // 对外公告区：空栏为常态，内容须创始人逐次明示后发布
     ],
   },
   {
-    group: '观测',
+    kind: 'group',
+    group: '资源',
     items: [
-      { to: '/agents', label: '智能体集群' },
-      { to: '/notifier', label: '通知机', badge: '在建中' }, // WS 实时通道令牌未通（4401），仅静态状态页
-    ],
-  },
-  { group: '作业', items: [{ to: '/studio', label: 'Agent Studio' }] },
-  {
-    // 站点一期（P1~P9）：名目照在册 PAGE_META 元数据（pages.tsx），仅挂导航入口，不改制度语义
-    group: '站点一期',
-    items: [
-      { to: '/workbuddy', label: 'WorkBuddy' },
-      { to: '/cluster', label: '集群编排' },
-      { to: '/formal', label: '形式化入站' },
-      { to: '/toolshelf', label: '工具货架' }, // 组一 8 件已上；组二 10 件已以智能体形态呈现于「智能体区」
-      { to: '/agent-shelf', label: '智能体区' }, // 组二 10 件智能体形态呈现（呈现≠注册，准入另走流程）
-      { to: '/anchors', label: '模拟锚' },
-      { to: '/ops', label: '运维端' },
-      { to: '/ownership-registry', label: '权属登记' },
-      { to: '/authorization-registry', label: '授权登记' },
-      { to: '/market-sim', label: '规范与沙盒链', badge: '在建中' }, // 两件规范未入册（端点 503 fail-closed）
+      { to: '/library', label: '文库' },
+      { to: '/openapi.json', label: '机器可读面', raw: true }, // AMEND-1：对人的说明书（openapi 字段表）；字段明文人读页＝二期 P1
     ],
   },
   {
-    group: '确权',
-    items: [
-      { to: '/attestation', label: '确权中心' },
-      { to: '/attestation/meta', label: '元函数确权' },
-      { to: '/attestation/dynamic', label: '动态确权' },
-      { to: '/attestation/history', label: '确权历史' },
-    ],
-  },
-  {
-    // 账户（F-2 接缝落地）：名目照在册 PAGE_META 元数据（/auth /register /me）
-    group: '账户',
-    items: [
-      { to: '/auth', label: '登录' },
-      { to: '/register', label: '注册' },
-      { to: '/me', label: '我的' },
-    ],
+    kind: 'group',
+    group: '帮助与联系',
+    items: [{ to: '/help', label: '帮助与联系', badge: '在建中' }], // 薄占位：内容随文档库「帮助」族入站（块二）
   },
 ]
 
@@ -206,7 +206,7 @@ function ShellInner() {
       )}
       <div className="border-b border-amber-200 bg-amber-50/60">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
-          <span className="text-xs font-semibold text-amber-800">TDCA 官网 · 制度橱窗 / 观测 / 作业</span>
+          <span className="text-xs font-semibold text-amber-800">TDCA 官网 · 公域（公开面）／私域（我的）／运维分区（不公开）</span>
           <SimulatedBadge nature="simulated" label="全站模拟态 data_nature=simulated (ID92)" />
         </div>
       </div>
@@ -221,28 +221,53 @@ function ShellInner() {
           </div>
         </div>
         <nav data-testid="app-nav" className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-4 pb-2">
-          {APP_NAV.map(({ group, items }) => (
-            <span key={group} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-gray-400">{group}</span>
-              {items.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === '/'}
-                  className={({ isActive }) =>
-                    `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
-                  }
-                >
-                  {item.label}
-                  {item.badge && (
-                    <span data-testid={`nav-badge-${item.to}`} className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">
-                      {item.badge}
-                    </span>
-                  )}
-                </NavLink>
-              ))}
-            </span>
-          ))}
+          {APP_NAV.map((entry) =>
+            entry.kind === 'link' ? (
+              <NavLink
+                key={entry.to}
+                to={entry.to}
+                end={entry.to === '/'}
+                className={({ isActive }) =>
+                  `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
+                }
+              >
+                {entry.label}
+              </NavLink>
+            ) : (
+              <span key={entry.group} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="text-[10px] font-medium tracking-wide text-gray-400">{entry.group}</span>
+                {entry.items.map((item) =>
+                  item.raw ? (
+                    <a
+                      key={item.to}
+                      href={item.to}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-testid={`nav-raw-${item.to}`}
+                      className="text-xs text-gray-500 underline decoration-dotted underline-offset-4 hover:text-slate-800"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      className={({ isActive }) =>
+                        `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
+                      }
+                    >
+                      {item.label}
+                      {item.badge && (
+                        <span data-testid={`nav-badge-${item.to}`} className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">
+                          {item.badge}
+                        </span>
+                      )}
+                    </NavLink>
+                  ),
+                )}
+              </span>
+            ),
+          )}
         </nav>
       </header>
       <div className="mx-auto mt-3 w-full max-w-7xl px-4">
