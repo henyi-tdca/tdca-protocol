@@ -73,3 +73,38 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* =============================================================================
+ * 全局可点件蓝底（创始人 2026-10-16 09:52 明示：「能点的按钮和链接都要用蓝色底」）
+ * 落法：非分层 CSS 置于一切 @layer 之后——按 Cascade L5，非分层声明优先于
+ * 任何分层声明（含 Tailwind utilities 与 shadcn 变体类），故无需 !important
+ * 即全站生效；内联样式除外（全站已核：按钮/链接无内联背景色）。
+ * 范围：按钮（button/[role=button]/提交类 input）与链接（a）。
+ * 口径：可点件蓝底白字；悬停加深；⛔ 破坏性（原红）亦统一蓝底（令曰「都要」）；
+ *       禁用件不视为可点，保持灰底不可点样式。
+ * ========================================================================== */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"] {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+a:hover,
+button:hover:not(:disabled),
+[role="button"]:hover,
+input[type="submit"]:hover:not(:disabled),
+input[type="button"]:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+input[type="submit"]:disabled,
+input[type="button"]:disabled {
+  background-color: #9ca3af;
+  color: #f9fafb;
+  cursor: not-allowed;
+}
