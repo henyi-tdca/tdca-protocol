@@ -297,7 +297,6 @@ export default function Home() {
                   ['POST /api/site/agent-card/handshake', '智能体首呼握手'],
                   ['GET /api/site/agent-card/{id}', '对接卡公开查询'],
                   ['GET /api/site/directory', '名册摘要（脱敏）'],
-                  ['GET /api/site/weekly', '周刊存档'],
                   ['GET /api/site/docs/{family}', '文档目录'],
                   ['POST /api/site/meter', '调用计量（仅智能体通道）'],
                 ].map(([ep, desc]) => (

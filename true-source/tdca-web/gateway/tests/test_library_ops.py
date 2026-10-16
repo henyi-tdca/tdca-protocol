@@ -74,8 +74,12 @@ def test_family_closed_set(_docs_table):
     h = _auth("libtester01")
     r = client.get("/api/v1/library/unknown", headers=h)
     assert r.status_code == 404
-    # 2026-10-04 创始人明示：regulation（制度规范）入闭集——须可列（不再 404）
+    # LIB-DOCS-SCOPE-001：regulation（制度类）归文档库 /api/site/docs——知识库闭集
+    # 收窄为 whitepaper/paper/terms/kg/cop-library，regulation 须 404（零重叠）
     r = client.get("/api/v1/library/regulation", headers=h)
+    assert r.status_code == 404
+    # 新族位 terms/kg：零行只建位，族面可列（200）
+    r = client.get("/api/v1/library/terms", headers=h)
     assert r.status_code == 200, r.text[:200]
 
 

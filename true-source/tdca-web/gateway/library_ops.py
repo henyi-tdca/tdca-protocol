@@ -17,13 +17,15 @@ from db import get_session  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/library", tags=["library"])
 
-# family 闭集：名目照入站令（甲＝whitepaper/paper；乙＝cop-library）；
-# 2026-10-04 创始人明示：规范栏目须看全文 ⟹ 增列 regulation（docs 表 regulation 族实读）
+# family 闭集：LIB-DOCS-SCOPE-001 新口径——知识库＝理论/白皮书/文献/术语/知识图谱/思维协议产物；
+# regulation（制度类）归文档库 /api/site/docs（两闭集各自定义 ⛔ 不互取，零重叠）；
+# terms/kg 新族位零行只建位 ⛔ 不造数据
 _FAMILIES: dict[str, str] = {
-    "whitepaper": "白皮书（whitepapers）",
-    "paper": "论文与实证（papers）",
-    "cop-library": "产物库（cop-library）",
-    "regulation": "制度规范（regulations）",
+    "whitepaper": "白皮书（理论／白皮书）",
+    "paper": "文献（papers）",
+    "terms": "术语（terms）",
+    "kg": "知识图谱（kg）",
+    "cop-library": "思维协议产物（cop-library）",
 }
 
 _SEL_LIST = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
