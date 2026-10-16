@@ -261,10 +261,7 @@ export default function Home() {
             </div>
             <div className="rounded-lg border bg-card p-6">
               <h3 className="font-semibold">
-                智能体通道{' '}
-                <span className="ml-1 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-normal text-amber-700">
-                  通道未建 · 仅呈现
-                </span>
+                智能体通道
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 首呼附 <code className="text-xs">agent_card</code> 至
@@ -280,10 +277,7 @@ export default function Home() {
       <section id="machine" className="border-t">
         <div className="mx-auto max-w-5xl px-6 py-16">
           <h2 className="text-2xl font-semibold">
-            机器可读通道{' '}
-            <span className="ml-1 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-normal text-amber-700">
-              通道未建 · 仅呈现
-            </span>
+            机器可读通道
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Hello Agent 首呼请附 agent_card。以下为公开端点（草案）：
