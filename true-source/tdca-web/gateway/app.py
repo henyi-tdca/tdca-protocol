@@ -153,6 +153,13 @@ app.include_router(market_admin_ops_router)
 from agent_channel_ops import router as agent_channel_ops_router  # noqa: E402
 app.include_router(agent_channel_ops_router)
 
+# A-27: 公开只读制度件取得面（丙案 · L1SI151-PUBLIC-ROUTE-001——/api/public/docs/* 匿名只读
+# 已入站公开件；只读容器件单一事实源；fail-closed；旧 /api/site/docs 为同一实现之别名）
+from public_docs_ops import router as public_docs_router  # noqa: E402
+app.include_router(public_docs_router)
+from public_docs_ops import alias_router as public_docs_alias_router  # noqa: E402
+app.include_router(public_docs_alias_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）
