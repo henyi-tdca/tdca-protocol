@@ -5,7 +5,8 @@
 - 建表迁移 0013（ops_logs）；六组 sections JSON 键名与 TDCA-TPL-OPS-LOG-001-MACHINE 1:1；
 - 四端点：POST 写（V-1~V-8 服务端全量校验）／GET 区间列表／GET today（红点+连续未填升级）／GET export（CSV）；
 - 一人一日一行（log_date+duty_no 主键）；同日同值日已存在 ⟹ 409（⛔ 不做静默更新，更正另令）；
-- 连续 2 日未填 ⟹ 写入既有 P7 工单池（INTAKE，operator/founder 必查面）⛔ 不新建通知通道；幂等守卫；
+- 连续 2 日未填 ⟹ 写入既有 P7 工单池（INTAKE，operator/founder 必查面）⛔ 不新建通知通道；
+  幂等键＝未填起算日（另案小改①，20261017）：同一未填 episode 只开一单，streak 逐日增长不再逐日新开；
 - ⛔ 不建 ops_files 表（防双源漂移）；⛔ 表单无口令/令牌/密钥字段；凭据形内容 V-2 双扫拒绝；
 - 归档：不删行（delete_allowed=false），月区间读取 + CSV 导出（周汇总/月报）。
 SPDX-License-Identifier: TDCA-Internal
@@ -56,6 +57,17 @@ _REQUIRED = {
 
 def _today08() -> date:
     return datetime.now(_TZ08).date()
+
+
+# ── CSV 公式注入防护（CWE-1236：单元格首字符为 = + - @ / 制表符 / 回车时，
+#    Excel 类表格软件会当公式执行——导出统一前置单引号中和，肉眼可核、可逆）──
+_CSV_FORMULA_LEAD = ("=", "+", "-", "@", "\t", "\r")
+
+
+def _csv_safe(v):
+    if isinstance(v, str) and v[:1] in _CSV_FORMULA_LEAD:
+        return "'" + v
+    return v
 
 
 def _walk_strings(obj):
@@ -257,22 +269,28 @@ def _missing_streak(today: date) -> int:
 
 
 def _ensure_escalation(streak: int, today: date, user: dict) -> bool:
-    """连续≥2 日未填 ⟹ 写 P7 工单池（幂等：未结同题不再写）。返回是否本次新建。"""
+    """连续≥2 日未填 ⟹ 写 P7 工单池。幂等键＝未填起算日（episode 起点＝上次已填日次日）：
+    同一 episode 的 streak 逐日增长时起算日不变，只开一单；episode 被打断后重新起算才开新单。
+    返回是否本次新建。"""
     if streak < 2:
         return False
     start = today - timedelta(days=streak - 1)
+    tid = f"OPS-esc{start.strftime('%Y%m%d')}"
     title = f"运维日志连续 {streak} 日未填（{start.isoformat()} 起）——请值班人补记并说明"
     with get_session() as s:
-        exists = s.query(M.OpsTicket).filter(
-            M.OpsTicket.title.like(f"运维日志连续 {streak} 日未填（{start.isoformat()}%"),
-            M.OpsTicket.status != "RELEASED").first()
-        if exists:
-            return False
+        if s.get(M.OpsTicket, tid) is not None:
+            # 同 episode 已有单：未结 ⟹ 幂等返回不重复写；已结（RELEASED）而再升级 ⟹ 后缀顺延，避免主键冲突
+            if s.query(M.OpsTicket).filter_by(ticket_id=tid).filter(
+                    M.OpsTicket.status != "RELEASED").first():
+                return False
+            seq = s.query(M.OpsTicket).filter(
+                M.OpsTicket.ticket_id.like(f"{tid}-r%")).count() + 1
+            tid = f"{tid}-r{seq}"
     nca_ref = _nca_append("OPS_LOG_ESCALATION", user["username"],
                           artifact_path=f"ops-logs:escalation:{start.isoformat()}")
     with get_sessionmaker().begin() as s:
         s.add(M.OpsTicket(
-            ticket_id=f"OPS-esc{today.strftime('%Y%m%d')}{streak}",
+            ticket_id=tid,
             title=title,
             description="运维日志表单化红点升级：连续未填≥2 日，自动入 P7 工单池（⛔ 非静默）",
             status="INTAKE", nca_ref=nca_ref, created_at=_utc(), updated_at=_utc()))
@@ -297,7 +315,8 @@ def today_status(request: Request):
 def export_logs(request: Request,
                 from_: str = Query("", alias="from"), to: str = Query(""),
                 duty_no: str = ""):
-    """导出 CSV（区间；供周汇总/月报；⛔ 不含凭据值——入库已过 V-2）。"""
+    """导出 CSV（区间；供周汇总/月报；⛔ 不含凭据值——入库已过 V-2；
+    CWE-1236 公式注入防护：前导 = + - @ 等单元格经 _csv_safe 前置单引号）。"""
     _require_ops_admin(request)
     with get_session() as s:
         q = s.query(M.OpsLog).order_by(M.OpsLog.log_date, M.OpsLog.duty_no)
@@ -318,12 +337,13 @@ def export_logs(request: Request,
         sec = json.loads(r.sections)
         b = sec.get("B_技术运维", {})
         c = sec.get("C_内容运维", {})
-        w.writerow([r.log_date, r.duty_role, r.duty_no, r.handover, r.exceptions_count,
-                    r.unclosed_count, r.backfill, r.backfill_reason or "",
-                    r.filled_by, r.filled_at,
-                    b.get("root_http_status", ""), b.get("acme_selftest", ""),
-                    b.get("tech_abnormal", ""), c.get("trail_seven_cols", ""),
-                    json.dumps(sec, ensure_ascii=False)])
+        w.writerow([_csv_safe(v) for v in (
+            r.log_date, r.duty_role, r.duty_no, r.handover, r.exceptions_count,
+            r.unclosed_count, r.backfill, r.backfill_reason or "",
+            r.filled_by, r.filled_at,
+            b.get("root_http_status", ""), b.get("acme_selftest", ""),
+            b.get("tech_abnormal", ""), c.get("trail_seven_cols", ""),
+            json.dumps(sec, ensure_ascii=False))])
     return Response(buf.getvalue(), media_type="text/csv; charset=utf-8",
                     headers={"Content-Disposition":
                              f"attachment; filename=ops_logs_{from_ or 'all'}_{to or 'all'}.csv"})

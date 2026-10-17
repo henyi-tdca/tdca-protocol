@@ -3,7 +3,8 @@
 
 覆盖：未登录 401／viewer 403；POST 正例 201＋NCA；同日同值日 409（⛔ 不静默更新）；
 V-1/V-2/V-3/V-4/V-5/V-6/V-8 各反例 400；GET 区间列表；today 红点（filled/streak/升级工单幂等）；
-export CSV。迁移可回退另由 alembic upgrade/downgrade 验证（回报项 2）。
+export CSV；另案小改两例（升级工单幂等键＝未填起算日 episode 级幂等／CSV 公式注入防护 CWE-1236）。
+迁移可回退另由 alembic upgrade/downgrade 验证（回报项 2）。
 """
 from datetime import datetime, timedelta, timezone
 
@@ -225,3 +226,39 @@ def test_v8_backfill_rule():
         "duty_role": "值班运维", "duty_no": "OP-001", "handover": "备份运维+OP-002",
         "sections": sec}, headers=_auth(role="operator"))
     assert r.status_code == 409
+
+
+# ── 另案小改（20261017 创始人「出」）：幂等键＝未填起算日 ──────────
+def test_escalation_keyed_by_episode_start():
+    """同一未填 episode 的 streak 逐日增长时起算日不变——只开一单，幂等不逐日新开；
+    episode 被打断（起算日变化）后才开新单。"""
+    from ops_logs_ops import _ensure_escalation
+    user = {"username": "opslog-esc001"}
+    d0 = datetime.now(_TZ08).date()
+    start0 = d0 - timedelta(days=1)                       # streak=2 起算日
+    assert _ensure_escalation(2, d0, user) is True        # episode 开单
+    # 连续未填逐日增长：起算日同为 start0 ⟹ 幂等返回，不新开
+    assert _ensure_escalation(3, d0 + timedelta(days=1), user) is False
+    assert _ensure_escalation(4, d0 + timedelta(days=2), user) is False
+    with get_session() as s:
+        ts = s.query(M.OpsTicket).filter(M.OpsTicket.title.like("运维日志连续%")).all()
+        assert len(ts) == 1                                 # 三访只一单
+        assert ts[0].ticket_id == f"OPS-esc{start0.strftime('%Y%m%d')}"
+        assert ts[0].status == "INTAKE"
+    # 起算日变化（新 episode）⟹ 可开新单
+    assert _ensure_escalation(2, d0 + timedelta(days=9), user) is True
+    with get_session() as s:
+        assert s.query(M.OpsTicket).filter(
+            M.OpsTicket.title.like("运维日志连续%")).count() == 2
+
+
+# ── 另案小改（20261017 创始人「出」）：CSV 公式注入防护 ──────────
+def test_export_csv_formula_injection_guard():
+    """CWE-1236：前导 = + - @ 的单元格导出时前置单引号中和；普通值原样。"""
+    assert _post(**{"B_技术运维.tech_abnormal": "=cmd|'/c calc'!"}).status_code == 201
+    h = _auth(role="operator")
+    r = client.get("/api/v1/ops/logs/export", headers=h)
+    assert r.status_code == 200 and "text/csv" in r.headers["content-type"]
+    assert "'=cmd|'/c calc'!" in r.text                    # 已前置单引号
+    assert "\n=cmd" not in r.text                          # 无前导裸公式格
+    assert "tech_abnormal" in r.text and "pass" in r.text   # 表头与正常值原样
