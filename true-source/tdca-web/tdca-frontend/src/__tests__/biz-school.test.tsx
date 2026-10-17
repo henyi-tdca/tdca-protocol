@@ -1,10 +1,11 @@
 // =============================================================================
-// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI152-EDU-PORTAL-001 商学院两页自检四验
-// 约束矩阵: 交办令 §三（原文照贴·零内部编号·价格留白·不加外链）§九（⛔ 不改一字）
-//  验①哈希：两 ?raw 源 sha256_16 == 在册值（9C9E83BACC40E70F ／ 3C5F8F33511F53AB）
+// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI152-EDU-PORTAL-001/002 商学院两页自检四验
+// 约束矩阵: 001 §三（原文照贴·零内部编号·价格留白·不加外链）
+//          002 替换说明 §三（无件头：⛔ 件号/零内部编号/价格留白/⭐ 标记零残留）
+//  验①哈希：两 ?raw 源 sha256_16 == 在册值（002 纯版：427870BDEFB667EA ／ 69936AD9223FD700）
 //  验②逐句照贴：对源逐行剥 markdown 语法后断言出现在渲染 textContent（零丢句）
 //  验③渲染：h1 与 meta.title 同名、关键句在位、两页互链
-//  验④零编号零金额零外链：渲染文本不含内部编号/金额模式/链接元素
+//  验④零编号零金额零外链零件头：渲染文本不含内部编号/金额模式/链接元素/件头字样
 // =============================================================================
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
@@ -60,9 +61,9 @@ function expectEverySourceLine(rendered: string, md: string, label: string) {
 }
 
 describe('L1SI152-EDU-PORTAL-001 商学院两页自检四验', () => {
-  it('验① 哈希：两附件 ?raw 源与在册 sha256_16 一致（零改写）', async () => {
-    expect(await sha16(introMd)).toBe('9C9E83BACC40E70F')
-    expect(await sha16(outlineMd)).toBe('3C5F8F33511F53AB')
+  it('验① 哈希：两附件 ?raw 源与在册 sha256_16 一致（002 纯版值·零改写）', async () => {
+    expect(await sha16(introMd)).toBe('427870BDEFB667EA')
+    expect(await sha16(outlineMd)).toBe('69936AD9223FD700')
   })
 
   it('验②③ /academy 介绍页：h1、关键句、逐句照贴、链到目录页', () => {
@@ -77,6 +78,9 @@ describe('L1SI152-EDU-PORTAL-001 商学院两页自检四验', () => {
     expect(page).toHaveTextContent('五卷')
     expect(page).toHaveTextContent('35')
     expect(page).toHaveTextContent('入学即上岗')
+    expect(page).toHaveTextContent('请咨询联系我们')
+    expect(page).toHaveTextContent('TDCA 官方出品 · 商学院指定培训教材')
+    expect(page).toHaveTextContent('版本：')
     expect(screen.getByRole('link', { name: /教材目录（纲要）/ })).toHaveAttribute('href', '/academy/outline')
     expectEverySourceLine(page.textContent ?? '', introMd, 'intro')
   })
@@ -92,6 +96,9 @@ describe('L1SI152-EDU-PORTAL-001 商学院两页自检四验', () => {
     expect(page).toHaveTextContent('五卷')
     expect(page).toHaveTextContent('制度哲学')
     expect(page).toHaveTextContent('入门本')
+    expect(page).toHaveTextContent('制度运行与工件')
+    expect(page).toHaveTextContent('TDCA 官方出品 · 商学院指定培训教材 · 教材目录')
+    expect(page).toHaveTextContent('版本：')
     expect(screen.getByRole('link', { name: /返回商学院介绍/ })).toHaveAttribute('href', '/academy')
     expectEverySourceLine(page.textContent ?? '', outlineMd, 'outline')
   })
@@ -115,6 +122,14 @@ describe('L1SI152-EDU-PORTAL-001 商学院两页自检四验', () => {
       expect(text).not.toMatch(/\bL1SI\d+/)
       expect(text).not.toMatch(/[¥￥]\s?\d/)
       expect(text).not.toMatch(/\$\d/)
+      // 002 纯版：件头字样与强调标记零残留（⛔ 件号/零内部编号/价格留白/⭐/⛔/✅/⚠️）
+      expect(text).not.toContain('件号')
+      expect(text).not.toContain('零内部编号')
+      expect(text).not.toContain('价格留白')
+      expect(text).not.toContain('⭐')
+      expect(text).not.toContain('⛔')
+      expect(text).not.toContain('✅')
+      expect(text).not.toContain('⚠️')
       // 不加外链：页内不得有 <a> 指向站外
       const anchors = Array.from(c.querySelectorAll('a'))
       for (const a of anchors) {
