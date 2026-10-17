@@ -2,7 +2,7 @@
 
 > Instrument ID: **TDCA-SPEC-REGISTER-OF-RIGHTS-001** ｜ Version: **`V0.1-DRAFT`** (⚠️ NOT IN FORCE · pending four-step procedure + sign-off) ｜ Date: **2026-10-03** (+08)
 > Operation type: **Spec / Draft** ｜ Compiled by: **Reasonix** (Think Tank · `L1-SI-104`) ｜ Nature: **Institutional instrument draft (⚠️ pending founder sign-off · ⛔ not a judicial ruling)**
-> ⭐ **This instrument is the second of a triad** (⭐ per `GSEQ-0667` division of work = ① Chinese human-readable ② English human-readable ③ machine-readable, ⭐ **same version number**); ⚠️ the machine-readable version ⭐ **is issued in the same batch**
+> ⭐ **This instrument is the second of a triad** (⭐ per registered division of work = ① Chinese human-readable ② English human-readable ③ machine-readable, ⭐ **same version number**); ⚠️ the machine-readable version ⭐ **is issued in the same batch**
 > ⭐ **Human-readable version (semantic authority)**: `TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md` — ⚠️ **on conflict the Chinese human-readable version prevails**
 > ⭐ **Source of positions**: ⭐ every article ⭐ **is compiled from the founder's verbatim positions of 2026-10-03** (⭐ see Annex 1) ⟹ ⛔ **this side adds no institutional semantics**; ⚠️ items marked ⚠️ ⛔ **are not decided by this side**
 > ⚠️ **Status**: `DRAFT` —— ⛔ **NOT IN FORCE**; ⭐ it takes effect after the ⭐ **registered four-step institutional-promotion procedure** (⭐ think tank → R&D governance package → proof or assertion → sandbox validation → issuance of the regulation) ＋ ⭐ **founder sign-off**
@@ -22,7 +22,7 @@
 
 **Article 2 (Scope)** This system applies to the **registration of all assets** within the TDCA ecosystem and to their **configuration-admission** activities.
 
-**Article 3 (Basis)** Per registered instruments: ⭐ *TDCA Metafunction–Interpretant Relation Reconciliation Specification* (**⭐ configuration right = the relation between metafunction and interpretant**) ｜ ⭐ `T-142` (**⭐ minimum configuration unit = scenario** · internal elements **do not participate in configuration directly**) ｜ ⭐ `T-030` (**⭐ five-tier generalized utility right**) ｜ ⭐ *IP Copyright Asset Valuation Management Measures* (⭐ registered regulation) ｜ ⭐ the three new-baseline institutional instruments.
+**Article 3 (Basis)** Per registered instruments: ⭐ *TDCA Metafunction–Interpretant Relation Reconciliation Specification* (**⭐ configuration right = the relation between metafunction and interpretant**) ｜ ⭐ **minimum configuration unit = scenario** · internal elements **do not participate in configuration directly** ｜ ⭐ **five-tier generalized utility right** ｜ ⭐ *IP Copyright Asset Valuation Management Measures* (⭐ registered regulation) ｜ ⭐ the three new-baseline institutional instruments.
 
 **Article 4 (Basic principles)**
 1. ⭐ **Compliance first**: ⭐ register first, authorize first, configure afterwards (⛔ **no inversion of order**).
