@@ -107,6 +107,10 @@ app.include_router(anchor_ops_router)
 from ops_ops import router as ops_ops_router  # noqa: E402
 app.include_router(ops_ops_router)
 
+# 乙案 P2: 运维每日日志（/api/v1/ops/logs/*——V-1~V-8 服务端校验；红点+连续未填入 P7 工单池；CSV 导出）
+from ops_logs_ops import router as ops_logs_ops_router  # noqa: E402
+app.include_router(ops_logs_ops_router)
+
 # A-19: P8a 权属登记管理（/api/v1/ownership/*——登记／变更／注销／查询；四条不公开负空间 fail-closed）
 from ownership_ops import router as ownership_ops_router  # noqa: E402
 app.include_router(ownership_ops_router)

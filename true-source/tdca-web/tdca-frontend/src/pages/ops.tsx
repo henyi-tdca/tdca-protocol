@@ -31,12 +31,19 @@ export function OpsPage() {
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
   const [ticketId, setTicketId] = useState('')
+  const [logToday, setLogToday] = useState<{ filled: boolean; missing_streak: number } | null>(null)
 
   // ACCESS-FIX-001-AMEND-1 交付三（块四移植）：管理面内容须管理员身份（角色取既有 /me 会话，⛔ 不造新标识）
   const me = useApiGet<{ session: { role: string } }>('/api/v1/me/dashboard')
   const isAdmin =
     me.status === 'ok' &&
     (me.data?.session.role === 'operator' || me.data?.session.role === 'founder')
+
+  useEffect(() => {
+    if (!isAdmin) return
+    void api.get<{ filled: boolean; missing_streak: number }>('/api/v1/ops/logs/today')
+      .then((r) => { if (r.ok) setLogToday(r.data) })
+  }, [isAdmin])
 
   const load = async () => {
     const r = await api.get<{ red_lines: RedLine[] }>('/api/v1/ops/redlines')
@@ -78,6 +85,19 @@ export function OpsPage() {
         </Link>
         <span className="ml-2 text-gray-400">运维管理员个人面：六栏只读占位，与用户「我的」两套独立。</span>
       </p>
+      {isAdmin && logToday && (
+        <p className="text-xs" data-testid="ops-logs-entry">
+          <Link to="/ops/logs" className="text-blue-600 underline hover:text-blue-800">
+            运维日志（每日填写）{!logToday.filled && <span data-testid="ops-logs-red-dot" title="今日未填">🔴</span>}
+          </Link>
+          <Link to="/ops/logs/list" className="ml-3 text-blue-600 underline hover:text-blue-800">列表与导出 →</Link>
+          {logToday.missing_streak >= 2 && (
+            <span data-testid="ops-logs-escalation" className="ml-2 text-red-600">
+              ⚠ 连续 {logToday.missing_streak} 日未填——已入 P7 工单池上报运维负责人
+            </span>
+          )}
+        </p>
+      )}
       {!isAdmin ? (
         <section data-testid="ops-admin-only" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           须管理员身份登录后可见。一般用户请从「我的」进入个人面；本入口对所有人保持可见。
