@@ -7,11 +7,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { PageShell } from './PageShell'
+import { docTitle, EMPTY_DOC_LIST, type PublicDocList } from './docs'
 
 interface HelpItem {
   slug: string
   title: string
-  synced_at: string
 }
 
 export function HelpPage() {
@@ -22,10 +22,22 @@ export function HelpPage() {
     let alive = true
     fetch('/api/site/docs/help')
       .then((r) => {
-        if (!r.ok) throw new Error(`API ${r.status}`)
+        if (!r.ok) {
+          if (r.status === 404) return EMPTY_DOC_LIST as PublicDocList // 族内无件＝如实空栏，⛔ 不当作故障
+          throw new Error(`API ${r.status}`)
+        }
         return r.json()
       })
-      .then((d) => alive && setItems((d as { items: HelpItem[] }).items))
+      .then(
+        (d) =>
+          alive &&
+          setItems(
+            ((d as PublicDocList).documents ?? []).map((doc) => ({
+              slug: doc.slug,
+              title: docTitle(doc.filename),
+            })),
+          ),
+      )
       .catch((e) => alive && setError(String(e instanceof Error ? e.message : e)))
     return () => {
       alive = false
@@ -60,7 +72,6 @@ export function HelpPage() {
                 <li key={it.slug}>
                   <Link to={`/docs/help/${it.slug}`} className="block px-4 py-3 hover:bg-gray-50">
                     <div className="font-medium text-gray-800">{it.title}</div>
-                    <div className="text-xs text-gray-400">入库：{it.synced_at}</div>
                   </Link>
                 </li>
               ))}

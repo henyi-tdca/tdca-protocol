@@ -64,6 +64,21 @@ describe('二期改版批2块二：首页正版门户内容', () => {
   })
 })
 
+function mockDocMeta(slug: string, filename: string) {
+  return {
+    family: 'help',
+    slug,
+    filename,
+    version: 'V1',
+    bytes: 1,
+    sha256: 'x',
+    sha256_16: 'X',
+  }
+}
+function mockDocList(docs: ReturnType<typeof mockDocMeta>[]) {
+  return { family: 'help', count: docs.length, documents: docs }
+}
+
 describe('二期改版批2块二：文档库（与文库并存）', () => {
   it('/docs 首页两族在位（制度／帮助）', () => {
     render(
@@ -77,7 +92,7 @@ describe('二期改版批2块二：文档库（与文库并存）', () => {
   })
 
   it('/docs/:family 列表渲染（mock 只读面）', async () => {
-    mockSiteDocs({ items: [{ slug: 'a', title: '示例件 A', synced_at: '2026-10-16' }] })
+    mockSiteDocs(mockDocList([mockDocMeta('a', '示例件 A.md')]))
     render(
       <MemoryRouter initialEntries={['/docs/help']}>
         <App />
@@ -88,7 +103,7 @@ describe('二期改版批2块二：文档库（与文库并存）', () => {
   })
 
   it('/docs/:family/:slug 详情渲染正文（纯文本呈现）', async () => {
-    mockSiteDocs({ title: '帮助件', body_md: '# 标题\n正文两行', source_path: 'docs/help/x.md', synced_at: '2026-10-16' })
+    mockSiteDocs({ ...mockDocMeta('x', '帮助件.md'), content: '# 标题\n正文两行' })
     render(
       <MemoryRouter initialEntries={['/docs/help/x']}>
         <App />
@@ -111,12 +126,9 @@ describe('二期改版批2块二：文档库（与文库并存）', () => {
 
 describe('二期改版批2块二：帮助与联系（复用帮助族）', () => {
   it('帮助条目动态列出，联系块不预置（如实空栏）', async () => {
-    mockSiteDocs({
-      items: [
-        { slug: 'howto', title: '如何注册', synced_at: '2026-10-16' },
-        { slug: 'contact', title: '联系我们', synced_at: '2026-10-16' },
-      ],
-    })
+    mockSiteDocs(
+      mockDocList([mockDocMeta('howto', '如何注册.md'), mockDocMeta('contact', '联系我们.md')]),
+    )
     render(
       <MemoryRouter initialEntries={['/help']}>
         <App />
@@ -129,7 +141,7 @@ describe('二期改版批2块二：帮助与联系（复用帮助族）', () => 
   })
 
   it('帮助族为空时联系块如实空栏（⛔ 不预置渠道）', async () => {
-    mockSiteDocs({ items: [] })
+    mockSiteDocs(mockDocList([]))
     render(
       <MemoryRouter initialEntries={['/help']}>
         <App />

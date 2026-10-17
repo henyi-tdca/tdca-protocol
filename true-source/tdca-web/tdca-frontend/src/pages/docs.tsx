@@ -14,8 +14,33 @@ export const DOC_FAMILIES: { key: string; label: string; desc: string }[] = [
   { key: 'help', label: '帮助', desc: '说明／示例／帮助' },
 ]
 
+/** 公开只读面封套（public_docs_ops · PR197）：列表 documents[]／详情 content */
+export interface PublicDocMeta {
+  family: string
+  slug: string
+  filename: string
+  version: string
+  bytes: number
+  sha256: string
+  sha256_16: string
+}
+export interface PublicDocList {
+  family: string
+  count: number
+  documents: PublicDocMeta[]
+}
+export interface PublicDocDetail extends PublicDocMeta {
+  content: string
+}
+/** 标题＝文件名去扩展名（⛔ 不猜测不伪造：新面无独立 title 字段） */
+export function docTitle(filename: string): string {
+  return filename.replace(/\.(md|yaml|yml)$/, '')
+}
+/** 族内无件（404）如实视为空清单，⛔ 不当作故障 */
+export const EMPTY_DOC_LIST: PublicDocList = { family: '', count: 0, documents: [] }
+
 /** 文档库只读面（/api/site/docs/*）：fail-closed——不可用即明示，不猜测不伪造 */
-function useDoc<T>(path: string): { data: T | null; error: string } {
+function useDoc<T>(path: string, emptyOn404 = false): { data: T | null; error: string } {
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState('')
   useEffect(() => {
@@ -23,7 +48,10 @@ function useDoc<T>(path: string): { data: T | null; error: string } {
     setError('')
     fetch(`/api/site${path}`)
       .then((r) => {
-        if (!r.ok) throw new Error(`API ${r.status}`)
+        if (!r.ok) {
+          if (emptyOn404 && r.status === 404) return EMPTY_DOC_LIST as T
+          throw new Error(`API ${r.status}`)
+        }
         return r.json()
       })
       .then((d) => alive && setData(d as T))
@@ -31,7 +59,7 @@ function useDoc<T>(path: string): { data: T | null; error: string } {
     return () => {
       alive = false
     }
-  }, [path])
+  }, [path, emptyOn404])
   return { data, error }
 }
 
@@ -49,24 +77,25 @@ function DocLoading({ error }: { error: string }) {
 export function DocsIndexPage() {
   const { family } = useParams()
   const fam = DOC_FAMILIES.find((f) => f.key === family)
-  const { data, error } = useDoc<{ items: { slug: string; title: string; synced_at: string }[] }>(`/docs/${family}`)
+  const { data, error } = useDoc<PublicDocList>(`/docs/${family}`, true)
+  const docs = data?.documents ?? []
   return (
     <section data-testid="docs-index" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-1 flex items-center gap-2">
-        <h2 className="text-lg font-bold text-gray-900">{fam?.label ?? family}（{data?.items.length ?? '…'} 件）</h2>
+        <h2 className="text-lg font-bold text-gray-900">{fam?.label ?? family}（{data ? docs.length : '…'} 件）</h2>
         <SimulatedBadge nature="simulated" />
       </div>
       <Link to="/docs" className="text-sm text-gray-500 hover:text-gray-800">← 全部文档</Link>
       <div className="mt-4">
         {(!data || error) && <DocLoading error={error} />}
-        {data && data.items.length === 0 && <p className="text-sm text-gray-500">该族暂无入库文档。</p>}
-        {data && data.items.length > 0 && (
+        {data && docs.length === 0 && <p className="text-sm text-gray-500">该族暂无入库文档。</p>}
+        {data && docs.length > 0 && (
           <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200">
-            {data.items.map((d) => (
+            {docs.map((d) => (
               <li key={d.slug}>
                 <Link to={`/docs/${family}/${d.slug}`} className="block px-4 py-3 hover:bg-gray-50">
-                  <div className="font-medium text-gray-800">{d.title}</div>
-                  <div className="text-xs text-gray-400">{d.slug} · {d.synced_at}</div>
+                  <div className="font-medium text-gray-800">{docTitle(d.filename)}</div>
+                  <div className="text-xs text-gray-400">{d.version} · {d.sha256_16}</div>
                 </Link>
               </li>
             ))}
@@ -107,9 +136,7 @@ export function DocsHomePage() {
 /** 文档详情（/docs/:family/:slug）——正文按纯文本呈现（Markdown 源不转样式，⛔ 不加依赖） */
 export function DocDetailPage() {
   const { family, slug } = useParams()
-  const { data, error } = useDoc<{ title: string; body_md: string; source_path: string; synced_at: string }>(
-    `/docs/${family}/${slug}`,
-  )
+  const { data, error } = useDoc<PublicDocDetail>(`/docs/${family}/${slug}`)
   return (
     <section data-testid="doc-detail" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <Link to={`/docs/${family}`} className="text-sm text-gray-500 hover:text-gray-800">← 返回列表</Link>
@@ -117,12 +144,12 @@ export function DocDetailPage() {
         {(!data || error) && <DocLoading error={error} />}
         {data && (
           <>
-            <h2 className="text-lg font-bold text-gray-900">{data.title}</h2>
+            <h2 className="text-lg font-bold text-gray-900">{docTitle(data.filename)}</h2>
             <article data-testid="doc-body" className="mt-4 whitespace-pre-wrap text-sm leading-6 text-gray-700">
-              {data.body_md}
+              {data.content}
             </article>
             <footer className="mt-8 border-t border-gray-100 pt-3 text-xs text-gray-400">
-              源路径：{data.source_path} · 入库：{data.synced_at}
+              {data.version} · sha256_16 {data.sha256_16} · 族 {data.family}
             </footer>
           </>
         )}
