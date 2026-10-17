@@ -869,3 +869,32 @@ class SiteAgentCallLedger(Base):
     __table_args__ = (
         CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_ledger_prov"),
     )
+
+
+class OpsLog(Base):
+    """37. 运维每日日志（乙案 P2：TDCA-TPL-OPS-LOG-001-MACHINE 表单化；L1SI150-OPS-STORAGE-P2-001）。
+
+    六组明细（A~F）以 sections JSON 原键入库（键名与机读版模板 1:1）；
+    一人一日一行（log_date 唯一——当日多人则分行靠 duty_no 区分，模板口径）；
+    exceptions_count/unclosed_count 由 sections.F.exceptions 派生（便于统计）；
+    保留 12 个月（纪律，库内不自动清除；delete_allowed=false 照模板）。
+    """
+
+    __tablename__ = "ops_logs"
+    log_date: Mapped[str] = mapped_column(Text, primary_key=True)      # YYYY-MM-DD（+08 自然日）
+    duty_no: Mapped[str] = mapped_column(Text, primary_key=True)       # 工号（⛔ 姓名）
+    duty_role: Mapped[str] = mapped_column(Text, nullable=False)       # 值班角色
+    handover: Mapped[str] = mapped_column(Text, nullable=False)        # 交接人（角色/工号，模板键 handover_role）
+    sections: Mapped[str] = mapped_column(Text, nullable=False)        # JSON：A~F 六组（键名照模板）
+    exceptions_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    unclosed_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    backfill: Mapped[str] = mapped_column(Text, nullable=False, default="false")  # bool 文本
+    backfill_reason: Mapped[str | None] = mapped_column(Text)
+    filled_by: Mapped[str] = mapped_column(Text, nullable=False)       # 角色+工号
+    filled_at: Mapped[str] = mapped_column(Text, nullable=False)       # ISO 时间戳
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    __table_args__ = (
+        Index("idx_ops_logs_filled_at", "filled_at"),
+        Index("idx_ops_logs_duty_no", "duty_no"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ops_logs_prov"),
+    )

@@ -40,8 +40,8 @@ function renderAt(path: string) {
 }
 
 describe('F0-A2 路由骨架（15 路由 + 404）', () => {
-  it('41 路由全部可达且渲染对应页面标题（33 基线 + 批2块二 /docs + 批2块三 /process 与 /me/appeal + 批2块四 /review + B5 新增批 /negativespace 与 /official-assets 与 /nca-guide 与 /ops/me；15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about + P1 /workbuddy + P2 /cluster + P3 /formal + P4 /toolshelf + P6 /anchors + P7 /ops + P8a /ownership-registry + P8b /authorization-registry + P9 /market-sim + 智能体区 /agent-shelf + 公告栏 /announcements + 文档库 /docs + 流程总览 /process + 申诉 /me/appeal + 评审 /review + 负空间 /negativespace + 官方资产区 /official-assets + 存证说明 /nca-guide + 运维我的 /ops/me）', () => {
-    expect(PAGE_META).toHaveLength(41)
+  it('43 路由全部可达且渲染对应页面标题（41 基线＋乙案 P2 /ops/logs 与 /ops/logs/list；15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about + P1 /workbuddy + P2 /cluster + P3 /formal + P4 /toolshelf + P6 /anchors + P7 /ops + P8a /ownership-registry + P8b /authorization-registry + P9 /market-sim + 智能体区 /agent-shelf + 公告栏 /announcements + 文档库 /docs + 流程总览 /process + 申诉 /me/appeal + 评审 /review + 负空间 /negativespace + 官方资产区 /official-assets + 存证说明 /nca-guide + 运维我的 /ops/me + 运维日志 /ops/logs 与 /ops/logs/list）', () => {
+    expect(PAGE_META).toHaveLength(43)
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
       expect(screen.getByRole('heading', { name: meta.title })).toBeInTheDocument()
