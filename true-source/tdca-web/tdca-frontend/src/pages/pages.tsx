@@ -68,6 +68,8 @@ export const PAGE_META: PageMeta[] = [
   // 乙案 P2：运维日志表单与列表（TDCA-TPL-OPS-LOG-001-MACHINE 表单化；V-1~V-8 服务端校验）
   { path: '/ops/logs', title: '运维日志（每日填写）', layer: 'L0', dataSource: '/api/v1/ops/logs（POST/GET）＋ /today（红点）', permission: 'operator/founder（运维门内）', description: '六组 A~F 照机读版模板键名；异常三段（发现→处置→闭合）结构化成三格；未闭合必填下一步＋时限；⛔ 不含凭据字段。' },
   { path: '/ops/logs/list', title: '运维日志列表', layer: 'L0', dataSource: '/api/v1/ops/logs（区间）＋ /export（CSV）', permission: 'operator/founder（运维门内）', description: '区间筛选＋行内查看＋导出 CSV（周汇总/月报）；保留 12 个月不删行。' },
+  // INACCOUNT-DEPLOY 块 2：手册接口化站内直读（在册七件按角色出件；撤 /ops/files/ 静态门后唯一取件口）
+  { path: '/ops/manual', title: '运维手册与制度（点击直接阅读）', layer: 'L0', dataSource: '/api/v1/ops/files（清单＋按名出件）', permission: 'operator/founder（运维门内）', description: '在册七件站内直读：运维手册／运维制度／日志模板／入站留痕制度；白名单防穿越，⛔ 不再输口令。' },
   { path: '/ops/me', title: '运维我的（站与服务的）', layer: 'L0', dataSource: '静态占位（六栏只读；功能面随运维制度分批接通）', permission: '登录 DID（运维身份；沿运维独立入口 tdca-ops 鉴权）', description: '运维管理员的「我的」：管站与服务的事——站务／服务／治理操作／审计与留痕／应急／账户六栏只读占位，与用户「我的」两套独立。' },
   // 二期改版批2块四：评审队列（裁点3 归运维分区，⛔ 不入公共导航；审核人标识＋写令牌只存本次会话）
   { path: '/review', title: '评审（缔约审核）', layer: 'L0', dataSource: '/api/site/join/*（只读队列＋审核写端点）', permission: '须登录＋审核身份（写令牌校验）', description: '缔约申请评审队列：放行／谢绝留痕；每次放行复核敏感词清单，触负即 409 拦截并留痕。' },
@@ -125,6 +127,7 @@ import { NcaGuidePage } from './nca-guide'
 import { OpsMePage } from './ops-me'
 import { OpsLogsPage } from './ops-logs'
 import { OpsLogsListPage } from './ops-logs-list'
+import { OpsManualPage } from './ops-manual'
 import { MeAppealPage } from './me-appeal'
 import { ReviewPage } from './review'
 export { DocsIndexPage, DocDetailPage }
@@ -172,6 +175,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/ops/me': OpsMePage,
   '/ops/logs': OpsLogsPage,
   '/ops/logs/list': OpsLogsListPage,
+  '/ops/manual': OpsManualPage,
   '/me/appeal': MeAppealPage,
   '/review': ReviewPage,
 }

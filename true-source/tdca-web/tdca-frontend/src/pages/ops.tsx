@@ -98,6 +98,14 @@ export function OpsPage() {
           )}
         </p>
       )}
+      {isAdmin && (
+        <p className="text-xs" data-testid="ops-manual-entry">
+          <Link to="/ops/manual" className="text-blue-600 underline hover:text-blue-800">
+            运维手册与制度（点击直接阅读）→
+          </Link>
+          <span className="ml-2 text-gray-400">在册七件站内直读，⛔ 不再输口令；新增件须登记白名单。</span>
+        </p>
+      )}
       {!isAdmin ? (
         <section data-testid="ops-admin-only" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           须管理员身份登录后可见。一般用户请从「我的」进入个人面；本入口对所有人保持可见。

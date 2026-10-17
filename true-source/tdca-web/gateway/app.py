@@ -111,6 +111,11 @@ app.include_router(ops_ops_router)
 from ops_logs_ops import router as ops_logs_ops_router  # noqa: E402
 app.include_router(ops_logs_ops_router)
 
+# 手册接口化（INACCOUNT-DEPLOY 块 2）: /api/v1/ops/files/*——在册七件按角色出件；
+# 撤 /ops/files/ 静态门后唯一取件口（白名单防穿越；md→text/markdown；容器内只读挂载）
+from ops_files_ops import router as ops_files_ops_router  # noqa: E402
+app.include_router(ops_files_ops_router)
+
 # A-19: P8a 权属登记管理（/api/v1/ownership/*——登记／变更／注销／查询；四条不公开负空间 fail-closed）
 from ownership_ops import router as ownership_ops_router  # noqa: E402
 app.include_router(ownership_ops_router)
