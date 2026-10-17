@@ -54,7 +54,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/agents', label: '智能体集群' }, // 展示面：官方智能体观测橱窗（照终定稿保留于公域）
       { to: '/agent-shelf', label: '智能体区' }, // 展示面：组二 10 件呈现（呈现≠注册）
       { to: '/toolshelf', label: '工具货架' }, // 展示面：浏览公开
-      { to: '/academy', label: '学院', badge: '在建中' }, // 教材/模拟器/考核未入站，现仅名词库
+      { to: '/academy', label: '商学院' }, // L1SI152-EDU-PORTAL-001 栏目首入：介绍页＋教材目录页（原文照贴）
     ],
   },
   {
