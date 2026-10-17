@@ -98,7 +98,7 @@
 | `1` | ⭐ `TDCA-STD-SRIGHT-001` (⭐ scenario configuration-right invocation interface specification) | ⭐ This draft sets the **institutional face**; ⭐ the **invocation implementation face** follows that instrument (⭐ the human-readable version is the semantic authority · ⛔ no machine-readable reverse change of semantics) |
 | `2` | ⭐ `TDCA-RULING-CONFIGRIGHT-TERM-001` (⭐ ＋`AMEND-1/2`) | ⭐ Configuration-right usage follows "**a scenario may be formally expressed as a function**"; ⭐ the effect path follows "**each governs its own face**" |
 | `3` | ⭐ `TDCA-STD-METAFUNC-ACCORD-001` (⭐ `REV2`) | ⭐ The **relation face** (⭐ metafunction ⟷ interpretant) follows that instrument; ⭐ role = **reconciliation**; ⭐ terms ⭐ **agreed at contracting** (⛔ no unilateral post-hoc addition) |
-| `4` | ⭐ `TDCA-TERM-REGISTER-SCENE-PERSIST-001` (⭐ `T-142`) | ⭐ The **minimum configuration unit = scenario** (⭐ internal elements do not participate in configuration directly) |
+| `4` | ⭐ `TDCA-TERM-REGISTER-SCENE-PERSIST-001` | ⭐ The **minimum configuration unit = scenario** (⭐ internal elements do not participate in configuration directly) |
 | `5` | ⭐ `TDCA-RULING-POSITIVESUM-DISCRIMINATION-001` (⭐ ＋`AMEND-1`) | ⭐ Positive-sum discrimination ⭐ = **discriminative power**; ⭐ handling ⭐ **adjust configuration weight · adjust presence** |
 | `6` | ⭐ Registered `MOU` ontology position ＋ ⭐ `RULING-PHASE1-BUILD-PROPOSAL-001` (⭐ five tiers) | ⭐ Anchoring = **floor, not ceiling**; ⭐ the five-tier formulation ⭐ **follows the registered wording** |
 | `7` | ⭐ `TDCA-REGISTER-CONTRACT-001` (⭐ contracting triad) | ⭐ The root of admission; ⭐ **human signature right** (⭐ no agent may exercise it on behalf) |

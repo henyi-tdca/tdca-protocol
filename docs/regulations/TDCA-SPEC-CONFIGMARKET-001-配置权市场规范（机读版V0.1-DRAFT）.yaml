@@ -152,7 +152,7 @@ chapter6_interfaces:
     instrument: TDCA-STD-METAFUNC-ACCORD-001（REV2）
     point: 关系面（元函数 ⟷ 解释项）以该件为准；角色＝调和；条件缔约时约定（不得事后单方追加）
   - id: 4
-    instrument: TDCA-TERM-REGISTER-SCENE-PERSIST-001（T-142）
+    instrument: TDCA-TERM-REGISTER-SCENE-PERSIST-001
     point: 最小配置单元 ＝ 场景（内部要素不直接参与配置）
   - id: 5
     instrument: TDCA-RULING-POSITIVESUM-DISCRIMINATION-001（+AMEND-1）

@@ -10,10 +10,10 @@ date: '2026-10-06'
 timezone: '+08'
 note: '机读版；⛔ 不得反向改语义；经授权方签批后生效'
 program_basis:
-  step1_research: 'GSEQ-3958'
-  step2_govkit: 'GSEQ-3962'
-  step3_assert: 'GSEQ-3963'
-  step4_sandbox: 'GSEQ-3964'
+  step1_research: 'registered'
+  step2_govkit: 'registered'
+  step3_assert: 'registered'
+  step4_sandbox: 'registered'
 authority_chain:
   - 'TDCA-RULING-PRP-ENC-001-005（三缝全并场景线·缝②落场景专章）'
   - 'TDCA-RULING-PRP-ENC-001-006（相遇双向奔赴·只有是否发生）'
@@ -27,7 +27,7 @@ definitions:
   matchmaking:
     text: '主动服务'
     cost: 'charged'
-    anchor: 'T-132'
+    anchor: 'matchmaking'
 
 chapters:
   - no: 1
@@ -117,7 +117,7 @@ machine_fields:
     forbidden_add: ['R11']
   fee_rules:
     encounter_fee: 'forbidden'
-    matchmaking_fee: 'allowed(T-132)'
+    matchmaking_fee: 'allowed'
 
 verification:
   asserts: ['A-1a', 'A-1b', 'A-1c', 'A-2a', 'A-2b', 'A-2c', 'A-3a', 'A-3b', 'A-3c', 'A-3d', 'A-4a', 'A-4b']
