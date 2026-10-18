@@ -119,4 +119,5 @@ def test_missing_public_doc_fail_closed_503(tmp_path, monkeypatch):
     (d / _DOCS[0]).write_text("独一件", encoding="utf-8")  # 其余 7 件缺失
     monkeypatch.setenv("TDCA_PUBLIC_DOCS_DIR", str(d))
     r = client.get("/api/public/docs")
-    assert r.status_code == 503 and "DOC_SOURCE_UNAVAILABLE" in r.text
+    assert r.status_code == 503 and "DOC_SOURCE" not in r.text  # 段二②：裸英文退役
+    assert r.json()["code"] == "TDCA-E-EXT-EXT-001" and "文档源异常" in r.json()["detail"]

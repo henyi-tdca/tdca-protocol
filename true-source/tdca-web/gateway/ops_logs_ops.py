@@ -96,57 +96,57 @@ def _validate_log(log_date: date, sections: dict, now08: datetime) -> None:
     for g, keys in _REQUIRED.items():
         grp = sections.get(g)
         if not isinstance(grp, dict):
-            raise HTTPException(400, f"V-1：缺组 {g}")
+            raise HTTPException(400, f"校验项一（必填齐）：缺组 {g}")
         for k in keys:
             if not _filled(grp.get(k)):
-                raise HTTPException(400, f"V-1：{g}.{k} 不得为空（无则填「无」，不适用填 n/a）")
+                raise HTTPException(400, f"校验项一（必填）：{g}.{k} 不得为空（无则填「无」，不适用填 n/a）")
     a, b, c, e, f = (sections[g] for g in
                      ("A_基本信息", "B_技术运维", "C_内容运维", "E_安全合规", "F_异常与收尾"))
 
     # V-7：+08 自然日且不晚于填写日
     if log_date > now08.date():
-        raise HTTPException(400, "V-7：log_date 不得晚于今日（+08）")
+        raise HTTPException(400, "校验项七（日期）：log_date 不得晚于今日（+08）")
 
     # V-8：补记口径
     backfill = a.get("backfill") or {}
     is_bf = bool(backfill.get("is_backfill"))
     if log_date < now08.date() and not is_bf:
-        raise HTTPException(400, "V-8：非当日填写须标 backfill.is_backfill=true 并写 reason")
+        raise HTTPException(400, "校验项八（补记）：非当日填写须标 backfill.is_backfill=true 并写 reason")
     if is_bf and not str(backfill.get("reason") or "").strip():
-        raise HTTPException(400, "V-8：补记须写 reason")
+        raise HTTPException(400, "校验项八（补记）：补记须写 reason")
 
     # V-2：凭据形双扫（六组全量文本）
     for s in _walk_strings(sections):
         for pat in _CRED_PATTERNS:
             if pat.search(s):
-                raise HTTPException(400, "V-2：内容含凭据形串（⛔ 口令/令牌/密钥值不入日志）")
+                raise HTTPException(400, "校验项二（凭据形）：内容含凭据形串（⛔ 口令/令牌/密钥值不入日志）")
 
     # V-3：异常三段齐；未闭合须 next_step+deadline
     for ex in f.get("exceptions") or []:
         if not (_filled(ex.get("found_at")) and _filled(ex.get("action"))):
-            raise HTTPException(400, "V-3：异常项须含 发现/处置 段")
+            raise HTTPException(400, "校验项三（异常三段）：异常项须含 发现/处置 段")
         if ex.get("closed") is True:
             continue
         if not (_filled(ex.get("next_step")) and _filled(ex.get("deadline"))):
-            raise HTTPException(400, "V-3：未闭合异常须填 下一步+时限")
+            raise HTTPException(400, "校验项三（异常三段）：未闭合异常须填 下一步+时限")
 
     # V-4：acme_selftest 与 swap_today.done 互斥
     if b.get("swap_today", {}).get("done") is True and b.get("acme_selftest") == "n/a":
-        raise HTTPException(400, "V-4：当日有换发则 acme_selftest 不得为 n/a")
+        raise HTTPException(400, "校验项四（互斥）：当日有换发则 acme_selftest 不得为 n/a")
 
     # V-5：bulletin.state=发布 ⟹ authorized=true
     if c.get("bulletin", {}).get("state") == "发布" and \
             c.get("bulletin", {}).get("authorized") is not True:
-        raise HTTPException(400, "V-5：公告 state=发布 时 authorized 必须为 true")
+        raise HTTPException(400, "校验项五（公告授权）：公告 state=发布 时 authorized 必须为 true")
 
     # V-6：cert_days_left 为实测（与 cert_not_after − log_date 一致，容差 0 天）
     try:
         not_after = date.fromisoformat(str(b["cert_not_after"]))
         days_left = int(b["cert_days_left"])
     except (ValueError, TypeError):
-        raise HTTPException(400, "V-6：cert_not_after/cert_days_left 格式非法")
+        raise HTTPException(400, "校验项六（证书实测）：cert_not_after/cert_days_left 格式非法")
     if (not_after - log_date).days != days_left:
-        raise HTTPException(400, "V-6：cert_days_left 须为实测值（= cert_not_after − log_date）")
+        raise HTTPException(400, "校验项六（证书实测）：cert_days_left 须为实测值（= cert_not_after − log_date）")
 
     # E 组凭据变更口径：⛔ 记值（凭据形双扫已覆盖；此处再守 changed 时 changed_at 必填）
     if e.get("credential_change", {}).get("changed") is True and \

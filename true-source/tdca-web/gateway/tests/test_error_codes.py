@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
-# L1SI153-ERROR-CODE-001 段一后端验收：classify 归簇纯函数（13 簇代表例＋兜底＋with_code）
+# L1SI153-ERROR-CODE-001 段一后端验收：classify 归码纯函数（13 码代表例＋兜底＋with_code）
 import sys
 from pathlib import Path
 
@@ -17,41 +17,41 @@ from error_codes import (  # noqa: E402
 def test_table_13_codes_match_handoff():
     assert len(ERROR_CODE_TABLE) == 13
     assert ERROR_CODE_TABLE[CODE_GOV_PERM] == "本次操作被制度性拒绝（合规前置未过）"
-    assert ERROR_CODE_TABLE["TDCA-E-SETL-RES-001"] == "额度不足"  # 簇10 reserved 只登记
+    assert ERROR_CODE_TABLE["TDCA-E-SETL-RES-001"] == "额度不足"  # reserved 只登记
 
 
-def test_cluster_representatives():
-    # 簇3 未登录
+def test_code_representatives():
+    # TDCA-E-IDENT-PERM-001 未登录
     assert classify(401, "") == CODE_IDENT_PERM
     assert classify(403, "未登录") == CODE_IDENT_PERM
-    # 簇4 凭证失效（会话/锚/协议/token）
+    # TDCA-E-IDENT-STATE-001 凭证失效（会话/锚/协议/token）
     assert classify(401, "会话已过期，请重新登录") == CODE_IDENT_STATE
     assert classify(403, "ANCHOR_INVALID: 主体锚无效") == CODE_IDENT_STATE
     assert classify(403, "PROTOCOL_HASH_MISMATCH: 哈希不符") == CODE_IDENT_STATE
-    # 簇5 无权
+    # TDCA-E-AUTHZ-PERM-001 无权
     assert classify(403, "仅 founder 可执行") == CODE_AUTHZ_PERM
     assert classify(403, "GRANT_REQUIRED: 无有效授权件") == CODE_AUTHZ_PERM
-    # 簇6 不存在/未登记
+    # TDCA-E-ASSET-STATE-001 不存在/未登记
     assert classify(404, "Not Found") == CODE_ASSET_STATE
     assert classify(403, "登记号不存在（未登记）") == CODE_ASSET_STATE
-    # 簇7 状态不允许
+    # TDCA-E-STATE-STATE-002 状态不允许
     assert classify(409, "") == CODE_STATE_STATE
     assert classify(403, "STEP_ORDER: ② 无有效执行令牌") == CODE_IDENT_STATE  # 令牌优先
-    assert classify(409, "CONFLICT: 已是目标态") == CODE_STATE_DUP  # 簇8 优先于簇7
-    # 簇8 重复提交
+    assert classify(409, "CONFLICT: 已是目标态") == CODE_STATE_DUP  # STATE-003 优先于 STATE-002
+    # TDCA-E-STATE-STATE-003 重复提交
     assert classify(409, "CONFLICT: 该判级事件已裁决（幂等拒重复裁决）") == CODE_STATE_DUP
-    # 簇9 限流
+    # TDCA-E-RES-RES-001 限流
     assert classify(429, "rate limit 60/min/IP") == CODE_RES_LIMIT
     assert classify(429, "登录尝试过于频繁") == CODE_RES_LIMIT
-    # 簇11 外部不可用
+    # TDCA-E-EXT-EXT-001 外部不可用
     assert classify(503, "DOC_SOURCE_UNAVAILABLE") == CODE_EXT_EXT
     assert classify(502, "") == CODE_EXT_EXT
-    # 簇13 制度性拒绝（负空间合规）
+    # TDCA-E-GOV-PERM-002 制度性拒绝（负空间合规）
     assert classify(400, "PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间") == CODE_GOV_PERM
     assert classify(400, "NS_REVIEW_REJECTED: 负空间审查不过") == CODE_GOV_PERM
 
 
-def test_input_clusters():
+def test_input_codes():
     assert classify(400, "six_elements_ref 为必填") == CODE_INPUT_REQUIRED
     assert classify(400, "REQUIREMENT_MISSING: 场景约束（要件①）") == CODE_INPUT_REQUIRED
     assert classify(400, "action 仅接受 issue|rotate|revoke") == CODE_INPUT_FORMAT
@@ -59,7 +59,7 @@ def test_input_clusters():
 
 
 def test_fallbacks():
-    # 无法归类 → 簇12 兜底（令 §二.3）
+    # 无法归类 → TDCA-E-SYS-SYS-001 兜底（令 §二.3）
     assert classify(418, "") == CODE_SYS_SYS
     assert classify(None, "") == CODE_SYS_SYS
     assert classify(500, "") == CODE_SYS_SYS

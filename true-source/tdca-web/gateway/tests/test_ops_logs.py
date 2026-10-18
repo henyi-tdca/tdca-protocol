@@ -169,17 +169,17 @@ def test_today_filled_and_escalation_idempotent():
 # ── V-1~V-8 反例 ────────────────────────────────────────
 def test_v1_required():
     r = _post(**{"B_技术运维.acme_selftest": ""})
-    assert r.status_code == 400 and "V-1" in r.text
+    assert r.status_code == 400 and "校验项一" in r.text
 
 
 def test_v2_credential_shape():
     r = _post(**{"B_技术运维.service_health":
                  {"status": "ok", "abnormal_containers": "password=hunter2secret"}})
-    assert r.status_code == 400 and "V-2" in r.text
+    assert r.status_code == 400 and "校验项二" in r.text
     r = _post(**{"D_运营运维.daily_patrol":
                  {"site_health": "Bearer abcdef1234567890xyz", "public_face": "正常",
                   "notify_machine": "正常", "abnormal_log": "无"}})
-    assert r.status_code == 400 and "V-2" in r.text
+    assert r.status_code == 400 and "校验项二" in r.text
 
 
 def test_v3_unclosed_needs_next_step():

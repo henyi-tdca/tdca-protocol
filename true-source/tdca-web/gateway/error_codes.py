@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
-# TDCA 统一错误码表 v1（L1SI153-ERROR-CODE-001 段一：加码与显示）
+# TDCA 统一错误码表 v2（L1SI153-ERROR-CODE-001 段一加码 · 段二判定收口）
 # 约束矩阵: TDCA-HANDOFF-EXEC-ERROR-CODE-001 §二/§四——只加 code 字段，
 #           ⛔ 不改 HTTP 状态码、不改文案、不改判定分支。
-# 码表来源: error-code-table-v1.yaml（13 簇；簇 10 额度不足=reserved 只登记；422 归簇 2）
+# 码表来源: error-code-table-v2.yaml（码名为唯一标识；SETL-RES-001 额度不足=reserved
+#           只登记；422 归 TDCA-E-INPUT-INPUT-002）
 # 命名规则: TDCA-E-<env: ENTER|IDENT|ASSET|AUTHZ|SCENE|COOP|NCA|SETL|DISP|CHG|EXIT|GOV>
 #           -<type: INPUT|PERM|STATE|RES|SYS|EXT>-<seq3>
 """拒绝类响应统一挂码：HTTPException 全局 handler / 鉴权中间件 / 裸 JSONResponse。
 
 classify(status, detail) 为唯一归类入口（纯函数、零副作用）：
-关键词簇按序首命中先归；均不命中按状态兜底；最终兜底 TDCA-E-SYS-SYS-001
+关键词按规则序首命中先归；均不命中按状态兜底；最终兜底 TDCA-E-SYS-SYS-001
 （令 §二.3：无法归类的例外用 SYS-SYS-001 并在回报逐条列出——离线全量验证清单见回报）。
 """
 from __future__ import annotations
@@ -20,19 +21,19 @@ from typing import Any, Optional
 # ---------------------------------------------------------------------------
 # 码表常量（唯一事实源；前端 errors.ts 为同表镜像，两处各自一处定义）
 # ---------------------------------------------------------------------------
-CODE_INPUT_REQUIRED = "TDCA-E-INPUT-INPUT-001"    # 簇1 缺少必填项
-CODE_INPUT_FORMAT = "TDCA-E-INPUT-INPUT-002"      # 簇2 格式不符（422 归此簇）
-CODE_IDENT_PERM = "TDCA-E-IDENT-PERM-001"         # 簇3 请先登录
-CODE_IDENT_STATE = "TDCA-E-IDENT-STATE-001"       # 簇4 凭证无效或已过期
-CODE_AUTHZ_PERM = "TDCA-E-AUTHZ-PERM-001"         # 簇5 无权执行
-CODE_ASSET_STATE = "TDCA-E-ASSET-STATE-001"       # 簇6 资源不存在或未登记
-CODE_STATE_STATE = "TDCA-E-STATE-STATE-002"       # 簇7 状态不允许
-CODE_STATE_DUP = "TDCA-E-STATE-STATE-003"         # 簇8 重复提交
-CODE_RES_LIMIT = "TDCA-E-RES-RES-001"             # 簇9 限流
-CODE_SETL_RES = "TDCA-E-SETL-RES-001"             # 簇10 额度不足（reserved，只登记）
-CODE_EXT_EXT = "TDCA-E-EXT-EXT-001"               # 簇11 外部不可用
-CODE_SYS_SYS = "TDCA-E-SYS-SYS-001"               # 簇12 系统繁忙（兜底）
-CODE_GOV_PERM = "TDCA-E-GOV-PERM-002"             # 簇13 制度性拒绝（负空间合规）
+CODE_INPUT_REQUIRED = "TDCA-E-INPUT-INPUT-001"    # 缺少必填项
+CODE_INPUT_FORMAT = "TDCA-E-INPUT-INPUT-002"      # 格式不符（422 归此码）
+CODE_IDENT_PERM = "TDCA-E-IDENT-PERM-001"         # 请先登录
+CODE_IDENT_STATE = "TDCA-E-IDENT-STATE-001"       # 凭证无效或已过期
+CODE_AUTHZ_PERM = "TDCA-E-AUTHZ-PERM-001"         # 无权执行
+CODE_ASSET_STATE = "TDCA-E-ASSET-STATE-001"       # 资源不存在或未登记
+CODE_STATE_STATE = "TDCA-E-STATE-STATE-002"       # 状态不允许
+CODE_STATE_DUP = "TDCA-E-STATE-STATE-003"         # 重复提交
+CODE_RES_LIMIT = "TDCA-E-RES-RES-001"             # 限流
+CODE_SETL_RES = "TDCA-E-SETL-RES-001"             # 额度不足（reserved，只登记）
+CODE_EXT_EXT = "TDCA-E-EXT-EXT-001"               # 外部不可用
+CODE_SYS_SYS = "TDCA-E-SYS-SYS-001"               # 系统繁忙（兜底）
+CODE_GOV_PERM = "TDCA-E-GOV-PERM-002"             # 制度性拒绝（负空间合规）
 
 ERROR_CODE_TABLE = {
     CODE_INPUT_REQUIRED: "缺少必填项：〈字段名〉",
