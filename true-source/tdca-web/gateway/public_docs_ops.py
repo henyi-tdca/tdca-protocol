@@ -142,9 +142,11 @@ def _list_docs() -> JSONResponse:
         got = _read_doc(name)
         if got is None:
             # 已入站件缺失＝容器件异常：不静默减项，明示 fail-closed
-            # L1SI153 段二②：裸英文退役，统一 detail＋code（码名为唯一标识）
+            # L1SI153 段三②：error 机器字段设过渡期（两存：error＋detail＋code）——
+            # DEPRECATED，下版删除；新判据一律读 code，⛔ 勿为新代码依赖 error
             return JSONResponse(
-                with_code({"detail": f"在册公开件暂不可读：{name}（文档源异常，已按 fail-closed 暂停列出）"}, 503),
+                with_code({"error": "DOC_SOURCE_UNAVAILABLE",
+                           "detail": f"在册公开件暂不可读：{name}（文档源异常，已按 fail-closed 暂停列出）"}, 503),
                 status_code=503)
         raw, sha = got
         entries.append(_entry(name, raw, sha))

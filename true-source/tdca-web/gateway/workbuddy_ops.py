@@ -87,7 +87,9 @@ def wb_create(req: CreateRequest, request: Request):
     try:
         wf = WorkflowDSL.from_dict(req.workflow_template)
     except (KeyError, TypeError) as exc:
-        raise HTTPException(400, f"DSL 无效: {exc}")
+        # L1SI153 段三①同类收口：异常 repr ⛔ 直吐；键名（用户输入回显）保留在文案
+        logger.warning("workbuddy create DSL 无效: %s", exc)
+        raise HTTPException(400, f"DSL 无效：模板缺字段或类型不符（{exc.args[0] if exc.args else '未知字段'}）")
     # 条件1：归属判定（纯读，⛔ 零副作用）——先判后写，堵住撞 ID 重复落 WORM/NCA
     with get_session() as s_check:
         existing = s_check.get(M.WorkflowDef, wf.workflow_id)
@@ -144,7 +146,9 @@ def wb_execute(req: ExecuteRequest, request: Request):
         raise HTTPException(403, "本次执行被签名门禁拒绝，工作流未被运行（人类签名权不可绕过）。"
                                  "你的签名未通过校验。请重新进行人工签名确认后再执行；仍不通请联系运维。")
     except KeyError as exc:
-        raise HTTPException(400, f"DSL 依赖错误: {exc}")
+        # L1SI153 段三①同类收口：异常 repr ⛔ 直吐；键名保留在文案
+        logger.warning("workbuddy execute DSL 依赖错误: %s", exc)
+        raise HTTPException(400, f"DSL 依赖错误：缺少依赖键（{exc.args[0] if exc.args else '未知'}）")
     nca_refs = list(ex.nca_refs) + [_nca_append(
         f"WORKBUDDY_EXECUTE:{ex.status}", user["username"],
         artifact_path=f"execution:{ex.execution_id}")]

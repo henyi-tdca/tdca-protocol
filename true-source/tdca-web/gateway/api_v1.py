@@ -90,6 +90,7 @@ def _sim_note() -> str:
 
 
 _NCA_LOG = logging.getLogger("tdca.nca")
+_ERR_LOG = logging.getLogger("tdca.errors")   # L1SI153 段三①：底层异常只进日志，不直透用户
 _NCA_APPEND_MAX_TRIES = 4   # 1 次正写 + 3 次 BUSY 退避重试（NCA-ATOMIC-001）
 _NCA_FORK_BASELINE: Optional[Dict[str, int]] = None   # 启动基线快照（辅改 B「只报新增」；不入库不建表）
 
@@ -242,7 +243,9 @@ def system_overview():
             "system": "ECOCOG S-1~S-16 FROZEN（613 测试绿）",
         })
     except Exception as e:
-        raise HTTPException(500, f"A-1 overview 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-1 overview 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/tax/mou/{agent_id}")
@@ -267,7 +270,9 @@ def tax_mou(agent_id: str):
             "note": "该主体暂无 MOU 记录（零值非估算）" + _sim_note(),
         })
     except Exception as e:
-        raise HTTPException(500, f"A-2 tax/mou 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-2 tax/mou 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/tax/nca-history")
@@ -281,7 +286,9 @@ def tax_nca_history():
                                "note": "账本事件（事件溯源，O(n) 可审计）"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
-        raise HTTPException(500, f"A-2 nca-history 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-2 nca-history 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/tax/shapley/{call_id}")
@@ -298,7 +305,9 @@ def tax_shapley(call_id: str):
                                        + "Shapley 分账由结算链路计算"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
-        raise HTTPException(500, f"A-2 shapley 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-2 shapley 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -384,7 +393,9 @@ def config_right_call(req: ConfigCallRequest):
             "note": _sim_note(),
         })
     except Exception as e:
-        raise HTTPException(500, f"A-3 config-right/call 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-3 config-right/call 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -452,7 +463,9 @@ def audit_ledger_public():
                                "note": "公共账本（只读，BV-3）"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
-        raise HTTPException(500, f"A-7 ledger-public 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-7 ledger-public 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 class NcaVerifyRequest(BaseModel):
@@ -543,7 +556,9 @@ def sandbox_apply(req: SandboxApplyRequest, request: Request):
                                "nca_ref": nca_ref,
                                "note": "入盒申请（沙盒编译-核验闭环；出盒须人类签名）"})
     except Exception as e:
-        raise HTTPException(500, f"A-5 sandbox/apply 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-5 sandbox/apply 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -570,13 +585,19 @@ def genie_compute(req: GenieComputeRequest, request: Request):
     try:
         llm = KimiLLM(model=req.model)
     except LLMConfigError as e:
-        raise HTTPException(503, f"平台通道未配置: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("genie 平台通道未配置: %s", e)
+        raise HTTPException(503, "服务暂不可用，请稍后重试；反复失败请联系运维。")
     try:
         out = run_genie(req.query, llm)
     except CircuitOpen as e:
-        raise HTTPException(503, f"平台通道熔断中: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("genie 平台通道熔断中: %s", e)
+        raise HTTPException(503, "服务暂不可用，请稍后重试；反复失败请联系运维。")
     except LLMCallError as e:
-        raise HTTPException(502, f"平台调用失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("genie 平台调用失败: %s", e)
+        raise HTTPException(502, "服务暂不可用，请稍后重试；反复失败请联系运维。")
     nca_ref = _nca_append(
         "TaskLodge",
         f"gateway:genie/compute:{user['username']}:"
@@ -649,7 +670,9 @@ def governance_emergency_fuse(req: EmergencyFuseRequest):
             "note": "紧急熔断（NSFL fail-closed；AI 无权解除，HUF 二次确认）",
         }, nature="real")
     except Exception as e:
-        raise HTTPException(500, f"A-8 emergency-fuse 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-8 emergency-fuse 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -685,7 +708,9 @@ def notifier_mrcr_status():
             "note": "通知机 MRCR 四角色并发（真实心跳待设备接入）" + _sim_note(),
         })
     except Exception as e:
-        raise HTTPException(500, f"A-9 notifier/mrcr-status 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-9 notifier/mrcr-status 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/eios/cluster-status")
@@ -716,7 +741,9 @@ def eios_cluster_status():
             "cluster": caps, "note": "eios GenieAPI 十端点（九大能力）；B-1 接口名已修复",
         })
     except Exception as e:
-        raise HTTPException(500, f"A-10 eios/cluster-status 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-10 eios/cluster-status 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
