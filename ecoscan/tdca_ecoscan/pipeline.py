@@ -49,15 +49,20 @@ class PipelineResult:
     invited: List[InviteLetter]                 # 实际发出邀请（TIER-A + 频率闸通过）
     skipped: List[Dict[str, any]]               # 跳过项（非 A 档/重复/频率超限）及原因
     ledger_report: Dict[str, any]
+    # W-5：全量画像（A/B/C 三档俱在，报告分列用；⛔ 不影响邀请行为）
+    all_profiles: Optional[List[CandidateProfile]] = None
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "candidates": [p.to_dict() for p in self.candidates],
             "invited": [l.to_dict() for l in self.invited],
             "skipped": self.skipped,
             "ledger": self.ledger_report,
             "steps": [{"stage": s.stage, "repo_full": s.repo_full, "detail": s.detail} for s in self.steps],
         }
+        if self.all_profiles is not None:
+            d["all_profiles"] = [p.to_dict() for p in self.all_profiles]
+        return d
 
 
 class InvitePipeline:
@@ -155,9 +160,56 @@ class InvitePipeline:
 
         # ④ 台账周报
         report = self._ledger.weekly_report()
+        all_profiles = [p for tier in (TIER_A, "B", "C") for p in routed[tier]]
         return PipelineResult(steps=steps, candidates=candidates,
                               invited=invited, skipped=skipped,
-                              ledger_report=report)
+                              ledger_report=report,
+                              all_profiles=all_profiles)
+
+    # ---- W-5 报告分列（来源类型／档位；不可判与契合度低分列；real 与模拟态不混）----
+
+    @staticmethod
+    def build_report(result: "PipelineResult", provenance: str = "SIMULATED") -> str:
+        """人读报告：分列呈现。
+
+        分节：A 档／B 档／C 档（契合度低）／许可不可判／拒收——
+        ⛔ 「不可判」与「契合度低」不得同列混淆；来源类型与档位逐行可见；
+        数据性质（provenance）在标题行单独标注，real 与 SIMULATED 不混排。
+        """
+        profiles = result.all_profiles or result.candidates
+        sec_a, sec_b, sec_c, sec_u, sec_r = [], [], [], [], []
+        for p in profiles:
+            st = p.target.source_type or "github"
+            row = (f"| {p.target.repo_full} | {st} | {p.target.license_spdx or '（无声明）'} "
+                   f"| {p.tier} | {p.fit_score:.3f} | {p.rationale} |")
+            if "拒收" in p.rationale:
+                sec_r.append(row)
+            elif getattr(p, "unjudgeable", False) or "不可判" in p.rationale:
+                sec_u.append(row)
+            elif p.tier == TIER_A:
+                sec_a.append(row)
+            elif p.tier == "B":
+                sec_b.append(row)
+            else:
+                sec_c.append(row)
+
+        head = ("| 候选 | 来源类型 | 许可 | 档位 | 契合度 | 理由 |\n"
+                "|---|---|---|---|---|---|")
+        parts = [f"# TDCA 生态雷达候选报告（数据性质：{provenance}——单报告不混排）\n"]
+        for title, sec in (("A 档 · 优先赋能", sec_a), ("B 档 · 观察", sec_b),
+                           ("C 档 · 契合度低", sec_c),
+                           ("许可不可判（⛔ 与契合度低分列）", sec_u),
+                           ("拒收（明示禁止）", sec_r)):
+            parts.append(f"## {title}（{len(sec)} 件）\n")
+            if sec:
+                parts.append(head + "\n" + "\n".join(sec) + "\n")
+            else:
+                parts.append("（本批无）\n")
+        if result.skipped:
+            parts.append("## 跳过项（可追溯）\n")
+            for s in result.skipped:
+                parts.append(f"- {s['repo_full']}：{s['reason']}")
+        return "\n".join(parts) + "\n"
 
     # ---- 分润细则校验（宣言 §三 措辞一致性）----
 
