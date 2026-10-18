@@ -30,11 +30,26 @@ class EcoLedger:
     # ---- 记录 ----
 
     def record_scan(self, targets: List[dict], query: str = "scan") -> dict:
-        """扫描记录落 NCA。"""
+        """扫描记录落 NCA。
+
+        W-6 增列（⛔ 不改既有键）：来源类型计数／证据指纹／抓取时间——供复算。
+        证据指纹＝对目标 canonical 串（排序键 JSON 之 UTF-8 字节）取 sha256 前 16 位大写；
+        同批同内容重算必同值（幂等可复算）。
+        """
+        source_types: Dict[str, int] = {}
+        for t in targets:
+            st = (t.get("source_type") or "github")
+            source_types[st] = source_types.get(st, 0) + 1
+        canonical = json.dumps(targets, ensure_ascii=False, sort_keys=True)
+        evidence_digest = hashlib.sha256(
+            canonical.encode("utf-8")).hexdigest()[:16].upper()
         return self._record({
             "type": "scan", "query": query,
             "target_count": len(targets),
             "targets": targets[:50],   # 裁剪防超限
+            "source_types": source_types,
+            "evidence_digest": evidence_digest,
+            "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         })
 
     def record_invite(self, letter: InviteLetter) -> dict:
