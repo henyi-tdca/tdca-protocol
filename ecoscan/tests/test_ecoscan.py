@@ -251,6 +251,32 @@ class TestLedger:
 
 
 # ---------------------------------------------------------------------------
+# W-6：台账留痕扩字段（来源类型／证据指纹／抓取时间·供复算）
+# ---------------------------------------------------------------------------
+
+def test_w6_record_scan_extra_fields(tmp_path):
+    led = EcoLedger(target_dir=str(tmp_path))
+    targets = [{"repo_full": "a/b", "source_type": "dataset"},
+               {"repo_full": "c/d"},  # 未标来源 → 计 github
+               {"repo_full": "e/f", "source_type": "dataset"}]
+    rec = led.record_scan(targets, query="w6")
+    p = rec["Payload"]
+    assert p["source_types"] == {"dataset": 2, "github": 1}
+    assert len(p["evidence_digest"]) == 16
+    assert p["fetched_at"].endswith("Z")
+    # 既有键不变
+    assert p["type"] == "scan" and p["target_count"] == 3
+
+
+def test_w6_evidence_digest_reproducible(tmp_path):
+    """证据指纹可复算：同内容同序重算必同值。"""
+    import hashlib as _hl, json as _js
+    led = EcoLedger(target_dir=str(tmp_path))
+    targets = [{"repo_full": "a/b", "source_type": "model", "stars": 5}]
+    rec = led.record_scan(targets, query="w6b")
+    again = _hl.sha256(_js.dumps(targets, ensure_ascii=False, sort_keys=True)
+                       .encode("utf-8")).hexdigest()[:16].upper()
+    assert rec["Payload"]["evidence_digest"] == again
 # W-4：档位上限接入（license_tiered=True；默认行为不变；非 OSI 永不升 A）
 # ---------------------------------------------------------------------------
 
