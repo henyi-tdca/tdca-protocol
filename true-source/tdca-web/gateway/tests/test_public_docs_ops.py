@@ -21,7 +21,7 @@ from app import app
 
 client = TestClient(app)
 
-_DOCS = list(public_docs_ops._PUBLIC_DOCS)
+_DOCS = list(public_docs_ops._PUBLIC_DOCS["regulation"])  # 本面既有用例锁定 regulation 族
 
 _EXTRA = "README.md"
 _YILEI = "TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md"
@@ -46,7 +46,7 @@ def test_anonymous_list_only_public_eight():
     r = client.get("/api/public/docs")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == len(public_docs_ops._PUBLIC_DOCS)
+    assert data["count"] == len(_DOCS)  # 动态取 regulation 族在册数（多族承载后 _PUBLIC_DOCS 为分族映射）
     names = {e["filename"] for e in data["documents"]}
     assert names == set(_DOCS)
     assert _EXTRA not in names and _YILEI not in names

@@ -5,7 +5,7 @@
 口径（入站判据 P-1~P-5之前置 · TDCA-RULING-SITE-INGEST-DEFINITION-001）：
   - 入站＝公网可取得件：本面即「可发现（P-1）＋可取得（P-2）」之公开承载面；
   - 匿名只读：仅 GET；写方法一律不开放（未定义即 405 fail-closed）；
-  - 只列已入站公开件：以在册公开清单（甲类 8 件 · L1SI151 批1段二）为准，
+  - 只列已入站公开件：以在册公开清单为准（regulation 17 · whitepapers 2 · papers 13 · L1SI154-010 扩面），
     ⛔ 未入站件不出现、⛔ 乙类存证件永不出现（fail-closed：越界取件 404，
     ⛔ 不借 404/200 之差泄露在仓与否之外的信息——统一 404）；
   - 单一事实源：件即容器内只读文件（docs/regulations/），sha256 由文件现算，
@@ -39,8 +39,11 @@ alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 # ⛔ 未入站件与乙类 2 件（签批记录／生效注记）一律不得列入；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
-_FAMILY = "regulation"
-_PUBLIC_DOCS = (
+_FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列 regulation）
+# L1SI154-010：多族承载——族 → 容器内目录（/docs/<dir>，只读挂载）
+_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers"}
+_PUBLIC_DOCS = {
+    "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md",
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md",
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml",
@@ -58,8 +61,31 @@ _PUBLIC_DOCS = (
     "TDCA-PUB-CORPUS-030-卷二纯版第三批-智能体定义条例对外版（二十一条·V1.0已生效·六检通过·引用不重写）.md",
     "TDCA-PUB-CORPUS-047-AgentDefinition-EN-智能体定义条例英文人读版（二十一条·V1.0·逐条对应中文）.md",
     "TDCA-PUB-CORPUS-048-AgentDefinition-MACHINE-智能体定义条例机读版（本体与创世与主体与效用与生命周期·V1.0互见）.yaml",
-)
-_PUBLIC_SET = frozenset(_PUBLIC_DOCS)
+    ),
+    # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
+    "whitepapers": (
+    "TDCA-AI-GOVERNANCE-WP-001.md",
+    "TDCA-COG-WP-001.md",
+    ),
+    # L1SI154-010：论文顶层正文 13 件（README/.gitattributes 元数据件不入；evidence/ 默认排除）
+    "papers": (
+    "TDCA-FUNCTION-WP-002-APPX-G-附录G-制度大模型与制度孪生函数化登记.md",
+    "TDCA-FUNCTION-WP-002-函数白皮书.md",
+    "TDCA-MATH-WP-REV-001-数学基础白皮书修订本.md",
+    "TDCA-MONOGRAPH-COP-001.md",
+    "TDCA-MONOGRAPH-IT-001.md",
+    "TDCA-PAPER-ENGINEERING-PHILOSOPHY-001-工程哲学-English-V1.0.md",
+    "TDCA-PAPER-ENGINEERING-PHILOSOPHY-001-工程哲学-中文版-V1.0.md",
+    "TDCA-PAPER-FUNCTIONAL-LM-001.md",
+    "TDCA-PAPER-PHILOSOPHY-001-制度哲学-English-V1.0.md",
+    "TDCA-PAPER-PHILOSOPHY-001-制度哲学-中文版-V1.0.md",
+    "TDCA-WP-MATERIALISM-001.md",
+    "TDCA-paper-CN.md",
+    "TDCA-paper-EN.md",
+    ),
+}
+_PUBLIC_SET = frozenset(n for names in _PUBLIC_DOCS.values() for n in names)
+_PUBLIC_FAMILY = {n: fam for fam, names in _PUBLIC_DOCS.items() for n in names}
 
 _RATE_LIMIT_PER_MIN = 60
 
@@ -84,17 +110,21 @@ def _rate_limited(ip: str) -> bool:
 
 
 # ---------------------------------------------------------------------
-# 件目录解析：容器内只读挂载（/docs/regulations）为单一事实源；
+# 件目录解析：容器内只读挂载（/docs/<族目录>）为单一事实源；
 # 本地/测试可用 TDCA_PUBLIC_DOCS_DIR 指向等价目录（⛔ 生产不设）
 # ---------------------------------------------------------------------
-def _docs_dir() -> Path | None:
+def _docs_dir(family: str = _FAMILY) -> Path | None:
     override = os.environ.get("TDCA_PUBLIC_DOCS_DIR", "").strip()
     if override:
+        # 测试覆盖：所有族共用一个等价目录（夹具平铺全部在册件）
         p = Path(override)
         return p if p.is_dir() else None
+    sub = _FAMILY_DIRS.get(family)
+    if not sub:
+        return None
     here = Path(__file__).resolve()
     for parent in (here.parents[3], here.parents[2], here.parents[1]):
-        cand = parent / "docs" / "regulations"
+        cand = parent / "docs" / sub
         if cand.is_dir():
             return cand
     return None
@@ -104,7 +134,7 @@ def _read_doc(filename: str) -> tuple[bytes, str] | None:
     """读在册公开件（⛔ 绝不越出清单）；返回 (bytes, sha256) 或 None。"""
     if filename not in _PUBLIC_SET:
         return None
-    d = _docs_dir()
+    d = _docs_dir(_PUBLIC_FAMILY.get(filename, _FAMILY))
     if d is None:
         return None
     fpath = d / filename
@@ -132,10 +162,10 @@ def _version_of(filename: str, text: str) -> str | None:
     return m.group(0) if m else None
 
 
-def _entry(filename: str, raw: bytes, sha: str) -> dict:
+def _entry(filename: str, raw: bytes, sha: str, family: str) -> dict:
     text = raw.decode("utf-8", "replace")
     return {
-        "family": _FAMILY,
+        "family": family,
         "slug": filename,
         "filename": filename,
         "version": _version_of(filename, text),
@@ -145,9 +175,9 @@ def _entry(filename: str, raw: bytes, sha: str) -> dict:
     }
 
 
-def _list_docs() -> JSONResponse:
+def _list_docs(family: str = _FAMILY) -> JSONResponse:
     entries = []
-    for name in _PUBLIC_DOCS:
+    for name in _PUBLIC_DOCS.get(family, ()):  # 未知族：空清单（路由层已 404，纵深防御）
         got = _read_doc(name)
         if got is None:
             # 已入站件缺失＝容器件异常：不静默减项，明示 fail-closed
@@ -158,11 +188,11 @@ def _list_docs() -> JSONResponse:
                            "detail": f"在册公开件暂不可读：{name}（文档源异常，已按 fail-closed 暂停列出）"}, 503),
                 status_code=503)
         raw, sha = got
-        entries.append(_entry(name, raw, sha))
+        entries.append(_entry(name, raw, sha, family))
     return JSONResponse({
-        "family": _FAMILY,
+        "family": family,
         "count": len(entries),
-        "source": "docs/regulations（只读容器件·单一事实源）",
+        "source": f"docs/{_FAMILY_DIRS.get(family, family)}（只读容器件·单一事实源）",
         "principle": "只列已入站公开件；未入站与存证件不出现（fail-closed）",
         "documents": entries,
     })
@@ -175,7 +205,7 @@ def _get_doc(slug: str) -> JSONResponse:
         # L1SI153 段二②：裸英文退役 → 中文短句＋码
         return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
     raw, sha = got
-    entry = _entry(slug, raw, sha)
+    entry = _entry(slug, raw, sha, _PUBLIC_FAMILY.get(slug, _FAMILY))
     entry["content"] = raw.decode("utf-8", "replace")
     return JSONResponse(entry)
 
@@ -203,10 +233,11 @@ def public_docs_family(family: str, request: Request):
     blocked = _guard(request)
     if blocked is not None:
         return blocked
-    if family != _FAMILY:
+    if family not in _PUBLIC_DOCS:
+        # L1SI154-010：族按公开清单判定（⛔ 非清单族一律 fail-closed 404）
         # L1SI153 段二②：裸英文退役 → 中文短句＋码
         return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
-    return _list_docs()
+    return _list_docs(family)
 
 
 @router.get("/docs/{family}/{slug:path}")
@@ -214,7 +245,8 @@ def public_docs_get(family: str, slug: str, request: Request):
     blocked = _guard(request)
     if blocked is not None:
         return blocked
-    if family != _FAMILY:
+    if family not in _PUBLIC_DOCS:
+        # L1SI154-010：族按公开清单判定（⛔ 非清单族一律 fail-closed 404）
         # L1SI153 段二②：裸英文退役 → 中文短句＋码
         return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
     return _get_doc(slug)
