@@ -10,6 +10,9 @@
 // 开发者: Reasonix（M）| 负空间版本: NSFL-V0.2 | MOU 锚定: 复用既有 gateway 契约
 // =============================================================================
 
+// L1SI153 段一：错误码表与显示串（一处常量，码与短句不分两处维护）
+import { errorDisplay } from './errors'
+
 export const BASE = import.meta.env.VITE_API_BASE ?? '' // M4 一体部署默认同源；开发态经 .env.development 指向 8100
 
 export const WS_CHANNELS = ['handshake', 'tax_mou', 'notifier', 'audit'] as const
@@ -31,6 +34,10 @@ export interface ApiFailure {
   reason: 'watermark_missing' | 'fail_closed' | 'http_error' | 'unauthorized' | 'forbidden'
   status?: number
   detail?: string
+  /** L1SI153 段一：后端错误码（TDCA-E-*）；缺失为 undefined */
+  code?: string
+  /** 后端原始文案（未被显示串改写前的 detail，备查/日志） */
+  rawDetail?: string
 }
 export type ApiResult<T> = ApiSuccess<T> | ApiFailure
 
@@ -179,13 +186,22 @@ async function request<T>(
       }
       // fail-closed：不猜测、不默认；401/403 给明确 reason 供页面内联提示
       // E-1（UX-PLAIN-001 批2）：解析后端错误原文（FastAPI detail），reason 保持兼容
+      // L1SI153 段一：解析后端 code → 显示「码＋中文短句」（errors.ts 一处常量）；
+      // 原始文案保留在 rawDetail，detail 为用户所见显示串
       let backendDetail: string | undefined
+      let backendCode: string | undefined
       try {
-        const errBody = (await res.json()) as { detail?: unknown }
+        const errBody = (await res.json()) as { detail?: unknown; code?: unknown }
         if (typeof errBody?.detail === 'string') backendDetail = errBody.detail
+        if (typeof errBody?.code === 'string') backendCode = errBody.code
       } catch { /* 非 JSON 错误体：detail 保持 undefined，回落 reason */ }
       const reason = res.status === 401 ? 'unauthorized' : res.status === 403 ? 'forbidden' : 'http_error'
-      return { ok: false, reason, status: res.status, detail: backendDetail }
+      return {
+        ok: false, reason, status: res.status,
+        detail: backendCode ? errorDisplay(backendCode) : backendDetail,
+        code: backendCode,
+        rawDetail: backendDetail,
+      }
     }
     const raw = (await res.json()) as RawEnvelope
     const verdict = verifyWatermark(raw)

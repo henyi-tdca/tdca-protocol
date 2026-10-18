@@ -28,6 +28,8 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
+from error_codes import with_code  # L1SI153 段一：拒绝体仅增设 code 字段
+
 router = APIRouter(prefix="/api/public", tags=["public-docs"])
 # 别名路由：与主路由同一实现（同一处理函数），仅为前端不改（施工令 §二）
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
@@ -140,9 +142,10 @@ def _list_docs() -> JSONResponse:
         got = _read_doc(name)
         if got is None:
             # 已入站件缺失＝容器件异常：不静默减项，明示 fail-closed
+            # L1SI153 段一：仅增设 code 字段（文案中文化属段二，本轮不动）
             return JSONResponse(
-                {"error": "DOC_SOURCE_UNAVAILABLE",
-                 "detail": f"在册公开件缺失或不可读：{name}（单一事实源异常）"},
+                with_code({"error": "DOC_SOURCE_UNAVAILABLE",
+                           "detail": f"在册公开件缺失或不可读：{name}（单一事实源异常）"}, 503),
                 status_code=503)
         raw, sha = got
         entries.append(_entry(name, raw, sha))
@@ -159,7 +162,8 @@ def _get_doc(slug: str) -> JSONResponse:
     got = _read_doc(slug)
     if got is None:
         # 统一 404：未入站件／乙类件／不存在件，对外不可分辨（fail-closed）
-        return JSONResponse({"detail": "Not Found"}, status_code=404)
+        # L1SI153 段一：仅增设 code 字段
+        return JSONResponse(with_code({"detail": "Not Found"}, 404), status_code=404)
     raw, sha = got
     entry = _entry(slug, raw, sha)
     entry["content"] = raw.decode("utf-8", "replace")
@@ -168,7 +172,8 @@ def _get_doc(slug: str) -> JSONResponse:
 
 def _guard(request: Request) -> JSONResponse | None:
     if _rate_limited(request.client.host if request.client else "unknown"):
-        return JSONResponse({"detail": "rate limit 60/min/IP"}, status_code=429)
+        # L1SI153 段一：仅增设 code 字段
+        return JSONResponse(with_code({"detail": "rate limit 60/min/IP"}, 429), status_code=429)
     return None
 
 
@@ -189,7 +194,8 @@ def public_docs_family(family: str, request: Request):
     if blocked is not None:
         return blocked
     if family != _FAMILY:
-        return JSONResponse({"detail": "Not Found"}, status_code=404)
+        # L1SI153 段一：仅增设 code 字段
+        return JSONResponse(with_code({"detail": "Not Found"}, 404), status_code=404)
     return _list_docs()
 
 
@@ -199,7 +205,8 @@ def public_docs_get(family: str, slug: str, request: Request):
     if blocked is not None:
         return blocked
     if family != _FAMILY:
-        return JSONResponse({"detail": "Not Found"}, status_code=404)
+        # L1SI153 段一：仅增设 code 字段
+        return JSONResponse(with_code({"detail": "Not Found"}, 404), status_code=404)
     return _get_doc(slug)
 
 

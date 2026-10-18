@@ -27,6 +27,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from error_codes import with_code  # L1SI153 段一：拒绝体仅增设 code 字段
+
 SESSION_PREFIX = "TDCA-SES-"
 CRT_PREFIX = "TDCA-CRT-"
 SESSION_TTL_HOURS = 2
@@ -185,6 +187,8 @@ class TDCAGatewayAuthMiddleware(BaseHTTPMiddleware):
         if needs_auth:
             ok, deny = _check_credential(request.headers.get("authorization", "").strip())
             if not ok:
-                return JSONResponse(deny, status_code=401 if deny["error"] == "UNAUTHORIZED" else 403)
+                _st = 401 if deny["error"] == "UNAUTHORIZED" else 403
+                # L1SI153 段一：拒绝体仅增设 code 字段（⛔ 不改状态码/文案）
+                return JSONResponse(with_code(deny, _st), status_code=_st)
 
         return await call_next(request)
