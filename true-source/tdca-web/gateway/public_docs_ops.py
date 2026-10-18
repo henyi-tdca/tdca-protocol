@@ -35,7 +35,7 @@ router = APIRouter(prefix="/api/public", tags=["public-docs"])
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 
 # ---------------------------------------------------------------------
-# 在册公开清单（甲类 8 件 · L1SI151 批1段二 · main e9b4309a）
+# 在册公开清单（三族 32 件 · regulation 17／whitepapers 2／papers 13 · L1SI154-010 扩面）
 # ⛔ 未入站件与乙类 2 件（签批记录／生效注记）一律不得列入；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
