@@ -310,3 +310,49 @@ def test_w4_default_route_unchanged():
     assert routed["A"] == []
     assert routed["B"] == []
     assert routed["C"][0].license_compliant is False
+# W-3：硬拒改分档受控（strict_license 开关，默认旧行为不变）
+# ---------------------------------------------------------------------------
+
+from tdca_ecoscan.scanner import EcoScanner  # noqa: E402
+
+
+def test_w3_default_strict_unchanged():
+    """开关缺省＝旧行为：非 OSI 硬拒（AUDIT-001 原语义，前向兼容）。"""
+    s = EcoScanner()
+    with pytest.raises(ValueError, match="NSFL-TRIGGER"):
+        s.scan_static([{"repo_full": "x/y", "license_spdx": "CC-BY-NC-4.0"}])
+    with pytest.raises(ValueError, match="NSFL-TRIGGER"):
+        s.scan_static([{"repo_full": "x/y", "license_spdx": None}])
+
+
+def test_w3_tiered_mode_passes_non_osi():
+    """strict_license=False：非 OSI／无声明／明示禁止全部放行（分档在下游）。"""
+    s = EcoScanner(strict_license=False)
+    targets = s.scan_static([
+        {"repo_full": "a/b", "license_spdx": "MIT"},
+        {"repo_full": "c/d", "license_spdx": "CC-BY-NC-4.0"},
+        {"repo_full": "e/f", "license_spdx": None},
+        {"repo_full": "g/h", "license_spdx": "PROPRIETARY"},
+    ])
+    assert [t.repo_full for t in targets] == ["a/b", "c/d", "e/f", "g/h"]
+    assert targets[2].license_spdx is None  # 无声明如实透传（≠ 契合度低）
+
+
+def test_w3_tiered_mode_passthrough_w1_fields():
+    """strict_license=False 时 W-1 三字段由记录透传。"""
+    s = EcoScanner(strict_license=False)
+    (t,) = s.scan_static([
+        {"repo_full": "x/y", "license_spdx": "Apache-2.0",
+         "source_type": "dataset", "evidence_ref": "card:42", "permalink": "rev:abc"},
+    ])
+    assert t.source_type == "dataset"
+    assert t.evidence_ref == "card:42"
+    assert t.permalink == "rev:abc"
+
+
+def test_w3_strict_mode_still_accepts_osi():
+    """strict_license=True（默认）对 OSI 白名单照常放行，构造兼容不受影响。"""
+    s = EcoScanner()
+    (t,) = s.scan_static([{"repo_full": "x/y", "license_spdx": "MIT"}])
+    assert t.license_spdx == "MIT"
+    assert t.source_type is None  # 旧构造不传三字段仍为 None（旧字段语义不变）
