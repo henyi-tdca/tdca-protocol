@@ -105,9 +105,9 @@ _DISPLAY_NAME = {
     "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml":
         "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版·V1.0-FROZEN已生效）.yaml",
     "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md":
-        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9·待签批）.md",
+        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md",
     "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml":
-        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9·待签批）.yaml",
+        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml",
 }
 assert all(n in _PUBLIC_SET for n in _DISPLAY_NAME), "显示名映射键必须是在册件名"
 
