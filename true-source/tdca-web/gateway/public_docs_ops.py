@@ -108,6 +108,11 @@ _DISPLAY_NAME = {
         "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md",
     "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml":
         "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml",
+    # L1SI154-081：去内部批次字样（卷二纯版第N批…），显示名规则＝制度名（形态·版本）；slug/路径不动
+    "TDCA-PUB-CORPUS-029-卷二纯版第二批清理版重出-身份可信等级认定条例对外版（仅去符号·语义同028·六检通过）.md":
+        "TDCA-PUB-CORPUS-029-身份可信等级认定条例对外版（V1.0已生效）.md",
+    "TDCA-PUB-CORPUS-030-卷二纯版第三批-智能体定义条例对外版（二十一条·V1.0已生效·六检通过·引用不重写）.md":
+        "TDCA-PUB-CORPUS-030-智能体定义条例对外版（V1.0已生效·二十一条）.md",
 }
 assert all(n in _PUBLIC_SET for n in _DISPLAY_NAME), "显示名映射键必须是在册件名"
 
