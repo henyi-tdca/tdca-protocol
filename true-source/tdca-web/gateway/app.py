@@ -109,6 +109,11 @@ app.include_router(library_ops_router)
 from announcements_ops import router as announcements_ops_router  # noqa: E402
 app.include_router(announcements_ops_router)
 
+# A-24: 存证公开自查入口 M1″（/api/v1/selfcheck/*——只读匿名白名单十字段；rec_hash 可真验；
+# 031 令：⛔ 不含部署、⛔ 不出 actor 原值、⛔ 不做列表接口防枚举、限流 60/分/IP）
+from selfcheck_ops import router as selfcheck_ops_router  # noqa: E402
+app.include_router(selfcheck_ops_router)
+
 # include_router 保留各子应用原路径（避免 mount 前缀叠加），前端仅需切换 BASE
 app.include_router(d2_app.router)        # /nsfl/preflight/check（CP-1）
 app.include_router(cscp_app.router)      # /handshake/* + /nca/chain（CP-2/4/5）

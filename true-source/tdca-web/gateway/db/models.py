@@ -78,6 +78,13 @@ class NcaChain(Base):
     handshake_id: Mapped[str | None] = mapped_column(Text)
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
     ts: Mapped[str] = mapped_column(Text, nullable=False)
+    # L1SI154-020/023 五列（存证自查 M1″ 判据基础）——现库已具此五列（服务器面 2026-10-19
+    # 增强并回填 179 行，rc_hash 口径与本仓一致）；此处为 ORM 对齐，⛔ 不改表结构、⛔ 无新迁移。
+    rec_hash: Mapped[str | None] = mapped_column(Text)        # 记录级哈希（写时锚定，M1″ 判据 2）
+    prev_hash: Mapped[str | None] = mapped_column(Text)       # 前件 rec_hash；断链者固定串 MISSING
+    anchor_ok: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # 入当日锚 leaf 集
+    detached: Mapped[int] = mapped_column(Integer, default=0, nullable=False)   # 1=无法回溯至创世
+    detach_reason: Mapped[str | None] = mapped_column(Text)   # missing_predecessor ／ 空
     __table_args__ = (
         CheckConstraint(_PROVENANCE_CHECK, name="ck_nca_prov"),
         Index("idx_nca_prev", "prev_nca"),
