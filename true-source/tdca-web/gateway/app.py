@@ -60,6 +60,15 @@ app = FastAPI(title="TDCA Unified API Gateway", version="V1.0",
               description="5CC 阶段 1 统一网关：聚合 D-2 / CSCP / Workbuddy / Translator / P3 + bridge",
               lifespan=_lifespan)
 
+# L1SI153-ERROR-CODE-001 段一：拒绝类响应统一挂码（全局 handler 仅增设 code 字段；
+# ⛔ 不改状态码/文案/判定分支；归簇见 error_codes.py）
+from fastapi.exceptions import RequestValidationError  # noqa: E402
+from starlette.exceptions import HTTPException as _StarletteHTTPException  # noqa: E402
+from error_codes import (tdca_http_exception_handler,  # noqa: E402
+                         tdca_validation_exception_handler)
+app.add_exception_handler(_StarletteHTTPException, tdca_http_exception_handler)
+app.add_exception_handler(RequestValidationError, tdca_validation_exception_handler)
+
 # bridge 挂载必须在 app 创建之后（修复：原位置在 app 定义前，NameError 被 except 静默吞掉导致 bridge 全 404）
 try:
     from main import app as bridge_app  # tdca-bridge（惰性引擎：RAG 缺失时端点 503 不崩溃）

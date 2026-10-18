@@ -90,7 +90,10 @@ def test_register_duplicate_409_no_side_effects():
         chain_before = s.query(M.NcaChain).count()
     r = _reg("reg-dup-2")
     assert r.status_code == 409
-    assert r.json() == {"detail": "用户名已存在"}        # 仅错误语义，无会话/存证字段
+    body = r.json()
+    assert body["detail"] == "用户名已存在"              # 错误语义不变（L1SI153 段一：仅增设 code 字段）
+    assert body.get("code") == "TDCA-E-STATE-STATE-002"  # 重复注册归簇 STATE-002，无会话/存证字段
+    assert "token" not in body and "chain" not in body
     with get_session() as s:
         assert s.query(M.NcaChain).count() == chain_before  # 409 不落缔约存证
     _drop_user("reg-dup-2")
