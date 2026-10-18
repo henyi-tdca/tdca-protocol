@@ -46,7 +46,7 @@ def test_anonymous_list_only_public_eight():
     r = client.get("/api/public/docs")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 8
+    assert data["count"] == len(public_docs_ops._PUBLIC_DOCS)
     names = {e["filename"] for e in data["documents"]}
     assert names == set(_DOCS)
     assert _EXTRA not in names and _YILEI not in names
