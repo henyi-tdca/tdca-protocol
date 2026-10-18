@@ -248,3 +248,65 @@ class TestLedger:
 
     def test_invite_limit_constant(self):
         assert WEEKLY_INVITE_LIMIT == 2
+
+
+# ---------------------------------------------------------------------------
+# W-4：档位上限接入（license_tiered=True；默认行为不变；非 OSI 永不升 A）
+# ---------------------------------------------------------------------------
+
+from tdca_ecoscan.diagnoser import CandidateDiagnoser  # noqa: E402
+
+_STRONG = {"description": "plugin framework with audit log for agent collaboration"}
+
+
+def _t(repo, lic):
+    return ScanTarget(
+        repo_full=repo, stars=10, license_spdx=lic, pushed_at=None,
+        description=_STRONG["description"], keywords=["agent"], url=f"https://x/{repo}",
+        source_type="github")
+
+
+def test_w4_tiered_four_outcomes():
+    """四类许可样本：OSI 照旧／非 OSI 降档 B／无声明不可判／明示禁止拒。"""
+    d = CandidateDiagnoser()
+    routed = d.route([_t("a/osi", "MIT"), _t("b/nonosi", "CC-BY-4.0"),
+                      _t("c/none", None), _t("d/deny", "PROPRIETARY")],
+                     license_tiered=True)
+    prof = {p.target.repo_full: p for tier in routed.values() for p in tier}
+    assert prof["a/osi"].tier == "A"                      # OSI 白名单照现闸
+    assert prof["b/nonosi"].tier == "B"                   # 降档（上限 B）
+    assert prof["c/none"].tier == "C" and prof["c/none"].unjudgeable  # 不可判
+    assert "不可判" in prof["c/none"].rationale
+    assert prof["d/deny"].tier == "C" and "拒收" in prof["d/deny"].rationale
+    # ⛔ 不可判与契合度低分列：rationale 不得混用「低契合」
+    assert "低契合" not in prof["c/none"].rationale
+
+
+def test_w4_redline_non_osi_never_a():
+    """红线测试：非 OSI 在任何路径下不得判 A（满信号＋高星＋优先级加成也不行）。"""
+    d = CandidateDiagnoser()
+    t = ScanTarget(repo_full="deepseek/harness", stars=99999, license_spdx="CC-BY-NC-4.0",
+                   pushed_at=None, description="harness plugin audit agent workflow",
+                   keywords=["agent"], url="https://x/y", source_type="github")
+    p = d.diagnose(t)                       # 未接线时旧路甚至可能给 A
+    routed = d.route([t], license_tiered=True)
+    tiered = routed["A"] + routed["B"] + routed["C"]
+    assert tiered[0].tier != "A", "非 OSI 不得升 A（红线）"
+    assert tiered[0].tier == "B"
+
+
+def test_w4_full_osi_rescored():
+    """GPL 系（全 OSI 表合规、旧窄名单误伤）在分档路按共用打分重评。"""
+    d = CandidateDiagnoser()
+    routed = d.route([_t("g/gpl", "GPL-3.0")], license_tiered=True)
+    prof = (routed["A"] + routed["B"] + routed["C"])[0]
+    assert prof.license_compliant and prof.tier == "A"
+
+
+def test_w4_default_route_unchanged():
+    """默认（不接分档）行为与旧口径一致：非 OSI 直接 C（AUDIT-001 原语义）。"""
+    d = CandidateDiagnoser()
+    routed = d.route([_t("b/nonosi", "CC-BY-4.0")])  # license_tiered 缺省 False
+    assert routed["A"] == []
+    assert routed["B"] == []
+    assert routed["C"][0].license_compliant is False
