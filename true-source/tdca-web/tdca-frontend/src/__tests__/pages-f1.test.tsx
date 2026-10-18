@@ -151,7 +151,11 @@ describe('F1 橱窗层页面接线', () => {
     render(<AuditPage />)
     await waitFor(() => expect(screen.getByTestId('audit-ledger')).toBeInTheDocument())
     expect(screen.getByText('EV-001')).toBeInTheDocument()
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    // L1SI154-031（A-24）：audit 页新增存证自查块（令面页面标注要求）——
+    // 全页唯一按钮即自查查询键，除此之外无按钮。
+    const buttons = screen.getAllByRole('button')
+    expect(buttons).toHaveLength(1)
+    expect(buttons[0]).toHaveAttribute('data-testid', 'selfcheck-run')
   })
 
   it('治理中心：HUF 签批全流程（模态 → needHuf POST → 结果）', async () => {

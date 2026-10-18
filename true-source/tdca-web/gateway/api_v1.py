@@ -89,6 +89,17 @@ def _sim_note() -> str:
     return "模拟态：演示参数，真实锚定待 DCEP/法学家基准后转硬数据"
 
 
+def rec_hash_of(nca_id: str, prev_nca: str | None, action: str, actor: str,
+                artifact_path: str | None, sha256_8: str | None,
+                handshake_id: str | None, data_provenance: str, ts: str) -> str:
+    """记录级哈希（M1″ 公开口径，逐字公开——第三方按此重算可验「该行未被改写」）：
+    sha256('nca_id|prev_nca|action|actor|artifact_path|sha256_8|handshake_id|data_provenance|ts')
+    → 十六进制大写前 16 位。空值按空串计。"""
+    s = "|".join([nca_id, prev_nca or "", action, actor, artifact_path or "",
+                  sha256_8 or "", handshake_id or "", data_provenance, ts])
+    return hashlib.sha256(s.encode("utf-8")).hexdigest().upper()[:16]
+
+
 _NCA_LOG = logging.getLogger("tdca.nca")
 _ERR_LOG = logging.getLogger("tdca.errors")   # L1SI153 段三①：底层异常只进日志，不直透用户
 _NCA_APPEND_MAX_TRIES = 4   # 1 次正写 + 3 次 BUSY 退避重试（NCA-ATOMIC-001）
@@ -124,6 +135,8 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
       · 落库后检测"同 prev 计数超启动基线"（新增链分叉）即 NCA_FORK_ALERT
         告警——日志级、不阻断写入、「只报新增」基线差口径（辅改 B 替代项：
         不建唯一索引、不动表结构、不入库不建表）。
+    L1SI154-031（M1″）：写时即锚定 rec_hash/prev_hash/detached/detach_reason——
+    判据 2（单行未被改写有真验证力）的前提；口径见 rec_hash_of（公开）。
     """
     import secrets
     nonce = secrets.token_hex(8)   # 同秒同参重复写入防主键碰撞（M3 测试实证）
@@ -138,16 +151,30 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
             cur = dbapi.cursor()
             cur.execute("BEGIN IMMEDIATE")   # 写锁在事务起点持有（取号+落库一体）
             row = cur.execute(
-                "SELECT nca_id FROM nca_chain ORDER BY rowid DESC LIMIT 1").fetchone()
+                "SELECT nca_id, rec_hash, detached FROM nca_chain"
+                " ORDER BY rowid DESC LIMIT 1").fetchone()
             tail = row[0] if row else "GENESIS"
+            ts = _utc()
             nca_id = "NCA-WEB-" + hashlib.sha256(
-                (action + actor + _utc() + nonce + tail).encode()).hexdigest()[:12]
+                (action + actor + ts + nonce + tail).encode()).hexdigest()[:12]
+            sha8 = (hashlib.sha256(artifact_path.encode()).hexdigest()[:8]
+                    if artifact_path else None)
+            if row is None:                    # 创世行
+                prev_hash, detached, detach_reason = "", 0, None
+            else:
+                tail_rec_hash, tail_detached = row[1], row[2]
+                prev_hash = tail_rec_hash or "MISSING"
+                broken = (tail_rec_hash in (None, "")) or tail_detached == 1
+                detached = 1 if broken else 0
+                detach_reason = "missing_predecessor" if broken else None
+            rh = rec_hash_of(nca_id, tail, action, actor, artifact_path,
+                             sha8, None, prov, ts)
             cur.execute(
                 "INSERT INTO nca_chain (nca_id, prev_nca, action, actor, artifact_path,"
-                " sha256_8, data_provenance, ts) VALUES (?,?,?,?,?,?,?,?)",
-                (nca_id, tail, action, actor, artifact_path or None,
-                 hashlib.sha256(artifact_path.encode()).hexdigest()[:8] if artifact_path else None,
-                 prov, _utc()))
+                " sha256_8, data_provenance, ts, rec_hash, prev_hash, anchor_ok,"
+                " detached, detach_reason) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (nca_id, tail, action, actor, artifact_path or None, sha8,
+                 prov, ts, rh, prev_hash, 0, detached, detach_reason))
             dbapi.commit()
             break
         except sqlite3.OperationalError as e:
