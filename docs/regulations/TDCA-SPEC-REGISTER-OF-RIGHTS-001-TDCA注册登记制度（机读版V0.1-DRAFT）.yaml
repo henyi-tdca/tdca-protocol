@@ -1,13 +1,13 @@
 # TDCA-SPEC-REGISTER-OF-RIGHTS-001 · TDCA 注册登记制度（机读版 · V0.1-DRAFT）
 # ⚠️ 人读版为语义权威；冲突时以人读版为准（⛔ 不得反向以机读版改语义）
-# ⚠️ 未生效：须四步程序全过 + 创始人签批
+# ⚠️ 未生效：须四步程序全过 + 授权方签批
 # ⭐ 本件为三件套之第三件（中／英／机读同版本号）
 spec_id: TDCA-SPEC-REGISTER-OF-RIGHTS-001
 version: V0.1-DRAFT
 status: DRAFT
 effective_from: null
 draft_basis: TDCA-RULING-TDCRA-REG-001 及 AMEND-001 至 012（权属登记与授权登记二分及历次追加口径）
-draft_source: 创始人 2026-10-03 逐字口径汇集（中文人读版附一 · 八条）
+draft_source: 2026-10-03 本框逐字口径汇集（中文人读版附一 · 八条）
 authority:
   human_readable_zh: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md
   human_readable_en: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md
@@ -33,8 +33,8 @@ chapter1_general:
     title: 依据
     refs:
       - 元函数—解释项关系调和规范（配置权 ＝ 元函数与解释项之关系）
-      - T-142（最小配置单元 ＝ 场景 · 内部要素不直接参与配置）
-      - T-030（五阶广义效用权利）
+      - 最小配置单元 ＝ 场景 · 内部要素不直接参与配置
+      - 五阶广义效用权利
       - IP 版权资产评估管理办法（在册条例）
       - 制度新基线三件
   - id: A4
@@ -172,7 +172,7 @@ chapter8_misc:
   - id: A24
     article: 24
     title: 生效
-    text: 自创始人签批之日起生效；生效范围与批次待创始人明示
+    text: 自授权方签批之日起生效；生效范围与批次待授权方明示
 
 # 九、与在册制度之衔接（5 处）
 chapter9_interfaces:
@@ -195,14 +195,14 @@ chapter9_interfaces:
 # 十、口径来源（指针 · 逐字见中文人读版附一）
 source_positions:
   count: 8
-  location: 中文人读版附一（创始人 2026-10-03 逐字摘录）
+  location: 中文人读版附一（2026-10-03 逐字摘录）
   policy: 逐字以人读版为准；机读版不另立新语义
 
-# 十一、待创始人定（一律留空 · 本侧不代定）
+# 十一、待授权方定（一律留空 · 本侧不代定）
 pending_founder:
   - 授权件固定格式之具体字段（本侧可先出草案）
   - 智能合约承载特别与自定义条款之接口形态（本侧可先出草案）
-  - 合规审查之门槛与授权等级分档（制度层 · 须创始人明示）
+  - 合规审查之门槛与授权等级分档（制度层 · 须授权方明示）
   - 一期权属登记之入口表单字段（本侧可先出草案）
   - 本制度之签批与生效批次
 

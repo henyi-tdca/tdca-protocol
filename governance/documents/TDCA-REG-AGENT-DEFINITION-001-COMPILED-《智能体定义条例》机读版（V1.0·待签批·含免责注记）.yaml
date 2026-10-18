@@ -1,0 +1,162 @@
+# TDCA-REG-AGENT-DEFINITION-001 · 机读版（Machine-Readable Envelope）
+# 与人读版同编号、同版本号；人读版为语义权威；按 TDCA-STD-DUAL-VERSION-001 §一 同批产出
+doc_id: TDCA-REG-AGENT-DEFINITION-001
+title_zh: 智能体定义条例
+title_status: 名称与编号待点定（本侧暂拟）
+version: V1.0
+status: PENDING-SIGNATURE
+effective_condition: 转正四步齐备（已成）＋ 签批
+effective_date: null
+created_in_session: L1-SI-146
+drafted_by: Reasonix
+human_versions:
+  zh:
+    file: tdca-thinktank/governance/documents/TDCA-REG-AGENT-DEFINITION-001-《智能体定义条例》（人读版·V1.0·待签批·四步齐备）.md
+    sha256: "以 NCA 存证记录为准（登记时落）"
+  en:
+    required_when: 对外发布时
+    file: null
+authority: human_reading_version_is_authoritative
+founder_verbatim:
+  - "好了，关于智能体的定义，我想我阐述的比较清楚了，你可以根据制度规范和新基线结合既有在册术语，等进行编制，为智能体通道构建提供制度理论的支持。未决事项，按转正四步走"
+  - "主体与执行体要分清楚，执行体经主体授权在续存期内是可以连续运行的。从资产的角度上讲智能体作为资产被使用的是其运行功能，价值体现在运行效用，其他版权资产被使用的是置换功能，其价值体现在交易效用"
+term_norm_ruling: 交易效用与交换效用同指一物 —— 一律用「交换效用」，不得两词并用（创始人逐字裁定）
+related:
+  - doc_id: TDCA-RESEARCH-AGENT-DEFINITION-001
+    gseq: GSEQ-4779
+    role: 转正四步第①步（智库研究草案）
+  - doc_id: TDCA-GOVKIT-AGENT-DEFINITION-001
+    role: 转正四步第②步（研发治理包挂门）
+  - doc_id: TDCA-ASSERT-AGENT-DEFINITION-001
+    role: 转正四步第③步（可机验断言）
+  - doc_id: TDCA-SANDBOX-AGENT-DEFINITION-001
+    role: 转正四步第④步（沙盒验证）
+  - doc_id: TDCA-STD-INSTITUTION-PROMOTION-001
+    role: 转正四步程序规范
+one_line: 把智能体从定义到创世到运行到资产到退出立成一条主线；其余只引用既有制度，不重写、不新增本体分型
+definitions:
+  agent:
+    definition: 元函数的表达（取实例化义），归入版权资产族
+    gseq: GSEQ-4773
+  meta_function:
+    definition: 本条例内仅指元函数层之层义（元函数层 ⟷ 解释项层）
+    constraint: 不得与本义混用
+  subject:
+    definition: 可归责节点（制度建构）
+    constraint: 时态非其判据
+  executor:
+    definition: 经主体授权、于续存期内连续运行者（本条例专指智能体执行体）
+    distinguish_from: 在册代码执行体
+  creator:
+    definition: 发起创建之法律主体
+    constraint: 须本人签名，智能体不得代签
+  genesis_declaration:
+    definition: 创建时提交之要素声明 ＋ 锚定项
+  trust_root:
+    definition: 根节点通知机令牌（物理根）
+  asset_temporality:
+    values: [连续运行, 离散]
+    constraint: 不与形式化时间窗之离散混用
+  functions:
+    agent: 运行功能
+    other_ip_assets: 置换功能
+  utilities:
+    running_utility: 运行效用（运行功能之价值类型）
+    exchange_utility: 交换效用（置换功能之价值类型；在册名）
+    deprecated_alias: [交易效用]
+  duration:
+    definition: 续存期 ＝ 授权期限（同义，不另立）
+  lifecycle:
+    states: [常态, 休眠, 唤醒, 结晶, 继承, 无主托管, 熔断, 注销]
+  ghost_state:
+    definition: 六要素不齐而运行，判未创建
+ontology:
+  rule_1: 归入版权资产族
+  rule_2: 只认一类本体（内容版权 IP 版权资产），不得凭空新增第二类本体
+  rule_3: 智能体与该类其他资产之别在时态（连续运行型 ⟷ 离散型）
+  rule_4: 智能体居元函数层（能力主体），版权资产居解释项层（构成其能力之材料）；两层不得拉平并列
+creation:
+  genesis_six_elements: [设备, 算力, 协议, 角色, 知识, 权限时效]
+  elements_count: 6
+  anchoring_item: 记其锚定之人类账户 ＋ 根令牌引用（不计入六要素）
+  multi_creator_rule: 单一责任锚点；组织须递归分解至可追责之人，余者列资产配置参与方
+  registration_rule: 登记方为创建；六要素不齐或未登记者判未创建、不受制度保护；运行而不登记者判幽灵态
+  registration_paths: [原生（创建即加载协议＋合规前置认证＋身份继承创建者）, 非原生（随调用提交 agent_card，校验不过即拒）]
+  derived_registration: 素材升格为主体的唯一通道 ＝ 再登记
+identity_subject:
+  identity_anchoring: 锚定人类账户与可信根
+  channel_rule: 通道不验证身份，只验证是否加载 TDCA 协议
+  token_rule: 令牌可被多个智能体共用，皆指同一物理身份；不追踪智能体生命周期，根健康即无碍
+  subject_executor_split: 主体与执行体系两个不同的东西，不得混称
+  executor_continuity: 经主体授权、于续存期内可连续运行；连续运行非自有，源于授权、有期限
+  subject_criterion: 不得以时态判定主体资格
+  liability: 责任跟随授权链，不脱离信任根；执行体无财产；主体为终局承担者
+asset_semantics:
+  functional_split: 智能体被使用运行功能 → 运行效用；其他版权资产被使用置换功能 → 交换效用
+  non_implication: 版权授权（置换功能）与智能体被调用（运行功能）两回事，不互推
+  term_norm: 交易效用与交换效用同指一物，一律用交换效用，不得两词并用
+  tax_base: 照在册，不另立（一层交易税＝流转税 ⟷ 二层配置权调度税＝资产专用税）
+runtime_governance:
+  definition_stack: 六层＝六层治理抓手（存在论／创世／运行／权利／主体／价值）
+  boundary_coordinate: 制度坐标刻意不进技术黑箱；制度只在边界上管理（输入／输出／权限／效用／责任）
+  convergence: 协作停机定理（满意解停机，非最优解；越过边界即熔断停机）
+  declaration_rule: 技术永远在声明里，制度永远在声明外；设备算力模型参数皆作被声明之配置项，无一项技术要素构成制度定义本身
+lifecycle:
+  常态: 授权有效、锚有效
+  休眠: 账本连续、按陈腐曲线折价（非冻结）
+  唤醒: 三＋一条件
+  结晶: 轨线 → 一包离散资产（含登记与权属承继）
+  继承: 依继承适配器六模块
+  无主托管: 休眠一年无归属 → 社区基金为公共品
+  熔断: 经济级可恢复 ⟷ 法律级永久休眠
+  注销: 主动终止
+channel_interface:
+  description: 与站点智能体通道之接口（六步硬序）
+  steps:
+    - 加载 TDCA 协议（通道准入之唯一验证对象）
+    - 持根节点执行令牌
+    - 负空间审查
+    - 沙盒验证（执行行为合 TDCA 机制要求）
+    - 正空间执行事务
+    - NCA 存证（全程）
+  hard_rule: 六步不可跳过、不可互替
+prohibitions:
+  - 不得凭空新增本体分型
+  - 不得自造编号（一律走编号／术语登记）
+  - 不得以技术要素构成制度定义
+  - 不得以智能体自身描述替代制度定义（定义权不在被治理者）
+  - 不得使执行体承担财产与责任
+  - 不得令责任脱离信任根
+  - 不得无主运行
+version_rules:
+  effective: 转正四步齐备（已成）＋ 签批
+  dual_version: 人读 ＋ 机读（成对且哈希互见，同批存证）
+  revision_mode: append-only
+  naming_and_number: 待点定
+explicit_items:
+  - 条例名称（本侧暂拟「智能体定义条例」）
+  - 条例编号
+  - 生效签批
+  - 运行效用之阶位（本侧按推荐推进：成对、独立；改动在册阶序属制度语义，签批点定）
+  - 对外（含条例名称对外使用）
+redlines:
+  - 不回改在册件一字（追加制）
+  - 不凭空新增本体分型；不称两类本体
+  - 不以技术要素构成制度定义
+  - 不擅用新造词与自造编号；不用禁用词
+  - 不使执行体担责担产；不容无主运行
+  - 零对外、不含凭据值与人名与本机真实路径串
+assertions_index:
+  ids: [Q-1, Q-2, Q-3, Q-4, Q-5, Q-6, Q-7, Q-8, Q-9, Q-10, Q-11, Q-12]
+  detail_ref: TDCA-ASSERT-AGENT-DEFINITION-001
+sandbox_ref: TDCA-SANDBOX-AGENT-DEFINITION-001
+promotion_trace:
+  step_1: TDCA-RESEARCH-AGENT-DEFINITION-001
+  step_2: TDCA-GOVKIT-AGENT-DEFINITION-001
+  step_3: TDCA-ASSERT-AGENT-DEFINITION-001
+  step_4: TDCA-SANDBOX-AGENT-DEFINITION-001
+  step_5: TDCA-REG-AGENT-DEFINITION-001
+disclaimer: 本机读版为程序化封套，语义以人读版为权威；本件待签批，尚未产生制度效力
+revision:
+  mode: append-only
+  conflict_rule: 以最新件为准

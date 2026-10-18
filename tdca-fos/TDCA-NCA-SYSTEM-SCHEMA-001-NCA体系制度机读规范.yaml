@@ -1,0 +1,108 @@
+# TDCA NCA 体系制度 · 机读规范（机器校验用）
+# 对应规范文本: TDCA-NCA-SYSTEM-STANDARD-001（V1.0，GSEQ-0571）
+# 用途: 机器可解析校验——NCA 编号规则 / 字段必填 / 库规则 / 对外动作七字段
+standard:
+  id: TDCA-NCA-SYSTEM-STANDARD-001
+  version: "1.0"
+  gseq_anchor: GSEQ-0571
+  status: ACTIVE
+  effective_from: "2026-08-28"
+
+nca_file:
+  pattern: "^TDCA-REASONIX-(\\d{8})-(\\d{3,})\\.yaml$"
+  id_pattern: "^TDCA-REASONIX-{YYYYMMDD}-{SEQ:03d}$"
+  generated_by_marker: "Generated-By: nca_generator.generate_nca"
+  forbidden_param: "explicit_seq"
+
+numbering:
+  rule: "max_plus_one"
+  candidate_expr: "max(existing)+1 if existing else 1"
+  per_date: true
+  concurrency: "O_CREAT|O_EXCL 原子预约，被抢顺延；跨挂载点/网络盘需分布式锁"
+  discipline_constant: "NCA_NUMBERING_DISCIPLINE"
+  lint: "verify_numbering_discipline(require_marker=True)"
+
+libraries:
+  reasonix_dual:
+    runtime:
+      role: 运行库
+      path: "<APPDATA>/reasonix/global-workspace/.tdca-nca/"
+    archive:
+      role: 归档镜像
+      path: "<Desktop>/TDCA归档文件夹/.tdca-nca/"
+    rule: "REGISTRY 双库 MD5 一致"
+  workbuddy_A:
+    role: 运行权威（唯一权威 NCA_DIR）
+    path: "<工作区>/.tdca-nca/"
+    tc_nca_dir: true
+  workbuddy_B:
+    role: 历史归档（冻结只读，不删）
+    path: "<Desktop>/TDCA-MEMO-006-Workspace/.tdca-nca/"
+    note: "623 件历史含 155-159 见证链；引用标注来源=B 归档"
+  audit_rule: "跨库引用须标来源（A=运行/B=归档/Reasonix 双库）；审计先确认库来源"
+
+nca_fields:
+  required:
+    - NCA-ID
+    - Function-Call-ID
+    - Operation-Type
+    - Operator
+    - Timestamp
+    - Scope
+    - Pre-State
+    - Post-State
+    - Config-Right-Token
+    - Audit-Trail
+    - Negative-Space-Check
+
+ecoact:
+  seven_fields:
+    - repo_full
+    - mode
+    - license_spdx
+    - invite_nca_ref
+    - response_status
+    - profit_sharing
+    - compliance
+  discipline:
+    - "分润模拟态（ID92，不承诺打款）"
+    - "算力零提及"
+    - "不点名"
+    - "只赋能不改码"
+  fail_closed: true
+
+admission_nca:
+  pattern: "^TDCA-ADMIT-{YYYYMMDD}-{SEQ}$"
+  operation_type: AdmissionNCA
+  self_signed_by: "GitHub ID（缔约者自签署）"
+  base_protocol_accepted:
+    - TDCA-CONST
+    - TDCA-NSFL
+    - TDCA-WORKING-SPEC
+    - TDCA-OPC
+  data_nature: "simulated-ID92"
+
+data_nature:
+  markers:
+    - mixed
+    - "[UNVERIFIED]"
+    - "simulated/ID92"
+
+registry:
+  file: "NCA-REGISTRY.yaml"
+  entry_fields:
+    - gseq
+    - nca_id
+    - files
+    - timestamp
+    - fc_id
+    - operation_type
+    - operator
+    - source
+    - status
+  gseq_rule: "全局单调递增 GSEQ-{NNNN}，按 Timestamp 升序"
+  consistency: "双库 MD5 一致（工作区 ↔ 桌面归档）"
+
+revision:
+  flow: "提案（DCD/REV）→ 人类签批 → 更新本规范+SCHEMA+版本链+GSEQ 锚"
+  backup: "每次修订保留上一版本完整文本+修订差异+存证锚"

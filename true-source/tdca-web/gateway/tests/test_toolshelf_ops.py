@@ -186,3 +186,24 @@ def test_template_auth_contract_200():
     assert any("中文人读版" in n for n in names)
     assert any("英文人读版" in n for n in names)
     assert any("机读版" in n for n in names)
+
+
+def test_register_nca_ref_persisted():
+    """上架落 NCA 存证：响应回带 nca_ref；落库可查；入 NCA 链可验。"""
+    h = _auth("tstester03", role="operator")
+    r = client.post("/api/v1/toolshelf/register",
+                    json={"name": "存证样例工具", "category": "other",
+                          "description": "NCA 存证补接线验收件"},
+                    headers=h)
+    assert r.status_code == 201, r.text
+    d = r.json()["data"]
+    assert d["nca_ref"].startswith("NCA-WEB-")
+    with get_sessionmaker().begin() as s:
+        row = s.get(M.ToolItem, d["tool_id"])
+        assert row is not None and row.nca_ref == d["nca_ref"]
+        assert s.get(M.NcaChain, d["nca_ref"]) is not None
+    # list 视图回带 nca_ref（增列不回退既有字段）
+    r2 = client.get("/api/v1/toolshelf/list", headers=h)
+    tools = r2.json()["data"]["tools"]
+    hit = [t for t in tools if t["tool_id"] == d["tool_id"]]
+    assert hit and hit[0]["nca_ref"] == d["nca_ref"]

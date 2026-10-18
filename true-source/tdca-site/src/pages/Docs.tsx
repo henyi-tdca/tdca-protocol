@@ -1,32 +1,30 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import Markdown from 'react-markdown'
-import { siteGet, GateRequired, FAMILIES } from '../lib/siteApi'
-import GatePrompt from '../components/GatePrompt'
+import { siteGet, FAMILIES } from '../lib/siteApi'
 
-function useGated<T>(fn: () => Promise<T>, deps: unknown[]) {
+function useLoaded<T>(fn: () => Promise<T>, deps: unknown[]) {
   const [data, setData] = useState<T | null>(null)
-  const [needGate, setNeedGate] = useState(false)
   const [error, setError] = useState<string>('')
   const load = () => {
+    setError('')
     fn().then(setData).catch((e) => {
-      if (e instanceof GateRequired) setNeedGate(true)
-      else setError(String(e))
+      setData(null)
+      setError(String(e instanceof Error ? e.message : e))
     })
   }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(load, deps)
-  return { data, needGate, error, retry: () => { setNeedGate(false); setError(''); load() } }
+  return { data, error, retry: () => { load() } }
 }
 
 export function DocsIndex() {
   const { family } = useParams()
   const fam = FAMILIES.find((f) => f.key === family)
-  const { data, needGate, error, retry } = useGated(
+  const { data, error } = useLoaded(
     () => siteGet<{ items: { slug: string; title: string; synced_at: string }[] }>(`/docs/${family}`),
     [family],
   )
-  if (needGate) return <GatePrompt onOk={retry} />
   if (error) return <div className="py-24 text-center text-destructive">加载失败：{error}</div>
   if (!data) return <div className="py-24 text-center text-muted-foreground">加载中…</div>
   return (
@@ -34,7 +32,7 @@ export function DocsIndex() {
       <Link to="/docs" className="text-sm text-muted-foreground">← 全部文档</Link>
       <h1 className="mt-2 text-2xl font-bold">{fam?.label ?? family}（{data.items.length} 件）</h1>
       {data.items.length === 0 ? (
-        <p className="mt-6 text-muted-foreground">该族暂无入库文档（weekly 族源目录未建，留空在案）。</p>
+        <p className="mt-6 text-muted-foreground">该族暂无入库文档。</p>
       ) : (
         <ul className="mt-6 divide-y rounded-lg border">
           {data.items.map((d) => (
@@ -56,11 +54,13 @@ export default function DocsHome() {
     <div className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="text-2xl font-bold">文档库</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        内部试运行版 · 白皮书 / 论文 / 公约条例 / COP 库四族内容已入库，点开即读
+        内部试运行版 · 制度 / 帮助二族内容已入库，点开即读
+      </p>
+      <p className="mt-2 rounded-md border bg-muted/50 px-4 py-2 text-xs text-muted-foreground">
+        分工（LIB-DOCS-SCOPE-001）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，原名文库，路由不变）。
       </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
-        <strong>怎么进（两步）：</strong>① 浏览器弹出账号密码框时，填管理员发你的站点账号密码；
-        ② 若页面提示输入口令，向管理员索取后填上即可。无需注册，看完直接关。
+        <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按 TDCA 管理方 指令由系统生成，由 TDCA 管理方 转交受邀者；到期失效，不回收。
       </p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {FAMILIES.map((f) => (
@@ -77,11 +77,10 @@ export default function DocsHome() {
 
 export function DocDetail() {
   const { family, slug } = useParams()
-  const { data, needGate, error, retry } = useGated(
+  const { data, error } = useLoaded(
     () => siteGet<{ title: string; body_md: string; source_path: string; synced_at: string }>(`/docs/${family}/${slug}`),
     [family, slug],
   )
-  if (needGate) return <GatePrompt onOk={retry} />
   if (error) return <div className="py-24 text-center text-destructive">加载失败：{error}</div>
   if (!data) return <div className="py-24 text-center text-muted-foreground">加载中…</div>
   return (

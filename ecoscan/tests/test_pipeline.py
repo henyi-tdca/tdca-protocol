@@ -172,3 +172,59 @@ class TestTraceability:
         result = pipe.run([_tier_a_repo(full="shape/harness")])
         r = result.ledger_report
         assert set(r) >= {"total_records", "scan_count", "invite_count", "invited_repos"}
+
+
+# ---------------------------------------------------------------------------
+# W-5：报告分列（来源类型／档位；不可判与契合度低分列；provenance 不混排）
+# ---------------------------------------------------------------------------
+
+from tdca_ecoscan.pipeline import PipelineResult  # noqa: E402
+
+
+def _profile(full, lic, tier, rationale, source_type="github", fit=0.5):
+    from tdca_ecoscan.diagnoser import CandidateProfile
+    from tdca_ecoscan.scanner import ScanTarget
+    t = ScanTarget(repo_full=full, stars=10, license_spdx=lic, pushed_at=None,
+                   description="d", keywords=[], url="https://x",
+                   source_type=source_type)
+    return CandidateProfile(target=t, non_invasive=True, auditable=True,
+                            settlement_pain=True, license_compliant=True,
+                            fit_score=fit, tier=tier, rationale=rationale)
+
+
+def test_w5_report_columns_and_sections():
+    """报告含来源类型/档位列；不可判与契合度低分两节；provenance 标注。"""
+    pipe = InvitePipeline.__new__(InvitePipeline)  # 只测静态报告函数
+    result = PipelineResult(
+        steps=[], candidates=[], invited=[], skipped=[{"repo_full": "x/y", "reason": "r"}],
+        ledger_report={},
+        all_profiles=[
+            _profile("a/osi", "MIT", "A", "高契合", source_type="dataset"),
+            _profile("b/low", "MIT", "C", "低契合或无契合信号——暂缓"),
+            _profile("c/none", None, "C", "不可判：无许可声明 → C·不可判"),
+            _profile("d/deny", "PROPRIETARY", "C", "拒收：明示禁止"),
+        ])
+    md = pipe.build_report(result, provenance="SIMULATED")
+    assert "来源类型" in md and "档位" in md          # 新列在位
+    assert "dataset" in md                            # 来源类型值可见
+    assert "许可不可判" in md and "契合度低" in md      # 分列两节俱在
+    u_idx, c_idx = md.index("许可不可判"), md.index("C 档 · 契合度低")
+    assert u_idx != c_idx                             # ⛔ 不混列（各成节）
+    assert "SIMULATED" in md                          # 数据性质标注
+    assert "拒收（明示禁止）" in md
+
+
+def test_w5_run_keeps_all_profiles_default_unchanged(tmp_path):
+    """默认 run()：all_profiles 三档俱在（报告原料），邀请行为不变（仅 A 受邀）。"""
+    pipe = InvitePipeline(ledger=EcoLedger(target_dir=str(tmp_path)))
+    result = pipe.run([_repo(full="a/harness"),
+                       _repo(full="b/low", desc="obscure corner")], max_invites=4)
+    assert result.all_profiles is not None and len(result.all_profiles) == len(result.candidates) + len([s for s in result.skipped if "tier_" in s["reason"]])
+    assert len(result.invited) == len(result.candidates)  # 仍只邀 A 档
+
+
+def test_w5_real_provenance_labeled():
+    """real 与 SIMULATED 不混：provenance 参数如实标注于报告标题行。"""
+    pipe = InvitePipeline.__new__(InvitePipeline)
+    result = PipelineResult(steps=[], candidates=[], invited=[], skipped=[], ledger_report={})
+    assert "数据性质：real" in pipe.build_report(result, provenance="real")

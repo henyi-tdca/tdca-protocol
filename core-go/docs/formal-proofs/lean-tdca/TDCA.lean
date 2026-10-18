@@ -106,3 +106,30 @@ import TDCA.CoordLayering
 -- ——COORD-6 错觉循环不动点（离散情形：自增强 ⟹ 一致压缩率 ＋ 单调 ＋ 有限步收敛 ＋ 唯一不动点），零依赖件；
 -- 本机机验 exit 0、零占位；模型假设与适用范围见件头（C6-1–C6-4）。
 import TDCA.CoordLoop
+-- 形式化线第三批（2026-10-05）：新增 import TDCA.TruthSpace
+-- —— 三空间真值 L1 子集（互斥／合取封闭／无补），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（T-1–T-4／A-1–A-3）。
+import TDCA.TruthSpace
+-- 形式化线第三批（2026-10-05）：新增 import TDCA.EconEmbed
+-- —— 成本正定性（条件化；正性公理为显式前提，⛔ 不进内核作定理），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（E-1–E-3）。
+import TDCA.EconEmbed
+-- 形式化线第三批 批 2 之序 P2-1（2026-10-05）：新增 import TDCA.Attractor
+-- ——PRP-ATT-001 制度吸引子（离散收窄版：压缩前提 ⟹ 吸引子唯一 ＋ 全局收敛 ＋ 步数界 ＋ 偏差不增），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A5）。
+import TDCA.Attractor
+-- 形式化线第三批 批 2 之序 P2-2（2026-10-05）：新增 import TDCA.TruthSpaceL2
+-- ——PRP-TRI-001 之 L2（样本代数构成海廷代数·逐式穷举：格公理／有界非退化／分配律／海廷伴随／伪补一致），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（M1–M6）。
+import TDCA.TruthSpaceL2
+-- 另案 F-3（2026-10-05）：新增 import TDCA.FractalScene
+-- ——场景分形嵌套形式化（收窄版：二元嵌套·层数判据·生成器加一层），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（F1–F5）。
+import TDCA.FractalScene
+-- 智能体定义骨架 P1（2026-10-16，交办 TDCA-HANDOFF-FORMAL-AGENT-DEFINITION-001）：新增 import TDCA.SubjectExclusion
+-- ——主体排他（封闭归纳式：调用主体限于智能体、离散资产不可调用；⛔ 弃用类型类写法），零依赖件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A2）。
+import TDCA.SubjectExclusion
+-- 智能体定义骨架 P3（2026-10-16，交办同上）：新增 import TDCA.GateBound
+-- ——闸门有界误差（闸门收缩 ⟹ 误差一致有界含初值项 ＋ 无闸门线性累积对照；建模假设为显式字段），ℝ 承载件；
+-- 本机机验 exit 0、零占位；模型假设与适用范围见件头（A1–A4）。

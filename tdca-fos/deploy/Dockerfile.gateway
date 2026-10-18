@@ -1,0 +1,24 @@
+# ============================================================================
+# TDCA-FOS REPO-003 gRPC 网关镜像
+# 制度锚定: TDCA-KG-001 §3.4 | FC: TDCA-FC-20260804-006-M3
+# SPDX-License-Identifier: TDCA-Internal
+# ============================================================================
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY tdca_graph/ tdca_graph/
+COPY tdca_kb/ tdca_kb/
+COPY tdca_tp/ tdca_tp/
+COPY tdca_nsfl/ tdca_nsfl/
+COPY tdca_nca/ tdca_nca/
+COPY tdca_irp/ tdca_irp/
+COPY tdca_gateway/ tdca_gateway/
+COPY checks/ checks/
+
+EXPOSE 50051
+
+CMD ["python", "-m", "tdca_gateway.server.grpc_server"]

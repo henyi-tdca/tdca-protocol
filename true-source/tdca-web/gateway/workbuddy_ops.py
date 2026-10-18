@@ -12,6 +12,7 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import json
+import logging
 import sys
 import time
 import uuid
@@ -30,10 +31,11 @@ for _sub in ("tdca-workbuddy",):
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
-from api_v1 import (_nca_append, _nca_watermark, _require_session_user,  # noqa: E402
-                    _utc)
+from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
+                    _require_session_user, _utc)
 
 router = APIRouter(prefix="/api/v1/workbuddy", tags=["workbuddy"])
+logger = logging.getLogger(__name__)
 
 
 # ---- P5 引擎（单例；nca_fn 落 nca_chain；nsfl_check_fn 接 D-2 场景负空间）----
@@ -74,21 +76,44 @@ class CreateRequest(BaseModel):
 
 @router.post("/workflow/create", status_code=201)
 def wb_create(req: CreateRequest, request: Request):
-    """创建（DSL 校验 → WORM 落 CREATE → 定义落库 → 缔约存证）。"""
+    """创建（DSL 校验 → 归属判定【B6：任何副作用之前】→ WORM 落 CREATE → 定义落库 → 缔约存证）。
+
+    B6（TDCA-HANDOFF-SITE-UX-PLAIN-001-IMPL-001 批3，附条件三条，⛔ 缺一不可）：
+      条件1 归属判定（存在 & 属谁）置于任何副作用之前——⛔ 不落 WORM ⛔ 不追加 NCA ⛔ 不调 engine.create；
+      条件2 本人／founder 重建 ⟹ 幂等回成功但零新增（NCA／WORM 条数不变）；
+      条件3 撞他人 ID ⟹ 409＋归属提示（脱敏角色口径，⛔ 不暴露用户名）。
+    """
     user = _require_session_user(request)
     try:
         wf = WorkflowDSL.from_dict(req.workflow_template)
     except (KeyError, TypeError) as exc:
-        raise HTTPException(400, f"DSL 无效: {exc}")
+        # L1SI153 段三①同类收口：异常 repr ⛔ 直吐；键名（用户输入回显）保留在文案
+        logger.warning("workbuddy create DSL 无效: %s", exc)
+        raise HTTPException(400, f"DSL 无效：模板缺字段或类型不符（{exc.args[0] if exc.args else '未知字段'}）")
+    # 条件1：归属判定（纯读，⛔ 零副作用）——先判后写，堵住撞 ID 重复落 WORM/NCA
+    with get_session() as s_check:
+        existing = s_check.get(M.WorkflowDef, wf.workflow_id)
+        owner_disp = _owner_display(s_check, existing.owner_username) if existing else None
+    if existing is not None:
+        if existing.owner_username != user["username"] and user.get("role") != "founder":
+            raise HTTPException(409,
+                                "该 workflow_id 已存在且归属他人"
+                                f"（归属：{owner_disp}）——请更换 workflow_id，"
+                                "或由原创建人（或 founder）执行（本次请求零 WORM／零 NCA 落链）")
+        # 条件2：幂等路径——⛔ 不调 engine.create ⛔ 不追加 NCA，零新增
+        return _nca_watermark({
+            "workflow_id": existing.workflow_id, "status": existing.status,
+            "owner": user["username"], "nca_ref": existing.nca_ref,
+            "existed": True,
+            "note": "工作流已存在（幂等返回，零新增存证：NCA／WORM 条数不变）"})
     created = _engine.create(wf)
     nca_ref = _nca_append("WORKBUDDY_CREATE", user["username"],
                           artifact_path=f"workflow:{wf.workflow_id}")
     with get_sessionmaker().begin() as s:
-        if s.get(M.WorkflowDef, wf.workflow_id) is None:
-            s.add(M.WorkflowDef(
-                workflow_id=wf.workflow_id, owner_username=user["username"],
-                dsl_json=json.dumps(req.workflow_template, ensure_ascii=False),
-                status=created["status"], nca_ref=nca_ref, created_at=_utc()))
+        s.add(M.WorkflowDef(
+            workflow_id=wf.workflow_id, owner_username=user["username"],
+            dsl_json=json.dumps(req.workflow_template, ensure_ascii=False),
+            status=created["status"], nca_ref=nca_ref, created_at=_utc()))
     return _nca_watermark({**created, "owner": user["username"], "nca_ref": nca_ref,
                            "note": "工作流已创建（PENDING_HUMAN_GATE，执行须经人类签名门禁）"})
 
@@ -116,9 +141,14 @@ def wb_execute(req: ExecuteRequest, request: Request):
         ex = _engine.execute(wf, req.human_signature)
         elapsed_ms = round((time.perf_counter() - start) * 1000.0, 1)
     except PermissionError as exc:
-        raise HTTPException(403, str(exc))
+        # L1SI153 段二①：引擎底层异常只进日志，⛔ 不直透用户；对外固定码＋通用三段式文案
+        logger.warning("workbuddy execute denied by engine: %s", exc)
+        raise HTTPException(403, "本次执行被签名门禁拒绝，工作流未被运行（人类签名权不可绕过）。"
+                                 "你的签名未通过校验。请重新进行人工签名确认后再执行；仍不通请联系运维。")
     except KeyError as exc:
-        raise HTTPException(400, f"DSL 依赖错误: {exc}")
+        # L1SI153 段三①同类收口：异常 repr ⛔ 直吐；键名保留在文案
+        logger.warning("workbuddy execute DSL 依赖错误: %s", exc)
+        raise HTTPException(400, f"DSL 依赖错误：缺少依赖键（{exc.args[0] if exc.args else '未知'}）")
     nca_refs = list(ex.nca_refs) + [_nca_append(
         f"WORKBUDDY_EXECUTE:{ex.status}", user["username"],
         artifact_path=f"execution:{ex.execution_id}")]

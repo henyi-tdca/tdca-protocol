@@ -1,0 +1,162 @@
+{
+  "spec_id": "TDCA-DSA-FC-NS-OPS-001",
+  "spec_title": "动态安全三空间循环 × 负空间管理操作空间 全栈接口契约",
+  "spec_version": "V1.0-REVIEW",
+  "machine_readable_version": "1.0.0",
+  "generated_by": "TDCA-HANDOFF-EXEC-ARTIFACT-INCORP-002 / T-3",
+  "generated_at": "2026-10-10",
+  "semantic_authority": "docs/sbx-ops/TDCA-DSA-FC-NS-OPS-001-接口规范-V1.0-REVIEW.md（人读件为语义权威；机读版仅作索引与机验，歧义时以人读件为准）",
+  "prerequisites": ["FC-NS-OPS-001 M3（验收通过）", "TDCA-PRINCIPLE-DSA-001（动态安全三空间循环机制）", "TDCA-CCP V0.1"],
+  "activation_rule": {
+    "coefficient": "(tax_out + employment_ss) / gov_pcr_input",
+    "comparator": "strictly_greater",
+    "threshold": 1.2,
+    "note": "REV-1 修正：≥1.2 → >1.2；α恰为 1.2 时继续沙盒验证"
+  },
+  "states": [
+    {"code": "0x10", "name": "NS-PENDING", "semantics": "负空间审查队列中，等待NSFL编译器扫描", "ttl": "≤72h（超时自动降级）"},
+    {"code": "0x20", "name": "SBX-QUEUED", "semantics": "沙盒资源排队，等待分配隔离环境", "ttl": "≤24h"},
+    {"code": "0x21", "name": "SBX-ACTIVE", "semantics": "沙盒验证执行中，主体在隔离环境运行", "ttl": "按沙盒类型定（7-90天）"},
+    {"code": "0x22", "name": "SBX-SUSPENDED", "semantics": "沙盒内暂停，等待整改或人类裁决", "ttl": "≤30天（超时自动转BANNED）"},
+    {"code": "0x2F", "name": "SBX-BANNED", "semantics": "永久休眠，配置权交易价格强制归零", "ttl": "不可逆"},
+    {"code": "0x30", "name": "PCM-ENTRY", "semantics": "协议配置市场准入过渡态，首笔MOU验证中", "ttl": "≤24h"},
+    {"code": "0x31", "name": "PCM-LIVE", "semantics": "协议配置市场正常运行态，全配置权可用", "ttl": "无上限（持续监控）"},
+    {"code": "0x32", "name": "PCM-RESTRICTED", "semantics": "受限运行态，部分配置权被冻结，仅保留只读/低危调用", "ttl": "≤72h（限期整改）"},
+    {"code": "0x33", "name": "PCM-FROZEN", "semantics": "全面冻结态，所有配置权调用暂停，等待深度审查", "ttl": "≤7天"},
+    {"code": "0xFF", "name": "EXITED", "semantics": "主体主动退出TDCA生态，所有配置权释放", "ttl": "终态", "rev": "REV-1新增"}
+  ],
+  "transitions": [
+    {"from": "NS-PENDING", "to": "SBX-QUEUED", "trigger": "NSFL-CERT签发"},
+    {"from": "NS-PENDING", "to": "EXITED", "trigger": "NSFL-REJECT（绝对负空间命中）"},
+    {"from": "NS-PENDING", "to": "NS-PENDING", "trigger": "NSFL-REVISION（补件）"},
+    {"from": "SBX-QUEUED", "to": "SBX-ACTIVE", "trigger": "隔离环境就绪"},
+    {"from": "SBX-ACTIVE", "to": "PCM-ENTRY", "trigger": "激活系数>1.2 + 正和验证通过"},
+    {"from": "SBX-ACTIVE", "to": "SBX-SUSPENDED", "trigger": "沙盒内异常/越界"},
+    {"from": "SBX-ACTIVE", "to": "SBX-BANNED", "trigger": "触及法律负空间"},
+    {"from": "PCM-ENTRY", "to": "PCM-LIVE", "trigger": "首笔MOU验证通过"},
+    {"from": "PCM-ENTRY", "to": "SBX-ACTIVE", "trigger": "首笔MOU验证失败（回退）"},
+    {"from": "PCM-LIVE", "to": "PCM-RESTRICTED", "trigger": "轻度越界（ECE预警）"},
+    {"from": "PCM-LIVE", "to": "PCM-FROZEN", "trigger": "中度越界（实时熔断）"},
+    {"from": "PCM-LIVE", "to": "SBX-SUSPENDED", "trigger": "严重越界（强制回退）"},
+    {"from": "PCM-LIVE", "to": "EXITED", "trigger": "主体主动退出"},
+    {"from": "PCM-RESTRICTED", "to": "PCM-LIVE", "trigger": "限期整改通过"},
+    {"from": "PCM-RESTRICTED", "to": "PCM-FROZEN", "trigger": "整改失败/二次越界"},
+    {"from": "PCM-RESTRICTED", "to": "SBX-SUSPENDED", "trigger": "拒绝整改"},
+    {"from": "PCM-FROZEN", "to": "PCM-LIVE", "trigger": "深度审查通过"},
+    {"from": "PCM-FROZEN", "to": "SBX-SUSPENDED", "trigger": "审查未通过（回退整改）"},
+    {"from": "PCM-FROZEN", "to": "SBX-BANNED", "trigger": "审查发现法律负空间触及"},
+    {"from": "SBX-SUSPENDED", "to": "SBX-ACTIVE", "trigger": "整改完成+重新验证"},
+    {"from": "SBX-SUSPENDED", "to": "SBX-BANNED", "trigger": "超时/拒绝整改/人类裁决否决"}
+  ],
+  "trigger_levels": [
+    {"code": "0x01", "name": "L1-预警", "condition": "ECE检测到接近负空间", "impact": "记录日志、提升监控频率", "resume": "自动（条件消除后）"},
+    {"code": "0x02", "name": "L2-限制", "condition": "轻度越界/MOU下降", "impact": "冻结高危配置权、保留只读", "resume": "限期整改+自动验证"},
+    {"code": "0x03", "name": "L3-冻结", "condition": "中度越界/MOU连续归零", "impact": "全部配置权暂停", "resume": "人类裁决+深度审查"},
+    {"code": "0x04", "name": "L4-强制回退", "condition": "严重越界/跨Agent攻击", "impact": "状态回退至SBX-SUSPENDED", "resume": "沙盒整改+重新验证"},
+    {"code": "0x05", "name": "L5-永久休眠", "condition": "触及法律负空间/超时未整改", "impact": "配置权交易价格强制归零", "resume": "不可逆"}
+  ],
+  "interfaces": [
+    {
+      "id": "IF-001", "name": "负空间声明校验", "protocol": "HTTPS/JSON-RPC 2.0", "mode": "同步",
+      "caller": "DSA-Controller.NSFL编译器", "callee": "FC-NS-OPS-001.NS函数库",
+      "endpoint_spec": "POST /fcnsops/v1/ns/validate", "endpoint_engineering_m3": "POST /api/v1/ns/validate",
+      "request_enums": {"ns_type": ["ABSOLUTE_FORBIDDEN", "SCENE_LIMITED", "HUMAN_APPROVAL"]},
+      "response_enums": {"status": ["PASS", "FAIL", "REVISION_REQUIRED"], "fail_severity": ["CRITICAL", "WARNING", "INFO"]},
+      "http_codes": {"200": "处理完成（结果在body中）", "429": "限流（NS函数库过载）", "503": "法律负空间基线更新中，暂不可用"}
+    },
+    {
+      "id": "IF-002", "name": "函数语料六要素审查", "protocol": "HTTPS/JSON-RPC 2.0", "mode": "同步",
+      "caller": "DSA-Controller.沙盒调度器", "callee": "FC-NS-OPS-001.审查引擎",
+      "endpoint_spec": "POST /fcnsops/v1/corpus/inspect", "endpoint_engineering_m3": "POST /api/v1/corpus/inspect",
+      "request_enums": {"inspection_level": ["PRE-SBX", "IN-SBX", "POST-SBX"]},
+      "response_enums": {"status": ["PASS", "FAIL", "CONDITIONAL_PASS"], "gap_type": ["MISSING", "AMBIGUOUS", "CONTRADICTORY"]},
+      "thresholds": {"composite_score_pass": 0.85, "threshold_source": "SBX-OPS-VALIDATION-TEMP", "threshold_review_date": "2026-09-10", "note": "暂定阈值，待DCD-005-TT-002制度确认"}
+    },
+    {
+      "id": "IF-003", "name": "熔断触发（下发）", "protocol": "WebSocket / gRPC Streaming", "mode": "异步（事件）", "direction": "DSA-Controller → FC-NS-OPS-001.熔断器",
+      "endpoint_spec": "wss://fcnsops/v1/circuit/stream", "endpoint_engineering_m3": "wss://api/v1/circuit/stream",
+      "message_enums": {"message_type": ["CIRCUIT_BREAK"], "trigger_level": ["L1-预警", "L2-限制", "L3-冻结", "L4-强制回退", "L5-永久休眠"], "trigger_source": ["ECE_ENGINE", "NSFL_COMPILER", "HUMAN_OVERRIDE", "MOU_MONITOR", "NCA_AUDIT"]}
+    },
+    {
+      "id": "IF-004", "name": "熔断事件上报", "protocol": "WebSocket / gRPC Streaming", "mode": "异步（事件）", "direction": "FC-NS-OPS-001.熔断器 → DSA-Controller.状态机引擎",
+      "endpoint_spec": "wss://dsa-controller/v1/events/stream",
+      "message_enums": {"event_type": ["CIRCUIT_EVENT"], "event_subtype": ["TRIGGERED", "AUTO_RESUMED", "HUMAN_RESOLVED", "ESCALATED", "PERMANENT_BAN"]}
+    },
+    {
+      "id": "IF-005", "name": "状态同步/人类审批请求", "protocol": null, "mode": "异步",
+      "caller": "DSA-Controller", "callee": "FC-NS-OPS-001.配置面板",
+      "endpoint_spec": null, "endpoint_engineering_m3": null,
+      "note": "总表列项；§2.4 无详细定义，机读版不臆造"
+    },
+    {
+      "id": "IF-006", "name": "运行时负空间匹配（ECE引擎 ↔ 审查引擎）", "protocol": "gRPC Unary", "mode": "同步",
+      "caller": "ECE引擎（毫秒级调用）", "callee": "FC-NS-OPS-001.审查引擎",
+      "endpoint_spec": "/fcnsops.v1.RuntimeNS/Check", "endpoint_engineering_m3": "/api/v1/runtime/check",
+      "sla": {"p99_ms": 5},
+      "response_enums": {"decision": ["ALLOW", "WARN", "BLOCK", "ABSOLUTE_BLOCK"], "matched_rule_type": ["LEGAL", "SCENE", "CUSTOM"]}
+    },
+    {
+      "id": "IF-007", "name": "沙盒状态查询/更新", "protocol": null, "mode": "同步",
+      "caller": "沙盒调度器", "callee": "FC-NS-OPS-001.配置面板",
+      "endpoint_spec": null, "endpoint_engineering_m3": null,
+      "note": "总表列项；§2.4 无详细定义，机读版不臆造"
+    },
+    {
+      "id": "IF-008", "name": "主体身份验证", "protocol": null, "mode": "同步",
+      "caller": "DSA-Controller", "callee": "FC-NS-OPS-001.DID模块",
+      "endpoint_spec": null, "endpoint_engineering_m3": null,
+      "note": "总表列项；§2.4 无详细定义，机读版不臆造"
+    }
+  ],
+  "engineering_adaptation": {
+    "note": "REV-1新增 §2.3：规范端点 /fcnsops/v1/* 经 DSA-Controller 反向代理映射至 M3 工程端点 /api/v1/*；过渡期（M4-M5）适配层兼容",
+    "mappings": [
+      {"spec": "/fcnsops/v1/ns/validate", "engineering": "/api/v1/ns/validate", "adapter": "DSA-Controller反向代理"},
+      {"spec": "/fcnsops/v1/corpus/inspect", "engineering": "/api/v1/corpus/inspect", "adapter": "DSA-Controller反向代理"},
+      {"spec": "/fcnsops/v1/circuit/stream", "engineering": "/api/v1/circuit/stream", "adapter": "DSA-Controller反向代理"},
+      {"spec": "/fcnsops/v1/runtime/ns/check", "engineering": "/api/v1/runtime/check", "adapter": "DSA-Controller反向代理+字段映射"}
+    ]
+  },
+  "error_codes": [
+    {"code": "TDCA-ERR-001", "semantics": "未授权调用", "handling": "检查调用方角色权限"},
+    {"code": "TDCA-ERR-002", "semantics": "非NSFL预言机", "handling": "仅FC-NS-OPS-001 NS模块可调用"},
+    {"code": "TDCA-ERR-003", "semantics": "非人类裁决委员会", "handling": "需多签地址"},
+    {"code": "TDCA-ERR-004", "semantics": "非法状态转换", "handling": "检查状态机定义"},
+    {"code": "TDCA-ERR-005", "semantics": "主体已存在", "handling": "查询现有状态而非重复注册"},
+    {"code": "TDCA-ERR-006", "semantics": "激活系数≤1.2", "handling": "延长沙盒期或调整商业模式（严格大于1.2）"},
+    {"code": "TDCA-ERR-007", "semantics": "ERI评分不足", "handling": "完善函数语料六要素"},
+    {"code": "TDCA-ERR-008", "semantics": "状态不支持MOU更新", "handling": "仅在PCM-LIVE/RESTRICTED可更新"},
+    {"code": "TDCA-ERR-009", "semantics": "NSFL证书过期", "handling": "重新提交负空间声明"},
+    {"code": "TDCA-ERR-010", "semantics": "熔断器已激活", "handling": "等待当前熔断解决"},
+    {"code": "TDCA-ERR-011", "semantics": "主体已被BANNED", "handling": "不可操作，联系人类裁决委员会", "rev": "REV-1新增"},
+    {"code": "TDCA-ERR-012", "semantics": "主体已EXITED", "handling": "不可操作，如需重新准入需重新注册", "rev": "REV-1新增"},
+    {"code": "TDCA-ERR-013", "semantics": "无效DID地址", "handling": "检查DID格式", "rev": "REV-1新增"},
+    {"code": "TDCA-ERR-014", "semantics": "仅PCM-LIVE可退出", "handling": "其他状态需先转换至PCM-LIVE", "rev": "REV-1新增"}
+  ],
+  "event_bus": {
+    "topics": [
+      "tdca.dsa.events.state-transition",
+      "tdca.dsa.events.circuit-breaker",
+      "tdca.dsa.events.mou-update",
+      "tdca.dsa.events.nsfl-cert",
+      "tdca.dsa.events.sandbox-lifecycle",
+      "tdca.dsa.events.human-approval",
+      "tdca.dsa.events.nca-generated",
+      "tdca.dsa.events.subject-exit"
+    ],
+    "avro_schema_reference": "§4.3 StateTransitionEvent（人读件）"
+  },
+  "rbac_roles": ["DSA-Controller", "FC-NS-OPS-001 NSFL", "FC-NS-OPS-001 熔断器", "ECE引擎", "人类裁决委员会", "MOU Oracle", "主体自身"],
+  "performance_baseline": [
+    {"metric": "NSFL审查响应时间", "target": "P99 < 500ms"},
+    {"metric": "ECE运行时检查", "target": "P99 < 5ms"},
+    {"metric": "状态转换链上确认", "target": "< 3s（联盟链）"},
+    {"metric": "熔断触发→状态冻结", "target": "< 100ms（链下）"},
+    {"metric": "MOU更新→合约同步", "target": "< 30s"},
+    {"metric": "全链路准入耗时", "target": "< 7天（沙盒期）"},
+    {"metric": "BANNED守卫拦截", "target": "< 1ms"}
+  ],
+  "chain_interface": {
+    "note": "TDCA-DSA-CBDC-001 智能合约接口（联盟链/数字人民币平台）属外部条件，本轮挂起不入机读化范围；枚举与档位已在 states/trigger_levels 中给出"
+  }
+}

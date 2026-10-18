@@ -140,7 +140,9 @@ def test_execute_empty_signature_rejected(auth):
                     json={"workflow_id": "WF-TEST-001",
                           "human_signature": ""}, headers=auth)
     assert r.status_code == 403
-    assert "HUMAN_SIGNATURE_REQUIRED" in r.text
+    # 段二①：引擎异常串不再直透（只进日志）；对外固定文案＋码
+    assert "签名门禁拒绝" in r.text and "HUMAN_SIGNATURE_REQUIRED" not in r.text
+    assert r.json()["code"] == "TDCA-E-IDENT-STATE-001"
 
 
 # ---- ④ 签名 request→confirm ----
@@ -214,3 +216,47 @@ def test_worm_log_integrity(auth):
     d = r.json()["data"]
     assert d["integrity"] is True
     assert d["worm_log_entries"] >= 1
+
+
+# ---- ⑦ B6：创建归属判定（判序前移／幂等零新增／409＋归属提示·UX-PLAIN-001 批3）----
+
+def _nca_worm_counts():
+    """直核 NCA 链条数（nca_chain 表）与 WORM 日志条数（引擎内存链）——⛔ 不以端点返回推断。"""
+    import workbuddy_ops
+    with get_sessionmaker().begin() as s:
+        n_nca = s.query(M.NcaChain).count()
+    return n_nca, len(workbuddy_ops._engine._log)
+
+
+def test_b6_create_others_id_409_and_zero_chain(auth):
+    # 条件3：撞他人 ID ⟹ 409＋归属提示；且该次请求 NCA／WORM 条数零新增（直核）
+    r = _create(auth, dsl={**_DSL, "workflow_id": "WF-B6-CONFLICT"})
+    assert r.status_code == 201
+    r = client.post("/api/v1/auth/register", json={
+        "username": "wbtester03", "password": _PW,
+        "agree_contract": True, "contract_version": "V1.0"})
+    assert r.status_code in (200, 201)
+    r = client.post("/api/v1/auth/login",
+                    json={"username": "wbtester03", "password": _PW})
+    other = {"Authorization": r.json()["data"]["token"]}
+    n0, w0 = _nca_worm_counts()   # 基线取在他人一切就绪后、撞 ID 请求之前
+    r = _create(other, dsl={**_DSL, "workflow_id": "WF-B6-CONFLICT"})
+    assert r.status_code == 409, r.text[:200]
+    assert "归属" in r.text
+    n1, w1 = _nca_worm_counts()
+    assert n1 == n0 and w1 == w0          # 直核：零新增（条件1 判序前移实证）
+
+
+def test_b6_create_owner_idempotent_zero_chain(auth):
+    # 条件2：本人重建 ⟹ 回成功但零新增（NCA／WORM 条数不变）
+    r = _create(auth, dsl={**_DSL, "workflow_id": "WF-B6-IDEM"})
+    assert r.status_code == 201
+    n0, w0 = _nca_worm_counts()
+    r = _create(auth, dsl={**_DSL, "workflow_id": "WF-B6-IDEM"})
+    assert r.status_code == 201, r.text[:200]
+    body = r.json()["data"]
+    assert body["existed"] is True
+    assert body["status"] == "PENDING_HUMAN_GATE"
+    assert "nca_ref" in body
+    n1, w1 = _nca_worm_counts()
+    assert n1 == n0 and w1 == w0          # 直核：幂等零新增

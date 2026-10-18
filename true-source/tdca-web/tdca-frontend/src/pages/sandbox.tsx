@@ -152,7 +152,7 @@ export function SandboxPage() {
                 {meData?.my_sandbox?.map((a) => (
                   <li key={a.apply_id} className="text-xs text-gray-600">
                     <button
-                      className="font-medium text-blue-600 underline"
+                      className="bg-transparent font-medium text-blue-600 underline hover:text-blue-800"
                       onClick={() => setExpanded(expanded === a.apply_id ? '' : a.apply_id)}>
                       {a.apply_id}
                     </button>

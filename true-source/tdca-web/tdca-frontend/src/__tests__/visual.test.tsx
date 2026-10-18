@@ -101,7 +101,11 @@ describe('VISUAL-001 可视化增强', () => {
   })
 
   it('/home：五元拓扑 Ω 挂载（H/M/L 顶点 + 五关系边，ID81）', async () => {
-    const r = render(<HomePage />)
+    const r = render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>,
+    )
     await waitFor(() => expect(screen.getByTestId('home-omega')).toBeInTheDocument())
     expect(screen.getByText(/五元拓扑 Ω/)).toBeInTheDocument()
     expect(r.container.querySelector('[data-testid="home-omega"]')).toBeInTheDocument()

@@ -15,14 +15,17 @@ from urllib.parse import quote
 
 @dataclass(frozen=True)
 class ScanTarget:
-    """扫描候选仓库。"""
-    repo_full: str              # owner/repo
+    """扫描候选仓库（来源适配层 W-1：新增三字段均带默认，旧字段与旧构造方式不变）。"""
+    repo_full: str              # owner/repo（非仓来源时为来源标识）
     stars: int
     license_spdx: Optional[str]
     pushed_at: Optional[str]
     description: Optional[str]
     keywords: List[str]
     url: str
+    source_type: Optional[str] = None      # 来源类型（github/dataset/model/saas/portal/page）
+    evidence_ref: Optional[str] = None     # 工件级证据引用（核验层填写）
+    permalink: Optional[str] = None        # 可复核之固定链接
 
     def to_dict(self) -> dict:
         return {
@@ -33,6 +36,9 @@ class ScanTarget:
             "description": self.description,
             "keywords": self.keywords,
             "url": self.url,
+            "source_type": self.source_type,
+            "evidence_ref": self.evidence_ref,
+            "permalink": self.permalink,
         }
 
 
@@ -47,10 +53,16 @@ class EcoScanner:
 
     def __init__(self, keywords: Optional[List[str]] = None,
                  min_stars: int = 100,
-                 max_results_per_query: int = 20):
+                 max_results_per_query: int = 20,
+                 strict_license: bool = True):
+        # strict_license（W-3 开关·默认 True＝旧行为不变）：
+        #   True  → scan_static 对非 OSI／无声明一律硬拒（AUDIT-001 原语义，前向兼容）；
+        #   False → 分档受控：放行全部记录（许可形态交由 license_tier 分档、
+        #           diagnoser 上限接线处理，⛔ 非 OSI 永不升 A 之红线在下游强制）。
         self._keywords = keywords or list(self.DEFAULT_KEYWORDS)
         self._min_stars = min_stars
         self._max_results = max_results_per_query
+        self._strict_license = strict_license
 
     # ---- GitHub API 扫描（真实执行）----
 
@@ -103,11 +115,17 @@ class EcoScanner:
                     "MPL-2.0", "GPL-3.0", "GPL-2.0", "LGPL-3.0", "AGPL-3.0"}
 
     def scan_static(self, repos: List[dict]) -> List[ScanTarget]:
-        """静态注入扫描（测试/离线用——数据性质 SIMULATED）。"""
+        """静态注入扫描（测试/离线用——数据性质 SIMULATED）。
+
+        strict_license=True（默认·旧行为不变）：非 OSI／无声明一律硬拒（AUDIT-001）。
+        strict_license=False（W-3 分档受控）：放行全部记录，许可形态交由
+        license_tier 四档分档；W-1 三字段（source_type/evidence_ref/permalink）
+        由记录透传，⛔ 非 OSI 永不升 A 之红线在 diagnoser 上限接线处强制（W-4）。
+        """
         targets = []
         for r in repos:
             lic = r.get("license_spdx")
-            if not lic or lic not in self.OSI_LICENSES:
+            if self._strict_license and (not lic or lic not in self.OSI_LICENSES):
                 raise ValueError(
                     f"[NSFL-TRIGGER] 非 OSI 许可（AUDIT-001 拒绝）: {r.get('repo_full')} -> {lic}")
             targets.append(ScanTarget(
@@ -118,6 +136,9 @@ class EcoScanner:
                 description=r.get("description"),
                 keywords=r.get("keywords", []),
                 url=r.get("url", f"https://github.com/{r['repo_full']}"),
+                source_type=r.get("source_type"),
+                evidence_ref=r.get("evidence_ref"),
+                permalink=r.get("permalink"),
             ))
         return targets
 

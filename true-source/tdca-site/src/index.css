@@ -73,3 +73,26 @@
     @apply bg-background text-foreground;
   }
 }
+/* =============================================================================
+ * 按钮文字改蓝（创始人 2026-10-16 11:1x 明示：「按钮黑色的字改为蓝色的字」）
+ * 落法：非分层 CSS 优先于一切 @layer 工具类，无需 !important。
+ * 口径：按钮本体文字默认蓝 #2563eb（原黑/深灰字按钮受益）；
+ *       自带 text-white / text-primary-foreground 类名的按钮（深底/彩底上的白字，
+ *       全站实测 17 处）予以豁免保白——蓝字落深底不可读。
+ *       链接不动（本次令只及按钮）。
+ * ========================================================================== */
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"] {
+  color: #2563eb;
+}
+
+button[class*="text-white"],
+[role="button"][class*="text-white"],
+input[type="submit"][class*="text-white"],
+input[type="button"][class*="text-white"],
+button[class*="text-primary-foreground"],
+[role="button"][class*="text-primary-foreground"] {
+  color: #ffffff;
+}

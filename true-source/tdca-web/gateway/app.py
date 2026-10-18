@@ -15,6 +15,7 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import sys
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 # 跨项目路径注入（与各子应用保持一致）
@@ -39,8 +40,34 @@ _BRIDGE_DIR = _ROOT / "tdca-bridge"
 if _BRIDGE_DIR.is_dir() and str(_BRIDGE_DIR) not in sys.path:
     sys.path.insert(0, str(_BRIDGE_DIR))
 
+@asynccontextmanager
+async def _lifespan(_app):
+    # NCA-ATOMIC 辅改 B：服务启动即对现有 prev_nca 计数打内存基线快照
+    # （告警「只报新增」基线差口径；不入库、不建表；快照失败首写惰性回退）
+    from api_v1 import init_nca_fork_baseline
+    init_nca_fork_baseline()
+    # T-037 任务 C：超期升档扫掠（服务内定时，⛔ 不入请求径；写口只许置永久）
+    import asyncio
+    from agent_channel_ops import _prs_sweep_loop
+    _sweep_task = asyncio.create_task(_prs_sweep_loop())
+    try:
+        yield
+    finally:
+        _sweep_task.cancel()
+
+
 app = FastAPI(title="TDCA Unified API Gateway", version="V1.0",
-              description="5CC 阶段 1 统一网关：聚合 D-2 / CSCP / Workbuddy / Translator / P3 + bridge")
+              description="5CC 阶段 1 统一网关：聚合 D-2 / CSCP / Workbuddy / Translator / P3 + bridge",
+              lifespan=_lifespan)
+
+# L1SI153-ERROR-CODE-001 段一：拒绝类响应统一挂码（全局 handler 仅增设 code 字段；
+# ⛔ 不改状态码/文案/判定分支；归簇见 error_codes.py）
+from fastapi.exceptions import RequestValidationError  # noqa: E402
+from starlette.exceptions import HTTPException as _StarletteHTTPException  # noqa: E402
+from error_codes import (tdca_http_exception_handler,  # noqa: E402
+                         tdca_validation_exception_handler)
+app.add_exception_handler(_StarletteHTTPException, tdca_http_exception_handler)
+app.add_exception_handler(RequestValidationError, tdca_validation_exception_handler)
 
 # bridge 挂载必须在 app 创建之后（修复：原位置在 app 定义前，NameError 被 except 静默吞掉导致 bridge 全 404）
 try:
@@ -89,6 +116,15 @@ app.include_router(anchor_ops_router)
 from ops_ops import router as ops_ops_router  # noqa: E402
 app.include_router(ops_ops_router)
 
+# 乙案 P2: 运维每日日志（/api/v1/ops/logs/*——V-1~V-8 服务端校验；红点+连续未填入 P7 工单池；CSV 导出）
+from ops_logs_ops import router as ops_logs_ops_router  # noqa: E402
+app.include_router(ops_logs_ops_router)
+
+# 手册接口化（INACCOUNT-DEPLOY 块 2）: /api/v1/ops/files/*——在册七件按角色出件；
+# 撤 /ops/files/ 静态门后唯一取件口（白名单防穿越；md→text/markdown；容器内只读挂载）
+from ops_files_ops import router as ops_files_ops_router  # noqa: E402
+app.include_router(ops_files_ops_router)
+
 # A-19: P8a 权属登记管理（/api/v1/ownership/*——登记／变更／注销／查询；四条不公开负空间 fail-closed）
 from ownership_ops import router as ownership_ops_router  # noqa: E402
 app.include_router(ownership_ops_router)
@@ -109,7 +145,31 @@ app.include_router(library_ops_router)
 from announcements_ops import router as announcements_ops_router  # noqa: E402
 app.include_router(announcements_ops_router)
 
-# A-24: 存证公开自查入口 M1″（/api/v1/selfcheck/*——只读匿名白名单十字段；rec_hash 可真验；
+# A-24: P8b 授权登记管理（/api/v1/authorization/*——登记／变更／注销／查询／操作＋公开查四字段；
+# 四要件缺一即拒；四条不公开负空间 fail-closed；签名须本人、智能体不代持代填）
+from authorization_ops import router as authorization_ops_router  # noqa: E402
+app.include_router(authorization_ops_router)
+
+# A-25: 配置权市场「管理」面（/api/v1/market-admin/*——挂出／查询／状态变更／下架；
+# 先有成件＋四要件合取闸门（例外仅沙盒演练）；限权属登记人本人；下架不溯及授权件；
+# 公开面四字段；每操作落 NCA＋事件双留痕）
+from market_admin_ops import router as market_admin_ops_router  # noqa: E402
+app.include_router(market_admin_ops_router)
+
+# A-26: 智能体通道 批1 身份与登记（/api/v1/agent-channel/*——登记即创建·未登记显幽灵态；
+# 主体/执行体二分；登记号为智能体侧标识（⛔ 非 TDID）；fail-closed 六步总闸；
+# 凭据只存指纹·人类会话内签发·锚无效不发令牌；草案五表只读不动）
+from agent_channel_ops import router as agent_channel_ops_router  # noqa: E402
+app.include_router(agent_channel_ops_router)
+
+# A-27: 公开只读制度件取得面（丙案 · L1SI151-PUBLIC-ROUTE-001——/api/public/docs/* 匿名只读
+# 已入站公开件；只读容器件单一事实源；fail-closed；旧 /api/site/docs 为同一实现之别名）
+from public_docs_ops import router as public_docs_router  # noqa: E402
+app.include_router(public_docs_router)
+from public_docs_ops import alias_router as public_docs_alias_router  # noqa: E402
+app.include_router(public_docs_alias_router)
+
+# A-28: 存证公开自查入口 M1″（/api/v1/selfcheck/*——只读匿名白名单十字段；rec_hash 可真验；
 # 031 令：⛔ 不含部署、⛔ 不出 actor 原值、⛔ 不做列表接口防枚举、限流 60/分/IP）
 from selfcheck_ops import router as selfcheck_ops_router  # noqa: E402
 app.include_router(selfcheck_ops_router)

@@ -1,0 +1,35 @@
+# encounter-assert-gate —— ENC-REPO-001 相遇专章断言闸（硬闸·不过不许合）
+#
+# 出处：交办令 ENC-REPO-001（C 组）＋ 改造令（丙＋甲）；照既有 consistency-gate 先例风格。
+# CI 硬闸三脚本（自足／仓内相对锚定·含本机绝对路径串零命中）：
+#   沙盒仿真（7/7）· 接口断言（7/7·对抗 7/7·换序·可重复）· 断言复跑 v2（12/12·对 docs/regulations/ 正式条文结构面）
+# 断言 v1（12/12）留仓内供本地复跑、不进 CI 硬闸：其被引两件（研究草案／双向奔赴口径件）不在仓，云端必失败（改造令·丙）。
+# v1 本地跑法：设环境变量 TDCA_ENC_ASSERT_WS 指向智库工作区根；缺被引件时如实 SKIP（exit 0），⛔ 不伪报通过。
+# 依赖：仅 v2 需 PyYAML —— 用 runner 系统 python3（ubuntu-latest 系统 Python 预装），不 setup-python、不联网装包（H-5 无外部网络调用）。
+
+name: encounter-assert-gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "docs/regulations/TDCA-STD-SCENE-ENCOUNTER-001*"
+      - "docs/experiments/encounter-001/**"
+      - ".github/workflows/encounter-assert-gate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  encounter-asserts:
+    name: 相遇专章断言闸（三脚本·硬闸）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: 沙盒仿真（7/7 · 自足零依赖）
+        run: python3 docs/experiments/encounter-001/enc_gaps_sandbox_v1.py
+      - name: 接口断言（7/7 · 对抗 7/7 · 换序 · 可重复 · 自足零依赖）
+        run: python3 docs/experiments/encounter-001/enc_identity_interface_assert_v1.py
+      - name: 断言复跑 v2（12/12 · 对仓内正式条文结构面）
+        run: python3 docs/experiments/encounter-001/enc_gaps_assert_v2_formal.py

@@ -91,6 +91,10 @@ export function AuthPage() {
         >
           登录（账号密码 → 会话令牌）
         </button>
+        {/* 忘记密码指引（件 B0：零后端文案口径——无自助重置通道，人工重置） */}
+        <p data-testid="auth-forgot-hint" className="text-[11px] leading-4 text-gray-500">
+          忘记密码？本站点无自助重置通道，请携带用户名联系站点管理员人工重置（<a href="mailto:xuantan0703@agent.qq.com" className="text-emerald-700 underline">xuantan0703@agent.qq.com</a>）后重新登录。
+        </p>
       </div>
       <div className="mb-2 max-w-md text-[10px] uppercase tracking-wide text-gray-400">降级通道：DID 模拟态登录（保留）</div>
       <div data-testid="auth-form" className="max-w-md space-y-4">
@@ -105,7 +109,7 @@ export function AuthPage() {
                 key={r}
                 data-testid={`auth-role-${r}`}
                 data-active={role === r}
-                className={`rounded border px-3 py-1.5 text-xs ${role === r ? 'border-slate-800 bg-slate-800 text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+                className={`rounded border px-3 py-1.5 text-xs ${role === r ? 'border-slate-800 bg-slate-800 text-white' : 'border-blue-600 bg-blue-600 text-white hover:bg-blue-700'}`}
                 onClick={() => setRole(r)}
               >
                 {r} · {r === 'H' ? '人类' : r === 'M' ? '智能体' : '学习体'}

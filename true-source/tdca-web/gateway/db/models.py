@@ -411,6 +411,7 @@ class ToolItem(Base):
     version: Mapped[str | None] = mapped_column(Text)
     requires_grant: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     status: Mapped[str] = mapped_column(Text, nullable=False, default="available")
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
     created_at: Mapped[str] = mapped_column(Text, nullable=False)
     __table_args__ = (
@@ -545,10 +546,362 @@ class Announcement(Base):
     announcement_id: Mapped[str] = mapped_column(Text, primary_key=True)  # AN-xxx
     title: Mapped[str] = mapped_column(Text, nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)               # 正文（纯文字）
+    category: Mapped[str] = mapped_column(Text, nullable=False, default="通知")  # LIB-DOCS-SCOPE-001 E：闭集四值（通知/信息公开/动态周报/资讯）
     published_by: Mapped[str | None] = mapped_column(Text)                # 发布账号（内部面）
     nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
     published_at: Mapped[str] = mapped_column(Text, nullable=False)
     __table_args__ = (
         CheckConstraint(_PROVENANCE_CHECK, name="ck_ann_prov"),
+        CheckConstraint("category IN ('通知','信息公开','动态周报','资讯')", name="ck_ann_category"),
+    )
+
+
+class AuthorizationRecord(Base):
+    """26. 授权登记记录（P8b 一期段：登记／变更／注销／查询／操作——授权侧；
+    登记二分之本面只做「谁能怎么用」；四要件（场景约束／五阶资产形态／全构成已授权／
+    法律主体签名）缺一即拒；授权件模板八字段以 template_fields 透传存证；
+    签名＝电子签名与授权码皆须本人，智能体不代持、不代填；公开面仅四字段）。"""
+
+    __tablename__ = "authorization_records"
+    record_id: Mapped[str] = mapped_column(Text, primary_key=True)  # AR-xxx
+    asset_ref: Mapped[str] = mapped_column(Text, nullable=False)    # 授权对象引用
+    grantee_ref: Mapped[str] = mapped_column(Text, nullable=False)  # 被授权方引用
+    scene: Mapped[str] = mapped_column(Text, nullable=False)        # 场景（四要件①载体）
+    req_scene: Mapped[bool] = mapped_column(nullable=False, default=False)          # ① 场景约束
+    req_five_forms: Mapped[bool] = mapped_column(nullable=False, default=False)     # ② 五阶资产形态
+    req_full_grant: Mapped[bool] = mapped_column(nullable=False, default=False)     # ③ 全构成已授权
+    req_legal_signature: Mapped[bool] = mapped_column(nullable=False, default=False)  # ④ 法律主体签名
+    scope_note: Mapped[str | None] = mapped_column(Text)            # 权限范围说明（⛔ 不代定取值）
+    term_note: Mapped[str | None] = mapped_column(Text)             # 期限说明（⛔ 不代定取值）
+    template_fields: Mapped[str] = mapped_column(Text, nullable=False, default="{}")  # 模板八字段 JSON
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    note: Mapped[str | None] = mapped_column(Text)
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('pre-accepted','active','amended','cancelled')",
+                        name="ck_authz_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_authz_prov"),
+        Index("idx_authz_grantee", "grantee_ref"),
+    )
+
+
+class MarketListing(Base):
+    """29. 配置权市场挂出件（管理面 A-1/A-3/A-4：挂出／状态变更／下架；
+    先有成件闸门（权属成件＋授权成件＋四要件齐；例外仅沙盒演练显式标记）；
+    初始条件必公开；下架不溯及已生成授权件；操作限权属登记人本人）。"""
+
+    __tablename__ = "market_listings"
+    listing_id: Mapped[str] = mapped_column(Text, primary_key=True)  # ML-xxx
+    owner_ref: Mapped[str] = mapped_column(Text, nullable=False)     # 权属登记人本人
+    ownership_record_id: Mapped[str] = mapped_column(Text, nullable=False)   # 权属成件
+    authorization_record_id: Mapped[str] = mapped_column(Text, nullable=False, default="")  # 授权成件（沙盒例外空）
+    asset_summary: Mapped[str] = mapped_column(Text, nullable=False)
+    scene: Mapped[str] = mapped_column(Text, nullable=False)
+    scope_note: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    term_note: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    initial_conditions: Mapped[str] = mapped_column(Text, nullable=False)  # 初始条件（必公开）
+    sandbox_flag: Mapped[int] = mapped_column(nullable=False, default=0)   # 沙盒例外显式标记
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    published_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('active','paused','delisted')", name="ck_ml_status"),
+        CheckConstraint("sandbox_flag IN (0,1)", name="ck_ml_sandbox"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ml_prov"),
+        Index("idx_ml_owner", "owner_ref"),
+        Index("idx_ml_status", "status"),
+    )
+
+
+class MarketListingEvent(Base):
+    """30. 挂出件事件留痕（双留痕：事件表＋NCA；publish／pause／resume／delist
+    各记原态与新态；操作人限权属登记人本人）。"""
+
+    __tablename__ = "market_listing_events"
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)    # MLE-xxx
+    listing_id: Mapped[str] = mapped_column(Text, nullable=False)
+    action: Mapped[str] = mapped_column(Text, nullable=False)        # publish/pause/resume/delist
+    from_status: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    to_status: Mapped[str] = mapped_column(Text, nullable=False)
+    operator: Mapped[str] = mapped_column(Text, nullable=False)
+    nca_ref: Mapped[str | None] = mapped_column(Text, ForeignKey("nca_chain.nca_id"))
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("action IN ('publish','pause','resume','delist')", name="ck_mle_action"),
+        CheckConstraint("to_status IN ('active','paused','delisted')", name="ck_mle_to"),
+        Index("idx_mle_listing", "listing_id"),
+    )
+
+
+class UserAnchor(Base):
+    """31. 用户身份锚表（L1SI145-ANCHOR-B2-001：注册选锚落存证＋人工受理核验）。
+
+    明文最小化硬约束：只落 anchor_kind 枚举引用与 *_present 布尔＋evidence_ref 引用，
+    ⛔ 绝不落真实姓名/手机号明文取值；选锚不产生权限、不发身份类令牌。
+    未选锚者注册时照常建一行（anchor_kind NULL＝未选如实，tier 记名级·态待补）。
+    """
+
+    __tablename__ = "user_anchors"
+    username: Mapped[str] = mapped_column(ForeignKey("users.username"), primary_key=True)
+    anchor_kind: Mapped[str | None] = mapped_column(Text)          # notifier|realname-phone；NULL=未选
+    anchor_tier: Mapped[str] = mapped_column(Text, nullable=False, default="记名级")
+    tier_state: Mapped[str] = mapped_column(Text, nullable=False, default="待补")   # 待补|已补
+    real_name_present: Mapped[int | None] = mapped_column(Integer)  # 核验后 1/0；未核 NULL
+    phone_present: Mapped[int | None] = mapped_column(Integer)      # 同上（非必填，可为 0）
+    evidence_ref: Mapped[str | None] = mapped_column(Text)          # 证据引用编号（⛔ 非明文）
+    verified_at: Mapped[str | None] = mapped_column(Text)
+    verifier: Mapped[str | None] = mapped_column(Text)              # 受理人账号
+    nca_ref: Mapped[str | None] = mapped_column(Text)               # 最近锚段存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("anchor_kind IN ('notifier','realname-phone')", name="ck_user_anchors_kind"),
+        CheckConstraint("anchor_tier IN ('固锚级','移锚级','记名级','未达门槛','未定档')",
+                        name="ck_user_anchors_tier"),
+        CheckConstraint("tier_state IN ('待补','已补')", name="ck_user_anchors_state"),
+        CheckConstraint("real_name_present IN (0,1)", name="ck_user_anchors_rn"),
+        CheckConstraint("phone_present IN (0,1)", name="ck_user_anchors_ph"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_user_anchors_prov"),
+    )
+
+
+class SiteAgentRegistry(Base):
+    """32. 站点智能体通道·登记表（L1SI147-CHANNEL-B1-001：登记即创建、未登记即未创建）。
+
+    主体与执行体二分：owner_username 为主体（人类账户）列，智能体执行体无财产；
+    智能体侧标识＝登记号 reg_no（⛔ 不叫 TDID、不自造编号体例）；
+    status＝正常＋惩罚三态（冻结／降权／吊销，批 4 执行器落表）。
+    """
+
+    __tablename__ = "site_agent_registry"
+    reg_no: Mapped[str] = mapped_column(Text, primary_key=True)          # 登记号（通道内唯一）
+    owner_username: Mapped[str] = mapped_column(ForeignKey("users.username"), nullable=False)
+    six_elements_ref: Mapped[str] = mapped_column(Text, nullable=False)  # 创世六要素引用
+    anchor_ref: Mapped[str | None] = mapped_column(Text)                 # 锚定项引用（user_anchors 锚段）
+    tier: Mapped[str] = mapped_column(Text, nullable=False, default="basic")  # 等第（取值域后续批次裁定）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="正常")
+    nca_ref: Mapped[str | None] = mapped_column(Text)                    # 登记存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('正常','冻结','降权','吊销')", name="ck_site_agent_registry_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_registry_prov"),
+    )
+
+
+class SiteAgentCredential(Base):
+    """33. 站点智能体通道·凭据族（⛔ 只存不可逆指纹，凭据值一律不入库）。
+
+    人类会话内签发（issuer_session 存会话指纹，⛔ 非会话值本身）；
+    吊销即时生效（批 4 执行器；status=revoked 即全库拒）。
+    """
+
+    __tablename__ = "site_agent_credential"
+    cred_no: Mapped[str] = mapped_column(Text, primary_key=True)
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    cred_fingerprint: Mapped[str] = mapped_column(Text, nullable=False)  # sha256 不可逆指纹
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    issued_at: Mapped[str] = mapped_column(Text, nullable=False)
+    rotated_at: Mapped[str | None] = mapped_column(Text)
+    revoked_at: Mapped[str | None] = mapped_column(Text)
+    issuer_session: Mapped[str | None] = mapped_column(Text)             # 签发人类会话指纹（⛔ 非值）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                    # 签发存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    __table_args__ = (
+        CheckConstraint("status IN ('active','revoked')", name="ck_site_agent_credential_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_credential_prov"),
+    )
+
+
+class SiteAgentAdmission(Base):
+    """34. 站点智能体通道·闸步表（批 2：六步硬序之状态机落点，①③④ 批 2 接真、⑤批 3）。
+
+    每（登记号, 步）一行；状态闭集 passed／failed／pending——fail-closed 非 passed 即未达；
+    负空间未过/沙盒未过如实记 failed（拒绝入网／⛔ 不得正空间执行）；
+    ②token 步状态由凭据表 active 指纹派生，⛔ 不在本表落行（单一事实源）。
+    """
+
+    __tablename__ = "site_agent_admission"
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), primary_key=True)
+    step: Mapped[str] = mapped_column(Text, primary_key=True)   # protocol-load|ns-review|sandbox|execute
+    state: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    result_ref: Mapped[str | None] = mapped_column(Text)        # 结果引用（⛔ 非凭据值）
+    detail: Mapped[str | None] = mapped_column(Text)            # 要件绑定/申报摘要（JSON 文本）
+    nca_ref: Mapped[str | None] = mapped_column(Text)           # 本步存证回链
+    actor: Mapped[str | None] = mapped_column(Text)             # 操作人类账户
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("step IN ('protocol-load','ns-review','sandbox','execute')",
+                        name="ck_site_agent_admission_step"),
+        CheckConstraint("state IN ('passed','failed','pending')",
+                        name="ck_site_agent_admission_state"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_admission_prov"),
+    )
+
+
+class SiteAgentGrant(Base):
+    """35. 站点智能体通道·授权件表（批 3：四要件机验，缺一不成立；配置即侵权口径）。
+
+    照令七字段（grant_no/reg_no/scene_constraint/legal_signer/signature_ref/
+    parent_grant_no/status）＋detail 四要件机验明细（R2 五阶清单/R3 全构成声明/逐条判值）；
+    四要件依在册《授权件模板》（R1 场景约束/R2 五阶资产形态/R3 全构成已授权/R4 法律主体签名）；
+    人类会话内登记（⛔ 智能体不代签代持）；⛔ 不承接不动草案 auth_grants。
+    """
+
+    __tablename__ = "site_agent_grant"
+    grant_no: Mapped[str] = mapped_column(Text, primary_key=True)
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    scene_constraint: Mapped[str] = mapped_column(Text, nullable=False)   # R1（未列明场景不在授权范围）
+    legal_signer: Mapped[str] = mapped_column(Text, nullable=False)       # R4 法律主体签名者
+    signature_ref: Mapped[str] = mapped_column(Text, nullable=False)      # R4 签名事件引用（落 NCA）
+    parent_grant_no: Mapped[str | None] = mapped_column(
+        ForeignKey("site_agent_grant.grant_no"))                          # 转授上层件号
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    detail: Mapped[str | None] = mapped_column(Text)   # 四要件机验明细（JSON）
+    nca_ref: Mapped[str | None] = mapped_column(Text)  # 登记存证回链
+    actor: Mapped[str | None] = mapped_column(Text)    # 操作人类账户
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('active','revoked')", name="ck_site_agent_grant_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_grant_prov"),
+    )
+
+
+class SiteAgentClassification(Base):
+    """37. 站点智能体通道·判级事件表（T-037 任务 A：引擎判级档）。
+
+    引擎只写事件＋存证，⛔ 永不写 site_agent_registry.status（Q-3/Q-12）；
+    档位由服务端依三空间分档口径从 signal_source 导出（⛔ 调用方不得自报档位）；
+    呈待裁：ruling_state=pending→ruled|dismissed，裁决由 founder 人类会话落（采纳只走既有惩罚端点）。
+    """
+
+    __tablename__ = "site_agent_classification"
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)         # PRS-＋12 位十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    signal_source: Mapped[str] = mapped_column(Text, nullable=False)      # sensor_warning|sensor_cryogenic|sensor_blocked|legal_matrix
+    signal_ref: Mapped[str] = mapped_column(Text, nullable=False)         # 信号锚（verdict 摘要/NSFL 引用，可核）
+    band: Mapped[str] = mapped_column(Text, nullable=False)               # 轻度|中度|严重|法律级（服务端导出）
+    band_basis: Mapped[str] = mapped_column(Text, nullable=False)         # 分档依据（在册口径件号与条款位引用）
+    ruling_state: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    ruling_ref: Mapped[str | None] = mapped_column(Text)                  # 裁决回链（punish 存证号或驳回存证号）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                     # 判级存证回链
+    actor: Mapped[str | None] = mapped_column(Text)                       # 写入者（引擎＝engine；裁决＝founder 账户）
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("signal_source IN ('sensor_warning','sensor_cryogenic','sensor_blocked','legal_matrix')",
+                        name="ck_site_agent_classification_source"),
+        CheckConstraint("band IN ('轻度','中度','严重','法律级')", name="ck_site_agent_classification_band"),
+        CheckConstraint("ruling_state IN ('pending','ruled','dismissed')",
+                        name="ck_site_agent_classification_ruling"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_classification_prov"),
+    )
+
+
+class SiteAgentRemediation(Base):
+    """38. 站点智能体通道·恢复径周期表（T-037 任务 B：重塑／重新验证独立记录）。
+
+    每周期一行：remediate 落 remediated_at（同周期可续重塑，次数不限）；
+    reverify 独立落行字段（⛔ 不与重塑合并为一步，S-3）；restore 只认「已重塑＋已验证(passed)」事实。
+    ⛔ 无 TTL/悬置字段（不合格续留沙盒重塑，不倒计不悬置，第十五条）。
+    """
+
+    __tablename__ = "site_agent_remediation"
+    cycle_no: Mapped[str] = mapped_column(Text, primary_key=True)         # REM-＋12 位十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    cycle_seq: Mapped[int] = mapped_column(nullable=False)                # 主体内周期序（自 1 递增）
+    remediated_at: Mapped[str | None] = mapped_column(Text)               # 重塑时点（回沙盒重塑落）
+    remediate_nca_ref: Mapped[str | None] = mapped_column(Text)           # 重塑存证回链
+    reverify_at: Mapped[str | None] = mapped_column(Text)                 # 重新验证时点（独立记录）
+    reverify_result: Mapped[str | None] = mapped_column(Text)             # passed|failed
+    reverify_nca_ref: Mapped[str | None] = mapped_column(Text)            # 验证存证回链
+    actor: Mapped[str | None] = mapped_column(Text)                       # 操作 founder 账户
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("reverify_result IN ('passed','failed')", name="ck_site_agent_remediation_rev"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_remediation_prov"),
+    )
+
+
+class SiteAgentPermanent(Base):
+    """39. 站点智能体通道·永久终态标记表（T-037 任务 C：超期升档）。
+
+    吊销满 30 天（以惩罚生效时点计）未达解禁 ⟹ 置永久（第十一条：⛔ 不经人工、永久为终态）；
+    写口仅服务内定时扫掠（⛔ 不入请求径），只许写永久、⛔ 不写其它态、⛔ 不降档、⛔ 不复活；
+    标记在册即恢复径全闭（remediate/reverify/restore 一律 403，第十六条法律级口径一致）。
+    ⛔ 不动 registry.status 闭集（不改表结构闭集）：主体 status 保持吊销，本表为终态叠加标记。
+    """
+
+    __tablename__ = "site_agent_permanent"
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), primary_key=True)
+    source: Mapped[str] = mapped_column(Text, nullable=False, default="sweep_upgrade")  # 写口来源闭集
+    nca_ref: Mapped[str | None] = mapped_column(Text)                     # 升档存证回链（独立存证类型）
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("source IN ('sweep_upgrade')", name="ck_site_agent_permanent_source"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_permanent_prov"),
+    )
+
+
+class SiteAgentCallLedger(Base):
+    """36. 站点智能体通道·计量表（批 3：聚合窗口落账，⛔ 不高频直写致锁）。
+
+    聚合窗口内同（登记号,端点,窗口起点）一行累计 units（窗口值施工取 60 秒，方案未定值）；
+    units 数值按方案标模拟（SIMULATED 水印）；provenance=mixed（落账事实真＋计量数值模拟）。
+    """
+
+    __tablename__ = "site_agent_call_ledger"
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), primary_key=True)
+    endpoint: Mapped[str] = mapped_column(Text, primary_key=True)     # execute 等正空间端点名
+    ts: Mapped[str] = mapped_column(Text, primary_key=True)           # 聚合窗口起点（ISO 分钟截断）
+    units: Mapped[int] = mapped_column(nullable=False, default=0)     # 窗口累计（数值模拟）
+    nca_anchor: Mapped[str | None] = mapped_column(Text)              # 本窗口最近存证锚
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="mixed")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_ledger_prov"),
+    )
+
+
+class OpsLog(Base):
+    """37. 运维每日日志（乙案 P2：TDCA-TPL-OPS-LOG-001-MACHINE 表单化；L1SI150-OPS-STORAGE-P2-001）。
+
+    六组明细（A~F）以 sections JSON 原键入库（键名与机读版模板 1:1）；
+    一人一日一行（log_date 唯一——当日多人则分行靠 duty_no 区分，模板口径）；
+    exceptions_count/unclosed_count 由 sections.F.exceptions 派生（便于统计）；
+    保留 12 个月（纪律，库内不自动清除；delete_allowed=false 照模板）。
+    """
+
+    __tablename__ = "ops_logs"
+    log_date: Mapped[str] = mapped_column(Text, primary_key=True)      # YYYY-MM-DD（+08 自然日）
+    duty_no: Mapped[str] = mapped_column(Text, primary_key=True)       # 工号（⛔ 姓名）
+    duty_role: Mapped[str] = mapped_column(Text, nullable=False)       # 值班角色
+    handover: Mapped[str] = mapped_column(Text, nullable=False)        # 交接人（角色/工号，模板键 handover_role）
+    sections: Mapped[str] = mapped_column(Text, nullable=False)        # JSON：A~F 六组（键名照模板）
+    exceptions_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    unclosed_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    backfill: Mapped[str] = mapped_column(Text, nullable=False, default="false")  # bool 文本
+    backfill_reason: Mapped[str | None] = mapped_column(Text)
+    filled_by: Mapped[str] = mapped_column(Text, nullable=False)       # 角色+工号
+    filled_at: Mapped[str] = mapped_column(Text, nullable=False)       # ISO 时间戳
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    __table_args__ = (
+        Index("idx_ops_logs_filled_at", "filled_at"),
+        Index("idx_ops_logs_duty_no", "duty_no"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_ops_logs_prov"),
     )

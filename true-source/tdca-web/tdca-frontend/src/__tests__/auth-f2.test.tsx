@@ -45,6 +45,15 @@ describe('F-2 /auth 鉴权', () => {
     expect(screen.getByTestId('auth-token')).toHaveValue('TDCA-CRT-demo-2026')
   })
 
+  it('忘记密码指引（件B0 零后端文案）：登录页可见「联系站点管理员人工重置」口径与管理员邮箱', () => {
+    renderAt('/auth')
+    const hint = screen.getByTestId('auth-forgot-hint')
+    expect(hint.textContent).toContain('无自助重置通道')
+    expect(hint.textContent).toContain('联系站点管理员人工重置')
+    expect(hint.textContent).toContain('xuantan0703@agent.qq.com')
+    expect(hint.querySelector('a[href="mailto:xuantan0703@agent.qq.com"]')).toBeTruthy()
+  })
+
   it('受保护路由（/studio）未登录 → 重定向 /auth', () => {
     renderAt('/studio')
     expect(screen.getByTestId('auth-login-link')).toBeInTheDocument()

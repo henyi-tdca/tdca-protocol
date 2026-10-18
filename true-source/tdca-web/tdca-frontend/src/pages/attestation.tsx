@@ -256,7 +256,7 @@ export function AttestationDynamicPage() {
                       key={opt.value}
                       data-decision={opt.value}
                       data-request-id={q.request_id}
-                      className="rounded border border-gray-300 px-2 py-0.5 text-[11px] text-gray-700 hover:bg-gray-100"
+                      className="rounded border border-blue-600 bg-blue-600 px-2 py-0.5 text-[11px] text-white hover:bg-blue-700"
                       onClick={() => setDeciding({ id: q.request_id, decision: opt.value })}
                     >
                       {opt.label}

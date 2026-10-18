@@ -33,14 +33,15 @@ export interface LayerIndicatorProps {
   current: LayerKey
 }
 
-/** 四层架构层级指示器：L0/L1/L2/L3 常驻 + 沙盒/Studio 特态（FRAMEWORK-001 §八·C.3） */
+/** 四层架构层级指示器：L0/L1/L2/L3 常驻 + 沙盒/Studio 特态（FRAMEWORK-001 §八·C.3）
+ *  创始人 2026-10-17 指示：上下竖排（非左右横排）、不逾中屏宽 */
 export function LayerIndicator({ current }: LayerIndicatorProps) {
   const shown: LayerKey[] = ['L0', 'L1', 'L2', 'L3']
   return (
     <div
       data-testid="layer-indicator"
       data-current={current}
-      className="flex items-center gap-1 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs"
+      className="flex w-min flex-col gap-0.5 rounded-lg border border-gray-200 bg-white px-1.5 py-1.5 text-xs"
     >
       {shown.map((key) => {
         const info = layerInfo(key)
@@ -50,7 +51,7 @@ export function LayerIndicator({ current }: LayerIndicatorProps) {
             key={key}
             data-layer={key}
             data-active={active}
-            className={`rounded-full px-2 py-0.5 font-medium ${active ? info.activeClass : 'bg-gray-100 text-gray-500'}`}
+            className={`whitespace-nowrap rounded px-2 py-0.5 text-left font-medium ${active ? info.activeClass : 'bg-gray-100 text-gray-500'}`}
           >
             {info.label}
           </span>
@@ -60,7 +61,7 @@ export function LayerIndicator({ current }: LayerIndicatorProps) {
         <span
           data-layer={current}
           data-active
-          className={`rounded-full px-2 py-0.5 font-medium text-white ${layerInfo(current).activeClass}`}
+          className={`whitespace-nowrap rounded px-2 py-0.5 text-left font-medium text-white ${layerInfo(current).activeClass}`}
         >
           {layerInfo(current).label}
         </span>

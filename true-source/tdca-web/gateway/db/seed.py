@@ -52,15 +52,19 @@ def seed():
     s = get_session()
     with s.begin():
         _ins(s, Agent, [
+            # 批级
             dict(agent_id="AGENT-TRAINER", name="Trainer 培训导师", endpoint="tdca-trainer",
                  capability="学术交流/考核测评/学习路径", tdid="tdid:trainer", five_role="M",
                  scene="academy", attestation_state="valid", created_at=_NOW),
+            # 批级
             dict(agent_id="AGENT-EXECUTOR", name="Executor 执行官", endpoint="tdca-executor",
                  capability="任务执行/交付闭环", tdid="tdid:executor", five_role="M",
                  scene="studio", attestation_state="valid", created_at=_NOW),
+            # 批级
             dict(agent_id="AGENT-AUDITOR", name="Auditor 审查官", endpoint="tdca-code-reviewer",
                  capability="代码审查/合规审计", tdid="tdid:auditor", five_role="G",
                  scene="governance", attestation_state="valid", created_at=_NOW),
+            # 批级
             dict(agent_id="AGENT-SERVICE", name="Service 服务官", endpoint="tdca-industry-advisor",
                  capability="行业顾问/落地匹配", tdid="tdid:service", five_role="L",
                  scene="market", attestation_state="expiring", created_at=_NOW),

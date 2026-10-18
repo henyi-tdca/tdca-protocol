@@ -7,6 +7,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { PageShell } from './PageShell'
+import { api } from '@/api/client'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 import { HufModal } from '@/shared/guards'
 import { LifecycleTimeline, DetailPanel, NCAChain, ExportButton, type LifecycleNode } from '@/components/LifecycleDashboard/LifecycleDashboard'
@@ -24,12 +25,18 @@ const LIFECYCLE_NODES: LifecycleNode[] = [
 const NCA_CHAIN = ['Meta-Attestation-NCA-001', 'NCA-EDU-001', 'NCA-SBX-001', 'NCA-MKT-001']
 
 // ---- 创建向导五步（FRAMEWORK-001 §7.2）----
+// plain＝人话一句（TDCA-PLAN-SITE-UX-PLAIN-001 A3；解释层，⛔ 不替换在册术语）
 const WIZARD_STEPS = [
-  { key: 'intent', title: '意图声明', desc: '自然语言描述创建意图 → 辅助智能体解析为六要素草稿' },
-  { key: 'six', title: '六要素确认', desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + 最小化合检查）' },
-  { key: 'nsfl', title: '场景约束 + NSFL', desc: '场景约束声明 + 负空间边界（NSFL）' },
-  { key: 'edu', title: '商学院培训/辅导', desc: '可选培训（tdca-ta）；未达标提示' },
-  { key: 'huf', title: 'HUF 签署 → 沙盒', desc: '签署 Config-Right-Token → 沙盒（SEA 五要件）→ 出盒终裁（/attestation/meta）' },
+  { key: 'intent', title: '意图声明', plain: '用大白话说清你想让这个智能体干什么。',
+    desc: '自然语言描述创建意图 → 辅助智能体解析为六要素草稿' },
+  { key: 'six', title: '六要素确认', plain: '把大白话翻译成机器可核验的六项指标（如目标函数＝它要优化什么）。',
+    desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + 最小化合检查）' },
+  { key: 'nsfl', title: '场景约束 + NSFL', plain: '划定它不许碰的边界，越界即熔断。',
+    desc: '场景约束声明 + 负空间边界（NSFL）' },
+  { key: 'edu', title: '商学院培训/辅导', plain: '上岗前培训（可选），没达标会如实提示。',
+    desc: '可选培训（tdca-ta）；未达标提示' },
+  { key: 'huf', title: 'HUF 签署 → 沙盒', plain: '你签字＝你为它负全责；签完它进沙盒试用。',
+    desc: '签署 Config-Right-Token → 沙盒（SEA 五要件）→ 出盒终裁（/attestation/meta）' },
 ]
 
 // ---- 化合衍生拓扑（父→子 NCA 链，ID91 继承）----
@@ -60,14 +67,44 @@ export function StudioPage() {
   const [actionModal, setActionModal] = useState<string | null>(null)
   const [wizardModal, setWizardModal] = useState(false)
 
+  // ---- 批 4 块一（通道批）：通道六步实况（只读接真；未达如实呈现，⛔ 不虚报通过）----
+  const [gateInput, setGateInput] = useState('')
+  const [gateView, setGateView] = useState<Record<string, unknown> | null>(null)
+  const [gateError, setGateError] = useState<string | null>(null)
+  const [gateLoading, setGateLoading] = useState(false)
+
+  async function queryGate() {
+    const regNo = gateInput.trim()
+    if (!regNo) return
+    setGateLoading(true)
+    setGateError(null)
+    const res = await api.get<Record<string, unknown>>(
+      `/api/v1/agent-channel/gate/${encodeURIComponent(regNo)}`)
+    setGateLoading(false)
+    if (!res.ok) {
+      setGateView(null)
+      setGateError(res.reason === 'forbidden' || res.reason === 'unauthorized'
+        ? '无权查看或登记不在册（fail-closed）'
+        : '实况暂不可用（fail-closed，不猜测数据）')
+      return
+    }
+    setGateView(res.data)
+  }
+
   return (
     <PageShell
-      title="Agent Studio（作业）"
+      title="作业（智能体全生命周期）"
       dataSource="全生命周期 API + HUF 签批通道（模拟态）"
       permission="登录 DID + HUF 签批"
       description="智能体全生命周期：诞生→教育→沙盒→出盒终裁（/attestation/meta）→市场→化合衍生。"
     >
       <div className="space-y-5">
+        {/* A1 人话定位条（UX-PLAIN-001；解释层，制度术语照在册） */}
+        <section data-testid="studio-plain-intro" className="rounded-lg border border-blue-200 bg-blue-50/60 p-4 text-sm leading-6 text-gray-800">
+          <strong>这一页能干什么：</strong>在这里创建一个属于你的智能体——说清楚意图 → 确认六要素 → 你亲手 HUF 签署为它负责 → 它进沙盒试用，出盒须过终裁后才能正式上岗。
+          全程你主导，AI 只打下手；每一步的存证（NCA）都可事后核验。
+        </section>
+
         {/* 生命周期看板（复用 LifecycleDashboard + 时间轴动画增强） */}
         <section data-testid="studio-lifecycle" className="rounded-lg border border-gray-200 p-4">
           <div className="mb-2 flex items-center justify-between">
@@ -77,6 +114,11 @@ export function StudioPage() {
           <div className="lifecycle-anim" data-testid="lifecycle-anim">
             <LifecycleTimeline nodes={LIFECYCLE_NODES} onSelect={setSelected} />
           </div>
+          {/* A2 状态灯图例（UX-PLAIN-001） */}
+          <p className="mt-2 text-xs text-gray-600" data-testid="lifecycle-legend">
+            状态灯图例：<span className="text-green-700">● 绿＝该阶段已通过</span>（如沙盒＝试用期通过）；
+            <span className="text-amber-700">● 黄＝进行中/待办</span>。点任一阶段可看明细与它自己的存证号。
+          </p>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             <DetailPanel node={selected} />
             <NCAChain chain={NCA_CHAIN} />
@@ -87,7 +129,7 @@ export function StudioPage() {
               <button
                 key={a.key}
                 data-testid={`life-action-${a.key}`}
-                className="rounded border border-gray-300 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-100"
+                className="rounded border border-blue-600 bg-blue-600 px-2.5 py-1 text-xs text-white hover:bg-blue-700"
                 onClick={() => setActionModal(a.label)}
               >
                 {a.label}（HUF）
@@ -110,6 +152,9 @@ export function StudioPage() {
               </span>
             ))}
           </div>
+          <p className="mb-1 text-sm font-medium text-blue-900" data-testid="wizard-plain">
+            {WIZARD_STEPS[wizardStep].plain}
+          </p>
           <p className="mb-3 text-sm text-gray-700" data-testid="wizard-desc">
             {WIZARD_STEPS[wizardStep].desc}
           </p>
@@ -129,6 +174,10 @@ export function StudioPage() {
               </button>
             )}
           </div>
+          {/* A4 签署后果说明（UX-PLAIN-001；措辞照智库更正：中性表述，不自造制度语） */}
+          <p className="mt-2 text-xs text-gray-600" data-testid="wizard-huf-note">
+            签署即生效；此后出盒须过终裁（/attestation/meta）。AI 无权替你签。
+          </p>
         </section>
 
         {/* 化合衍生（父→子 NCA 链，ID91） */}
@@ -138,9 +187,74 @@ export function StudioPage() {
             <SimulatedBadge nature="simulated" />
           </div>
           <TopologyEngine data={COMPOUND_TOPO} height={260} />
-          <p className="mt-2 text-xs text-gray-500">
+          {/* A5 人话一句（UX-PLAIN-001） */}
+          <p className="mt-2 text-xs text-gray-600" data-testid="compound-plain">
+            从这里能「生」出新智能体：六要素与存证链（NCA）继承父体——子体一出生就带着家谱，信用记录随链可查。
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
             父体（PCM-LIVE）→ 选择化合场景 → 六要素继承 + 场景偏移 → 子体诞生（NCA 链继承父体）→ 自动进入生命周期起点。
           </p>
+        </section>
+
+        {/* 批 4 块一（通道批）：通道六步实况（只读接真；未达如实呈现，⛔ 不虚报；计量 SIMULATED） */}
+        <section data-testid="channel-gate-section" className="rounded-lg border border-gray-200 p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-800">通道六步实况（接真）</h3>
+            <SimulatedBadge nature="simulated" />
+          </div>
+          <div className="mb-3 flex items-center gap-2">
+            <input
+              data-testid="channel-gate-input"
+              className="w-56 rounded border border-gray-300 px-2 py-1 text-xs"
+              placeholder="输入登记号查询实况"
+              value={gateInput}
+              onChange={(e) => setGateInput(e.target.value)}
+            />
+            <button
+              data-testid="channel-gate-query"
+              className="rounded bg-gray-700 px-2.5 py-1 text-xs text-white hover:bg-gray-800 disabled:opacity-50"
+              disabled={gateLoading || !gateInput.trim()}
+              onClick={() => void queryGate()}
+            >
+              {gateLoading ? '查询中…' : '查询实况'}
+            </button>
+          </div>
+          {gateError && (
+            <p data-testid="channel-gate-error" className="mb-2 text-xs text-red-600">{gateError}</p>
+          )}
+          {gateView && (
+            <div data-testid="channel-gate-steps">
+              {(() => {
+                const steps = (gateView.gate as { steps?: Record<string, { step: string; label: string; state: string }> })?.steps ?? {}
+                const LABEL: Record<string, string> = { satisfied: '已达', pending: '未达', failed: '未过' }
+                const CLS: Record<string, string> = {
+                  satisfied: 'bg-green-100 text-green-800 border-green-300',
+                  pending: 'bg-gray-100 text-gray-500 border-gray-300',
+                  failed: 'bg-red-100 text-red-700 border-red-300',
+                }
+                return (
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(steps).map(([key, s]) => (
+                      <span
+                        key={key}
+                        data-testid={`channel-gate-step-${key}`}
+                        className={`rounded border px-2 py-0.5 text-xs ${CLS[s.state] ?? CLS.pending}`}
+                      >
+                        {s.step} {s.label}·{LABEL[s.state] ?? s.state}
+                      </span>
+                    ))}
+                  </div>
+                )
+              })()}
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-600">
+                <span data-testid="channel-gate-grants">有效授权件：{String(gateView.grants_active ?? 0)} 件</span>
+                <span data-testid="channel-gate-units">计量合计（模拟）：{String((gateView.metering as { units_total?: number } | undefined)?.units_total ?? 0)}</span>
+                <span data-testid="channel-gate-admitted">
+                  总闸：{(gateView.gate as { admitted?: boolean } | undefined)?.admitted ? '六步全达' : '未全达'}
+                </span>
+              </div>
+            </div>
+          )}
         </section>
       </div>
 

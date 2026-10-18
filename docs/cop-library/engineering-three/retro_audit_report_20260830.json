@@ -73,7 +73,7 @@
   "parse_fail": [
     {
       "file": "coldstart\\community\\第01条-开源社区冷启动·正和准入.yaml",
-      "error": "while scanning for the next token\nfound character '`' that cannot start any token\n  in \"C:\\Users\\22850\\Desktop\\TDCA-MEMO"
+      "error": "while scanning for the next token\nfound character '`' that cannot start any token\n  in \"<本机工作区>"
     }
   ]
 }

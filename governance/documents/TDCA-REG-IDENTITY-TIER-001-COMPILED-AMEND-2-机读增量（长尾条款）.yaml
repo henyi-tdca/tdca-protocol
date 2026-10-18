@@ -1,0 +1,87 @@
+# 《身份可信等级认定条例》机读版 · V0.4 增量（AMEND-2）
+# 件号: TDCA-REG-IDENTITY-TIER-001-COMPILED-AMEND-2 ｜ 版本: V0.4-PENDING-SIGNATURE ｜ 日期: 2026-10-11（+08）
+# 编制: Reasonix（智库 · L1-SI-132）
+# 性质: 条例机读版之增量（并入一般性与长尾分野）；⛔ 未生效（须签批）；⛔ 非对外
+# 合并读: 基数件 = V1.0 机读件 ＋ V0.3 增量；如有冲突以本增量为准；⛔ 不回改前件一字
+
+reg_id: 'TDCA-REG-IDENTITY-TIER-001'
+compiled_version: 'V0.4-AMEND-2'
+status: 'PENDING-SIGNATURE'
+effective_condition: '转正四步齐备（已成）＋ 创始人签批'
+date: '2026-10-11'
+timezone: '+08'
+side: 'reasonix'
+session: 'L1-SI-132'
+basis_ruling: 'TDCA-RULING-SRTA-TIER-CRITERIA-003'
+
+merge:
+  base_compiled:
+    - 'TDCA-REG-IDENTITY-TIER-001-COMPILED-《身份可信等级认定条例》机读版（V1.0·待签批·含免责注记）.yaml'
+    - 'TDCA-REG-IDENTITY-TIER-001-COMPILED-AMEND-1-机读版增量yaml（并入三项口径·待签批）.yaml'
+  precedence: '本增量与基数件或 V0.3 增量冲突时以本增量为准'
+
+pair:
+  human_doc: 'TDCA-REG-IDENTITY-TIER-001-AMEND-2-条例V0.4追加件（并入一般性与长尾分野·长尾按惯例或实例裁）.md'
+  human_sha256_16: '44EC5FDFFA2422CA'
+  machine_doc: 'TDCA-REG-IDENTITY-TIER-001-COMPILED-AMEND-2-机读增量（长尾条款）.yaml'
+  cross_ref: '两件哈希并列于同批 NCA 存证 ⟹ 互指成立'
+
+# ── 第 20 条：长尾条款
+general_vs_longtail:
+  article: 20
+  scope: '本条例只解决一般性问题'
+  general_problem: '反复出现、跨对象普遍适用之问题 ⟹ 写进通则'
+  longtail_problem: '个别 / 罕见 / 边缘 / 组合特殊者 ⟹ 不作一般性问题处理、不写进正文'
+  longtail_rule:
+    - '有惯例者从惯例'
+    - '无惯例而有同类实例者从实例'
+    - '两者皆无者：一事一议个案裁'
+  invariants:
+    - '个案裁量不自动上升为通则'
+    - '不以个案改写本条例'
+    - '同一长尾重复出现到成惯例时，再按制度流程处理'
+    - '长尾之裁不呈创始人裁（除落对外／签批两项者）'
+
+general_clauses:                          # 通则 10 项（确认保留）
+  - '四档判据'
+  - '判定式（两属性为输入 · 不单凭根之类型 · 同类可不同档）'
+  - '核验前置（属门一）'
+  - '可采信判准（可验证 ＋ 不可篡改）'
+  - '可信信息自证（数据自带其信息数据；仅 IP 不能自证 ⟹ 告警）'
+  - '三态处置（可定档 / 待补 / 未达门槛）'
+  - '两道门（不可互替）'
+  - '评审与承认（主体＝我方；外部先做、我方复核评审）'
+  - '承认 → 接纳 → 兼容（可双向承认、不可双向改建；域内规则属地）'
+  - '与既有制度之关系（只引不回写；对标仅参考注）'
+
+longtail_items:                           # 附表八 · 长尾清单 8 项（不入通则）
+  - {no: 1, item: '两属性之核验要件具体取值', origin: '附表一 N-26', disposition: '按惯例或实例裁'}
+  - {no: 2, item: '证据形态细目', origin: 'N-23', disposition: '按惯例或实例裁'}
+  - {no: 3, item: '档位↔场景风险对应表数值', origin: 'N-27', disposition: '按惯例或实例裁（数值不入通则）'}
+  - {no: 4, item: '承认要件细目（权威机构范围 / 复检 / 第三方 / 凭证形态）', origin: "N-3'", disposition: '按惯例或实例裁'}
+  - {no: 5, item: '告警期限取值', origin: '附表五 deadline', disposition: '按惯例或实例裁'}
+  - {no: 6, item: '技术字段形态与取数口径', origin: '本侧上轮自办项', disposition: '按惯例或实例裁'}
+  - {no: 7, item: '评审程序细则', origin: 'N-20 余项', disposition: '按惯例或实例裁'}
+  - {no: 8, item: '罕见过渡态之具体处理', origin: '散见', disposition: '按惯例或实例裁'}
+
+read_overrides:
+  - {target: 'V1.0 附表一 N-26 / N-23 / N-27 / N-3′', was: '待点定 / 本侧可出草案', now: '属长尾 ⟹ 按惯例或实例裁；退出待点定'}
+  - {target: 'V0.3 附表七 第 3 项（数值类）', was: '本侧按制度办（默认＋可改）', now: '属长尾 ⟹ 按惯例或实例裁'}
+  - {target: 'V0.3 第 19 条第 6 项（评审程序细则）', was: '归我方内部程序', now: '属长尾 ⟹ 按惯例或实例裁'}
+  - {target: 'V1.0 附表五 deadline', was: '取值留签批 → V0.3 改默认', now: '属长尾 ⟹ 按惯例或实例裁'}
+  - {target: 'V0.3 所定默认值', was: '默认＋可改', now: '仅系个案参考（非通则条款）；不构成本条例之一般性规定'}
+
+pending_signature:                        # 不变
+  - {no: 1, item: '本条例生效签批', owner: 'founder', type: 'signature'}
+  - {no: 2, item: '一切对外（含条例名称与档名之对外使用）', owner: 'founder', type: 'external'}
+note: '长尾诸项 ⛔ 不列待签批清单（按惯例或实例裁）'
+
+self_correction:                          # 本条系本侧自纠，如实登记
+  - '本框前一批（GSEQ-4361 / 4362）件内件序自述误记为第 36 / 37 件；正确应为第 34 / 35 件（本框自 GSEQ-4328 起计）'
+  - '不回改已登记件（链已封）；以本登记为准；实质内容不受影响'
+
+disclaimer:
+  - '本增量为机读版；如有疑义以人读追加件为准'
+  - '本条例尚未生效（须签批）'
+  - '本增量不代定取值与门槛；不代拟法律意见'
+  - '零对外；不推送、不合并、不部署、不登录、不转交、不代署'

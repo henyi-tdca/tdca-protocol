@@ -1,0 +1,25 @@
+# TDCA 效用精灵 — 资源配置示例
+# 制度锚定: ID84(正和满意解)
+# 场景: 多智能体协作分配有限资源
+
+参与者:
+  - agent_id: "sales-agent"    capability: 1.2
+  - agent_id: "ops-agent"      capability: 0.8
+  - agent_id: "support-agent"  capability: 1.0
+
+目标函数: 各智能体效用 = 分配资源 × 能力系数 × 2
+保留效用: [10.0, 8.0, 9.0]
+时间预算: 5.0 秒
+负空间边界: ["autonomous_repair", "value_land_decisions"]
+
+求解类型: 正和满意解 (PositiveSumSolver)
+
+满意解标准:
+  - 个体理性: 每个智能体效用 ≥ 保留效用
+  - 正和性: 总效用 > 各保留效用之和
+  - 时间约束: 求解时间 ≤ 时间预算
+  - 负空间: 不触及 ⊗ 边界
+
+制度备注:
+  - 满意解 ≠ 最优解，人类保有最终决策权
+  - 触及 ⊗ 时立即熔断返回当前最佳可行解

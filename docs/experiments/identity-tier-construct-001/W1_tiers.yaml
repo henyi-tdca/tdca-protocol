@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+# W-1 · 档位定义表（机读）· TDCA-REG-IDENTITY-TIER-001 第5条
+# 档名已签批（GSEQ-4354）：固锚级／移锚级／记名级／未达门槛；态（非档）：待补
+# ⚠️ 不称末档为"不可信"；匿名 ≠ 没有身份
+# ⚠️ 取值项照追加件口径（AMEND-1 V0.3／AMEND-2 V0.4，冲突以追加件为准）：
+#    N-29 最低要件判据已定（第18条：自证能力，⛔ 无留白）／N-30 默认不设固定期限／
+#    N-23 技术字段形态归我方自办 —— 值仍一律以 null 如实留默认，不代定（行为不变）
+
+spec_id: TDCA-W1-IDENTITY-TIER-TABLE-001
+version: V1.0
+basis: TDCA-REG-IDENTITY-TIER-001 第5条
+mark: SIMULATED  # 施工工件（沙盒位），非生产件
+
+ranks:
+  - rank: 1
+    name: 固锚级
+    criteria: 设备唯一 + 物理地址保持
+    anchor: 通知机令牌            # Q-2′：最高档锚定物＝通知机令牌
+    trace_evidence_required: true  # Q-2′：可溯证据字段非空
+    device_unique: required
+    address_stable: required
+  - rank: 2
+    name: 移锚级
+    criteria: 设备唯一 + 物理地址可移动
+    anchor: null                   # 外部硬件锚须评审定级·一事一议（第8条）
+    trace_evidence_required: true
+    device_unique: required
+    address_stable: movable
+  - rank: 3
+    name: 记名级
+    criteria: 仅注册实名认证账号（IP 仅辅助）
+    anchor: null
+    trace_evidence_required: false # 记名级主依据＝实名账号（第10条），可溯证据非其要件
+    device_unique: not_unique
+    address_stable: irrelevant
+  - rank: 4
+    name: 未达门槛                 # ⛔ 不称"不可信"
+    criteria: 匿名 ⟹ 未达可信门槛
+    anchor: null
+    trace_evidence_required: false
+    device_unique: anonymous
+    address_stable: irrelevant
+
+states:  # ⛔ 态非档
+  - name: 待补
+    criteria: 仅 IP（其余可信信息缺）⟹ 判告警（第11条）
+    is_rank: false
+
+comparison_notes: >-
+  国际 LoA 体系（eIDAS 保证等级／NIST 800-63 三轴／ITU 可信授权维）
+  仅作参考注对照，四档映射见 TDCA-AMEND-SRTA-LOA-001；
+  本表不作与任何外部标准的对等性声称。
+
+pending_signoff:  # 照追加件口径注记；值保持 null（默认＋可改，不代定）
+  evidence_forms: null        # N-23：技术字段形态归我方自办（追加件口径）
+  alert_deadline: null        # N-30：默认不设固定期限；null 即该默认之如实表达
+  min_supplement: null        # N-29：判据已定（第18条 自证能力，⛔ 无留白）

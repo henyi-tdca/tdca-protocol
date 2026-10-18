@@ -32,15 +32,18 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
+import sqlite3
 import sys
-from datetime import datetime, timezone
+import time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix="/api/v1")
@@ -55,7 +58,7 @@ for _sub in ("tdca-microtax", "tdca-ns-runtime", "tdca-notification-machine",
         sys.path.insert(0, str(_p))
 
 # ---- M2：DB 访问（惰性工厂；测试经 DATABASE_URL 隔离）----
-from db import get_session, get_sessionmaker  # noqa: E402
+from db import get_engine, get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 
 
@@ -97,34 +100,123 @@ def rec_hash_of(nca_id: str, prev_nca: str | None, action: str, actor: str,
     return hashlib.sha256(s.encode("utf-8")).hexdigest().upper()[:16]
 
 
+_NCA_LOG = logging.getLogger("tdca.nca")
+_ERR_LOG = logging.getLogger("tdca.errors")   # L1SI153 段三①：底层异常只进日志，不直透用户
+_NCA_APPEND_MAX_TRIES = 4   # 1 次正写 + 3 次 BUSY 退避重试（NCA-ATOMIC-001）
+_NCA_FORK_BASELINE: Optional[Dict[str, int]] = None   # 启动基线快照（辅改 B「只报新增」；不入库不建表）
+
+
+def init_nca_fork_baseline() -> None:
+    """服务启动：对现有 prev_nca 计数打内存基线快照。
+
+    基线差口径：此后仅当某 prev 计数超过其基线时才告警（历史分叉不刷告警）；
+    不入库、不建表；快照失败保持 None，首个写路径惰性重取（fail-soft，不拒服）。
+    """
+    global _NCA_FORK_BASELINE
+    try:
+        with get_sessionmaker().begin() as s:
+            rows = (s.query(M.NcaChain.prev_nca, func.count())
+                    .filter(M.NcaChain.prev_nca != "GENESIS")
+                    .group_by(M.NcaChain.prev_nca).all())
+        _NCA_FORK_BASELINE = {p: c for p, c in rows}
+        _NCA_LOG.info("NCA fork baseline snapshot: prevs=%d", len(_NCA_FORK_BASELINE))
+    except Exception:
+        _NCA_LOG.exception("NCA fork baseline snapshot failed; lazy fallback at first write")
+        _NCA_FORK_BASELINE = None
+
+
 def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "simulated") -> str:
     """写路径通用：向 nca_chain 追加一条存证（链式 prev_nca 自动取最新）。
-    L1SI154-031（M1″）：写时即锚定 rec_hash/prev_hash/detached——判据 2 有真验证力的前提。"""
+
+    NCA-ATOMIC-001 原子性整改（只防新断，不重接历史断链）：
+      · 原始连接显式 BEGIN IMMEDIATE + BUSY 退避重试——"取尾号→落本行"成
+        串行临界区，并发写者不再读到同一快照（防 prev 悬空/分叉的新增）；
+      · 尾号按插入序（rowid）取，弃 ts DESC（同秒批量记录 ts 相同，取尾不可靠）；
+      · 落库后检测"同 prev 计数超启动基线"（新增链分叉）即 NCA_FORK_ALERT
+        告警——日志级、不阻断写入、「只报新增」基线差口径（辅改 B 替代项：
+        不建唯一索引、不动表结构、不入库不建表）。
+    L1SI154-031（M1″）：写时即锚定 rec_hash/prev_hash/detached/detach_reason——
+    判据 2（单行未被改写有真验证力）的前提；口径见 rec_hash_of（公开）。
+    """
     import secrets
     nonce = secrets.token_hex(8)   # 同秒同参重复写入防主键碰撞（M3 测试实证）
-    with get_sessionmaker().begin() as s:
-        last = s.query(M.NcaChain).order_by(M.NcaChain.ts.desc()).first()
-        ts = _utc()
-        prev_nca = last.nca_id if last else "GENESIS"
-        nca_id = "NCA-WEB-" + hashlib.sha256(
-            (action + actor + ts + nonce + prev_nca).encode()).hexdigest()[:12]
-        sha8 = (hashlib.sha256(artifact_path.encode()).hexdigest()[:8]
-                if artifact_path else None)
-        if last is None:                       # 创世行
-            prev_hash, detached, detach_reason = "", 0, None
-        else:
-            prev_hash = last.rec_hash or "MISSING"
-            broken = (last.rec_hash in (None, "")) or last.detached == 1
-            detached = 1 if broken else 0
-            detach_reason = "missing_predecessor" if broken else None
-        rh = rec_hash_of(nca_id, prev_nca, action, actor, artifact_path,
-                         sha8, None, prov, ts)
-        s.add(M.NcaChain(nca_id=nca_id, prev_nca=prev_nca,
-                         action=action, actor=actor, artifact_path=artifact_path,
-                         sha256_8=sha8,
-                         data_provenance=prov, ts=ts,
-                         rec_hash=rh, prev_hash=prev_hash,
-                         anchor_ok=0, detached=detached, detach_reason=detach_reason))
+    engine = get_engine()
+    nca_id: Optional[str] = None
+    last_err: Optional[Exception] = None
+    for attempt in range(_NCA_APPEND_MAX_TRIES):
+        raw = cur = None
+        try:
+            raw = engine.raw_connection()
+            dbapi = raw.dbapi_connection
+            cur = dbapi.cursor()
+            cur.execute("BEGIN IMMEDIATE")   # 写锁在事务起点持有（取号+落库一体）
+            row = cur.execute(
+                "SELECT nca_id, rec_hash, detached FROM nca_chain"
+                " ORDER BY rowid DESC LIMIT 1").fetchone()
+            tail = row[0] if row else "GENESIS"
+            ts = _utc()
+            nca_id = "NCA-WEB-" + hashlib.sha256(
+                (action + actor + ts + nonce + tail).encode()).hexdigest()[:12]
+            sha8 = (hashlib.sha256(artifact_path.encode()).hexdigest()[:8]
+                    if artifact_path else None)
+            if row is None:                    # 创世行
+                prev_hash, detached, detach_reason = "", 0, None
+            else:
+                tail_rec_hash, tail_detached = row[1], row[2]
+                prev_hash = tail_rec_hash or "MISSING"
+                broken = (tail_rec_hash in (None, "")) or tail_detached == 1
+                detached = 1 if broken else 0
+                detach_reason = "missing_predecessor" if broken else None
+            rh = rec_hash_of(nca_id, tail, action, actor, artifact_path,
+                             sha8, None, prov, ts)
+            cur.execute(
+                "INSERT INTO nca_chain (nca_id, prev_nca, action, actor, artifact_path,"
+                " sha256_8, data_provenance, ts, rec_hash, prev_hash, anchor_ok,"
+                " detached, detach_reason) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (nca_id, tail, action, actor, artifact_path or None, sha8,
+                 prov, ts, rh, prev_hash, 0, detached, detach_reason))
+            dbapi.commit()
+            break
+        except sqlite3.OperationalError as e:
+            last_err = e
+            if "locked" not in str(e).lower():
+                raise
+            time.sleep(min(0.05 * (2 ** attempt), 0.4) + secrets.randbelow(50) / 1000.0)
+        finally:
+            if cur is not None:
+                cur.close()
+            if raw is not None:
+                try:
+                    raw.dbapi_connection.rollback()
+                except Exception:
+                    pass
+                raw.close()
+    else:
+        raise last_err  # type: ignore[misc]   # 重试耗尽：fail-closed，不写半条
+    # 分叉告警（不阻断，「只报新增」基线差口径）：仅当某 prev 计数超过其
+    # 启动基线时才告警；基线随现值上浮，同批分叉不重复刷。告警失败不影响主流程。
+    try:
+        global _NCA_FORK_BASELINE
+        with get_sessionmaker().begin() as s:
+            if _NCA_FORK_BASELINE is None:   # 启动快照失败的惰性回退
+                rows = (s.query(M.NcaChain.prev_nca, func.count())
+                        .filter(M.NcaChain.prev_nca != "GENESIS")
+                        .group_by(M.NcaChain.prev_nca).all())
+                _NCA_FORK_BASELINE = {p: c for p, c in rows}
+            dups = (s.query(M.NcaChain.prev_nca, func.count())
+                    .filter(M.NcaChain.prev_nca != "GENESIS")
+                    .group_by(M.NcaChain.prev_nca)
+                    .having(func.count() > 1).all())
+        base = _NCA_FORK_BASELINE
+        new_forks = [(p, c) for p, c in dups if c > base.get(p, 1)]
+        if new_forks:
+            _NCA_LOG.warning("NCA_FORK_ALERT new-fork groups=%d detail=%s",
+                             len(new_forks), new_forks[:5])
+        for p, c in dups:
+            if c > base.get(p, 1):
+                base[p] = c
+    except Exception:
+        _NCA_LOG.exception("NCA_FORK_ALERT check failed")
     return nca_id
 
 
@@ -178,7 +270,9 @@ def system_overview():
             "system": "ECOCOG S-1~S-16 FROZEN（613 测试绿）",
         })
     except Exception as e:
-        raise HTTPException(500, f"A-1 overview 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-1 overview 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/tax/mou/{agent_id}")
@@ -203,7 +297,9 @@ def tax_mou(agent_id: str):
             "note": "该主体暂无 MOU 记录（零值非估算）" + _sim_note(),
         })
     except Exception as e:
-        raise HTTPException(500, f"A-2 tax/mou 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-2 tax/mou 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/tax/nca-history")
@@ -217,7 +313,9 @@ def tax_nca_history():
                                "note": "账本事件（事件溯源，O(n) 可审计）"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
-        raise HTTPException(500, f"A-2 nca-history 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-2 nca-history 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/tax/shapley/{call_id}")
@@ -234,7 +332,9 @@ def tax_shapley(call_id: str):
                                        + "Shapley 分账由结算链路计算"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
-        raise HTTPException(500, f"A-2 shapley 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-2 shapley 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -320,7 +420,9 @@ def config_right_call(req: ConfigCallRequest):
             "note": _sim_note(),
         })
     except Exception as e:
-        raise HTTPException(500, f"A-3 config-right/call 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-3 config-right/call 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -388,7 +490,9 @@ def audit_ledger_public():
                                "note": "公共账本（只读，BV-3）"},
                               nature=_nature_of([r.data_provenance for r in rows]))
     except Exception as e:
-        raise HTTPException(500, f"A-7 ledger-public 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-7 ledger-public 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 class NcaVerifyRequest(BaseModel):
@@ -479,7 +583,9 @@ def sandbox_apply(req: SandboxApplyRequest, request: Request):
                                "nca_ref": nca_ref,
                                "note": "入盒申请（沙盒编译-核验闭环；出盒须人类签名）"})
     except Exception as e:
-        raise HTTPException(500, f"A-5 sandbox/apply 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-5 sandbox/apply 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -506,13 +612,19 @@ def genie_compute(req: GenieComputeRequest, request: Request):
     try:
         llm = KimiLLM(model=req.model)
     except LLMConfigError as e:
-        raise HTTPException(503, f"平台通道未配置: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("genie 平台通道未配置: %s", e)
+        raise HTTPException(503, "服务暂不可用，请稍后重试；反复失败请联系运维。")
     try:
         out = run_genie(req.query, llm)
     except CircuitOpen as e:
-        raise HTTPException(503, f"平台通道熔断中: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("genie 平台通道熔断中: %s", e)
+        raise HTTPException(503, "服务暂不可用，请稍后重试；反复失败请联系运维。")
     except LLMCallError as e:
-        raise HTTPException(502, f"平台调用失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("genie 平台调用失败: %s", e)
+        raise HTTPException(502, "服务暂不可用，请稍后重试；反复失败请联系运维。")
     nca_ref = _nca_append(
         "TaskLodge",
         f"gateway:genie/compute:{user['username']}:"
@@ -585,7 +697,9 @@ def governance_emergency_fuse(req: EmergencyFuseRequest):
             "note": "紧急熔断（NSFL fail-closed；AI 无权解除，HUF 二次确认）",
         }, nature="real")
     except Exception as e:
-        raise HTTPException(500, f"A-8 emergency-fuse 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-8 emergency-fuse 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -621,7 +735,9 @@ def notifier_mrcr_status():
             "note": "通知机 MRCR 四角色并发（真实心跳待设备接入）" + _sim_note(),
         })
     except Exception as e:
-        raise HTTPException(500, f"A-9 notifier/mrcr-status 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-9 notifier/mrcr-status 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 @router.get("/eios/cluster-status")
@@ -652,7 +768,9 @@ def eios_cluster_status():
             "cluster": caps, "note": "eios GenieAPI 十端点（九大能力）；B-1 接口名已修复",
         })
     except Exception as e:
-        raise HTTPException(500, f"A-10 eios/cluster-status 失败: {e}")
+        # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
+        _ERR_LOG.exception("A-10 eios/cluster-status 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
 # =====================================================================
@@ -789,14 +907,20 @@ class LoginRequest(BaseModel):
 
 
 @router.post("/auth/login")
-def auth_login(req: LoginRequest):
-    """M3: 登录（PBKDF2 校验 → 签发 TDCA-SES 会话；单会话制，旧会话即吊销）。"""
+def auth_login(req: LoginRequest, request: Request):
+    """M3: 登录（PBKDF2 校验 → 签发 TDCA-SES 会话；单会话制，旧会话即吊销）。
+    F-5（2026-10-10）：失败登录计入 IP|用户名 滑动窗限流（只计失败，成功不耗额度；
+    超限 429 fail-closed，文案仍不区分账号不存在/口令错）。"""
+    rate_key = f"{_client_ip(request)}|{req.username}"
+    if not _login_rate_ok(rate_key):
+        raise HTTPException(429, f"登录尝试过于频繁（每账号每 IP 每小时 ≤{_LOGIN_MAX} 次），请稍后再试")
     with get_session() as s:
         user = s.get(M.User, req.username)
         ok = user is not None and verify_password(
             req.password, user.salt, user.iterations, user.password_hash)
         role = user.role if user else None
     if not ok:
+        _login_rate_record(rate_key)
         raise HTTPException(401, "用户名或密码错误")
     token, expires_at = issue_session(req.username)
     return _nca_watermark({
@@ -854,6 +978,27 @@ _REGISTER_WINDOW_S = 3600
 _REGISTER_MAX = int(os.environ.get("TDCA_REGISTER_MAX_PER_HOUR", "5"))  # 轻量防滥用（可配置）
 _register_hits: Dict[str, List[float]] = {}            # 进程内限流（单容器部署口径）
 
+# F-5（2026-10-10 立项）：登录口防爆破限流——注册口已有同构件，登录口原缺（免码公开面可爆破）。
+# 键 = IP|用户名（双键：防同 IP 扫多账号，也防分布式对单账号爆破）；只计失败（成功登录不耗额度）。
+_LOGIN_WINDOW_S = 3600
+_LOGIN_MAX = int(os.environ.get("TDCA_LOGIN_MAX_PER_HOUR", "10"))  # 每账号每 IP 每小时（可配置）
+_login_hits: Dict[str, List[float]] = {}               # 进程内（与注册限流同口径）
+
+
+def _login_rate_record(key: str) -> None:
+    """记录一次失败登录（滑动窗前先裁剪）。"""
+    now = _time.time()
+    hits = [t for t in _login_hits.get(key, []) if now - t < _LOGIN_WINDOW_S]
+    hits.append(now)
+    _login_hits[key] = hits
+
+
+def _login_rate_ok(key: str) -> bool:
+    """同一 IP|用户名 滑动窗口限流：60 分钟内失败 ≤_LOGIN_MAX 次。"""
+    now = _time.time()
+    hits = [t for t in _login_hits.get(key, []) if now - t < _LOGIN_WINDOW_S]
+    return len(hits) < _LOGIN_MAX
+
 
 class RegisterRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")   # GSEQ-0700：未知字段 fail-closed 拒绝，不静默丢弃
@@ -865,6 +1010,10 @@ class RegisterRequest(BaseModel):
     identity_type: str = "native"       # native（人机面默认）| external（非原生智能体，须带卡+授权）
     agent_card: Optional[dict] = None   # external 必填：agent_card 全量（持久化，链上可机验）
     owner_auth: str = ""                # external 必填：主人授权引用（如 TDCA-OWNER-CONTRACT-AUTH-001）
+    # L1SI145-ANCHOR-B2-001：注册选锚（可后补不设门槛；未选者默认记名级·待补）。
+    # 只收枚举引用，⛔ 不收任何身份明文取值；选锚不产生权限、不发身份类令牌。
+    anchor_kind: Optional[str] = None           # notifier|realname-phone；缺省/空=未选
+    anchor_evidence_ref: Optional[str] = None   # 证据引用编号（引用非值；须与 anchor_kind 同传）
 
 
 def _client_ip(request: Request) -> str:
@@ -913,6 +1062,15 @@ def auth_register(req: RegisterRequest, request: Request):
             raise HTTPException(400, "external 身份必须携带 owner_auth（主人授权引用）")
     elif req.agent_card is not None or req.owner_auth.strip():
         raise HTTPException(400, "agent_card/owner_auth 仅 identity_type=external 时有效（native 身份经 Agent Studio 创建）")
+    # L1SI145-ANCHOR-B2-001：选锚枚举校验（fail-closed，未知值拒绝；引用只收编号不收明文取值）
+    anchor_kind = (req.anchor_kind or "").strip() or None
+    if anchor_kind is not None and anchor_kind not in ("notifier", "realname-phone"):
+        raise HTTPException(400, "anchor_kind 仅接受 notifier|realname-phone（可留空，未选默认记名级·待补）")
+    anchor_ref = (req.anchor_evidence_ref or "").strip() or None
+    if anchor_ref is not None and anchor_kind is None:
+        raise HTTPException(400, "anchor_evidence_ref 须与 anchor_kind 同传（未选锚不得携带证据引用）")
+    if anchor_ref is not None and len(anchor_ref) > 256:
+        raise HTTPException(400, "anchor_evidence_ref 过长（≤256 字符，引用编号）")
     ph, salt, iters = hash_password(pw)
     try:
         with get_sessionmaker().begin() as s:
@@ -946,6 +1104,21 @@ def auth_register(req: RegisterRequest, request: Request):
             owner_auth=req.owner_auth.strip() or None,
             nca_ref=nca_id, data_provenance="real",
             created_at=now_iso, updated_at=now_iso))
+    # L1SI145-ANCHOR-B2-001：选锚落锚段存证（无存证不执行——存证失败即抛错，不建锚行）；
+    # 未选者也照常建一行（anchor_kind NULL 如实＋记名级·待补＝默认标记落点）。
+    _ANCHOR_TIER_BY_KIND = {"notifier": "固锚级", "realname-phone": "记名级"}
+    anchor_tier = _ANCHOR_TIER_BY_KIND.get(anchor_kind or "", "记名级")
+    anchor_nca = _nca_append(
+        "user_anchor_select", username,
+        artifact_path=(f"anchor://kind:{anchor_kind or 'none'}/tier:{anchor_tier}"
+                       f"/state:待补/ref:{anchor_ref or 'none'}"),
+        prov="real")
+    with get_sessionmaker().begin() as s:
+        now_iso = datetime.now(timezone.utc).isoformat()
+        s.add(M.UserAnchor(
+            username=username, anchor_kind=anchor_kind, anchor_tier=anchor_tier,
+            tier_state="待补", evidence_ref=anchor_ref, nca_ref=anchor_nca,
+            data_provenance="real", created_at=now_iso, updated_at=now_iso))
     token, expires_at = issue_session(username)   # 注册成功直接发登录会话（指令 §二.1 推荐口径）
     return _nca_watermark({
         "token": token, "username": username, "role": "viewer",
@@ -956,6 +1129,9 @@ def auth_register(req: RegisterRequest, request: Request):
         "contract": {"contract_id": CONTRACT_ID, "version": CONTRACT_VERSION,
                      "zh_sha256": CONTRACT_ZH_SHA256, "en_sha256": CONTRACT_EN_SHA256,
                      "machine_sha256": CONTRACT_JSON_SHA256, "consent_ts": consent_ts},
+        "anchor": {"anchor_kind": anchor_kind, "anchor_tier": anchor_tier,
+                   "tier_state": "待补", "nca_ref": anchor_nca,
+                   "note": "选锚已随注册落锚段存证（未选者默认记名级·待补，可后补）；选锚不产生权限"},
         "note": "注册即缔约成立（默认 viewer 只读角色，operator 走升级流程，founder 仅种子保留；"
                 "已自动签发 2h 会话；缔约存证含协议版本+三件套哈希+同意时间戳；display_name 免迁移不落库）",
     }, nature="real")
@@ -1027,6 +1203,66 @@ def identity_annotation(req: IdentityAnnotationRequest, request: Request):
 
 
 # =====================================================================
+# L1SI145-ANCHOR-B2-001：锚核验人工受理（founder/operator 专用，追加制留痕）
+# =====================================================================
+
+class AnchorVerifyRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    username: str
+    real_name_present: bool = False    # 只收有无（布尔），⛔ 不收明文取值
+    phone_present: bool = False        # 手机号非必填：present=False 如实落 0
+    evidence_ref: str = ""             # 证据引用编号（人工受理留痕载体，引用非值）
+
+
+@router.post("/me/anchor/verify")
+def me_anchor_verify(req: AnchorVerifyRequest, request: Request):
+    """锚核验人工受理：站点管理员线下核过实名/手机号后调用。
+
+    追加制：每次受理追加一条 user_anchor_verify 存证（原态→新态如实），再更新锚行；
+    明文最小化：只落 *_present 布尔＋evidence_ref 引用，⛔ 绝不收/不落明文取值；
+    fail-closed：无锚记录/无证据引用/角色不符一律拒绝。
+    """
+    v = _require_session_user(request)
+    if v["role"] not in ("founder", "operator"):
+        raise HTTPException(403, "锚核验受理仅 founder/operator 可执行（人工受理制度级操作）")
+    username = req.username.strip()
+    ref = req.evidence_ref.strip()
+    if not ref:
+        raise HTTPException(400, "evidence_ref 必填（核验证据引用编号，人工受理留痕载体）")
+    if len(ref) > 256:
+        raise HTTPException(400, "evidence_ref 过长（≤256 字符，引用编号）")
+    with get_sessionmaker().begin() as s:
+        if s.get(M.User, username) is None:
+            raise HTTPException(404, f"用户不存在: {username}")
+        row = s.get(M.UserAnchor, username)
+        if row is None:
+            raise HTTPException(404, f"该用户无锚记录（注册时未建锚行，异常态——请上报）")
+        prev_state = row.tier_state
+        nca_id = _nca_append(
+            "user_anchor_verify", v["username"],
+            artifact_path=(f"anchor://{username}/state:{prev_state}->已补"
+                           f"/ref:{ref}"
+                           f"/rn:{int(req.real_name_present)}/ph:{int(req.phone_present)}"),
+            prov="real")
+        now_iso = datetime.now(timezone.utc).isoformat()
+        row.tier_state = "已补"
+        row.real_name_present = 1 if req.real_name_present else 0
+        row.phone_present = 1 if req.phone_present else 0
+        row.evidence_ref = ref
+        row.verified_at = now_iso
+        row.verifier = v["username"]
+        row.nca_ref = nca_id
+        row.updated_at = now_iso
+    return _nca_watermark({
+        "username": username, "tier_state": "已补",
+        "real_name_present": bool(req.real_name_present),
+        "phone_present": bool(req.phone_present),
+        "evidence_ref": ref, "verifier": v["username"], "nca_id": nca_id,
+        "note": "锚核验受理完成（追加制存证已落链：原态如实→已补；明文最小化：只落有无布尔＋引用）",
+    }, nature="real")
+
+
+# =====================================================================
 # M5 双后台：/me/dashboard（个人，须登录）+ /agents/{id}/dashboard（公开读+脱敏）
 # =====================================================================
 
@@ -1059,6 +1295,25 @@ def _owner_display(s, owner_username: Optional[str]) -> Optional[str]:
         return None
     u = s.get(M.User, owner_username)
     return _ROLE_LABEL.get(u.role if u else "", "用户")
+
+
+_USAGE_TZ = timezone(timedelta(hours=8))     # +08（本项目明示日界口径）
+_USAGE_DEFAULT_DAYS = 30                     # 窗口默认取值（执行侧裁，回报载明）
+_USAGE_MAX_DAYS = 90                         # 窗口上限（防全表拉取）
+
+
+def _fmt_plus8(raw: Optional[str]) -> tuple:
+    """ISO-8601 文本 → (+08 'YYYY-MM-DD HH:MM:SS', True)；缺失/不可解析 → (None, False)。
+    降级口径：不猜测不伪造，原值由调用方如实带出。"""
+    if not raw:
+        return None, False
+    try:
+        dt = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(_USAGE_TZ).strftime("%Y-%m-%d %H:%M:%S"), True
+    except (ValueError, TypeError, OverflowError):
+        return None, False
 
 
 @router.get("/me/dashboard")
@@ -1105,13 +1360,32 @@ def me_dashboard(request: Request):
                     .order_by(M.NcaChain.ts.desc()).first())
         # GSEQ-0700：身份三要素机读（identity_type/owner_auth；agent_card 全量经 nca-verify 链上核验）
         ident = s.get(M.UserIdentity, me)
+        # L1SI145-ANCHOR-B2-001：本人锚行机读（无行=旧账号如实 null；只现有无布尔与核态，⛔ 不出明文取值）
+        anchor = s.get(M.UserAnchor, me)
+        # 账户信息栏升级版（可增项第 3 件）：users.created_at 现值如实带出（只读），
+        # +08 展示值由 _fmt_plus8 解析；缺失/不可解析 ⟹ 原值如实、display=null、parse_ok=false
+        u = s.get(M.User, me)
+        created_raw = u.created_at if u else None
+        created_disp, created_ok = _fmt_plus8(created_raw)
         return _nca_watermark({
             "session": {"username": me, "role": v["role"], "expires_at": v["expires_at"],
                         "last_register_nca_id": last_reg.nca_id if last_reg else None,
                         "identity_type": ident.identity_type if ident else None,
                         "owner_auth": ident.owner_auth if ident else None,
-                        "agent_card_persisted": bool(ident and ident.agent_card_json)},
+                        "agent_card_persisted": bool(ident and ident.agent_card_json),
+                        "created_at": created_raw,
+                        "created_at_display": created_disp,
+                        "created_at_parse_ok": created_ok},
             "pending_count": len(pending),
+            "user_anchor": ({
+                "anchor_kind": anchor.anchor_kind, "anchor_tier": anchor.anchor_tier,
+                "tier_state": anchor.tier_state,
+                "real_name_present": anchor.real_name_present,
+                "phone_present": anchor.phone_present,
+                "evidence_ref": anchor.evidence_ref,
+                "verified_at": anchor.verified_at, "verifier": anchor.verifier,
+                "nca_ref": anchor.nca_ref, "updated_at": anchor.updated_at,
+            } if anchor else None),
             "my_agents": [{"agent_id": a.agent_id, "name": a.name,
                            "five_role": a.five_role, "status": a.status,
                            "attestation_state": a.attestation_state,
@@ -1140,6 +1414,15 @@ def me_dashboard(request: Request):
                                                 M.AuthGrant.subject_agent.in_(ids or ["\0"])))
                                     .order_by(M.AuthGrant.status).all())],
             "my_config_records": config_records,
+            # 2026-10-09 批 1：权属栏（本人过滤；摘要口径与 /me/nca 明细单一口径）
+            "my_ownership": [{"record_id": r.record_id, "work_title": r.work_title,
+                              "jurisdiction_branch": r.jurisdiction_branch,
+                              "status": r.status, "nca_ref": r.nca_ref,
+                              "data_provenance": r.data_provenance,
+                              "created_at": r.created_at}
+                             for r in (s.query(M.OwnershipRecord)
+                                       .filter(M.OwnershipRecord.owner_ref == me)
+                                       .order_by(M.OwnershipRecord.created_at.desc()).all())],
             "my_points": {"balance": my_points,
                           "data_provenance": "simulated",
                           "note": "站内积分（最小链结算记账；期一 SIMULATED，非真实清算）"},
@@ -1149,8 +1432,222 @@ def me_dashboard(request: Request):
                        for n in (s.query(M.NcaChain).filter(M.NcaChain.actor == me)
                                  .order_by(M.NcaChain.ts.desc()).limit(20).all())],
             "note": "个人后台（谁的数据谁可见；simulated 行已按口径标注；资产目录为全站五阶形态，"
-                    "积分/最小链为 SIMULATED）",
+                    "积分/最小链为 SIMULATED；权属栏本人过滤）",
         }, nature="real")
+
+
+@router.get("/me/nca")
+def me_nca(request: Request, page: int = 1, limit: int = 20, action: str = ""):
+    """P1 控制台：本人 NCA 存证分页明细（actor=本人强制过滤；摘要走 /me/dashboard 最近 20，
+    明细走本端分页——单一口径不两处各算；action 精确过滤可空）。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    if page < 1:
+        raise HTTPException(400, "page 须 ≥1")
+    if limit < 1 or limit > 100:
+        raise HTTPException(400, "limit 须 1~100")
+    with get_session() as s:
+        q = s.query(M.NcaChain).filter(M.NcaChain.actor == me)
+        if action:
+            q = q.filter(M.NcaChain.action == action)
+        total = q.count()
+        rows = (q.order_by(M.NcaChain.ts.desc())
+                .offset((page - 1) * limit).limit(limit).all())
+    return _nca_watermark({
+        "total": total, "page": page, "limit": limit,
+        "items": [{"nca_id": n.nca_id, "action": n.action,
+                   "artifact_path": n.artifact_path, "sha256_8": n.sha256_8,
+                   "ts": n.ts} for n in rows],
+    }, nature="real")
+
+
+class PasswordChangeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")   # 未知字段 fail-closed 拒绝
+    old_password: str = ""
+    new_password: str = ""
+
+
+class SessionRevokeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")   # 未知字段 fail-closed 拒绝
+    sid: str = ""
+
+
+def _session_sid(token_hash: str) -> str:
+    """会话展示指纹（吊销标识）：sha256(token_hash) 前 12 位。
+    不可逆、不可用于登录取值、不暴露 token_hash 本身；仅作列表-吊销对照键。"""
+    return hashlib.sha256(token_hash.encode("utf-8")).hexdigest()[:12]
+
+
+@router.get("/me/sessions")
+def me_sessions(request: Request):
+    """会话管理·看（2026-10-09 可增项第 1 件）：列本人会话——创建/到期/是否当前/
+    是否已失效（revoked 或过期）。⛔ 不返回 token/token_hash 任何值（标识用 sid 指纹）。
+    勘察实况：单活会话制（登录即挤旧），历史 revoked 行只读留痕、照常列出。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    current_hash = hashlib.sha256(
+        request.headers.get("authorization", "").strip().encode("utf-8")).hexdigest()
+    now = datetime.now(timezone.utc)
+    items = []
+    with get_session() as s:
+        rows = (s.query(M.AuthSession)
+                .filter(M.AuthSession.username == me)
+                .order_by(M.AuthSession.created_at.desc()).all())
+        for r in rows:
+            items.append({
+                "sid": _session_sid(r.token_hash),
+                "created_at": r.created_at,
+                "expires_at": r.expires_at,
+                "is_current": r.token_hash == current_hash,
+                "is_revoked": r.revoked == 1,
+                "is_expired": datetime.fromisoformat(r.expires_at) <= now,
+            })
+    return _nca_watermark({
+        "sessions": items,
+        "note": "仅列本人会话；单活会话制（登录即挤下线），历史会话只读留痕；"
+                "标识 sid 为 token_hash 的 sha256 指纹，不含任何可登录材料",
+    }, nature="real")
+
+
+@router.post("/me/sessions/revoke")
+def me_session_revoke(req: SessionRevokeRequest, request: Request):
+    """会话管理·踢（指定会话）：sid 指纹命中本人未吊销会话 → revoked=1（既有语义）。
+    他人会话或不存在 → 404（不可见处理，⛔ 不泄漏存在性）；⛔ 不删行、不动表。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    sid = req.sid.strip()
+    if not sid:
+        raise HTTPException(400, "sid 不可为空")
+    with get_sessionmaker().begin() as s:
+        row = None
+        for r in s.query(M.AuthSession).filter(
+                M.AuthSession.username == me, M.AuthSession.revoked == 0).all():
+            if _session_sid(r.token_hash) == sid:
+                row = r
+                break
+        if row is None:
+            raise HTTPException(404, "会话不存在或已失效")
+        row.revoked = 1
+    nca_ref = _nca_append("user_session_revoke", me,
+                          artifact_path=f"auth://me/session-revoke/{me}", prov="real")
+    return _nca_watermark({
+        "revoked": True, "sid": sid, "nca_ref": nca_ref,
+        "note": "指定会话已吊销（revoked=1 既有语义，不删行）",
+    }, nature="real")
+
+
+@router.post("/me/sessions/revoke-all")
+def me_session_revoke_all(request: Request):
+    """会话管理·踢（全部）：吊销本人全部会话（含当前）＝强制退出登录。
+    revoked=1 既有语义；⛔ 不删行、不动表；落 NCA（⛔ 不含 token 值）。
+    当前会话自下一请求起 401（validate_session revoked 语义，S-3 实测口径）。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    revoked_n = 0
+    with get_sessionmaker().begin() as s:
+        for r in s.query(M.AuthSession).filter(
+                M.AuthSession.username == me, M.AuthSession.revoked == 0).all():
+            r.revoked = 1
+            revoked_n += 1
+    nca_ref = _nca_append("user_session_revoke_all", me,
+                          artifact_path=f"auth://me/session-revoke-all/{me}", prov="real")
+    return _nca_watermark({
+        "revoked": revoked_n, "nca_ref": nca_ref,
+        "note": "本人全部会话已吊销（含当前，强制退出登录）；本会话自下一请求起失效",
+    }, nature="real")
+
+
+_USAGE_TZ = timezone(timedelta(hours=8))     # +08（本项目明示日界口径；定义上移至 me 系端点共用）
+
+
+@router.get("/me/usage")
+def me_usage(request: Request, days: int = _USAGE_DEFAULT_DAYS):
+    """用量统计 v1（2026-10-09 可增项第 2 件）：本人 NCA 按日计数聚合（纯 SELECT）。
+    口径（勘察结论照办）：actor 恰等于会话用户名者计入——gateway:…/HUF:… 等非用户
+    形态不属「本人」名下，一律排除；ts 为 UTC ISO 文本，日界＝+08（先解析转 +08 再取日，
+    聚合与展示同口径）；窗口默认 30 天、上限 90，越界 400 fail-closed。
+    ⛔ 零写库、零新表、不落 NCA；data_provenance 按行聚合明示（ID92 SIMULATED 照守）。
+    形状二择一取①（新只读端点）：/me/dashboard 既有字段一律不动。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    if days < 1 or days > _USAGE_MAX_DAYS:
+        raise HTTPException(400, f"days 须为 1~{_USAGE_MAX_DAYS} 的整数")
+    window_start = datetime.now(timezone.utc) - timedelta(days=days)
+    daily: Dict[str, Dict[str, object]] = {}
+    provs: List[str] = []
+    with get_session() as s:
+        rows = s.query(M.NcaChain).filter(M.NcaChain.actor == me).all()
+        for r in rows:
+            try:
+                ts = datetime.fromisoformat(r.ts.replace("Z", "+00:00"))
+            except ValueError:
+                continue            # 非 ISO 行不计入（fail-closed 不猜测）
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
+            if ts < window_start:
+                continue
+            day = ts.astimezone(_USAGE_TZ).date().isoformat()
+            cell = daily.setdefault(day, {"count": 0, "by_action": {}})
+            cell["count"] = int(cell["count"]) + 1
+            ba = cell["by_action"]
+            ba[r.action] = ba.get(r.action, 0) + 1
+            provs.append(r.data_provenance)
+    nature = _nature_of(provs)
+    return _nca_watermark({
+        "days": days,
+        "timezone": "+08",
+        "actor_filter": "actor == 会话用户名（gateway:…/HUF:… 等非用户形态不计入）",
+        "total": sum(int(c["count"]) for c in daily.values()),
+        "daily": [{"date": d, "count": int(c["count"]),
+                   "by_action": dict(sorted(c["by_action"].items()))}
+                  for d, c in sorted(daily.items(), reverse=True)],
+        "data_provenance": nature,
+        "note": "本人 NCA 存证按日计数（+08 日界，窗口默认 30 天）；纯只读聚合，零写库、不落 NCA",
+    }, nature=nature)
+
+
+@router.post("/me/password")
+def me_password(req: PasswordChangeRequest, request: Request):
+    """改密（仅本人；2026-10-09 最小实现令）：旧密核验 → 新密强度（沿用注册口径）→
+    吊销本人其它会话（revoked=1 既有语义，当前会话保留）→ NCA 落链。
+    ⛔ 不加字段、不动表结构；哈希/盐/迭代数不入件不入响应。
+    返码口径（2026-10-09 评估件落地）：旧密错=400（401 会被前端客户端误作
+    会话失效清退本地令牌）；「用户不存在」=401 与未登录=401 保持不动（真会话面）。"""
+    v = _require_session_user(request)
+    me = v["username"]
+    with get_session() as s:
+        user = s.get(M.User, me)
+        if user is None:
+            raise HTTPException(401, "用户不存在")  # fail-closed
+        if not verify_password(req.old_password, user.salt, user.iterations,
+                               user.password_hash):
+            raise HTTPException(400, "旧密码错误")   # 返码口径：应用层凭据错→400（401 保留给会话面）
+    new_pw = req.new_password
+    if (len(new_pw) < 8 or not any(c.isalpha() for c in new_pw)
+            or not any(c.isdigit() for c in new_pw)):
+        raise HTTPException(400, "密码强度不足：至少 8 位且同时包含字母与数字")
+    ph, salt, iters = hash_password(new_pw)
+    current_hash = hashlib.sha256(
+        request.headers.get("authorization", "").strip().encode("utf-8")).hexdigest()
+    revoked_n = 0
+    with get_sessionmaker().begin() as s:
+        user = s.get(M.User, me)
+        user.password_hash = ph
+        user.salt = salt
+        user.iterations = iters
+        # 吊销本人其它会话（保留当前会话；既有 revoked=1 语义）
+        for sess in s.query(M.AuthSession).filter(
+                M.AuthSession.username == me, M.AuthSession.revoked == 0):
+            if sess.token_hash != current_hash:
+                sess.revoked = 1
+                revoked_n += 1
+    nca_ref = _nca_append("user_password_change", me,
+                          artifact_path=f"auth://me/password-change/{me}", prov="real")
+    return _nca_watermark({
+        "changed": True, "username": me, "other_sessions_revoked": revoked_n,
+        "nca_ref": nca_ref,
+        "note": "密码已更换；本人其它会话已吊销（当前会话保留）；落 NCA 存证链",
+    }, nature="real")
 
 
 @router.get("/agents/{agent_id}/dashboard")
@@ -1205,6 +1702,47 @@ _INTENT_TABLE = [
      "action": "查询",
      "guide": ["须登录（未登录自动引导登录页）", "我的智能体 / 签批待办（红签置顶）一屏聚合",
                "点任意智能体可进它的专属后台"]},
+    # ── 2026-10-09 批 1 控制台补词（人类通道专用）──
+    {"keys": ["我的资产", "五阶资产", "资产管理"],
+     "route": "/me", "title": "我的 · 资产（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页资产栏：五阶形态目录", "个人持有见配置权持有栏"]},
+    {"keys": ["我的权属", "权属登记", "产权"],
+     "route": "/me", "title": "我的 · 权属（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页权属栏：本人权属件（登记/变更/注销状态）", "登记操作直达权属登记面"]},
+    {"keys": ["我的授权", "配置权", "授权件"],
+     "route": "/me", "title": "我的 · 授权（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页授权持有栏：授权件与状态", "五操作（预收权/实时/追加/变更/多层级）直达授权登记面"]},
+    {"keys": ["我的积分", "积分"],
+     "route": "/me", "title": "我的 · 积分（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页积分栏（SIMULATED 明示）", "口径：本人为出让方的最小链要约报价合计"]},
+    {"keys": ["我的存证", "活动产物", "操作记录", "存证查询"],
+     "route": "/me", "title": "我的 · 活动产物（控制台）",
+     "action": "查询",
+     "guide": ["「我的」页活动产物栏：本人 NCA 分页明细", "可按动作过滤，链上可查可验"]},
+    {"keys": ["工具货架", "上架", "货架"],
+     "route": "/toolshelf", "title": "工具货架",
+     "action": "操作",
+     "guide": ["须登录；上架须 operator", "逐项上架，三条准入逐件过闸"]},
+    {"keys": ["运维", "工单", "红线"],
+     "route": "/ops", "title": "运维工单",
+     "action": "操作",
+     "guide": ["须登录；操作须 operator", "建单 / 红线查看 / 反馈 / 分类"]},
+    {"keys": ["公告", "通知"],
+     "route": "/announcements", "title": "公告栏",
+     "action": "查询",
+     "guide": ["对外公告区，公开可读", "空栏为常态"]},
+    {"keys": ["集群", "准入", "判定", "编排"],
+     "route": "/cluster", "title": "集群编排与准入",
+     "action": "操作",
+     "guide": ["须登录", "五门合取判定，fail-closed", "沙盒例外：已缔约即可演练"]},
+    {"keys": ["沙盒", "演练", "入盒"],
+     "route": "/sandbox", "title": "沙盒演练",
+     "action": "操作",
+     "guide": ["须登录（注册即缔约）", "沙盒内配置不入正式账本", "出盒须初始确权"]},
     {"keys": ["智能体后台", "这只智能体", "该智能体", "智能体详情", "它的税单"],
      "route": "/agents", "title": "智能体后台（选一只进入）",
      "action": "查询",
@@ -1277,15 +1815,20 @@ _INTENT_TABLE = [
 def intent_route(q: str = ""):
     """意图导航：自然语言 → 功能页 + 操作指引（确定性关键词规则表，可审计，零外部依赖）。"""
     text = q.strip().lower()
-    best, best_hits, alts = None, 0, []
+    best, best_key, alts = None, None, []
     for item in _INTENT_TABLE:
-        hits = sum(1 for k in item["keys"] if k in text)
+        matched = [k for k in item["keys"] if k in text]   # 命中定义不变（k in text ＋计数）
+        hits = len(matched)
         if hits > 0:
-            alts.append({"route": item["route"], "title": item["title"], "hits": hits})
-            if hits > best_hits:
-                best, best_hits = item, hits
+            longest = max(len(k) for k in matched)          # 命中键中最长者长度
+            alts.append({"route": item["route"], "title": item["title"],
+                         "hits": hits, "longest": longest})
+            # 裁决（2026-10-09 可增项第 4 件）：命中数 ↓、最长命中键 ↓，仍并列维持表序（严格 >，先到先得）
+            if best is None or (hits, longest) > best_key:
+                best, best_key = item, (hits, longest)
+    # 备选与最优同一裁决规则；稳定排序保证全并列时维持表序兜底
     alts = sorted((a for a in alts if not best or a["route"] != best["route"]),
-                  key=lambda a: -a["hits"])[:2]
+                  key=lambda a: (-a["hits"], -a["longest"]))[:2]
     if best is None:
         return _nca_watermark({
             "matched": False, "route": "/", "title": "首页 KPI 总览", "action": "查询",

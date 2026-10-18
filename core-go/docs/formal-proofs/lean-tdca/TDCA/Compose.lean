@@ -12,7 +12,7 @@
   **不满足时**，`gf ∘ hg` **不是**复合的右逆（本文件 L3a 把该条件显式化为假设；
   L3b 给出**不依赖该条件**的规范代表元版本，但须先证选择函数存在）。
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 namespace TDCA.MetaInverse
 
