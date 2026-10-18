@@ -35,7 +35,7 @@ router = APIRouter(prefix="/api/public", tags=["public-docs"])
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 
 # ---------------------------------------------------------------------
-# 在册公开清单（甲类 8 件 · L1SI151 批1段二 · main e9b4309a）
+# 在册公开清单（三族 32 件 · regulation 17／whitepapers 2／papers 13 · L1SI154-010 扩面）
 # ⛔ 未入站件与乙类 2 件（签批记录／生效注记）一律不得列入；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
@@ -86,6 +86,30 @@ _PUBLIC_DOCS = {
 }
 _PUBLIC_SET = frozenset(n for names in _PUBLIC_DOCS.values() for n in names)
 _PUBLIC_FAMILY = {n: fam for fam, names in _PUBLIC_DOCS.items() for n in names}
+
+# L1SI154-011 段C：清单显示名映射（⛔ 只改显示名，路径与 slug 一字不改，防断链）。
+# 背景：008 段A 只换了六件内容、件名未变，文件名里的 V0.1-DRAFT 与内容面貌（V1.0-FROZEN已生效）
+# 不符；相遇专章两版内容仍为真草案，去 DRAFT 字样但保留「待签批」真实状态。
+# 键必须是 _PUBLIC_SET 内的在册件名；未映射件显示名=文件名（默认行为不变）。
+_DISPLAY_NAME = {
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md":
+        "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版·V1.0-FROZEN已生效）.md",
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md":
+        "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版·V1.0-FROZEN已生效）.md",
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml":
+        "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版·V1.0-FROZEN已生效）.yaml",
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md":
+        "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版·V1.0-FROZEN已生效）.md",
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md":
+        "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版·V1.0-FROZEN已生效）.md",
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml":
+        "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版·V1.0-FROZEN已生效）.yaml",
+    "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md":
+        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9·待签批）.md",
+    "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml":
+        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9·待签批）.yaml",
+}
+assert all(n in _PUBLIC_SET for n in _DISPLAY_NAME), "显示名映射键必须是在册件名"
 
 _RATE_LIMIT_PER_MIN = 60
 
@@ -168,6 +192,7 @@ def _entry(filename: str, raw: bytes, sha: str, family: str) -> dict:
         "family": family,
         "slug": filename,
         "filename": filename,
+        "display_name": _DISPLAY_NAME.get(filename, filename),  # 仅显示层；路径/slug 不改
         "version": _version_of(filename, text),
         "bytes": len(raw),
         "sha256": sha,
