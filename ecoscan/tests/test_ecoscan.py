@@ -248,3 +248,38 @@ class TestLedger:
 
     def test_invite_limit_constant(self):
         assert WEEKLY_INVITE_LIMIT == 2
+
+
+# ---------------------------------------------------------------------------
+# W-7：公开件机检门（不公开四条阻断·NSFL-TRIGGER fail-closed·词面不公示）
+# ---------------------------------------------------------------------------
+
+from tdca_ecoscan.compliance_gate import (  # noqa: E402
+    assert_publication_safe, check_publication_safe,
+)
+
+
+def test_w7_blocks_each_category():
+    """不公开四条逐类命中即报。"""
+    assert check_publication_safe("见 TDCA-OPEN-COLLAB-001 §三") == ["internal_id"]
+    assert check_publication_safe("token: ghp_abcdefghijklmnopqrstuvwxyz123456") == ["credential"]
+    assert check_publication_safe("key AKIAIOSFODNN7EXAMPLE 在此") == ["credential"]
+    assert check_publication_safe("联系人身份证 110101199003077758") == ["pii"]
+    assert check_publication_safe("正文含 发币 词面", nsfl_terms=["发币"]) == ["nsfl_term"]
+
+
+def test_w7_clean_text_passes():
+    """干净对外文本全类通过（含正常 TDCA 提及但无内部编号形态）。"""
+    assert check_publication_safe(
+        "TDCA 生态雷达周报：本批 3 件候选、1 封邀请，数据性质 SIMULATED。") == []
+    assert check_publication_safe("许可证 MIT／Apache-2.0 照现闸") == []
+
+
+def test_w7_gate_raises_fail_closed():
+    """assert 门 fail-closed：命中即 raise（NSFL-TRIGGER 规约），并带上下文。"""
+    with pytest.raises(ValueError, match="NSFL-TRIGGER"):
+        assert_publication_safe("sk-abcdef0123456789abcdef", context="周报")
+    with pytest.raises(ValueError, match="nsfl_term"):
+        assert_publication_safe("含 xyz 词面", nsfl_terms=["xyz"], context="评论")
+    # 无命中不 raise
+    assert_publication_safe("干净文本", context="周报")
