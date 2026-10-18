@@ -49,6 +49,15 @@ _PUBLIC_DOCS = (
     "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml",
     "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md",
     "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml",
+    "TDCA-PUB-CORPUS-017-可信协作宪法（对外可读版·V0.1草案候选·十条与序言四支柱）.md",
+    "TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md",
+    "TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml",
+    "TDCA-PUB-CORPUS-029-卷二纯版第二批清理版重出-身份可信等级认定条例对外版（仅去符号·语义同028·六检通过）.md",
+    "TDCA-PUB-CORPUS-045-IdentityTier-EN-身份可信等级认定条例英文人读版（十六条·V1.0·逐条对应中文）.md",
+    "TDCA-PUB-CORPUS-046-IdentityTier-MACHINE-身份可信等级认定条例机读版（四档与判定次序与三态·V1.0·互见）.yaml",
+    "TDCA-PUB-CORPUS-030-卷二纯版第三批-智能体定义条例对外版（二十一条·V1.0已生效·六检通过·引用不重写）.md",
+    "TDCA-PUB-CORPUS-047-AgentDefinition-EN-智能体定义条例英文人读版（二十一条·V1.0·逐条对应中文）.md",
+    "TDCA-PUB-CORPUS-048-AgentDefinition-MACHINE-智能体定义条例机读版（本体与创世与主体与效用与生命周期·V1.0互见）.yaml",
 )
 _PUBLIC_SET = frozenset(_PUBLIC_DOCS)
 
