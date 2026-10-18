@@ -22,8 +22,8 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe('错误码表 v1（errors.ts 一处常量）', () => {
-  it('13 簇码全在册（令 §四码表逐字）', () => {
+describe('错误码表 v2（errors.ts 一处常量）', () => {
+  it('13 码全在册（令 §四码表逐字）', () => {
     const expected: Record<string, string> = {
       'TDCA-E-INPUT-INPUT-001': '缺少必填项：〈字段名〉',
       'TDCA-E-INPUT-INPUT-002': '〈字段名〉格式不符要求',

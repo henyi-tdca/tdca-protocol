@@ -12,6 +12,7 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import json
+import logging
 import sys
 import time
 import uuid
@@ -34,6 +35,7 @@ from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
                     _require_session_user, _utc)
 
 router = APIRouter(prefix="/api/v1/workbuddy", tags=["workbuddy"])
+logger = logging.getLogger(__name__)
 
 
 # ---- P5 引擎（单例；nca_fn 落 nca_chain；nsfl_check_fn 接 D-2 场景负空间）----
@@ -137,7 +139,10 @@ def wb_execute(req: ExecuteRequest, request: Request):
         ex = _engine.execute(wf, req.human_signature)
         elapsed_ms = round((time.perf_counter() - start) * 1000.0, 1)
     except PermissionError as exc:
-        raise HTTPException(403, str(exc))
+        # L1SI153 段二①：引擎底层异常只进日志，⛔ 不直透用户；对外固定码＋通用三段式文案
+        logger.warning("workbuddy execute denied by engine: %s", exc)
+        raise HTTPException(403, "本次执行被签名门禁拒绝，工作流未被运行（人类签名权不可绕过）。"
+                                 "你的签名未通过校验。请重新进行人工签名确认后再执行；仍不通请联系运维。")
     except KeyError as exc:
         raise HTTPException(400, f"DSL 依赖错误: {exc}")
     nca_refs = list(ex.nca_refs) + [_nca_append(

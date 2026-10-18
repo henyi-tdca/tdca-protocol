@@ -140,7 +140,9 @@ def test_execute_empty_signature_rejected(auth):
                     json={"workflow_id": "WF-TEST-001",
                           "human_signature": ""}, headers=auth)
     assert r.status_code == 403
-    assert "HUMAN_SIGNATURE_REQUIRED" in r.text
+    # 段二①：引擎异常串不再直透（只进日志）；对外固定文案＋码
+    assert "签名门禁拒绝" in r.text and "HUMAN_SIGNATURE_REQUIRED" not in r.text
+    assert r.json()["code"] == "TDCA-E-IDENT-STATE-001"
 
 
 # ---- ④ 签名 request→confirm ----
