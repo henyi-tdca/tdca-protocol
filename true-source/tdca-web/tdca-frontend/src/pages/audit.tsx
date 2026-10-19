@@ -104,7 +104,7 @@ function SelfCheckBlock() {
                 ['action', result.record.action],
                 ['ts', result.record.ts],
                 ['artifact_filename_sha256_16',
-                 `件名校验码 ${result.record.artifact_filename_sha256_16}（⛔ 台账件名原值不出，035-A2 脱敏）`],
+                 `件名校验码 ${result.record.artifact_filename_sha256_16}（台账件名原值不对外显示）`],
                 ['artifact_ext', result.record.artifact_ext || '—'],
                 ['sha256_8', `${result.record.sha256_8}（artifact_path 之哈希，非记录哈希）`],
                 ['rec_hash', result.record.rec_hash],

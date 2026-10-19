@@ -93,3 +93,21 @@ def _seed():
 
 
 _seed()
+
+
+# ---------------------------------------------------------------------
+# AMEND-2 公开子集收窄：每测试以空公开清单起（fail-closed 语义不被
+# 默认放行污染）；需要 200 的用例自行登记：
+#   selfcheck_ops._PUBLIC_IDS.update(ids)
+# ---------------------------------------------------------------------
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _public_ids_fresh():
+    import selfcheck_ops
+    fresh: set[str] = set()
+    orig = selfcheck_ops._PUBLIC_IDS
+    selfcheck_ops._PUBLIC_IDS = fresh
+    yield fresh
+    selfcheck_ops._PUBLIC_IDS = orig
