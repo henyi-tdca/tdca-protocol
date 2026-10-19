@@ -111,7 +111,7 @@ function SelfCheckBlock() {
                 ['prev_hash', result.record.prev_hash],
                 ['detached', String(result.record.detached)],
                 ['detach_reason', result.record.detach_reason || '—'],
-                ['actor_hash', `${result.record.actor_hash}（脱敏值，⛔ 不出原值）`],
+                ['actor_hash', `${result.record.actor_hash}（脱敏值，不出原值）`],
               ] as const
             ).map(([k, v]) => (
               <tr key={k} className="border-b border-gray-100">
