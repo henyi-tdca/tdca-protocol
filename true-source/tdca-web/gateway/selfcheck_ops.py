@@ -80,11 +80,17 @@ def _artifact_checksum(artifact_path: str | None) -> str:
 
 
 def _artifact_ext(artifact_path: str | None) -> str:
-    """非敏感项：扩展名（小写、无点）；无扩展名则空串（035-A2 令 §三 A-2 许给）。"""
+    """非敏感项：扩展名（小写、无点）；无扩展名则空串（035-A2 令 §三 A-2 许给）。
+
+    AMEND-1 收紧：返回值须匹配 ^[a-z0-9]{1,5}$，否则回空串——
+    路径内嵌 ':sha1'／'rtbase=' 等内部标记时不得外泄任何子串。"""
     name = _artifact_filename(artifact_path)
     if "." not in name:
         return ""
-    return name.rsplit(".", 1)[-1].lower()
+    ext = name.rsplit(".", 1)[-1].lower()
+    if len(ext) > 5 or not ext.isalnum() or not ext.isascii():
+        return ""
+    return ext
 
 
 def _anchor_dir() -> Path:

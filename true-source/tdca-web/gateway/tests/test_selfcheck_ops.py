@@ -10,6 +10,7 @@ import json
 
 from fastapi.testclient import TestClient
 
+import selfcheck_ops
 from api_v1 import _nca_append, rec_hash_of
 from app import app
 from db import get_session, get_sessionmaker
@@ -134,3 +135,21 @@ def test_m1pp_spec_public():
     r = client.get("/api/v1/selfcheck/spec")
     assert r.status_code == 200
     assert "rec_hash = sha256(" in r.json()["data"]["rec_hash_spec"]
+
+
+# ---- AMEND-1①：artifact_ext 收紧（路径内嵌 ':sha1'／'rtbase=' 不外泄） ----
+def test_amend1_ext_leaky_path_returns_empty():
+    leaky = ("obs/NCA-WEB-225450bc3ed9.py:10fddbd3502918818d0a5e6eb0478febf096b109"
+             ":rtbase=e64c9a6d,a8a79475,872e256e,5d584adc")
+    ext = selfcheck_ops._artifact_ext(leaky)
+    assert ext == ""
+    assert ":" not in ext and "=" not in ext and "/" not in ext
+
+
+def test_amend1_ext_normal_extensions_still_ok():
+    assert selfcheck_ops._artifact_ext("docs/a.py") == "py"
+    assert selfcheck_ops._artifact_ext("docs/b.md") == "md"
+    assert selfcheck_ops._artifact_ext("docs/noext") == ""
+    assert selfcheck_ops._artifact_ext("docs/x.PY") == "py"        # 大写归一仍正确
+    assert selfcheck_ops._artifact_ext("a/f.python") == ""         # 超 5 长拒
+
