@@ -1,0 +1,31 @@
+# gate-flow-orchestrator —— L1-SI-137 门禁扩面 P1-1
+# ⚠️ 该工程现无测试文件（本身即缺口）：本门先做「语法 + 可导入」硬闸，待补测试后按令升级为 pytest。
+name: gate-flow-orchestrator
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-flow-orchestrator/**", ".github/workflows/gate-flow-orchestrator.yml"]
+  pull_request:
+    paths: ["tdca-flow-orchestrator/**", ".github/workflows/gate-flow-orchestrator.yml"]
+permissions:
+  contents: read
+jobs:
+  syntax:
+    name: tdca-flow-orchestrator 语法/导入门
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip
+          if [ -f tdca-flow-orchestrator/requirements.txt ]; then pip install -r tdca-flow-orchestrator/requirements.txt; fi
+      - name: 语法门（全部 .py 编译）
+        run: python -m compileall -q tdca-flow-orchestrator/src
+      - name: 导入门（src 包可导入）
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python -c "import sys; sys.path.insert(0,'tdca-flow-orchestrator'); import src"

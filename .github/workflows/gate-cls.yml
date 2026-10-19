@@ -1,0 +1,29 @@
+# gate-cls —— L1-SI-137 门禁扩面 P1-1
+name: gate-cls
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-cls/**", ".github/workflows/gate-cls.yml"]
+  pull_request:
+    paths: ["tdca-cls/**", ".github/workflows/gate-cls.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: tdca-cls 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip pytest
+          if [ -f tdca-cls/requirements.txt ]; then pip install -r tdca-cls/requirements.txt; fi
+      - name: 跑测试
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        working-directory: tdca-cls
+        run: python -m pytest -q

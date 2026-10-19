@@ -1,0 +1,29 @@
+# gate-gateway —— L1-SI-137 门禁扩面 P1-2（对外可见面）
+name: gate-gateway
+on:
+  workflow_dispatch:
+  push:
+    paths: ["true-source/tdca-web/gateway/**", ".github/workflows/gate-gateway.yml"]
+  pull_request:
+    paths: ["true-source/tdca-web/gateway/**", ".github/workflows/gate-gateway.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: gateway 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip pytest
+          if [ -f true-source/tdca-web/gateway/requirements.txt ]; then pip install -r true-source/tdca-web/gateway/requirements.txt; fi
+      - name: 跑测试
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        working-directory: true-source/tdca-web/gateway
+        run: python -m pytest -q
