@@ -20,14 +20,14 @@
 
 本项目在下列开源平台保持同步镜像，三端同源同点，便于国内外访问：
 
-- **GitHub**（主仓）：https://github.com/henyi-tdca/tdca-protocol
-- **AtomGit**（开放原子开源基金会）：https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
+- **AtomGit**（开放原子开源基金会，主仓）：https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
+- **GitHub**：https://github.com/henyi-tdca/tdca-protocol
 - **Gitee**：https://gitee.com/siweihanshuzhineng_0/tdca-protocol
 
-以 GitHub 主仓为准；镜像与主仓同源同步，可能存在短暂同步延迟。
+以 AtomGit 主仓为准；镜像与主仓同源同步，可能存在短暂同步延迟。
 
-Mirrors synchronized with the main GitHub repository:
-https://github.com/henyi-tdca/tdca-protocol
+Mirrors synchronized with the main AtomGit repository:
+https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
 
 **The main repository remains authoritative**, and the mirrors may lag briefly.
 
