@@ -37,7 +37,8 @@ describe('M1″ 存证自查（031 令页面标注）', () => {
   it('查询成功渲染十字段；未查到渲染 fail-closed（不渲染 actor 原值）', async () => {
     const record = {
       nca_id: 'NCA-WEB-test0001', action: 'TEST_ACT', ts: '2026-10-19T00:00:00Z',
-      artifact_filename: 'a.md', sha256_8: 'abcd1234',
+      artifact_filename_sha256_16: 'AB12CD34EF56GH78', artifact_ext: 'md',
+      sha256_8: 'abcd1234',
       rec_hash: 'ABCD1234EFGH5678', prev_hash: 'MISSING',
       detached: 1, detach_reason: 'missing_predecessor',
       actor_hash: '0a1b2c3d',
@@ -52,6 +53,7 @@ describe('M1″ 存证自查（031 令页面标注）', () => {
           json: async () => envelope({
             record, rec_hash_spec: 'rec_hash = sha256(...)',
             page_disclaimer: '本查询可证：…',
+            note: '只读自查；⛔ 响应不含 actor 原值/凭据/内部编号/台账件名原值；⛔ 不构成对外证明（存证对外可验证性之宣称，另候明示）',
           }),
         } as Response
       }
@@ -63,5 +65,8 @@ describe('M1″ 存证自查（031 令页面标注）', () => {
     fireEvent.click(screen.getByTestId('selfcheck-run'))
     await waitFor(() => expect(screen.getByTestId('selfcheck-record')).toBeTruthy())
     expect(screen.getByText('missing_predecessor')).toBeTruthy()
+    // 035-A2 令 B 项：硬注取 API note 渲染（一源两现同字，⛔ 前端另行手写）
+    expect(screen.getByTestId('selfcheck-note').textContent).toContain('不构成对外证明')
+    expect(screen.getByText(/件名校验码 AB12CD34EF56GH78/)).toBeTruthy()
   })
 })
