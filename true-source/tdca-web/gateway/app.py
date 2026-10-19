@@ -205,6 +205,9 @@ class _SPAStaticFiles(__import__("starlette.staticfiles", fromlist=["StaticFiles
             return await super().get_response(path, scope)
         except StarletteHTTPException as exc:
             if exc.status_code == 404:
+                # ⭐ API 面不兜底：未命中即 404（GSEQ-5372／5374）
+                if str(scope.get("path", "")).startswith("/api"):
+                    raise
                 return await super().get_response("index.html", scope)
             raise
 
