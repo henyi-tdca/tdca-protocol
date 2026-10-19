@@ -110,7 +110,7 @@ export function AnnouncementsPage() {
               {busy ? '发布中…' : '发布'}
             </button>
             {msg && <p data-testid="ann-msg" role="status" className="mt-2 text-xs text-emerald-800">{msg}</p>}
-            <p className="mt-1 text-[11px] text-emerald-700">⛔ 内容未经创始人逐次明示不得发布；发布落 NCA 存证链（real），对外纪律四零 fail-closed。</p>
+            <p className="mt-1 text-[11px] text-emerald-700">内容未经创始人逐次明示不得发布；发布落 NCA 存证链（real），对外纪律四零 fail-closed。</p>
           </section>
         )}
 

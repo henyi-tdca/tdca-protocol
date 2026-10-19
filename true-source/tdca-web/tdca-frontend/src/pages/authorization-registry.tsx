@@ -143,7 +143,7 @@ export function AuthorizationRegistryPage() {
         {rules && (
           <section data-testid="ar-rules" className="rounded-lg border border-blue-200 bg-blue-50/50 p-4 text-sm">
             <h3 className="mb-2 font-semibold text-blue-800">登记口径</h3>
-            <p>四要件（缺一即拒，⛔ 不代填代证）：</p>
+            <p>四要件（缺一即拒，不代填代证）：</p>
             <ul className="list-disc pl-5">
               {rules.four_requirements.map((x) => (
                 <li key={x.key}>{x.label}——{x.rule}</li>
@@ -172,9 +172,9 @@ export function AuthorizationRegistryPage() {
             onChange={(e) => setGrantee(e.target.value)} />
           <input placeholder="场景·必填（如：生产交付（内循环部署与运行））" value={scene}
             onChange={(e) => setScene(e.target.value)} />
-          <input placeholder="权限范围说明·选填（⛔ 未裁取值由人填，本端不自定）" value={scopeNote}
+          <input placeholder="权限范围说明·选填（未裁取值由人填，本端不自定）" value={scopeNote}
             onChange={(e) => setScopeNote(e.target.value)} />
-          <input placeholder="期限说明·选填（⛔ 未裁取值由人填）" value={termNote}
+          <input placeholder="期限说明·选填（未裁取值由人填）" value={termNote}
             onChange={(e) => setTermNote(e.target.value)} />
           <fieldset className="text-sm">
             <legend>四要件自证（逐条勾证，缺一即 fail-closed 拒收）</legend>

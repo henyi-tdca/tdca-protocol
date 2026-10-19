@@ -104,7 +104,7 @@ export function OwnershipRegistryPage() {
       description="登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引不代法律判定。">
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          登记二分：权属登记＝归谁（本页）／授权登记＝谁能怎么用（8b，⛔ 一期不做）
+          登记二分：权属登记＝归谁（本页）／授权登记＝谁能怎么用（8b，一期不做）
           <SimulatedBadge nature="simulated" />
         </div>
 
