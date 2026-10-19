@@ -43,12 +43,14 @@ def test_m1pp_known_id_ten_fields():
     body = r.json()["data"]
     assert "nca_watermark" in r.json()      # 全链路水印（前端 fail-closed 依赖）
     rec = body["record"]
-    expect = {"nca_id", "action", "ts", "artifact_filename", "sha256_8",
-              "rec_hash", "prev_hash", "detached", "detach_reason", "actor_hash"}
+    expect = {"nca_id", "action", "ts", "artifact_filename_sha256_16", "artifact_ext",
+              "sha256_8", "rec_hash", "prev_hash", "detached", "detach_reason", "actor_hash"}
     assert set(rec.keys()) == expect, f"白名单漂移: {set(rec.keys()) ^ expect}"
     assert rec["nca_id"] == ids[0]
-    assert rec["artifact_filename"] == "artifact-0.md"     # 只给文件名，⛔ 无目录
-    assert "/" not in rec["artifact_filename"]
+    # 035-A2 令脱敏：件名原值不出，回 sha256(件名 UTF-8) 前 16 位大写
+    assert rec["artifact_filename_sha256_16"] == hashlib.sha256(
+        "artifact-0.md".encode("utf-8")).hexdigest()[:16].upper()
+    assert rec["artifact_ext"] == "md"
     assert rec["actor_hash"] == hashlib.sha256(
         _SEED_ACTOR.encode("utf-8")).hexdigest()[:8]       # 脱敏值口径
     assert body["page_disclaimer"].startswith("本查询可证：")
@@ -95,6 +97,8 @@ def test_m1pp_no_actor_no_secret_no_internal_id():
     r = client.get(f"/api/v1/selfcheck/nca/{ids[2]}")
     text = json.dumps(r.json(), ensure_ascii=False)
     assert _SEED_ACTOR not in text                    # ⛔ actor 原值（自然人标识）不出
+    assert "artifact-2.md" not in text                # ⛔ 台账件名原值不出（035-A2 脱敏）
+    assert "creator=" not in text                     # ⛔ 件名内嵌账号形态不出
     assert "TDCA-HANDOFF" not in text and "TDCA-EXEC" not in text   # ⛔ 内部编号
     assert "PRIVATE KEY" not in text and "TDCA-SES-" not in text \
         and "TDCA-CRT-" not in text and "password" not in text.lower()  # ⛔ 凭据形态
