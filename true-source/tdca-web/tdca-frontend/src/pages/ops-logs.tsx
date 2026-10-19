@@ -169,7 +169,7 @@ export function OpsLogsPage() {
   return (
     <PageShell title="运维日志（每日填写）" dataSource="/api/v1/ops/logs（V-1~V-8 服务端校验）"
       permission="operator/founder（运维门内）"
-      description="六组 A~F 照 TDCA-TPL-OPS-LOG-001-MACHINE 键名；异常三段（发现→处置→闭合）结构化成三格，未闭合必填下一步＋时限；⛔ 不含口令/令牌/密钥字段。">
+      description="六组 A~F 照 TDCA-TPL-OPS-LOG-001-MACHINE 键名；异常三段（发现→处置→闭合）结构化成三格，未闭合必填下一步＋时限；不含口令/令牌/密钥字段。">
       <p className="text-xs">
         <Link to="/ops/logs/list" className="text-blue-600 underline">日志列表与导出 →</Link>
         <span className="ml-2 text-gray-400">周汇总/月报用导出 CSV（区间）。</span>
@@ -182,7 +182,7 @@ export function OpsLogsPage() {
         <div className="flex flex-wrap gap-2 items-center">
           <T k="date" label="日期" v={day} set={(x) => { setDay(x); setSec((s) => ({ ...s, A_基本信息: { ...s.A_基本信息, date: x } })) }} placeholder="YYYY-MM-DD" />
           <T k="duty_role" label="值班角色" v={dutyRole} set={setDutyRole} placeholder="如 值班运维" />
-          <T k="duty_no" label="工号" v={dutyNo} set={setDutyNo} placeholder="如 OP-001（⛔ 姓名）" />
+          <T k="duty_no" label="工号" v={dutyNo} set={setDutyNo} placeholder="如 OP-001（勿填姓名）" />
           <T k="handover" label="交接人" v={handover} set={setHandover} placeholder="角色+工号" />
         </div>
         <div className="flex flex-wrap gap-3">
@@ -298,8 +298,8 @@ export function OpsLogsPage() {
           <T k="m_ops401" label="文件区401(四项维持)" v={e.three_maintain.ops_401} set={(x) => setE({ three_maintain: { ...e.three_maintain, ops_401: x } })} />
           <Cb k="cred_changed" label="凭据有变" v={e.credential_change.changed} set={(x) => setE({ credential_change: { changed: x, changed_at: x ? '' : NA } })} />
           {e.credential_change.changed && (
-            <T k="cred_at" label="变更时点(⛔记值)" v={e.credential_change.changed_at === NA ? '' : e.credential_change.changed_at}
-              set={(x) => setE({ credential_change: { ...e.credential_change, changed_at: x } })} placeholder="时点即可，⛔ 值" />
+            <T k="cred_at" label="变更时点(勿记值)" v={e.credential_change.changed_at === NA ? '' : e.credential_change.changed_at}
+              set={(x) => setE({ credential_change: { ...e.credential_change, changed_at: x } })} placeholder="时点即可，勿填值" />
           )}
           <Cb k="sec_event" label="安全事件" v={e.security_event.exists} set={(x) => setE({ security_event: { ...e.security_event, exists: x, event_id: x ? '' : NA } })} />
           {e.security_event.exists && (

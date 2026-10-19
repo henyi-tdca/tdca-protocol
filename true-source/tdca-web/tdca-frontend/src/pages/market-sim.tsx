@@ -76,7 +76,7 @@ export function MarketSimPage() {
       title="规范索引与沙盒最小链（P9）"
       dataSource="A-20 /api/v1/regulations/* + A-21 /api/v1/market-sim/*"
       permission="登录 DID"
-      description="规范入册＋最小可用挂接（⛔ 不承诺 L2 市场全功能）：索引入口只列名目；最小链发布→准入→撮合→结算全 SIMULATED。">
+      description="规范入册＋最小可用挂接（不承诺 L2 市场全功能）：索引入口只列名目；最小链发布→准入→撮合→结算全 SIMULATED。">
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           期一承诺＝规范入册＋最小可用挂接；未入册规范依赖端点 503 fail-closed
@@ -110,7 +110,7 @@ export function MarketSimPage() {
             ))}
           </ul>
           <p className="text-xs text-gray-600">
-            只列名目与索引入口：⛔ 不复制正文、⛔ 不另存副本、⛔ 不重写条文；
+            只列名目与索引入口：不复制正文、不另存副本、不重写条文；
             与运维端红线第八项（登记制度）同源。
           </p>
         </section>

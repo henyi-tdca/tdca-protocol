@@ -87,7 +87,7 @@ export function AnchorsPage() {
       </section>
       <section data-testid="anchor-events">
         <h2>权属登记事件（登记／变更／注销）</h2>
-        <p>转让／许可属权利处分，⛔ 本期不做（归 8b）。</p>
+        <p>转让／许可属权利处分，本期不做（归 8b）。</p>
         <div>
           <select value={eventType} onChange={(e) => setEventType(e.target.value)} aria-label="事件类型">
             <option value="register">登记</option>

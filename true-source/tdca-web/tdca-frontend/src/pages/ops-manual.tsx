@@ -61,7 +61,7 @@ export function OpsManualPage() {
       title="运维手册与制度（点击直接阅读）"
       dataSource="/api/v1/ops/files（GET 清单＋按名出件）"
       permission="operator/founder（运维门内）"
-      description="在册七件：运维手册／运维制度／日志模板／入站留痕制度——站内直读，⛔ 不再输口令；新增件须登记白名单。">
+      description="在册七件：运维手册／运维制度／日志模板／入站留痕制度——站内直读，不再输口令；新增件须登记白名单。">
       <div data-testid="ops-manual" className="grid gap-4 md:grid-cols-[16rem_1fr]">
         <aside className="rounded-lg border border-gray-200 bg-white">
           <div className="border-b border-gray-100 px-4 py-2 text-xs text-gray-400">在册 {files.length} 件（人工登记）</div>
@@ -111,7 +111,7 @@ export function OpsManualPage() {
                 {body}
               </article>
               <footer className="mt-6 border-t border-gray-100 pt-2 text-xs text-gray-400">
-                件名：{active} · 本站只读，⛔ 不跳转外部
+                件名：{active} · 本站只读，不跳转外部
               </footer>
             </>
           )}
