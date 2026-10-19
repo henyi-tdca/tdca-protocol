@@ -24,7 +24,8 @@ interface SelfCheckRecord {
   nca_id: string
   action: string
   ts: string
-  artifact_filename: string
+  artifact_filename_sha256_16: string
+  artifact_ext: string
   sha256_8: string
   rec_hash: string
   prev_hash: string
@@ -37,6 +38,7 @@ interface SelfCheckResult {
   record: SelfCheckRecord
   rec_hash_spec: string
   page_disclaimer: string
+  note: string
 }
 
 /** A-24 存证自查（M1″）：按 nca_id 查单行存证——白名单十字段，⛔ 不出 actor 原值 */
@@ -88,6 +90,11 @@ function SelfCheckBlock() {
           [fail-closed] 未查到该存证（404 统一码）或入口不可用：{error}
         </p>
       )}
+      {result?.note && (
+        <p data-testid="selfcheck-note" className="rounded bg-amber-50 p-2 text-xs text-amber-700">
+          {result.note}
+        </p>
+      )}
       {result && (
         <table data-testid="selfcheck-record" className="w-full text-xs">
           <tbody>
@@ -96,7 +103,9 @@ function SelfCheckBlock() {
                 ['nca_id', result.record.nca_id],
                 ['action', result.record.action],
                 ['ts', result.record.ts],
-                ['artifact_filename', result.record.artifact_filename],
+                ['artifact_filename_sha256_16',
+                 `件名校验码 ${result.record.artifact_filename_sha256_16}（⛔ 台账件名原值不出，035-A2 脱敏）`],
+                ['artifact_ext', result.record.artifact_ext || '—'],
                 ['sha256_8', `${result.record.sha256_8}（artifact_path 之哈希，非记录哈希）`],
                 ['rec_hash', result.record.rec_hash],
                 ['prev_hash', result.record.prev_hash],

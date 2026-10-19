@@ -70,6 +70,23 @@ def _artifact_filename(artifact_path: str | None) -> str:
     return PurePosixPath(p).name
 
 
+def _artifact_checksum(artifact_path: str | None) -> str:
+    """件名脱敏（035-A2 令 · 只动呈现层）：不回台账件名原值，
+    回 sha256(件名 UTF-8) 前 16 位大写——人可对原值自验，响应不留原值。"""
+    name = _artifact_filename(artifact_path)
+    if not name:
+        return ""
+    return hashlib.sha256(name.encode("utf-8")).hexdigest()[:16].upper()
+
+
+def _artifact_ext(artifact_path: str | None) -> str:
+    """非敏感项：扩展名（小写、无点）；无扩展名则空串（035-A2 令 §三 A-2 许给）。"""
+    name = _artifact_filename(artifact_path)
+    if "." not in name:
+        return ""
+    return name.rsplit(".", 1)[-1].lower()
+
+
 def _anchor_dir() -> Path:
     """当日锚目录：env TDCA_ANCHOR_DIR 优先；缺省探测容器/仓内常位。"""
     env = os.environ.get("TDCA_ANCHOR_DIR", "").strip()
@@ -103,11 +120,14 @@ def selfcheck_spec():
                   "anchor": "GET /api/v1/selfcheck/anchor"},
         "rec_hash_spec": _RECHASH_SPEC,
         "anchor_digest_spec": _ANCHOR_SPEC,
-        "fields_whitelist": ["nca_id", "action", "ts", "artifact_filename",
-                             "sha256_8", "rec_hash", "prev_hash", "detached",
+        "fields_whitelist": ["nca_id", "action", "ts", "artifact_filename_sha256_16",
+                             "artifact_ext", "sha256_8", "rec_hash", "prev_hash", "detached",
                              "detach_reason", "actor_hash"],
         "not_returned": ["actor（原值，自然人标识一律不出）", "handshake_id",
-                         "chain_id", "side", "凭据", "内部编号", "负空间词面"],
+                         "chain_id", "side", "凭据", "内部编号", "负空间词面",
+                         "artifact_filename（台账件名原值，035-A2 令脱敏）"],
+        "artifact_filename_note": ("台账件名原值不入响应；以 artifact_filename_sha256_16 供给"
+                                   "（sha256(件名 UTF-8) 前 16 位大写），artifact_ext 为扩展名"),
         "rate_limit": f"{_RATE_PER_MIN}/min/IP（内存滑窗，单实例口径）",
         "sha256_8_note": "sha256_8 系 artifact_path 之哈希，非记录哈希（如实标注）",
         "page_disclaimer": _PAGE_DISCLAIMER,
@@ -126,7 +146,8 @@ def selfcheck_nca(nca_id: str, request: Request):
             "nca_id": row.nca_id,
             "action": row.action,
             "ts": row.ts,
-            "artifact_filename": _artifact_filename(row.artifact_path),
+            "artifact_filename_sha256_16": _artifact_checksum(row.artifact_path),
+            "artifact_ext": _artifact_ext(row.artifact_path),
             "sha256_8": row.sha256_8 or "",   # 如实标注：artifact_path 之哈希，非记录哈希
             "rec_hash": row.rec_hash or "",
             "prev_hash": row.prev_hash if row.prev_hash not in (None, "") else
@@ -139,8 +160,10 @@ def selfcheck_nca(nca_id: str, request: Request):
         "record": payload,
         "rec_hash_spec": _RECHASH_SPEC,
         "sha256_8_note": "sha256_8 系 artifact_path 之哈希，非记录哈希（如实标注）",
+        "artifact_filename_note": ("台账件名原值不入响应；artifact_filename_sha256_16 = "
+                                   "sha256(件名 UTF-8) 前 16 位大写（035-A2 令脱敏）"),
         "page_disclaimer": _PAGE_DISCLAIMER,
-        "note": "只读自查；⛔ 响应不含 actor 原值/凭据/内部编号；"
+        "note": "只读自查；⛔ 响应不含 actor 原值/凭据/内部编号/台账件名原值；"
                 "⛔ 不构成对外证明（存证对外可验证性之宣称，另候明示）",
     })
 
