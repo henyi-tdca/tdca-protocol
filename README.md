@@ -16,19 +16,20 @@
 
 **与现有协议栈的关系**：通信层（MCP/A2A）与支付层（AP2/x402/ACP）锚定的是私人信用；TDCA 的治理层（NSFL 负空间 / NCA 存证链 / CCP 契约）可挂载于 MCP/A2A 之上，但结算轨道不接受私人信用资产。三锚叠加，全球无对标。
 
-## 二、国内镜像 / Domestic Mirror
+## 二、仓库镜像 / Mirrors
 
-本项目在国内开源平台提供同步镜像，便于国内访问：
+本项目在下列开源平台保持同步镜像，三端同源同点，便于国内外访问：
 
+- **GitHub**（主仓）：https://github.com/henyi-tdca/tdca-protocol
 - **AtomGit**（开放原子开源基金会）：https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
 - **Gitee**：https://gitee.com/siweihanshuzhineng_0/tdca-protocol
 
-镜像与主仓（AtomGit）同源；**以主仓为准**，镜像可能存在短暂同步延迟。GitHub 线冻结在案。
+以 GitHub 主仓为准；镜像与主仓同源同步，可能存在短暂同步延迟。
 
-A synchronized mirror is available on AtomGit (OpenAtom Foundation):
-https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
+Mirrors synchronized with the main GitHub repository:
+https://github.com/henyi-tdca/tdca-protocol
 
-The mirror tracks the GitHub main repository. **The main repository remains authoritative**, and the mirror may lag briefly.
+**The main repository remains authoritative**, and the mirrors may lag briefly.
 
 ## 三、仓库导航（两包 + 引擎 + 生态）
 
