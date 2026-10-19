@@ -1,0 +1,29 @@
+# gate-workbuddy —— L1-SI-137 门禁扩面 P1-1（测试散在 silent-mount/*/…/tests，递归收集）
+name: gate-workbuddy
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-workbuddy/**", ".github/workflows/gate-workbuddy.yml"]
+  pull_request:
+    paths: ["tdca-workbuddy/**", ".github/workflows/gate-workbuddy.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: tdca-workbuddy 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip pytest
+          if [ -f tdca-workbuddy/requirements.txt ]; then pip install -r tdca-workbuddy/requirements.txt; fi
+      - name: 跑测试
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        working-directory: tdca-workbuddy
+        run: python -m pytest -q

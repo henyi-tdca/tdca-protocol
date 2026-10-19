@@ -1,0 +1,26 @@
+# gate-frontend —— L1-SI-137 门禁扩面 P1-2（对外可见面）
+name: gate-frontend
+on:
+  workflow_dispatch:
+  push:
+    paths: ["true-source/tdca-web/tdca-frontend/**", ".github/workflows/gate-frontend.yml"]
+  pull_request:
+    paths: ["true-source/tdca-web/tdca-frontend/**", ".github/workflows/gate-frontend.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: tdca-frontend 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: 安装依赖
+        working-directory: true-source/tdca-web/tdca-frontend
+        run: npm ci || npm install
+      - name: 跑测试
+        working-directory: true-source/tdca-web/tdca-frontend
+        run: npm test

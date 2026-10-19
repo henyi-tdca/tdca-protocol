@@ -1,0 +1,30 @@
+# gate-toolchain —— L1-SI-137 门禁扩面 P1-1（出处 TDCA-ASSESS-REPO-FULLSTACK-ROADMAP-001 缺口三）
+name: gate-toolchain
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-toolchain/**", ".github/workflows/gate-toolchain.yml"]
+  pull_request:
+    paths: ["tdca-toolchain/**", ".github/workflows/gate-toolchain.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: tdca-toolchain 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip pytest
+          if [ -f tdca-toolchain/requirements.txt ]; then pip install -r tdca-toolchain/requirements.txt; \
+          elif [ -f tdca-toolchain/pyproject.toml ]; then pip install -e tdca-toolchain || true; fi
+      - name: 跑测试
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        working-directory: tdca-toolchain
+        run: python -m pytest -q

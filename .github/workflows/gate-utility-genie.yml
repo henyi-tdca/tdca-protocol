@@ -1,0 +1,29 @@
+# gate-utility-genie —— L1-SI-137 门禁扩面 P1-1
+name: gate-utility-genie
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-utility-genie/**", ".github/workflows/gate-utility-genie.yml"]
+  pull_request:
+    paths: ["tdca-utility-genie/**", ".github/workflows/gate-utility-genie.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: tdca-utility-genie 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip pytest
+          if [ -f tdca-utility-genie/requirements.txt ]; then pip install -r tdca-utility-genie/requirements.txt; fi
+      - name: 跑测试
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        working-directory: tdca-utility-genie
+        run: python -m pytest -q

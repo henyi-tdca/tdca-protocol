@@ -1,0 +1,29 @@
+# gate-ns-ops —— L1-SI-137 门禁扩面 P1-1
+name: gate-ns-ops
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-ns-ops/**", ".github/workflows/gate-ns-ops.yml"]
+  pull_request:
+    paths: ["tdca-ns-ops/**", ".github/workflows/gate-ns-ops.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: tdca-ns-ops 测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装依赖
+        run: |
+          python -m pip install -U pip pytest
+          if [ -f tdca-ns-ops/backend/requirements.txt ]; then pip install -r tdca-ns-ops/backend/requirements.txt; fi
+      - name: 跑测试
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        working-directory: tdca-ns-ops/backend
+        run: python -m pytest -q
