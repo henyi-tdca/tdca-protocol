@@ -1,0 +1,14 @@
+# TDCA 存证公开自查入口（/api/v1/selfcheck/nca/{nca_id}）公开子集清单
+# 机制（AMEND-2 令 · TDCA-HANDOFF-EXEC-L1SI154-035-A2-AMEND-2）：
+#   - 仅清单内 nca_id 可查询；清单外与不存在同码同文 404（不可区分）；
+#   - 清单缺失或为空 ⟹ 全部不可查（fail-closed，不默认放行）；
+#   - 扩清单另案一句 + 更新本件 + 走 PR，⛔ 随手加。
+version: 1
+generated_from: 'L1SI155-AMEND-2 (reasonix)'
+ids:
+  - NCA-SEED-001
+  - NCA-SEED-002
+  - NCA-WEB-225450bc3ed9
+  - NCA-WEB-fd5ce893a73a
+  - NCA-WEB-5f5feabe1273
+count: 5

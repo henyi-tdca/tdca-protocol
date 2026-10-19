@@ -93,6 +93,42 @@ def _artifact_ext(artifact_path: str | None) -> str:
     return ext
 
 
+def _load_public_ids() -> set[str]:
+    """AMEND-2：显式公开清单 → 集合。清单缺失／为空／不可读 ⟹ 空集（fail-closed 全拒）。
+
+    极简行解析（清单形状固定：version/generated_from/ids/count），⛔ 不引第三方依赖；
+    路径：env TDCA_SELFCHECK_MANIFEST 显式覆盖（只读该路径），
+    缺省 gateway/docs/PUBLIC-SELFCHECK-MANIFEST.yaml。"""
+    env = os.environ.get("TDCA_SELFCHECK_MANIFEST", "").strip()
+    cands = [Path(env)] if env else [
+        Path(__file__).resolve().parent / "docs" / "PUBLIC-SELFCHECK-MANIFEST.yaml"]
+    ids: set[str] = set()
+    for c in cands:
+        try:
+            text = c.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        in_ids = False
+        for line in text.splitlines():
+            if not in_ids:
+                if line.strip() == "ids:":
+                    in_ids = True
+                continue
+            s = line.strip()
+            if s.startswith("- "):
+                ids.add(s[2:].strip().strip("'\""))
+            elif s == "" or s.startswith("#"):
+                continue
+            else:
+                break
+        break  # 取第一份可读清单
+    return ids
+
+
+# 服务启动即加载（模块级）；运行期测试可用可变集合替换
+_PUBLIC_IDS: set[str] = _load_public_ids()
+
+
 def _anchor_dir() -> Path:
     """当日锚目录：env TDCA_ANCHOR_DIR 优先；缺省探测容器/仓内常位。"""
     env = os.environ.get("TDCA_ANCHOR_DIR", "").strip()
@@ -142,11 +178,12 @@ def selfcheck_spec():
 
 @router.get("/nca/{nca_id}")
 def selfcheck_nca(nca_id: str, request: Request):
-    """单行自查：白名单十字段；不存在 ⟹ 统一 404（同码同文，防探测差异）。"""
+    """单行自查：白名单十字段；不存在或不在公开清单 ⟹ 同一分支统一 404
+    （AMEND-2：清单外与不存在同码同文，不可区分；清单空 ⟹ 全拒）。"""
     _rate_limit(request)
     with get_session() as s:
         row = s.get(M.NcaChain, nca_id)
-        if row is None:
+        if row is None or nca_id not in _PUBLIC_IDS:
             raise HTTPException(404, "NOT_FOUND: 该 nca_id 不存在于台账（统一 404）")
         payload = {  # ⛔ 白名单构造：不取全量再过滤
             "nca_id": row.nca_id,

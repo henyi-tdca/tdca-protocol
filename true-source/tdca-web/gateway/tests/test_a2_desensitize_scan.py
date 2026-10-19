@@ -6,6 +6,7 @@ import re
 
 from fastapi.testclient import TestClient
 
+import selfcheck_ops
 from api_v1 import _nca_append
 from app import app
 
@@ -17,6 +18,7 @@ def test_a2_desensitize_scan():
                        artifact_path=f"docs/x/agent:AGENT-NM-0{i}:creator=founder:"
                                      f"loaded=engine{i}.py")
            for i in range(3)]
+    selfcheck_ops._PUBLIC_IDS.update(ids)   # 登记进测试清单（conftest 每例起空集）
     pats = {"creator=": r"creator=", "founder": r"founder",
             ".py 件名模式": r"\w+\.py", ".md 件名模式": r"\w+\.md"}
     totals = {k: 0 for k in pats}

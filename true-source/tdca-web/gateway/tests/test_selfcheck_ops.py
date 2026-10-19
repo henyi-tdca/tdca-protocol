@@ -26,6 +26,7 @@ def _seed_chain():
     ids = [_nca_append(f"M1PP_TEST_{i}", _SEED_ACTOR,
                        artifact_path=f"docs/test/artifact-{i}.md")
            for i in range(3)]
+    selfcheck_ops._PUBLIC_IDS.update(ids)   # 登记进测试清单（conftest 每例起空集；AMEND-2 收窄后仍 200）
     return ids
 
 
@@ -153,3 +154,47 @@ def test_amend1_ext_normal_extensions_still_ok():
     assert selfcheck_ops._artifact_ext("docs/x.PY") == "py"        # 大写归一仍正确
     assert selfcheck_ops._artifact_ext("a/f.python") == ""         # 超 5 长拒
 
+
+# ---- AMEND-2：公开子集收窄（显式清单 · fail-closed · 不可区分） ----
+def test_amend2_in_manifest_returns_200():
+    ids = _seed_chain()
+    r = client.get(f"/api/v1/selfcheck/nca/{ids[0]}")
+    assert r.status_code == 200
+
+
+def test_amend2_outside_manifest_returns_404():
+    nca_id = _nca_append("M1PP_OUTSIDE", _SEED_ACTOR, artifact_path="docs/test/out.md")
+    # 不走 _seed_chain（其自动登记），保持清单外
+    r = client.get(f"/api/v1/selfcheck/nca/{nca_id}")
+    assert r.status_code == 404
+
+
+def test_amend2_empty_manifest_rejects_all():
+    ids = _seed_chain()
+    selfcheck_ops._PUBLIC_IDS.clear()      # 空清单 ⟹ 全部不可查（fail-closed）
+    r = client.get(f"/api/v1/selfcheck/nca/{ids[0]}")
+    assert r.status_code == 404
+
+
+def test_amend2_outside_404_identical_to_missing_404():
+    nca_id = _nca_append("M1PP_OUTSIDE2", _SEED_ACTOR, artifact_path="docs/test/out2.md")
+    r_out = client.get(f"/api/v1/selfcheck/nca/{nca_id}")             # 清单外
+    r_none = client.get("/api/v1/selfcheck/nca/NCA-NO-SUCH-AMEND2")  # 不存在
+    assert r_out.status_code == 404 and r_none.status_code == 404
+    assert r_out.text == r_none.text          # 状态码与响应体逐字相同
+    for leak_word in ("未公开", "无权", "部分可见"):   # ⛔ 不得泄漏"存在但未公开"
+        assert leak_word not in r_out.text
+
+
+# ---- AMEND-2：清单加载器（缺失 ⟹ 空集 fail-closed） ----
+def test_amend2_loader_missing_file_fail_closed(tmp_path, monkeypatch):
+    monkeypatch.setenv("TDCA_SELFCHECK_MANIFEST", str(tmp_path / "no-such.yaml"))
+    assert selfcheck_ops._load_public_ids() == set()
+
+
+def test_amend2_loader_reads_ids_section(tmp_path, monkeypatch):
+    m = tmp_path / "m.yaml"
+    m.write_text("version: 1\ngenerated_from: 'x'\nids:\n  - AAA-1\n  - BBB-2\ncount: 2\n",
+                 encoding="utf-8")
+    monkeypatch.setenv("TDCA_SELFCHECK_MANIFEST", str(m))
+    assert selfcheck_ops._load_public_ids() == {"AAA-1", "BBB-2"}
