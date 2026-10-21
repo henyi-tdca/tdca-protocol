@@ -1,0 +1,4 @@
+# TDCA-CLS 依赖清单
+# 制度锚定: L1SI163-WO-5（gate-cls 依赖补齐·RETURN-20261021-025-B）
+numpy>=1.24
+scipy>=1.10
