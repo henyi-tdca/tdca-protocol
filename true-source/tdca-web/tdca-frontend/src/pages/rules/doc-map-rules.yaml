@@ -1,5 +1,5 @@
-generated_at: '2026-10-21'
-version: V6.1-FINAL-五态校准＋integrity 按仓实测
+generated_at: '2026-10-22'
+version: V6.2-NCA制度入图（五态校准＋integrity 按交件实测；V6.1 全项不动）
 states_def:
   生效: 件头版本行明载生效／effective／已签批
   对外候选: 自载「对外候选件」——版本号已有但未生效
@@ -7,16 +7,16 @@ states_def:
   指引性: 流程环节卡系列，无生效态概念
   非制度件: README／公告／生效注记
   待辨: 载 V1.0 但未载生效字样
-total: 56
+total: 57
 states:
   非制度件: 3
   草案: 5
-  生效: 27
+  生效: 28
   指引性: 17
   对外候选: 4
 classes:
   条例: 21
-  基本制度: 4
+  基本制度: 5
   标准与流程: 17
   规范与细则: 9
   模板与表单: 5
@@ -1000,6 +1000,23 @@ items:
   state_note: ''
   page_visible: true
   integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-NCA-STD-001-EXT-V1.1-存证（NCA）制度对外节选版（已生效·与内部V1.1同版·差异清单）-R2.md
+  class: 基本制度
+  steps:
+  - S2
+  state: 生效
+  version: V1.1
+  bytes: 6892
+  sha256_16: 05F316A0915631EC
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-NCA-STD-001-EXT-V1.1-存证（NCA）制度对外节选版（已生效·与内部V1.1同版·差异清单）-R2.md
+  state_basis: 件内自载（版本行「已生效（内部执行）」）
+  display_name: TDCA-PUB-NCA-STD-001-EXT-V1.1-存证（NCA）制度对外节选版（已生效·与内部V1.1同版·差异清单）-R2.md
+  state_note: 与内部现行版 V1.1 同版；本件为对外节选，差异清单见件内附录 A
+  page_visible: true
+  integrity_basis: 本侧交件实测（R2 修订末行占位后重算 bytes＋sha256_16）；入站后执行侧须复核
+
 state_def_note: 五态认定口径（本版）：以件头版本行／件内自载为据，⛔ 不以件名派生判；「已签批生效但件头仍旧 DRAFT」者按「生效」标并同条注明（创始人
   2026-10-21 取甲）
 v6_changes:
@@ -1014,7 +1031,7 @@ v6_changes:
   encounter_dual: 相遇专章 V0.9 草案 2 件标 page_visible=false（只列 V1.0 生效 2 件）
   in_repo: 以 atomgit/main 树 a961efbe 重算（原 36 件 false → true）
 step_counts:
-  S2: 24
+  S2: 25
   S1: 5
   S4: 26
   S3: 17
@@ -1039,3 +1056,12 @@ v6_1_corrections:
   root_cause: V6 生成脚本自 V5 重读 items 后未重跑 in_repo 重算与 integrity 重算，注记照抄前序脚本结果 ⟹ 注记与表内矛盾
   unchanged: 五态／五类／六步／display_name／state_note／step_note／page_visible 一律照 V6-FINAL
     不变（⛔ 改判）
+
+v6_2_changes:
+  reason: 创始人 2026-10-22 明示取甲案（NCA 制度对外节选版升为已生效并上站）；本侧按内外一致 C-1~C-4 供表
+  added: 1 项（存证（NCA）制度对外节选版 V1.1 · 件名带 -R2 · 6892B · 05F316A0915631EC · 基本制度类 · 生效态 · S2）
+  counts: total 56→57／生效 27→28／基本制度 4→5／S2 24→25
+  unchanged: 其余 56 项逐字节照 V6.1 不动（五态／五类／六步／display_name／state_note／page_visible 一律不改判）
+  scope_note: 本表为地图数据整件替换件，⛔ 手改；执行侧按其既有替换方式落地
+  api_note: gateway 公开清单 count=42 ⛔ 本轮不动（属既有口径，与地图件数 57 两数并存）
+  rollback: 若入站未成，回退本表至 V6.1（V6.1 原文在册可复原）
