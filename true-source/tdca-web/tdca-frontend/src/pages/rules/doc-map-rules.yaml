@@ -1,0 +1,1041 @@
+generated_at: '2026-10-21'
+version: V6.1-FINAL-五态校准＋integrity 按仓实测
+states_def:
+  生效: 件头版本行明载生效／effective／已签批
+  对外候选: 自载「对外候选件」——版本号已有但未生效
+  草案: DRAFT／draft candidate／待签批
+  指引性: 流程环节卡系列，无生效态概念
+  非制度件: README／公告／生效注记
+  待辨: 载 V1.0 但未载生效字样
+total: 56
+states:
+  非制度件: 3
+  草案: 5
+  生效: 27
+  指引性: 17
+  对外候选: 4
+classes:
+  条例: 21
+  基本制度: 4
+  标准与流程: 17
+  规范与细则: 9
+  模板与表单: 5
+undetermined: []
+items:
+- filename: README.md
+  class: 条例
+  steps:
+  - S2
+  state: 非制度件
+  version: ''
+  bytes: 8021
+  sha256_16: C53D59F9553A295A
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: README.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-NSFL-COLLAB-NOTICE-V0.3.md
+  class: 条例
+  steps:
+  - S2
+  state: 非制度件
+  version: ''
+  bytes: 1225
+  sha256_16: 926B1A1EFA2A776F
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: TDCA-NSFL-COLLAB-NOTICE-V0.3.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-017-可信协作宪法（对外可读版·V0.1草案候选·十条与序言四支柱）.md
+  class: 基本制度
+  steps:
+  - S1
+  - S2
+  - S4
+  state: 草案
+  version: V0.1
+  bytes: 4685
+  sha256_16: 7C737861AEDF1CB3
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-017-可信协作宪法（对外可读版·V0.1草案候选·十条与序言四支柱）.md
+  state_basis: 文件名
+  display_name: TDCA-PUB-CORPUS-017-可信协作宪法（对外可读版·V0.1草案候选·十条与序言四支柱）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-029-卷二纯版第二批清理版重出-身份可信等级认定条例对外版（仅去符号·语义同028·六检通过）.md
+  class: 条例
+  steps:
+  - S2
+  - S3
+  state: 生效
+  version: V1.0
+  bytes: 6861
+  sha256_16: 910B19E1C3D05329
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-029-卷二纯版第二批清理版重出-身份可信等级认定条例对外版（仅去符号·语义同028·六检通过）.md
+  state_basis: 版本行
+  body_len: 3025
+  display_name: TDCA-PUB-CORPUS-029-身份可信等级认定条例对外版（V1.0已生效）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-030-卷二纯版第三批-智能体定义条例对外版（二十一条·V1.0已生效·六检通过·引用不重写）.md
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: V1.0
+  bytes: 6926
+  sha256_16: 27BDA4C41F0EE091
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-030-卷二纯版第三批-智能体定义条例对外版（二十一条·V1.0已生效·六检通过·引用不重写）.md
+  state_basis: 文件名
+  display_name: TDCA-PUB-CORPUS-030-智能体定义条例对外版（V1.0已生效·二十一条）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md
+  class: 基本制度
+  steps:
+  - S1
+  - S2
+  - S4
+  state: 草案
+  version: V0.1
+  bytes: 6648
+  sha256_16: 453750FC41E03B2E
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md
+  state_basis: 件头 Version V0.1 (draft candidate)
+  body_len: 6632
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml
+  class: 基本制度
+  steps:
+  - S1
+  - S2
+  - S4
+  state: 草案
+  version: V0.1
+  bytes: 7962
+  sha256_16: D6704C36439CB154
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml
+  state_basis: 件头 V0.1，与中英人读版同批
+  body_len: 5985
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-045-IdentityTier-EN-身份可信等级认定条例英文人读版（十六条·V1.0·逐条对应中文）.md
+  class: 条例
+  steps:
+  - S2
+  - S3
+  state: 生效
+  version: V1.0
+  bytes: 8722
+  sha256_16: C0AF241A2A344ED8
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-045-IdentityTier-EN-身份可信等级认定条例英文人读版（十六条·V1.0·逐条对应中文）.md
+  state_basis: 件头 Version V1.0 (effective 2026-10-11)
+  body_len: 8670
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-PUB-CORPUS-045-IdentityTier-EN-身份可信等级认定条例英文人读版（十六条·V1.0·逐条对应中文）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-046-IdentityTier-MACHINE-身份可信等级认定条例机读版（四档与判定次序与三态·V1.0·互见）.yaml
+  class: 条例
+  steps:
+  - S2
+  - S3
+  state: 生效
+  version: V1.0
+  bytes: 5353
+  sha256_16: 8C5FEBC47C183F86
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-046-IdentityTier-MACHINE-身份可信等级认定条例机读版（四档与判定次序与三态·V1.0·互见）.yaml
+  state_basis: 件头 V1.0，与中文英文同批（2026-10-11）
+  body_len: 3922
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-PUB-CORPUS-046-IdentityTier-MACHINE-身份可信等级认定条例机读版（四档与判定次序与三态·V1.0·互见）.yaml
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-047-AgentDefinition-EN-智能体定义条例英文人读版（二十一条·V1.0·逐条对应中文）.md
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: V1.0
+  bytes: 8705
+  sha256_16: D00FFC7A868E2B6D
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-047-AgentDefinition-EN-智能体定义条例英文人读版（二十一条·V1.0·逐条对应中文）.md
+  state_basis: 件头 V1.0 (effective 2026-10-15)；promoted from draft
+  body_len: 8657
+  reviewed: 017 复核（限速重取）
+  display_name: TDCA-PUB-CORPUS-047-AgentDefinition-EN-智能体定义条例英文人读版（二十一条·V1.0·逐条对应中文）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-048-AgentDefinition-MACHINE-智能体定义条例机读版（本体与创世与主体与效用与生命周期·V1.0互见）.yaml
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: V1.0
+  bytes: 5405
+  sha256_16: 4A669DBEB2C1124D
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-048-AgentDefinition-MACHINE-智能体定义条例机读版（本体与创世与主体与效用与生命周期·V1.0互见）.yaml
+  state_basis: 件头 V1.0 与中文 ENGLISH 同批
+  body_len: 4252
+  reviewed: 017 复核（限速重取）
+  display_name: TDCA-PUB-CORPUS-048-AgentDefinition-MACHINE-智能体定义条例机读版（本体与创世与主体与效用与生命周期·V1.0互见）.yaml
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-058-流程环节卡注册缔约（五问·七类失败·三句固定·第三张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 4412
+  sha256_16: 4726CA2A8D3FFDB8
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-058-流程环节卡注册缔约（五问·七类失败·三句固定·第三张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 2002
+  display_name: TDCA-PUB-CORPUS-058-流程环节卡注册缔约（五问·七类失败·三句固定·第三张卡）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-069-惩罚三态与守门器对外纯版（二十五条与AB九条·V1.0已生效2026-10-16）.md
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: V1.0
+  bytes: 6131
+  sha256_16: 27199AD0194ABA04
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-069-惩罚三态与守门器对外纯版（二十五条与AB九条·V1.0已生效2026-10-16）.md
+  state_basis: 文件名
+  display_name: TDCA-PUB-CORPUS-069-惩罚三态与守门器对外纯版（二十五条与AB九条·V1.0已生效2026-10-16）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-070-租户与环境作用域凭证绑定条例对外纯版（三规则一通路一分层·V1.0已生效2026-09-25）.md
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: V1.0
+  bytes: 4391
+  sha256_16: ED87D66CEA4A8977
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-070-租户与环境作用域凭证绑定条例对外纯版（三规则一通路一分层·V1.0已生效2026-09-25）.md
+  state_basis: 文件名
+  display_name: TDCA-PUB-CORPUS-070-租户与环境作用域凭证绑定条例对外纯版（三规则一通路一分层·V1.0已生效2026-09-25）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-071-IP版权资产评估管理办法对外纯版（三十一条齐·V1.0已生效2026-09-30）.md
+  class: 规范与细则
+  steps:
+  - S2
+  - S3
+  state: 生效
+  version: V1.0
+  bytes: 10002
+  sha256_16: 6477D5E812E07200
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-071-IP版权资产评估管理办法对外纯版（三十一条齐·V1.0已生效2026-09-30）.md
+  state_basis: 文件名
+  display_name: TDCA-PUB-CORPUS-071-IP版权资产评估管理办法对外纯版（三十一条齐·V1.0已生效2026-09-30）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-074-制度治理规范对外纯版（六判据链·英文待补）.md
+  class: 基本制度
+  steps:
+  - S1
+  state: 对外候选
+  version: V1.0
+  bytes: 4490
+  sha256_16: 707BBFCFF9DA1480
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-074-制度治理规范对外纯版（六判据链·英文待补）.md
+  state_basis: 件内自载「本版仅为中文对外候选」（英文人读版未出）
+  body_len: 1994
+  reviewed: 017 复核（限速重取）
+  display_name: TDCA-PUB-CORPUS-074-制度治理规范对外纯版（六判据链·英文待补）.md
+  state_note: ⚠️ 对外候选 ≠ 生效：⛔ 不得标成生效；对外发布须先补英文人读版
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-083-流程环节卡发现（五问·六类失败·第4张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3967
+  sha256_16: 3051D1C08D26C893
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-083-流程环节卡发现（五问·六类失败·第4张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1804
+  display_name: 流程卡 · 发现（五问 · 六类失败）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-084-流程环节卡相遇（五问·六类失败·第5张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3618
+  sha256_16: D664E6638F6CAC22
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-084-流程环节卡相遇（五问·六类失败·第5张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1671
+  display_name: 流程卡 · 相遇（五问 · 六类失败）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-085-流程环节卡握手（五问·七类失败·第6张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3464
+  sha256_16: 2DDA628B7D7A20FB
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-085-流程环节卡握手（五问·七类失败·第6张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1599
+  display_name: 流程卡 · 握手（五问 · 七类失败）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-086-流程环节卡签约（五问·七类失败·第7张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3656
+  sha256_16: 1AA1A32474D50962
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-086-流程环节卡签约（五问·七类失败·第7张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1677
+  display_name: 流程卡 · 签约（五问 · 七类失败）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-087-流程环节卡交付（五问·七类失败·第8张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3283
+  sha256_16: CBB054F3E721C79C
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-087-流程环节卡交付（五问·七类失败·第8张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1524
+  display_name: 流程卡 · 交付（五问 · 七类失败）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-088-流程环节卡验收（五问·七类失败·第9张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3526
+  sha256_16: 5069BC9A4F95F3D9
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-088-流程环节卡验收（五问·七类失败·第9张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1625
+  display_name: 流程卡 · 验收（五问 · 七类失败）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-090-卷四治理卷对外版（谁定规则与怎么改与怎么监督与争议边界·首件）.md
+  class: 条例
+  steps:
+  - S1
+  - S6
+  state: 对外候选
+  version: V1.0
+  bytes: 4671
+  sha256_16: B6977778146109A3
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-090-卷四治理卷对外版（谁定规则与怎么改与怎么监督与争议边界·首件）.md
+  state_basis: 件头 版本 V1.0 且 性质 对外候选件
+  body_len: 2134
+  reviewed: 017 复核（限速重取）
+  display_name: 说明卷 · 卷四 治理卷（谁定规则／怎么改／怎么监督／争议边界）.md
+  state_note: ''
+  page_visible: true
+  step_note: ⚠️ 仅 3 件：内容缺口，上页须挂相邻件并明标「待补」
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-091-卷五同构卷对外版（制度与技术同构与本体同构与场景嵌套·移植四步·边界四条）.md
+  class: 规范与细则
+  steps:
+  - S2
+  state: 对外候选
+  version: V1.0
+  bytes: 3707
+  sha256_16: 7003762F641EA50A
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-091-卷五同构卷对外版（制度与技术同构与本体同构与场景嵌套·移植四步·边界四条）.md
+  state_basis: 件头 版本 V1.0 且 性质 对外候选件
+  body_len: 1660
+  reviewed: 017 复核（限速重取）
+  display_name: 说明卷 · 卷五 同构卷（制度与技术同构／本体同构／场景嵌套）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-092-卷六助手与入口对外版（三类入口与助手四步接入与代签红线）.md
+  class: 条例
+  steps:
+  - S2
+  state: 对外候选
+  version: V1.0
+  bytes: 3741
+  sha256_16: CE6358F17BD3BFC3
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-092-卷六助手与入口对外版（三类入口与助手四步接入与代签红线）.md
+  state_basis: 件头 版本 V1.0 且 性质 对外候选件
+  body_len: 1743
+  reviewed: 017 复核（限速重取）
+  display_name: 说明卷 · 卷六 助手与入口（三类入口／助手四步接入／代签红线）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-093-流程环节卡履约（五问·七类失败·第14张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3306
+  sha256_16: 019028D4A62A3825
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-093-流程环节卡履约（五问·七类失败·第14张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1533
+  display_name: TDCA-PUB-CORPUS-093-流程环节卡履约（五问·七类失败·第14张卡）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-094-流程环节卡结算分配（五问·七类失败·第15张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  - S5
+  state: 指引性
+  version: V1.0
+  bytes: 3554
+  sha256_16: C408C954E10D4A00
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-094-流程环节卡结算分配（五问·七类失败·第15张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1639
+  display_name: TDCA-PUB-CORPUS-094-流程环节卡结算分配（五问·七类失败·第15张卡）.md
+  state_note: ''
+  page_visible: true
+  step_note: ⚠️ 仅 2 件：内容缺口，上页须挂相邻件并明标「待补」
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  - S6
+  state: 指引性
+  version: V1.0
+  bytes: 3820
+  sha256_16: 649C126BA4423218
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1729
+  display_name: TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md
+  state_note: ''
+  page_visible: true
+  step_note: ⚠️ 仅 3 件：内容缺口，上页须挂相邻件并明标「待补」
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  - S6
+  state: 指引性
+  version: V1.0
+  bytes: 3548
+  sha256_16: 0453B2438A716978
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1638
+  display_name: TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md
+  state_note: ''
+  page_visible: true
+  step_note: ⚠️ 仅 3 件：内容缺口，上页须挂相邻件并明标「待补」
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-097-流程环节卡谈判（五问·七类失败·第10张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3782
+  sha256_16: E0CBE09572301463
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-097-流程环节卡谈判（五问·七类失败·第10张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1758
+  display_name: TDCA-PUB-CORPUS-097-流程环节卡谈判（五问·七类失败·第10张卡）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-098-流程环节卡试错（五问·七类失败·第11张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3601
+  sha256_16: 524C8509ED02BA2E
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-098-流程环节卡试错（五问·七类失败·第11张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1683
+  display_name: TDCA-PUB-CORPUS-098-流程环节卡试错（五问·七类失败·第11张卡）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-099-流程环节卡验证（五问·七类失败·第12张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3597
+  sha256_16: BB6F96FBA7F53458
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-099-流程环节卡验证（五问·七类失败·第12张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1688
+  display_name: TDCA-PUB-CORPUS-099-流程环节卡验证（五问·七类失败·第12张卡）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-100-流程环节卡履约准备（五问·七类失败·第13张卡）.md
+  class: 标准与流程
+  steps:
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3680
+  sha256_16: 99DE8142EF194AD1
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-100-流程环节卡履约准备（五问·七类失败·第13张卡）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1706
+  display_name: TDCA-PUB-CORPUS-100-流程环节卡履约准备（五问·七类失败·第13张卡）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-101-流程环节卡授权配置（五问·七类失败·第1张卡补五问版）.md
+  class: 标准与流程
+  steps:
+  - S3
+  - S4
+  state: 指引性
+  version: V1.0
+  bytes: 3933
+  sha256_16: E9D3E0C5A219E603
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-101-流程环节卡授权配置（五问·七类失败·第1张卡补五问版）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1766
+  display_name: TDCA-PUB-CORPUS-101-流程环节卡授权配置（五问·七类失败·第1张卡补五问版）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-102-流程环节卡结算计税（五问·七类失败·第2张卡补五问版）.md
+  class: 标准与流程
+  steps:
+  - S4
+  - S5
+  state: 指引性
+  version: V1.0
+  bytes: 3556
+  sha256_16: 03B38F140F0480E8
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-102-流程环节卡结算计税（五问·七类失败·第2张卡补五问版）.md
+  state_basis: 流程环节卡系列（指引材料，无生效态概念）
+  body_len: 1625
+  display_name: TDCA-PUB-CORPUS-102-流程环节卡结算计税（五问·七类失败·第2张卡补五问版）.md
+  state_note: ''
+  page_visible: true
+  step_note: ⚠️ 仅 2 件：内容缺口，上页须挂相邻件并明标「待补」
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md
+  class: 模板与表单
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 4980
+  sha256_16: 746C808BAF7BA3E4
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md
+  state_basis: 文件名
+  display_name: TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: ''
+  bytes: 3378
+  sha256_16: 530ECAC210AB45CA
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 件头 Version V1.0 ｜ Nature Public document（publication explicitly authorized）
+  body_len: 3346
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read
+    version·external·de-identified）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
+  class: 条例
+  steps:
+  - S2
+  state: 生效
+  version: ''
+  bytes: 2115
+  sha256_16: 8825B7253D954174
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 件头 version V1.0 ｜ nature public-document
+  body_len: 2114
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md
+  class: 条例
+  steps:
+  - S4
+  state: 生效
+  version: ''
+  bytes: 2884
+  sha256_16: 97D7F39F4560B0EF
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 件头 版本 V1.0 ｜ 性质 对外公开件（已获创始人明示授权发布）
+  body_len: 1268
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-签批落地件（配置权市场规范与授权件模板生效·V1.0-FROZEN）.md
+  class: 模板与表单
+  steps:
+  - S3
+  state: 生效
+  version: ''
+  bytes: 6042
+  sha256_16: 5F7CCCEAC9396F37
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-签批落地件（配置权市场规范与授权件模板生效·V1.0-FROZEN）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001-签批落地件（注册登记制度生效V1.0-FROZEN·范围期一内部运行）.md
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: ''
+  bytes: 6726
+  sha256_16: FE5269C3A968A4BA
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001-签批落地件（注册登记制度生效V1.0-FROZEN·范围期一内部运行）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md
+  class: 条例
+  steps:
+  - S2
+  - S4
+  state: 生效
+  version: ''
+  bytes: 5169
+  sha256_16: 6CAD665A30D2E28D
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 签批记录件；转正四步走完；V1.0
+  body_len: 2985
+  reviewed: 本侧人工（件头实读）
+  display_name: TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 15131
+  sha256_16: DF66753E43E2EC93
+  in_public: true
+  in_repo: true
+  slug: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版·V1.0-FROZEN已生效）.md
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 12159
+  sha256_16: F88AF49BD346E1EE
+  in_public: true
+  in_repo: true
+  slug: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版·V1.0-FROZEN已生效）.yaml
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 20278
+  sha256_16: 043587FA0F0048EA
+  in_public: true
+  in_repo: true
+  slug: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版·V1.0-FROZEN已生效）.md
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 9730
+  sha256_16: EE3BAFD2D83E2849
+  in_public: true
+  in_repo: true
+  slug: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版·V1.0-FROZEN已生效）.md
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 8344
+  sha256_16: E3FBED7B8B7B32EF
+  in_public: true
+  in_repo: true
+  slug: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版·V1.0-FROZEN已生效）.yaml
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md
+  class: 规范与细则
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 14429
+  sha256_16: 3F7EC338FF88B324
+  in_public: true
+  in_repo: true
+  slug: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版·V1.0-FROZEN已生效）.md
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md
+  class: 条例
+  steps:
+  - S2
+  - S4
+  state: 草案
+  version: ''
+  bytes: 6862
+  sha256_16: 79AE34F72E107243
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md
+  state_note: ⚠️ 历史草案版（V0.9-DRAFT）：同制度已有 V1.0 生效版 ⟹ 上页只列生效版，本件不单列（折叠「历史草案」）
+  page_visible: false
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md
+  class: 条例
+  steps:
+  - S2
+  - S4
+  state: 生效
+  version: V1.0
+  bytes: 3835
+  sha256_16: 4DF6FC9288085CAD
+  in_public: true
+  in_repo: true
+  slug: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md
+  state_basis: 文件名
+  display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md
+  state_note: ⭐ 同制度另有 V0.9-DRAFT 历史草案版 ⟹ 以本生效版为准（只列本件）
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml
+  class: 条例
+  steps:
+  - S2
+  - S4
+  state: 草案
+  version: ''
+  bytes: 4761
+  sha256_16: 967E05D69A14CB30
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml
+  state_note: ⚠️ 历史草案版（V0.9-DRAFT）：同制度已有 V1.0 生效版 ⟹ 上页只列生效版，本件不单列（折叠「历史草案」）
+  page_visible: false
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml
+  class: 条例
+  steps:
+  - S2
+  - S4
+  state: 生效
+  version: V1.0
+  bytes: 4200
+  sha256_16: F29F724A919BFC9F
+  in_public: true
+  in_repo: true
+  slug: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml
+  state_basis: 文件名
+  display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml
+  state_note: ⭐ 同制度另有 V0.9-DRAFT 历史草案版 ⟹ 以本生效版为准（只列本件）
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md
+  class: 模板与表单
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 10545
+  sha256_16: 7184C3F1029BD93F
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V0.1-DRAFT）.yaml
+  class: 模板与表单
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 3906
+  sha256_16: 9D9921FE775DBC9F
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V0.1-DRAFT）.yaml
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V0.1-DRAFT）.md
+  class: 模板与表单
+  steps:
+  - S3
+  state: 生效
+  version: V1.0-FROZEN
+  bytes: 13167
+  sha256_16: F73069E66CAE0FE0
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 签批落地件（2026-10-03）＋ 公网呈现（display_name／version 已标 V1.0-FROZEN 已生效）
+  display_name: TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V0.1-DRAFT）.md
+  state_note: ⭐ 生效凭证：2026-10-03 签批落地件（TDCA-SIGNOFF-CONFIGMARKET-AUTH-001／TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001／TDCA-TEMPLATE-AUTH-001-生效注记），范围＝期一内部运行；⚠️
+    件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+- filename: TDCA-TEMPLATE-AUTH-001-生效注记.md
+  class: 条例
+  steps:
+  - S2
+  state: 非制度件
+  version: ''
+  bytes: 855
+  sha256_16: 2C7B928F6ADC0AA5
+  in_public: false
+  in_repo: true
+  slug: ''
+  state_basis: 文件名
+  display_name: TDCA-TEMPLATE-AUTH-001-生效注记.md
+  state_note: ''
+  page_visible: true
+  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+state_def_note: 五态认定口径（本版）：以件头版本行／件内自载为据，⛔ 不以件名派生判；「已签批生效但件头仍旧 DRAFT」者按「生效」标并同条注明（创始人
+  2026-10-21 取甲）
+v6_changes:
+  signed_to_effective:
+    families:
+    - TDCA-SPEC-CONFIGMARKET-001
+    - TDCA-SPEC-REGISTER-OF-RIGHTS-001
+    - TDCA-TEMPLATE-AUTH-001
+    count: 9
+    note: 原 V5 按件名判「草案」，与签批落地件及公网呈现不符 ⟹ 改判「生效」
+  corpus074: 待辨 → 对外候选（件内自载「本版仅为中文对外候选」）
+  encounter_dual: 相遇专章 V0.9 草案 2 件标 page_visible=false（只列 V1.0 生效 2 件）
+  in_repo: 以 atomgit/main 树 a961efbe 重算（原 36 件 false → true）
+step_counts:
+  S2: 24
+  S1: 5
+  S4: 26
+  S3: 17
+  S6: 3
+  S5: 2
+step_gap_note:
+  S5: ⚠️ 仅 2 件：内容缺口，上页须挂相邻件并明标「待补」
+  S6: ⚠️ 仅 3 件：内容缺口，上页须挂相邻件并明标「待补」
+rescan_basis:
+  repo_ref: a961efbeadbd88e5ed485802708af853d6657795
+  repo_file_count: 56
+  map_items: 56
+  integrity_recomputed: 56
+  flipped_in_repo: 36
+  note: 56 项 bytes／sha256_16 一律按 atomgit/main 实测重算；in_repo 同源置真；⛔ 不含任何旧值
+v6_1_corrections:
+  reason: 执行侧 RETURN-20261021-021 报 S-1 停手（本侧认领数据缺陷）
+  fixed:
+  - sha256_16 空白 14 项 → 全部补齐（本版重算 20 项哈希）
+  - bytes／sha 双不符 6 项（配置权市场＋注册登记 中／英／机读，10-17 抹号施工后件已变）→ 按现仓重算（本版重算 6 项字节）
+  - in_repo 自相矛盾（注记称已重算、表内仍 false）→ 本版 36 项一律置真
+  root_cause: V6 生成脚本自 V5 重读 items 后未重跑 in_repo 重算与 integrity 重算，注记照抄前序脚本结果 ⟹ 注记与表内矛盾
+  unchanged: 五态／五类／六步／display_name／state_note／step_note／page_visible 一律照 V6-FINAL
+    不变（⛔ 改判）

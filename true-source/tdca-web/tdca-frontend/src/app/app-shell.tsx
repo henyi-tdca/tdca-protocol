@@ -89,6 +89,7 @@ export const APP_NAV: NavEntry[] = [
     items: [
       { to: '/library', label: '文库' },
       { to: '/docs', label: '文档库' }, // 裁点2终定：与文库并存（⛔ 不并线——端点不同、族不同）
+      { to: '/rules', label: '制度地图' }, // L1SI162-RULES-MAP-001：56 件制度件五类五态六步（公开读；件正文权限照旧）
       { to: '/anchors', label: '模拟锚' }, // 裁定落地件：SIMULATED 模拟态展示＝官方资源呈现 ➜ 公域（随块二落位）
       { to: '/openapi.json', label: '机器可读面', raw: true }, // AMEND-1：对人的说明书（openapi 字段表）；字段明文人读页＝二期 P1
     ],
