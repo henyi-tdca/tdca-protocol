@@ -1,0 +1,155 @@
+# 身份可信等级认定条例 · 机读版（V1.0）
+# 人读版为语义权威；本机读版不得反向改语义。
+# 与中文人读版（V1.0, 2026-10-11）、英文人读版（V1.0）同批产出版本号一致。
+document:
+  id: TDCA-REG-IDENTITY-TIER-001
+  title_zh: 身份可信等级认定条例
+  title_en: Regulation on Identity Trust Level Determination
+  version: V1.0
+  effective_date: '2026-10-11'
+  status: effective
+  external_granted: true
+  publication_state: published
+  authority_language: zh
+  article_count: 16
+external_use_boundary:
+  title_and_tier_names_usable: true
+  equivalence_claim_prohibited: true
+  prohibited_targets:
+  - eIDAS
+  - NIST
+  - ITU
+  - any other external framework
+  international_correspondence: reference_only
+terms:
+  trusted_root_device_zh: 发出信号的根（本侧为根节点通知机；外部为外部硬件或机构之根）
+  device_uniqueness_zh: 该可信根设备是否为唯一的一台
+  physical_address_mobility_zh: 该设备的物理地址是否保持
+  traceable_root_form_zh: 以能否提供锚定根物理变迁之法律可采信证据为准的根之形态
+  trust_information_zh: 可用于认定身份可信等级的信息
+  level_scope_note_zh: 本条例所称等级专指身份可信等级；与授权面与合规审查面的等级无涉；亦非权属登记（无等级）之等级
+tiers:
+- id: FIXED_ANCHOR
+  name_zh: 固锚级
+  condition_zh: 设备唯一且物理地址保持
+- id: MOVABLE_ANCHOR
+  name_zh: 移锚级
+  condition_zh: 设备唯一但物理地址可移
+- id: NAMED
+  name_zh: 记名级
+  condition_zh: 设备非唯一但持有注册实名认证账号
+- id: BELOW_THRESHOLD
+  name_zh: 未达门槛
+  condition_zh: 匿名
+  note_zh: 不称"不可信"；匿名不等于没有身份
+- id: PENDING
+  name_zh: 待补
+  condition_zh: 仅 IP 而无其他可信信息
+  nature_zh: 存疑待补过渡态，非档位、非未达门槛
+tier_count_graded: 4
+sixth_tier_prohibited: true
+determination_sequence:
+- step: 1
+  action_zh: 取两项属性（设备唯一性、物理地址可移动性）
+- step: 2
+  action_zh: 唯一且地址保持 → 固锚级
+  yields: FIXED_ANCHOR
+- step: 3
+  action_zh: 唯一而地址可移 → 移锚级
+  yields: MOVABLE_ANCHOR
+- step: 4
+  action_zh: 非唯一且有注册实名认证账号 → 记名级
+  yields: NAMED
+- step: 5a
+  action_zh: 仅 IP → 待补（出告警）
+  yields: PENDING
+- step: 5b
+  action_zh: 匿名 → 未达门槛
+  yields: BELOW_THRESHOLD
+determination_rules:
+- missing_either_attribute_lowers_tier: true
+- tier_by_root_type_alone_prohibited: true
+- same_root_type_may_differ_in_tier: true
+three_state_handling:
+- state: GRADABLE
+  situation_zh: 具备可信信息
+  handling_zh: 按四档定级
+  admission_zh: 按档办理（过两道门）
+- state: PENDING
+  situation_zh: 仅 IP
+  handling_zh: 判告警并要求补料
+  admission_zh: 补足后重判；补足前不予定档
+- state: BELOW_THRESHOLD
+  situation_zh: 匿名
+  handling_zh: 不纳入定档且不接纳入网
+  admission_zh: 不接入
+verification:
+  gate: first_gate
+  precedes_determination: true
+  failure_effect_zh: 不予定级且不得入网
+  requirements_status: determined_separately
+external_hardware_anchor:
+  review_required: true
+  case_by_case: true
+  automatic_same_tier: false
+  batch_inclusion: false
+  review_core_zh: 能否提供锚定根物理变迁之法律可采信证据
+alert:
+  trigger_zh: 上链存证中唯一可信信息为 IP 而其余缺失
+  effect_zh: 产出告警；不径行定档；不静默降档
+  must_request_supplement: true
+  supplement_may_be_empty: false
+  not_equal_to_below_threshold: true
+  not_a_determination: true
+admission_gates:
+  gates:
+  - id: GATE_1
+    name_zh: 门一 · 过根检查并定级
+  - id: GATE_2
+    name_zh: 门二 · 入网加载协议并接受制度约束
+  interchangeable: false
+  default_order:
+  - GATE_1
+  - GATE_2
+  progressive_relations_zh:
+  - 承认
+  - 接纳
+  - 兼容
+  mutual_recognition_allowed: true
+  mutual_reengineering_allowed: false
+  tier_definition_authority_external: false
+  territoriality_zh: 进入对方系统者以对方标准为生效标准；我方标准不出口
+  anchor_borrowing_term_retired: true
+  compatibility_mechanism_zh: 桥接映射（内码↔外部码）
+  primary_key_owner_zh: 我方
+  follow_external_change: true
+relation_to_existing:
+  scope_zh: 只就真空白而设（锚定分级＋承认接纳＋兼容维护）
+  referenced_only:
+  - 准入
+  - 双轨身份
+  - 鉴权
+  - 身份绑定
+  - 登记公开
+  rewrite_existing: false
+  international_correspondence_claim: reference_only_no_equivalence
+editions:
+- lang: zh
+  artifact: TDCA-REG-IDENTITY-TIER-001/V1.0-zh
+  role: authority
+- lang: en
+  artifact: TDCA-REG-IDENTITY-TIER-001/V1.0-en
+  role: equivalent
+- lang: machine
+  artifact: TDCA-REG-IDENTITY-TIER-001/V1.0-machine
+  role: derived
+coherence: 三版同版本号；逐条对应；哈希互见；机读版不得反向改语义
+open_items_zh:
+- 核验具体要件（取证方式与凭据形态）另定
+- 可信信息清单与最低要件（解除告警门槛）另定
+- 条例编号另定
+boundaries:
+  zero_external_action_by_drafter: true
+  credentials_in_file: false
+  publication_requires_explicit_grant: true
+  note: 本件未入站、未部署、未发布；入站与宣称须逐动作明示。
