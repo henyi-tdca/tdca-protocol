@@ -1,0 +1,111 @@
+# security-sla —— CI 第四条：严重级漏洞响应 SLA 事件门
+# 件号: TDCA-HANDOFF-EXEC-CI-SEC-SLA-001 ｜ 制度依据: TDCA-SPEC-CI-SEC-SLA-001 (V1.0, 2026-10-22 生效)
+# 硬约束: 只新增不改既有 workflow ｜ 触发仅 workflow_dispatch + issues(labeled) ｜ 不进 push/PR 链 ｜ 零凭据零新依赖
+name: security-sla
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "要判定的 issue 号（可空；留空则输出空判模板）"
+        required: false
+        type: string
+      know_time:
+        description: "知悉时间 ISO8601（必填，例 2026-10-22T02:00:00+08:00）"
+        required: true
+        type: string
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  sla-judge:
+    name: 三段时限判定
+    # 事件触发门：issues 触发时仅认 security-critical 标签
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'security-critical'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      recon: ${{ steps.judge.outputs.recon }}
+      remedy: ${{ steps.judge.outputs.remedy }}
+      review: ${{ steps.judge.outputs.review }}
+    steps:
+      - name: 三段判定（只读 issue 评论时间戳，零写零联网抓取）
+        id: judge
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // ---- CI 第四条三段时限（自 know_time 起算；制度件 TDCA-SPEC-CI-SEC-SLA-001 V1.0）----
+            const PHASES = [
+              { key: 'recon',  name: '排查', limitH: 2,
+                markers: ['【排查回报】', '【排查】'] },
+              { key: 'remedy', name: '处置', limitH: 24,
+                markers: ['【处置完成】', '【处置】', '处置方案'] },
+              { key: 'review', name: '复盘', limitH: 48,
+                markers: ['【复盘】'] },
+            ];
+
+            // ---- know_time 解析：dispatch 取输入；issues 触发取打标签事件时间 ----
+            let knowTime;
+            let issueNo = null;
+            if (context.eventName === 'workflow_dispatch') {
+              knowTime = new Date(context.payload.inputs.know_time);
+              issueNo = context.payload.inputs.issue_number || null;
+            } else {
+              issueNo = context.payload.issue.number;
+              // 打标签时间 = 知悉时间的在册缺省值（严重级标签挂上即知悉）
+              const events = await github.paginate(github.rest.issues.listEventsForTimeline, {
+                owner: context.repo.owner, repo: context.repo.repo, issue_number: issueNo,
+              });
+              const ev = events.find(e => e.event === 'labeled'
+                && e.label && e.label.name === 'security-critical');
+              if (!ev) { core.setFailed('issues 触发但未找到 security-critical 打标事件'); return; }
+              knowTime = new Date(ev.created_at);
+            }
+            if (isNaN(knowTime.getTime())) {
+              core.setFailed(`know_time 非法：${context.payload.inputs ? context.payload.inputs.know_time : '(label event)'}`);
+              return;
+            }
+
+            // ---- 逐段取证：issue 内首个含阶段标记的评论时间戳（可指认证据口径）----
+            const results = [];
+            let comments = [];
+            if (issueNo) {
+              comments = await github.paginate(github.rest.issues.listComments, {
+                owner: context.repo.owner, repo: context.repo.repo, issue_number: Number(issueNo),
+              });
+            }
+            for (const ph of PHASES) {
+              let verdict = 'MISSING', note = '无该阶段证据评论';
+              const hit = comments.find(c => ph.markers.some(m => (c.body || '').includes(m)));
+              if (hit) {
+                const t = new Date(hit.created_at);
+                const h = (t - knowTime) / 36e5;
+                if (h < 0) { verdict = 'ERROR'; note = `证据早于知悉时间 ${h.toFixed(2)}h（时钟或顺序存疑）`; }
+                else if (h <= ph.limitH) { verdict = 'PASS'; note = `${h.toFixed(2)}h ≤ ${ph.limitH}h`; }
+                else { verdict = 'LATE'; note = `${h.toFixed(2)}h > ${ph.limitH}h`; }
+              }
+              results.push({ ...ph, verdict, note });
+              core.setOutput(ph.key, verdict);
+            }
+
+            // ---- 结论摘要（job summary，不写任何件、不改 issue）----
+            const md = [
+              `# security-sla 判定（CI 第四条）`,
+              ``,
+              `- 知悉时间 know_time：${knowTime.toISOString()}`,
+              `- issue：${issueNo ? '#' + issueNo : '（未指定）'}`,
+              ``,
+              `| 阶段 | 时限 | 判定 | 依据 |`,
+              `|---|---|---|---|`,
+              ...results.map(r => `| ${r.name} | ≤${r.limitH}h | **${r.verdict}** | ${r.note} |`),
+              ``,
+              `> 证据口径：issue 评论内阶段标记（【排查回报】/【处置完成】/【处置】/【复盘】）首评时间戳；`,
+              `> 仓内可指认件（文件名＋sha256_16）由人工贴入对应阶段评论作为证据体。`,
+            ].join('\n');
+            core.summary.addRaw(md).write();
+            console.log(JSON.stringify({ know_time: knowTime.toISOString(), issue: issueNo,
+              results: results.map(r => ({ phase: r.key, verdict: r.verdict, note: r.note })) }, null, 2));
