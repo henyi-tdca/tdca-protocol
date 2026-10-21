@@ -1,0 +1,37 @@
+{
+  "block_id": "TDCA-NCA-BLOCK-20261022-003",
+  "kind": "SEAL",
+  "height": 2,
+  "prev_block_hash": "a109cedda0197f664402257b7bd61f86684bce7fd8dfa68108eae90030c1eed4",
+  "network": "gseq（Reasonix 主账）",
+  "as_of": "2026-10-22T03:43:07.107576+08:00",
+  "coverage": {
+    "gseq_from": "GSEQ-5672",
+    "gseq_to": "GSEQ-5678",
+    "records": 7
+  },
+  "leaves": {
+    "count": 7,
+    "missing_rule": "leaf＝sha256(MISSING:{gseq})，⛔ 跳过"
+  },
+  "algorithm": "merkle-sha256/leaf=sha256(file-bytes)/pair=sha256(hexbytes a + hexbytes b)/odd=dup-last/v1",
+  "merkle": {
+    "depth": 3,
+    "root_sha256": "75e337d77b3d6bd5db9192fa896f03a23ed26caee6eb9f7328c6963964d8a6a2",
+    "root_16": "75E337D77B3D6BD5"
+  },
+  "genesis_link": {
+    "genesis_root": "fd906b403e6a26f4a93621cbc134e2f7697687ceeb47471f0a3543de5b2d9775",
+    "genesis_root_16": "FD906B403E6A26F4"
+  },
+  "signature": {
+    "status": "Pending",
+    "signed_by": null,
+    "note": "人类签批位"
+  },
+  "chain": {
+    "seq": 3,
+    "prev_block_16": "A109CEDDA0197F66",
+    "genesis_root_16": "FD906B403E6A26F4"
+  }
+}

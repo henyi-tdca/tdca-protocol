@@ -1,0 +1,140 @@
+# TDCA-NCA-INDEX-SCHEMA V0.1 · 机读版（索引层字段骨架）
+# 会话框 L1-SI-164 ｜ 2026-10-22 ｜ Reasonix
+# 权威关系：本件为人读版之机读骨架，语义以人读版为准（冲突以人读版为准，⛔ 反向以机读版改语义）
+doc_id: TDCA-SPEC-NCA-INDEX-SCHEMA-V0.1
+title_zh: NCA 索引层字段骨架规范（三态标注·资产类与运行类分栏·LC-1至LC-4·段位分列）
+version: V0.1
+status: DRAFT-INTERNAL
+date: '2026-10-22'
+session: L1-SI-164
+authored_by: Reasonix
+upstream:
+  - TDCA-PLAN-NCA-COS-001   # 期一 A-2 包
+  - TDCA-NCA-STD-001-V1.1   # 十三字段与类型枚举之制度源
+  - TDCA-AMEND-STATEMENT-NCA-ASSET-001-002  # 链级定性 LC-1~LC-4
+  - TDCA-AMEND-STATEMENT-NCA-ASSET-001-001  # 可信认知资产／数据资产归属
+basis_measured:
+  registry_records: 5627
+  linked_segment_from: 'GSEQ-2936'
+  linked_segment_count: 2693
+  legacy_segment_count: 2934
+  probe_file: '.tdca-nca/reports/_NCA-A2-PROBE-20261022.json'
+
+# ── 三态定义（缺一不可，⛔ 混称）
+states:
+  DIRECT:
+    zh: 直取
+    rule: 件内已有字段，脚本可直接读数
+  DERIVED:
+    zh: 派生
+    rule: 由既有字段或件体复算可得，且复算可被他人独立重现
+  PENDING:
+    zh: 待建
+    rule: 在册无载体；本规范只定义字段与口径，⛔ 填 0、⛔ 填空串、⛔ 估充、⛔ 以日志代填
+
+# ── 段位（祖父条款：⛔ 不回改历史件，只影响可得性统计口径）
+segments:
+  SEG-LINKED:
+    zh: 带链段
+    range: 'GSEQ-2936 起'
+    count_measured: 2693
+    policy: 照 STD-001 V1.1 十三字段全量要求
+  SEG-LEGACY:
+    zh: 未链历史段
+    range: 'GSEQ-2936 之前'
+    count_measured: 2934
+    policy: 祖父条款·⛔ 不回改；字段缺项一律标 PENDING-LEGACY，⛔ 判不合规
+
+# ── 分栏（资产类 / 运行类 · ⛔ 混表）
+columns:
+  asset:
+    zh: 资产类
+    meaning: 认知资产属性（场景·认知·对齐·依据·资产归属）
+    source_rule: 只取 NCA 件与台账，⛔ 取运行日志
+  ops:
+    zh: 运行类
+    meaning: 执行与技术属性（时间·工具·哈希·链·环境）
+    source_rule: 亦可取件与台账；环境类无载体者标 PENDING
+
+# ── 同词异指之辨明（⛔ 混用）
+disambiguation:
+  chain_verify_L:
+    symbol: 'L-1／L-2／L-3'
+    owner: '_nca_chain_verify_v1.py'
+    meaning: 链完整性（chain_id 一致／prev_nca 接续／self_sha256_16 相符）
+  cognitive_L:
+    symbol: 'LC-1／LC-2／LC-3／LC-4'
+    owner: 本规范
+    meaning: 链级认知判据（场景锚定／两方认知／判性可判／依据落制度件）
+  rule: ⛔ 两套不得互代；本规范一律写 LC- 前缀
+
+fields:
+  # ── 层 A：台账层（REG）
+  - {id: A01, name: reg.gseq, layer: reg, column: ops, state: DIRECT, source: 'NCA-REGISTRY.records[].gseq', method: '直读', measured: '5627/5627'}
+  - {id: A02, name: reg.nca_id, layer: reg, column: ops, state: DIRECT, source: 'records[].nca_id', method: '直读', measured: '5627/5627'}
+  - {id: A03, name: reg.timestamp, layer: reg, column: ops, state: DIRECT, source: 'records[].timestamp', method: '直读', measured: '5627/5627'}
+  - {id: A04, name: reg.fc_id, layer: reg, column: ops, state: DIRECT, source: 'records[].fc_id', method: '直读', measured: '5627/5627'}
+  - {id: A05, name: reg.operation_type, layer: reg, column: ops, state: DIRECT, source: 'records[].operation_type', method: '直读', measured: '5627/5627'}
+  - {id: A06, name: reg.operator, layer: reg, column: ops, state: DIRECT, source: 'records[].operator', method: '直读', measured: '5627/5627'}
+  - {id: A07, name: reg.source, layer: reg, column: ops, state: DIRECT, source: 'records[].source', method: '直读', measured: '5627/5627'}
+  - {id: A08, name: reg.status, layer: reg, column: ops, state: DIRECT, source: 'records[].status', method: '直读', measured: '5626/5627'}
+  - {id: A09, name: reg.files, layer: reg, column: ops, state: DIRECT, source: 'records[].files', method: '直读', measured: '5615/5627'}
+  - {id: A10, name: reg.chain_id, layer: reg, column: ops, state: DERIVED, source: 'records[].chain_id', method: '缺者取 records[].gseq', measured: '2693/5627 直存', legacy: PENDING-LEGACY}
+  - {id: A11, name: reg.prev_nca, layer: reg, column: ops, state: DERIVED, source: 'records[].prev_nca', method: '缺者取上一条带链 record 之 nca_id，链首 GENESIS', measured: '2693/5627 直存', legacy: PENDING-LEGACY}
+  - {id: A12, name: reg.self_sha256_16, layer: reg, column: ops, state: DERIVED, source: 'records[].self_sha256_16', method: '缺者按所指件实测 sha256 前 16 位', measured: '2693/5627 直存', legacy: PENDING-LEGACY}
+  # ── 层 B：件层（DOC · 照 STD-001 V1.1 十三字段）
+  - {id: B01, name: doc.nca_id, layer: doc, column: ops, state: DIRECT, source: 'NCA 件首部', measured: '2724/5627'}
+  - {id: B02, name: doc.side, layer: doc, column: ops, state: DIRECT, source: 'side', measured: '2693/5627', legacy: PENDING-LEGACY}
+  - {id: B03, name: doc.timestamp, layer: doc, column: ops, state: DIRECT, source: 'timestamp', measured: '2723/5627'}
+  - {id: B04, name: doc.chain_space, layer: doc, column: ops, state: DERIVED, source: 'chain_space', method: '照 STD 取值矩阵：RX=gseq／KW=kimi／WB=ref-gseq', measured: '2693/5627'}
+  - {id: B05, name: doc.chain_id, layer: doc, column: ops, state: DIRECT, source: 'chain_id', measured: '2693/5627'}
+  - {id: B06, name: doc.chain_ref, layer: doc, column: ops, state: DIRECT, source: 'chain_ref', measured: '2693/5627', note: '空属正常（非跨侧件）'}
+  - {id: B07, name: doc.prev_nca, layer: doc, column: ops, state: DIRECT, source: 'prev_nca', measured: '2721/5627'}
+  - {id: B08, name: doc.operation_type, layer: doc, column: ops, state: DIRECT, source: 'operation_type', measured: '2693/5627'}
+  - {id: B09, name: doc.actor, layer: doc, column: ops, state: DIRECT, source: 'actor', measured: '2723/5627'}
+  - {id: B10, name: doc.artifacts, layer: doc, column: ops, state: DIRECT, source: 'artifacts[].path／sha256_16', measured: '2693/5627'}
+  - {id: B11, name: doc.data_provenance, layer: doc, column: ops, state: DIRECT, source: 'data_provenance', measured: '2721/5627', note: '缺省标 UNKNOWN，⛔ 不默认 real'}
+  - {id: B12, name: doc.profit_sharing, layer: doc, column: ops, state: DIRECT, source: 'profit_sharing', measured: '2695/5627'}
+  - {id: B13, name: doc.compliance, layer: doc, column: asset, state: DIRECT, source: 'compliance（挂载六条）', measured: '2695/5627'}
+  # ── 层 C：链级认知判据（LC · 本规范改名避与链验器 L- 同名）
+  - {id: C01, name: lc1.scene_anchor, layer: lc, column: asset, state: DERIVED, source: 'scope＋scene_boundary_ref', method: '一级：scope 非空；二级：scope 内场景指针或场景件号（正则）', measured_proxy: '343/5627 场景词命中', pending_part: 'scene_boundary_ref 字段无载体 ⟹ 二级只作近似，⛔ 以近似判判据成立'}
+  - {id: C02, name: lc2.two_party, layer: lc, column: asset, state: DERIVED, source: 'actor＋operation_type＋邻接', method: '同场景存在「提交件（Delivery／HandoffDeliverable／Document）＋核证件（Witness／SignOff／Ruling／SessionClose）」成对', measured_proxy: '以 operation_type 与 scope 引件号近似', note: '单方自记不构成对齐'}
+  - {id: C03, name: lc3.judgement, layer: lc, column: asset, state: DERIVED, source: 'operation_type＋scope', method: '类型属判性类，或 scope 内含 PASS／CONDITIONAL／退回／待裁／裁定', measured_proxy: '2118/5627 判性词命中'}
+  - {id: C04, name: lc4.basis_cited, layer: lc, column: asset, state: DERIVED, source: 'scope', method: 'scope 内匹配在册件号／口径号（正则 GSEQ-／TDCA-／T-###／ID##）', measured_proxy: '1427/5627 依据命中'}
+  # ── 层 D：资产属性（AS · 在册口径已定、件内无载体）
+  - {id: D01, name: as.asset_class, layer: asset, column: asset, state: PENDING, source: '在册定性（数据资产／T-030 第五阶）', note: '口径在册、字段未建；⛔ 以口径代填'}
+  - {id: D02, name: as.scene_quantum_ref, layer: asset, column: asset, state: PENDING, source: '场景量子声明指针', note: '与 lc1 二级同源，待载体'}
+  - {id: D03, name: as.cog_distance_d, layer: asset, column: asset, state: PENDING, source: 'DCD-COG-ALIGN-001 引擎输入', note: '需同场景序列，现无载体；⛔ 擅补算法与权重'}
+  - {id: D04, name: as.alignment_threshold_hit, layer: asset, column: asset, state: PENDING, source: '协商阈值 0.35（在册）', note: '依赖 D03'}
+  - {id: D05, name: as.succession_ref, layer: asset, column: asset, state: PENDING, source: '继承线', note: '继承线未启'}
+  # ── 层 E：运行属性（OP）
+  - {id: E01, name: op.runtime_env, layer: ops, column: ops, state: PENDING, source: '运行环境', note: '⛔ 从生产日志取；非本表口径'}
+  - {id: E02, name: op.container_id, layer: ops, column: ops, state: PENDING, source: '容器标识', note: '同上'}
+  - {id: E03, name: op.duration_ms, layer: ops, column: ops, state: PENDING, source: '耗时', note: '同上；⛔ 日志口径统计资产'}
+  - {id: E04, name: op.column_guard, layer: ops, column: ops, state: DERIVED, source: '本表自检', method: "asset 栏字段不得取日志；ops 栏字段不得混资产口径", note: '分栏断言位'}
+
+backfill:
+  script: '.tdca-nca/scripts/_nca_index_backfill_v1.py'
+  output: '.tdca-nca/reports/_NCA-INDEX-BACKFILL-20261022.jsonl'
+  rules:
+    - 逐条一行；三态分列；PENDING 写 null 并在 state 注记
+    - 段位分列（SEG-LINKED／SEG-LEGACY）
+    - ⛔ 填 0 冒充、⛔ 空串冒充、⛔ 估充、⛔ 日志代填
+    - 派生值一律按当刻台账与件体重算，⛔ 抄旧报告
+
+acceptance:
+  M2_target: 对主账当刻 records 全量出字段可得性台账，两栏与两段位分列，PENDING 数如实
+  gate:
+    - 直取字段计数＝脚本实读计数
+    - 派生字段可被第三方按 method 复现
+    - PENDING 字段计数与 schema 声明一致
+
+non_goals:
+  - 不回改任何历史 NCA 与台账行
+  - 不代定认知距离权重与阈值
+  - 不以本 schema 变更 STD-001 V1.1 十三字段语义
+  - 不对外
+
+revision:
+  mode: append-only
+  conflict_rule: 人读版为准

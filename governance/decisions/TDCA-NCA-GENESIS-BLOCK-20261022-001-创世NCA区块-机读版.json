@@ -1,0 +1,74 @@
+{
+  "block_id": "TDCA-NCA-GENESIS-20261022-001",
+  "kind": "GENESIS",
+  "height": 0,
+  "prev_block_hash": "GENESIS",
+  "network": "gseq（Reasonix 主账）",
+  "as_of": "2026-10-22T02:54:30.475639+08:00",
+  "coverage": {
+    "gseq_from": "GSEQ-0001",
+    "gseq_to": "GSEQ-5663",
+    "records": 5662,
+    "seq_span": 5663,
+    "gaps": [
+      2821
+    ],
+    "gap_note": "空号不判 FAIL（照在册；祖父条款）"
+  },
+  "segments": {
+    "SEG-LINKED": 2728,
+    "SEG-LEGACY": 2934,
+    "link_from": "GSEQ-2936（带链起算）"
+  },
+  "leaves": {
+    "count": 5662,
+    "missing_file": 98,
+    "missing_gseq": [
+      642,
+      643,
+      644,
+      645,
+      646,
+      647,
+      648,
+      870,
+      873,
+      877,
+      909,
+      927,
+      1276,
+      1277,
+      1278,
+      1279,
+      1280,
+      1281,
+      1282,
+      1283
+    ],
+    "missing_rule": "叶＝sha256(MISSING:{gseq})，⛔ 跳过"
+  },
+  "operation_type_dist": {
+    "Handoff": 1022,
+    "Witness": 961,
+    "Ruling": 650,
+    "Document": 484,
+    "Amendment": 447,
+    "Delivery": 178,
+    "ProtocolInit": 165,
+    "Review": 157,
+    "SessionClose": 157,
+    "N/A": 118
+  },
+  "algorithm": "merkle-sha256/leaf=sha256(file-bytes)/pair=sha256(hexbytes a + hexbytes b)/odd=dup-last/v1",
+  "merkle": {
+    "depth": 13,
+    "root_sha256": "fd906b403e6a26f4a93621cbc134e2f7697687ceeb47471f0a3543de5b2d9775",
+    "root_16": "FD906B403E6A26F4"
+  },
+  "signature": {
+    "status": "Pending",
+    "signed_by": null,
+    "note": "人类签批位；⛔ 本侧代签"
+  },
+  "self_note": "本区块覆盖至登记前之全量；⭐ 本区块件自身登记为下一 GSEQ，⛔ 不含于本区块（防自指）"
+}

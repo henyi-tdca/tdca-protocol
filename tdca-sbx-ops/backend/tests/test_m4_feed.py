@@ -91,7 +91,7 @@ class TestFeedContract:
         assert [d["metric_id"] for d in body["dimensions"]] == _METRIC_IDS
         for d in body["dimensions"]:
             assert set(d.keys()) == _FIELDS, f"{d['metric_id']} 字段集不符"
-            assert d["unit"] in ("count", "pct", "ratio")
+            assert d["unit"] in ("count", "pct", "ratio", "delta")
             assert d["space"] in ("NS", "SBX", "PCM")
             assert d["status"] in ("OK", "OUT-OF-LEDGER-NOT-CONNECTED", "PARTIAL")
             assert d["basis"].strip() and d["note"].strip(), "basis/note ⛔ 留白"

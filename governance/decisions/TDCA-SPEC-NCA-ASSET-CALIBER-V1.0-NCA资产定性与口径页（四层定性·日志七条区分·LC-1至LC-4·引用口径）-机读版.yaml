@@ -1,0 +1,96 @@
+# TDCA-NCA-ASSET-CALIBER V1.0 · 机读版（口径页）
+# 会话框 L1-SI-164 ｜ 2026-10-22 ｜ Reasonix
+# 权威关系：本件为人读版之机读骨架；语义以人读版为准（⛔ 反向以机读版改语义）
+doc_id: TDCA-SPEC-NCA-ASSET-CALIBER-V1.0
+title_zh: NCA 资产定性与口径页（四层定性·与生产日志七条区分·LC-1至LC-4·引用口径）
+version: V1.0-DRAFT-INTERNAL
+status: DRAFT-INTERNAL
+date: '2026-10-22'
+session: L1-SI-164
+authored_by: Reasonix
+package: 期一 A-1
+role: 汇总口径页（⛔ 新增定性；只归并上游已定口径）
+upstream:
+  - TDCA-STATEMENT-NCA-ASSET-001                 # 内部产物
+  - TDCA-AMEND-STATEMENT-NCA-ASSET-001-001       # 可信认知资产／数据资产／七条区分
+  - TDCA-AMEND-STATEMENT-NCA-ASSET-001-002       # 过程认知链／四条判据
+  - TDCA-NCA-STD-001-V1.1                        # 十三字段／十五类／四必登／豁免
+  - TDCA-SPEC-NCA-INDEX-SCHEMA-V0.1              # LC- 命名与三态段位
+  - TDCA-NCA-AUDIT-RPT-001-template-V1.0         # 审计报告引用面
+
+positioning:
+  - NCA 制度是 TDCA 基础制度之一（制度地图类名「基本制度」；⛔ 另立类名）
+  - 内外必须一致（C-1~C-4）；对外面不许比内部少一件、错一版、软一口径
+  - 本体 TDCA-NCA-STD-001 V1.1 只约束今后新登记；既有 NCA 一律不变不动
+
+layers:
+  - {level: 1, name: 内部产物, note: 制度构建与工程化全过程见证, root: TDCA-STATEMENT-NCA-ASSET-001}
+  - {level: 2, name: 可信认知资产, note: 可信＝可验证（链＋哈希＋签批位）；认知＝T-030 第五阶, root: TDCA-AMEND-STATEMENT-NCA-ASSET-001-001}
+  - {level: 3, name: 数据资产, note: 落在 IP 版权资产涵盖门类内（内容／数据／商标／专利），⛔ 新立门类, root: SPEC-IPASSESS-002 第二条}
+  - {level: 4, name: 过程认知链, note: 事实事件（含场景）→ 不对称认知 → 制度规范下对齐；价值在过程连续不在单件, root: TDCA-AMEND-STATEMENT-NCA-ASSET-001-002}
+
+distinct_from_production_log:
+  - {id: 1, key: 生成触发, nca: 只在四必登时点生成·一次动作一件, log: 系统事件自动批量·同秒可上千条}
+  - {id: 2, key: 制度地位, nca: 执行凭据（无存证不执行）, log: 运行证据（有日志≠事已办成）}
+  - {id: 3, key: 构成要件, nca: 主体＋产物哈希＋判断依据＋义务六键＋负空间检查＋签批位＋链, log: 时间戳／类型／级别／对象／耗量，无依据无签批位无链}
+  - {id: 4, key: 承载内容, nca: 语义与判断, log: 事实与状态}
+  - {id: 5, key: 豁免安排, nca: 自动化类在册明文豁免, log: 豁免清单即其归属地}
+  - {id: 6, key: 可重建性, nca: 不可重建·缺件即判断链永久断点, log: 可重放重采集}
+  - {id: 7, key: 价值形态, nca: 资产（可评估可继承可对外证明）, log: 成本项}
+
+prohibitions:
+  - ⛔ 不得以日志口径统计 NCA 资产规模（调用数／请求数 ≠ NCA 件数）
+  - ⛔ 不得为扩充数量而将自动化事件逐条登记（稀释资产）
+
+cognitive_chain_criteria:
+  naming_rule: 一律写 LC- 前缀；⛔ 与链验器 L-1~L-3（链完整性）互代
+  items:
+    - {id: LC-1, name: 每件必带场景锚定, method: scope 非空＋场景指针或场景件号, fail_meaning: 裸事实，不属认知链，留日志层, measured_ok: 343, measured_ratio: 6.1%}
+    - {id: LC-2, name: 每件至少两方认知, method: 同场景「提交件＋核证件」成对, fail_meaning: 单方自记＝自言自语, measured_ok: 529, measured_ratio: 9.4%}
+    - {id: LC-3, name: 对齐结果可判, method: 含 PASS／CONDITIONAL／退回／待裁／裁定, fail_meaning: 过程未收口, measured_ok: 2592, measured_ratio: 46.1%}
+    - {id: LC-4, name: 对齐依据必落制度件, method: scope 内引在册件号／口径, fail_meaning: 无依据＝共识非对齐, measured_ok: 1385, measured_ratio: 24.6%}
+  measured_base: 主账 records 5627（L1-SI-164 实测 · 近似法）
+  honest_note: 定性成立在口径层，存量件尚未普遍落实（STD-001 只约束今后新登记，⛔ 归旧件缺陷）
+
+inner_outer_consistency:
+  - {id: C-1, req: 同一文本, check: 对外文本与内部本体逐字节或附差异清单}
+  - {id: C-2, req: 同一口径, check: 对外所称是什么记什么谁签与台账一致}
+  - {id: C-3, req: 同一判据, check: 五态／生效／签批逐项对得上（锚件头与件内自载）}
+  - {id: C-4, req: 同一版本, check: 对外版本＝内部现行 V1.1；⛔ 对外出现「现行 V1.0」}
+
+G1_gap:
+  id: G-1
+  status: OPEN
+  fact: NCA 本体尚未进入对外制度地图（docs/regulations 与 /rules 件名含 NCA 者 0）
+  consequence: 内外一致目前不成立
+  action: 须创始人明示（涉对外可见面），⛔ 本侧不代做
+
+counting_rules:
+  - {wrong: 用事件数／调用数当 NCA 件数, right: 以台账 records 计件；链长以 max(GSEQ) 与空号单列}
+  - {wrong: 把「有输出」当「判据成立」, right: LC- 四判据报成立数，注明近似法}
+  - {wrong: 把待建写成 0, right: PENDING 写「待建」（0 会被读成无异常）}
+
+fact_source_dual:
+  institution: INSTITUTION-HASHES-001（8 类对象·管制度版本）
+  record: NCA 台账三件（REGISTRY 三字段＋artifacts[].sha256_16＋chain_id／prev_nca）
+  rule: ⛔ 两源互代
+
+misreadings:
+  - {id: 1, wrong: NCA 是版权资产之下另立一类, right: 归属数据资产，⛔ 新立门类（前件建议已撤回）}
+  - {id: 2, wrong: 挂起＝取消或已完成, right: 挂起于零施工点，口径与事实核仍有效}
+  - {id: 3, wrong: 日志也能算流程证据, right: 见七条区分；日志不具执行门槛效力}
+  - {id: 4, wrong: NCA 越多越好, right: 见两条禁令；灌量即稀释资产}
+  - {id: 5, wrong: 已挂起就不必引用, right: 定性／判据／七条区分仍可照常引用（T-1 已重启）}
+
+citation_rule: 引用本页须连件号＋版本；⛔ 只引正文片段
+
+non_goals:
+  - 新增定性（本页只归并上游）
+  - 改上游件或历史 NCA
+  - 迁移／合并跨侧链号
+  - 代定阈值与权重
+  - 对外
+
+revision:
+  mode: append-only
+  conflict_rule: 人读版为准
