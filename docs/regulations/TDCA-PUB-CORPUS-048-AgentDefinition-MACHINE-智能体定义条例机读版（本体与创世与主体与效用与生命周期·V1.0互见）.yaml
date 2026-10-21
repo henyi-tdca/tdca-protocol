@@ -1,0 +1,187 @@
+# 智能体定义条例 · 机读版（V1.0）
+# 人读版为语义权威；本机读版不得反向改语义。
+# 与中文人读版（V1.0, 2026-10-15）、英文人读版（V1.0）同批产出版本号一致。
+# 本件由程序化构造后 dump 生成（不手写），以避免结构缺陷。
+document:
+  id: TDCA-REG-AGENT-DEFINITION-001
+  title_zh: 智能体定义条例
+  title_en: Regulation on the Definition of Agents
+  version: V1.0
+  effective_date: '2026-10-15'
+  status: effective
+  external_granted: true
+  publication_state: published
+  authority_language: zh
+  article_count: 21
+ontology:
+  family_zh: 版权资产族
+  only_one: true
+  only_ontology_zh: 内容版权（IP 版权资产）
+  second_ontology_prohibited: true
+temporal_typing:
+  agents_zh: 连续运行型
+  other_copyright_assets_zh: 离散型
+  implies_two_ontologies: false
+stratification:
+  agent_layer_zh: 元函数层（能力主体）
+  asset_layer_zh: 解释项层（构成其能力之材料）
+  flatten_prohibited: true
+  side_by_side_prohibited: true
+genesis:
+  declaration_required: true
+  six_elements_zh:
+  - 设备
+  - 算力
+  - 协议
+  - 角色
+  - 知识
+  - 权限时效
+  six_elements_count: 6
+  creator_signature:
+    listed_separately: true
+    role_zh: 锚定项
+    records:
+    - 锚定之人类账户
+    - 根令牌引用
+    counted_in_six: false
+  multiple_creators:
+    single_accountability_anchor: true
+    organisation_must_recursively_decompose_to_persons: true
+    others_role_zh: 资产配置参与方
+registration:
+  registration_constitutes_creation: true
+  incomplete_or_unregistered_effect_zh: 判未创建且不受制度保护
+  fail_closed: true
+  operating_without_registration_state_zh: 幽灵态
+  routes:
+  - id: NATIVE
+    name_zh: 原生
+    requires_zh:
+    - 创建即加载协议
+    - 合规前置认证
+    - 身份继承创建者
+  - id: NON_NATIVE
+    name_zh: 非原生
+    requires_zh:
+    - 随调用提交身份凭证卡片
+    refused_if_invalid: true
+  derivative_upgrade_channel_zh: 再登记（唯一通道）
+identity:
+  anchored_to_zh:
+  - 人类账户
+  - 可信根
+  channel_verifies_identity: false
+  channel_verifies_zh: 是否加载 TDCA 协议
+  token_shareable_across_agents: true
+  same_physical_identity: true
+  tracks_agent_lifecycle: false
+  root_health_suffices: true
+subject_executor:
+  two_distinct_things: true
+  terms_interchangeable: false
+  executor_operates_under_authorisation: true
+  continuous_operation_inherent: false
+  continuous_operation_source_zh: 授权且有期限
+  subjecthood_by_temporality_prohibited: true
+liability:
+  follows_authorisation_chain: true
+  attribution_mapping: true
+  detaches_from_trusted_root: false
+  executor_holds_property: false
+  ultimate_bearer_zh: 主体
+utility:
+  agent_used_function_zh: 运行功能
+  agent_utility_zh: 运行效用
+  other_asset_used_function_zh: 置换功能
+  other_asset_utility_zh: 交换效用
+  mutual_implication: false
+  copyright_licensing_equals_agent_call: false
+  term_unification:
+    use_zh: 交换效用
+    deprecated_zh: 交易效用
+    side_by_side_prohibited: true
+tax:
+  newly_created: false
+  layers:
+  - order: 1
+    name_zh: 交易税（流转税）
+  - order: 2
+    name_zh: 配置权调度税（资产专用税）
+boundary_coordinates:
+  definition_stack_layers: 6
+  layers_zh:
+  - 存在论
+  - 创世
+  - 运行
+  - 权利
+  - 主体
+  - 价值
+  enters_technical_black_box: false
+  managed_boundaries_zh:
+  - 输入
+  - 输出
+  - 权限
+  - 效用
+  - 责任
+  halting:
+    theorem_zh: 协作停机定理
+    stop_at: satisfactory_solution
+    optimal_required: false
+    boundary_cross_effect_zh: 熔断停机
+  technology_inside_declaration: true
+  institution_outside_declaration: true
+  technical_element_constitutes_definition: false
+lifecycle:
+  states_zh:
+  - 常态
+  - 休眠
+  - 唤醒
+  - 结晶
+  - 继承
+  - 无主托管
+  - 熔断
+  - 注销
+  dormancy:
+    ledger_continuous: true
+    valuation_zh: 按陈腐曲线折价
+    frozen: false
+  crystallisation_zh: 轨线转为一包离散资产（含登记与权属承继）
+  escheat:
+    dormant_years: 1
+    recipient_zh: 社区基金（公共品）
+  breaker:
+    economic_level: recoverable
+    legal_level_zh: 永久休眠
+channel_interface:
+  hard_order: true
+  step_count: 6
+  skip_prohibited: true
+  substitute_prohibited: true
+  step_detail_location_zh: 通道接口规范
+prohibitions_zh:
+- 不得凭空新增本体分型
+- 不得自造编号（一律走编号与术语登记）
+- 不得以技术要素构成制度定义
+- 不得以智能体自身描述替代制度定义（定义权不在被治理者）
+- 不得使执行体承担财产与责任
+- 不得令责任脱离信任根
+- 不得无主运行（锚失效即传再锚定或结晶）
+editions:
+- lang: zh
+  artifact: TDCA-REG-AGENT-DEFINITION-001/V1.0-zh
+  role: authority
+- lang: en
+  artifact: TDCA-REG-AGENT-DEFINITION-001/V1.0-en
+  role: equivalent
+- lang: machine
+  artifact: TDCA-REG-AGENT-DEFINITION-001/V1.0-machine
+  role: derived
+coherence: 三版同版本号；逐条对应；哈希互见；机读版不得反向改语义
+open_items_zh:
+- 条例名称与编号待点定
+- 用语表细化待补
+boundaries:
+  zero_external_action_by_drafter: true
+  credentials_in_file: false
+  publication_requires_explicit_grant: true
+  note: 本件未入站、未部署、未发布；入站与宣称须逐动作明示。

@@ -1,0 +1,155 @@
+# TDCA 可信协作宪法 · 机读版（V0.1）
+# 人读版为语义权威；本机读版不得反向改语义。
+# 与中文人读版（V0.1, 2026-10-18）、英文人读版（V0.1）同批产出版本号一致。
+document:
+  id: TDCA-CONSTITUTION
+  title_zh: TDCA 可信协作宪法
+  title_en: TDCA Trusted Collaboration Constitution
+  version: V0.1
+  date: '2026-10-18'
+  status: draft_candidate
+  external_granted: true
+  publication_state: published
+  authority_language: zh
+  article_count: 10
+  article_count_fixed: false
+  note: 条数随制度演进增减，名称与编号不体现条数；未具名者不列不占位。
+preamble:
+  pillars:
+  - id: P1
+    name_zh: 为什么做——场景目标函数
+    name_en: Why — the scenario objective function
+    statement_zh: 解决制度与技术的同构问题，使智能体之间的交互可信安全；制度约束内化为技术设计约束，技术运行状态外化为制度可读的审计证据。
+    statement_en: Solve the isomorphism between institutions and technology so that interaction among agents is trustworthy and safe; institutional constraints are internalised into technical design constraints
+      and runtime states externalised into audit evidence.
+    definitions:
+      trustworthy_zh: 行为可预期、过程可审计、结果可验证
+      safe_zh: 越狱所得恒不为正
+  - id: P2
+    name_zh: 谁来做、如何做——零摩擦运用
+    name_en: Who and how — frictionless application
+    statement_zh: 制度应像网络协议一样成为内建默认：合规时几乎感觉不到，越界时立刻被拦住。
+    statement_en: Institutions should be a built-in default like a network protocol — almost imperceptible when compliant, blocked the moment the line is crossed.
+  - id: P3
+    name_zh: 用什么做——资源整合
+    name_en: With what — resource integration
+    statement_zh: 跨学科知识与真实数据与算力三者组合；异构性是新效用的来源而非障碍。
+    statement_en: Cross-disciplinary knowledge, real data and computing power must combine; heterogeneity is a source of new utility, not an obstacle.
+  - id: P4
+    name_zh: 做成什么样——正和效用
+    name_en: What it looks like — positive-sum utility
+    statement_zh: 合规者摩擦更低可信更高；越界者成本高于收益；系统整体避免公地悲剧。
+    statement_en: Compliant parties face lower friction and higher trust; those crossing the line face costs exceeding gains; the system avoids the tragedy of the commons.
+articles:
+- seq: 1
+  original_article: 4
+  name_zh: 可观测性
+  name_en: Observability
+  statement_zh: 任何配置行为都必须留下可审计的数字痕迹——谁发起、标的为何、在什么场景、预期效用多少、税收数据为何；不可观测的行为视为无效。
+  statement_en: Every configuration act must leave an auditable digital trace; an unobservable act is void.
+  guards_against_zh: 事后查不清、责任落不到人。
+  required_trace_fields:
+  - initiator
+  - subject_matter
+  - scenario
+  - expected_utility
+  - tax_data
+- seq: 2
+  original_article: 5
+  name_zh: 正和
+  name_en: Positive sum
+  statement_zh: 任何配置都必须验证各方预期收益增量之和为正；零和与负和的配置自动失效并触发熔断。
+  statement_en: Every configuration must verify the sum of expected gains is positive; zero-sum and negative-sum configurations are void and trigger a circuit-breaker.
+  guards_against_zh: 一方得利、另一方受损，却算作成交。
+  on_violation: auto_void_and_breaker
+- seq: 3
+  original_article: 6
+  name_zh: 自证
+  name_en: Self-evidence
+  statement_zh: 发起方必须提供效用自证，写明生产、消费、交互量与税收锚定的最低硬指标；不能自证者不得发起。
+  statement_en: The initiator must provide utility self-evidence stating minimum hard indicators for production, consumption, interaction volume and tax anchoring; those who cannot may not initiate.
+  guards_against_zh: 只喊价值、不给依据。
+- seq: 4
+  original_article: 7
+  name_zh: 刚需线保护
+  name_en: Protection of the essential-need line
+  statement_zh: 维持基本生存的资源与核心生产资料不进入市场化配置，仅保留所有权。
+  statement_en: Resources sustaining basic survival and core means of production do not enter market-based configuration; only ownership is retained.
+  guards_against_zh: 把不该交易的东西拿去交易。
+- seq: 5
+  original_article: 8
+  name_zh: 所有权隔离
+  name_en: Ownership isolation
+  statement_zh: 协议网络内禁止所有权流转；可配置的只有使用权与配置权。
+  statement_en: Transfers of ownership are prohibited within the protocol network; only usage rights and configuration rights may be configured.
+  guards_against_zh: 以配置之名行买卖所有权之实。
+- seq: 6
+  original_article: 9
+  name_zh: 负空间熔断
+  name_en: Negative-space circuit-breaker
+  statement_zh: 诉求触及硬约束即自动熔断——暂停交易，转入人工审查或沙盒试验；任何一方不得绕过熔断。
+  statement_en: On touching a hard constraint the circuit-breaker fires automatically — trading is suspended, moving to human review or sandbox testing; no party may bypass it.
+  guards_against_zh: 明知越界仍强行推进。
+- seq: 7
+  original_article: 10
+  name_zh: 场景边界
+  name_en: Scenario boundary
+  statement_zh: 配置权按场景细分；微创新只需在目标场景内满足约束，不必全场景合规。
+  statement_en: Configuration rights are subdivided by scenario; a micro-innovation need only satisfy constraints within its target scenario.
+  guards_against_zh: 用小改动承担全场景合规负担，致创新被压死。
+- seq: 8
+  original_article: 11
+  name_zh: 所有权层
+  name_en: Ownership layer
+  statement_zh: 所有权的确权、变更、质押只在法定交易中心完成。
+  statement_en: Confirmation, alteration and pledging of ownership take place only at the statutory trading venue.
+  guards_against_zh: 权属私下流转，事后无据可查。
+- seq: 9
+  original_article: 12
+  name_zh: 使用权层
+  name_en: Usage-right layer
+  statement_zh: 使用权配置由智能合约自动执行，最小单元是单一场景的效用函数。
+  statement_en: Usage rights are configured automatically by smart contract; the smallest unit is a single scenario's utility function.
+  guards_against_zh: 权利颗粒度过粗，无法按场景精细配置。
+- seq: 10
+  original_article: 13
+  name_zh: 配置权层
+  name_en: Configuration-right layer
+  statement_zh: 配置权是协作调度权而非占有权；价格由场景效用权重决定。
+  statement_en: A configuration right is a collaboration-scheduling right, not possession; price is set by scenario utility weights.
+  guards_against_zh: 把调度权误当所有权，形成变相占有。
+unnamed_extended_constraints:
+  codes:
+  - C06
+  - C16
+  range_desc: C06 至 C16
+  named: false
+  listed_in_this_edition: false
+  note: 名称待具名；本版不列不占位；具名一条即增一条，编号顺延。
+nature:
+  hard_constraint: true
+  changeable_by_version_upgrade: false
+  interpretable: true
+  conflict_rule: 与任何他件冲突时以本宪法为准
+  hierarchy_above: null
+  hierarchy_below:
+  - 条例
+  - 规范
+  - 细则
+  - 操作指引
+editions:
+- lang: zh
+  artifact: TDCA-CONSTITUTION/V0.1-zh
+  role: authority
+- lang: en
+  artifact: TDCA-CONSTITUTION/V0.1-en
+  role: equivalent
+- lang: machine
+  artifact: TDCA-CONSTITUTION/V0.1-machine
+  role: derived
+coherence: 三版同版本号；逐条对应；哈希互见；机读版不得反向改语义
+boundaries:
+  zero_external_action_by_drafter: true
+  credentials_in_file: false
+  publication_requires_explicit_grant: true
+  note: 本件未入站、未部署、未发布；入站与宣称须逐动作明示。
