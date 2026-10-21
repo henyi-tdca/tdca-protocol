@@ -87,6 +87,8 @@ _PUBLIC_DOCS = {
     "TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md",
     "TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md",
     "TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md",
+    # L1SI164-NCA-EXT-INSITE-001（AMEND-2 授权追加）：存证（NCA）制度对外节选版 R2 件——regulation 42→43
+    "TDCA-PUB-NCA-STD-001-EXT-V1.1-存证（NCA）制度对外节选版（已生效·与内部V1.1同版·差异清单）-R2.md",
     ),
     # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
     "whitepapers": (
