@@ -1,5 +1,5 @@
 generated_at: '2026-10-22'
-version: V6.2-NCA制度入图（五态校准＋integrity 按交件实测；V6.1 全项不动）
+version: V6.4-创世完整证据入图（V6.3 全项不动）
 states_def:
   生效: 件头版本行明载生效／effective／已签批
   对外候选: 自载「对外候选件」——版本号已有但未生效
@@ -7,16 +7,16 @@ states_def:
   指引性: 流程环节卡系列，无生效态概念
   非制度件: README／公告／生效注记
   待辨: 载 V1.0 但未载生效字样
-total: 57
+total: 59
 states:
   非制度件: 3
   草案: 5
-  生效: 28
+  生效: 30
   指引性: 17
   对外候选: 4
 classes:
   条例: 21
-  基本制度: 5
+  基本制度: 7
   标准与流程: 17
   规范与细则: 9
   模板与表单: 5
@@ -1016,6 +1016,40 @@ items:
   state_note: 与内部现行版 V1.1 同版；本件为对外节选，差异清单见件内附录 A
   page_visible: true
   integrity_basis: 本侧交件实测（R2 修订末行占位后重算 bytes＋sha256_16）；入站后执行侧须复核
+- filename: TDCA-PUB-NCA-GENESIS-REG-001-TDCA官方可信认知资产登记·创世认知资产区块（人读·已登记·对外节选版）.md
+  class: 基本制度
+  steps:
+  - S1
+  - S2
+  state: 生效
+  version: V1.0
+  bytes: 3781
+  sha256_16: FDAC3FCC24336316
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-NCA-GENESIS-REG-001-TDCA官方可信认知资产登记·创世认知资产区块（人读·已登记·对外节选版）.md
+  state_basis: 件内自载（「已登记 · 创始人本人签署 2026-10-22」）
+  display_name: TDCA-PUB-NCA-GENESIS-REG-001-TDCA官方可信认知资产登记·创世认知资产区块（人读·已登记·对外节选版）.md
+  state_note: 官方可信认知资产登记（创世认知资产区块）·对外节选版
+  page_visible: true
+  integrity_basis: 本侧交件实测（bytes＋sha256_16）；入站后须复核
+- filename: TDCA-PUB-NCA-GENESIS-EVID-001-官方可信认知资产·创世区块完整证据（三块·算法·签批·自验）-对外版.md
+  class: 基本制度
+  steps:
+  - S1
+  - S2
+  state: 生效
+  version: V1.1
+  bytes: 5259
+  sha256_16: CCF73FCCA298C37A
+  in_public: true
+  in_repo: true
+  slug: TDCA-PUB-NCA-GENESIS-EVID-001-官方可信认知资产·创世区块完整证据（三块·算法·签批·自验）-对外版.md
+  state_basis: 件内自载（「完整版 · 创始人本人签署 2026-10-22」）
+  display_name: TDCA-PUB-NCA-GENESIS-EVID-001-官方可信认知资产·创世区块完整证据（三块·算法·签批·自验）-对外版.md
+  state_note: 官方可信认知资产·创世区块完整证据（三块全貌·算法·验证三态·自验指引）·对外完整版
+  page_visible: true
+  integrity_basis: 本侧交件实测（bytes＋sha256_16）；入站后须复核
 
 state_def_note: 五态认定口径（本版）：以件头版本行／件内自载为据，⛔ 不以件名派生判；「已签批生效但件头仍旧 DRAFT」者按「生效」标并同条注明（创始人
   2026-10-21 取甲）
@@ -1031,8 +1065,8 @@ v6_changes:
   encounter_dual: 相遇专章 V0.9 草案 2 件标 page_visible=false（只列 V1.0 生效 2 件）
   in_repo: 以 atomgit/main 树 a961efbe 重算（原 36 件 false → true）
 step_counts:
-  S2: 25
-  S1: 5
+  S2: 27
+  S1: 7
   S4: 26
   S3: 17
   S6: 3
@@ -1065,3 +1099,20 @@ v6_2_changes:
   scope_note: 本表为地图数据整件替换件，⛔ 手改；执行侧按其既有替换方式落地
   api_note: gateway 公开清单 count=42 ⛔ 本轮不动（属既有口径，与地图件数 57 两数并存）
   rollback: 若入站未成，回退本表至 V6.1（V6.1 原文在册可复原）
+
+v6_3_changes:
+  reason: 创始人 2026-10-22 明示「这个可以在官网确权成为 TDCA 官方可信认知资产正式登记」；签批人显示取「只写创始人本人签署不写姓名」；落位取「制度地图（与制度件同列）」
+  added: 1 项（TDCA-PUB-NCA-GENESIS-REG-001 官方可信认知资产登记·创世认知资产区块 · 对外节选版 · 基本制度类 · 生效态 · S1+S2）
+  counts: total 57→58／生效 28→29／基本制度 5→6／S1 5→6／S2 25→26／in_public 43→44
+  unchanged: 其余 57 项逐字节照 V6.2-R2 不动（五态／五类／六步／display_name／state_note／page_visible 一律不改判）
+  scope_note: 本表为地图数据整件替换件，⛔ 手改；执行侧按既有替换方式落地
+  api_note: gateway 清单须同步追加一行（regulation 43→44，公开面总 58→59）
+  rollback: 若入站未成，回退本表至 V6.2-R2（44951B／F8CDC09D844BB428）
+
+v6_4_changes:
+  reason: 创始人 2026-10-22 明示「完整版要对外」（在 V6.3 之登记节选版之外，另出完整证据对外版）
+  added: 1 项（TDCA-PUB-NCA-GENESIS-EVID-001 创世区块完整证据 · 对外完整版 · 基本制度类 · 生效态 · S1+S2）
+  counts: total 58→59／生效 29→30／基本制度 6→7／S1 6→7／S2 26→27／in_public 44→45
+  unchanged: 其余 58 项逐字节照 V6.3 不动
+  api_note: gateway 清单须再追加一行（regulation 44→45，公开面总 59→60）
+  rollback: 若入站未成，回退本表至 V6.3（46739B／28EDCA678ACA83A7）

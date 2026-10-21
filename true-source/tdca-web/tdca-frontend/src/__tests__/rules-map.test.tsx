@@ -1,10 +1,10 @@
 // =============================================================================
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI162-RULES-MAP-001 /rules 制度地图自检
 // 约束矩阵: 交办令 §六 R-1~R-7（计数以程序统计为准，⛔ 目测）
-//  验①哈希：?raw 机读表 sha256_16 == 在册值 F8CDC09D844BB428（V6.2-NCA）
-//  验②解析：57 项；五态 28/17/5/4/3/0；五类 21/17/9/5/5；六步 5/25/17/26/2/3；
-//           page_visible=false 恰 2（相遇 V0.9）；V1.0-FROZEN 恰 9（三族）；in_public 43
-//  验③渲染：R-1 主表 55＋折叠 2；R-4 对外候选 4 件逐条未标生效；R-5 三族注明在位；
+//  验①哈希：?raw 机读表 sha256_16 == 在册值 D09429966CEC4C80（V6.4-GENESIS-EVID）
+//  验②解析：59 项；五态 30/17/5/4/3/0；五类 21/17/9/5/7；六步 7/27/17/26/2/3；
+//           page_visible=false 恰 2（相遇 V0.9）；V1.0-FROZEN 恰 9（三族）；in_public 45
+//  验③渲染：R-1 主表 57＋折叠 2；R-4 对外候选 4 件逐条未标生效；R-5 三族注明在位；
 //           R-6 折叠区注「以生效版为准」；R-7 S5/S6 点步出「待补」横幅
 // =============================================================================
 import { fireEvent, render, screen, within } from '@testing-library/react'
@@ -36,11 +36,11 @@ function renderPage() {
 
 describe('验①② 机读表哈希与解析（R-2/R-3 程序统计）', () => {
   it('?raw 源 sha256_16 == 在册值', async () => {
-    expect(await sha16(docMapYaml)).toBe('F8CDC09D844BB428')
+    expect(await sha16(docMapYaml)).toBe('D09429966CEC4C80')
   })
 
-  it('57 项 integrity 自洽（bytes>0、sha256_16 16 位大写、in_repo 全真）', () => {
-    expect(ITEMS).toHaveLength(57)
+  it('59 项 integrity 自洽（bytes>0、sha256_16 16 位大写、in_repo 全真）', () => {
+    expect(ITEMS).toHaveLength(59)
     for (const i of ITEMS) {
       expect(i.bytes).toBeGreaterThan(0)
       expect(i.sha256_16).toMatch(/^[0-9A-F]{16}$/)
@@ -48,23 +48,23 @@ describe('验①② 机读表哈希与解析（R-2/R-3 程序统计）', () => {
     }
   })
 
-  it('五态计数 28/17/5/4/3/0（R-2）', () => {
+  it('五态计数 30/17/5/4/3/0（R-2）', () => {
     for (const s of DOC_MAP_STATE_ORDER) {
       const n = ITEMS.filter((i) => i.state === s).length
-      const want = { 生效: 28, 指引性: 17, 草案: 5, 对外候选: 4, 非制度件: 3, 待辨: 0 }[s]
+      const want = { 生效: 30, 指引性: 17, 草案: 5, 对外候选: 4, 非制度件: 3, 待辨: 0 }[s]
       expect(n, `state=${s}`).toBe(want)
     }
   })
 
-  it('五类计数 21/17/9/5/5（R-3）', () => {
+  it('五类计数 21/17/9/5/7（R-3）', () => {
     for (const c of DOC_MAP_CLASS_ORDER) {
       const n = ITEMS.filter((i) => i.class === c).length
-      const want = { 条例: 21, 标准与流程: 17, 规范与细则: 9, 模板与表单: 5, 基本制度: 5 }[c]
+      const want = { 条例: 21, 标准与流程: 17, 规范与细则: 9, 模板与表单: 5, 基本制度: 7 }[c]
       expect(n, `class=${c}`).toBe(want)
     }
   })
 
-  it('折叠 2 恰为相遇 V0.9；注明适用件恰 9；in_public 43', () => {
+  it('折叠 2 恰为相遇 V0.9；注明适用件恰 9；in_public 45', () => {
     const hidden = ITEMS.filter((i) => !i.page_visible)
     expect(hidden).toHaveLength(2)
     for (const h of hidden) expect(h.filename).toContain('V0.9-DRAFT')
@@ -77,15 +77,15 @@ describe('验①② 机读表哈希与解析（R-2/R-3 程序统计）', () => {
         i.filename.startsWith('TDCA-TEMPLATE-AUTH-001-'),
     )
     expect(noteScope).toHaveLength(9)
-    expect(ITEMS.filter((i) => i.in_public)).toHaveLength(43)
+    expect(ITEMS.filter((i) => i.in_public)).toHaveLength(45)
   })
 })
 
 describe('验③ 渲染（R-1/R-4/R-5/R-6/R-7）', () => {
-  it('R-1 主表 55 行＋折叠区 2 行', () => {
+  it('R-1 主表 57 行＋折叠区 2 行', () => {
     renderPage()
     const main = screen.getByTestId('rules-main')
-    expect(within(main).getAllByTestId('doc-row')).toHaveLength(55)
+    expect(within(main).getAllByTestId('doc-row')).toHaveLength(57)
     const archived = screen.getByTestId('rules-archived')
     expect(within(archived).getAllByTestId('doc-row')).toHaveLength(2)
     expect(archived.textContent).toContain('以生效版为准')
@@ -154,7 +154,7 @@ describe('验③ 渲染（R-1/R-4/R-5/R-6/R-7）', () => {
     expect(within(screen.getByTestId('rules-main')).getAllByTestId('doc-row')).toHaveLength(s6count)
   })
 
-  it('徽标文字与表内 state 逐字一致（全 57 件域校验）', () => {
+  it('徽标文字与表内 state 逐字一致（全 59 件域校验）', () => {
     renderPage()
     for (const s of DOC_MAP_STATE_ORDER) {
       const n = ITEMS.filter((i) => i.state === s).length
