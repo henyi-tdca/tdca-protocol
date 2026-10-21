@@ -23,7 +23,8 @@ jobs:
 
       - name: Go test (with race — 破坏性并发检测)
         working-directory: core-go
-        run: go test -race -count=1 ./...
+        # L1SI163-WO-6：限并发防 OOM（891MB 级 CI 机实测曾压垮 sshd；swap 已加作双保险）
+        run: go test -race -count=1 -p 1 -parallel 2 ./...
 
       - name: Build tdcad
         working-directory: core-go
