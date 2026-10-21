@@ -1,0 +1,87 @@
+# TDCA-STD-NCA-SYSTEM-001 · 机读版（NCA 制度标准草案 V0.1）
+# 会话框 L1-SI-164 ｜ 2026-10-22 ｜ Reasonix
+# 权威关系：语义以人读版为准（⛔ 反向以机读版改语义）；人读版为草案，⛔ 生效
+doc_id: TDCA-STD-NCA-SYSTEM-001
+title_zh: TDCA NCA 制度标准（统合草案：三空间·类型三元·动态量归属·审计·跨侧登记）
+version: V0.1-DRAFT
+status: DRAFT
+date: '2026-10-22'
+session: L1-SI-164
+authored_by: Reasonix
+side_role: 智库侧出制度件
+package: A-4（出标准草案前置 → 草案）
+dual_version: REQUIRED（本制度属硬约束类 ⟹ 人读＋机读双版本）
+belongs_to: TDCA NCA 制度（三空间／类型三元／动态量／索引层／审计／跨侧登记 皆归本制度，⛔ 另立多制）
+supersedes: NONE（⛔ 替代在册 TDCA-NCA-STD-001 V1.1）
+relation_to_std001: 补齐四事（三空间／类型三元／动态量归属／审计与跨侧规则）；十三字段／十五类／四必登／自动化豁免仍现行
+
+clauses:
+  - {id: 1, topic: 定位, key: NCA 制度是 TDCA 基础制度之一（类名基本制度）；本件为统合草案}
+  - {id: 2, topic: 与在册关系, key: ⛔ 替代 STD-001 V1.1；在其上补四事}
+  - {id: 3, topic: 适用范围, key: 三侧今后新登记；既有 NCA 一律不变不动（祖父条款）}
+  - {id: 4, topic: 定性四层, key: 内部产物→可信认知资产（可验证）→数据资产（T-030 第五阶）→过程认知链}
+  - {id: 5, topic: 三处不同, key: 产生于协作关系／内容是判断／价值随链增长}
+  - {id: 6, topic: 三空间, key: NS 负空间审查区／SBX 沙盒验证区／PCM 协议配置市场（照 DSA-001）}
+  - {id: 7, topic: 衔接四条, key: 空间标识随件／链不断／跨空间引用走 chain_ref／判据分段链不分段}
+  - {id: 8, topic: 可溯源可审计, key: 接口成对件／沿链回链首可验／判据有落件且审计者入链}
+  - {id: 9, topic: 类型三元, key: stage_space × flow_stage × action_type}
+  - {id: 10, topic: 类型门禁, key: 三元缺一即类型不完整；同号同动作异空间或异环节即不同类型}
+  - {id: 11, topic: 展示形态, key: 建议 SBX·F7·HandoffDeliverable；nca_id 形态不变}
+  - {id: 12, topic: 索引层, key: 40 字段三态（DIRECT／DERIVED／PENDING）；PENDING 写 null 不写 0}
+  - {id: 13, topic: 两栏与段位, key: 资产类与运行类不混；带链段与未链历史段分列（祖父条款）}
+  - {id: 14, topic: 两元待建, key: stage_space 与 flow_stage 台账未建；⛔ 声称已按三元登记}
+  - {id: 15, topic: 动态量归属, key: 沙盒四类动态量⛔ 记在台账，读数在引擎}
+  - {id: 16, topic: 出盒后定性, key: 出沙盒后 NCA 即执行的确定性过程之 NCA（可重放、不再实时计算）}
+  - {id: 17, topic: 待建与不同源, key: 真有字段位未建＝PENDING；他层过程量＝OUT-OF-LEDGER；⛔ 互换、⛔ 写 0}
+  - {id: 18, topic: 与生产日志七条区分, key: 触发／地位／要件／内容／豁免／可重建／价值形态}
+  - {id: 19, topic: 两条禁令, key: ⛔ 日志口径统计资产；⛔ 灌自动化事件凑量}
+  - {id: 20, topic: 审计八维, key: 3.1 完整率／3.2 熔断／3.3 正和／3.4 锚定／3.5 化合／3.6 边界／3.7 资产来源／3.8 认知对齐}
+  - {id: 21, topic: 数据源二分, key: 台账可算四维 DERIVED；沙盒四维 OUT-OF-LEDGER（须从引擎取数）}
+  - {id: 22, topic: 审计铁律, key: DERIVED 必带算法注；PENDING 写待建；⛔ 替代台账权威；审计者入链}
+  - {id: 23, topic: 跨侧三件必登, key: ProtocolInit／Delivery／SessionClose 为每框下限；四必登时点为全量；取并集}
+  - {id: 24, topic: 落账, key: 记录落主账、件体留侧库；侧出件本侧核证后代录；不迁件不追溯不合并链号}
+
+spaces:
+  - {id: NS, name: 负空间审查区, role: NSFL 前置闸口, state_mark: NS-PENDING}
+  - {id: SBX, name: 沙盒验证区, role: Meta-TDCA 生态沙盒, state_mark: SBX-ACTIVE}
+  - {id: PCM, name: 协议配置市场, role: L2 配置权市场, state_mark: PCM-LIVE}
+
+triaxis:
+  space: [NS, SBX, PCM]
+  flow_stage_count: 11
+  flow_stages: [F1 发现, F2 相遇, F3 握手, F4 协商, F5 签约, F6 履约, F7 交付, F8 分配, F9 验证, F10 争议裁决, F11 信用继承]
+  action: STD-001 十五类（★降为动作面）
+  field_state: {stage_space: PENDING, flow_stage: PENDING, action_type: DIRECT}
+
+dynamic_dimensions_out_of_ledger:
+  - {dim: 3.2 熔断, related: 负空间审查准入, carriers: [nsops_adapter, dsa_extension, sandbox_core]}
+  - {dim: 3.3 正和, related: 沙盒阶段效用精灵对协作正和的认知对齐计算, carriers: [utility_genie_adapter, genie_callback]}
+  - {dim: 3.4 MOU 锚定, related: 配置, carriers: [cbdc_anchor, sright]}
+  - {dim: 3.5 化合链, related: 五阶资产化合, carriers: [chem_engine]}
+
+dynamic_rule: ⛔ 从台账派生；出盒后不再产生
+
+audit_ledger_derived:
+  - 3.1 完整率
+  - 3.6 场景边界
+  - 3.7 资产性质与来源
+  - 3.8 认知对齐维
+
+evidence_check:
+  - {step: 1, name: 智库研究, status: PASS, basis: 定性三件＋口径页＋四补正件}
+  - {step: 2, name: 研发治理包, status: PASS, basis: 索引层 V0.2-ADD2（40 字段）＋模板 V1.0＋生成器 v1}
+  - {step: 3, name: 证明或断言, status: PASS, basis: 25 条断言全过 0 失败}
+  - {step: 4, name: 沙盒验证, status: SAMPLE-ONLY, basis: 三期 SIMULATED 样例（同快照重放）＋红队 3 次}
+
+evidence_honest_note: 第 4 步为样例态⛔ 真实沙盒；独立第三方审查未发生 ⟹ 只达可提交审阅，⛔ 可签批
+
+redlines:
+  - ⛔ 生效、⛔ 对外、⛔ 本侧代签批
+  - ⛔ 改 STD-001 V1.1／DSA-001／矩阵件
+  - ⛔ 改历史 NCA、⛔ 迁移、⛔ 合并跨侧链号
+  - ⛔ 代定空间×环节主归属（建议待确认）／动态量阈值与权重
+  - ⛔ 猜填待建字段；一切读数须可复算
+
+revision:
+  mode: append-only
+  conflict_rule: 人读版为准

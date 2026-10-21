@@ -45,7 +45,7 @@ router = APIRouter(
 )
 
 _MetricId = Literal["FUSE_EVENTS", "POSITIVE_SUM", "MOU_ANCHOR", "COMPOUND_CHAIN"]
-_Unit = Literal["count", "pct", "ratio"]
+_Unit = Literal["count", "pct", "ratio", "delta"]
 _Space = Literal["NS", "SBX", "PCM"]
 _Status = Literal["OK", "OUT-OF-LEDGER-NOT-CONNECTED", "PARTIAL"]
 
@@ -104,7 +104,7 @@ def _dim_fuse(nca_items: List[Dict[str, Any]], nca_ok: bool, generated_at: str) 
             basis=basis,
             sample=None,
             as_of=generated_at,
-            space="SBX",
+            space="NS",
             source_module=["nca_logger"],
             status="OUT-OF-LEDGER-NOT-CONNECTED",
             note="NCA 存证账本不可达（读取异常），无法计熔断事件；"
@@ -124,7 +124,7 @@ def _dim_fuse(nca_items: List[Dict[str, Any]], nca_ok: bool, generated_at: str) 
         basis=basis,
         sample=len(nca_items),
         as_of=as_of,
-        space="SBX",
+        space="NS",
         source_module=["nca_logger"],
         status="OK",
         note=note,
@@ -148,7 +148,7 @@ def _dim_positive_sum(sandboxes: List[Sandbox], generated_at: str) -> MetricDime
         return MetricDimension(
             metric_id="POSITIVE_SUM",
             value=None,
-            unit="ratio",
+            unit="delta",
             basis=basis,
             sample=0,
             as_of=generated_at,
@@ -172,7 +172,7 @@ def _dim_positive_sum(sandboxes: List[Sandbox], generated_at: str) -> MetricDime
     return MetricDimension(
         metric_id="POSITIVE_SUM",
         value=log["delta"],
-        unit="ratio",
+        unit="delta",
         basis=basis,
         sample=len(entries),
         as_of=str(log.get("timestamp") or sb.updated_at or generated_at),

@@ -1,0 +1,180 @@
+# TDCA-NCA-AUDIT-RPT-001 · 月度报告模板 V1.0 · 机读版
+# 会话框 L1-SI-164 ｜ 2026-10-22 ｜ Reasonix
+# 权威关系：本件为人读版之机读骨架，语义以人读版为准（⛔ 反向以机读版改语义）
+doc_id: TDCA-NCA-AUDIT-RPT-001
+title_zh: NCA 制度审计月度报告模板（月度 · 八维 · 双源事实源 · 附录B三态）
+version: V1.0-DRAFT-INTERNAL
+status: DRAFT
+date: '2026-10-22'
+session: L1-SI-164
+authored_by: Reasonix
+template_package: '期一 B-1'
+upstream:
+  - TDCA-PLAN-NCA-COS-001
+  - TDCA-ASSESS-NCA-AUDIT-RPT-001        # 判 CONDITIONAL · 呈裁四项
+  - TDCA-NCA-STD-001-V1.1                # 十三字段与四必登时点
+  - TDCA-SPEC-NCA-INDEX-SCHEMA-V0.1      # 附录 B 字段源
+  - TDCA-AMEND-STATEMENT-NCA-ASSET-001-002  # LC- 判据与认知对齐维
+  - TDCA-AMEND-STATEMENT-NCA-ASSET-001-001  # 可信认知资产／数据资产归属
+
+watermark:
+  text: 'SIMULATED —— 本期全部锚定类数据为模拟态读数，未接入法定结算通道'
+  remove_conditions:
+    - MCT 实链上线
+    - 且通过 TDCA-PRINCIPLE-MOU-001 验证
+    - 且人工裁决留 NCA 记录（⛔ 无裁决不得移除）
+
+generation:
+  mode: SEMI-AUTOMATIC
+  statement: 脚本生成 ＋ 人工触发；⛔ 不得表述为「持续自动审计」
+  human_scope: 仅可填写 §4【人工裁决】区
+
+fact_sources:
+  institution_version_anchor:
+    id: INSTITUTION-HASHES-001
+    version: V1.0
+    objects: 8
+    scope: 制度件 → 版本哈希（宪法十六条 v3.1.2／NSFL 规则 V0.2／公理 6 实例化／数学基础白皮书／分润规则 等）
+    rule: 管「制度是哪个版本」
+  record_anchor:
+    parts:
+      - NCA-REGISTRY.yaml 之 gseq／nca_id／self_sha256_16
+      - 单件 artifacts[].sha256_16
+      - 链 chain_id／prev_nca
+    rule: 管「这件事谁在何时登记了什么」
+  cross_rule: ⛔ 两源互代；⛔ 无法回指任一源之数字不得出现
+  self_chain: 报告自身入 NCA 链（§8），审计者同样被审计
+
+corrections_vs_v0_1:
+  - id: C-1
+    topic: 单一事实源改双源
+    before: 单一事实源 INSTITUTION-HASHES；所有指标回指 NCA 哈希
+    after: 双源并列（制度版本锚 ＋ 记录锚三件），⛔ 互代
+  - id: C-2
+    topic: ID38 语义归位
+    before: 破例请求本身即伪创新信号
+    after: 逐条按 ID38 检验；仅「须单独立法／游离法外／法律空白创新」判伪创新，其余走 §3.6 例外鉴权
+    note: ID38 对象是诉求类型；⛔ 扩大读法
+  - id: C-3
+    topic: MOU 两机制拆分
+    before: 连续 t 周期无锚定 ⟹ 效用权重应已归零（合并读法）
+    after: ①  MOU-001 归零规则（无 T(y_t)>0；ID79；必要条件硬下限非充分）② T-036-L3 生态熔断（t=30 天 · θ=0.70× 历史平均 MOU）
+    note: 单期无锚定 ⛔ 读作应已熔断
+
+sections:
+  S0_meta: [报告编号, 周期窗口, NCA池快照哈希, 生成时间与生成器版本, 索引层模式版本, 上期报告哈希]
+  S1_summary: 机器生成 ≤8 行
+  S2_scope: [覆盖主体清单(H/M/L), 覆盖场景清单, 取数范围声明三条, 排除项声明]
+  S3_dimensions: 八维（见 dimensions）
+  S4_manual: 人工裁决区（人工新增条目须附 NCA 依据，否则不受理）
+  S5_open_problems: [问题, 挂账期数, 当前处置, 责任方]
+  S6_trend: 近 6 期八维；首期填 GENESIS／N/A，⛔ 填 0
+  S8_evidence_block: 六要素＋第七附加位
+
+scope_declarations:
+  - id: B-1
+    text: 台账主账在工作区、仓内仅局部可见面 ⟹ 写明「工作区主账 N 件 ＋ 仓内可见面 M 件」，⛔ 混算
+  - id: B-2
+    text: 半自动生成（脚本＋人工触发），⛔ 称「自动／持续自动」
+  - id: B-3
+    text: 首期无历史 ⟹ 趋势填 GENESIS／N/A ＋ 一句说明，⛔ 填 0
+
+dimensions:
+  - id: D31
+    name: 六要素字段完整率
+    threshold: 绿 ≥99%／黄 95–99%／红 <95%
+    over_action: 红即入 §4 置顶 ＋ 出补录交办
+    owner: 生成器（判定）／人工裁决（§4）
+  - id: D32
+    name: 熔断事件与处置
+    threshold: 超时未恢复 >0 即入 §4
+    over_action: 未恢复清单直通 §4
+    owner: 生成器／人工裁决
+  - id: D33
+    name: 正和验证
+    threshold: 负和拦截未处置 >0 即红
+    over_action: 未评估调用单列 ＋ 入 §4
+    owner: 生成器／人工裁决
+  - id: D34
+    name: MOU 锚定覆盖
+    threshold: 覆盖率下降 >θ（两机制分列；MOU-001 归零与 T-036-L3 熔断各判）
+    over_action: 黑洞清单单列不并入总率
+    owner: 生成器／人工裁决
+  - id: D35
+    name: 化合链健康
+    threshold: 孤儿资产数上升即黄；未经锚定调用即红
+    over_action: 孤儿清单 ＋ 反向析构台账
+    owner: 生成器／人工裁决
+  - id: D36
+    name: 场景边界合规
+    threshold: 未经声明即行动记录应为 0；非 0 即重大异常
+    over_action: 直通 §4 置顶
+    owner: 生成器／人工裁决
+  - id: D37
+    name: 资产性质与来源
+    threshold: 无 NCA 依据之资产读数为 0 才合规
+    over_action: 无依据项单列 ＋ 不入资产口径
+    owner: 生成器／制度管理方（口径）
+    new_in: V1.0
+    source_rule: 只取 NCA 件与台账；⛔ 从生产日志取
+    exclude:
+      - 无场景锚定之件（裸事实）⟹ 留日志层
+      - 运行类读数（耗时／环境／容器）⟹ 在册禁令
+  - id: D38
+    name: 认知对齐维
+    threshold: 协商阈值 0.35（在册）；d 之漂移阈值待定（⛔ 本侧不擅补）
+    over_action: 漂移场景单列 ＋ 入 §4
+    owner: 生成器／人工裁决
+    new_in: V1.0
+    metrics: [LC-1 场景锚定成立件数, LC-2 两方认知成对件数, LC-3 判性可判件数, LC-4 依据落制度件件数, d 下降场景数, d 上升场景数, 触及 0.35 之对数, 待建项计数]
+    data_source: _NCA-INDEX-BACKFILL-*.jsonl（索引层回填器）
+    recalculation_base: 当刻台账（⛔ 沿用旧值）
+    limits:
+      - 以近似法计，⛔ 表述为判据已全部成立
+      - d 之计算须用 DCD-COG-ALIGN-001 引擎，⛔ 自造算法与权重
+    naming_rule: 一律写 LC- 前缀；⛔ 与链验器 L-1~L-3（链完整性）混用
+
+appendix_b_mapping:
+  - {report_field: nca_id, state: DIRECT, schema_field: reg.nca_id／doc.nca_id}
+  - {report_field: timestamp, state: DIRECT, schema_field: reg.timestamp／doc.timestamp}
+  - {report_field: hash, state: DIRECT, schema_field: 'doc.artifacts[].sha256_16 ＋ reg.self_sha256_16'}
+  - {report_field: actor, state: DIRECT, schema_field: doc.actor, note: 零角色名零真名}
+  - {report_field: six_element_flags, state: DERIVED, schema_field: 件内六要素文本块, method: 逐项匹配生成位图，重算基准＝当刻件体}
+  - {report_field: fuse_events, state: PENDING, schema_field: '无', method: 待建熔断事件集，⛔ 以 operation_type 冒充}
+  - {report_field: anchor_status, state: PENDING, schema_field: 'doc.data_provenance 仅 real/simulated', method: 三态 ANCHORED_SIM／ANCHORED_REAL／NONE 无载体}
+  - {report_field: compound_links, state: PENDING, schema_field: '无', method: 化合父子关系无字段}
+  - {report_field: scene_boundary_ref, state: PENDING, schema_field: as.scene_quantum_ref, method: 现只能以场景词近似}
+  - {report_field: asset_class, state: PENDING, schema_field: as.asset_class, method: 口径在册、字段未建}
+  - {report_field: cog_distance_d, state: PENDING, schema_field: as.cog_distance_d, method: 需引擎与序列载体}
+
+appendix_b_iron_rule: 非直取字段必带 DERIVED 标记与算法注；PENDING 一律写「待建」，⛔ 写 0
+
+evidence_block:
+  six_elements: [目标函数, 约束矩阵, 先验分布, 配置权边界, 预期分配, 审计轨迹]
+  seventh_slot:
+    name: 入链哈希位
+    is_six_element: false
+    note: ⭐ 第七附加位，⛔ 读作六要素有七项
+  six_element_source_rule: 成文时须加脚注注出处，⛔ 凭记忆写
+
+appendix_a_caliber:
+  fields: [精确定义, 计算方式, 阈值来源, 口径变更历史]
+  iron_rule: 口径变更不回填、不追溯重算，只在变更处标注
+
+open_items:
+  - {item: 四字段待建（fuse_events／anchor_status／compound_links／scene_boundary_ref）, state: PENDING, phase: 期二}
+  - {item: d 之漂移阈值, state: 待定, note: ⛔ 本侧不擅补}
+  - {item: 模板有效性, state: DRAFT, note: ⛔ 生效、未用于任何真实报告}
+  - {item: 独立第三方审查, state: 未发生, note: 本侧自审，⛔ 读作已过第三方审查}
+  - {item: 生成器 pipeline, state: 期二 B-2, note: 本件只定模板与字段}
+
+non_goals:
+  - 报告数字替代台账权威（层级不同）
+  - 以「自动」表述半自动
+  - 估算值充维度
+  - 回填历史
+  - 对外
+
+revision:
+  mode: append-only
+  conflict_rule: 人读版为准

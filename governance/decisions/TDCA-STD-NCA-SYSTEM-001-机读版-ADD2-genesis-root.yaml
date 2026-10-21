@@ -1,0 +1,56 @@
+# TDCA-STD-NCA-SYSTEM-001 机读版 · ADD2（追加：genesis_root 与封块规则）
+# ⚠️ 本件为「追加件」：⛔ 不改原机读件（GSEQ-5657）、⛔ 不改 ADD1、⛔ 改记录层 40 字段。
+annex_to: 'TDCA-STD-NCA-SYSTEM-001（机读版）'
+annex_chain:
+  - '机读版（原）'
+  - '机读版-ADD1（红线补注）'
+  - '机读版-ADD2（本件：genesis_root 与封块规则）'
+version: 'V0.1-ADD2'
+date: '2026-10-22'
+status: 'EFFECTIVE-BY-FOUNDER-DIRECTIVE'
+directive:
+  founder_verbatim: '后续官方 NCA 以此为根，按照今天指定的 NCA 制度实行'
+  on: '2026-10-22'
+  scope: '后续全部官方 NCA'
+
+block_layer:
+  genesis_root:
+    block_id: 'TDCA-NCA-GENESIS-20261022-001'
+    public_block_id: 'TDCA-GENESIS-BLOCK-001'
+    root_sha256: 'fd906b403e6a26f4a93621cbc134e2f7697687ceeb47471f0a3543de5b2d9775'
+    root_16: 'FD906B403E6A26F4'
+    merkle_depth: 13
+    covered: 'GSEQ-0001~GSEQ-5663'
+    records: 5662
+    signed_by: '创始人本人（Signed-By 真名，⛔ 对外显示姓名）'
+    signed_at: '2026-10-22'
+    signed_gseq: ['GSEQ-5664', 'GSEQ-5665']
+    signoff_doc: 'TDCA-SIGNOFF-NCA-GENESIS-001'
+  rules:
+    - 'genesis_root 属区块层字段；⛔ 进记录层 40 字段（记录层不改不增）'
+    - '后续官方式封块 prev_block_hash 填创世根（或其直接前块之根）；GENESIS 仅创世块自用'
+    - '任一官方 NCA 沿链可回溯至创世块（可核·可审计·可举证）'
+    - '封块算法与创世块同一规范，任何人可复算'
+  algorithm: 'merkle-sha256/leaf=sha256(file-bytes)/pair=sha256(hexbytes a + hexbytes b)/odd=dup-last/v1'
+  missing_leaf_rule: 'leaf = SHA-256("MISSING:{gseq}") —— ⛔ 跳过（跳过则根不稳）'
+
+record_layer:
+  schema_fields: 40
+  change: 'NONE'
+  note: '记录层 40 字段（含 stage_space／flow_stage／action_type 三元）一律照 V0.2-ADD2，不由本件增删'
+
+effective_means:
+  carried_out: true
+  signed: false
+  signed_note: '制度标准两件签批位仍 Pending；⛔ 本侧代签，需创始人一句即落笔'
+  public_disclosure: false
+  public_note: '对外另须明示'
+
+immutable:
+  - '⛔ 回改创世块'
+  - '⛔ 改创世根'
+  - '⛔ 在创世块内追加'
+  - '⛔ 记录层加字段'
+
+long_tail:
+  rule: '《身份可信等级认定条例》V0.4 第 20 条（惯例或实例裁）'
