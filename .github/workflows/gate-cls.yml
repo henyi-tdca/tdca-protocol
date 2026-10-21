@@ -24,6 +24,7 @@ jobs:
           if [ -f tdca-cls/requirements.txt ]; then pip install -r tdca-cls/requirements.txt; fi
       - name: 跑测试
         env:
-          PYTHONPATH: ${{ github.workspace }}
+          # L1SI163-WO-5：注入仓内 tdca-microtax（tdca_cls.adapters 之 microtax 只读复用）
+          PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/true-source/tdca-web/tdca-microtax
         working-directory: tdca-cls
         run: python -m pytest -q
