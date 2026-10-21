@@ -1,0 +1,7 @@
+# TDCA Web Gateway 依赖清单
+# 制度锚定: L1SI163-WO-1（gate-gateway 依赖补齐·RETURN-20261021-025-B）
+# 与 tdca-ns-ops/tdca-sbx-ops backend 同版锁定
+fastapi==0.141.1
+httpx>=0.27
+uvicorn>=0.30
+sqlalchemy>=2.0
