@@ -76,6 +76,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/review', title: '评审（缔约审核）', layer: 'L0', dataSource: '/api/site/join/*（只读队列＋审核写端点）', permission: '须登录＋审核身份（写令牌校验）', description: '缔约申请评审队列：放行／谢绝留痕；每次放行复核敏感词清单，触负即 409 拦截并留痕。' },
   // L1SI162-RULES-MAP-001：制度地图（56 件五类五态六步·页面与检索共读随件机读表 V6.1·0C0FE95560264A8E）
   { path: '/rules', title: '制度地图', layer: 'L0', dataSource: '机读表 _DOC-MAP-RULES-20261021-V6.1-FINAL（仓内单源·?raw 进包）', permission: '公开', description: '56 件制度件按五类分组、五态如实标、S1~S6 六步导航；历史草案折入折叠区，以生效版为准。' },
+  // L1SI163-START-001：新手指引（六步＋目录筛四维＋147 术语检索·页面与检索共读 _START-MAP-20261021-V1·0CE5C89A957B6B60）
+  { path: '/start', title: '新手指引 · 六步上手 TDCA', layer: 'L0', dataSource: '_START-MAP 三表（单一事实源·仓内单源 ?raw 进包）', permission: '公开', description: 'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -136,6 +138,8 @@ import { MeAppealPage } from './me-appeal'
 import { ReviewPage } from './review'
 // L1SI162-RULES-MAP-001：制度地图 /rules（五类五态六步·机读表单一源）
 import { RulesMapPage } from './rules/rules'
+// L1SI163-START-001：新手指引 /start（六步＋检索批3·_START-MAP 单一事实源）
+import { StartPage } from './start/start'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -186,6 +190,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/me/appeal': MeAppealPage,
   '/review': ReviewPage,
   '/rules': RulesMapPage,
+  '/start': StartPage,
 }
 
 export function renderPage(meta: PageMeta) {

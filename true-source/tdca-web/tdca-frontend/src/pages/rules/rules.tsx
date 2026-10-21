@@ -96,7 +96,15 @@ function DocRow({ item }: { item: DocMapItem }) {
 }
 
 export function RulesMapPage() {
-  const items = useMemo(() => parseDocMapItems(docMapYaml), [])
+  // M-4：解析 try/catch 兜底——表坏显示提示＋骨架，⛔ 白屏
+  const [parsed] = useState<{ items: DocMapItem[]; error: boolean }>(() => {
+    try {
+      return { items: parseDocMapItems(docMapYaml), error: false }
+    } catch {
+      return { items: [], error: true }
+    }
+  })
+  const items = parsed.items
   const [stepFilter, setStepFilter] = useState<string | null>(null)
 
   const visible = useMemo(() => items.filter((i) => i.page_visible), [items])
@@ -143,7 +151,7 @@ export function RulesMapPage() {
   return (
     <PageShell
       title="制度地图"
-      dataSource="GET /api/site/docs 族面＋机读表 _DOC-MAP-RULES-20261021-V6.1-FINAL（页面与检索同一源）"
+      dataSource="机读表 _DOC-MAP-RULES-20261021-V6.1-FINAL（页面与检索同一源·仓内单源 ?raw 进包）"
       permission="公开"
       description="56 件制度件按五类分组、五态如实标、S1~S6 六步导航；五态与版本以在册机读表为唯一口径。"
     >
@@ -164,9 +172,21 @@ export function RulesMapPage() {
             className={`rounded px-2 py-1 text-xs ${stepFilter === s ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700'}`}
           >
             {s} {DOC_MAP_STEP_LABELS[s]}
+            {GAP_STEPS.includes(s) && (
+              <span data-testid={`step-gap-${s}`} className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">
+                待补
+              </span>
+            )}
           </button>
         ))}
       </div>
+
+      {/* M-4：解析失败兜底提示（骨架保留：六步导航与空表仍在） */}
+      {parsed.error && (
+        <div data-testid="load-error" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+          本次数据加载失败，请稍后重试
+        </div>
+      )}
 
       {/* §五：S5/S6 待补横幅＋相邻件 */}
       {stepFilter && GAP_STEPS.includes(stepFilter) && (
@@ -174,7 +194,7 @@ export function RulesMapPage() {
           <strong>待补</strong>：{stepFilter} {DOC_MAP_STEP_LABELS[stepFilter]} 为内容缺口，本步制度件尚在补足途中（⛔ 不以草案充数）。
           {adjacent.length > 0 && (
             <span className="mt-1 block text-xs">
-              相邻件（S4／S6 侧）挂接 {adjacent.length} 件，见下表（含相邻步标签者）。
+              相邻件（本步前两步 ＋ 后一步）挂接 {adjacent.length} 件，见下表（含相邻步标签者）。
             </span>
           )}
         </div>
