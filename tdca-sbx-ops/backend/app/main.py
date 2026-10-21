@@ -31,7 +31,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routes import activation, cbdc, chem, dsa, flow, genie, genie_callback, nca, nsops, phase, sandboxes, sright, trinity
+from .routes import activation, cbdc, chem, dsa, flow, genie, genie_callback, nca, nsops, phase, sandboxes, sandbox_feed, sright, trinity
 from .seed import seed_if_empty
 
 
@@ -80,6 +80,7 @@ app.include_router(phase.router)     # M3-3: 联动层 PhaseMachine 阶段推进
 app.include_router(genie_callback.router)  # M3-4: 联动层 效用精灵深度对接（GE-IF-001）
 app.include_router(cbdc.router)       # M3-5: 联动层 数字人民币 MOU 锚定（CB-IF-001）
 app.include_router(dsa.router)        # M3-6: 联动层 DSA 状态机扩展（SBX-SUSPENDED/BANNED）
+app.include_router(sandbox_feed.router)  # M3-7: 沙盒四维取数只读接口（NCA-SANDBOX-FEED-001·审计八维 3.2~3.5 供数）
 
 
 @app.get("/", tags=["健康"])
