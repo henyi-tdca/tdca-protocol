@@ -29,6 +29,10 @@ os.environ["DATABASE_URL"] = "sqlite:///" + (_TMP / "test.db").as_posix()
 # 闸可开（缺省语义＝闸关闭由 gap_c 专项用例直测；⛔ 硬编码进业务代码，仅测试配置）。
 os.environ.setdefault("TDCA_UTILITY_DEPOSIT_MIN_MOU", "1")
 
+# GO-LIVE-001 收口附页 §二步6b：注册开关——测试态默认开（既有套件验开放逻辑），
+# 开关专项用例以 monkeypatch 拨 0 直测收口语义（生产缺省 0=关，部署配置另落）。
+os.environ.setdefault("TDCA_AGENT_REG_OPEN", "1")
+
 _EIOS = _WS / "tdca-eios"
 if str(_EIOS) not in sys.path:
     sys.path.insert(0, str(_EIOS))

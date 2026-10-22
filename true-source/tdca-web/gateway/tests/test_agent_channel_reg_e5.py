@@ -28,8 +28,11 @@ _SEQ = {"n": 0}
 @pytest.fixture(autouse=True)
 def _reset_rate_limit():
     agent_channel_ops._chreg_hits.clear()
+    import api_v1
+    api_v1._register_hits.clear()   # 开关新测增 _auth 调用：auth 注册频控逐测同清
     yield
     agent_channel_ops._chreg_hits.clear()
+    api_v1._register_hits.clear()
 
 
 def _auth(uname: str | None = None) -> dict:
@@ -264,3 +267,33 @@ def test_e6_middleware_exempt_anchor_still_endpoint_401():
         assert "error" not in body                      # ⛔ 非中间件 401 形态
     finally:
         os.environ.pop("TDCA_GATEWAY_AUTH", None)
+
+
+# ------------------------------------------- GO-LIVE-001 步6b · 注册开关（默认关）
+def test_reg_switch_closed_blocks_anon_but_not_session(monkeypatch):
+    """开关 0（缺省）：匿名 GUEST → 403 TDCA-E-GOV-PERM-003；会话 ANCHOR 照常 201。"""
+    monkeypatch.delenv("TDCA_AGENT_REG_OPEN", raising=False)   # 缺省=0（关）
+    r = client.post("/api/v1/agent-channel/register", json=_guest_body("sw-closed"))
+    assert r.status_code == 403, r.text[:300]
+    assert "TDCA-E-GOV-PERM-003" in r.text and "通道尚未开放登记" in r.text
+    # 内部账号走会话路不受开关影响
+    hdr = _auth()
+    r = client.post("/api/v1/agent-channel/register",
+                    json=_anchor_body("sw-closed-anchor"), headers=hdr)
+    assert r.status_code == 201, r.text[:300]
+
+
+def test_reg_switch_open_restores_guest_then_close_again(monkeypatch):
+    """开关 1：匿名 GUEST 照现有逻辑 201；改回 0 再拒（验完即改回之测试内等价）。"""
+    monkeypatch.setenv("TDCA_AGENT_REG_OPEN", "1")
+    r = client.post("/api/v1/agent-channel/register", json=_guest_body("sw-open"))
+    assert r.status_code == 201, r.text[:300]
+    assert r.json()["data"]["channel_type"] == "GUEST"
+    monkeypatch.setenv("TDCA_AGENT_REG_OPEN", "0")
+    r = client.post("/api/v1/agent-channel/register", json=_guest_body("sw-reclosed"))
+    assert r.status_code == 403 and "TDCA-E-GOV-PERM-003" in r.text
+    # 会话路两态皆通（开态已验 201 于上测试；此处验关态）
+    hdr = _auth()
+    r = client.post("/api/v1/agent-channel/register",
+                    json=_anchor_body("sw-reclosed-anchor"), headers=hdr)
+    assert r.status_code == 201, r.text[:300]
