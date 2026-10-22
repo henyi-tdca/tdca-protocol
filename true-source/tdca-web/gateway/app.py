@@ -175,6 +175,12 @@ app.include_router(agent_channel_promo_router)
 from agent_channel_deposit_ops import router as agent_channel_deposit_router  # noqa: E402
 app.include_router(agent_channel_deposit_router)
 
+# A-30: 智能体通道 对外补齐 D（L1SI166-CHANNEL-GAP-001 项 D——履约保证保险挂接：
+# 保单登记＋转正前置 fail-closed［无有效保单拒转正］＋漏洞损失申报入口落 NCA
+# ［状态 INSURED 照在册保险规则］；⛔ 不改 channel_type，转正只作事件记录）
+from agent_channel_insurance_ops import router as agent_channel_insurance_router  # noqa: E402
+app.include_router(agent_channel_insurance_router)
+
 # A-27: 公开只读制度件取得面（丙案 · L1SI151-PUBLIC-ROUTE-001——/api/public/docs/* 匿名只读
 # 已入站公开件；只读容器件单一事实源；fail-closed；旧 /api/site/docs 为同一实现之别名）
 from public_docs_ops import router as public_docs_router  # noqa: E402
