@@ -35,7 +35,11 @@ SESSION_TTL_HOURS = 2
 _PBKDF2_ITERATIONS = 120000
 
 # 写操作豁免路径（登录/登出/注册自身）
-_AUTH_EXEMPT = ("/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/register")
+# 块 E GUEST 小门（L1SI167-AGENT-REG-UI-001-001）：/agent-channel/register 豁免中间件——
+# GUEST 路本就面向未入网外部创建者（端点内合规前置校验+5/h 频控）；ANCHOR 路在端点内
+# 仍须人类会话（_require_session_user，fail-closed 401 未登录），此处豁免不产生旁路。
+_AUTH_EXEMPT = ("/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/register",
+                "/api/v1/agent-channel/register")
 _SENSITIVE_PREFIXES = ("/governance", "/api/v1/governance")
 _SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
