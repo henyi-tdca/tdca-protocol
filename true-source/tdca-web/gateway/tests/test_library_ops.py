@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """内容区文库测试（/api/v1/library/*——A-22）。
 
-验收映射：① 无会话 401（fail-closed）
+验收映射：① 匿名口径按 _OPEN_FAMILIES 分流：families 清单／cop-library／terms
+          匿名 200（COP-LIB-OPEN-001／TERMS-OPEN-001），whitepaper 等未开放族
+          匿名 401（fail-closed）
           ② family 闭集机验（越界 404）
           ③ 件目/正文只读（docs 表实读；标题与正文逐字一致）
           ④ docs 表缺失 → 503 fail-closed（不崩溃）
@@ -65,8 +67,11 @@ def _docs_table():
     conn.close()
 
 
-def test_no_session_401():
-    assert client.get("/api/v1/library/families").status_code == 401
+def test_closed_families_401_and_open_families_200(_docs_table):
+    """匿名口径分流（COP-LIB-OPEN-001／TERMS-OPEN-001）：开放族 200，未开放族 401。"""
+    assert client.get("/api/v1/library/families").status_code == 200
+    assert client.get("/api/v1/library/cop-library").status_code == 200
+    assert client.get("/api/v1/library/terms").status_code == 200
     assert client.get("/api/v1/library/whitepaper").status_code == 401
 
 
