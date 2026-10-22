@@ -70,28 +70,36 @@ def _event_no() -> str:
 
 def _add_event(s, reg_no: str, action: str, amount_mou: int, actor: str,
                mou_ref: str, pool: str, note: str, nca_action: str) -> dict:
-    """四态事件落账（共用）：存证先于生效（fail-closed：存证失败操作不生效）。"""
+    """四态事件落账（共用）：存证先于生效（fail-closed：存证失败操作不生效）。
+
+    GO-LIVE-001 收口附页 §三：无收款通道 ⟹ 押付实为记账——data_provenance
+    一律 simulated（⛔ real），NCA 存证同标 simulated；mou_ref 留空／INTERNAL-DEMO，
+    ⛔ 编造流水号；对外口径只称「已记账」，⛔ 称「已收押金」。
+    """
     nca_ref = _nca_append(nca_action, actor,
                           artifact_path=f"agent-channel:{reg_no}/deposit:{action}",
-                          prov="real")
+                          prov="simulated")
     now = _utc()
     event_no = _event_no()
     s.add(M.SiteAgentUtilityDeposit(
         event_no=event_no, reg_no=reg_no, action=action, amount_mou=amount_mou,
         mou_ref=mou_ref or None, pool=pool or None, note=note or None, actor=actor,
-        nca_ref=nca_ref, data_provenance="real", created_at=now))
+        nca_ref=nca_ref, data_provenance="simulated", created_at=now))
     return {"event_no": event_no, "nca_ref": nca_ref, "ts": now}
 
 
 class DepositPayReq(BaseModel):
     model_config = ConfigDict(extra="forbid")
     amount_mou: int = 0
-    mou_ref: str = ""        # MOU 折算依据引用（必填：计量非凭空）
+    mou_ref: str = ""        # MOU 折算依据引用（无收款通道：留空／INTERNAL-DEMO，⛔ 编造流水号）
 
 
 @router.post("/{reg_no}/deposits", status_code=201)
 def pay_deposit(reg_no: str, req: DepositPayReq, request: Request):
-    """效用保金押付（人类会话内；仅登记主体本人；⛔ 智能体不得代付代持）。"""
+    """效用保金押付（人类会话内；仅登记主体本人；⛔ 智能体不得代付代持）。
+
+    记账口径（收口附页 §三）：无收款通道 ⟹ 押付记 simulated 账，⛔ 称已收押金。
+    """
     v = _require_session_user(request)
     actor = v["username"]
     with get_session() as s:
@@ -100,8 +108,6 @@ def pay_deposit(reg_no: str, req: DepositPayReq, request: Request):
             raise HTTPException(403, "人类签名权不可绕：仅登记主体本人可押付其效用保金")
         if req.amount_mou <= 0:
             raise HTTPException(400, "押付金额须为正整数（MOU 计量，fail-closed）")
-        if not req.mou_ref.strip():
-            raise HTTPException(400, "须载 MOU 折算依据引用（mou_ref，计量非凭空）")
     with get_sessionmaker().begin() as s:
         ev = _add_event(s, reg_no, "paid", req.amount_mou, actor,
                         req.mou_ref.strip(), "", "", "AGENT_CHANNEL_DEPOSIT_PAID")
@@ -110,8 +116,9 @@ def pay_deposit(reg_no: str, req: DepositPayReq, request: Request):
     return _nca_watermark({
         "paid": True, "reg_no": reg_no, "amount_mou": req.amount_mou,
         "effective_mou": bal, **ev,
-        "note": "押付落账：有效保金＝Σ押付−Σ没收−Σ退还；沙盒准入判据读配置"
-                f"（{_MIN_MOU_ENV}）"}, nature="real")
+        "note": "押付记账（SIMULATED 水印：无收款通道，押付为记账 ⛔ 称已收押金）："
+                "有效保金＝Σ押付−Σ没收−Σ退还；沙盒准入判据读配置"
+                f"（{_MIN_MOU_ENV}）"}, nature="simulated")
 
 
 class DepositActionReq(BaseModel):
@@ -163,9 +170,9 @@ def deposit_action(reg_no: str, req: DepositActionReq, request: Request):
     return _nca_watermark({
         "action": action, "zh": zh, "reg_no": reg_no, "amount_mou": req.amount_mou,
         "effective_mou": bal, **ev,
-        "note": f"保金{zh}落账；" + ("没收金额入保险金池（在册保险金机制同向）"
-                                   if action == "confiscated" else "冻结单列记账不减有效额")},
-        nature="real")
+        "note": f"保金{zh}记账（SIMULATED 水印）；" + ("没收金额入保险金池（在册保险金机制同向）"
+                                              if action == "confiscated" else "冻结单列记账不减有效额")},
+        nature="simulated")
 
 
 @router.get("/{reg_no}/deposits")
@@ -185,5 +192,6 @@ def deposit_state(reg_no: str, request: Request):
         "reg_no": reg_no, "channel_type": row.channel_type,
         "effective_mou": eff, "frozen_mou": frz,
         "events": events, "required_min_mou": required_min_mou(),
-        "note": "有效保金＝Σ押付−Σ没收−Σ退还；冻结单列；阈值读配置（None=闸关）"},
-        nature="real")
+        "note": "有效保金＝Σ押付−Σ没收−Σ退还；冻结单列；阈值读配置（None=闸关）；"
+                "本表记账为 SIMULATED 口径（无收款通道，⛔ 称已收押金）"},
+        nature="simulated")

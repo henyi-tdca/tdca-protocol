@@ -139,12 +139,15 @@ def test_pay_positive_event_and_nca():
     assert d["paid"] is True and d["amount_mou"] == 10
     assert d["effective_mou"] == 10                      # Σ押付−Σ没收−Σ退还
     assert d["event_no"].startswith("SUD-") and d["nca_ref"]
+    assert r.json()["data_nature"] == "simulated"        # 记账口径（收口附页 §三）
     with get_session() as s:
         row = s.get(M.SiteAgentUtilityDeposit, d["event_no"])
         assert row is not None and row.action == "paid" and row.amount_mou == 10
         assert row.actor == who and row.mou_ref == "mou://gapc/1"
+        assert row.data_provenance == "simulated"        # ⛔ 写 real（无收款通道）
         nca = s.get(M.NcaChain, d["nca_ref"])
         assert nca is not None and nca.action == "AGENT_CHANNEL_DEPOSIT_PAID"
+        assert nca.data_provenance == "simulated"
 
 
 # ---------------------------------------------------------------- C-2 权限
@@ -165,15 +168,23 @@ def test_pay_fail_closed_amount_and_mou_ref():
     _, hdr = _auth()
     reg_no = _register(hdr)
     for body in ({"amount_mou": 0, "mou_ref": "mou://gapc/1"},
-                 {"amount_mou": -5, "mou_ref": "mou://gapc/1"},
-                 {"amount_mou": 5, "mou_ref": "  "},
-                 {"amount_mou": 5}):
+                 {"amount_mou": -5, "mou_ref": "mou://gapc/1"}):
         r = client.post(f"/api/v1/agent-channel/{reg_no}/deposits", json=body, headers=hdr)
         assert r.status_code == 400, (body, r.text[:300])
     r = client.post(f"/api/v1/agent-channel/{reg_no}/deposits",
                     json={"amount_mou": 5, "mou_ref": "mou://gapc/1",
                           "surprise": 1}, headers=hdr)   # extra=forbid
     assert r.status_code == 422
+    # mou_ref 留空照记（收口附页 §三：无真实凭据 ⟹ 留空／INTERNAL-DEMO，⛔ 编造流水号）
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/deposits",
+                    json={"amount_mou": 5}, headers=hdr)
+    assert r.status_code == 201, r.text[:300]
+    with get_session() as s:
+        row = s.get(M.SiteAgentUtilityDeposit, r.json()["data"]["event_no"])
+        assert row.mou_ref is None and row.data_provenance == "simulated"
+    # INTERNAL-DEMO 为在册演示引用
+    r = _pay(reg_no, hdr, amount=5, mou_ref="INTERNAL-DEMO")
+    assert r.status_code == 201
 
 
 # ---------------------------------------------------------------- C-4 三态处置
