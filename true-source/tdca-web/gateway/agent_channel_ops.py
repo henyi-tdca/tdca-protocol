@@ -21,6 +21,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import os
 import secrets
 import time
 import uuid
@@ -271,6 +272,15 @@ def register_agent(req: RegisterReq, request: Request):
     ip = _client_ip(request)
     if not _chreg_rate_ok(ip, ct):
         raise HTTPException(429, f"登记过于频繁（{ct} 路每 IP 每小时 ≤{_CHREG_MAX[ct]} 次），请稍后再试")
+    # GO-LIVE-001 收口附页 §二步6b：注册开关 TDCA_AGENT_REG_OPEN（默认 0=关）。
+    # 0 ⟹ 匿名/外部路 403 TDCA-E-GOV-PERM-003「通道尚未开放登记」；
+    # 人类会话路（ANCHOR 内部账号）不受开关影响、两态皆通；1 ⟹ 照现有逻辑全量。
+    if os.environ.get("TDCA_AGENT_REG_OPEN", "0").strip() != "1":
+        try:
+            _require_session_user(request)
+        except HTTPException:
+            raise HTTPException(403, "TDCA-E-GOV-PERM-003: 通道尚未开放登记"
+                                     "（内部开通期：外部登记收口；内部账号走会话路照常）")
     # 六要素逐项点名（第8条第1款，恰6项；⛔ 静默落成幽灵态）
     missing = [zh for k, zh in SIX_ELEMENT_FIELDS if not getattr(req, k).strip()]
     if missing:
