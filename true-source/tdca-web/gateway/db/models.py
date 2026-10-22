@@ -778,6 +778,37 @@ class SiteAgentPromoToken(Base):
     )
 
 
+class SiteAgentUtilityDeposit(Base):
+    """41. 站点智能体通道·效用保金事件账（对外补齐 C 项；裁定 TDCA-RULING-L1SI166-GUEST-THREE-001 项三之 2／Q-2）。
+
+    四态事件账：押付 paid／冻结 frozen／没收 confiscated／退还 refunded，逐笔落行；
+    当前有效保金＝Σpaid−Σconfiscated−Σrefunded（冻结单列记账、⛔ 不减有效额）；
+    进沙盒须先押付有效保金（无有效保金 ⟹ fail-closed 拒入盒，与六步硬序同向叠加、
+    ⛔ 不造旁路）；没收权在人类裁决（founder 会话），没收金额入**保险金池**
+    （在册保险金机制同向，⛔ 另起一套）；金额一律 MOU 折算（mou_ref 载折算依据引用）；
+    准入阈值读配置（TDCA_UTILITY_DEPOSIT_MIN_MOU），⛔ 硬编码。
+    """
+
+    __tablename__ = "site_agent_utility_deposit"
+    event_no: Mapped[str] = mapped_column(Text, primary_key=True)   # SUD-＋12 位大写十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    action: Mapped[str] = mapped_column(Text, nullable=False)       # paid|frozen|confiscated|refunded
+    amount_mou: Mapped[int] = mapped_column(Integer, nullable=False)
+    mou_ref: Mapped[str | None] = mapped_column(Text)               # MOU 折算依据引用（押付必填）
+    pool: Mapped[str | None] = mapped_column(Text)                  # 没收去向（保险金池）
+    note: Mapped[str | None] = mapped_column(Text)
+    actor: Mapped[str] = mapped_column(Text, nullable=False)        # 操作人类账户
+    nca_ref: Mapped[str | None] = mapped_column(Text)               # 存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("action IN ('paid','frozen','confiscated','refunded')",
+                        name="ck_site_agent_utility_deposit_action"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_utility_deposit_prov"),
+        Index("idx_site_agent_utility_deposit_reg", "reg_no"),
+    )
+
+
 class SiteAgentAdmission(Base):
     """34. 站点智能体通道·闸步表（批 2：六步硬序之状态机落点，①③④ 批 2 接真、⑤批 3）。
 

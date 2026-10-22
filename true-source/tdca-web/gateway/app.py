@@ -168,6 +168,13 @@ app.include_router(agent_channel_ops_router)
 from agent_channel_promo_ops import router as agent_channel_promo_router  # noqa: E402
 app.include_router(agent_channel_promo_router)
 
+# A-29: 智能体通道 对外补齐 C（L1SI166-CHANNEL-GAP-001 项 C——效用保金：四态事件账
+# paid/frozen/confiscated/refunded；有效额＝Σ押付−Σ没收−Σ退还，冻结单列不减；没收权在
+# founder 人类裁决且入保险金池；金额 MOU 折算；进沙盒须先押付有效保金——fail-closed 闸
+# 读配置 TDCA_UTILITY_DEPOSIT_MIN_MOU，缺省即关闭；与六步硬序同向叠加、⛔ 不造旁路）
+from agent_channel_deposit_ops import router as agent_channel_deposit_router  # noqa: E402
+app.include_router(agent_channel_deposit_router)
+
 # A-27: 公开只读制度件取得面（丙案 · L1SI151-PUBLIC-ROUTE-001——/api/public/docs/* 匿名只读
 # 已入站公开件；只读容器件单一事实源；fail-closed；旧 /api/site/docs 为同一实现之别名）
 from public_docs_ops import router as public_docs_router  # noqa: E402

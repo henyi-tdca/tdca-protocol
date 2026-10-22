@@ -67,7 +67,13 @@ def _register(hdr: dict) -> str:
                           "knowledge": "B路知识-x", "permission_ttl": "B路权限时效-x",
                           "root_token_ref": "root-token://gapb/1"}, headers=hdr)
     assert r.status_code == 201, r.text[:300]
-    return r.json()["data"]["reg_no"]
+    reg_no = r.json()["data"]["reg_no"]
+    # 对外补齐 C（L1SI166-CHANNEL-GAP-001 项 C）：进沙盒须先押付有效保金——登记即
+    # 代押测试保金，使后续沙盒步可达（阈值 1 MOU，见 conftest 配置）。
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/deposits",
+                    json={"amount_mou": 5, "mou_ref": "mou://test/x"}, headers=hdr)
+    assert r.status_code == 201, r.text[:300]
+    return reg_no
 
 
 def _chain_to_sandbox(hdr: dict, reg_no: str) -> str:
