@@ -111,3 +111,13 @@ def _public_ids_fresh():
     selfcheck_ops._PUBLIC_IDS = fresh
     yield fresh
     selfcheck_ops._PUBLIC_IDS = orig
+
+
+@pytest.fixture(autouse=True)
+def _chreg_rate_fresh():
+    """块 E 登记频控内存窗逐测清零（同进程多测试文件共用 TestClient IP，
+    不清零会假性触限 429——频控阈值面向真实单客户端，⛔ 让测试间互相污染）。"""
+    import agent_channel_ops
+    agent_channel_ops._chreg_hits.clear()
+    yield
+    agent_channel_ops._chreg_hits.clear()

@@ -74,9 +74,19 @@ def _founder() -> dict:
     return {"Authorization": r.json()["data"]["token"]}
 
 
-def _register(hdr: dict) -> str:
+_REG_SEQ = {"n": 0}
+
+
+def _register(hdr: dict, tag: str | None = None) -> str:
+    if tag is None:
+        _REG_SEQ["n"] += 1
+        tag = f"b4-{_REG_SEQ['n']:03d}"
     r = client.post("/api/v1/agent-channel/register",
-                    json={"six_elements_ref": "six-elements://b4/0001"}, headers=hdr)
+                    json={"channel_type": "ANCHOR",
+                          "device": f"测试设备-{tag}", "compute": "测试算力-x",
+                          "protocol": "测试协议-x", "role": "测试角色-x",
+                          "knowledge": "测试知识-x", "permission_ttl": "测试权限时效-x",
+                          "root_token_ref": "root-token://test/1"}, headers=hdr)
     assert r.status_code == 201, r.text[:300]
     return r.json()["data"]["reg_no"]
 
