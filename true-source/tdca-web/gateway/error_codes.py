@@ -101,7 +101,13 @@ async def tdca_http_exception_handler(request: Any, exc: Any) -> Any:
     """HTTPException（含 Starlette）→ 原 detail ＋ code。head=原样。"""
     from fastapi.responses import JSONResponse
     code = classify(getattr(exc, "status_code", None), getattr(exc, "detail", None))
-    return JSONResponse({"detail": exc.detail, "code": code},
+    detail = getattr(exc, "detail", None)
+    # P0 处置令（SITE-WALK-001 §二.3）：仅 404 框架默认文案加区分线索，
+    # code 由上方 classify 按原文判定（保持不变），只加 detail 措辞。
+    if getattr(exc, "status_code", None) == 404 and isinstance(detail, str) \
+            and detail == "Not Found":
+        detail = "Not Found（该端点未上线或不存在）"
+    return JSONResponse({"detail": detail, "code": code},
                         status_code=exc.status_code, headers=getattr(exc, "headers", None))
 
 
