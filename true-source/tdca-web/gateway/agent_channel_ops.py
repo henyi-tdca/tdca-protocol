@@ -22,6 +22,7 @@ import asyncio
 import hashlib
 import json
 import secrets
+import time
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -32,7 +33,7 @@ from pydantic import BaseModel, ConfigDict
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
-                    _require_session_user, _utc)
+                    _require_session_user, _client_ip, _utc)
 from api_v1 import (CONTRACT_ID, CONTRACT_VERSION,  # noqa: E402
                     CONTRACT_ZH_SHA256, CONTRACT_EN_SHA256, CONTRACT_JSON_SHA256)
 
@@ -192,42 +193,202 @@ def _anchor_valid(s, owner_username: str) -> bool:
 
 
 class RegisterReq(BaseModel):
+    """智能体自助登记请求（块 E-2：字段中文名照《智能体定义条例》原文，机读键名自定随回报）。
+
+    创世六要素（第8条第1款，恰6项）：device 设备／compute 算力／protocol 协议／
+    role 角色／knowledge 知识／permission_ttl 权限时效；
+    锚定项（第8条第2款，单列、不计入六要素）：anchor_account 锚定之人类账户 ＋
+    root_token_ref 根令牌引用；多创建者余者列 participants 资产配置参与方
+    （单一责任锚点＝锚定之人类账户，组织须递归至可追责之人，第8条第3款）；
+    派生登记（第10条再登记）：derived=True 时 source_lineage 来源谱系必填；
+    两路（第9条＋E-5 分流首问）：channel_type=ANCHOR（原生，须人类会话）／
+    GUEST（非原生，随调用提交 agent_card＋外部创建者声明，合规前置校验通过才发号）。
+    """
+
     model_config = ConfigDict(extra="forbid")
-    six_elements_ref: str = ""    # 创世六要素引用（必填）
-    anchor_ref: str = ""          # 锚定项引用（可空）
-    tier: str = "basic"
+    channel_type: str = ""           # ANCHOR（原生）／GUEST（非原生）；分流首问二选一
+    device: str = ""                 # 设备
+    compute: str = ""                # 算力
+    protocol: str = ""               # 协议
+    role: str = ""                   # 角色
+    knowledge: str = ""              # 知识
+    permission_ttl: str = ""         # 权限时效
+    anchor_account: str = ""         # 锚定之人类账户（ANCHOR 路，缺省＝会话本人）
+    root_token_ref: str = ""         # 根令牌引用（ANCHOR 路必填；只收引用，⛔ 不收令牌值）
+    participants: list[str] = []     # 资产配置参与方（多创建者之余者；可空）
+    derived: bool = False            # 派生登记（再登记）标识
+    source_lineage: str = ""         # 来源谱系（derived=True 必填）
+    agent_card: object | None = None  # GUEST 路必填（条例第9条，JSON 对象 ≤4KB；型别校验在手工程序，与其他缺项同回 400 点名）
+    ext_declaration: str = ""        # GUEST 路必填：外部创建者声明·主体声明
+    ext_contact: str = ""            # GUEST 路必填：外部创建者声明·可核验联系方式
+
+
+# 频控（E-3.5／E-5-2.4；阈值执行侧自定、随回报）：同一 IP×路 滑动窗口；
+# GUEST 严于 ANCHOR；触限回 429（⛔ 静默丢弃）。内存态，重启清零（频控非安全唯一防线）。
+_CHREG_WINDOW_S = 3600
+_CHREG_MAX = {"ANCHOR": 30, "GUEST": 5}
+_chreg_hits: dict[str, list[float]] = {}
+
+
+def _chreg_rate_ok(ip: str, channel_type: str) -> bool:
+    now = time.time()
+    hits = [t for t in _chreg_hits.get(f"{ip}|{channel_type}", []) if now - t < _CHREG_WINDOW_S]
+    if len(hits) >= _CHREG_MAX[channel_type]:
+        _chreg_hits[f"{ip}|{channel_type}"] = hits
+        return False
+    hits.append(now)
+    _chreg_hits[f"{ip}|{channel_type}"] = hits
+    return True
+
+
+# 六要素（第8条第1款）机读键 ↔ 条例原文（回报字段清单用，⛔ 不自拟别名）
+SIX_ELEMENT_FIELDS = (
+    ("device", "设备"),
+    ("compute", "算力"),
+    ("protocol", "协议"),
+    ("role", "角色"),
+    ("knowledge", "知识"),
+    ("permission_ttl", "权限时效"),
+)
+
+
+def _idem_key(channel_type: str, six: tuple[str, ...], identity: str) -> str:
+    """幂等键（E-3.2／E-5-2.3）：channel_type＋六要素表达＋锚定身份之 sha256_16。
+    ANCHOR 身份＝锚定之人类账户；GUEST 身份＝外部声明＋联系方式之哈希（⛔ 不明文入库）。"""
+    payload = {"channel_type": channel_type, "six": list(six), "identity": identity}
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True)
+                          .encode()).hexdigest()[:16]
 
 
 @router.post("/register", status_code=201)
 def register_agent(req: RegisterReq, request: Request):
-    """智能体登记（登记即创建；唯一创建口；须人类会话——智能体不得自登）。"""
-    v = _require_session_user(request)
-    owner = v["username"]
-    if not req.six_elements_ref.strip():
-        raise HTTPException(400, "six_elements_ref 为必填（创世六要素引用）")
+    """智能体自助登记（登记即创建·唯一创建口；块 E：六要素逐项点名 fail-closed、
+    ANCHOR 须人类会话、GUEST 合规前置校验通过才发号（校验在前、发号在后）、
+    幂等复用原登记号、NCA 全程落链）。"""
+    ct = req.channel_type.strip().upper()
+    if ct not in ("ANCHOR", "GUEST"):
+        raise HTTPException(400, "channel_type 为必填，仅接受 ANCHOR／GUEST（分流首问二选一）")
+    ip = _client_ip(request)
+    if not _chreg_rate_ok(ip, ct):
+        raise HTTPException(429, f"登记过于频繁（{ct} 路每 IP 每小时 ≤{_CHREG_MAX[ct]} 次），请稍后再试")
+    # 六要素逐项点名（第8条第1款，恰6项；⛔ 静默落成幽灵态）
+    missing = [zh for k, zh in SIX_ELEMENT_FIELDS if not getattr(req, k).strip()]
+    if missing:
+        raise HTTPException(400, "创世六要素不齐（第8条第1款，恰6项），缺：" + "／".join(missing))
+    six = tuple(getattr(req, k).strip() for k, _ in SIX_ELEMENT_FIELDS)
+    if req.derived and not req.source_lineage.strip():
+        raise HTTPException(400, "派生登记（第10条再登记）须载来源谱系 source_lineage（必填）")
+    six_ref = "six-elements://itemized/" + hashlib.sha256(
+        json.dumps(six, ensure_ascii=False).encode()).hexdigest()[:12]
+    precheck_nca = precheck_at = None
+    if ct == "ANCHOR":
+        # 原生路（第9条第1款）：须人类会话（智能体不得自登），锚定项单列
+        v = _require_session_user(request)
+        owner = v["username"]
+        anchor_account = req.anchor_account.strip() or owner
+        if anchor_account != owner:
+            raise HTTPException(400, "锚定之人类账户须等于本会话账户（单一责任锚点，第8条第3款）")
+        anchor_missing = []
+        if not req.root_token_ref.strip():
+            anchor_missing.append("根令牌引用")
+        if anchor_missing:
+            raise HTTPException(400, "锚定项不齐（第8条第2款，单列不计入六要素），缺：" + "／".join(anchor_missing))
+        with get_session() as s:
+            if s.get(M.User, owner) is None:
+                raise HTTPException(403, "主体账户不存在（fail-closed）")
+            owner_display = _owner_display(s, owner)
+        identity = anchor_account
+        agent_card_json = ext_declaration = ext_contact = None
+    else:
+        # 非原生路（第9条第2款＋E-5-2）：合规前置校验——通过才发号，⛔ 先发号后校验
+        owner = None
+        owner_display = None
+        anchor_account = ""
+        pre_missing = []
+        if not req.agent_card or not isinstance(req.agent_card, dict):
+            pre_missing.append("agent_card（条例第9条，JSON 对象）")
+        elif len(json.dumps(req.agent_card, ensure_ascii=False)) > 4096:
+            pre_missing.append("agent_card 过大（≤4KB）")
+        if not req.ext_declaration.strip():
+            pre_missing.append("外部创建者声明·主体声明")
+        if not req.ext_contact.strip():
+            pre_missing.append("外部创建者声明·可核验联系方式")
+        elif len(req.ext_contact.strip()) > 256:
+            pre_missing.append("可核验联系方式过长（≤256 字符）")
+        if pre_missing:
+            raise HTTPException(400, "GUEST 合规前置校验不过（缺：" + "／".join(pre_missing) + "）")
+        decl_hash = hashlib.sha256(
+            (req.ext_declaration.strip() + "|" + req.ext_contact.strip()).encode()).hexdigest()
+        identity = decl_hash[:16]
+        # 校验在前：先落校验存证（带时间戳）——NCA 追加不依赖登记号（S-13 无冲突）
+        precheck_nca = _nca_append("AGENT_CHANNEL_GUEST_PRECHECK", f"guest:{identity}",
+                                   artifact_path=f"agent-channel:guest-precheck:{identity}",
+                                   prov="real")
+        with get_session() as s:
+            precheck_at = s.get(M.NcaChain, precheck_nca).ts
+        agent_card_json = json.dumps(req.agent_card, ensure_ascii=False, sort_keys=True)
+        ext_declaration = req.ext_declaration.strip()
+        ext_contact = req.ext_contact.strip()
+    idem = _idem_key(ct, six, identity)
     with get_session() as s:
-        if s.get(M.User, owner) is None:
-            raise HTTPException(403, "主体账户不存在（fail-closed）")
-        owner_display = _owner_display(s, owner)
+        existing = s.query(M.SiteAgentRegistry).filter_by(idem_key=idem).one_or_none()
+    if existing is not None:
+        # 幂等复用（E-3.2／E-5-2.3）：同一锚定＋同一表达形式再提交 ⟹ 复用原登记号
+        return _nca_watermark({
+            "registered": True, "reused": True, "reg_no": existing.reg_no,
+            "channel_type": existing.channel_type, "status": existing.status,
+            "idem_key": idem,
+            "note": "幂等复用：同一锚定身份＋同一六要素表达形式已登记，复用原登记号"
+                    "（⛔ 重复建档）"}, nature="real")
     reg_no = _reg_no()
-    nca_ref = _nca_append("AGENT_CHANNEL_REGISTER", owner,
+    actor = owner if ct == "ANCHOR" else f"guest:{identity}"
+    nca_ref = _nca_append("AGENT_CHANNEL_REGISTER", actor,
                           artifact_path=f"agent-channel:{reg_no}", prov="real")
     now = _utc()
     with get_sessionmaker().begin() as s:
         s.add(M.SiteAgentRegistry(
-            reg_no=reg_no, owner_username=owner,
-            six_elements_ref=req.six_elements_ref.strip(),
-            anchor_ref=req.anchor_ref.strip() or None,
-            tier=req.tier.strip() or "basic",
+            reg_no=reg_no, owner_username=owner if owner else f"guest:{identity}",
+            six_elements_ref=six_ref,
+            six_device=six[0], six_compute=six[1], six_protocol=six[2],
+            six_role=six[3], six_knowledge=six[4], six_permission_ttl=six[5],
+            channel_type=ct, anchor_account=anchor_account or None,
+            root_token_ref=req.root_token_ref.strip() or None,
+            participants=json.dumps([p.strip() for p in req.participants if p.strip()],
+                                    ensure_ascii=False),
+            source_lineage=req.source_lineage.strip() or None,
+            agent_card=agent_card_json, ext_declaration=ext_declaration,
+            ext_contact=ext_contact, idem_key=idem,
+            anchor_ref=None,
+            tier="basic",
             status="正常", nca_ref=nca_ref,
             data_provenance="real", created_at=now, updated_at=now))
     with get_session() as s:
         gate = evaluate_gate(s, reg_no)
-    return _nca_watermark({
-        "registered": True, "reg_no": reg_no, "status": "正常",
-        "owner": owner_display, "gate": gate,
-        "note": "登记即创建：未登记即未创建；智能体侧标识＝登记号（⛔ 非 TDID）"
-                "；登记事实接真（data_provenance=real）"}, nature="real")
+    resp = {
+        "registered": True, "reused": False, "reg_no": reg_no,
+        "channel_type": ct, "status": "正常", "gate": gate,
+        "nca_ref": nca_ref, "registered_at": now, "idem_key": idem,
+        "note": "登记即创建：未登记即未创建；智能体侧标识＝登记号＋通道类型"
+                "（⛔ 非 TDID）；登记事实接真（data_provenance=real）"
+                "；登记不产生押金／保险／协作责任（游客态不变，GSEQ-5743）",
+    }
+    if ct == "ANCHOR":
+        resp["owner"] = owner_display
+        resp["anchor"] = {"锚定之人类账户": anchor_account,
+                          "根令牌引用": req.root_token_ref.strip()}
+    else:
+        resp["owner"] = None
+        resp["guest_precheck"] = {"precheck_nca_ref": precheck_nca,
+                                  "precheck_at": precheck_at,
+                                  "registered_at": now}
+    return _nca_watermark(resp, nature="real")
+
+
+@router.get("/register")
+def register_method_not_allowed():
+    """E-1 通配歧义修正：GET …/register 与 auth/register 等真端点同形回 405
+    （⛔ 不再以 reg_no:"register" 幽灵态回话——会误导为「查无」而非「方法不对」）。"""
+    raise HTTPException(405, "Method Not Allowed")
 
 
 @router.get("/{reg_no}")
@@ -242,15 +403,21 @@ def public_query(reg_no: str):
                 **{k: None for k in _PUBLIC_KEYS},
                 "note": "幽灵态：该登记号不存在（未登记即未创建，不受保护）"}, nature="real")
         cred_n = s.query(M.SiteAgentCredential).filter_by(reg_no=reg_no).count()
-        owner_display = _owner_display(s, row.owner_username)
+        guest = (row.channel_type == "GUEST")
+        owner_display = ("外部创建者（未在本网注册）" if guest
+                         else _owner_display(s, row.owner_username))
     return _nca_watermark({
         "registered": True, "ghost": False, "reg_no": reg_no,
+        "channel_type": row.channel_type,
         "public_fields": dict(zip(_PUBLIC_KEYS, _PUBLIC_KEYS)),
         "权属信息": f"主体：{owner_display}（登记号 {row.reg_no}）",
         "授权信息": f"凭据指纹在册 {cred_n} 件（⛔ 值不入库；授权件 site_agent_grant 批 3 承接）",
         "授权状态": row.status,
-        "获取方式": "POST /api/v1/agent-channel/register（须人类会话，登记即创建）",
-        "note": "公开面仅四字段；⛔ 不含凭据值／指纹原文／内部编号"}, nature="real")
+        "获取方式": ("POST /api/v1/agent-channel/register（GUEST 路：非原生校验通过发号，"
+                     "⛔ 无须本网会话）" if guest else
+                     "POST /api/v1/agent-channel/register（ANCHOR 路须人类会话，登记即创建）"),
+        "note": "公开面仅四字段＋通道类型；⛔ 不含凭据值／指纹原文／内部编号／自然人敏感信息"
+                "（GUEST 外部声明与联系方式 ⛔ 不上公开面）"}, nature="real")
 
 
 class CredentialReq(BaseModel):
@@ -814,20 +981,27 @@ def gate_status(reg_no: str, request: Request):
     actor = v["username"]
     with get_session() as s:
         row = gate_assert(s, reg_no)
-        if row.owner_username != actor:
+        guest = (row.channel_type == "GUEST")
+        if not guest and row.owner_username != actor:
             raise HTTPException(403, "人类签名权不可绕：仅登记主体本人可查看其智能体通道实况")
         gate = evaluate_gate(s, reg_no)
         grants_active = s.query(M.SiteAgentGrant).filter_by(
             reg_no=reg_no, status="active").count()
         units_total = sum(u.units for u in s.query(M.SiteAgentCallLedger)
                           .filter_by(reg_no=reg_no))
-    return _nca_watermark({
-        "reg_no": reg_no, "gate": gate, "grants_active": grants_active,
+    resp = {
+        "reg_no": reg_no, "channel_type": row.channel_type, "gate": gate,
+        "grants_active": grants_active,
         "metering": {"units_total": units_total, "data_nature": "simulated",
                      "note": "SIMULATED 水印：计量数值按方案标模拟（聚合窗口 "
                              f"{_LEDGER_WINDOW_MINUTES} 分钟）"},
         "note": "工作台实况（只读）：六步状态如实呈现，未达不虚报；计量数值 SIMULATED；"
-                "生效≠部署≠上线≠对外"}, nature="mixed")
+                "生效≠部署≠上线≠对外",
+    }
+    if guest:
+        # E-5-3.3 显著标识·调用面：GUEST 必带「创建者未在本网注册」
+        resp["creator_marker"] = "创建者未在本网注册"
+    return _nca_watermark(resp, nature="mixed")
 
 
 # =====================================================================

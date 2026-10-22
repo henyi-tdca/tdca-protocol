@@ -673,11 +673,14 @@ class UserAnchor(Base):
 
 
 class SiteAgentRegistry(Base):
-    """32. 站点智能体通道·登记表（L1SI147-CHANNEL-B1-001：登记即创建、未登记即未创建）。
+    """32. 站点智能体通道·登记表（L1SI147-CHANNEL-B1-001：登记即创建、未登记即未创建；
+    块 E（L1SI167-AGENT-REG-001）：自助登记入口——六要素逐项落列＋两路 channel_type）。
 
     主体与执行体二分：owner_username 为主体（人类账户）列，智能体执行体无财产；
     智能体侧标识＝登记号 reg_no（⛔ 不叫 TDID、不自造编号体例）；
     status＝正常＋惩罚三态（冻结／降权／吊销，批 4 执行器落表）。
+    GUEST 行 owner_username 记哨兵 guest:<decl_hash_16>（创建者未在本网注册，
+    ⛔ 非本站用户）；外部声明／联系方式只入库不上公开面（不公开四条）。
     """
 
     __tablename__ = "site_agent_registry"
@@ -691,9 +694,26 @@ class SiteAgentRegistry(Base):
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
     created_at: Mapped[str] = mapped_column(Text, nullable=False)
     updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    # ── 块 E 新增列（0014 迁移；中文名照条例第8/9/10条，机读键名随回报）──
+    channel_type: Mapped[str] = mapped_column(Text, nullable=False, default="ANCHOR")  # ANCHOR／GUEST（三项裁定 5742）
+    six_device: Mapped[str] = mapped_column(Text, nullable=False, default="")          # 设备
+    six_compute: Mapped[str] = mapped_column(Text, nullable=False, default="")         # 算力
+    six_protocol: Mapped[str] = mapped_column(Text, nullable=False, default="")        # 协议
+    six_role: Mapped[str] = mapped_column(Text, nullable=False, default="")            # 角色
+    six_knowledge: Mapped[str] = mapped_column(Text, nullable=False, default="")       # 知识
+    six_permission_ttl: Mapped[str] = mapped_column(Text, nullable=False, default="")  # 权限时效
+    anchor_account: Mapped[str | None] = mapped_column(Text)      # 锚定之人类账户（第8条第2款）
+    root_token_ref: Mapped[str | None] = mapped_column(Text)      # 根令牌引用（只收引用，⛔ 不收值）
+    participants: Mapped[str] = mapped_column(Text, nullable=False, default="[]")  # 资产配置参与方（JSON 数组）
+    source_lineage: Mapped[str | None] = mapped_column(Text)      # 来源谱系（第10条派生登记必填）
+    agent_card: Mapped[str | None] = mapped_column(Text)          # GUEST：agent_card 全量（JSON 文本，≤4KB）
+    ext_declaration: Mapped[str | None] = mapped_column(Text)     # GUEST：外部创建者声明·主体声明（⛔ 不上公开面）
+    ext_contact: Mapped[str | None] = mapped_column(Text)         # GUEST：可核验联系方式（⛔ 不上公开面）
+    idem_key: Mapped[str | None] = mapped_column(Text)            # 幂等键（sha256_16；唯一索引见迁移 0014）
     __table_args__ = (
         CheckConstraint("status IN ('正常','冻结','降权','吊销')", name="ck_site_agent_registry_status"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_registry_prov"),
+        CheckConstraint("channel_type IN ('ANCHOR','GUEST')", name="ck_site_agent_registry_ctype"),
     )
 
 

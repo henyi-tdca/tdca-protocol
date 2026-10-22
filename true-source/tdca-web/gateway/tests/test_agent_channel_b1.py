@@ -51,9 +51,26 @@ def _auth(anchor_kind: str | None = None, uname: str | None = None) -> dict:
     return {"Authorization": r.json()["data"]["token"]}
 
 
-def _register(hdr: dict, ref: str = "six-elements://test/0001") -> str:
+_REG_SEQ = {"n": 0}
+
+
+def _reg_body(tag: str, **kw) -> dict:
+    """块 E 登记载荷：六要素逐项（条例第8条）＋锚定项（根令牌引用）；tag 区分表达形式。"""
+    body = {"channel_type": "ANCHOR",
+            "device": f"测试设备-{tag}", "compute": "测试算力-x",
+            "protocol": "测试协议-x", "role": "测试角色-x",
+            "knowledge": "测试知识-x", "permission_ttl": "测试权限时效-x",
+            "root_token_ref": "root-token://test/1"}
+    body.update(kw)
+    return body
+
+
+def _register(hdr: dict, tag: str | None = None) -> str:
+    if tag is None:
+        _REG_SEQ["n"] += 1
+        tag = f"t{_REG_SEQ['n']:03d}"
     r = client.post("/api/v1/agent-channel/register",
-                    json={"six_elements_ref": ref}, headers=hdr)
+                    json=_reg_body(tag), headers=hdr)
     assert r.status_code == 201, r.text[:300]
     return r.json()["data"]["reg_no"]
 
@@ -72,20 +89,26 @@ def _set_anchor_verified(username: str) -> None:
 def test_register_positive_creates_and_attests():
     hdr = _auth()
     r = client.post("/api/v1/agent-channel/register",
-                    json={"six_elements_ref": "six-elements://demo/0001",
-                          "anchor_ref": "anchor://notifier/x",
-                          "tier": "standard"}, headers=hdr)
+                    json=_reg_body("pos", participants=["参与方甲", "参与方乙"],
+                                   root_token_ref="root-token://demo/0001"),
+                    headers=hdr)
     assert r.status_code == 201
     d = r.json()["data"]
     assert d["registered"] is True and d["status"] == "正常"
+    assert d["channel_type"] == "ANCHOR" and d["reused"] is False
     reg_no = d["reg_no"]
     assert reg_no.startswith("SAR-")
-    # 落库实读：登记即创建
+    # 落库实读：登记即创建＋六要素逐项＋锚定项单列
     with get_session() as s:
         row = s.get(M.SiteAgentRegistry, reg_no)
         assert row is not None and row.status == "正常"
         assert row.data_provenance == "real"
-        assert row.six_elements_ref == "six-elements://demo/0001"
+        assert row.channel_type == "ANCHOR"
+        assert row.six_device == "测试设备-pos"
+        assert row.six_permission_ttl == "测试权限时效-x"
+        assert row.six_elements_ref.startswith("six-elements://itemized/")
+        assert row.root_token_ref == "root-token://demo/0001"
+        assert row.idem_key == d["idem_key"]
         assert row.nca_ref      # 登记存证回链
     # NCA 链实读
     with get_session() as s:
@@ -93,15 +116,41 @@ def test_register_positive_creates_and_attests():
         assert nca is not None and nca.action == "AGENT_CHANNEL_REGISTER"
 
 
+def test_register_get_method_not_allowed():
+    # E-1：GET …/register 与真端点同形回 405（⛔ 不再回 reg_no:"register" 幽灵态）
+    r = client.get("/api/v1/agent-channel/register")
+    assert r.status_code == 405
+    assert r.json()["code"] == "TDCA-E-SYS-SYS-001"
+
+
 def test_register_negative_no_session_and_missing_elements():
-    # 负例 1：无会话 → 401（须人类会话，智能体不得自登）
-    r = client.post("/api/v1/agent-channel/register",
-                    json={"six_elements_ref": "six-elements://x"})
+    # 负例 1：ANCHOR 路无会话 → 401（须人类会话，智能体不得自登）
+    r = client.post("/api/v1/agent-channel/register", json=_reg_body("neg1"))
     assert r.status_code == 401
-    # 负例 2：缺创世六要素引用 → 400
+    # 负例 2：缺 channel_type → 400 点名
     hdr = _auth(uname="b1neg2")
     r = client.post("/api/v1/agent-channel/register", json={}, headers=hdr)
     assert r.status_code == 400
+    assert "channel_type" in r.json()["detail"]
+    # 负例 3：六要素缺项逐项点名 → 400
+    body = _reg_body("neg3")
+    del body["knowledge"]
+    del body["permission_ttl"]
+    r = client.post("/api/v1/agent-channel/register", json=body, headers=hdr)
+    assert r.status_code == 400
+    detail = r.json()["detail"]
+    assert "知识" in detail and "权限时效" in detail
+    # 负例 4：派生登记缺来源谱系 → 400
+    body = _reg_body("neg4", derived=True)
+    r = client.post("/api/v1/agent-channel/register", json=body, headers=hdr)
+    assert r.status_code == 400
+    assert "来源谱系" in r.json()["detail"]
+    # 负例 5：锚定项缺根令牌引用 → 400
+    body = _reg_body("neg5")
+    del body["root_token_ref"]
+    r = client.post("/api/v1/agent-channel/register", json=body, headers=hdr)
+    assert r.status_code == 400
+    assert "根令牌引用" in r.json()["detail"]
 
 
 # ---------------------------------------------------------------- ① 总闸正/负例
