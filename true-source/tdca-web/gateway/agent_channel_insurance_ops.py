@@ -131,15 +131,28 @@ def promote(reg_no: str, request: Request):
         if pol is None:
             raise HTTPException(403, "无有效保单——拒转正（fail-closed：履约保证保险"
                                      "未在册或保障期未覆盖当前时点）")
+        # 重复转正拦截（GO-LIVE-001 步2 状态位）：promoted_at 非空即已转正
+        if row.promoted_at is not None:
+            raise HTTPException(409, "TDCA-E-ASSET-STATE-002: 已转正"
+                                     "（promoted_at 见列；⛔ 重复发令牌 ⛔ 重复落 NCA）")
     nca_ref = _nca_append("AGENT_CHANNEL_PROMOTED", actor,
                           artifact_path=f"agent-channel:{reg_no}/promotion",
                           prov="real")
+    now = _utc()
+    with get_sessionmaker().begin() as s:
+        r2 = s.get(M.SiteAgentRegistry, reg_no)
+        if r2 is None or r2.promoted_at is not None:   # 竞态护栏：重复转正事务回滚
+            raise HTTPException(409, "TDCA-E-ASSET-STATE-002: 已转正"
+                                     "（promoted_at 见列；⛔ 重复发令牌 ⛔ 重复落 NCA）")
+        r2.promoted_at = now
+        r2.promotion_nca_ref = nca_ref
     return _nca_watermark({
         "promoted": True, "reg_no": reg_no, "event_only": True,
+        "promoted_at": now,
         "token_no": tok.token_no, "policy_no": pol.policy_no,
         "channel_type_unchanged": row.channel_type, "nca_ref": nca_ref,
-        "note": "转正事件已落 NCA（AGENT_CHANNEL_PROMOTED）；⛔ 不改 channel_type"
-                "——通道定性裁定不动，转正只作事件记录"},
+        "note": "转正事件已落 NCA（AGENT_CHANNEL_PROMOTED）；promoted_at/promotion_nca_ref"
+                " 已写登记表；⛔ 不改 channel_type——通道定性裁定不动，转正只作事件记录"},
         nature="real")
 
 

@@ -277,3 +277,77 @@ def test_claim_anon_401_and_non_owner_403():
     _, hdr2 = _auth()
     r = client.post(f"/api/v1/agent-channel/{reg_no}/claims", json=body, headers=hdr2)
     assert r.status_code == 403 and "人类签名权" in r.text
+
+
+# ------------------------------------------------- GO-LIVE-001 步2 · 转正状态位
+def _promote_ready(hdr: dict) -> str:
+    """双前置备齐（令牌＋保单），返回登记号，供转正状态位三例共用。"""
+    reg_no = _register(hdr)
+    _issue_token(hdr, reg_no)
+    assert _policy(hdr, reg_no).status_code == 201
+    return reg_no
+
+
+def test_promotion_writes_state_columns():
+    """① 首次转正：promoted_at ＋ promotion_nca_ref 写登记表（存证号＝回执 nca_ref）。"""
+    _, hdr = _auth()
+    reg_no = _promote_ready(hdr)
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/promotion", headers=hdr)
+    assert r.status_code == 201, r.text[:400]
+    d = r.json()["data"]
+    assert d["promoted_at"]
+    with get_session() as s:
+        row = s.get(M.SiteAgentRegistry, reg_no)
+        assert row.promoted_at == d["promoted_at"]
+        assert row.promotion_nca_ref == d["nca_ref"]     # 存证号（⛔ 令牌值）
+        assert row.channel_type == "ANCHOR"              # ⛔ 不改通道定性
+
+
+def test_repeat_promotion_409_no_duplicate_nca():
+    """② 重复转正：409 TDCA-E-ASSET-STATE-002；⛔ 重复落 NCA。"""
+    _, hdr = _auth()
+    reg_no = _promote_ready(hdr)
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/promotion", headers=hdr)
+    assert r.status_code == 201
+    with get_session() as s:
+        n_before = s.query(M.NcaChain).filter_by(
+            action="AGENT_CHANNEL_PROMOTED").count()
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/promotion", headers=hdr)
+    assert r.status_code == 409 and "TDCA-E-ASSET-STATE-002" in r.text
+    with get_session() as s:
+        assert s.query(M.NcaChain).filter_by(
+            action="AGENT_CHANNEL_PROMOTED").count() == n_before   # 未重复落链
+        row = s.get(M.SiteAgentRegistry, reg_no)
+        first_at = row.promoted_at
+        assert first_at is not None
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/promotion", headers=hdr)
+    assert r.status_code == 409
+    with get_session() as s:
+        assert s.get(M.SiteAgentRegistry, reg_no).promoted_at == first_at  # 首值未动
+
+
+def test_promoted_visible_public_and_gate_no_sensitive():
+    """③ 查询面：公开面与会话面显 promoted/promoted_at；⛔ 无令牌/指纹/保单号。"""
+    who, hdr = _auth()
+    reg_no = _promote_ready(hdr)
+    r = client.post(f"/api/v1/agent-channel/{reg_no}/promotion", headers=hdr)
+    assert r.status_code == 201
+    # 公开面（免会话）
+    r = client.get(f"/api/v1/agent-channel/{reg_no}")
+    assert r.status_code == 200, r.text[:400]
+    d = r.json()["data"]
+    assert d["registered"] is True and d["promoted"] is True and d["promoted_at"]
+    body = r.text
+    for needle in ("TDCA-PRT-", "token_fingerprint", "SIP-", "policy_no",
+                   "fingerprint"):
+        assert needle not in body, f"公开面泄敏: {needle}"      # ⛔ 敏感串不上公开面
+    # 会话面（gate）
+    r = client.get(f"/api/v1/agent-channel/gate/{reg_no}", headers=hdr)
+    assert r.status_code == 200, r.text[:400]
+    d = r.json()["data"]
+    assert d["promoted"] is True and d["promoted_at"]
+    # 未转正对照：promoted=false、promoted_at=None
+    reg_no2 = _register(hdr)
+    r = client.get(f"/api/v1/agent-channel/{reg_no2}")
+    d = r.json()["data"]
+    assert d["promoted"] is False and d["promoted_at"] is None

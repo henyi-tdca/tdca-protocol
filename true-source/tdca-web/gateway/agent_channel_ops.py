@@ -409,6 +409,8 @@ def public_query(reg_no: str):
     return _nca_watermark({
         "registered": True, "ghost": False, "reg_no": reg_no,
         "channel_type": row.channel_type,
+        "promoted": row.promoted_at is not None,      # GO-LIVE-001 步2：转正状态位（bool）
+        "promoted_at": row.promoted_at,               # ⛔ 出令牌/指纹/保单号
         "public_fields": dict(zip(_PUBLIC_KEYS, _PUBLIC_KEYS)),
         "权属信息": f"主体：{owner_display}（登记号 {row.reg_no}）",
         "授权信息": f"凭据指纹在册 {cred_n} 件（⛔ 值不入库；授权件 site_agent_grant 批 3 承接）",
@@ -1002,6 +1004,8 @@ def gate_status(reg_no: str, request: Request):
                           .filter_by(reg_no=reg_no))
     resp = {
         "reg_no": reg_no, "channel_type": row.channel_type, "gate": gate,
+        "promoted": row.promoted_at is not None,   # GO-LIVE-001 步2：转正状态位
+        "promoted_at": row.promoted_at,
         "grants_active": grants_active,
         "metering": {"units_total": units_total, "data_nature": "simulated",
                      "note": "SIMULATED 水印：计量数值按方案标模拟（聚合窗口 "
