@@ -229,3 +229,38 @@ def test_guest_signage_three_layers():
     # 匿名 gate 仍 401（fail-closed 口径未变）
     r = client.get(f"/api/v1/agent-channel/gate/{reg_no}")
     assert r.status_code == 401
+
+
+# ------------------------------------------- E-6 中间件豁免（GUEST 小门过闸证明）
+# 线上 TDCA_GATEWAY_AUTH=1 时写操作 fail-closed；块 E 小门 = /agent-channel/register
+# 豁免中间件（auth.py _AUTH_EXEMPT）。以下两例在启用鉴权下跑，证明豁免后行为正确：
+# GUEST 匿名递件到达端点（端点内校验点名），ANCHOR 匿名被端点层 401 拦（⛔ 非中间件层）。
+
+import os  # noqa: E402
+
+def test_e6_middleware_exempt_guest_reaches_endpoint():
+    """鉴权启用＋匿名 GUEST：非中间件 401，而是端点层 400 点名（缺六要素）。"""
+    os.environ["TDCA_GATEWAY_AUTH"] = "1"
+    try:
+        r = client.post("/api/v1/agent-channel/register",
+                        json={"channel_type": "GUEST",
+                              "agent_card": {"name": "x"}, "ext_declaration": "d",
+                              "ext_contact": "c@example.org"})
+        assert r.status_code == 400, r.text[:300]
+        assert "创世六要素不齐" in r.json()["detail"]
+    finally:
+        os.environ.pop("TDCA_GATEWAY_AUTH", None)
+
+
+def test_e6_middleware_exempt_anchor_still_endpoint_401():
+    """鉴权启用＋匿名 ANCHOR（六要素齐）：端点层 401「未登录」（端点内会话守卫，非中间件体）。"""
+    os.environ["TDCA_GATEWAY_AUTH"] = "1"
+    try:
+        r = client.post("/api/v1/agent-channel/register",
+                        json=_anchor_body("e6mw"))
+        assert r.status_code == 401, r.text[:300]
+        body = r.json()
+        assert body.get("detail") == "未登录"          # 端点层 HTTPException 形态
+        assert "error" not in body                      # ⛔ 非中间件 401 形态
+    finally:
+        os.environ.pop("TDCA_GATEWAY_AUTH", None)
