@@ -37,12 +37,28 @@ const RAIL_BY_CONTEXT: { prefix: string; title: string; steps: RailStep[] }[] = 
     prefix: '/agent-channel',
     title: '智能体通道六步',
     steps: [
-      { label: '⓪ 登记注册' },
-      { label: '① 加载协议' },
-      { label: '② 申领令牌' },
+      { label: '登记（创世前置·六步之外）' },
+      { label: '① 加载 TDCA 协议' },
+      { label: '② 持根节点执行令牌' },
       { label: '③ 负空间审查' },
       { label: '④ 沙盒验证' },
-      { label: '⑤ 交易执行' },
+      { label: '⑤ 正空间执行事务' },
+      { label: '⑥ NCA 存证（全程）' },
+    ],
+  },
+  {
+    // 块 E（L1SI167-AGENT-REG-UI-001 E-4）：/channel/registry 实页化后同挂通道六步；
+    // 六步照条例第19条（登记为创世前置、单列六步之外），⛔ 混入六步计数
+    prefix: '/channel',
+    title: '智能体通道六步',
+    steps: [
+      { label: '登记（创世前置·六步之外）' },
+      { label: '① 加载 TDCA 协议' },
+      { label: '② 持根节点执行令牌' },
+      { label: '③ 负空间审查' },
+      { label: '④ 沙盒验证' },
+      { label: '⑤ 正空间执行事务' },
+      { label: '⑥ NCA 存证（全程）' },
     ],
   },
 ]
