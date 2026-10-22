@@ -1,8 +1,15 @@
-# encounter-assert-gate —— ENC-REPO-001 相遇专章断言闸（硬闸·不过不许合）
+# encounter-assert-gate —— ENC-REPO-001 相遇专章断言闸（GitHub 端便利镜像·非主仓门禁依据）
 #
-# 出处：交办令 ENC-REPO-001（C 组）＋ 改造令（丙＋甲）；照既有 consistency-gate 先例风格。
-# CI 硬闸三脚本（自足／仓内相对锚定·含本机绝对路径串零命中）：
-#   沙盒仿真（7/7）· 接口断言（7/7·对抗 7/7·换序·可重复）· 断言复跑 v2（12/12·对 docs/regulations/ 正式条文结构面）
+# 出处：交办令 ENC-REPO-001（C 组）＋ 改造令（丙＋甲）＋ 分档令 TDCA-HANDOFF-EXEC-ENC-ASSERT-TIER-001；照既有 consistency-gate 先例风格。
+# ⭐ 落位正名（承 TIER-001·2026-10-22）：主仓 CI 门禁依据 ＝ ⭐阿里云自建机⭐。
+#    令面所指「每周一 09:00 定期跑批次」⭐2026-10-22 实测该机并无此批次⭐（该机唯一周期件为 5 分钟
+#    merge-poller，已含本脚本、main 前进即实跑）；新跑组纳入施工据实停手待令（回报 EXEC-L1SI165-005），
+#    本注释据实回改、不预支未落地事实。本工作流仅为 GitHub 端便利镜像，⭐其成败不充当主仓门禁⭐（约束：⛔ 冒充）。
+# CI 镜像三脚本（自足／仓内相对锚定·含本机绝对路径串零命中）：
+#   沙盒仿真（7/7）· 接口断言（7/7·对抗 7/7·换序·可重复）· 断言复跑 v2（⭐分档制⭐）
+# 断言复跑 v2 现态（分档制·默认 v1.0 档）：对 V1.0 正式件 ＝ A-1a／A-1c／A-2c 三验 PASS
+#   ＋ 九条草案时代结构面断言记 SKIP-DRAFT-ERA（如实标注·⛔ PASS ⛔ FAIL·代码保留）；
+#   沿革档 `--target v0.9` 对 archive/ 之 V0.9 机读草案仍 12/12 全过（可复现）。
 # 断言 v1（12/12）留仓内供本地复跑、不进 CI 硬闸：其被引两件（研究草案／双向奔赴口径件）不在仓，云端必失败（改造令·丙）。
 # v1 本地跑法：设环境变量 TDCA_ENC_ASSERT_WS 指向智库工作区根；缺被引件时如实 SKIP（exit 0），⛔ 不伪报通过。
 # 依赖：仅 v2 需 PyYAML —— 用 runner 系统 python3（ubuntu-latest 系统 Python 预装），不 setup-python、不联网装包（H-5 无外部网络调用）。
@@ -31,5 +38,5 @@ jobs:
         run: python3 docs/experiments/encounter-001/enc_gaps_sandbox_v1.py
       - name: 接口断言（7/7 · 对抗 7/7 · 换序 · 可重复 · 自足零依赖）
         run: python3 docs/experiments/encounter-001/enc_identity_interface_assert_v1.py
-      - name: 断言复跑 v2（12/12 · 对仓内正式条文结构面）
+      - name: 断言复跑 v2（分档制·默认 v1.0 档：3 PASS＋9 SKIP-DRAFT-ERA＋0 FAIL·可 --target v0.9 复现 12/12）
         run: python3 docs/experiments/encounter-001/enc_gaps_assert_v2_formal.py
