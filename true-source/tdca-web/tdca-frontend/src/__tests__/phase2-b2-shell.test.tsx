@@ -106,7 +106,6 @@ describe('二期改版批2块一：/channel/* 五路极简入口（重定向保�
   it.each([
     ['/channel/portal', 'TDCA 三体可视化中心'],
     ['/channel/agents', '智能体集群观测'],
-    ['/channel/registry', '权属登记管理（P8a）'],
     ['/channel/market', '配置权市场（L2）'],
     ['/channel/tools', '工具货架（P4）'],
   ])('%s 重定向到对应新壳页面（⛔ 不 404）', (from, heading) => {
@@ -116,6 +115,18 @@ describe('二期改版批2块一：/channel/* 五路极简入口（重定向保�
       </MemoryRouter>,
     )
     expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument()
+    unmount()
+  })
+
+  it('/channel/registry 实页化：智能体自助登记入口（块 E；登记表单＋分流首问，⛔ 不 404）', () => {
+    const { unmount } = render(
+      <MemoryRouter initialEntries={['/channel/registry']}>
+        <App />
+      </MemoryRouter>,
+    )
+    expect(screen.getByRole('heading', { name: '智能体自助登记（通道登记）' })).toBeInTheDocument()
+    expect(screen.getByTestId('reg-six-steps').textContent).toContain('⑥ NCA 存证（全程）')
+    expect(screen.getByTestId('reg-first-ask').textContent).toContain('是否已在本网注册')
     unmount()
   })
 })

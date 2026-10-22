@@ -9,6 +9,7 @@ import { AppShell } from '@/app/app-shell'
 import { AuthProvider } from '@/app/auth-context'
 import { RequireAuth } from '@/app/route-guard'
 import { PAGE_META, NotFoundPage, renderPage, DocsIndexPage, DocDetailPage } from '@/pages/pages'
+import { AgentChannelRegisterPage } from '@/pages/agent-channel-register'
 
 /** 受保护路由（FRAMEWORK-001 §四：须登录 DID + HUF 鉴权）——未登录重定向 /auth */
 const PROTECTED = new Set([
@@ -36,10 +37,11 @@ export default function App() {
               element={PROTECTED.has(meta.path) ? <RequireAuth>{renderPage(meta)}</RequireAuth> : renderPage(meta)}
             />
           ))}
-          {/* 二期改版批2块一：/channel/* 五路保留为极简入口（重定向，⛔ 不裁撤——删路由＝公开面 404 风险；内容已融入新壳导航） */}
+          {/* 二期改版批2块一：/channel/* 五路保留为极简入口（重定向，⛔ 不裁撤——删路由＝公开面 404 风险；内容已融入新壳导航）；
+              块 E（L1SI167-AGENT-REG-UI-001）：/channel/registry 实页化为智能体自助登记入口（登记表单＋分流首问） */}
           <Route path="/channel/portal" element={<Navigate to="/" replace />} />
           <Route path="/channel/agents" element={<Navigate to="/agents" replace />} />
-          <Route path="/channel/registry" element={<Navigate to="/ownership-registry" replace />} />
+          <Route path="/channel/registry" element={<AgentChannelRegisterPage />} />
           <Route path="/channel/market" element={<Navigate to="/market" replace />} />
           <Route path="/channel/tools" element={<Navigate to="/toolshelf" replace />} />
           {/* 二期改版批2块二：文档库两路参数路由（族列表／详情；首页 /docs 走 PAGE_META） */}
