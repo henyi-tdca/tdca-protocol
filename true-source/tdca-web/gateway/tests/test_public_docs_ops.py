@@ -150,12 +150,15 @@ def test_display_name_mapping_no_draft():
 
 
 def test_ingest002_list_42_no_droop():
-    """L1SI155-INGEST-002 防掉条用例：regulation 族 42 条；
+    """L1SI155-INGEST-002 防掉条用例：regulation 族 44 条；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 42, f"清单条数漂移: {data['count']}"
+    assert data["count"] == 44, f"清单条数漂移: {data['count']}"
+    返回集 = {e["filename"] for e in data["documents"]}
+    在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
+    assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
     names = {e["filename"] for e in data["documents"]}
     must = {
         # L1SI154-028 九件（部署面已入册，⛔ 不得掉回不可见）
