@@ -1,0 +1,88 @@
+# TDCA 运行时版本台账 · 骨架（机读）
+# 件号: TDCA-SEC-RUNTIME-LEDGER-001 ｜ 版本: V1.0 ｜ 日期: 2026-10-23（+08）
+# 会话框: L1-SI-167 ｜ 性质: 内部件·非对外 ｜ 用途: CI 构建基线校验（第四条第二款候选）
+# ⚠️ 本件只放骨架与组件映射；节点明细（含地址等）留运维私域，⛔ 入仓
+schema_version: '1.0'
+ledger_id: 'TDCA-SEC-RUNTIME-LEDGER-001'
+updated_at: '2026-10-23'
+owner: 'reasonix / L1-SI-167'
+
+# 组件 → 运行时映射（五组）
+component_runtime_map:
+  - component: 'core-go(enforce/nca/nsfl)'
+    runtime: 'go'
+    exposure_hint: 'protocol-execution'
+  - component: 'tdcad'
+    runtime: 'go'
+    exposure_hint: 'daemon'
+  - component: 'mcp-bridge'
+    runtime: 'go'
+    exposure_hint: 'network-bridge'
+  - component: 'site-backend'
+    runtime: 'php'
+    exposure_hint: 'public-api'
+  - component: 'frontend-build'
+    runtime: 'node'
+    exposure_hint: 'build-chain'
+  - component: 'mailbox/scheduler/sandbox-scripts'
+    runtime: 'python'
+    exposure_hint: 'internal'
+
+# 判定档
+status_values: ['ok', 'below-baseline', 'unknown']
+
+# 节点行（示例与已核者；详表明细留私域）
+nodes:
+  - node: 'local-workstation'
+    note: '本侧开发工作站（非 CI、非站点）'
+    runtimes:
+      - runtime: 'node'
+        version: 'v24.18.1'
+        fix_baseline: '24.22.1'
+        services: ['frontend-build']
+        exposure: 'local'
+        status: 'below-baseline'
+        source: '本机实测（20261023）'
+        updated_at: '2026-10-23'
+      - runtime: 'go'
+        version: '未安装'
+        fix_baseline: '以官方公告为准'
+        services: []
+        exposure: 'none'
+        status: 'ok'
+        source: '本机实测（20261023）'
+        updated_at: '2026-10-23'
+      - runtime: 'php'
+        version: '未安装'
+        fix_baseline: '以官方公告为准'
+        services: []
+        exposure: 'none'
+        status: 'ok'
+        source: '本机实测（20261023）'
+        updated_at: '2026-10-23'
+      - runtime: 'python'
+        version: '3.12.10'
+        fix_baseline: '未波及'
+        services: ['sandbox-scripts']
+        exposure: 'local'
+        status: 'ok'
+        source: '本机实测（20261023）'
+        updated_at: '2026-10-23'
+  - node: 'ci-machine'
+    note: '执行侧回执待填（本侧不可直核）'
+    runtimes: []
+  - node: 'site-host'
+    note: '执行侧回执待填（本侧不可直核）'
+    runtimes: []
+
+# 待回执与待判
+pending:
+  - item: 'ci-machine 运行时版本（go/node/php）'
+    owner: '执行侧'
+    trigger: 'LANGCORE-202610 排查回执'
+  - item: 'site-host 运行时版本（php/go）'
+    owner: '执行侧'
+    trigger: '同上'
+  - item: 'local-workstation node 升窗'
+    owner: '创始人'
+    trigger: '前端发布前 / 出网构建前 / 本机异常'
