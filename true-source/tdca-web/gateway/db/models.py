@@ -809,6 +809,63 @@ class SiteAgentUtilityDeposit(Base):
     )
 
 
+class SiteAgentInsurancePolicy(Base):
+    """42. 站点智能体通道·履约保证保险保单表（对外补齐 D 项；裁定 TDCA-RULING-L1SI166-GUEST-THREE-001 项三／五条）。
+
+    履约保证保险挂接：登记主体须持有效保单方可转正（无有效保单 ⟹ fail-closed 拒转正，
+    ⛔ 告警放行）；有效＝status active 且 保障期覆盖当前时点；status 闭集
+    active／expired／revoked（期满即 expired 口径：判效以 period 覆盖为准，fail-closed）；
+    保额一律 MOU 折算；保单登记即落 NCA 存证。
+    """
+
+    __tablename__ = "site_agent_insurance_policy"
+    policy_no: Mapped[str] = mapped_column(Text, primary_key=True)  # SIP-＋12 位大写十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    insurer: Mapped[str] = mapped_column(Text, nullable=False)      # 承保方（人类可读名）
+    coverage_mou: Mapped[int] = mapped_column(Integer, nullable=False)  # 保额（MOU 折算）
+    period_start: Mapped[str] = mapped_column(Text, nullable=False)  # 保障期起（ISO 串）
+    period_end: Mapped[str] = mapped_column(Text, nullable=False)    # 保障期止（ISO 串）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    nca_ref: Mapped[str | None] = mapped_column(Text)               # 登记存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('active','expired','revoked')",
+                        name="ck_site_agent_insurance_policy_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_insurance_policy_prov"),
+        Index("idx_site_agent_insurance_policy_reg", "reg_no"),
+    )
+
+
+class SiteAgentInsuranceClaim(Base):
+    """43. 站点智能体通道·漏洞损失申报表（对外补齐 D 项——申报入口留痕载体）。
+
+    漏洞损失申报：loss_type 闭集 制度漏洞／技术漏洞；提交即落 NCA 存证
+    （AGENT_CHANNEL_INSURANCE_CLAIM）；状态口径照在册保险规则（TDCA-INSURANCE-RULES-001）：
+    INSURED＝事件触发态（定损→池兑付 NCA 留痕→追偿回补由在册机制承接，本表只记触发态）。
+    """
+
+    __tablename__ = "site_agent_insurance_claim"
+    claim_no: Mapped[str] = mapped_column(Text, primary_key=True)   # SIC-＋12 位大写十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    loss_type: Mapped[str] = mapped_column(Text, nullable=False)    # 制度漏洞|技术漏洞
+    description: Mapped[str] = mapped_column(Text, nullable=False)  # 损失情述明文
+    amount_mou: Mapped[int] = mapped_column(Integer, nullable=False)   # 申报损失额（MOU 折算）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="INSURED")
+    actor: Mapped[str] = mapped_column(Text, nullable=False)        # 申报人类账户
+    nca_ref: Mapped[str | None] = mapped_column(Text)               # 申报存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("loss_type IN ('制度漏洞','技术漏洞')",
+                        name="ck_site_agent_insurance_claim_loss_type"),
+        CheckConstraint("status IN ('INSURED')",
+                        name="ck_site_agent_insurance_claim_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_insurance_claim_prov"),
+        Index("idx_site_agent_insurance_claim_reg", "reg_no"),
+    )
+
+
 class SiteAgentAdmission(Base):
     """34. 站点智能体通道·闸步表（批 2：六步硬序之状态机落点，①③④ 批 2 接真、⑤批 3）。
 
