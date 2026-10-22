@@ -733,6 +733,17 @@ def sandbox_verify(req: SandboxReq, request: Request):
     actor, s = _subject_gate(req.reg_no, request)
     try:
         _require_prior_steps(s, req.reg_no)            # ①②须达
+        # 对外补齐 C（L1SI166-CHANNEL-GAP-001 项 C／裁定项三之 2·Q-2）：进沙盒须先押付
+        # 有效效用保金——与六步硬序**同向叠加**（⛔ 不造旁路、⛔ 不改硬序本身）；阈值读
+        # 配置，缺省即 fail-closed 关闸（⛔ 忘配＝开门）。
+        from agent_channel_deposit_ops import required_min_mou, effective_deposit
+        _min_dep = required_min_mou()
+        if _min_dep is None:
+            raise HTTPException(503, "DEPOSIT_CONFIG_MISSING: 沙盒准入保金阈值未配置"
+                                     "（TDCA_UTILITY_DEPOSIT_MIN_MOU）——闸 fail-closed 关闭")
+        if effective_deposit(s, req.reg_no) < _min_dep:
+            raise HTTPException(403, "DEPOSIT_REQUIRED: 有效保金不足——进沙盒须先押付"
+                                     "效用保金（fail-closed 拒入盒）")
         if _step_state(s, req.reg_no, "ns-review") != "passed":
             raise HTTPException(403, "STEP_ORDER: ③ 负空间审查未过——"
                                      "未过即拒绝入网，⛔ 不得进沙盒（fail-closed）")

@@ -25,6 +25,10 @@ import tempfile
 _TMP = Path(tempfile.mkdtemp(prefix="tdca-test-"))
 os.environ["DATABASE_URL"] = "sqlite:///" + (_TMP / "test.db").as_posix()
 
+# 对外补齐 C（L1SI166-CHANNEL-GAP-001 项 C）：沙盒准入保金阈值——测试态给正阈值使
+# 闸可开（缺省语义＝闸关闭由 gap_c 专项用例直测；⛔ 硬编码进业务代码，仅测试配置）。
+os.environ.setdefault("TDCA_UTILITY_DEPOSIT_MIN_MOU", "1")
+
 _EIOS = _WS / "tdca-eios"
 if str(_EIOS) not in sys.path:
     sys.path.insert(0, str(_EIOS))
