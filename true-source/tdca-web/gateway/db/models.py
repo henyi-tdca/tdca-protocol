@@ -741,6 +741,43 @@ class SiteAgentCredential(Base):
     )
 
 
+class SiteAgentPromoToken(Base):
+    """40. 站点智能体通道·转正令牌表（对外补齐 B 项；裁定 TDCA-RULING-L1SI166-GUEST-THREE-001 项二）。
+
+    出盒凭证定名「转正令牌」，与身份凭据族**物理分离**：独立表／独立编号前缀 SPT-／
+    独立存证类型（⛔ 不共用 site_agent_credential 表、⛔ 不共用 SCD- 前缀）；
+    与在册「执行令牌」（根节点令牌）**不同物**（⛔ 名称不得用「执行令牌」）。
+    只存 sha256 不可逆指纹（凭据值至多一次性回显，⛔ 入库、⛔ 入日志）；
+    签发即轮换（同登记号旧 active 自动 revoked）；吊销即时生效；
+    签发须人类会话内（人类签名权不可绕，⛔ 智能体不得代签代持）＋
+    沙盒签批四要件（人／时／物／意）逐项齐 ＋ 沙盒签批记录在册 且 出盒判据达标
+    （③负空间审查与④沙盒验证皆 passed，物＝闸步表 sandbox 行 result_ref 引用绑定）；
+    ⛔ 转授、⛔ 复合、⛔ 跨场景复用；⛔ 作身份凭证使用（验伪端只判此令牌真伪与态）。
+    """
+
+    __tablename__ = "site_agent_promo_token"
+    token_no: Mapped[str] = mapped_column(Text, primary_key=True)   # SPT-＋12 位大写十六进制
+    reg_no: Mapped[str] = mapped_column(ForeignKey("site_agent_registry.reg_no"), nullable=False)
+    token_fingerprint: Mapped[str] = mapped_column(Text, nullable=False)  # sha256 不可逆指纹
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    approver: Mapped[str] = mapped_column(Text, nullable=False)          # 四要件·人（须＝会话主体）
+    approved_at: Mapped[str] = mapped_column(Text, nullable=False)       # 四要件·时
+    sandbox_approval_ref: Mapped[str] = mapped_column(Text, nullable=False)  # 四要件·物
+    approval_intent: Mapped[str] = mapped_column(Text, nullable=False)   # 四要件·意（签批意旨）
+    issued_at: Mapped[str] = mapped_column(Text, nullable=False)
+    rotated_at: Mapped[str | None] = mapped_column(Text)
+    revoked_at: Mapped[str | None] = mapped_column(Text)
+    issuer_session: Mapped[str | None] = mapped_column(Text)             # 签发人类会话指纹（⛔ 非值）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                    # 签发存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('active','revoked')", name="ck_site_agent_promo_token_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_promo_token_prov"),
+        Index("idx_site_agent_promo_token_fp", "token_fingerprint"),
+    )
+
+
 class SiteAgentAdmission(Base):
     """34. 站点智能体通道·闸步表（批 2：六步硬序之状态机落点，①③④ 批 2 接真、⑤批 3）。
 

@@ -162,6 +162,12 @@ app.include_router(market_admin_ops_router)
 from agent_channel_ops import router as agent_channel_ops_router  # noqa: E402
 app.include_router(agent_channel_ops_router)
 
+# A-28: 智能体通道 对外补齐 B（L1SI166-CHANNEL-GAP-001 项 B——转正令牌：与身份凭据族
+# 物理分离（独立表/独立 SPT- 前缀）；只存 sha256 指纹；签发即轮换·吊销即时；
+# 人类会话内签发＋沙盒签批四要件（人/时/物/意）＋出盒判据达标；⛔ 名称不得用「执行令牌」）
+from agent_channel_promo_ops import router as agent_channel_promo_router  # noqa: E402
+app.include_router(agent_channel_promo_router)
+
 # A-27: 公开只读制度件取得面（丙案 · L1SI151-PUBLIC-ROUTE-001——/api/public/docs/* 匿名只读
 # 已入站公开件；只读容器件单一事实源；fail-closed；旧 /api/site/docs 为同一实现之别名）
 from public_docs_ops import router as public_docs_router  # noqa: E402
