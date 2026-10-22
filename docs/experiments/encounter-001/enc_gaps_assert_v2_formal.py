@@ -16,8 +16,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 # 路径锚定（改造令·甲）：仓内相对——本脚本位 docs/experiments/encounter-001/，条文在 docs/regulations/
 _HERE = os.path.dirname(os.path.abspath(__file__))
-F_MD = os.path.normpath(os.path.join(_HERE, "..", "..", "regulations", "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md"))
-F_YM = os.path.normpath(os.path.join(_HERE, "..", "..", "regulations", "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml"))
+F_MD = os.path.normpath(os.path.join(_HERE, "..", "..", "regulations", "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md"))
+F_YM = os.path.normpath(os.path.join(_HERE, "..", "..", "..", "archive", "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml"))
 
 assert os.path.exists(F_MD), "缺人读版"
 assert os.path.exists(F_YM), "缺机读版"
