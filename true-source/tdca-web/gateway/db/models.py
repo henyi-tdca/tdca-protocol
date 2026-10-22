@@ -710,6 +710,10 @@ class SiteAgentRegistry(Base):
     ext_declaration: Mapped[str | None] = mapped_column(Text)     # GUEST：外部创建者声明·主体声明（⛔ 不上公开面）
     ext_contact: Mapped[str | None] = mapped_column(Text)         # GUEST：可核验联系方式（⛔ 不上公开面）
     idem_key: Mapped[str | None] = mapped_column(Text)            # 幂等键（sha256_16；唯一索引见迁移 0014）
+    # ── GO-LIVE-001 步2 新增列（0018 迁移；转正状态位——NULL＝未转正，⛔ 与 A 项收窄不冲突：
+    #   收窄禁的是 agents 表加 channel_type；本表同表加列照 RULING-L1SI167-FIVE-STATE-001 §三）──
+    promoted_at: Mapped[str | None] = mapped_column(Text)         # 转正时点（ISO 串；NULL＝未转正）
+    promotion_nca_ref: Mapped[str | None] = mapped_column(Text)   # 转正存证号（⛔ 存令牌值）
     __table_args__ = (
         CheckConstraint("status IN ('正常','冻结','降权','吊销')", name="ck_site_agent_registry_status"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_site_agent_registry_prov"),
