@@ -865,23 +865,6 @@ items:
     件头与件名仍载 V0.1-DRAFT（签批时按「一字未改」保留原貌）⟹ 呈现按「生效」，同条注明此点
   page_visible: true
   integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
-- filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md
-  class: 条例
-  steps:
-  - S2
-  - S4
-  state: 草案
-  version: ''
-  bytes: 6862
-  sha256_16: 79AE34F72E107243
-  in_public: false
-  in_repo: true
-  slug: ''
-  state_basis: 文件名
-  display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V0.9-DRAFT·待签批）.md
-  state_note: ⚠️ 历史草案版（V0.9-DRAFT）：同制度已有 V1.0 生效版 ⟹ 上页只列生效版，本件不单列（折叠「历史草案」）
-  page_visible: false
-  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
 - filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md
   class: 条例
   steps:
@@ -889,8 +872,8 @@ items:
   - S4
   state: 生效
   version: V1.0
-  bytes: 3835
-  sha256_16: 4DF6FC9288085CAD
+  bytes: 6862
+  sha256_16: 79AE34F72E107243
   in_public: true
   in_repo: true
   slug: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md
@@ -898,24 +881,7 @@ items:
   display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md
   state_note: ⭐ 同制度另有 V0.9-DRAFT 历史草案版 ⟹ 以本生效版为准（只列本件）
   page_visible: true
-  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
-- filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml
-  class: 条例
-  steps:
-  - S2
-  - S4
-  state: 草案
-  version: ''
-  bytes: 4761
-  sha256_16: 967E05D69A14CB30
-  in_public: false
-  in_repo: true
-  slug: ''
-  state_basis: 文件名
-  display_name: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V0.9-DRAFT）.yaml
-  state_note: ⚠️ 历史草案版（V0.9-DRAFT）：同制度已有 V1.0 生效版 ⟹ 上页只列生效版，本件不单列（折叠「历史草案」）
-  page_visible: false
-  integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
+  integrity_basis: L1SI165 相遇名对齐小单施工实测（bytes＋sha256_16）
 - filename: TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml
   class: 条例
   steps:
@@ -1062,7 +1028,7 @@ v6_changes:
     count: 9
     note: 原 V5 按件名判「草案」，与签批落地件及公网呈现不符 ⟹ 改判「生效」
   corpus074: 待辨 → 对外候选（件内自载「本版仅为中文对外候选」）
-  encounter_dual: 相遇专章 V0.9 草案 2 件标 page_visible=false（只列 V1.0 生效 2 件）
+  encounter_dual: 相遇专章 V0.9 草案 2 件已归 archive/（清单不再列），只列 V1.0 生效 2 件
   in_repo: 以 atomgit/main 树 a961efbe 重算（原 36 件 false → true）
 step_counts:
   S2: 27
