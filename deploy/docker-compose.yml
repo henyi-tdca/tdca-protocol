@@ -10,6 +10,11 @@ services:
       MOONSHOT_API_KEY: "${MOONSHOT_API_KEY:-}"
       DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
       DATABASE_URL: "sqlite:////data/tdca.db"
+      # GO-LIVE-001（RULING-L1SI167-FIVE-STATE-001）：押金门槛 1 MOU（象征性，
+      # 缺省 fail-closed 关闸——配后方开）；注册开关缺省 0=关显式落编排
+      # （内部开通期：外部登记收口 403 TDCA-E-GOV-PERM-003；开门须另令置 1）
+      TDCA_UTILITY_DEPOSIT_MIN_MOU: "1"
+      TDCA_AGENT_REG_OPEN: "0"
     volumes:
       - tdca-db:/data
       - /root/tdca/docs/regulations:/docs/regulations:ro
