@@ -21,6 +21,8 @@ const FAMILY_TABS: { key: string; label: string }[] = [
   { key: 'paper', label: '论文与实证' },
   { key: 'cop-library', label: '产物库' },
   { key: 'regulation', label: '制度规范' },
+  { key: 'laws', label: '法律原文' },
+  { key: 'law-notes', label: '适用说明' },
 ]
 
 // 产物库族内子库分组（slug 前缀 <子库>--；批一在册件无此前缀，归入说明件与代表件）
@@ -103,7 +105,7 @@ export function LibraryPage() {
   const [params] = useSearchParams()
   const [families, setFamilies] = useState<FamilyView[]>([])
   const [family, setFamily] = useState(
-    ['whitepaper', 'paper', 'cop-library', 'regulation'].includes(params.get('family') ?? '')
+    ['whitepaper', 'paper', 'cop-library', 'regulation', 'laws', 'law-notes'].includes(params.get('family') ?? '')
       ? (params.get('family') as string)
       : 'whitepaper')
   const [items, setItems] = useState<ItemView[]>([])
@@ -135,7 +137,7 @@ export function LibraryPage() {
 
   return (
     <PageShell
-      title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范）"
+      title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范 · 法律原文 · 适用说明）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"
       description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。">
