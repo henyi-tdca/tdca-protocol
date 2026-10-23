@@ -2,8 +2,8 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI163-START-001 /start 新手指引自检
 // 约束矩阵: 设计件 §五 A-1~A-10（计数程序统计，⛔ 目测）＋ §四 M-1~M-4 同批验收
 //  验①哈希：?raw 源 sha256_16 == 在册值 DE72CA35429AF099（_START-MAP-20261021-V1·R1-001-A 实测刷新）
-//  验②解析：steps 6／docs 56／terms 147；六步 5/24/17/26/2/3；五类 21/17/9/5/4；
-//           五态 27/17/5/4/3；page_visible 54＋折叠 2（相遇 V0.9）；adjacent_steps 口径；
+//  验②解析：steps 6／docs 54／terms 147；六步 5/24/17/26/2/3；五类 19/17/9/5/4；
+//           五态 27/17/3/4/3；page_visible 54（折叠 0·相遇 V0.9 已归 archive）；adjacent_steps 口径；
 //           RTN 两义 T-029/T-034 并列在册
 //  验③渲染：A-2 六步名逐字／A-3 步内件数（page_visible 在列 5/22/17/24/2/3，
 //           徽数照 STEP 表 5/24/17/26/2/3，差值即折叠件并注明）／A-4 缺口两处同标／
@@ -80,9 +80,9 @@ describe('验①② 机读表哈希与解析（A-3 程序统计）', () => {
     expect(await sha16(startMapYaml)).toBe('DE72CA35429AF099')
   })
 
-  it('三表规模：steps 6／docs 56／terms 147／组 12', () => {
+  it('三表规模：steps 6／docs 54／terms 147／组 12', () => {
     expect(DATA.steps).toHaveLength(6)
-    expect(DATA.docs).toHaveLength(56)
+    expect(DATA.docs).toHaveLength(54)
     expect(DATA.terms).toHaveLength(147)
     expect(new Set(DATA.terms.map((t) => t.group)).size).toBe(12)
   })
@@ -95,17 +95,16 @@ describe('验①② 机读表哈希与解析（A-3 程序统计）', () => {
     }
   })
 
-  it('五类 21/17/9/5/4（全 56）；五态 27/17/5/4/3（全 56）；page_visible 54＋折叠 2（相遇 V0.9）', () => {
-    for (const [cls, n] of Object.entries({ 条例: 21, 标准与流程: 17, 规范与细则: 9, 模板与表单: 5, 基本制度: 4 })) {
+  it('五类 19/17/9/5/4（全 54）；五态 27/17/3/4/3（全 54）；page_visible 54＋折叠 0（相遇 V0.9 已归 archive）', () => {
+    for (const [cls, n] of Object.entries({ 条例: 19, 标准与流程: 17, 规范与细则: 9, 模板与表单: 5, 基本制度: 4 })) {
       expect(DATA.docs.filter((d) => d.class === cls), cls).toHaveLength(n)
     }
-    for (const [st, n] of Object.entries({ 生效: 27, 指引性: 17, 草案: 5, 对外候选: 4, 非制度件: 3 })) {
+    for (const [st, n] of Object.entries({ 生效: 27, 指引性: 17, 草案: 3, 对外候选: 4, 非制度件: 3 })) {
       expect(DATA.docs.filter((d) => d.state === st), st).toHaveLength(n)
     }
     expect(VISIBLE).toHaveLength(54)
     const folded = DATA.docs.filter((d) => !d.page_visible)
-    expect(folded).toHaveLength(2)
-    for (const f of folded) expect(f.filename).toContain('V0.9-DRAFT')
+    expect(folded).toHaveLength(0)
   })
 
   it('相邻件口径＝本步前两步＋后一步（S1=[S2]／S5=[S3,S4,S6]／S6=[S4,S5]）', () => {
@@ -204,9 +203,9 @@ describe('A-6 目录筛选叠加（抽测 8 组，含两组空组合）', () => 
     })
   }
 
-  it('态芯片计数与 §2.1 一致（生效 27／指引性 17／草案 5／对外候选 4／非制度件 3）', () => {
+  it('态芯片计数与 §2.1 一致（生效 27／指引性 17／草案 3／对外候选 4／非制度件 3）', () => {
     renderStart()
-    const want = { 生效: 27, 指引性: 17, 草案: 5, 对外候选: 4, 非制度件: 3 } as const
+    const want = { 生效: 27, 指引性: 17, 草案: 3, 对外候选: 4, 非制度件: 3 } as const
     for (const [st, n] of Object.entries(want)) {
       expect(screen.getByTestId(`catalog-chip-state-${st}`).textContent).toContain(`${st} ${n}`)
     }
