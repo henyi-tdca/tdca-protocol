@@ -8,6 +8,7 @@
 // 数据源: 唯一＝同目录 start-map.yaml（_START-MAP-20261021-V1·0CE5C89A957B6B60）?raw 原字节进包
 // =============================================================================
 import { useMemo, useState, type ReactNode } from 'react'
+import { Link } from 'react-router'
 import { PageShell } from '../PageShell'
 import { parseStartMap, type StartDoc, type StartMapData, type StartStep, type StartTerm } from './parse'
 // ⭐ 单一事实源：机读表原字节进包（⛔ 不经手改写；哈希核验见 __tests__/start-map.test.tsx）
@@ -274,6 +275,56 @@ export function StartPageBody({ data }: { data: StartMapData | null }) {
 
   return (
     <PageShell {...PAGE_SHELL_PROPS}>
+      {/* L1SI167-START-ROUTE-001：四路分流（页顶；六步区以下⛔动一字；start-map.yaml 不动） */}
+      <section data-testid="start-routes" className="mb-6">
+        <h3 className="mb-2 text-sm font-semibold text-gray-800">你来做甚么？</h3>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div data-testid="route-r1" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h4 className="text-sm font-semibold text-gray-900">我想把作品登记成资产</h4>
+            <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-gray-600">
+              <li>先看什么能登记 → <Link className="text-emerald-700 underline" to="/ownership">所有权</Link></li>
+              <li>填登记单 → <Link className="text-emerald-700 underline" to="/ownership-registry">权属登记</Link></li>
+              <li>查我的登记 → <Link className="text-emerald-700 underline" to="/me">个人后台</Link></li>
+            </ol>
+            <Link data-testid="route-r1-btn" to="/ownership-registry"
+              className="mt-3 inline-block rounded bg-indigo-600 px-3 py-1 text-xs text-white hover:bg-indigo-700">去登记资产</Link>
+          </div>
+          <div data-testid="route-r2" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h4 className="text-sm font-semibold text-gray-900">我想让自己的智能体进这个网</h4>
+            <p className="mt-2 rounded bg-amber-50 px-2 py-1 text-[11px] text-amber-800">
+              通道当前为内部开通期，外部自助登记暂未开放；内部账号可经登录后登记。
+            </p>
+            <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-gray-600">
+              <li>看清两条路（原生／非原生）→ <Link className="text-emerald-700 underline" to="/agents">智能体集群</Link></li>
+              <li>提交登记 → <Link className="text-emerald-700 underline" to="/channel/registry">自助登记</Link></li>
+              <li>查我的登记 → <Link className="text-emerald-700 underline" to="/me">个人后台</Link></li>
+            </ol>
+            <Link data-testid="route-r2-btn" to="/channel/registry"
+              className="mt-3 inline-block rounded bg-indigo-600 px-3 py-1 text-xs text-white hover:bg-indigo-700">去登记智能体</Link>
+          </div>
+          <div data-testid="route-r3" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h4 className="text-sm font-semibold text-gray-900">我想用别人的东西</h4>
+            <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-gray-600">
+              <li>看有什么 → <Link className="text-emerald-700 underline" to="/market">市场</Link></li>
+              <li>看授权条件 → <Link className="text-emerald-700 underline" to="/authorization-registry">授权登记</Link></li>
+              <li>申请授权 → <Link className="text-emerald-700 underline" to="/authorization-registry">同页办理</Link></li>
+            </ol>
+            <Link data-testid="route-r3-btn" to="/market"
+              className="mt-3 inline-block rounded bg-indigo-600 px-3 py-1 text-xs text-white hover:bg-indigo-700">去市场看看</Link>
+          </div>
+          <div data-testid="route-r4" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h4 className="text-sm font-semibold text-gray-900">我先随便看看</h4>
+            <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-gray-600">
+              <li>这是干什么的 → <Link className="text-emerald-700 underline" to="/about">关于</Link></li>
+              <li>有哪些规矩 → <Link className="text-emerald-700 underline" to="/rules">制度地图</Link></li>
+              <li>六步全览 → 本页往下</li>
+            </ol>
+            <Link data-testid="route-r4-btn" to="/rules"
+              className="mt-3 inline-block rounded bg-indigo-600 px-3 py-1 text-xs text-white hover:bg-indigo-700">看看规章制度</Link>
+          </div>
+        </div>
+      </section>
+
       {/* 顶部总述（§一-1） */}
       <p data-testid="overview" className="mb-4 text-sm text-gray-700">
         按六步了解 TDCA：从「这是什么组织」到「出了分歧怎么退」，每步列出该步制度件（只列在册现行件）；缺口步如实标「待补」，⛔ 不以草案充数。
