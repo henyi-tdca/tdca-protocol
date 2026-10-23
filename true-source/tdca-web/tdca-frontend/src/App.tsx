@@ -10,6 +10,7 @@ import { AuthProvider } from '@/app/auth-context'
 import { RequireAuth } from '@/app/route-guard'
 import { PAGE_META, NotFoundPage, renderPage, DocsIndexPage, DocDetailPage } from '@/pages/pages'
 import { AgentChannelRegisterPage } from '@/pages/agent-channel-register'
+import { ChannelMyPage } from '@/pages/channel-my'
 
 /** 受保护路由（FRAMEWORK-001 §四：须登录 DID + HUF 鉴权）——未登录重定向 /auth */
 const PROTECTED = new Set([
@@ -42,6 +43,8 @@ export default function App() {
           <Route path="/channel/portal" element={<Navigate to="/" replace />} />
           <Route path="/channel/agents" element={<Navigate to="/agents" replace />} />
           <Route path="/channel/registry" element={<AgentChannelRegisterPage />} />
+          {/* L1SI167-CHANNEL-UI-001：/channel/my「我的通道」四屏流水线（私域须登录；⛔ 入公域导航） */}
+          <Route path="/channel/my" element={<RequireAuth><ChannelMyPage /></RequireAuth>} />
           <Route path="/channel/market" element={<Navigate to="/market" replace />} />
           <Route path="/channel/tools" element={<Navigate to="/toolshelf" replace />} />
           {/* 二期改版批2块二：文档库两路参数路由（族列表／详情；首页 /docs 走 PAGE_META） */}
