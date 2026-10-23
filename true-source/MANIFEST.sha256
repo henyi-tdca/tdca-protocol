@@ -29,7 +29,7 @@ ad4ba110c5255dfe4a083e94d85a9d7458075da1cd28d155e48d3eb3349c85ba  tdca-web/gatew
 0009b696276015987e418e4b8ca2017c3e8dd532caae67b059d7c5978e399ec2  tdca-web/gateway/tests/test_intent.py
 b59f530de3f071c1f3048d4fad2e98f76681676afbc4e10d62eab452af3972e6  tdca-web/gateway/ws_events.py
 ec54e27840a5497dbb4dcd68a8a52dcf9a311d22c16cea37f8d0578540cd40f3  tdca-web/gateway/交付报告-可用性修复-20260811.md
-4c766b69dacdf37c89be708136028f8728a6b80cec80648e5e4e4f30f4bd6f1c  tdca-web/gateway/发布前检查单-20260821.md
+# 2026-10-23 删：tdca-web/gateway/发布前检查单-20260821.md（运维作业单转运维私域·L1SI168-PUBSCRUB-001·ADD-001 允注记一行）
 719551305d593a5eb505e16955a458f7af2702df726b392e24d31962b546ada8  tdca-web/package.json
 78a311d1b48f8d9b24ab30a30f840543ea329f8ec7a39d19759b4bea1f3ccccb  tdca-web/tdca-call-rules/README.md
 3bae509b2493c33a0deb7a40c69e753ba576373e07f65dfd1e844156c4806b88  tdca-web/tdca-call-rules/TDCA-CALL-001-商业调用规则.md
