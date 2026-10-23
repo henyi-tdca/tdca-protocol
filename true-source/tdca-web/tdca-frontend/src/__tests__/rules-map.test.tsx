@@ -1,7 +1,7 @@
 // =============================================================================
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI162-RULES-MAP-001 /rules 制度地图自检
 // 约束矩阵: 交办令 §六 R-1~R-7（计数以程序统计为准，⛔ 目测）
-//  验①哈希：?raw 机读表 sha256_16 == 在册值 D09429966CEC4C80（V6.4-GENESIS-EVID）
+//  验①哈希：?raw 机读表 sha256_16 == 在册值 4BE2B6E63824DA4A（V6.4-GENESIS-EVID·R1-001-A 实测刷新）
 //  验②解析：59 项；五态 30/17/5/4/3/0；五类 21/17/9/5/7；六步 7/27/17/26/2/3；
 //           page_visible=false 恰 2（相遇 V0.9）；V1.0-FROZEN 恰 9（三族）；in_public 45
 //  验③渲染：R-1 主表 57＋折叠 2；R-4 对外候选 4 件逐条未标生效；R-5 三族注明在位；
@@ -36,7 +36,7 @@ function renderPage() {
 
 describe('验①② 机读表哈希与解析（R-2/R-3 程序统计）', () => {
   it('?raw 源 sha256_16 == 在册值', async () => {
-    expect(await sha16(docMapYaml)).toBe('D09429966CEC4C80')
+    expect(await sha16(docMapYaml)).toBe('4BE2B6E63824DA4A')
   })
 
   it('59 项 integrity 自洽（bytes>0、sha256_16 16 位大写、in_repo 全真）', () => {
