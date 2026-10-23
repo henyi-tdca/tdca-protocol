@@ -26,6 +26,7 @@ const PRIVATE_NAV: { to: string; label: string }[] = [
   { to: '/ownership-registry', label: '权属登记' },
   { to: '/authorization-registry', label: '授权登记' },
   { to: '/market-sim', label: '规范与沙盒链' },
+  { to: '/channel/my', label: '我的通道' }, // L1SI167-CHANNEL-UI-001：四屏流水线（押金→令牌→转正→沙盒；私域）
 ]
 
 /** 「我的」卡（批1骨架）：登录态摘要 + 快捷入口；批2块一加入私域栏目（申诉端 /me/appeal 随块三） */
