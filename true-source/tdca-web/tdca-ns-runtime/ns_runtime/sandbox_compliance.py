@@ -134,7 +134,7 @@ class SandboxCompilePipeline:
         if not result.ok or result.ir is None:
             return None
 
-        nca_id = f"NCA-SBX-{hashlib.sha1(f'{scene.get('action', '')}{time.time_ns()}'.encode()).hexdigest()[:8]}"
+        nca_id = "NCA-SBX-" + hashlib.sha1(f"{scene.get('action', '')}{time.time_ns()}".encode()).hexdigest()[:8]
         return SandboxCompiledNCA(
             nca_id=nca_id,
             source_ref="+".join(legal_refs) if legal_refs else "no-legal-ref",
