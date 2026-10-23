@@ -112,7 +112,7 @@ describe('F4 通知机状态页 /notifier', () => {
       </MemoryRouter>,
     )
     await waitFor(() => expect(screen.getByTestId('notifier-attest')).toBeInTheDocument())
-    expect(screen.getByText('DAR-001')).toBeInTheDocument()
+    expect(screen.getByText('DAR-DEMO-001')).toBeInTheDocument()
     fireEvent.click(screen.getByTestId('notifier-go-attest'))
     await waitFor(() => expect(screen.getByText('动态确权请求队列')).toBeInTheDocument())
     r.unmount()

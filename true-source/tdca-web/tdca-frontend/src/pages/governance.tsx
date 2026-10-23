@@ -74,7 +74,7 @@ export function GovernancePage() {
               data-testid="governance-target"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              placeholder="如 TDID-AGENT-001"
+              placeholder="如 example-tdid-demo"
               className="w-48 rounded border border-gray-300 px-2 py-1 text-sm"
             />
             <button

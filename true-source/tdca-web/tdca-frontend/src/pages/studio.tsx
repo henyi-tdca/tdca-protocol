@@ -15,14 +15,14 @@ import { TopologyEngine, hashAgentId, type TopoData } from '@/components/workbud
 
 // ---- 生命周期六阶段（诞生→教育→沙盒→市场→化合衍生；F3 模拟数据）----
 const LIFECYCLE_NODES: LifecycleNode[] = [
-  { step: 'BIRTH', label: '诞生', status: 'ok', detail: { tdid: 'TDID-AGENT-007', creator: 'H（人类）' }, nca_ref: 'Meta-Attestation-NCA-001' },
-  { step: 'EDU', label: '教育', status: 'ok', detail: { course: 'E-EDU 商学院', progress: '100%' }, nca_ref: 'NCA-EDU-001' },
-  { step: 'SANDBOX', label: '沙盒', status: 'ok', detail: { sea: '4/5 GREEN', activation: 1.35 }, nca_ref: 'NCA-SBX-001' },
-  { step: 'MARKET', label: '市场', status: 'ok', detail: { mou: 1200, calls: 3 }, nca_ref: 'NCA-MKT-001' },
-  { step: 'COMPOUND', label: '化合衍生', status: 'pending', detail: { child: 'TDID-AGENT-007-C1' } },
+  { step: 'BIRTH', label: '诞生', status: 'ok', detail: { tdid: 'TDID-DEMO-001', creator: 'H（人类）' }, nca_ref: 'Meta-Attestation-NCA-DEMO' },
+  { step: 'EDU', label: '教育', status: 'ok', detail: { course: 'E-EDU 商学院', progress: '100%' }, nca_ref: 'NCA-EDU-DEMO' },
+  { step: 'SANDBOX', label: '沙盒', status: 'ok', detail: { sea: '4/5 GREEN', activation: 1.35 }, nca_ref: 'NCA-SBX-DEMO' },
+  { step: 'MARKET', label: '市场', status: 'ok', detail: { mou: 1200, calls: 3 }, nca_ref: 'NCA-MKT-DEMO' },
+  { step: 'COMPOUND', label: '化合衍生', status: 'pending', detail: { child: 'TDID-DEMO-001-C1' } },
 ]
 
-const NCA_CHAIN = ['Meta-Attestation-NCA-001', 'NCA-EDU-001', 'NCA-SBX-001', 'NCA-MKT-001']
+const NCA_CHAIN = ['Meta-Attestation-NCA-DEMO', 'NCA-EDU-DEMO', 'NCA-SBX-DEMO', 'NCA-MKT-DEMO']
 
 // ---- 创建向导五步（FRAMEWORK-001 §7.2）----
 // plain＝人话一句（TDCA-PLAN-SITE-UX-PLAIN-001 A3；解释层，⛔ 不替换在册术语）
@@ -42,13 +42,13 @@ const WIZARD_STEPS = [
 // ---- 化合衍生拓扑（父→子 NCA 链，ID91 继承）----
 const COMPOUND_TOPO: TopoData = {
   nodes: [
-    { id: hashAgentId('TDID-AGENT-007'), label: '父体 AGENT-007', type: 'official', status: 'active' },
-    { id: hashAgentId('TDID-AGENT-007-C1'), label: '子体 C1', type: 'user', status: 'active' },
-    { id: hashAgentId('TDID-AGENT-007-C2'), label: '子体 C2', type: 'user', status: 'idle' },
+    { id: hashAgentId('TDID-DEMO-001'), label: '父体 DEMO-001', type: 'official', status: 'active' },
+    { id: hashAgentId('TDID-DEMO-001-C1'), label: '子体 C1', type: 'user', status: 'active' },
+    { id: hashAgentId('TDID-DEMO-001-C2'), label: '子体 C2', type: 'user', status: 'idle' },
   ],
   edges: [
-    { from: hashAgentId('TDID-AGENT-007'), to: hashAgentId('TDID-AGENT-007-C1'), label: '化合（NCA 链继承）', state: 'flowing' },
-    { from: hashAgentId('TDID-AGENT-007'), to: hashAgentId('TDID-AGENT-007-C2'), label: '化合（NCA 链继承）', state: 'flowing' },
+    { from: hashAgentId('TDID-DEMO-001'), to: hashAgentId('TDID-DEMO-001-C1'), label: '化合（NCA 链继承）', state: 'flowing' },
+    { from: hashAgentId('TDID-DEMO-001'), to: hashAgentId('TDID-DEMO-001-C2'), label: '化合（NCA 链继承）', state: 'flowing' },
   ],
 }
 
@@ -108,8 +108,8 @@ export function StudioPage() {
         {/* 生命周期看板（复用 LifecycleDashboard + 时间轴动画增强） */}
         <section data-testid="studio-lifecycle" className="rounded-lg border border-gray-200 p-4">
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-800">生命周期看板 · TDID-AGENT-007</h3>
-            <ExportButton data={{ request_id: 'AGENT-007', nodes: LIFECYCLE_NODES, nca_chain: NCA_CHAIN }} />
+            <h3 className="text-sm font-semibold text-gray-800">生命周期看板 · TDID-DEMO-001</h3>
+            <ExportButton data={{ request_id: 'AGENT-DEMO-001', nodes: LIFECYCLE_NODES, nca_chain: NCA_CHAIN }} />
           </div>
           <div className="lifecycle-anim" data-testid="lifecycle-anim">
             <LifecycleTimeline nodes={LIFECYCLE_NODES} onSelect={setSelected} />

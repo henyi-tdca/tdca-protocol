@@ -120,7 +120,7 @@ export function AttestationMetaPage() {
     setError(null)
     const res = await api.post<{ status: string; attestation_id: string; verified: boolean }>(
       '/api/v1/attestation/meta',
-      { agent_id: 'AGENT-007', activation: Number(activation) || 0, six_elements: Object.fromEntries(checked.map((c) => [c, 'ok'])) },
+      { agent_id: 'AGENT-DEMO-001', activation: Number(activation) || 0, six_elements: Object.fromEntries(checked.map((c) => [c, 'ok'])) },
       { needHuf: true },
     )
     if (res.ok) setResult(res.data)
@@ -141,7 +141,7 @@ export function AttestationMetaPage() {
         <section data-testid="meta-step1" className="rounded-lg border border-gray-200 p-4">
           <h3 className="mb-1 text-sm font-semibold text-gray-800">步骤 1 · 沙盒验证报告审阅（只读）</h3>
           <ul className="space-y-0.5 text-xs text-gray-600">
-            <li>✓ NCA 审计轨迹：compile_for_scene → NCA-SBX-001（哈希完整）</li>
+            <li>✓ NCA 审计轨迹：compile_for_scene → NCA-SBX-DEMO（哈希完整）</li>
             <li>✓ 税收锚定：MOU ¥1,200（进项+出项）</li>
             <li>✓ 正和性验证：u_positive_sum PASS（θ=0.70）</li>
             <li>✓ L2-R8 核验 + 素材映射 10 冲突消解</li>

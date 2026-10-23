@@ -1,4 +1,4 @@
-﻿// =============================================================================
+// =============================================================================
 // TDCA 制度水印
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: F5 确权中心测试（总览/meta/dynamic/history + A-11 闭环）
 // 约束矩阵: FRAMEWORK-001 §八·B + REV-002 + A-11 契约 + F-4/HUF
@@ -14,8 +14,8 @@ function envelope(payload: unknown) {
 
 const QUEUE_PAYLOAD = {
   queue: [
-    { request_id: 'DAR-001', agent_id: 'AGENT-007', request_type: 'scene_extension', urgency: 'urgent', reason: 'MRCR 角色扩展' },
-    { request_id: 'DAR-002', agent_id: 'AGENT-012', request_type: 'cognition_evolution', urgency: 'normal', reason: 'S 漂移' },
+    { request_id: 'DAR-DEMO-001', agent_id: 'AGENT-DEMO-001', request_type: 'scene_extension', urgency: 'urgent', reason: 'MRCR 角色扩展' },
+    { request_id: 'DAR-DEMO-002', agent_id: 'AGENT-DEMO-002', request_type: 'cognition_evolution', urgency: 'normal', reason: 'S 漂移' },
   ],
   total: 2,
   note: '动态确权待审队列',
@@ -23,8 +23,8 @@ const QUEUE_PAYLOAD = {
 
 const HISTORY_PAYLOAD = {
   chain: [
-    { index: 1, nca_ref: 'Meta-Attestation-NCA-001', agent: 'AGENT-007', type: 'META', status: 'SIGNED', ts: '2026-08-01T00:00:00Z' },
-    { index: 3, nca_ref: 'Dynamic-Attestation-002', agent: 'AGENT-007', type: 'COGNITION_EVOLUTION', status: 'REJECTED', ts: '2026-08-08T00:00:00Z' },
+    { index: 1, nca_ref: 'Meta-Attestation-NCA-DEMO', agent: 'AGENT-DEMO-001', type: 'META', status: 'SIGNED', ts: '2026-08-01T00:00:00Z' },
+    { index: 3, nca_ref: 'Dynamic-Attestation-002', agent: 'AGENT-DEMO-001', type: 'COGNITION_EVOLUTION', status: 'REJECTED', ts: '2026-08-08T00:00:00Z' },
   ],
   total: 2,
   note: '确权历史 NCA 链跨代',
@@ -76,7 +76,7 @@ describe('F5 确权中心', () => {
       </MemoryRouter>,
     )
     await waitFor(() => expect(screen.getByTestId('attest-overview')).toBeInTheDocument())
-    expect(screen.getByText(/DAR-001/)).toBeInTheDocument()
+    expect(screen.getByText(/DAR-DEMO-001/)).toBeInTheDocument()
     expect(screen.getByTestId('link-meta')).toHaveTextContent('元函数初始确权')
     expect(screen.getByTestId('link-dynamic')).toHaveTextContent('1 紧急')
   })
@@ -112,10 +112,10 @@ describe('F5 确权中心', () => {
     render(<AttestationDynamicPage />)
     await waitFor(() => expect(screen.getByTestId('dynamic-queue')).toBeInTheDocument())
     expect(screen.getByText(/MRCR 角色扩展/)).toBeInTheDocument()
-    fireEvent.click(screen.getByTestId('dynamic-queue').querySelector('[data-decision="approve"][data-request-id="DAR-001"]')!)
+    fireEvent.click(screen.getByTestId('dynamic-queue').querySelector('[data-decision="approve"][data-request-id="DAR-DEMO-001"]')!)
     expect(screen.getByTestId('huf-modal')).toBeInTheDocument()
     fireEvent.click(screen.getByTestId('huf-confirm'))
-    await waitFor(() => expect(screen.getByTestId('decision-DAR-001')).toHaveTextContent('APPROVED'))
+    await waitFor(() => expect(screen.getByTestId('decision-DAR-DEMO-001')).toHaveTextContent('APPROVED'))
     const postCall = fn.mock.calls.find((c) => String(c[0]).includes('/api/v1/attestation/dynamic'))
     const headers = (postCall?.[1] as RequestInit | undefined)?.headers as Record<string, string> | undefined
     expect(headers?.Authorization).toBeDefined()
@@ -125,7 +125,7 @@ describe('F5 确权中心', () => {
     mockApiMulti({ '/api/v1/attestation/history': HISTORY_PAYLOAD })
     render(<AttestationHistoryPage />)
     await waitFor(() => expect(screen.getByTestId('history-chain')).toBeInTheDocument())
-    expect(screen.getByText('Meta-Attestation-NCA-001')).toBeInTheDocument()
+    expect(screen.getByText('Meta-Attestation-NCA-DEMO')).toBeInTheDocument()
     const rejected = screen.getByTestId('history-chain').querySelector('[data-status="REJECTED"]')
     expect(rejected).toHaveClass('bg-red-50')
     expect(rejected).toHaveTextContent('REJECTED')
