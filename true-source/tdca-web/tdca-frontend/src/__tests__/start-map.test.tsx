@@ -76,7 +76,7 @@ function applyCatalog(
 }
 
 describe('验①② 机读表哈希与解析（A-3 程序统计）', () => {
-  it('?raw 源 sha256_16 == 在册值 0CE5C89A957B6B60', async () => {
+  it('?raw 源 sha256_16 == 在册值 DE72CA35429AF099', async () => {
     expect(await sha16(startMapYaml)).toBe('DE72CA35429AF099')
   })
 
