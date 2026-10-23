@@ -1,0 +1,16 @@
+{
+  "_simulated": "SIMULATED-TEST",
+  "labeler_a": {
+    "d1": "ok",
+    "d2": "bad",
+    "d3": "ok"
+  },
+  "labeler_b": {
+    "d1": "ok",
+    "d2": "ok",
+    "d3": "ok"
+  },
+  "reported_diff": [
+    "d2"
+  ]
+}
