@@ -1,10 +1,10 @@
 // =============================================================================
 // TDCA 制度水印
 // FC-ID: TDCA-FC-FRONTEND-CHANNEL-MY-001 | 目标函数: L1SI167-CHANNEL-UI-001 四屏界面令
-// 约束矩阵: TDCA-HANDOFF-EXEC-L1SI167-CHANNEL-UI-001 §一~§四 ＋ 点击演示档追加件（乙档）
-// 制度锚点: 四步硬序（押金→令牌→转正→沙盒）｜前置状态可见｜人话提示｜演示徽标
+// 约束矩阵: CHANNEL-UI-001 §一~§四 ＋ 点击演示档追加件（乙档）＋ 步序修正令（-002）
+// 制度锚点: 步序＝押金⟹过闸(审查+沙盒)⟹领令牌⟹办转正；前置状态可见；人话提示；演示徽标
 // 配置权边界: L2 前端层；只接既有端点（⛔ 不改后端／⛔ 不改开关／⛔ 演示档不落真库）
-// 审计轨迹: L1SI167-CHANNEL-UI-001
+// 审计轨迹: L1SI167-CHANNEL-UI-001 + AMEND-002
 // 开发者: Reasonix（M）| 负空间版本: NSFL-V0.2 | MOU 锚定: 复用既有 gateway 契约
 // =============================================================================
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -41,6 +41,11 @@ interface DepositStateResp {
   events: DepositEvent[]
   required_min_mou: number | null
 }
+interface NsReviewResp {
+  reviewed: boolean
+  result?: string
+  nca_ref?: string
+}
 interface TokenIssueResp {
   issued: boolean
   token_no: string
@@ -66,30 +71,35 @@ interface SandboxResp {
 // ---------------------------------------------------------------------------
 function humanize(fail: ApiFailure): string {
   const raw = (fail.rawDetail ?? fail.detail ?? '').toString()
-  if (/无有效转正令牌/.test(raw)) return '还没有有效的转正令牌——先回第 2 步把转正令牌签了，再来办转正。'
-  if (/无有效保单/.test(raw)) return '还没有在册的有效保单——先在第 3 步登记一张保障期覆盖今天的保单，再来办转正。'
-  if (/无在册沙盒签批记录|④沙盒验证未过/.test(raw)) return '沙盒验证还没通过——这道闸门要求先通过沙盒验证才能签转正令牌（顺序不能倒）。'
-  if (/③负空间审查未过|③ 负空间审查未过/.test(raw)) return '前置的合规审查还没通过，暂不能签转正令牌。'
+  if (/无有效转正令牌/.test(raw)) return '还没有有效的转正令牌——先回第 3 步把转正令牌签了，再来办转正。'
+  if (/无有效保单/.test(raw)) return '还没有在册的有效保单——先在第 4 步登记一张保障期覆盖今天的保单，再来办转正。'
+  if (/无在册沙盒签批记录|④沙盒验证未过/.test(raw)) return '先到第 2 步把沙盒跑通，才能领令牌。'
+  if (/出盒判据未达：③/.test(raw) || /出盒判据未达/.test(raw)) return '还差一步：合规审查／沙盒验证没通过——先回第 2 步把两盏灯点亮。'
   if (/DEPOSIT_REQUIRED/.test(raw)) return '押金还不够——回第 1 步补足押金，才进得了沙盒。'
-  if (/DEPOSIT_CONFIG_MISSING/.test(raw)) return '站点还没配置押金门槛，沙盒闸门按安全默认关闭——请联系站点管理员配置后再试。'
-  if (/STEP_ORDER/.test(raw)) return '前面的步骤还没走完——先过合规审查，再进沙盒。'
+  if (/DEPOSIT_CONFIG_MISSING/.test(raw)) return '站点还没开押金门槛，暂时进不了沙盒——请联系站点管理员配置后再试。'
+  if (/STEP_ORDER: ③/.test(raw) || /负空间审查未过/.test(raw)) return '合规审查还没通过，进不了沙盒——先点上面的「提交审查」。'
+  if (/STEP_ORDER: ①/.test(raw)) return '前面的步骤还没走完：协议还没加载——按站内流程先把协议加载这步走了。'
+  if (/STEP_ORDER: ②/.test(raw)) return '前面的步骤还没走完：执行令牌还没有——按站内流程先把令牌这步走了。'
   if (/仅登记主体本人/.test(raw)) return '这个登记号不是你的——换你自己的登记号再操作。'
   if (/已转正/.test(raw)) return '这个登记号已经转正过了，不用重复办理。'
   if (/四要件不齐/.test(raw)) return '签批四要件没填齐——人、时、物、意四项都要填。'
+  if (/四要件·人须等于本会话主体/.test(raw)) return '「人」必须是你自己的登录名——不能替别人签。'
   if (/沙盒要件缺失/.test(raw)) return '进沙盒要带上两样东西：要件绑定引用和沙盒运行号——两项都填上再点。'
   if (/押付金额须为正整数/.test(raw)) return '押付金额要填大于 0 的整数。'
   if (/保障期止须晚于保障期起/.test(raw)) return '保单的截止日要晚于开始日。'
   if (/保额须为正整数/.test(raw)) return '保额要填大于 0 的整数。'
   if (/保单要件不齐/.test(raw)) return '保单信息没填齐——承保方、保障起止日期都要填。'
+  if (/对抗集|边界函数|场景约束/.test(raw)) return '审查三引用没填齐——边界声明、对抗集、场景范围都要填。'
   if (fail.reason === 'unauthorized') return '请先登录——登录后再走这四步。'
   if (fail.reason === 'forbidden') return '现在做不了这一步——原因见下方「详情」。'
   if (fail.reason === 'fail_closed') return '站点暂时连不上——稍后再试，页面不会瞎猜数据。'
   if (fail.reason === 'watermark_missing') return '站点回应缺了防伪水印——为保护你不展示这次结果，请稍后再试。'
-  return raw ? `这一步没办成——原因见下方「详情」。` : '这一步没办成——请稍后再试。'
+  return raw ? '这一步没办成——原因见下方「详情」。' : '这一步没办成——请稍后再试。'
 }
 
 // 演示档用假令牌值（⛔ 非真值；只显一次；不入库不入日志）
 const DEMO_TOKEN = 'TDCA-PRT-示例-DEMO-ONLY-9f3a7c51e2b84d60'
+const DEMO_RUN_REF = 'RUN-DEMO-0001'
 
 interface StepResult {
   kind: 'ok' | 'err' | 'demo'
@@ -101,6 +111,7 @@ export function ChannelMyPage() {
   // ----- 登记号与后端实况（真跑档回填；演示档不写库） -----
   const [regInput, setRegInput] = useState(() => loadDraft<string>('/channel/my:reg') ?? '')
   const [regNo, setRegNo] = useState('')
+  const [meName, setMeName] = useState('') // 会话用户名（「人」自动带出用）
   const [gate, setGate] = useState<GateResp | null>(null)
   const [dep, setDep] = useState<DepositStateResp | null>(null)
   const [loadMsg, setLoadMsg] = useState('')
@@ -109,27 +120,38 @@ export function ChannelMyPage() {
   // ----- 演示档 -----
   const [demo, setDemo] = useState(false)
   const [demoStep, setDemoStep] = useState(0) // 已走到的步数（0~4）
+  const [demoNs, setDemoNs] = useState(false) // 演示档：审查灯
+  const [demoSb, setDemoSb] = useState(false) // 演示档：沙盒灯
 
   // ----- 各步结果（留在页上；真跑档刷新后由后端状态回填判步） -----
   const [depResult, setDepResult] = useState<StepResult | null>(null)
+  const [gateResult, setGateResult] = useState<StepResult | null>(null) // 过闸：审查
+  const [sandboxResult, setSandboxResult] = useState<StepResult | null>(null) // 过闸：沙盒
+  const [runRef, setRunRef] = useState('') // 沙盒运行号＝第 3 步「物」来源
   const [tokenResult, setTokenResult] = useState<StepResult | null>(null)
   const [promoResult, setPromoResult] = useState<StepResult | null>(null)
-  const [sandboxResult, setSandboxResult] = useState<StepResult | null>(null)
   const [tokenValue, setTokenValue] = useState<string | null>(null) // 只显一次
   const [tokenShown, setTokenShown] = useState(false)
 
   // ----- 表单 -----
   const [amount, setAmount] = useState(1) // 默认 1（令 §一步 1）
-  const [fPerson, setFPerson] = useState('')
+  const [nsBoundary, setNsBoundary] = useState('')
+  const [nsAdversarial, setNsAdversarial] = useState('')
+  const [nsScope, setNsScope] = useState('')
   const [fTime, setFTime] = useState('')
-  const [fThing, setFThing] = useState('')
   const [fIntent, setFIntent] = useState('')
   const [polInsurer, setPolInsurer] = useState('')
   const [polCoverage, setPolCoverage] = useState(1)
   const [polStart, setPolStart] = useState('')
   const [polEnd, setPolEnd] = useState('')
   const [seaRef, setSeaRef] = useState('')
-  const [runRef, setRunRef] = useState('')
+
+  // 「人」＝本会话（auth/me 自动带出；取不到则留空由用户填）
+  useEffect(() => {
+    void api.get<{ username?: string }>('/api/v1/auth/me').then((r) => {
+      if (r.ok && r.data.username) setMeName(r.data.username)
+    })
+  }, [])
 
   const refresh = useCallback(async (rn: string) => {
     const [g, d] = await Promise.all([
@@ -154,8 +176,7 @@ export function ChannelMyPage() {
       saveDraft('/channel/my:reg', rn)
       setGate(null); setDep(null)
       setLoadMsg(`演示模式：${rn} 仅用于页面演示（不连站点、不写真库）`)
-      setDepResult(null); setTokenResult(null); setPromoResult(null); setSandboxResult(null)
-      setTokenValue(null); setTokenShown(false); setDemoStep(0)
+      resetAll()
       return
     }
     setBusy(true)
@@ -172,42 +193,42 @@ export function ChannelMyPage() {
     setRegNo(rn)
     saveDraft('/channel/my:reg', rn)
     setLoadMsg(`已载入：${rn}（${g.data.channel_type}）${g.data.creator_marker ? `；${g.data.creator_marker}` : ''}`)
-    // 清旧结果，防串号
-    setDepResult(null); setTokenResult(null); setPromoResult(null); setSandboxResult(null)
-    setTokenValue(null); setTokenShown(false); setDemoStep(0)
+    resetAll()
     await refresh(rn)
+  }
+
+  function resetAll() {
+    setDepResult(null); setGateResult(null); setSandboxResult(null)
+    setTokenResult(null); setPromoResult(null)
+    setTokenValue(null); setTokenShown(false); setDemoStep(0)
+    setDemoNs(false); setDemoSb(false)
+    setRunRef('')
   }
 
   // ----- 真跑档前置灯 -----
   const stepState = (key: string): 'satisfied' | 'pending' | 'failed' | 'unknown' =>
     gate?.gate?.steps?.[key]?.state ?? 'unknown'
+  const nsOk = stepState('ns-review') === 'satisfied'
+  const sandboxOk = stepState('sandbox') === 'satisfied'
+  const threshold = dep?.required_min_mou ?? null
+  const depositEnough = threshold !== null && (dep?.effective_mou ?? 0) >= threshold
   const depositPaid = (dep?.events ?? []).filter((e) => e.action === 'paid')
     .reduce((s, e) => s + e.amount_mou, 0)
   const depositConfiscated = (dep?.events ?? []).filter((e) => e.action === 'confiscated')
     .reduce((s, e) => s + e.amount_mou, 0)
   const depositRefunded = (dep?.events ?? []).filter((e) => e.action === 'refunded')
     .reduce((s, e) => s + e.amount_mou, 0)
-  const threshold = dep?.required_min_mou ?? null
 
-  // 第 2 步灯：合规审查（ns-review）／沙盒（sandbox）——后端硬序：先过后两项才签得出令牌
-  const nsOk = stepState('ns-review') === 'satisfied'
-  const sandboxOk = stepState('sandbox') === 'satisfied'
-  const tokenGateOk = nsOk && sandboxOk
-  // 第 3 步灯：保单无查询口（S-1 受理），只能靠办转正结果反推
-  const policyUnknown = true
-  // 第 4 步灯：押金 ≥ 门槛（门槛未配置＝闸关）
-  const depositEnough = threshold !== null && (dep?.effective_mou ?? 0) >= threshold
-
-  // ----- 总状态条 -----
+  // ----- 总状态条（步序修正令：押金⟹过闸⟹令牌⟹转正） -----
   const progress = useMemo(() => {
     if (demo) return [demoStep >= 1, demoStep >= 2, demoStep >= 3, demoStep >= 4]
     return [
       (dep?.effective_mou ?? 0) > 0,
-      gate?.promoted === true ? true : tokenResult?.kind === 'ok', // 无令牌查询口：以签发结果或已转正推
+      nsOk && sandboxOk,
+      tokenResult?.kind === 'ok' || gate?.promoted === true,
       gate?.promoted === true,
-      sandboxOk,
     ]
-  }, [demo, demoStep, dep, gate, tokenResult, sandboxOk])
+  }, [demo, demoStep, dep, nsOk, sandboxOk, tokenResult, gate])
 
   // ----- 第 1 步：交押金 -----
   const payDeposit = async () => {
@@ -218,7 +239,7 @@ export function ChannelMyPage() {
     }
     if (!regNo || amount <= 0) return
     setBusy(true)
-    const r = await api.post<DepositStateResp & { paid?: boolean }>(
+    const r = await api.post<{ paid?: boolean; effective_mou?: number }>(
       `/api/v1/agent-channel/${encodeURIComponent(regNo)}/deposits`,
       { amount_mou: amount, mou_ref: '' },
     )
@@ -226,18 +247,71 @@ export function ChannelMyPage() {
     if (!r.ok) {
       setDepResult({ kind: 'err', text: humanize(r), detail: r.rawDetail ?? r.detail })
     } else {
-      setDepResult({
-        kind: 'ok',
-        text: `已记账 ${amount} MOU（当前有效 ${r.data.effective_mou} MOU）`,
-      })
+      setDepResult({ kind: 'ok', text: `已记账 ${amount} MOU（当前有效 ${r.data.effective_mou ?? 0} MOU）` })
       await refresh(regNo)
     }
   }
 
-  // ----- 第 2 步：领令牌 -----
+  // ----- 第 2 步 · 过闸 A：提交审查 -----
+  const submitReview = async () => {
+    if (demo) {
+      setDemoStep((s) => Math.max(s, 1)) // 过闸第一步（押金后）
+      setDemoNs(true)
+      setGateResult({ kind: 'demo', text: '演示：合规审查已通过（演示数据·非真实业务）' })
+      return
+    }
+    if (!regNo) return
+    setBusy(true)
+    const r = await api.post<NsReviewResp>('/api/v1/agent-channel/ns-review', {
+      reg_no: regNo,
+      boundary_ref: nsBoundary.trim(),
+      adversarial_set_ref: nsAdversarial.trim(),
+      scene_scope: nsScope.trim(),
+      note: '',
+    })
+    setBusy(false)
+    if (!r.ok) {
+      setGateResult({ kind: 'err', text: humanize(r), detail: r.rawDetail ?? r.detail })
+    } else {
+      setGateResult({ kind: 'ok', text: '合规审查已通过' })
+      await refresh(regNo)
+    }
+  }
+
+  // ----- 第 2 步 · 过闸 B：进沙盒验证 -----
+  const enterSandbox = async () => {
+    if (demo) {
+      setDemoStep((s) => Math.max(s, 2)) // 过闸完成
+      setDemoNs(true); setDemoSb(true)
+      setRunRef(DEMO_RUN_REF) // 「物」自动带出源
+      setSandboxResult({
+        kind: 'demo',
+        text: `演示：沙盒验证已通过（运行号 ${DEMO_RUN_REF}，演示数据·非真实业务）`,
+      })
+      return
+    }
+    if (!regNo) return
+    setBusy(true)
+    const r = await api.post<SandboxResp>('/api/v1/agent-channel/sandbox', {
+      reg_no: regNo,
+      sea_elements_ref: seaRef.trim(),
+      sandbox_run_ref: runRef.trim(),
+      result: 'passed',
+    })
+    setBusy(false)
+    if (!r.ok) {
+      setSandboxResult({ kind: 'err', text: humanize(r), detail: r.rawDetail ?? r.detail })
+      return
+    }
+    setSandboxResult({ kind: 'ok', text: `沙盒验证已通过（运行号 ${runRef.trim()}）` })
+    await refresh(regNo)
+  }
+
+  // ----- 第 3 步：领转正令牌（物＝第 2 步运行号，自动带出只读） -----
+  const thingRef = demo ? (runRef || DEMO_RUN_REF) : runRef
   const issueToken = async () => {
     if (demo) {
-      setDemoStep((s) => Math.max(s, 2))
+      setDemoStep((s) => Math.max(s, 3))
       if (!tokenShown) {
         setTokenValue(DEMO_TOKEN)
         setTokenShown(true)
@@ -249,8 +323,8 @@ export function ChannelMyPage() {
     setBusy(true)
     const r = await api.post<TokenIssueResp>(
       `/api/v1/agent-channel/${encodeURIComponent(regNo)}/promotion-token`,
-      { approver: fPerson.trim(), approved_at: fTime.trim(),
-        sandbox_approval_ref: fThing.trim(), approval_intent: fIntent.trim() },
+      { approver: meName, approved_at: fTime.trim(),
+        sandbox_approval_ref: thingRef.trim(), approval_intent: fIntent.trim() },
     )
     setBusy(false)
     if (!r.ok) {
@@ -268,10 +342,10 @@ export function ChannelMyPage() {
     await refresh(regNo)
   }
 
-  // ----- 第 3 步：办转正 -----
+  // ----- 第 4 步：办转正 -----
   const promote = async () => {
     if (demo) {
-      setDemoStep((s) => Math.max(s, 3))
+      setDemoStep((s) => Math.max(s, 4))
       setPromoResult({
         kind: 'demo',
         text: `演示：已转正 promoted_at＝${new Date().toISOString()}（演示数据·非真实业务）`,
@@ -312,47 +386,33 @@ export function ChannelMyPage() {
     }
   }
 
-  // ----- 第 4 步：进沙盒 -----
-  const enterSandbox = async () => {
-    if (demo) {
-      setDemoStep((s) => Math.max(s, 4))
-      setSandboxResult({ kind: 'demo', text: '演示：沙盒验证已通过（演示数据·非真实业务，未写库）' })
-      return
-    }
-    if (!regNo) return
-    setBusy(true)
-    const r = await api.post<SandboxResp>('/api/v1/agent-channel/sandbox', {
-      reg_no: regNo,
-      sea_elements_ref: seaRef.trim(),
-      sandbox_run_ref: runRef.trim(),
-      result: 'passed',
-    })
-    setBusy(false)
-    if (!r.ok) {
-      setSandboxResult({ kind: 'err', text: humanize(r), detail: r.rawDetail ?? r.detail })
-      return
-    }
-    setSandboxResult({ kind: 'ok', text: `已进沙盒：验证结果 ${r.data.result === 'passed' ? '通过' : '未通过'}` })
-    await refresh(regNo)
-  }
-
   // ----- 置灰判据（人话原因） -----
   const step1Disabled = !regNo || busy || amount <= 0
   const step1Why = !regNo ? '先在上面载入你的登记号' : amount <= 0 ? '押付金额要大于 0' : ''
-  const step2Disabled = !regNo || busy || (!demo && !tokenGateOk) ||
-    !fPerson.trim() || !fTime.trim() || !fThing.trim() || !fIntent.trim()
-  const step2Why = !regNo ? '先载入登记号'
-    : !demo && !tokenGateOk ? '沙盒验证还没通过——这道闸门要求先通过沙盒验证才能签转正令牌'
-    : [fPerson, fTime, fThing, fIntent].some((v) => !v.trim()) ? '签批四要件（人／时／物／意）填齐才亮' : ''
-  const step3Disabled = !regNo || busy
-  const step3Why = !regNo ? '先载入登记号' : ''
-  const step4Disabled = !regNo || busy || (!demo && !depositEnough)
-  const step4Why = !regNo ? '先载入登记号'
-    : !demo && threshold === null ? '押金门槛还没配置，沙盒闸按安全默认关着'
-    : !demo && !depositEnough ? `押金还不够：当前有效 ${dep?.effective_mou ?? 0} MOU，门槛 ${threshold} MOU——回第 1 步补足`
+  const reviewDisabled = !regNo || busy || (!demo && (nsOk || !nsBoundary.trim() || !nsAdversarial.trim() || !nsScope.trim()))
+  const reviewWhy = !regNo ? '先载入登记号'
+    : !demo && nsOk ? '合规审查已经通过了'
+    : !demo && (!nsBoundary.trim() || !nsAdversarial.trim() || !nsScope.trim()) ? '审查三引用（边界声明／对抗集／场景范围）填齐再提交'
     : ''
+  const sandboxDisabled = !regNo || busy || (!demo && (!depositEnough || sandboxOk || !runRef.trim() || !seaRef.trim()))
+  const sandboxWhy = !regNo ? '先载入登记号'
+    : !demo && sandboxOk ? '沙盒验证已经通过了'
+    : !demo && threshold === null ? '站点还没开押金门槛，暂时进不了沙盒'
+    : !demo && !depositEnough ? `押金还不够：当前有效 ${dep?.effective_mou ?? 0} MOU，门槛 ${threshold} MOU——回第 1 步补足`
+    : !demo && !runRef.trim() ? '填一个沙盒运行号再进'
+    : !demo && !seaRef.trim() ? '填上要件绑定引用再进'
+    : ''
+  const tokenDisabled = !regNo || busy || (!demo && (!nsOk || !sandboxOk)) || !fTime.trim() || !fIntent.trim() || !thingRef.trim()
+  const tokenWhy = !regNo ? '先载入登记号'
+    : !demo && !nsOk ? '合规审查还没通过——先回第 2 步点「提交审查」'
+    : !demo && !sandboxOk ? '沙盒验证还没通过——先回第 2 步点「进沙盒验证」'
+    : !thingRef.trim() ? '「物」要等第 2 步沙盒跑通后自动带出'
+    : !fTime.trim() || !fIntent.trim() ? '「时」和「意」填上再签发'
+    : ''
+  const promoteDisabled = !regNo || busy
+  const promoteWhy = !regNo ? '先载入登记号' : ''
 
-  const stepTitle = ['① 交押金', '② 领转正令牌', '③ 办转正', '④ 进沙盒']
+  const stepTitle = ['① 交押金', '② 过闸', '③ 领转正令牌', '④ 办转正']
 
   const ResultPanel = ({ r }: { r: StepResult | null }) => {
     if (!r) return null
@@ -387,9 +447,9 @@ export function ChannelMyPage() {
   return (
     <PageShell
       title="我的通道"
-      dataSource="GET /api/v1/agent-channel/gate/{reg_no} ＋ deposits ＋ promotion-token ＋ promotion ＋ sandbox（只接既有端点）"
+      dataSource="GET /api/v1/agent-channel/gate/{reg_no} ＋ deposits ＋ ns-review ＋ sandbox ＋ promotion-token ＋ promotion（只接既有端点）"
       permission="私域（须登录；仅登记主体本人可操作）"
-      description="四步流水线：交押金 ⟶ 领转正令牌 ⟶ 办转正 ⟶ 进沙盒。每步先看前置状态，满足了按钮才亮；没满足会一句话讲清原因。"
+      description="四步流水线：交押金 ⟶ 过闸（审查＋沙盒）⟹ 领转正令牌 ⟶ 办转正。每步先看前置状态，满足了按钮才亮；没满足会一句话讲清原因。"
     >
       {/* —— 登记号载入 —— */}
       <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
@@ -450,7 +510,7 @@ export function ChannelMyPage() {
           <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">已没收：{depositConfiscated} MOU</span>
           <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">已退：{depositRefunded} MOU</span>
           <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">
-            进沙盒门槛：{threshold === null ? '未配置（沙盒闸关闭）' : `${threshold} MOU`}
+            进沙盒门槛：{threshold === null ? '站点还没开押金门槛，暂时进不了沙盒' : `${threshold} MOU`}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -475,9 +535,67 @@ export function ChannelMyPage() {
         <ResultPanel r={depResult} />
       </section>
 
-      {/* —— 第 2 步：领转正令牌 —— */}
+      {/* —— 第 2 步：过闸（审查 ＋ 沙盒） —— */}
       <section data-testid="step-2" className="mb-4 rounded-lg border border-gray-200 p-4">
-        <h3 className="mb-2 font-semibold text-gray-800">② 领转正令牌</h3>
+        <h3 className="mb-2 font-semibold text-gray-800">② 过闸：审查 ＋ 沙盒</h3>
+        <div className="mb-2 flex flex-wrap gap-2">
+          {!demo && (
+            <>
+              <Lamp ok={nsOk} label="合规审查已通过" />
+              <Lamp ok={sandboxOk} label="沙盒验证已通过" />
+              <Lamp ok={depositEnough} label={threshold === null ? '押金门槛未配置' : `押金 ≥ 门槛（${threshold} MOU）`} />
+            </>
+          )}
+          {demo && (
+            <>
+              <Lamp ok={demoNs} label="合规审查已通过" />
+              <Lamp ok={demoSb} label="沙盒验证已通过" />
+            </>
+          )}
+        </div>
+        {/* 过闸 A：提交审查 */}
+        <div className="mb-3 rounded-lg border border-gray-100 bg-gray-50 p-3">
+          <p className="mb-2 text-xs font-medium text-gray-600">先提交合规审查（三引用）：</p>
+          <div className="mb-2 flex flex-wrap gap-2">
+            <input data-testid="ns-boundary" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="边界声明引用" value={nsBoundary} onChange={(e) => setNsBoundary(e.target.value)} />
+            <input data-testid="ns-adversarial" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="对抗集引用" value={nsAdversarial} onChange={(e) => setNsAdversarial(e.target.value)} />
+            <input data-testid="ns-scope" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="场景范围" value={nsScope} onChange={(e) => setNsScope(e.target.value)} />
+          </div>
+          <button
+            data-testid="review-submit"
+            onClick={submitReview}
+            disabled={reviewDisabled}
+            className="rounded bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-700 disabled:bg-gray-300"
+          >
+            提交审查
+          </button>
+          {reviewDisabled && reviewWhy && <p className="mt-1 text-xs text-gray-500">{reviewWhy}</p>}
+          <ResultPanel r={gateResult} />
+        </div>
+        {/* 过闸 B：进沙盒验证 */}
+        <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+          <p className="mb-2 text-xs font-medium text-gray-600">再进沙盒验证：</p>
+          <div className="mb-2 flex flex-wrap gap-2">
+            <input data-testid="sb-sea" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="要件绑定引用（SEA 引用）" value={seaRef} onChange={(e) => setSeaRef(e.target.value)} />
+            <input data-testid="sb-run" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="沙盒运行号" value={runRef} onChange={(e) => setRunRef(e.target.value)} />
+          </div>
+          <button
+            data-testid="sandbox-enter"
+            onClick={enterSandbox}
+            disabled={sandboxDisabled}
+            className="rounded bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-700 disabled:bg-gray-300"
+          >
+            进沙盒验证
+          </button>
+          {sandboxDisabled && sandboxWhy && <p className="mt-1 text-xs text-gray-500">{sandboxWhy}</p>}
+          {sandboxOk && <p className="mt-1 text-xs text-emerald-700">沙盒运行号（result_ref）：{thingRef}</p>}
+          <ResultPanel r={sandboxResult} />
+        </div>
+      </section>
+
+      {/* —— 第 3 步：领转正令牌（人／时自动带出；物＝第 2 步运行号，只读） —— */}
+      <section data-testid="step-3" className="mb-4 rounded-lg border border-gray-200 p-4">
+        <h3 className="mb-2 font-semibold text-gray-800">③ 领转正令牌</h3>
         <div className="mb-2 flex flex-wrap gap-2">
           {!demo && (
             <>
@@ -485,28 +603,29 @@ export function ChannelMyPage() {
               <Lamp ok={sandboxOk} label="沙盒验证已通过" />
             </>
           )}
-          {demo && <Lamp ok={demoStep >= 1} label="演示前置已备" />}
+          {demo && <Lamp ok={demoStep >= 2} label="过闸两灯已绿" />}
         </div>
         <p className="mb-2 text-xs text-gray-500">签批四要件（谁批／何时批／哪次沙盒通过／批来做什么）：</p>
         <div className="grid gap-2 sm:grid-cols-2">
-          <input data-testid="tok-person" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="人：谁批（你的登录用户名）" value={fPerson} onChange={(e) => setFPerson(e.target.value)} />
+          <input data-testid="tok-person" className="rounded border border-gray-200 bg-gray-100 px-2 py-1 text-sm text-gray-500" value={meName ? `${meName}（本会话，自动带出）` : '人：你的登录用户名（载入后自动带出）'} readOnly />
           <div className="flex gap-1">
-            <input data-testid="tok-time" className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm" placeholder="时：何时批（如 2026-10-23T08:00:00）" value={fTime} onChange={(e) => setFTime(e.target.value)} />
+            <input data-testid="tok-time" className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm" placeholder="时：何时批" value={fTime} onChange={(e) => setFTime(e.target.value)} />
             <button type="button" className="rounded border border-gray-300 px-2 text-xs text-gray-600 hover:bg-gray-100"
               onClick={() => setFTime(new Date().toISOString().slice(0, 19))}>填现在</button>
           </div>
-          <input data-testid="tok-thing" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="物：哪次沙盒通过（沙盒运行号引用）" value={fThing} onChange={(e) => setFThing(e.target.value)} />
+          <input data-testid="tok-thing" className="rounded border border-gray-200 bg-gray-100 px-2 py-1 text-sm text-gray-500"
+            value={thingRef ? `物：${thingRef}（第 2 步沙盒运行号，自动带出）` : '物：等第 2 步沙盒跑通后自动带出'} readOnly />
           <input data-testid="tok-intent" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="意：批来做什么用" value={fIntent} onChange={(e) => setFIntent(e.target.value)} />
         </div>
         <button
           data-testid="token-issue"
           onClick={issueToken}
-          disabled={step2Disabled}
+          disabled={tokenDisabled}
           className="mt-2 rounded bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-700 disabled:bg-gray-300"
         >
           签发转正令牌
         </button>
-        {step2Disabled && step2Why && <p className="mt-1 text-xs text-gray-500">{step2Why}</p>}
+        {tokenDisabled && tokenWhy && <p className="mt-1 text-xs text-gray-500">{tokenWhy}</p>}
         {tokenValue && (
           <div data-testid="token-once" className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3">
             <p className="break-all font-mono text-lg font-bold text-red-800">{tokenValue}</p>
@@ -524,29 +643,29 @@ export function ChannelMyPage() {
         <ResultPanel r={tokenResult} />
       </section>
 
-      {/* —— 第 3 步：办转正 —— */}
-      <section data-testid="step-3" className="mb-4 rounded-lg border border-gray-200 p-4">
-        <h3 className="mb-2 font-semibold text-gray-800">③ 办转正</h3>
+      {/* —— 第 4 步：办转正 —— */}
+      <section data-testid="step-4" className="mb-4 rounded-lg border border-gray-200 p-4">
+        <h3 className="mb-2 font-semibold text-gray-800">④ 办转正</h3>
         <div className="mb-2 flex flex-wrap gap-2">
           {!demo && (
             <>
               <Lamp ok={tokenResult?.kind === 'ok'} unknown={tokenResult?.kind !== 'ok'}
                 label="转正令牌有效（无查询口，以签发结果为准）" />
-              <Lamp ok={false} unknown={policyUnknown}
+              <Lamp ok={false} unknown
                 label="保单有效且覆盖今天（无查询口，办转正时一并校验）" />
             </>
           )}
-          {demo && <Lamp ok={demoStep >= 2} label="演示前置已备" />}
+          {demo && <Lamp ok={demoStep >= 3} label="令牌已签发" />}
         </div>
         <button
           data-testid="promotion-run"
           onClick={promote}
-          disabled={step3Disabled}
+          disabled={promoteDisabled}
           className="rounded bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-700 disabled:bg-gray-300"
         >
           办转正
         </button>
-        {step3Disabled && step3Why && <p className="mt-1 text-xs text-gray-500">{step3Why}</p>}
+        {promoteDisabled && promoteWhy && <p className="mt-1 text-xs text-gray-500">{promoteWhy}</p>}
         <details className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm">
           <summary className="cursor-pointer text-gray-700">还没有保单？先在这里登记一张</summary>
           <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -570,29 +689,6 @@ export function ChannelMyPage() {
           </button>
         </details>
         <ResultPanel r={promoResult} />
-      </section>
-
-      {/* —— 第 4 步：进沙盒 —— */}
-      <section data-testid="step-4" className="mb-4 rounded-lg border border-gray-200 p-4">
-        <h3 className="mb-2 font-semibold text-gray-800">④ 进沙盒</h3>
-        <div className="mb-2 flex flex-wrap gap-2">
-          {!demo && <Lamp ok={depositEnough} label={`押金 ≥ 门槛（${threshold === null ? '门槛未配置' : threshold + ' MOU'}）`} />}
-          {demo && <Lamp ok={demoStep >= 3} label="演示前置已备" />}
-        </div>
-        <div className="mb-2 flex flex-wrap gap-2">
-          <input data-testid="sb-sea" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="要件绑定引用（SEA 引用）" value={seaRef} onChange={(e) => setSeaRef(e.target.value)} />
-          <input data-testid="sb-run" className="rounded border border-gray-300 px-2 py-1 text-sm" placeholder="沙盒运行号" value={runRef} onChange={(e) => setRunRef(e.target.value)} />
-        </div>
-        <button
-          data-testid="sandbox-enter"
-          onClick={enterSandbox}
-          disabled={step4Disabled}
-          className="rounded bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-700 disabled:bg-gray-300"
-        >
-          进沙盒验证
-        </button>
-        {step4Disabled && step4Why && <p className="mt-1 text-xs text-gray-500">{step4Why}</p>}
-        <ResultPanel r={sandboxResult} />
       </section>
 
       <p className="text-xs text-gray-400">
