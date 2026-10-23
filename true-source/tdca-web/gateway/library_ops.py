@@ -4,10 +4,13 @@
 # FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 内容区文库（/api/v1/library/*）
 # 约束矩阵: 站点入站令·甲（whitepapers/papers 批 1 入站）＋乙（cop-library 说明件
 #           与代表性子库）——内容区只读面；以在册仓库为唯一权威源，本站只作内部阅读索引
-# 口径: 只读（无写端点）；family 闭集机验（whitepaper/paper/terms/kg/cop-library）；
+# 口径: 只读（无写端点）；family 闭集机验（whitepaper/paper/terms/kg/cop-library/laws/law-notes）；
 #       登录 DID 会话鉴权（与 P3~P9 各面一致）；docs 表缺失即 503 fail-closed
 # 匿名放行: TDCA-RULING-SITE-COP-LIB-OPEN-001（2026-10-21，创始人取甲）——
 #           仅 cop-library 一族三端点匿名只读；其余族仍须会话；⛔ 不改 _require_session_user 本体
+# 匿名放行追加: LAWINGEST-001（2026-10-23，批C-C2）——laws/law-notes 两族并入匿名只读
+#           （法律原文属公域材料；适用说明标「本侧解读·非官方意见」）；制度族（regulation）
+#           归 /api/site/docs 维持原口径不变，⛔ 借机改动
 # =============================================================================
 from __future__ import annotations
 
@@ -28,6 +31,8 @@ _FAMILIES: dict[str, str] = {
     "terms": "术语（terms）",
     "kg": "知识图谱（kg）",
     "cop-library": "思维协议产物（cop-library）",
+    "laws": "法律原文（laws）",
+    "law-notes": "适用说明（law-notes）",
 }
 
 _SEL_LIST = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
@@ -37,11 +42,13 @@ _SEL_DETAIL = text("SELECT slug, title, body_md, source_path, data_nature, synce
 _SEL_COUNTS = text("SELECT family, COUNT(*) AS n FROM docs GROUP BY family")
 
 # COP-LIB-OPEN-001 + TERMS-OPEN-001：匿名放行两族（2026-10-21 并入同轮）
-_OPEN_FAMILIES = ("cop-library", "terms")
+# LAWINGEST-001（批C-C2）：追加 laws/law-notes 两族匿名只读（法律原文属公域材料）
+_OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes")
 
 
 def _session_or_open(request: Request, family: str = "") -> None:
-    """会话要求分派：cop-library/terms 分支匿名放行；其余（含未点名）照旧会话鉴权。
+    """会话要求分派：_OPEN_FAMILIES 四族（cop-library/terms/laws/law-notes）匿名放行；
+    其余（含未点名）照旧会话鉴权。
     ⛔ 不改 _require_session_user 本体（不动其签名与行为），仅在本族分支不调用之。"""
     if family in _OPEN_FAMILIES:
         return
@@ -64,7 +71,7 @@ def _check_family(family: str) -> None:
 
 @router.get("/families")
 def library_families(request: Request):
-    """文库族列表。匿名仅返 cop-library＋terms 两族（⛔ 泄他族名，COP-LIB-OPEN-001／TERMS-OPEN-001）；
+    """文库族列表。匿名仅返 _OPEN_FAMILIES 四族（⛔ 泄他族名）；
     会话通过则返全闭集（回归照旧）。"""
     try:
         _require_session_user(request)
@@ -76,7 +83,8 @@ def library_families(request: Request):
         items = [{"family": f, "name": _FAMILIES[f],
                   "count": counts.get(f, 0)} for f in _OPEN_FAMILIES]
         return _nca_watermark(
-            {"items": items, "note": "匿名只读面：仅 cop-library＋terms 两族开放（COP-LIB-OPEN-001／TERMS-OPEN-001）"},
+            {"items": items, "note": "匿名只读面：cop-library＋terms＋laws＋law-notes 四族开放"
+                                     "（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001）"},
             nature="real")
     items = [{"family": k, "name": v, "count": counts.get(k, 0)} for k, v in _FAMILIES.items()]
     return _nca_watermark({"families": items, "note": "内容区只读面；以在册仓库为唯一权威源"},
@@ -85,7 +93,7 @@ def library_families(request: Request):
 
 @router.get("/{family}")
 def library_list(family: str, request: Request):
-    """族内件目（slug/title/synced_at；正文经 /{slug} 读取）。cop-library/terms 匿名可读。"""
+    """族内件目（slug/title/synced_at；正文经 /{slug} 读取）。_OPEN_FAMILIES 四族匿名可读。"""
     _session_or_open(request, family)
     _check_family(family)
     try:
@@ -102,7 +110,7 @@ def library_list(family: str, request: Request):
 
 @router.get("/{family}/{slug}")
 def library_detail(family: str, slug: str, request: Request):
-    """单件正文（body_md 原文直出；不复制不改写；权威源在册）。cop-library/terms 匿名可读。"""
+    """单件正文（body_md 原文直出；不复制不改写；权威源在册）。_OPEN_FAMILIES 四族匿名可读。"""
     _session_or_open(request, family)
     _check_family(family)
     try:

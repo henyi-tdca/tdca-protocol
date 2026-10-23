@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """内容区文库测试（/api/v1/library/*——A-22）。
 
-验收映射：① 匿名口径按 _OPEN_FAMILIES 分流：families 清单／cop-library／terms
-          匿名 200（COP-LIB-OPEN-001／TERMS-OPEN-001），whitepaper 等未开放族
-          匿名 401（fail-closed）
+验收映射：① 匿名口径按 _OPEN_FAMILIES 分流：families 清单／cop-library／terms／
+          laws／law-notes 匿名 200（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001），
+          whitepaper 等未开放族匿名 401（fail-closed）
           ② family 闭集机验（越界 404）
           ③ 件目/正文只读（docs 表实读；标题与正文逐字一致）
           ④ docs 表缺失 → 503 fail-closed（不崩溃）
@@ -68,10 +68,13 @@ def _docs_table():
 
 
 def test_closed_families_401_and_open_families_200(_docs_table):
-    """匿名口径分流（COP-LIB-OPEN-001／TERMS-OPEN-001）：开放族 200，未开放族 401。"""
+    """匿名口径分流（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001）：开放族 200，未开放族 401。"""
     assert client.get("/api/v1/library/families").status_code == 200
     assert client.get("/api/v1/library/cop-library").status_code == 200
     assert client.get("/api/v1/library/terms").status_code == 200
+    # LAWINGEST-001（批C-C2）：laws/law-notes 两族匿名可读（法律原文＋适用说明对外发布）
+    assert client.get("/api/v1/library/laws").status_code == 200
+    assert client.get("/api/v1/library/law-notes").status_code == 200
     assert client.get("/api/v1/library/whitepaper").status_code == 401
 
 
@@ -85,6 +88,11 @@ def test_family_closed_set(_docs_table):
     assert r.status_code == 404
     # 新族位 terms/kg：零行只建位，族面可列（200）
     r = client.get("/api/v1/library/terms", headers=h)
+    assert r.status_code == 200, r.text[:200]
+    # LAWINGEST-001：laws/law-notes 入闭集（会话态亦 200；匿名态见分流测试）
+    r = client.get("/api/v1/library/laws", headers=h)
+    assert r.status_code == 200, r.text[:200]
+    r = client.get("/api/v1/library/law-notes", headers=h)
     assert r.status_code == 200, r.text[:200]
 
 

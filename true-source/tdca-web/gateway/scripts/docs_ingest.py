@@ -25,7 +25,9 @@ slug 取法（对齐库内既有惯例，实测 README-1 / TDCA-INSURANCE-RULES-
   文件名 stem 截于首个 CJK 或 （/( 处，去尾分隔符；空则回退全 stem。
 DRAFT/待签批标注在文件名者照录（内容照抄，不加不删）。
 
-范围: 仅四映射目录（docs/regulations→regulation、docs/cop-library→cop-library 等）；
+范围: 六映射目录（docs/regulations→regulation、docs/cop-library→cop-library 等）；
+      laws/law-notes 两族为 LAWINGEST-001（TDCA-HANDOFF-EXEC-L1SI169-LAWINGEST-001，
+      批C-C2）新增：docs/laws→laws（法律原文）、docs/law-notes→law-notes（适用说明）；
       paper 两件非文献差额已关闭（IMPL-002），本脚本不涉 paper 之 .gitattributes 等。
 data_nature: 既有 652 行全 'real'，新行同值对齐。
 """
@@ -42,6 +44,8 @@ FAMILY_MAP = {
     "docs/whitepapers": "whitepaper",
     "docs/papers": "paper",
     "docs/cop-library": "cop-library",
+    "docs/laws": "laws",
+    "docs/law-notes": "law-notes",
 }
 
 _SRC_PREFIX = "tdca-protocol/"
