@@ -141,4 +141,12 @@ describe('二期改版批2块一：帮助与联系薄占位', () => {
     expect(screen.getByRole('heading', { name: '帮助与联系' })).toBeInTheDocument()
     expect(screen.getByTestId('page-shell').textContent).toContain('复用文档库')
   })
+
+  it('L1SI167-START-ENTRY-001-001：帮助组首项为新手指引（/start）', () => {
+    const helpGroup = APP_NAV.find((e) => e.kind === 'group' && e.group === '帮助与联系')
+    expect(helpGroup && helpGroup.kind === 'group' ? helpGroup.items[0] : undefined).toEqual({
+      to: '/start',
+      label: '新手指引',
+    })
+  })
 })
