@@ -1,0 +1,52 @@
+{
+  "_simulated": "SIMULATED-TEST",
+  "allocation": {
+    "a": 30.0,
+    "b": 70.0
+  },
+  "steps": [
+    {
+      "label": "s1"
+    },
+    {
+      "label": "s2"
+    },
+    {
+      "label": "s3"
+    },
+    {
+      "label": "s4"
+    },
+    {
+      "label": "s5"
+    },
+    {
+      "label": "s6"
+    },
+    {
+      "label": "s7"
+    },
+    {
+      "label": "s8"
+    },
+    {
+      "label": "s9"
+    },
+    {
+      "label": "s10"
+    },
+    {
+      "label": "s11"
+    },
+    {
+      "label": "s12"
+    },
+    {
+      "label": "s13"
+    },
+    {
+      "label": "s14"
+    }
+  ],
+  "surplus": 100.0
+}

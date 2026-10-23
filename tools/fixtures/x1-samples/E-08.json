@@ -1,0 +1,12 @@
+{
+  "_simulated": "SIMULATED-TEST",
+  "f": {
+    "oid:1": "tdid:1",
+    "oid:2": "tdid:2"
+  },
+  "g": {
+    "tdid:1": "oid:1",
+    "tdid:2": "oid:2"
+  },
+  "receipt_ok": true
+}

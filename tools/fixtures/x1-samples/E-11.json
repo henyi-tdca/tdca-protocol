@@ -1,0 +1,19 @@
+{
+  "_simulated": "SIMULATED-TEST",
+  "chapters": [
+    "C1",
+    "C2"
+  ],
+  "questions": [
+    {
+      "chapter": "C1",
+      "full": 10,
+      "score": 8
+    },
+    {
+      "chapter": "C2",
+      "full": 5,
+      "score": 0
+    }
+  ]
+}
