@@ -37,8 +37,8 @@ const TRANSFORM_TOPO: TopoData = {
 
 /** 动态确权请求推送（模拟；F5 接入确权 API + notifier WS 实时推送） */
 const ATTEST_REQUESTS = [
-  { id: 'DAR-001', agent: 'AGENT-007', type: '场景扩展（MRCR）', urgency: 'urgent' },
-  { id: 'DAR-002', agent: 'AGENT-012', type: '认知演化（S 漂移）', urgency: 'normal' },
+  { id: 'DAR-DEMO-001', agent: 'AGENT-DEMO-001', type: '场景扩展（MRCR）', urgency: 'urgent' },
+  { id: 'DAR-DEMO-002', agent: 'AGENT-DEMO-002', type: '认知演化（S 漂移）', urgency: 'normal' },
 ]
 
 const URGENCY: Record<string, { label: string; cls: string }> = {

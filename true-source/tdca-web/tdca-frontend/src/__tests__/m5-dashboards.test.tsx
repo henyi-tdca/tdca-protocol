@@ -22,8 +22,8 @@ const ME_PAYLOAD = {
     { agent_id: 'AGENT-GENIE', name: 'Genie 效用精灵', five_role: 'mu', status: 'active', attestation_state: 'valid', audit_count: 3, data_provenance: 'simulated' },
   ],
   my_pending_sign: [
-    { request_id: 'DAR-001', agent_id: 'AGENT-GENIE', request_type: 'scene_extension', urgency: 'urgent', reason: '扩展场景', ts: '2026-08-21T00:00:00Z' },
-    { request_id: 'DAR-002', agent_id: 'AGENT-GENIE', request_type: 'meta', urgency: 'normal', reason: '', ts: '2026-08-21T00:00:00Z' },
+    { request_id: 'DAR-DEMO-001', agent_id: 'AGENT-GENIE', request_type: 'scene_extension', urgency: 'urgent', reason: '扩展场景', ts: '2026-08-21T00:00:00Z' },
+    { request_id: 'DAR-DEMO-002', agent_id: 'AGENT-GENIE', request_type: 'meta', urgency: 'normal', reason: '', ts: '2026-08-21T00:00:00Z' },
   ],
   my_decided: [],
   my_sandbox: [{ apply_id: 'SBX-ab12', result: 'pending', ts: '2026-08-21T00:00:00Z' }],
@@ -39,9 +39,9 @@ const AGENT_PAYLOAD = {
     owner_display: '创始人', created_at: '2026-08-20T00:00:00+00:00', data_provenance: 'simulated',
   },
   mou: [{ period: '2026-08', mou_inbound: 19000, mou_outbound: 1500, mou_total: 20500, note: 'n', ts: '2026-08-20T00:00:00Z' }],
-  tax_events: [{ event_id: 'EVT-CASE002-01', type: 'dispatch_tax', amount: 4000, tax_rate_bp: 200, call_id: 'C1', nca_ref: 'NCA-SEED-001', ts: '2026-08-20T00:00:00Z' }],
-  attestations: [{ request_id: 'DAR-001', request_type: 'scene_extension', urgency: 'urgent', status: 'pending', decided_by: null, reason: '扩展', nca_ref: null, ts: '2026-08-21T00:00:00Z' }],
-  nca_chain: [{ nca_id: 'NCA-SEED-001', action: 'TaskLodge', actor: 'seed', prev_nca: 'GENESIS', ts: '2026-08-20T00:00:00Z' }],
+  tax_events: [{ event_id: 'EVT-CASE002-01', type: 'dispatch_tax', amount: 4000, tax_rate_bp: 200, call_id: 'C1', nca_ref: 'NCA-SEED-DEMO', ts: '2026-08-20T00:00:00Z' }],
+  attestations: [{ request_id: 'DAR-DEMO-001', request_type: 'scene_extension', urgency: 'urgent', status: 'pending', decided_by: null, reason: '扩展', nca_ref: null, ts: '2026-08-21T00:00:00Z' }],
+  nca_chain: [{ nca_id: 'NCA-SEED-DEMO', action: 'TaskLodge', actor: 'seed', prev_nca: 'GENESIS', ts: '2026-08-20T00:00:00Z' }],
   note: 'test',
 }
 
@@ -78,7 +78,7 @@ describe('M5 双后台', () => {
     render(<MemoryRouter><AuthProvider><MePage /></AuthProvider></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('me-pending-card').textContent).toContain('2 件'))
     expect(screen.getByTestId('me-agents').textContent).toContain('Genie 效用精灵')
-    expect(screen.getByTestId('me-pending-list').textContent).toContain('DAR-001')
+    expect(screen.getByTestId('me-pending-list').textContent).toContain('DAR-DEMO-001')
     expect(screen.getByTestId('me-sandbox').textContent).toContain('SBX-ab12')
   })
 
@@ -137,7 +137,7 @@ describe('M5 双后台', () => {
     expect(screen.getByTestId('agent-dash-mou-total').textContent).toContain('¥205.00')
     expect(screen.getByTestId('agent-dash-profile').textContent).toContain('创始人')
     expect(screen.getByTestId('agent-dash-profile').textContent).not.toContain('owner_username')
-    expect(screen.getByTestId('agent-dash-nca').textContent).toContain('NCA-SEED-001')
+    expect(screen.getByTestId('agent-dash-nca').textContent).toContain('NCA-SEED-DEMO')
   })
 
   it('/agents/:id 不存在（404 fail）→ 兜底提示 + 返回链接', async () => {

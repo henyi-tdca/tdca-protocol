@@ -71,7 +71,7 @@ function SelfCheckBlock() {
         <input
           data-testid="selfcheck-input"
           className="w-64 rounded border border-gray-300 px-2 py-1 font-mono text-xs"
-          placeholder="输入 nca_id（如 NCA-WEB-…）"
+          placeholder="输入 nca_id（如 example-nca-demo）"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && run()}

@@ -46,7 +46,7 @@ describe('F3 Agent Studio /studio', () => {
     expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
     expect(screen.getByTestId('studio-wizard')).toBeInTheDocument()
     expect(screen.getByTestId('studio-compound')).toBeInTheDocument()
-    expect(screen.getByText('生命周期看板 · TDID-AGENT-007')).toBeInTheDocument()
+    expect(screen.getByText('生命周期看板 · TDID-DEMO-001')).toBeInTheDocument()
   })
 
   it('生命周期六阶段可导航（点击节点 → 详情更新）', () => {
