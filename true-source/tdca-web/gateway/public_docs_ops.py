@@ -41,7 +41,7 @@ alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 # ---------------------------------------------------------------------
 _FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列 regulation）
 # L1SI154-010：多族承载——族 → 容器内目录（/docs/<dir>，只读挂载）
-_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers"}
+_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library"}
 _PUBLIC_DOCS = {
     "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md",
@@ -114,7 +114,81 @@ _PUBLIC_DOCS = {
     "TDCA-paper-CN.md",
     "TDCA-paper-EN.md",
     ),
+    # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
+    # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）
+    # ⛔ 放六件（内部编号，待改另批）：simulations/README、MCP-LIVE-TEST-REPORT、
+    #    REAL-SUNZI-3PHASE×2、REAL-SUNZI-COLLAB、SUNZI-COLLAB-REPORT
+    "cop-library": (
+    "README.md",
+    "OPENING.md",
+    "COP-MANIFEST-2026-09-13.md",
+    "tdca_core/README.md",
+    "simulations/multilateral_search_match/README.md",
+    "engineering-three/01-试验思维协议.md",
+    "engineering-three/02-灰度管理思维协议.md",
+    "engineering-three/03-可靠性设计思维协议.md",
+    "engineering-three/04-智能体安全管理化合协议.md",
+    "engineering-three/05-工程三×场景×TDCA-双层化合协议.md",
+    "hundred_schools/README.md",
+    "hundred_schools/COMPOSITION-REPORT-道德经_可审计决策.md",
+    "hundred_schools/daodejing/COMPOSITION-REPORT-第36章_可审计决策.md",
+    "hundred_schools/daxue/COMPOSITION-REPORT-第03目_可审计决策.md",
+    "hundred_schools/lunyu/COMPOSITION-REPORT-第12篇_可审计决策.md",
+    "hundred_schools/sunzi/sunzi_real/计篇_战略蒸馏.md",
+    "hundred_schools/sunzi/sunzi_real/计篇_训诂校勘.md",
+    "compositions/COMPOSITION-REPORT.md",
+    "compositions/COMPOSITION-REPORT-囚徒困境_最后通牒博弈.md",
+    "compositions/COMPOSITION-REPORT-囚徒困境_机制设计.md",
+    "compositions/COMPOSITION-REPORT-囚徒困境_认知涌现.md",
+    "compositions/COMPOSITION-REPORT-围魏救赵_囚徒困境.md",
+    "compositions/COMPOSITION-REPORT-围魏救赵_斗鸡博弈.md",
+    "compositions/COMPOSITION-REPORT-场景思维协议_囚徒困境.md",
+    "compositions/COMPOSITION-REPORT-场景画布_囚徒困境.md",
+    "compositions/COMPOSITION-REPORT-数据治理_机制设计.md",
+    "compositions/COMPOSITION-REPORT-机制设计_场景思维协议.md",
+    "compositions/COMPOSITION-REPORT-生命周期适配_走为上.md",
+    "compositions/COMPOSITION-REPORT-走为上_囚徒困境.md",
+    "compositions/COMPOSITION-REPORT-走为上_猎鹿博弈.md",
+    # 批 2（25 件，COPLIB-005）
+    "simulations/multilateral_search_match/MCP-LIVE-AB-UTILITY-REPORT.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-LOCAL8.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-A.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-AB.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-B.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-BASE.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-FALLBACK.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-LIVE.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-LIVE-SW.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-MCP-NAMED.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-REAL-A.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-REAL-BASE.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-REAL-SINGLE.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-REAL-SINGLE-BASE.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-RESULT.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-SCALE200.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-SCALE200-MC.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-SCALE600.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-V2.md",
+    "simulations/multilateral_search_match/SEARCH-MATCH-V3.md",
+    "simulations/positivesum_negotiation/POSITIVE-SUM-RESULT.md",
+    "simulations/positivesum_negotiation/SIMULATION-TRACE.md",
+    "simulations/zou_wei_shang_transformation/BUSINESS-TRANSFORMATION-PLAN.md",
+    "simulations/zou_wei_shang_transformation/SIMULATION-TRACE.md",
+    ),
 }
+# L1SI170-COPLIB-007：显式排除清单（⛔ 族级放行）——六件硬 404，判定前置先于白名单。
+# 路径相对族目录；⛔ 改六件原文，改写另批（承 COPLIB-005 甲案待出）。
+_DENY_PATHS = {
+    "cop-library": frozenset((
+        "simulations/README.md",
+        "simulations/multilateral_search_match/MCP-LIVE-TEST-REPORT.md",
+        "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT.md",
+        "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT-HONEST.md",
+        "simulations/multilateral_search_match/REAL-SUNZI-COLLAB-REPORT.md",
+        "simulations/multilateral_search_match/SUNZI-COLLAB-REPORT.md",
+    )),
+}
+_DENY_SET = frozenset(n for names in _DENY_PATHS.values() for n in names)
 _PUBLIC_SET = frozenset(n for names in _PUBLIC_DOCS.values() for n in names)
 _PUBLIC_FAMILY = {n: fam for fam, names in _PUBLIC_DOCS.items() for n in names}
 
@@ -210,6 +284,8 @@ def _docs_dir(family: str = _FAMILY) -> Path | None:
 
 def _read_doc(filename: str) -> tuple[bytes, str] | None:
     """读在册公开件（⛔ 绝不越出清单）；返回 (bytes, sha256) 或 None。"""
+    if filename in _DENY_SET:  # L1SI170-COPLIB-007：显式排除前置，硬 404
+        return None
     if filename not in _PUBLIC_SET:
         return None
     d = _docs_dir(_PUBLIC_FAMILY.get(filename, _FAMILY))
@@ -220,7 +296,11 @@ def _read_doc(filename: str) -> tuple[bytes, str] | None:
         raw = fpath.read_bytes()
     except OSError:
         return None
-    if not fpath.is_file() or fpath.parent != d:  # 纵深防御（防路径穿越）
+    # 纵深防御（防路径穿越）：白名单件可含子路径（cop-library 族），解析后须仍在族目录内
+    try:
+        if not fpath.is_file() or not fpath.resolve().is_relative_to(d.resolve()):
+            return None
+    except OSError:
         return None
     return raw, hashlib.sha256(raw).hexdigest()
 
@@ -277,7 +357,10 @@ def _list_docs(family: str = _FAMILY) -> JSONResponse:
     })
 
 
-def _get_doc(slug: str) -> JSONResponse:
+def _get_doc(slug: str, family: str | None = None) -> JSONResponse:
+    # L1SI170-COPLIB-007：slug 须属所请求之族（新族含 README.md 等通用名，防跨族串读）
+    if family is not None and _PUBLIC_FAMILY.get(slug) != family:
+        return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
     got = _read_doc(slug)
     if got is None:
         # 统一 404：未入站件／乙类件／不存在件，对外不可分辨（fail-closed）
@@ -328,7 +411,7 @@ def public_docs_get(family: str, slug: str, request: Request):
         # L1SI154-010：族按公开清单判定（⛔ 非清单族一律 fail-closed 404）
         # L1SI153 段二②：裸英文退役 → 中文短句＋码
         return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
-    return _get_doc(slug)
+    return _get_doc(slug, family)
 
 
 # ---------------------------------------------------------------------
