@@ -174,19 +174,19 @@ _PUBLIC_DOCS = {
     "simulations/positivesum_negotiation/SIMULATION-TRACE.md",
     "simulations/zou_wei_shang_transformation/BUSINESS-TRANSFORMATION-PLAN.md",
     "simulations/zou_wei_shang_transformation/SIMULATION-TRACE.md",
+    # 六件去编号改写后放行（L1SI170-COPLIB-008，承 007 硬排除解除）
+    "simulations/README.md",
+    "simulations/multilateral_search_match/MCP-LIVE-TEST-REPORT.md",
+    "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT.md",
+    "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT-HONEST.md",
+    "simulations/multilateral_search_match/REAL-SUNZI-COLLAB-REPORT.md",
+    "simulations/multilateral_search_match/SUNZI-COLLAB-REPORT.md",
     ),
 }
-# L1SI170-COPLIB-007：显式排除清单（⛔ 族级放行）——六件硬 404，判定前置先于白名单。
-# 路径相对族目录；⛔ 改六件原文，改写另批（承 COPLIB-005 甲案待出）。
+# L1SI170-COPLIB-008：六件已去编号改写并自查零命中，显式排除整组撤除；
+# _DENY_PATHS 机制保留（空表），后续精确排除仍走此前置通道。
 _DENY_PATHS = {
-    "cop-library": frozenset((
-        "simulations/README.md",
-        "simulations/multilateral_search_match/MCP-LIVE-TEST-REPORT.md",
-        "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT.md",
-        "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT-HONEST.md",
-        "simulations/multilateral_search_match/REAL-SUNZI-COLLAB-REPORT.md",
-        "simulations/multilateral_search_match/SUNZI-COLLAB-REPORT.md",
-    )),
+    "cop-library": frozenset(),
 }
 _DENY_SET = frozenset(n for names in _DENY_PATHS.values() for n in names)
 _PUBLIC_SET = frozenset(n for names in _PUBLIC_DOCS.values() for n in names)
