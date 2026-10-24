@@ -28,7 +28,7 @@ python compile_tdca_core.py
 from enforce_entry import require_core_loaded, ecosystem_admit
 
 # 主体已加载基协议 -> 准入
-require_core_loaded(["TDCA-CORE-20260815-01", "SCEN-COP-20260814-01"])  # True
+require_core_loaded(["生态准入与可信协作基协议", "SCEN-COP-20260814-01"])  # True（编号已换语义名，运行时以平台实注册名为准）
 
 # 主体未加载基协议 -> 抛 AdmissionDenied
 ecosystem_admit("外部Agent", loaded_ids=[])  # AdmissionDenied

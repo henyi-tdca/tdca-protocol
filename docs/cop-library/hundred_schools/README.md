@@ -12,7 +12,7 @@
 - 道家：`第01百家-道德经.yaml`(8原语) + `daodejing/`(81章)
 - 儒家四书：`lunyu/`(20篇) · `daxue/`(11目) · `mengzi/`(12条) · `zhongyong/`(13条) · `xunzi/`(12条)
 - 诸子百家：`mojia/`(墨家11条) · `fajia/`(法家10条) · `mingjia/`(名家7条) · `yinyangjia/`(阴阳家7条)
-- 合计中方 COP ≈ 174 条，全部声明 `base_protocol: TDCA-CORE-20260815-01`，兼容 `compose_general` 跨范式化合。
+- 合计中方 COP ≈ 174 条，全部声明 `base_protocol: 生态准入与可信协作基协议`（运行时以平台实注册名为准），兼容 `compose_general` 跨范式化合。
 
 ## 编译
 各子库同构，独立运行其编译器（复用 `cognitive_compiler.s5_validate / _dump_yaml` 与
