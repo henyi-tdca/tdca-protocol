@@ -206,4 +206,4 @@
 
 本文为源协议层。化合 COP 编译单元见 `编译清单-工程三协议系列-2026-08-30.md` E 组（7 个工程三⊗场景化合）与 F 组（**4 个** TDCA 门控化合——按用户裁定 F1 拆分为门控总装 / MOU 灰靶熔断 / Shapley 安全归因 / 全链存证，拆分后 dispatch.graph 显式互引，组合性不减）。
 
-**编译已执行（2026-08-30 21:02）**：`compile_engineering_three.py` 单脚本批量产出 41 个 COP（25 原生 + 16 化合），全部 s5_validate 通过（含立场分离 fail-closed 校验），批次 NCA = TDCA-REASONIX-20260830-007。产物目录：`engineering-three/{trial, grey, dependability, fusion, fusion_scene, fusion_tdca}/`。每 COP 携带 composition_policy（standalone=false / TDCA-CORE 强制 / 可剥离独立声明）；化合 COP 额外携带 fusion_spec（属性改变表+涌现判据）。
+**编译已执行（2026-08-30 21:02）**：`compile_engineering_three.py` 单脚本批量产出 41 个 COP（25 原生 + 16 化合），全部 s5_validate 通过（含立场分离 fail-closed 校验），批次 NCA = 实跑留痕。产物目录：`engineering-three/{trial, grey, dependability, fusion, fusion_scene, fusion_tdca}/`。每 COP 携带 composition_policy（standalone=false / TDCA-CORE 强制 / 可剥离独立声明）；化合 COP 额外携带 fusion_spec（属性改变表+涌现判据）。

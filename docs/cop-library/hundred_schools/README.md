@@ -4,7 +4,7 @@
 的中方 operand 源。首个编译成果为 **《道德经》(道家)** —— `HS-DAO-20260815-01`。
 
 ## 强制底座
-凡加入 TDCA 生态的主体，必须先加载 `TDCA-CORE-20260815-01`（生态准入基协议，由
+凡加入 TDCA 生态的主体，必须先加载 `生态准入与可信协作基协议`（生态准入基协议，由
 `../tdca_core/enforce_entry.py` 强制门校验）。本库各 COP 在基协议之上化合，并在
 `soul.base_protocol` 字段显式声明该可信底座。
 
@@ -12,7 +12,7 @@
 - 道家：`第01百家-道德经.yaml`(8原语) + `daodejing/`(81章)
 - 儒家四书：`lunyu/`(20篇) · `daxue/`(11目) · `mengzi/`(12条) · `zhongyong/`(13条) · `xunzi/`(12条)
 - 诸子百家：`mojia/`(墨家11条) · `fajia/`(法家10条) · `mingjia/`(名家7条) · `yinyangjia/`(阴阳家7条)
-- 合计中方 COP ≈ 174 条，全部声明 `base_protocol: TDCA-CORE-20260815-01`，兼容 `compose_general` 跨范式化合。
+- 合计中方 COP ≈ 174 条，全部声明 `base_protocol: 生态准入与可信协作基协议`（运行时以平台实注册名为准），兼容 `compose_general` 跨范式化合。
 
 ## 编译
 各子库同构，独立运行其编译器（复用 `cognitive_compiler.s5_validate / _dump_yaml` 与
