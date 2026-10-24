@@ -21,13 +21,13 @@
 | RZ-08 | 数字版权确权与IP院 | candidate_role | False | False |
 
 ## 3. enforce_entry 准入门 (真实发射 NCA)
-- ✅ 准入 **兵学战略研究院** (real=True) -> 发射 NCA `TDCA-REASONIX-20260815-286`
-- ✅ 准入 **古籍训诂与文本校勘院** (real=True) -> 发射 NCA `TDCA-REASONIX-20260815-287`
-- ✅ 准入 **中文语义与情报NLP所** (real=True) -> 发射 NCA `TDCA-REASONIX-20260815-288`
-- ✅ 准入 **编译推理算力云** (real=True) -> 发射 NCA `TDCA-REASONIX-20260815-289`
-- ✅ 准入 **智能系统建模实验室** (real=False) -> 发射 NCA `TDCA-REASONIX-20260815-290`
-- ✅ 准入 **知识图谱与态势感知中心** (real=False) -> 发射 NCA `TDCA-REASONIX-20260815-291`
-- ✅ 准入 **合规与可信决策审计院** (real=False) -> 发射 NCA `TDCA-REASONIX-20260815-292`
+- ✅ 准入 **兵学战略研究院** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **古籍训诂与文本校勘院** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **中文语义与情报NLP所** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **编译推理算力云** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **智能系统建模实验室** (real=False) -> 发射 NCA 实跑留痕
+- ✅ 准入 **知识图谱与态势感知中心** (real=False) -> 发射 NCA 实跑留痕
+- ✅ 准入 **合规与可信决策审计院** (real=False) -> 发射 NCA 实跑留痕
 - ❌ 拒绝 **数字版权确权与IP院** (未加载基协议) -> AdmissionDenied
 
 ## 4. form_coalition 互补比配 + shapley 正和分成 (真实)
@@ -47,13 +47,13 @@
 - **MOU 正和底线**: 各方 φ ≥ BATNA = False —— 不可行
 
 ## 5. 联盟承诺 NCA (真实发射)
-- 联盟 NCA: `TDCA-REASONIX-20260815-293`
+- 联盟 NCA: 实跑留痕
 
 ## 6. 真实多agent编译产物 (兵学战略研究院蒸馏 + 古籍训诂院校勘 + zh-nlp实算 + 算力云校验)
 - 训诂校勘(古籍训诂院 real): `hundred_schools/sunzi/sunzi_real/计篇_训诂校勘.md`
 - 战略蒸馏(兵学战略研究院 real): `hundred_schools/sunzi/sunzi_real/计篇_战略蒸馏.md`
 - 计篇 COP(算力云 real 编译+校验+NCA): `hundred_schools/sunzi/sunzi_real/第01篇-计篇-real.yaml`
-- 计篇 COP 确权 NCA: `TDCA-REASONIX-20260815-285` (由算力云 subagent 发射)
+- 计篇 COP 确权 NCA: 实跑留痕 (由算力云 subagent 发射)
 
 ## 7. 诚实性质声明 (真实 vs 占位)
 - **真实可调用资源(4)**: 兵学战略研究院(主agent, 真蒸馏) / 古籍训诂与文本校勘院(真实注册Expert guji-philology, 真校勘) / 中文语义与情报NLP所(真实MCP连接器 zh-nlp, jieba真算) / 编译推理算力云(真实subagent, 真编译校验+NCA)。

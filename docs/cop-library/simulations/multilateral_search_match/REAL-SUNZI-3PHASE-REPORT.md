@@ -4,13 +4,13 @@
 
 ## 1. enforce_entry 准入门 (admission_phase · 真实发射准入NCA)
 > 准入只验证'是否接受正和博弈原则'(加载基协议), 不验证'本联盟能否正和'——后者是沙盒的事。
-- ✅ 准入 **兵学战略研究院** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-001`
-- ✅ 准入 **古籍训诂与文本校勘院** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-002`
-- ✅ 准入 **中文语义与情报NLP所** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-003`
-- ✅ 准入 **编译推理算力云** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-004`
-- ✅ 准入 **智能系统建模实验室** (real=False) -> 发射 NCA `TDCA-REASONIX-20260816-005`
-- ✅ 准入 **知识图谱与态势感知中心** (real=False) -> 发射 NCA `TDCA-REASONIX-20260816-006`
-- ✅ 准入 **合规与可信决策审计院** (real=False) -> 发射 NCA `TDCA-REASONIX-20260816-007`
+- ✅ 准入 **兵学战略研究院** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **古籍训诂与文本校勘院** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **中文语义与情报NLP所** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **编译推理算力云** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **智能系统建模实验室** (real=False) -> 发射 NCA 实跑留痕
+- ✅ 准入 **知识图谱与态势感知中心** (real=False) -> 发射 NCA 实跑留痕
+- ✅ 准入 **合规与可信决策审计院** (real=False) -> 发射 NCA 实跑留痕
 - ❌ 拒绝 **数字版权确权与IP院** (未加载基协议) -> AdmissionDenied
 
 ## 2. 沙盒迭代 (sandbox_phase · 真实重算, 不落盘)
@@ -62,9 +62,9 @@
 > 沙盒 mou_ok=True, 现在才真实调NLP + 真实发射NCA + 真实落盘COP。
 - 真实调 zh-nlp MCP: proper=["孙子", "兵者", "大事", "死生", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
 - 真实调 zh-nlp MCP: classical_tokens=["孙子", "兵者", "国", "大事", "死生", "事", "校", "情", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
-- 真实落盘: 回填 `<本机工作区>\.tdca-protocol\cognitive-compiler\hundred_schools\sunzi\sunzi_real\第01篇-计篇-real.yaml` 的 coalition_nca=TDCA-REASONIX-20260816-008 + mou_ok + 沙盒元信息
-- 联盟承诺 NCA: `TDCA-REASONIX-20260816-008`
-- 计篇生产 NCA: `TDCA-REASONIX-20260816-009`
+- 真实落盘: 回填 `<本机工作区>\.tdca-protocol\cognitive-compiler\hundred_schools\sunzi\sunzi_real\第01篇-计篇-real.yaml` 的 coalition_nca=实跑留痕 + mou_ok + 沙盒元信息
+- 联盟承诺 NCA: 实跑留痕
+- 计篇生产 NCA: 实跑留痕
 
 ## 4. 诚实性质声明 (真实 vs 占位 / 沙盒闸门)
 - **真实可调用资源(4)**: 兵学战略研究院(主agent) / 古籍训诂院(真实Expert guji-philology) / 中文语义NLP所(真实MCP zh-nlp, jieba真算) / 编译推理算力云(真实subagent)。

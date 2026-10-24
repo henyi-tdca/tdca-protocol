@@ -59,7 +59,7 @@ run_networkwide.py --provider mcp
 | 贴边脆弱维度 | **5 个**（渠道0.55/算力0.50/数据0.55/合规0.50/IP0.50） | **2 个**（渠道0.55/模型0.50） |
 | 各方 ≥ BATNA | True | True |
 | 正和满意解 | 达成 TRUE（附条件） | 达成 TRUE（附条件） |
-| NCA 确权 | TDCA-REASONIX-20260815-010 | TDCA-REASONIX-20260815-014 |
+| NCA 确权 | 实跑留痕 | |
 
 ---
 
