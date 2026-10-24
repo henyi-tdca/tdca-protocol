@@ -1,0 +1,136 @@
+instrument: 'TDCA-REG-NODE-ACCESS-001'
+version: 'V1.0'
+status: 'PENDING_SIGNATURE'
+effective: false
+date: '2026-10-17'
+timezone: '+08'
+session: 'L1-SI-151'
+author: 'Reasonix'
+human_readable: 'TDCA-REG-NODE-ACCESS-001-业务端节点接入与同构契约条例（人读版·V1.0·待签批）.md'
+upstream:
+  - 'TDCA-DRAFT-REG-NODE-ACCESS-001'
+  - 'TDCA-PROJECT-NODE-ACCESS-001'
+  - 'TDCA-ASSESS-DELIVERY-TOPOLOGY-INVENTORY-001'
+  - 'TDCA-DESIGN-SITE-NODE-ISOMORPHIC-INTERFACE-001'
+  - 'TDCA-RULING-SITE-SAAS-NATURE-001'
+promotion_trail:
+  step1_research: 'TDCA-DRAFT-REG-NODE-ACCESS-001'
+  step2_govkit: 'TDCA-GOVKIT-NODE-ACCESS-001'
+  step3_assert: 'TDCA-ASSERT-NODE-ACCESS-001'
+  step4_sandbox: 'TDCA-SANDBOX-NODE-ACCESS-001'
+  step5_regulation: 'TDCA-REG-NODE-ACCESS-001'
+three_ends:
+  dev_end: '仓库（研发端）'
+  ops_end: '站点（制度运维端）'
+  biz_end: '节点（业务端）'
+layers:
+  note: '生效不等于部署不等于上线不等于对外不等于入仓，五事分别'
+binding_policy: 'all_hard'
+articles:
+  - id: 1
+    title: '目的'
+    binding: 'hard'
+    text: '为业务端节点接入确立制度依据：明确三端界分、同构接口与规程，使外部主体接入有规可依，不临场现编。'
+  - id: 2
+    title: '依据'
+    binding: 'hard'
+    text: '依在册：三端定性、NCA 制度与链验、注册登记制度与授权件模板、身份双轨与桥接规范、税基双表、通道定性、对外契约版本协商口径。'
+  - id: 3
+    title: '适用范围'
+    binding: 'hard'
+    text: '适用在线服务与协议包自部署与软硬一体机三形态之外部主体接入；不适用内部研发态实验（另照沙盒规范）。'
+  - id: 4
+    title: '术语'
+    binding: 'hard'
+    text: '业务端即节点，制度运维端即站点，研发端即仓库；同构指三端同名同义同字段；代行指站点暂代节点动作、待移交。'
+  - id: 5
+    title: '分层律'
+    binding: 'hard'
+    text: '生效不等于部署不等于上线不等于对外不等于入仓，五事分别，各须单独明示。'
+  - id: 6
+    title: '研发端'
+    binding: 'hard'
+    text: '研发端产出制度与工件、做哈希锚定与存证；不承接业务运行，不承载业务数据。'
+  - id: 7
+    title: '制度运维端'
+    binding: 'hard'
+    text: '站点承担登记与校验、制度状态呈现、综合运维；是唯一公开面。'
+  - id: 8
+    title: '业务端'
+    binding: 'hard'
+    text: '节点承担执行与计量与结算与协作；数据留本地即私域，主体自持。'
+  - id: 9
+    title: '业务数据不上站'
+    binding: 'hard'
+    text: '业务数据（订单、客户数据、具体交互内容）不得上站；站点只呈现制度对象（登记、存证、MOU、熔断记录、状态）。'
+  - id: 10
+    title: '制度对象必回'
+    binding: 'hard'
+    text: '制度对象必要状态必回站点（登记、存证摘要、状态变更、熔断）；频度与项次由接口契约定；隐私最小化，不全量上送。'
+  - id: 11
+    title: '同构三义'
+    binding: 'hard'
+    text: '对象同构（同名同义同字段）、语义同构（同一动作含义一致，计量即计费事实而非订单）、契约同构（同版本、同错误码、同鉴权、同留痕）。'
+  - id: 12
+    title: '九类接口'
+    binding: 'hard'
+    text: '接口分九类：加入注册、身份交换与协议加载、名录发现、计量上报、额度配额、令牌锚定、文档协议包分发、心跳状态、存证回传校验；每类须有字段与错误码与版本与留痕四要素。'
+    categories:
+      - 'join_register'
+      - 'identity_handshake_protocol_load'
+      - 'directory_discovery'
+      - 'meter_report'
+      - 'quota_credit'
+      - 'token_anchor'
+      - 'doc_bundle_distribution'
+      - 'heartbeat_status'
+      - 'attestation_return_verify'
+  - id: 13
+    title: '不得另造'
+    binding: 'hard'
+    text: '节点侧不得自定字段名、错误码、版本号，须用契约所定者。'
+  - id: 14
+    title: '空壳禁止'
+    binding: 'hard'
+    text: '未实现即不开放（fail-closed）；不预置示例数据；契约可先冻结、实现后置。'
+  - id: 15
+    title: '契约冻结与版本'
+    binding: 'hard'
+    text: '对外契约须版本协商与弃用期；站点升级不得使既有节点断服。'
+  - id: 16
+    title: '准入'
+    binding: 'hard'
+    text: '一切接入过闸门与审核；未登记不服务；匿名只读限于在册公开面。'
+  - id: 17
+    title: '幂等与重放'
+    binding: 'hard'
+    text: '计量与存证必带幂等键；重放不重复计费、不重复入链。'
+  - id: 18
+    title: '失败与降级'
+    binding: 'hard'
+    text: '须设离线补报窗口与重试退避；站点不可用时节点本地兜底，业务不停摆。'
+  - id: 19
+    title: '留痕与举证'
+    binding: 'hard'
+    text: '明确必回站留痕项与留节点项；留痕件若上公开面不得含内部编号。'
+  - id: 20
+    title: '责任'
+    binding: 'hard'
+    text: '责任跟随授权链；执行体无财产；不得默认责任落站点即运营方。'
+  - id: 21
+    title: '锚定分级'
+    binding: 'hard'
+    text: 'HSM与PUF为技术根，须经锚定分级方称锚；不得径称PUF即锚点。'
+  - id: 22
+    title: '代行待移交'
+    binding: 'hard'
+    text: '站点现代行之节点动作（计量、协议加载、令牌）须标注代行待移交；不得固化为站点即节点。'
+  - id: 23
+    title: '变更与施行与解释'
+    binding: 'hard'
+    text: '接口重大变更走本条例修订；本条例签批后施行；解释权属TDCA管理方；与在册冲突以在册制度原文为准。'
+signature:
+  status: 'Pending'
+  signed_by: null
+  signed_at: null
+note: '未签批前不得称生效、不得对外引用为制度。'

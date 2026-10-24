@@ -1,0 +1,426 @@
+# TDCA-SPEC-MAILBOX-001 条例机读版 V1.0-FROZEN
+# 附条件生效：GK-02 灰度门与 GK-03 失效模式三查待补录（2026-11-20 前）；失败自动撤销退回 V0.11-DRAFT。
+# 附件A＝V0.11 全部条款，与正文同等效力；冲突以正文为准。
+spec_id: TDCA-SPEC-MAILBOX-001
+version: V1.0-FROZEN
+status: FROZEN
+date: '2026-10-21'
+session: L1-SI-161
+supersedes_semantics: TDCA-SPEC-MAILBOX-001@V0.11-DRAFT（并入作附件A·草案状态终止）
+upstream:
+- GSEQ-5437
+- GSEQ-5475
+- GSEQ-5514
+- GSEQ-5516
+- GSEQ-5517
+- GSEQ-5518
+license_scope: protocol-free
+data_provenance: real
+real_delivery_evidence:
+  rule: 四者合一，缺一不可
+  evidences:
+    E1:
+      name: 支付单据
+      issuer: 银行/持牌支付机构
+      verify: 金额与收付双方对账一致
+      field: payment_ref
+    E2:
+      name: 税单
+      issuer: 税务机关
+      verify: 票面可查可验
+      field: tax_receipt_ref
+      real_format_elements:
+      - 票种
+      - 票号
+      - 开票日期
+      - 纳税人识别号
+      - 税种
+      - 税额
+      - 征收机关
+      - 校验码
+    E3:
+      name: 实际交付单据
+      issuer: 交付双方
+      verify: 签认方与 subject 一致
+      field: delivery_ref
+    E4:
+      name: 智能合约
+      issuer: 合约执行载体
+      verify: 地址/参数/tx_hash 可复算
+      field: contract_ref
+  online_delivery_complete:
+    rule: 三件齐，缺一不算交付
+    R1_permission_sync:
+      field: permission_sync_ref
+      verify: 交付方已撤权 + 受让方已获权 + 两侧清单一致
+    R2_prepayment:
+      field: payment_ref
+      verify: 金额与约定一致 + 到账 + 收付方对得上
+      arrival_proof:
+        channel_receipt_fields:
+        - 通道单号
+        - 到账时间
+        - 金额
+        - 付方账户尾号
+        - 收款账户尾号
+        - 交易状态
+        alternative: 银行回单(扫描件六要素)
+    R3_tax_prepay_deducted:
+      field: tax_receipt_ref
+      verify: 按在册微交付口径计税 + 扣款完成 + 凭证可核
+      completion_source:
+      - 税务系统回执编号
+      - 扣缴流水号
+      tax_rates_ref: CALL-RULES TaxRates（dispatch 2% / royalty 7.5% 仅化合 / trade_fee
+        0.75%）
+    not_counted:
+    - 文件已发出
+    - 对方已打开
+    - 口头确认
+    - NCA 轨迹已生成
+    same_business: business_ref
+  identity_check:
+    id: E5
+    rule: 四证同指一笔
+    field: business_ref
+    forged_mix_not_valid: true
+  E3_by_delivery_form:
+    offline:
+      voucher: 签收确认（物流单号+签收记录）或验收单
+      verify: 物流轨迹可查+签收方与 subject 一致
+      boundary: ⛔自造物流签收，只做单号对账
+    online:
+      voucher: 三件齐（权限变更同步+预付款+预缴税金扣款完成）
+      verify: 权限两侧清单对账一致 + 预付款到账 + 预缴扣款凭证可核
+      reason: 线上无实物签收，故以权限+钱+税代替签收
+    mixed:
+      voucher: 两套皆备
+      verify: 显式列明线下部分与线上部分
+  verdict_rule: E1~E4 任一缺不成立；齐但同一性不成立仍不成立
+no_substitution_rules:
+- id: N1
+  rule: 外部锚上链交易不得充当 E4 智能合约
+- id: N2
+  rule: settlement 内部结算记录不得充当 E1 支付单据
+- id: N3
+  rule: mou_ref 不得充当 E4 合约（度量锚定 ≠ 执行载体）
+acceptance:
+  rule: 件内须写明所处阶段
+  stage1:
+    name: 跑通
+    criteria:
+      mailbox_assertions:
+      - A1
+      - A2
+      - A3
+      - A4
+      - A5
+      - A6
+      - A7
+      availability_5d: 0.95
+      external_anchor_if_involved: controlled-third-party + recomputable
+    reserved_fields_involved: false
+    verdict_rule: 达标即通过
+  stage2:
+    name: 真实交付（四证合一）
+    criteria:
+      S2-1: 真实业务（⛔ 测试件/沙盒模拟件）
+      S2-2: E1~E4 四证齐
+      S2-3: E5 同一性（business_ref 一致）
+      S2-4: 各证可核
+    entry_conditions:
+    - 阶段一已通过
+    - 有真实企业愿意使用（沙盒准入就位）
+    - 财税通道就位（MOU 锚定 + 税务凭证可出）
+    - 结算与开票口径已明示（涉真钱须单独批）
+    trigger_type: external_business_dependent
+mandatory_clauses:
+- id: M1
+  rule: claim_moves_out_of_inbox
+- id: M2
+  rule: mutual_exclusion_by_exclusive_create
+- id: M3
+  rule: archive_idempotent_and_lock_until_archived
+card:
+  schema_ref: mailbox-card-v0.2.schema.json
+  required:
+  - id
+  - command
+  - constraint
+  - budget_seconds
+  - expected_output
+  - subject
+  - actor
+  - delivered
+  optional:
+  - input_payload
+  - note
+  - model_hint
+  - retry_of
+  - auth_envelope
+  required_with_default:
+    delivery_form: online
+    delivered: pending
+  reserved_null:
+  - nca_hash
+  - scene_weight
+  - settlement
+  - mou_ref
+  - tax_receipt_ref
+  - payment_ref
+  - delivery_ref
+  - contract_ref
+  - business_ref
+  - permission_sync_ref
+  sidecar_hash:
+    pattern: <id>.json.sha256
+    embed_in_card: false
+  delivered:
+    field: delivered
+    enum:
+    - pending
+    - received
+    - expired
+    - na
+    default: pending
+    meaning:
+      pending: 本侧已投，对方未报收（⛔ 不得据此算完成）
+      received: 对方报已收
+      expired: 超期未收（due 时点过；未设 due 则默认 24h）
+      na: 非信箱卡
+    received_requires: received_sha256_16
+    rules:
+    - ⛔ 已投不得默认写 received（投递与收件两态分离）
+    - received 无哈希 ⟹ 视同 pending
+    - received_sha256_16 报而不符 ⟹ 降回 pending 并计入 read_claims_without_hash
+return_card:
+  budget_compliance:
+    required:
+    - budget_seconds
+    - used_seconds
+    - verdict
+    - over_reason
+    budget_seconds: 照抄卡面原值，⛔ 不得改写
+    used_seconds: 实测量级，⛔ 取整过度
+    verdict:
+      enum:
+      - within
+      - over
+      note: 二值，⛔ 第三写法
+    over_reason: over 必填；within 写 n/a
+    rules:
+    - ⛔ 不得只写「约 N 秒，预算内」，须给卡面值与实测值两数
+    - 超预算 ⛔ 不判失败，但 over_reason 缺 ⟹ 视为未报
+    - budget_compliance 缺报 ⟹ A1 不通过
+  status_items:
+    class_field: status_class
+    enum:
+    - registered
+    - probe
+    rules:
+    - registered 与在册口径比对；不符 ⟹ 异常
+    - probe 得 404／非在册码 ⟹ 非故障，⛔ 计入异常数
+    - ⛔ 不得把自探写作「预期外探测」
+  container_report:
+    requires:
+    - restart_count
+    - started_at
+    rules:
+    - restart_count = 0 且 started_at 在观察窗外 ⟹ 连续运行
+    - restart_count = 0 但 started_at 在观察窗内 ⟹ 标 recreated（删后重拉计数归零）
+    - restart_count > 0 ⟹ 重启，记次数与时刻
+    - ⛔ 仅凭 restart_count = 0 断言「未重启」
+auth_envelope:
+  when: 卡涉配置或调用授权时必带
+  template_ref: TDCA-TEMPLATE-AUTH-001
+  fields:
+  - template_ref
+  - auth_id
+  - version
+  - requirement_digest
+  - signature_event_nca
+  - parent_auth_id
+  requirement_digest:
+    R1: F3_场景
+    R2: 五阶资产形态清单
+    R3: 全构成声明
+    R4: 法律主体签署栏
+  rules:
+  - ⛔ 卡内字段不得充当授权件本体（fail-closed：无件不得配置、无授权不得调用）
+  - ⛔ 复制条款正文，只引用 auth_id
+  - ⛔ 授权码值／电子签名值不入件，只报 signature_event_nca 指针
+  - 四要件缺一 ⟹ 信封无效
+  - 多层转授每层一信封、parent_auth_id 串联，⛔ 一层多父；任一环失效 ⟹ 下游全部失效
+assertions:
+- id: A1
+  metric: duplicate_executions
+  threshold: 0
+  note: 认领计数不作判据
+  observability_extended: 本版扩容：并列观测 delivered 无 expired 留白 + budget_compliance 有值；原阈值不动
+- id: A2
+  metric: illegal_state_count
+  threshold: 0
+  observability_extended: 本版扩容：并列观测 read_claims_without_hash = 0
+- id: A3
+  metric: hash_mismatch
+  threshold: 0
+- id: A4
+  metric: inbox_leftover
+  threshold: 0
+- id: A5
+  metric: raw_text_hits
+  threshold: 0
+- id: A6
+  metric: missing_dual_identity
+  threshold: 0
+- id: A7
+  metric: archived_vs_submitted_diff
+  threshold: 0
+- id: A2-RH
+  metric: read_claims_without_hash
+  threshold: 0
+  note: 本版新增：声称已读未报哈希／报而不符，双向适用，无例外条款
+- id: A1-DL
+  metric: expired_without_disposal
+  threshold: 0
+  note: 本版新增：delivered = expired 须有处置记录
+- id: A1-BC
+  metric: budget_compliance_missing
+  threshold: 0
+  note: 本版新增：回报缺 budget_compliance 即计
+verifier:
+  script: _mbx_assert_v011.py
+  readonly: true
+  requires:
+    A1: --exec-log
+    A4: --inbox
+    A7: --submitted | --cards-dir
+  skip_is_not_pass: true
+  path: sim-mailbox-001/_mbx_assert_v011.py
+  last_run:
+    verdict: PASS
+    compliant_false_positive: 0
+    adversarial_caught: 18/18
+    exit: 0
+precheck_policy:
+  id: C
+  rules:
+  - credential_prefix_always_block:
+    - akia
+    - '-----begin private key-----'
+    - eyj
+    - sk-
+    - ghp_
+  - keyword_requires_separator_and_value:
+    - 密码
+    - password
+    - secret
+    - token
+    - accesskey
+    - 私钥
+    - 身份证
+    - 银行卡
+  - long_digit_run:
+      min_len: 16
+      boundary: non_digit
+  allow_bare_words: true
+external_anchor:
+  fact_type: invocation
+  chain_label: TA-V1
+  verifiability: controlled-third-party + recomputable
+  evidence_pack:
+  - tx_hash
+  - block_header
+  - tx_input
+  - recompute_script
+  not_equal_to_E4: true
+chain_discipline:
+  L1_no_chain_wipe_on_real_chain: true
+  L2_idempotency_regression_required: true
+  L3_persistence_must_be_measured: true
+  L4_retention:
+    chain_days_min: 30
+    evidence: permanent
+  L5_chain_switch_config_only: true
+negative_space:
+- 不定义身份、不签发凭据
+- 不定义收费与结算
+- 不做编排调度
+- 不承诺云同步零重复
+- 未过可靠性门不得对外称已可用
+- 不得写「公网任意可查」
+- 阶段一不得引用阶段二判据（反之亦然）
+- 内部记录不得充当外部凭证
+- trade_fee(0.75%) 与配置成功收费(1%) 为不同名目，不得混用同一项
+- 卡内字段不得充当授权件本体（⛔ 以信封代授权）
+- 不得据「口称已读」推进放行、合并或开工（须报哈希并以件实测为准）
+dual_version:
+  human: TDCA-SPEC-MAILBOX-001-V1.0-FROZEN-信箱协议条例（人读版·附条件生效·灰度回报30日补录）.md
+  machine: TDCA-SPEC-MAILBOX-001-V1.0.yaml
+  sync_required_on_change: true
+document_class: regulation
+annex_a:
+  ref_human: TDCA-SPEC-MAILBOX-001-V0.11-DRAFT-信箱协议规范草案（人读版·卡面投递与预算机读化·授权信封·已读报哈希）.md
+  ref_machine: TDCA-SPEC-MAILBOX-001-V0.11.yaml
+  effect: 并入本条例·与正文同等效力
+  conflict_rule: 以本条例正文为准
+regulation:
+  id: TDCA-SPEC-MAILBOX-001
+  name: 信箱协议条例
+  version: V1.0-FROZEN
+  effective_from: '2026-10-21'
+  promotion_track:
+    step1_thinktank:
+      verdict: done
+      evidence: V0.1~V0.11 十一版草案在册
+    step2_govkit:
+      verdict: partial
+      evidence: TDCA-GOVKIT-MAILBOX-001
+      note: 适用 8 闸（6 过·2 未闭环）·不适用 4 闸如实标
+    step3_assertions:
+      verdict: done
+      evidence: TDCA-ASSERT-SANDBOX-MAILBOX-001
+      verdict_detail: 18/18 全捕获·误伤 0·EXIT=0
+    step4_sandbox:
+      verdict: done
+      evidence: TDCA-ASSERT-SANDBOX-MAILBOX-001
+      threshold: 中档（照 GSEQ-3816）
+  effective_conditions:
+    kind: conditional
+    open_items:
+    - id: GK-02
+      name: 灰度门
+      status: pending
+      owner: 执行侧
+      evidence: 任务书 TDCA-HANDOFF-EXEC-MAILBOX-001 已出·回报未见
+    - id: GK-03
+      name: 失效模式三查（九项）
+      status: pending
+      owner: 执行侧＋本侧核
+      evidence: 原定灰度门后（TDCA-GATE-TRIAL-MAILBOX-001 §五 动作 3）
+    backfill_deadline: '2026-11-20'
+    backfill_span_days: 30
+    on_failure:
+      auto_revoke: true
+      rollback_to: V0.11-DRAFT
+      issue_revoke_note: true
+      no_retroactive_effect: 不追溯已归档任务卡与已核证回报
+    on_pass:
+      become_unconditional: true
+      issue_backfill_done_note: true
+      no_new_regulation: true
+  revocation_paths:
+  - 第六条·附条件失败自动撤销
+  - 创始人明示撤销并出撤销件
+  signoff:
+    signed_by: 创始人（本人）
+    signed_at: '2026-10-21'
+    authority_verbatim: 走门禁升正式办
+    choice: 乙·附条件生效
+    defaults_accepted:
+      name_and_id: 沿用 TDCA-SPEC-MAILBOX-001
+      version: V1.0-FROZEN
+      backfill_days: 30
+      failure_effect: 自动撤销并退回 V0.11-DRAFT
+    agent_may_substitute_signature: false
+  validity_scope: 内部运行·零对外
