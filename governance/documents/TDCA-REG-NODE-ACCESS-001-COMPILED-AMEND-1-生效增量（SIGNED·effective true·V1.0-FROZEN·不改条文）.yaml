@@ -1,0 +1,22 @@
+instrument: 'TDCA-REG-NODE-ACCESS-001'
+amendment: 'AMEND-1'
+version: 'V1.0-FROZEN'
+status: 'SIGNED'
+effective: true
+effective_at: '2026-10-17'
+effective_scope: 'TDCA 内部（业务端节点接入与同构契约）'
+session: 'L1-SI-151'
+base_instrument: 'TDCA-REG-NODE-ACCESS-001（人读 V1.0 ／机读 V1.0）'
+signoff_record: 'TDCA-SIGNOFF-REG-NODE-ACCESS-001'
+signature:
+  status: 'Signed'
+  signed_by: 'founder'
+  signed_at: '2026-10-17T00:00:00+08:00'
+  basis: '创始人本框逐字「签批，继续下一步」'
+articles_changed: false
+articles_count: 23
+note: '本增量只改「状态与生效」三项（status ／ effective ／ signature），⛔ 不改任何条文；条文以人读版与机读原件为准。'
+boundaries:
+  - '生效 ≠ 部署 ≠ 上线 ≠ 对外 ≠ 入仓（五事分别）'
+  - '本增量 ⛔ 不构成对外发布'
+  - '条文修订须走本条例第 23 条'
