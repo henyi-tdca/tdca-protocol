@@ -2,7 +2,7 @@
 
 ## Thinking-Protocol Library: The Flow-Nature of Human Intelligence in the Digital World
 
-> Document: TDCA-COG-LIBRARY-OPEN-002 ｜ Published: 2026-08-26 ｜ Status: **Released**
+> Document: 开放件（2026-08-26） ｜ Published: 2026-08-26 ｜ Status: **Released**
 
 ---
 
