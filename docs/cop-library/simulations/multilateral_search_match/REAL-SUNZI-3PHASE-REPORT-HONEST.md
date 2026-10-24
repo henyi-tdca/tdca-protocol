@@ -3,15 +3,15 @@
 > 性质声明: 本跑验证的是 **TDCA 治理外壳**(准入门/沙盒闸门/MOU判定/NCA确权) 在真实平台真实实跑, **非编译内容本身**。data_provenance=mixed(4真实/3占位), VB为组织者宣言式(无外部锚, 标[UNVERIFIED]), 生产产出薄。引用须带混合口径。
 
 ## 1. enforce_entry 准入门 (admission_phase · 真实发射准入NCA)
-> 准入只验证'是否接受正和博弈原则'(加载 TDCA-CORE-20260815-01), 不验证'本联盟能否正和'——后者是沙盒的事。
-- ✅ 准入 **兵学战略研究院** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-001`
-- ✅ 准入 **古籍训诂与文本校勘院** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-002`
-- ✅ 准入 **中文语义与情报NLP所** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-003`
-- ✅ 准入 **编译推理算力云** (real=True) -> 发射 NCA `TDCA-REASONIX-20260816-004`
-- ✅ 准入 **智能系统建模实验室** (real=False) -> 发射 NCA `TDCA-REASONIX-20260816-005`
-- ✅ 准入 **知识图谱与态势感知中心** (real=False) -> 发射 NCA `TDCA-REASONIX-20260816-006`
-- ✅ 准入 **合规与可信决策审计院** (real=False) -> 发射 NCA `TDCA-REASONIX-20260816-007`
-- ❌ 拒绝 **数字版权确权与IP院** (未加载 TDCA-CORE-20260815-01) -> AdmissionDenied
+> 准入只验证'是否接受正和博弈原则'(加载基协议), 不验证'本联盟能否正和'——后者是沙盒的事。
+- ✅ 准入 **兵学战略研究院** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **古籍训诂与文本校勘院** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **中文语义与情报NLP所** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **编译推理算力云** (real=True) -> 发射 NCA 实跑留痕
+- ✅ 准入 **智能系统建模实验室** (real=False) -> 发射 NCA 实跑留痕
+- ✅ 准入 **知识图谱与态势感知中心** (real=False) -> 发射 NCA 实跑留痕
+- ✅ 准入 **合规与可信决策审计院** (real=False) -> 发射 NCA 实跑留痕
+- ❌ 拒绝 **数字版权确权与IP院** (未加载基协议) -> AdmissionDenied
 
 ## 2. 沙盒迭代 (sandbox_phase · 真实重算, 不落盘)
 > 沙盒闸门: 此阶段无论如何只计算, 不发射业务NCA、不写COP。'亏'被隔离在落盘之前。
@@ -62,14 +62,14 @@
 > 沙盒 mou_ok=True, 现在才真实调NLP + 真实发射NCA + 真实落盘COP。
 - 真实调 zh-nlp MCP: proper=["孙子", "兵者", "大事", "死生", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
 - 真实调 zh-nlp MCP: classical_tokens=["孙子", "兵者", "国", "大事", "死生", "事", "校", "情", "道者", "令民", "天者", "阴阳", "寒暑", "时制", "地者", "将者", "智信仁", "法者", "曲制", "官道", "主用", "诡道", "故能"]
-- 真实落盘: 回填 `<本机工作区>\.tdca-protocol\cognitive-compiler\hundred_schools\sunzi\sunzi_real\第01篇-计篇-real.yaml` 的 coalition_nca=TDCA-REASONIX-20260816-008 + mou_ok + 沙盒元信息
-- 联盟承诺 NCA: `TDCA-REASONIX-20260816-008` (notes 已标 data_provenance=mixed)
-- 计篇生产 NCA: `TDCA-REASONIX-20260816-009`
+- 真实落盘: 回填 `<本机工作区>\.tdca-protocol\cognitive-compiler\hundred_schools\sunzi\sunzi_real\第01篇-计篇-real.yaml` 的 coalition_nca=实跑留痕 + mou_ok + 沙盒元信息
+- 联盟承诺 NCA: 实跑留痕 (notes 已标 data_provenance=mixed)
+- 计篇生产 NCA: 实跑留痕
 
 ## 4. 诚实性质声明 (真实 vs 占位 / 沙盒闸门)
 - **真实可调用资源(4)**: 兵学战略研究院(主agent) / 古籍训诂院(真实Expert guji-philology) / 中文语义NLP所(真实MCP zh-nlp, jieba真算) / 编译推理算力云(真实subagent)。
 - **能力角色占位(3)**: 建模/图谱/合规 —— loaded_core=true, 联盟互补维度用, 待绑定真实资源。
-- **被准入门拒绝(1)**: 数字版权院(未加载基协议) —— 证明'加入生态必须加载TDCA-CORE'。
+- **被准入门拒绝(1)**: 数字版权院(未加载基协议) —— 证明'加入生态必须加载基协议'。
 - **沙盒闸门已生效**: 沙盒通过→已真实生产落盘(发联盟NCA+生产NCA+回填COP)
 - **机制全真实**: MCP握手/NLP调用/enforce_entry/form_coalition/shapley/NCA发射 均为平台真实代码实跑。
 - 与旧版(run_sunzi_real.py)区别: 旧版生产落盘在沙盒判定之前(错误); 本版沙盒不过不落盘。

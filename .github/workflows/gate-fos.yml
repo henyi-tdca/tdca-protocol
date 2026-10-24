@@ -11,7 +11,7 @@ permissions:
 jobs:
   test:
     name: tdca-fos 测试
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, tdca-ci]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -25,5 +25,6 @@ jobs:
       - name: 跑测试
         env:
           PYTHONPATH: ${{ github.workspace }}
+          TDCA_KB_DIR: /opt/tdca-kb/tdca-official-kb
         working-directory: tdca-fos
         run: python -m pytest -q
