@@ -11,10 +11,11 @@ import pytest
 from tdca_rag.engine import TDCARAGEngine, CORE_TERMS
 
 # 可移植路径解析（修复跨机器硬编码——workspace 相对上溯，替代旧机器绝对路径）
+# 路径来源可由环境变量覆盖（CI 私域语料落位）；断言与阈值一字不动
 _WS = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-KB = os.path.join(_WS, "tdca-official-kb")
-AUTH = os.path.join(_WS, "_authority_text")
-PDF = os.path.join(_WS, "_pdf_text")
+KB = os.environ.get("TDCA_KB_DIR") or os.path.join(_WS, "tdca-official-kb")
+AUTH = os.path.join(KB, "..", "_authority_text")
+PDF = os.path.join(KB, "..", "_pdf_text")
 
 
 @pytest.fixture(scope="module")
