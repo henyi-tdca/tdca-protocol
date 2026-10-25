@@ -180,3 +180,60 @@ def test_amend1_q_length_and_ctrl(_seed):
     # 控制字符嵌入正常词：清理后按正常词处理
     r = client.get("/api/v1/knowledge/terms", params={"q": "配\x01置权"})
     assert r.status_code == 200 and r.json()["data"]["total"] == 1
+
+
+# ---------------------------------------------------------------------------
+# L1SI175-A1-003：term 字段脱敏补齐（线上 term 含 ID 类 3 处漏网之修复验证）
+# 种子复刻线上两行真实漏网形态，独立 fixture（不动共享 _seed 计数）
+# ---------------------------------------------------------------------------
+
+_TERM_DIRTY_ROWS = [
+    ("T-010", "ID61 / ID64（里程碑编号）", "普通释义"),
+    ("T-011", "ID27↔P-007+AC 映射补登记", "普通释义"),
+]
+
+
+@pytest.fixture()
+def _seed_term_dirty():
+    sm = get_sessionmaker()
+    with sm.begin() as s:
+        for tid, term, dfn in _TERM_DIRTY_ROWS:
+            s.add(M.TermsRegistry(term_id=tid, term=term, definition=dfn,
+                                  data_provenance="real"))
+    yield
+    with sm.begin() as s:
+        for tid, *_ in _TERM_DIRTY_ROWS:
+            s.query(M.TermsRegistry).filter(M.TermsRegistry.term_id == tid).delete()
+
+
+def test_a1_003_anon_term_desensitized(_seed_term_dirty):
+    """验收①②：匿名 term 与 def 五类编号全 0（term 也过脱敏）。"""
+    import re as _re
+    pat = _re.compile(r"\bT-\d{3}\b|TDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*|\bNC-\d+\b|\bID\d+\b|\bFC-[A-Z0-9]+\b")
+    r = client.get("/api/v1/knowledge/terms")
+    assert r.status_code == 200
+    for row in r.json()["data"]["terms"]:
+        assert not pat.search(row["term"]), f"term 漏网: {row['term']}"
+        assert not pat.search(row["def"]), f"def 漏网: {row['term']}"
+    terms = {i["term"] for i in r.json()["data"]["terms"]}
+    assert "ID61 / ID64（里程碑编号）" not in terms
+    # 脱敏占位形态在册
+    dirty = [i for i in r.json()["data"]["terms"] if "里程碑" in i["term"]]
+    assert dirty and "〔内部编号〕" in dirty[0]["term"]
+
+
+def test_a1_003_login_term_original(_seed_term_dirty):
+    """验收⑤/S-2：登录面 term 仍原文（含编号），行为不变。"""
+    r = client.get("/api/v1/knowledge/terms", headers=_auth())
+    items = {i["id"]: i for i in r.json()["data"]["terms"]}
+    assert items["T-010"]["term"] == "ID61 / ID64（里程碑编号）"
+    assert items["T-011"]["term"] == "ID27↔P-007+AC 映射补登记"
+
+
+def test_a1_003_anon_search_term_dirty_still_hits(_seed_term_dirty):
+    """匿名按普通词检索命中编号词名时，返回的 term 已脱敏。"""
+    r = client.get("/api/v1/knowledge/terms?q=里程碑")
+    assert r.status_code == 200
+    items = r.json()["data"]["terms"]
+    assert len(items) == 1
+    assert "ID61" not in items[0]["term"] and "〔内部编号〕" in items[0]["term"]

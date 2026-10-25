@@ -520,17 +520,19 @@ def knowledge_terms(q: Optional[str] = None, request: Request = None):
             note = "术语注册表 DB 实读（G-1；权威版本以注册表登记为准）"
         else:
             # AMEND-1 附加①：空壳条（脱敏去占位后为空）不出现在匿名结果
-            items = [{"term": r.term, "def": _terms_desensitize(r.definition)}
+            # A1-003：term 字段同样过脱敏（线上实测 term 含 ID 类 3 处漏网）；
+            # 登录面仍原文（S-2：只改匿名返回层）
+            items = [{"term": _terms_desensitize(r.term), "def": _terms_desensitize(r.definition)}
                      for r in rows if _terms_anon_visible(r.definition)]
-            note = "术语注册表 DB 实读（匿名面：释义已脱敏内部编号；登录可见全量）"
+            note = "术语注册表 DB 实读（匿名面：词名与释义已脱敏内部编号；登录可见全量）"
     else:
         if authed:
             items, nature, note = list(_TERMS), "simulated", "G-1 术语子集（完整权威见注册表 V1.1；本端点演示）"
         else:
-            items = [{"term": t["term"], "def": _terms_desensitize(t["def"])}
+            items = [{"term": _terms_desensitize(t["term"]), "def": _terms_desensitize(t["def"])}
                      for t in _TERMS if _terms_anon_visible(t["def"])]
             nature = "simulated"
-            note = "G-1 术语子集（匿名面：释义已脱敏内部编号；登录可见全量）"
+            note = "G-1 术语子集（匿名面：词名与释义已脱敏内部编号；登录可见全量）"
     if q:
         items = [t for t in items if q.lower() in t["term"].lower() or q.lower() in t["def"].lower()]
     return _nca_watermark({"terms": items, "total": len(items), "note": note}, nature=nature)
