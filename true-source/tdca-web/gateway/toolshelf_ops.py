@@ -8,6 +8,7 @@ SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
 
+import re
 import uuid
 
 from fastapi import APIRouter, HTTPException, Request
@@ -18,6 +19,42 @@ from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/toolshelf", tags=["toolshelf"])
+
+# 匿名面脱敏：内部件号/存证指针/凭据措辞，任一命中即不列（fail-closed）
+_CATALOG_SENSITIVE = re.compile(
+    r"\b(TL|FC|CI)-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES|"
+    r"(密码|口令|token|secret|凭据)", re.IGNORECASE)
+_CATALOG_PURPOSE_LEN = 80
+
+
+def _one_line_purpose(description: str) -> str:
+    """一句用途：取 description 首句（。！？!?换行截断），超 80 字截断。"""
+    text = (description or "").strip()
+    if not text:
+        return ""
+    first = re.split(r"[。！？!?；;\n]", text, maxsplit=1)[0].strip()
+    return first[:_CATALOG_PURPOSE_LEN]
+
+
+@router.get("/catalog")
+def tool_catalog(request: Request):
+    """匿名货架清单（L1SI175-B1 S1-2）：只返 name ＋ 一句用途 ＋ category。
+
+    ⛔ 不含 tool_id / version / requires_grant / nca_ref（内部编号、凭据态与存证指针不出）；
+    名称或用途命中脱敏正则者整件不列（fail-closed）。上架与详情仍须登录。"""
+    with get_session() as s:
+        rows = s.query(M.ToolItem).order_by(M.ToolItem.created_at).all()
+    out = []
+    for r in rows:
+        purpose = _one_line_purpose(r.description)
+        if _CATALOG_SENSITIVE.search(r.name or "") or _CATALOG_SENSITIVE.search(purpose):
+            continue
+        out.append({"name": r.name, "category": r.category, "purpose": purpose})
+    return _nca_watermark({
+        "count": len(out),
+        "tools": out,
+        "note": "工具货架公开目录（只列名称、类目与一句用途；"
+                "不含内部编号、版本与调用凭据信息）"})
 
 
 @router.get("/list")
