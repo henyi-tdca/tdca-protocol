@@ -463,14 +463,19 @@ _TERMS = [
 ]
 
 
-# L1SI175-A1-1：匿名面脱敏（只改返回层，不改源数据）——五类内部编号命中即替换占位
+# L1SI175-A1-AMEND-2：匿名面脱敏（只改返回层，不改源数据）——七类内部编号命中即替换占位。
+# 五类（A1-1）：T-\d{3}／TDCA-件号／NC-\d／ID\d+／FC-；
+# 六类（AMEND-2）：P-\d{2,4} 专利防御件号族（prior-art 未披露，源数据实测 5 处）；
+# 七类（AMEND-2）：S-/A-\d{1,3} 条款位（源数据实测 4 处，实读全为条款引用编号）。
+# 脱敏与 q 拦截共用本正则，扩类即同步拦截（否则存在性侧信道复活）。
 _TERMS_SENSITIVE = re.compile(
-    r"\bT-\d{3}\b|TDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*|\bNC-\d+\b|\bID\d+\b|\bFC-[A-Z0-9]+\b")
+    r"\bT-\d{3}\b|TDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*|\bNC-\d+\b|\bID\d+\b|\bFC-[A-Z0-9]+\b"
+    r"|\bP-\d{2,4}\b|\b(?:S|A)-\d{1,3}\b")
 _TERMS_DESENS_MARK = "〔内部编号〕"
 
 
 def _terms_desensitize(text: str) -> str:
-    """匿名面释义脱敏：五类内部编号（T-/TDCA-件号/NC-/ID/FC-）替换为占位。"""
+    """匿名面词名/释义脱敏：七类内部编号（T-/TDCA-/NC-/ID/FC-/P-/S·A-条款位）替换为占位。"""
     if not text:
         return text
     out = _TERMS_SENSITIVE.sub(_TERMS_DESENS_MARK, text)

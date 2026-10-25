@@ -7,6 +7,8 @@
   A1-1  登录面保持全量：含 id、def 原文不改（脱敏不溯源）
   A1-2  检索走现有 ?q=：空词全量 / 常见词过滤 / 无匹配空表
 """
+import re
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -237,3 +239,76 @@ def test_a1_003_anon_search_term_dirty_still_hits(_seed_term_dirty):
     items = r.json()["data"]["terms"]
     assert len(items) == 1
     assert "ID61" not in items[0]["term"] and "〔内部编号〕" in items[0]["term"]
+
+
+# ---------------------------------------------------------------------------
+# L1SI175-A1-AMEND-2：脱敏口径五类扩七类（补 P- 编号族与 S-/A- 条款位）
+# 源数据实测枚举（令面硬规矩）：P- 5 处（term 1 / def 4），A-/S- 4 处（def 4）
+# ---------------------------------------------------------------------------
+
+# 七类全正则（与 api_v1._TERMS_SENSITIVE 同口径，独立书写防实现漂移）
+_PAT_7 = re.compile(
+    r"\bT-\d{3}\b|TDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*|\bNC-\d+\b|\bID\d+\b|\bFC-[A-Z0-9]+\b"
+    r"|\bP-\d{2,4}\b|\b(?:S|A)-\d{1,3}\b")
+
+_P_ROWS = [("T-012", "P-编号词", "涉及 P-007 与 P-070 的编译器角色与批判对象"),
+           ("T-013", "条款位词", "可经迁移／解构（A-8）；越级（A-11／A-12）")]
+
+
+@pytest.fixture()
+def _seed_p_sa():
+    sm = get_sessionmaker()
+    with sm.begin() as s:
+        for tid, term, dfn in _P_ROWS:
+            s.add(M.TermsRegistry(term_id=tid, term=term, definition=dfn,
+                                  data_provenance="real"))
+    yield
+    with sm.begin() as s:
+        for tid, *_ in _P_ROWS:
+            s.query(M.TermsRegistry).filter(M.TermsRegistry.term_id == tid).delete()
+
+
+def test_amend2_anon_seven_class_zero(_seed_p_sa):
+    """验收①②：匿名 term+def 七类计数全 0（原五类保持 0）。"""
+    r = client.get("/api/v1/knowledge/terms")
+    assert r.status_code == 200
+    tc = dc = 0
+    for row in r.json()["data"]["terms"]:
+        tc += len(_PAT_7.findall(row["term"]))
+        dc += len(_PAT_7.findall(row["def"]))
+    assert tc == 0 and dc == 0, f"term={tc} def={dc}"
+    # P- 种子脱敏形态在册
+    p_row = [i for i in r.json()["data"]["terms"] if i["term"] == "P-编号词"]
+    assert p_row and "P-007" not in p_row[0]["def"] and "〔内部编号〕" in p_row[0]["def"]
+    sa_row = [i for i in r.json()["data"]["terms"] if i["term"] == "条款位词"]
+    assert sa_row and "A-8" not in sa_row[0]["def"]
+
+
+def test_amend2_q_probes_include_p(_seed):
+    """验收③：q 拦截随扩类同步——P-007／P-070 匿名亦 400（侧信道不复活）。"""
+    for probe in ["P-007", "P-070"]:
+        r = client.get("/api/v1/knowledge/terms", params={"q": probe})
+        assert r.status_code == 400, f"{probe} → {r.status_code}"
+        assert "内部编号" in r.json()["detail"]
+    # 正常词不受扩类影响
+    assert client.get("/api/v1/knowledge/terms?q=配置权").status_code == 200
+
+
+def test_amend2_login_original_kept(_seed_p_sa):
+    """验收④：登录面仍原文（抽样 P-007 行）。"""
+    r = client.get("/api/v1/knowledge/terms", headers=_auth())
+    items = {i["id"]: i for i in r.json()["data"]["terms"]}
+    assert "P-007" in items["T-012"]["def"] and "P-070" in items["T-012"]["def"]
+    assert "A-8" in items["T-013"]["def"]
+
+
+def test_amend2_no_collateral_on_seed_corpus():
+    """S-1 误伤自查：既有种子语料（conftest 预种 8 行）七类正则零命中——
+    即扩类对存量正常词零误脱；线上全量误伤清单以部署后 diff 为准。"""
+    r = client.get("/api/v1/knowledge/terms")
+    assert r.status_code == 200
+    hits = []
+    for row in r.json()["data"]["terms"]:
+        for m in _PAT_7.findall(row["term"]) + _PAT_7.findall(row["def"]):
+            hits.append((row["term"], m))
+    assert not hits, f"存量误伤: {hits}"
