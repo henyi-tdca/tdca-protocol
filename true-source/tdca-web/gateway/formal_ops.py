@@ -85,13 +85,15 @@ def conclusion_catalog(request: Request):
 
     ⛔ 不含 conclusion_id / nca_ref / scope_note（内部编号与存证指针不出匿名面）；
     入站时已机验结论面（公式/数值/内部编号任一命中即 400），此处再挡一道：
-    存量行若含内部编号，整行不列出（fail-closed）。"""
+    存量行若含内部编号（含 TL- 件号，入站正则未覆盖面），整行不列出（fail-closed）。"""
     with get_session() as s:
         rows = s.query(M.FormalConclusion) \
                 .order_by(M.FormalConclusion.created_at).all()
+    sensitive = re.compile(r"\bTL-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES")
     out = [{"claim_text": r.claim_text, "data_nature": r.data_nature}
            for r in rows
-           if not _INTERNAL_ID.search(r.claim_text or "")]
+           if not _INTERNAL_ID.search(r.claim_text or "")
+           and not sensitive.search(r.claim_text or "")]
     return _nca_watermark({
         "count": len(out),
         "conclusions": out,
