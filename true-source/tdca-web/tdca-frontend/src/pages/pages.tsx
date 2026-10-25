@@ -78,6 +78,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/rules', title: '制度地图', layer: 'L0', dataSource: '机读表 _DOC-MAP-RULES-20261021-V6.1-FINAL（仓内单源·?raw 进包）', permission: '公开', description: '56 件制度件按五类分组、五态如实标、S1~S6 六步导航；历史草案折入折叠区，以生效版为准。' },
   // L1SI163-START-001：新手指引（六步＋目录筛四维＋147 术语检索·页面与检索共读 _START-MAP-20261021-V1·0CE5C89A957B6B60）
   { path: '/start', title: '新手指引 · 六步上手 TDCA', layer: 'L0', dataSource: '_START-MAP 三表（单一事实源·仓内单源 ?raw 进包）', permission: '公开', description: 'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表。' },
+  // L1SI175-B1 S1-5：怎么验证常设页（三件自查全路径，匿名面）
+  { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读，任何第三方可复算。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -140,6 +142,8 @@ import { ReviewPage } from './review'
 import { RulesMapPage } from './rules/rules'
 // L1SI163-START-001：新手指引 /start（六步＋检索批3·_START-MAP 单一事实源）
 import { StartPage } from './start/start'
+// L1SI175-B1 S1-5：怎么验证 /verify（三件自查全路径·匿名面）
+import { VerifyPage } from './verify'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -191,6 +195,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/review': ReviewPage,
   '/rules': RulesMapPage,
   '/start': StartPage,
+  '/verify': VerifyPage,
 }
 
 export function renderPage(meta: PageMeta) {

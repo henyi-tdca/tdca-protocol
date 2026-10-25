@@ -99,6 +99,7 @@ export const APP_NAV: NavEntry[] = [
     group: '帮助与联系',
     items: [
       { to: '/start', label: '新手指引' }, // L1SI167-START-ENTRY-001-001：入口置帮助组首位（首页卡片撤回；自我更正：导航表为手写分组，PAGE_META 仅路由）
+      { to: '/verify', label: '怎么验证' }, // L1SI175-B1 S1-5：三件自查全路径（匿名面）
       { to: '/help', label: '帮助与联系', badge: '在建中' },
     ], // 薄占位：内容随文档库「帮助」族入站（块二）
   },
