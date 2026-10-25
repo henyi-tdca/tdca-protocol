@@ -114,8 +114,11 @@ def ci_runs(request: Request, suite: str = "", limit: int = 20):
 
 @router.get("/badge")
 def ci_badge(request: Request, suite: str = "gateway-regression"):
-    """绿灯徽章（P3 页面展示最近一回机验状态；无记录 → none）。"""
-    _require_session_user(request)
+    """绿灯徽章（P3 页面展示最近一回机验状态；无记录 → none）。
+
+    匿名可读（L1SI175-B1 S1-3）：仅 suite/status/run_id/finished_at/note 一行状态，
+    ⛔ 不含日志详情；触发（POST /run）与历史（GET /runs）仍须登录。"""
+
     with get_session() as s:
         row = s.query(M.CiRun).filter_by(suite=suite) \
                .order_by(M.CiRun.started_at.desc()).first()
