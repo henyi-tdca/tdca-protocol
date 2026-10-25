@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install -U pip pytest
           if [ -f tdca-toolchain/requirements.txt ]; then pip install -r tdca-toolchain/requirements.txt; \
-          elif [ -f tdca-toolchain/pyproject.toml ]; then pip install -e tdca-toolchain || true; fi
+          elif [ -f tdca-toolchain/pyproject.toml ]; then pip install -e tdca-toolchain; fi
       - name: 跑测试
         env:
           PYTHONPATH: ${{ github.workspace }}

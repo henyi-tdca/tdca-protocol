@@ -15,4 +15,5 @@ dependencies = [
 tdca-tool = "tdca_tool:main"
 
 [tool.setuptools]
-packages = ["tdca_toolchain"]
+packages = ["cog_align", "cypress_pool", "dca_sandbox", "maka_nca", "merchant_loop", "paperclip_nca", "pi_nca", "thingsboard_pool", "util_value", "value_services"]
+py-modules = ["tdca_cognitive_distance", "tdca_cognitive_state", "tdca_constraint_interpreter", "tdca_function_compiler", "tdca_fuzzy_distance", "tdca_mou_recorder", "tdca_output_validator", "tdca_tool", "tdca_verify_chain"]
