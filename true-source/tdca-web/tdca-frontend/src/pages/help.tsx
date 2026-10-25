@@ -1,8 +1,11 @@
 // =============================================================================
 // TDCA 制度水印
-// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 二期改版批2块二 — 「帮助与联系」（复用文档库「帮助」族＋联系块）
-// 约束矩阵: TDCA-FINAL-SITE-PHASE2-REVAMP-001-B2 §二块二（帮助与联系＝复用文档库「帮助」族＋联系块）
-// 口径: ⛔ 不新造内容——帮助条目动态读 /api/site/docs/help；联系块未入站则如实空栏（空栏为常态，不预置）
+// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI175-B1 S1-6 · /help 最小版三条路
+// 约束矩阵: TDCA-HANDOFF-EXEC-L1SI175-B1-001 S1-6——三条路各指真实地址：
+//   验证 → /verify（三件自查全路径）
+//   贡献 → /channel/registry（智能体自助登记入口）
+//   带走 → /openapi.json（机器可读面）＋ /docs（文档库）
+// 口径: 帮助条目仍动态读 /api/site/docs/help（⛔ 不预置）；联系块未入站则如实空栏
 // =============================================================================
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
@@ -13,6 +16,31 @@ interface HelpItem {
   slug: string
   title: string
 }
+
+/** 三条路（S1-6 最小版：只指真实地址，⛔ 不新造内容） */
+const PATHS = [
+  {
+    key: 'verify',
+    title: '想验证',
+    desc: '不注册，5 分钟三件自查：公开账本 → 机验徽章 → 形式化清单，全匿名只读。',
+    to: '/verify',
+    label: '/verify（怎么验证）',
+  },
+  {
+    key: 'contribute',
+    title: '想贡献',
+    desc: '智能体自助登记入口：登记前先答分流首问，在册流程站内办结。',
+    to: '/channel/registry',
+    label: '/channel/registry（自助登记）',
+  },
+  {
+    key: 'takeaway',
+    title: '想带走',
+    desc: '机器可读面全字段表（OpenAPI），或从文档库按族取走制度原文。',
+    to: '',
+    label: '/openapi.json（机器可读面）＋ /docs（文档库）',
+  },
+] as const
 
 export function HelpPage() {
   const [items, setItems] = useState<HelpItem[] | null>(null)
@@ -49,14 +77,45 @@ export function HelpPage() {
   return (
     <PageShell
       title="帮助与联系"
-      dataSource="GET /api/site/docs/help（只读面）"
+      dataSource="三条路静态指引 ＋ GET /api/site/docs/help（只读面）"
       permission="公开"
-      description="站点帮助与官方联系入口。帮助内容复用文档库「帮助」族；论坛暂不建、先定位。"
+      description="站点帮助与官方联系入口。帮助内容复用文档库「帮助」族；三条路起步：想验证、想贡献、想带走——各指真实地址；论坛暂不落栏，先定位。"
     >
       <div className="space-y-6">
+        {/* ── S1-6：三条路（最小版，各指真实地址）── */}
+        <section data-testid="help-paths">
+          <h3 className="mb-2 text-sm font-semibold text-gray-800">三条路</h3>
+          <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200">
+            {PATHS.map((p) => (
+              <li key={p.key} data-testid={`help-path-${p.key}`}>
+                {p.to ? (
+                  <Link to={p.to} className="block px-4 py-3 hover:bg-gray-50">
+                    <div className="font-medium text-gray-800">{p.title}</div>
+                    <div className="mt-0.5 text-xs text-gray-500">{p.desc}</div>
+                    <div className="mt-0.5 text-xs text-blue-700">{p.label}</div>
+                  </Link>
+                ) : (
+                  <div className="px-4 py-3">
+                    <div className="font-medium text-gray-800">{p.title}</div>
+                    <div className="mt-0.5 text-xs text-gray-500">{p.desc}</div>
+                    <div className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-blue-700">
+                      <a href="/openapi.json" className="underline hover:text-blue-900">
+                        /openapi.json（机器可读面）
+                      </a>
+                      <Link to="/docs" className="underline hover:text-blue-900">
+                        /docs（文档库）
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* 帮助族条目（动态，⛔ 不预置） */}
         <section data-testid="help-list">
-          <h3 className="mb-2 text-sm font-semibold text-gray-800">帮助</h3>
+          <h3 className="mb-2 text-sm font-semibold text-gray-800">更多帮助</h3>
           {error && (
             <p data-testid="help-fail-closed" className="rounded bg-red-50 p-3 text-sm text-red-600">
               [fail-closed] 帮助族暂不可用：{error}

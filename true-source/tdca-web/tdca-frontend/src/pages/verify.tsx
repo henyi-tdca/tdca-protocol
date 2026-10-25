@@ -47,7 +47,7 @@ const STEPS: VerifyStep[] = [
 export function VerifyPage() {
   return (
     <PageShell
-      title="怎么验证"
+      title="怎么验证 · 5 分钟三件自查"
       dataSource="匿名只读三件：ledger-public ／ ci/badge ／ formal/conclusion/catalog"
       permission="公开"
       description="不注册、不登录，5 分钟三件自查：公开账本 → 机验徽章 → 形式化清单。三个端点都是匿名只读，任何第三方可复算。体验期免费使用，收费标准另定。"
