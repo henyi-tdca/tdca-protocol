@@ -34,6 +34,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import sqlite3
 import sys
 import time
@@ -462,17 +463,51 @@ _TERMS = [
 ]
 
 
+# L1SI175-A1-1：匿名面脱敏（只改返回层，不改源数据）——五类内部编号命中即替换占位
+_TERMS_SENSITIVE = re.compile(
+    r"\bT-\d{3}\b|TDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*|\bNC-\d+\b|\bID\d+\b|\bFC-[A-Z0-9]+\b")
+_TERMS_DESENS_MARK = "〔内部编号〕"
+
+
+def _terms_desensitize(text: str) -> str:
+    """匿名面释义脱敏：五类内部编号（T-/TDCA-件号/NC-/ID/FC-）替换为占位。"""
+    if not text:
+        return text
+    out = _TERMS_SENSITIVE.sub(_TERMS_DESENS_MARK, text)
+    # 相邻占位去重（「〔内部编号〕〔内部编号〕」⟹ 单个）
+    while _TERMS_DESENS_MARK * 2 in out:
+        out = out.replace(_TERMS_DESENS_MARK * 2, _TERMS_DESENS_MARK)
+    return out
+
+
 @router.get("/knowledge/terms")
-def knowledge_terms(q: Optional[str] = None):
-    """A-6: 术语检索（terms_registry 表实读；空表回退演示子集，G-1）。"""
+def knowledge_terms(q: Optional[str] = None, request: Request = None):
+    """A-6: 术语检索（terms_registry 表实读；空表回退演示子集，G-1）。
+
+    L1SI175-A1-1 匿名分流：匿名返回只出 term＋脱敏 def（五类内部编号占位，
+    ⛔ 不含 id）；登录面保持全量（含 id）——脱敏只改返回层，不改源数据。"""
+    authed = True
+    try:
+        _require_session_user(request)
+    except HTTPException:
+        authed = False
     with get_session() as s:
         rows = s.query(M.TermsRegistry).all()
     if rows:
-        items = [{"term": r.term, "id": r.term_id, "def": r.definition} for r in rows]
         nature = _nature_of([r.data_provenance for r in rows])
-        note = "术语注册表 DB 实读（G-1；权威版本以注册表登记为准）"
+        if authed:
+            items = [{"term": r.term, "id": r.term_id, "def": r.definition} for r in rows]
+            note = "术语注册表 DB 实读（G-1；权威版本以注册表登记为准）"
+        else:
+            items = [{"term": r.term, "def": _terms_desensitize(r.definition)} for r in rows]
+            note = "术语注册表 DB 实读（匿名面：释义已脱敏内部编号；登录可见全量）"
     else:
-        items, nature, note = list(_TERMS), "simulated", "G-1 术语子集（完整权威见注册表 V1.1；本端点演示）"
+        if authed:
+            items, nature, note = list(_TERMS), "simulated", "G-1 术语子集（完整权威见注册表 V1.1；本端点演示）"
+        else:
+            items = [{"term": t["term"], "def": _terms_desensitize(t["def"])} for t in _TERMS]
+            nature = "simulated"
+            note = "G-1 术语子集（匿名面：释义已脱敏内部编号；登录可见全量）"
     if q:
         items = [t for t in items if q.lower() in t["term"].lower() or q.lower() in t["def"].lower()]
     return _nca_watermark({"terms": items, "total": len(items), "note": note}, nature=nature)
