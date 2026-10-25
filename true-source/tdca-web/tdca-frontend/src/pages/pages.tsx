@@ -80,6 +80,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/start', title: '新手指引 · 六步上手 TDCA', layer: 'L0', dataSource: '_START-MAP 三表（单一事实源·仓内单源 ?raw 进包）', permission: '公开', description: 'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表。' },
   // L1SI175-B1 S1-5：怎么验证常设页（三件自查全路径，匿名面）
   { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读，任何第三方可复算。' },
+  // L1SI175-A1-2：术语检索页（登录可见；服务端 ?q= 过滤；⛔ 匿名开放未授权）
+  { path: '/terms', title: '术语检索', layer: 'L0', dataSource: 'A-6 GET /api/v1/knowledge/terms?q=（服务端过滤）', permission: '登录 DID', description: '站内术语注册表检索：词与释义两列，关键词走服务端过滤；登录可见全量，匿名返回已脱敏内部编号。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -144,6 +146,8 @@ import { RulesMapPage } from './rules/rules'
 import { StartPage } from './start/start'
 // L1SI175-B1 S1-5：怎么验证 /verify（三件自查全路径·匿名面）
 import { VerifyPage } from './verify'
+// L1SI175-A1-2：术语检索 /terms（登录可见·服务端 ?q= 过滤）
+import { TermsPage } from './terms'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -196,6 +200,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/rules': RulesMapPage,
   '/start': StartPage,
   '/verify': VerifyPage,
+  '/terms': TermsPage,
 }
 
 export function renderPage(meta: PageMeta) {
