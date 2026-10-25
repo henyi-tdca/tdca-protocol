@@ -20,7 +20,7 @@ jobs:
           node-version: "22"
       - name: 安装依赖
         working-directory: true-source/tdca-web/tdca-frontend
-        run: npm ci || npm install
+        run: npm ci
       - name: 跑测试
         working-directory: true-source/tdca-web/tdca-frontend
         run: npm test
