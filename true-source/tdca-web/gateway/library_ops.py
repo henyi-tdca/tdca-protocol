@@ -14,6 +14,8 @@
 # =============================================================================
 from __future__ import annotations
 
+import re
+
 from fastapi import APIRouter, HTTPException, Request
 from sqlalchemy import text
 
@@ -40,6 +42,53 @@ _SEL_LIST = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
 _SEL_DETAIL = text("SELECT slug, title, body_md, source_path, data_nature, synced_at"
                    " FROM docs WHERE family = :family AND slug = :slug")
 _SEL_COUNTS = text("SELECT family, COUNT(*) AS n FROM docs GROUP BY family")
+_SEL_PAPER_CATALOG = text("SELECT slug, title, body_md, synced_at FROM docs"
+                          " WHERE family = 'paper' ORDER BY slug")
+
+# L1SI175-B1 S1-4：匿名摘要面脱敏正则——内部件号/存证指针/凭据措辞/自然人邮箱，
+# 命中任一即 fail-closed（摘处置 null 或整件不列）
+_CATALOG_SENSITIVE = re.compile(
+    r"\b(FC|TL|CI)-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES|"
+    r"[\w.+-]+@[\w-]+\.[\w.]+|(密码|口令|token|secret|凭据)", re.IGNORECASE)
+_SUMMARY_LEN = 200
+
+
+def _first_prose_paragraph(body_md: str) -> str:
+    """取正文首个说明性段落：跳过 Markdown 标题/分隔线/空行，截 200 字。"""
+    for block in re.split(r"\n\s*\n", body_md or ""):
+        lines = [ln.strip() for ln in block.splitlines()
+                 if ln.strip() and not ln.strip().startswith(("#", "---", "```"))]
+        if lines:
+            return " ".join(lines)[:_SUMMARY_LEN]
+    return ""
+
+
+@router.get("/paper/catalog")
+def paper_catalog(request: Request):
+    """纸族匿名目录＋摘要（L1SI175-B1 S1-4）。
+
+    匿名只返 slug/title/摘要（正文首段截 200 字）；正文端点 /paper/{slug} 仍 401 不动；
+    摘要或标题命中脱敏正则者 fail-closed（摘要置 null 标「待核定」，标题命中整件不列）。"""
+    try:
+        with get_session() as s:
+            rows = s.execute(_SEL_PAPER_CATALOG).all()
+    except Exception:
+        raise HTTPException(503, "LIBRARY_FAIL_CLOSED: 内容库不可用（docs 表缺失或损坏）")
+    items = []
+    for r in rows:
+        if _CATALOG_SENSITIVE.search(r.title or ""):
+            continue
+        summary = _first_prose_paragraph(r.body_md or "")
+        if _CATALOG_SENSITIVE.search(summary):
+            items.append({"slug": r.slug, "title": r.title,
+                          "summary": None, "summary_note": "摘要待核定"})
+        else:
+            items.append({"slug": r.slug, "title": r.title, "summary": summary})
+    return _nca_watermark(
+        {"family": "paper", "count": len(items), "items": items,
+         "note": "文献族公开目录＋摘要（正文须登录；摘要不构成全文替代）"},
+        nature="real")
+
 
 # COP-LIB-OPEN-001 + TERMS-OPEN-001：匿名放行两族（2026-10-21 并入同轮）
 # LAWINGEST-001（批C-C2）：追加 laws/law-notes 两族匿名只读（法律原文属公域材料）
