@@ -1,0 +1,254 @@
+# TDCA-NCA-COMPILED-001 · 机读版 · V0.3-COMPILED
+# 同编号同版本号；人读版为语义权威；按判据 2 同批产出（规范类双版本）
+# ⚠️ 状态 PENDING-VERIFICATION；⛔ 未生效；⛔ 不得称正式制度（未走转正四步；R-4 暂不升）
+standard:
+  id: TDCA-NCA-COMPILED-001
+  title_zh: NCA 制度合一版
+  version: V0.3-COMPILED
+  status: PENDING-VERIFICATION
+  effective: null
+  created_in_session: L1-SI-057
+  drafted_by: Reasonix
+  kind: composite
+  date: '2026-09-19'
+  timezone: '+08'
+  supersedes: TDCA-NCA-COMPILED-001 V0.2-COMPILED
+  merges: [TDCA-RULING-NCA-COMPILED-001-001, TDCA-WITNESS-NCA-COMPILED-001]
+  merges_note: 本版并入四项裁定（R-1~R-4）与只读侧核证成立之六项遗漏（M-1~M-6）；⛔ 原件与旧版一字不回改，冲突以本件为准
+  human_versions:
+    zh:
+      file: tdca-thinktank/governance/documents/TDCA-NCA-COMPILED-001-V0.3-NCA制度合一版（并入四项裁定与六项遗漏·待核查）.md
+      sha256: 以 NCA 存证记录为准（登记时落）
+    en:
+      required_when: 对外发布时
+      file: null
+  authority: human_reading_version_is_authoritative
+  founder_verbatim:
+    - NCA 制度特别重要
+    - 可整组按推荐
+    - 先修「今后模板＋新件」、存量另议
+    - 各侧域内各自权威——本侧以桌面归档为权威、他侧以开发会话文件为权威，跨侧引用一律标来源
+    - 十三项照旧，另加一个「义务块」必备，把六项放进去并纳入机器校验
+    - 使用侧自担，并把这条写进规范
+    - 合一版暂不升
+
+changelog_v02_to_v03:
+  - { n: 1, change: 库权威＝域内分治（本侧桌面归档为权威；他侧自有库为其域内权威；跨侧引用标来源；不跨侧统一）, from: R-1 }
+  - { n: 2, change: 新增义务块六项必备并纳入机器校验, from: R-2 }
+  - { n: 3, change: 并发风险＝使用侧自担（明示写入规范）, from: R-3 }
+  - { n: 4, change: 新增修订备档节（版本链＋备档验证）, from: M-1 }
+  - { n: 5, change: 补运行态生态准入（PENDING_LOAD 零权利态 → 机读证据 → EcosystemAdmit）, from: M-2 }
+  - { n: 6, change: 审查补撞车／镜像核查（核 status 标注与物理文件一致）, from: M-4 }
+  - { n: 7, change: 检索补时间窗切片（GSEQ 单调递增可按时间窗切片）, from: M-5 }
+  - { n: 8, change: 会话初始化基线项数复原为 8 项, from: M-6 }
+  - { n: 9, change: R-4 暂不升条例（D-3 结案为现行状态）, from: R-4 }
+  - { n: 10, change: 首版两处待裁（库权威两说／六项义务无承载）本版结案, from: R-1+R-2 }
+
+libraries:
+  authority_model: per-domain
+  authority_rule: 各侧域内各自权威；本侧以桌面归档库为权威、工作区库为运行镜像；他侧以其自有库为其域内权威；不跨侧统一权威
+  cross_side_ref_rule: 跨侧引用一律标来源
+  layers:
+    - id: reasonix_archive
+      path: 'Desktop/TDCA归档文件夹/.tdca-nca/'
+      role: 本侧权威库
+      scope: reasonix
+    - id: reasonix_runtime
+      path: 'global-workspace/.tdca-nca/'
+      role: 本侧运行镜像
+      scope: reasonix
+    - id: peer_store
+      path: 'Desktop/开发会话文件/.tdca-nca/'
+      role: 他侧域内权威
+      scope: other_sides
+    - id: history_store
+      path: 'Desktop/TDCA-MEMO-006-Workspace/.tdca-nca/'
+      role: 历史归档（冻结只读，不删）
+  audit_rule: 审计先确认库来源；不得以他侧库之账目主张本侧权威
+
+numbering:
+  nca_id: 'NCA-<侧码>-<YYYYMMDD>-<3 位序号>'
+  nca_id_rule: 一律不含动作后缀
+  side_codes: [TDCA-REASONIX, KIMI, WORKBUDDY]
+  gseq: 'GSEQ-{NNNN}'
+  gseq_rule: 全局单调递增，按 Timestamp 升序；只登记于索引，不写入文件、不改命名
+  daily_seq_allocation: 当日现有计数 +1（计数式）
+  gap_policy: 编号即事实时间序；缺口不可回填
+  gap_risk: 计数式遇历史缺口有撞车风险，由校验器检出并报
+  concurrency:
+    current_behavior: 直接写入（无原子预约）
+    risk_borne_by: 使用侧
+    requirement: 并发场景之撞车风险由使用侧自行规避并自担；不使用侧为风险背书
+    basis: R-3
+  manual_preallocation:
+    forbidden: true
+    criterion: 件内 nca_id 与文件名一致（撞车双版本去后缀比对）＋ 索引有登记
+    not_by_marker: true
+  filename: 'NCA-<侧码>-<YYYYMMDD>-<NNN>[-动作后缀].yaml'
+  location: '<侧根>/.tdca-nca/<YYYY-MM>/'
+  encoding: UTF-8 无 BOM；换行 LF
+  collision: 跨库同名 nca_id 内容不同 → 双版本以 -D/-W 后缀区分；文件内 nca_id 不变；校验比对时去后缀
+  special: 跨项目专属 ID 可保留，但须在索引登记 GSEQ 并标 legacy
+
+fields:
+  core:
+    count: 13
+    generation_marker: { required: false }
+    items: [nca_id, side, timestamp, chain_space, chain_id, chain_ref, prev_nca, operation_type, actor, artifacts, data_provenance, profit_sharing, compliance]
+  obligations:
+    name: 义务块
+    block_key: obligations
+    required: true
+    machine_verifiable: true
+    basis: R-2
+    note: 承原 11 字段体系之六项义务，不得因统一而丢失；存量不迁移（读取层兼容）
+    items:
+      - { id: O-1, key: function_call_id, spec: 本件所属调用／任务标识, check: 非空；与索引 fc_id 一致 }
+      - { id: O-2, key: state_hashes, spec: '{pre, post} 前后状态 SHA-256', check: 两者非空且为 64 位十六进制 }
+      - { id: O-3, key: config_right, spec: '{scope, rollback, audit_trail_ref, human_signature_required, max_retry, granted_by, expires}', check: 键齐；human_signature_required 为布尔 }
+      - { id: O-4, key: audit_trail, spec: 步／时间／证据 之列表（≥1 条）, check: 非空；每项含步名与时间 }
+      - { id: O-5, key: human_signature, spec: '{status, signed_by, signed_at}', check: 决策点件不得为 Pending；其余允许 }
+      - { id: O-6, key: negative_space_check, spec: '{nsfl_version, triggered, trigger_reason}', check: triggered 为布尔且显式；为 true 时 trigger_reason 非空 }
+  self_check: 登记前须过「十三项齐备 ＋ 义务块六键齐备 ＋ YAML 可解析」；未过者不得写入台账
+  stock_application:
+    existing_docs: 一律不动、不迁移
+    reconciliation_keys: [nca_id, chain_space, chain_ref]
+
+operation_types:
+  count: 15
+  plus: [AdmissionNCA]
+  forbidden: 'N/A 不得作新件类型'
+  authority: 以索引登记之 operation_type 为准
+  impl_enum_note: 实现侧生成器之动作名枚举（11 个）降为内部标识，不作违规判，映射由校验器报告
+
+mandatory_registration:
+  points:
+    - { when: 开工／受理, types: [TaskLodge] }
+    - { when: 交付／回报, types: [Delivery, HandoffDeliverable] }
+    - { when: 核证／签批, types: [Witness, SignOff] }
+    - { when: 收官／裁定, types: [SessionClose, Ruling] }
+  rule: 一次动作一次登记；不得一事多记或漏记
+
+lifecycle:
+  stages: [登记, 存证, 归档, 检索, 审查]
+  retrieval:
+    keys: [GSEQ, NCA-ID]
+    time_window_slice: true
+    basis: M-5
+  review:
+    items: [哈希基线核对, GSEQ 连续性, 签批完整性, 撞车／镜像核查]
+    collision_mirror_check: 核 status 标注与物理文件一致（collision 双版本、mirror 双副本）
+    basis: M-4
+  archival_discipline: [生成 → 写域内权威库 → 镜像, 会话结束前归并并更新索引, 禁止单库长期不归并, 禁止手工改名破坏引用链]
+  incidents:
+    collision: 双版本（-D/-W）
+    mirror: 跨库同 MD5，各留副本、索引标 mirror、不重复计数
+    legacy_draft: legacy／draft
+
+session_init:
+  mandatory: true
+  checklist: [域内双库 REGISTRY 存在可读一致, 末条 GSEQ 已知, 登记起点＝当日序号最大值+1（或新日期 0001）, project_sections 之 dir_checksum 在位, 制度基线 8 项就绪]
+  baseline_items: 8
+  basis: M-6
+
+violations:
+  - { violation: 双库独立编号（撞车）, consequence: 制度完整性违规，触发负空间熔断审查 }
+  - { violation: 单库滞留不归并, consequence: 索引失真，禁止继续新任务 }
+  - { violation: 删除／篡改 NCA, consequence: 最高等级违规 }
+  - { violation: 签批缺失（决策点 human_signature 仍 Pending）, consequence: 决策点无效，回退并补签 }
+
+ecoact:
+  scope: 对外动作（邀请／挂载／化合／治理协作）
+  rule: 先存证后动作，无存证不动作
+  seven_fields: [repo_full, mode, license_spdx, invite_nca_ref, response_status, profit_sharing, compliance]
+  fail_closed: true
+
+admission_nca:
+  pattern: 'TDCA-ADMIT-{YYYYMMDD}-{SEQ}'
+  operation_type: AdmissionNCA
+  self_signed_by: 缔约者平台标识（自签署）
+  base_protocol_accepted: [TDCA-CONST, TDCA-NSFL, TDCA-WORKING-SPEC, TDCA-OPC]
+  data_nature: simulated-ID92
+
+ecosystem_admission:
+  runtime: true
+  flow: PENDING_LOAD 零权利态 → 机读证据核验 → EcosystemAdmit
+  rule: 无准入存证即不得赋予任何权利（fail-closed）
+  basis: M-2
+
+data_nature:
+  markers: [mixed, '[UNVERIFIED]', 'simulated-ID92']
+  rule: 模拟／自报数据强制标注；不可冒充 real
+
+automation_exemption:
+  scope: 受既有裁定约束的自动化链路
+  handling: 维持既有命名／格式；仅在产物内加注 std_note
+  forbidden: 不得因统一而破坏既有裁定
+  switch_requires: 先修既有裁定（另呈最高权力）
+
+cross_side_discipline:
+  - 追加制（不改历史行、不改既有件字段值）
+  - 凭据零落盘（设置时当场提醒创始人保存）
+  - 算力零提及；零角色名
+  - 内外一致（不粉饰）
+  - 不得为过闸放宽门禁（只可加严）
+  - 跨侧引用标来源（R-1）
+
+registry:
+  file: NCA-REGISTRY.yaml
+  entry_fields: [gseq, nca_id, files, timestamp, fc_id, operation_type, operator, source, status, collision_with]
+  status_values: [ok, mirror, collision, legacy, draft]
+  consistency: 域内双库 MD5 一致；件集比对须先去 -D/-W 后缀
+  verify_entrypoints: [常态校验器, 双库 MD5, dir_checksum]
+
+templates:
+  items:
+    - { path: .tdca-nca/std/nca-template-v2.yaml, role: 件模板 }
+    - { path: .tdca-nca/scripts/_nca_register_template_v2.py, role: 登记脚本模板, note: 含 --selftest }
+  constraints:
+    - { id: T-1, rule: 字段照十三项 ＋ 义务块 }
+    - { id: T-2, rule: 写入前必过「十三项 ＋ 义务块六键 ＋ YAML 可解析」自检；未过者不得写入台账 }
+    - { id: T-3, rule: 禁以单个减号作数值位取值；无值写 n/a 或整键省略 }
+    - { id: T-4, rule: 模板落位并照骨架另存副本使用（不直接改模板） }
+
+validator:
+  entry: .tdca-nca/scripts/_nca_discipline_check_v2.py
+  first_run_archive: .tdca-nca/scripts/_nca_discipline_check_v1.py
+  covers: [文件名格式, 专属ID之索引登记, 件内nca_id一致, YAML可解析, 必需字段（两体系兼容）, 义务块六键齐备, 索引连续性, 双库一致, 计数式分配缺口, 生成标记覆盖度（只报）]
+  verdict_line: VERDICT=PASS / VERDICT=FAIL
+  discipline: 存量祖父条款：只报不删、不回改；存量 FAIL 不阻断新件
+  known_gaps:
+    - { id: E-1, item: 未处理撞车双版本 -D/-W 之对应关系 }
+    - { id: E-2, item: 专属 ID 之登记核验为文件名级 }
+    - { id: E-3, item: 必需字段为两体系并集判定，未分层 }
+  artifact_visibility: 本侧工件位于 .tdca-nca/（不进归档镜像）；对外核查时须定向补送
+
+revision_archive:
+  version_chain_required: true
+  backup_verification: 每次修订保留上一版本完整文本 ＋ 修订差异 ＋ 存证锚（哈希／版本文件）
+  flow: 提案 → 最高权力签批 → 更新本规范 ＋ 机读版 ＋ 版本链 ＋ 存证锚
+  self_chain: [V0.1-COMPILED（GSEQ-2083）, V0.2-COMPILED（GSEQ-2087）, V0.3-COMPILED（本件）]
+  artifact_delivery_discipline: 凡交他侧核查之本侧工件须定向补送至可见位置；不得据「镜像内无」判为不存在
+  basis: M-1
+
+pending_decisions:
+  - { id: D-1, item: 何库为权威, status: 已裁（R-1 域内分治） }
+  - { id: D-2, item: 既有件字段口径之过渡, status: 已裁（A-2） }
+  - { id: D-3, item: 本合一版阶位, status: 已裁（R-4 暂不升；维持草案／提案级） }
+  - { id: D-4, item: 存量勘误范围, status: 存量另议 }
+  - { id: D-5, item: 并发撞车风险, status: 已裁（R-3 使用侧自担） }
+  - { id: D-6, item: 六项义务承载, status: 已裁（R-2 义务块必备并纳入机验） }
+
+not_decided_by_us: [阈值与权重, 窗口取值, 披露口径, 门槛与规模, 对外定价, 门参数改值, 裁定权与签批权]
+
+redlines:
+  - 不回改任何在册件（追加制；冲突以最新件为准）
+  - 原件不动（验收后降为存档）；存量不迁移
+  - 未走完转正四步者不得称正式制度（R-4 暂不升）
+  - 未获创始人单独明示不得转新基线
+  - 零对外、不含凭据值、不含人名；时区 +08
+  - 未做：本线逐字全量比对；存量 670 件逐件根因普查；转正步②步④（另议）
+
+revision:
+  mode: append-only
+  conflict_rule: 与上游冲突以上游为准；本件之内以最新追加件为准
