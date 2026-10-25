@@ -79,6 +79,28 @@ def conclusion_register(req: ConclusionIn, request: Request):
                 "数据性质随文显式标注，不得据入站升级主张"})
 
 
+@router.get("/conclusion/catalog")
+def conclusion_catalog(request: Request):
+    """匿名结论清单（L1SI175-B1 S1-1）：只返 claim_text ＋ data_nature。
+
+    ⛔ 不含 conclusion_id / nca_ref / scope_note（内部编号与存证指针不出匿名面）；
+    入站时已机验结论面（公式/数值/内部编号任一命中即 400），此处再挡一道：
+    存量行若含内部编号（含 TL- 件号，入站正则未覆盖面），整行不列出（fail-closed）。"""
+    with get_session() as s:
+        rows = s.query(M.FormalConclusion) \
+                .order_by(M.FormalConclusion.created_at).all()
+    sensitive = re.compile(r"\bTL-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES")
+    out = [{"claim_text": r.claim_text, "data_nature": r.data_nature}
+           for r in rows
+           if not _INTERNAL_ID.search(r.claim_text or "")
+           and not sensitive.search(r.claim_text or "")]
+    return _nca_watermark({
+        "count": len(out),
+        "conclusions": out,
+        "note": "形式化清单（匿名面；只列结论文字与数据性质，"
+                "不含内部编号与存证指针；不构成对外发布）"})
+
+
 @router.get("/conclusion/list")
 def conclusion_list(request: Request, data_nature: str = ""):
     """结论列表（可按数据性质过滤；全量只读可查）。"""
