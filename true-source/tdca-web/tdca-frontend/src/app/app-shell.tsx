@@ -34,6 +34,8 @@ export interface NavItem {
   badge?: string
   /** raw＝站内原始资源（如 /openapi.json 机读面）：<a> 直开，⛔ 不走 SPA 路由（避免 404 兜底吞掉） */
   raw?: boolean
+  /** authOnly＝仅登录态渲染（L1SI175-A1-3）：项进公域组但匿名不可见，不进公域匿名导航面 */
+  authOnly?: boolean
 }
 
 /**
@@ -81,6 +83,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/negativespace', label: '负空间' }, // B5 新增批项一：管「什么不能做」（原则与类别，⛔ 不列禁项词表）
       { to: '/official-assets', label: '官方资产区' }, // B5 新增批项二：官方工具（免费）＋官方产物（付费橱窗），调用暂未开放
       { to: '/nca-guide', label: '存证说明' }, // B5 新增批项三：存证格式制度说明（为什么存/怎么存/谁都要存；⛔ 不展凭据与内部编号）
+      { to: '/terms', label: '术语检索', authOnly: true }, // L1SI175-A1-3：进制度与透明组但仅登录态渲染（⛔ 公域匿名导航——匿名开放另候创始人一句）
     ],
   },
   {
@@ -154,6 +157,8 @@ function ShellInner() {
   const location = useLocation()
   const navigate = useNavigate()
   const layer = layerForPath(location.pathname)
+  // L1SI175-A1-3：authOnly 导航项（登录态可见）过滤用
+  const { isAuthenticated } = useAuth()
   // M3 裁定③兜底：会话过期/被踢 → 明确提示横幅；不自动跳转，当前页面未提交内容原样保留
   const [sessionExpiredFrom, setSessionExpiredFrom] = useState<string | null>(null)
   // 二期改版批1：小屏左右栏折叠开关（宽屏恒显）
@@ -248,7 +253,9 @@ function ShellInner() {
             ) : (
               <span key={entry.group} className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span className="text-[10px] font-medium tracking-wide text-gray-400">{entry.group}</span>
-                {entry.items.map((item) =>
+                {entry.items
+                  .filter((item) => !item.authOnly || isAuthenticated)
+                  .map((item) =>
                   item.raw ? (
                     <a
                       key={item.to}
