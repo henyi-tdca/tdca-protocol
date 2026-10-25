@@ -49,15 +49,21 @@ _SEL_PAPER_CATALOG = text("SELECT slug, title, body_md, synced_at FROM docs"
 # 命中任一即 fail-closed（摘处置 null 或整件不列）
 _CATALOG_SENSITIVE = re.compile(
     r"\b(FC|TL|CI)-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES|"
-    r"[\w.+-]+@[\w-]+\.[\w.]+|(密码|口令|token|secret|凭据)", re.IGNORECASE)
+    r"\bNC-\d|[\w.+-]+@[\w-]+\.[\w.]+|(密码|口令|token|secret|凭据)", re.IGNORECASE)
 _SUMMARY_LEN = 200
 
 
 def _first_prose_paragraph(body_md: str) -> str:
-    """取正文首个说明性段落：跳过 Markdown 标题/分隔线/空行，截 200 字。"""
+    """取正文首个说明性段落：跳过 Markdown 标题/引用块记号线/分隔线/代码围栏，截 200 字。"""
     for block in re.split(r"\n\s*\n", body_md or ""):
-        lines = [ln.strip() for ln in block.splitlines()
-                 if ln.strip() and not ln.strip().startswith(("#", "---", "```"))]
+        lines = []
+        for ln in block.splitlines():
+            s = ln.strip()
+            if not s or s.startswith(("#", "---", "```")):
+                continue
+            s = re.sub(r"^>\s?", "", s).strip()   # 去引用块记号
+            if s:
+                lines.append(s)
         if lines:
             return " ".join(lines)[:_SUMMARY_LEN]
     return ""

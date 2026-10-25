@@ -88,6 +88,10 @@ def _docs_table():
                  " VALUES ('paper', 'paper-dirty', '公开论文乙',"
                  " '本文结论存证于 NCA-AAAA 链上须被挡。',"
                  " 'docs/papers/dirty.md')")
+    conn.execute("INSERT OR REPLACE INTO docs (family, slug, title, body_md, source_path)"
+                 " VALUES ('paper', 'paper-quote-dirty', '公开论文丙',"
+                 " '> 引用块首行载内部决定号 NC-20261026-001 须被挡。',"
+                 " 'docs/papers/qdirty.md')")
     conn.commit()
     conn.close()
     yield
@@ -158,6 +162,9 @@ def test_s14_paper_catalog_anonymous(_docs_table):
     assert "第二段" not in items["paper-clean"]["summary"]      # 首段截 200 字
     assert items["paper-dirty"]["summary"] is None               # 命中脱敏 → 待核定
     assert items["paper-dirty"]["summary_note"] == "摘要待核定"
+    # 引用块首行载 NC- 内部决定号 → 去记号后仍命中脱敏 → 待核定
+    assert items["paper-quote-dirty"]["summary"] is None
+    assert items["paper-quote-dirty"]["summary_note"] == "摘要待核定"
 
 
 def test_s14_paper_body_still_401(_docs_table):
