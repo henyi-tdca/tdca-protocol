@@ -81,13 +81,14 @@ describe('B5 项二 · 官方资产区（公域新增）', () => {
     expect(body).not.toMatch(/ghp_[A-Za-z0-9]|PRIVATE KEY|AKID[A-Za-z0-9]/)
   })
 
-  it('公共导航「生态」组含官方资产区入口', () => {
+  it('公共导航「服务」栏含官方工具入口（官方资产区拆基础/增值两行，同页 /official-assets）', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>,
     )
     const nav = screen.getByTestId('app-nav')
-    expect(nav).toHaveTextContent('官方资产区')
+    expect(nav).toHaveTextContent('官方工具')
+    expect(nav).toHaveTextContent('官方产物与增值')
   })
 })
