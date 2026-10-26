@@ -39,81 +39,191 @@ export interface NavItem {
 }
 
 /**
- * 二期改版批2块一：公域顶栏六入口（照终定稿 §二块一）。
- * 公域只留公开栏目；须登录／须角色栏目移入右栏「我的」（PRIVATE_NAV，见 right-rail）；
- * 运维分区（运维端／形式化入站／集群准入闸门／评审）⛔ 不入公共导航，独立入口属块四——
- * 块四已由批3 C块落地（L1SI176-B3-GATE-001 §四）：导航显性露出「我的／运维」私域入口，
- * 安全靠鉴权不靠藏；运维分区各作业页（评审等）仍不入公共导航。
+ * 导航-甲（L1SI176-NAV-A-001）：七组拍平成九栏，两层结构——一层「物」（栏4 资产与权利）、
+ * 一层「人」（栏5 主体与协作），轴分辨靠分组标题与层级本身，⛔ 不靠注释补。
+ * 本期只动导航数据与分组：⛔ 不改路由／⛔ 不改页面组件内容与文案／⛔ 不新增页面／
+ * 未实现新建项（合规前置／授权与配置合约／协作合约／评估与打包）⛔ 不列，留导航-乙。
+ * 安全靠鉴权不靠藏（批3 C块口径延续）：/ops 独立入口可见，门内作业页鉴权自守。
  */
+export interface NavSubgroup {
+  /** 栏内子组（如 所有权／配置权；智能体／协作）：层级即轴分辨 */
+  subgroup: string
+  items: NavItem[]
+}
+export type NavGroupContent = NavItem | NavSubgroup
 export type NavEntry =
   | { kind: 'link'; to: string; label: string }
-  | { kind: 'group'; group: string; items: NavItem[] }
+  | { kind: 'group'; group: string; items: NavGroupContent[] }
+
+/** 扁平化全部导航项（含子组展开）：测试与死链核查用 */
+export function navAllItems(entries: NavEntry[]): NavItem[] {
+  return entries.flatMap((e) =>
+    e.kind === 'link' ? [{ to: e.to, label: e.label }] : e.items.flatMap((i) => ('items' in i ? i.items : [i])),
+  )
+}
+
+/** 单个导航项渲染（raw 直开／NavLink；badge 角标）——栏内项与子组项共用 */
+function NavItemLink({ item }: { item: NavItem }) {
+  return item.raw ? (
+    <a
+      href={item.to}
+      target="_blank"
+      rel="noreferrer"
+      data-testid={`nav-raw-${item.to}`}
+      className="text-xs text-gray-500 underline decoration-dotted underline-offset-4 hover:text-slate-800"
+    >
+      {item.label}
+    </a>
+  ) : (
+    <NavLink
+      to={item.to}
+      className={({ isActive }) =>
+        `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
+      }
+    >
+      {item.label}
+      {item.badge && (
+        <span data-testid={`nav-badge-${item.to}`} className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">
+          {item.badge}
+        </span>
+      )}
+    </NavLink>
+  )
+}
 
 export const APP_NAV: NavEntry[] = [
   { kind: 'link', to: '/', label: '首页' },
   {
     kind: 'group',
-    group: '生态',
-    items: [
-      { to: '/agents', label: '智能体集群' }, // 展示面：官方智能体观测橱窗（照终定稿保留于公域）
-      { to: '/agent-shelf', label: '智能体区' }, // 展示面：组二 10 件呈现（呈现≠注册）
-      { to: '/toolshelf', label: '工具货架' }, // 展示面：浏览公开
-      { to: '/academy', label: '商学院' }, // L1SI152-EDU-PORTAL-001 栏目首入：介绍页＋教材目录页（原文照贴）
-    ],
-  },
-  {
-    kind: 'group',
-    group: '市场',
-    items: [
-      { to: '/ownership', label: '所有权' }, // 公开读 / 确权操作须 HUF
-      { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
-      { to: '/tax', label: '税收' },
-      { to: '/sandbox', label: '沙盒' }, // 公开读 / 入盒须 HUF
-    ],
-  },
-  {
-    kind: 'group',
-    group: '制度与透明',
+    group: '了解 TDCA',
     items: [
       { to: '/about', label: '关于' },
-      { to: '/governance', label: '治理' }, // HUF 强制鉴权（B-4）；操作唤起签批，⛔ 不内嵌凭据面
-      { to: '/audit', label: '审计' },
-      { to: '/notifier', label: '通知机', badge: '在建中' }, // WS 实时通道令牌未通（4401），仅静态状态页
-      { to: '/attestation/history', label: '确权历史' }, // 制度即公开；总览/meta/dynamic 三路在私域「我的」
-      { to: '/announcements', label: '公告栏' }, // 对外公告区：空栏为常态，内容须创始人逐次明示后发布
-      { to: '/process', label: '流程总览' }, // 二期改版批2块三：14 环逐环四能（tdca-site ProcessOverview 移植）
-      { to: '/negativespace', label: '负空间' }, // B5 新增批项一：管「什么不能做」（原则与类别，⛔ 不列禁项词表）
-      { to: '/official-assets', label: '官方资产区' }, // B5 新增批项二：官方工具（免费）＋官方产物（付费橱窗），调用暂未开放
-      { to: '/nca-guide', label: '存证说明' }, // B5 新增批项三：存证格式制度说明（为什么存/怎么存/谁都要存；⛔ 不展凭据与内部编号）
-      { to: '/terms', label: '术语检索', authOnly: true }, // L1SI175-A1-3：进制度与透明组但仅登录态渲染（⛔ 公域匿名导航——匿名开放另候创始人一句）
-    ],
-  },
-  {
-    kind: 'group',
-    group: '资源',
-    items: [
-      { to: '/library', label: '文库' },
-      { to: '/docs', label: '文档库' }, // 裁点2终定：与文库并存（⛔ 不并线——端点不同、族不同）
       { to: '/rules', label: '制度地图' }, // L1SI162-RULES-MAP-001：56 件制度件五类五态六步（公开读；件正文权限照旧）
-      { to: '/anchors', label: '模拟锚' }, // 裁定落地件：SIMULATED 模拟态展示＝官方资源呈现 ➜ 公域（随块二落位）
-      { to: '/api/v1/selfcheck/spec', label: '机器可读规格', raw: true }, // D1-002（裁定 6181）：原 /openapi.json 实测 404，改指 selfcheck/spec（200·六关键词齐）；raw 直开保留
+      { to: '/process', label: '流程总览' }, // 二期改版批2块三：14 环逐环四能
+      { to: '/terms', label: '术语检索', authOnly: true }, // L1SI175-A1-3：仅登录态渲染（⛔ 公域匿名导航——匿名开放另候创始人一句）
+      { to: '/negativespace', label: '负空间' }, // B5：管「什么不能做」（原则与类别，⛔ 不列禁项词表）
+      { to: '/verify', label: '怎么验证' }, // L1SI175-B1 S1-5：三件自查全路径（匿名面）
+      { to: '/private', label: '私域与边界' },
+      { to: '/demo', label: '体验演示' },
+      { to: '/lab', label: '模拟演练' },
     ],
   },
   {
     kind: 'group',
-    group: '帮助与联系',
+    group: '合规与沙盒',
     items: [
-      { to: '/start', label: '新手指引' }, // L1SI167-START-ENTRY-001-001：入口置帮助组首位（首页卡片撤回；自我更正：导航表为手写分组，PAGE_META 仅路由）
-      { to: '/verify', label: '怎么验证' }, // L1SI175-B1 S1-5：三件自查全路径（匿名面）
-      { to: '/help', label: '帮助与联系', badge: '在建中' },
-    ], // 薄占位：内容随文档库「帮助」族入站（块二）
+      { to: '/sandbox', label: '沙盒' }, // 公开读 / 入盒须 HUF
+      { to: '/formal', label: '形式化与机验' },
+    ],
+  },
+  {
+    // 轴一（物）：一栏讲「东西」——资产与权利
+    kind: 'group',
+    group: '资产与权利',
+    items: [
+      {
+        subgroup: '所有权',
+        items: [
+          { to: '/attestation', label: '确权中心' },
+          { to: '/attestation/meta', label: '元函数确权' },
+          { to: '/attestation/dynamic', label: '动态确权' },
+          { to: '/attestation/history', label: '确权历史' }, // 制度即公开
+          { to: '/ownership-registry', label: '权属登记' },
+          { to: '/ownership', label: '所有权与交易入口' }, // 公开读 / 确权操作须 HUF
+        ],
+      },
+      {
+        subgroup: '配置权',
+        items: [
+          { to: '/authorization-registry', label: '授权登记' },
+          { to: '/cluster#auth', label: '多层转授' }, // /cluster 双入口之一（页内拆段留导航-乙）
+          { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
+          { to: '/market-sim', label: '使用记录与结算' }, // 税收与结算并为一项；/tax 保留为页内入口，不在导航单列
+        ],
+      },
+    ],
+  },
+  {
+    // 轴二（人）：一栏讲「谁在干活」——主体与协作
+    kind: 'group',
+    group: '主体与协作',
+    items: [
+      {
+        subgroup: '智能体',
+        items: [
+          { to: '/agent-shelf', label: '介绍' }, // 组二 10 件呈现（呈现≠注册）
+          { to: '/agents', label: '能力与观测' }, // 官方智能体观测橱窗；同一对象全站一名（原「智能体集群」）
+          { to: '/channel/registry', label: '自助登记' },
+          { to: '/channel/my', label: '我的通道' },
+        ],
+      },
+      {
+        subgroup: '协作',
+        items: [
+          { to: '/cluster#orch', label: '协作与编排' }, // /cluster 双入口之二（页内拆段留导航-乙）
+          { to: '/workbuddy', label: '人机协作' },
+        ],
+      },
+    ],
   },
   {
     kind: 'group',
-    group: '私域', // B3-GATE C块（L1SI176-B3-GATE-001 §四）：入口显性化——安全靠鉴权不靠藏（⛔ 隐藏入口≠权限控制）；批2块一「独立入口属块四」即本块落地
+    group: '服务',
     items: [
-      { to: '/me', label: '我的' }, // 私域面：须登录，未登录引导登录（me-login-required 去登录）
-      { to: '/ops', label: '运维' }, // 运维独立入口：门内六栏；未登录/非管理员见提示、不露内容
+      {
+        subgroup: '基础（免费）',
+        items: [
+          { to: '/toolshelf', label: '工具货架' }, // 展示面：浏览公开
+          { to: '/official-assets', label: '官方工具' }, // 官方资产区·基础行（同页 /official-assets）
+        ],
+      },
+      {
+        subgroup: '增值（付费）',
+        items: [
+          { to: '/official-assets', label: '官方产物与增值' }, // 调用暂未开放
+        ],
+      },
+    ],
+  },
+  {
+    // 横切：身份与账户——原「私域」组取消并入（L1SI176-NAV-A-001 §三.5）
+    kind: 'group',
+    group: '我的',
+    items: [
+      { to: '/me', label: '身份与账户' }, // 私域面：须登录，未登录引导登录（me-login-required 去登录）
+      { to: '/studio', label: '工作台（作业）' },
+      { to: '/ops', label: '运维端' }, // 运维独立入口：门内六栏；未登录/非管理员见提示、不露内容
+      { to: '/ops/me', label: '运维我的' },
+      { to: '/review', label: '缔约评审' }, // 令面（NAV-A-001 §一.7）显性列入；鉴权自守，⛔ 本令不改其页
+      { to: '/me/appeal', label: '申诉' },
+    ],
+  },
+  {
+    kind: 'group',
+    group: '学习与帮助',
+    items: [
+      { to: '/academy', label: '商学院' }, // L1SI152-EDU-PORTAL-001
+      { to: '/academy/outline', label: '教材目录' },
+      { to: '/start', label: '新手指引' }, // L1SI167-START-ENTRY-001-001
+      { to: '/start/three-questions', label: '三问向导' },
+      { to: '/docs', label: '操作文档' }, // 与文库并存（⛔ 不并线——端点不同、族不同）
+      { to: '/library', label: '知识库' },
+      { to: '/contribute', label: '我要贡献' },
+      { to: '/help', label: '帮助与联系', badge: '在建中' }, // 薄占位：内容随文档库「帮助」族入站
+    ],
+  },
+  {
+    kind: 'group',
+    group: 'NCA 与透明',
+    items: [
+      { to: '/nca-guide', label: '存证说明' }, // 存证格式制度说明（⛔ 不展凭据与内部编号）
+      { to: '/audit', label: '公开账本与审计' },
+      { to: '/governance', label: '治理' }, // HUF 强制鉴权（B-4）；操作唤起签批，⛔ 不内嵌凭据面
+      { to: '/announcements', label: '公告栏' }, // 对外公告区：空栏为常态，内容须创始人逐次明示后发布
+      { to: '/status', label: '系统健康' },
+      { to: '/anchors', label: '模拟锚' }, // SIMULATED 模拟态展示＝官方资源呈现
+      { to: '/notifier', label: '通知机', badge: '在建中' }, // WS 实时通道令牌未通（4401），仅静态状态页
+      { to: '/api/v1/selfcheck/spec', label: '机器可读规格', raw: true }, // D1-002（裁定 6181）：raw 直开保留
     ],
   },
 ]
@@ -263,36 +373,19 @@ function ShellInner() {
             ) : (
               <span key={entry.group} className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span className="text-[10px] font-medium tracking-wide text-gray-400">{entry.group}</span>
-                {entry.items
-                  .filter((item) => !item.authOnly || isAuthenticated)
-                  .map((item) =>
-                  item.raw ? (
-                    <a
-                      key={item.to}
-                      href={item.to}
-                      target="_blank"
-                      rel="noreferrer"
-                      data-testid={`nav-raw-${item.to}`}
-                      className="text-xs text-gray-500 underline decoration-dotted underline-offset-4 hover:text-slate-800"
-                    >
-                      {item.label}
-                    </a>
-                  ) : (
-                    <NavLink
-                      key={item.to}
-                      to={item.to}
-                      className={({ isActive }) =>
-                        `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
-                      }
-                    >
-                      {item.label}
-                      {item.badge && (
-                        <span data-testid={`nav-badge-${item.to}`} className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">
-                          {item.badge}
-                        </span>
-                      )}
-                    </NavLink>
-                  ),
+                {entry.items.map((content) =>
+                  'subgroup' in content ? (
+                    <span key={content.subgroup} className="flex flex-wrap items-center gap-x-2 gap-y-1" data-subgroup={content.subgroup}>
+                      <span className="text-[10px] font-medium tracking-wide text-slate-500">· {content.subgroup}</span>
+                      {content.items
+                        .filter((item) => !item.authOnly || isAuthenticated)
+                        .map((item) => (
+                          <NavItemLink key={item.to} item={item} />
+                        ))}
+                    </span>
+                  ) : !content.authOnly || isAuthenticated ? (
+                    <NavItemLink key={content.to} item={content} />
+                  ) : null,
                 )}
               </span>
             ),

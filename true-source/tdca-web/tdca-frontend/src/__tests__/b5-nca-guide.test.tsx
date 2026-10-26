@@ -76,7 +76,7 @@ describe('B5 项三 · 存证（NCA）说明栏（公域新增）', () => {
     expect(body).not.toMatch(/ghp_[A-Za-z0-9]|PRIVATE KEY|AKID[A-Za-z0-9]/)
   })
 
-  it('公共导航「制度与透明」组含存证说明入口（纯中文标签）', () => {
+  it('公共导航「NCA 与透明」栏含存证说明入口（纯中文标签）', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
