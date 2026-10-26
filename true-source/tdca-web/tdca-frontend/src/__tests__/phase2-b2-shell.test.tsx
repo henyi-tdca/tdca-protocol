@@ -28,10 +28,10 @@ vi.mock('cytoscape', () => {
 const PUBLIC_NAV_TEXT = () =>
   APP_NAV.map((e) => (e.kind === 'link' ? [e.label] : [e.group, ...e.items.map((i) => i.label)])).flat()
 
-describe('二期改版批2块一：公域顶栏六入口', () => {
-  it('六入口齐备：首页／生态／市场／制度与透明／资源／帮助与联系', () => {
+describe('二期改版批2块一：公域顶栏入口', () => {
+  it('入口齐备：首页／生态／市场／制度与透明／资源／帮助与联系／私域（B3 C块追加）', () => {
     const tops = APP_NAV.map((e) => (e.kind === 'link' ? e.label : e.group))
-    expect(tops).toEqual(['首页', '生态', '市场', '制度与透明', '资源', '帮助与联系'])
+    expect(tops).toEqual(['首页', '生态', '市场', '制度与透明', '资源', '帮助与联系', '私域'])
   })
 
   it('公域导航零英文标签（验收三条之零英文）', () => {

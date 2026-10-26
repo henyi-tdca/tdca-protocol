@@ -71,7 +71,12 @@ export function OpsMePage() {
         <div className="grid gap-3 sm:grid-cols-2">
           {SECTIONS.map((s) => (
             <section key={s.key} data-testid={s.key} className="rounded-lg border border-gray-200 bg-white p-3">
-              <h3 className="mb-1.5 text-sm font-semibold text-gray-900">{s.title}</h3>
+              <h3 className="mb-1.5 flex flex-wrap items-center gap-2 text-sm font-semibold text-gray-900">
+                {s.title}
+                {/* B3-GATE C块：未实现处一律标「建设中」＋「预计批次」（照 L1SI176-B3-GATE-001 §四③） */}
+                <span data-testid={`${s.key}-building`} className="rounded border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-[10px] font-normal text-amber-700">建设中</span>
+                <span className="text-[10px] font-normal text-gray-400">预计批次：未定（随运维制度件转正排期）</span>
+              </h3>
               <ul className="space-y-1">
                 {s.items.map((it) => (
                   <li key={it} className="text-xs text-gray-600">· {it}</li>
