@@ -109,6 +109,8 @@ export function OpsPage() {
       {!isAdmin ? (
         <section data-testid="ops-admin-only" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           须管理员身份登录后可见。一般用户请从「我的」进入个人面；本入口对所有人保持可见。
+          {/* B3-GATE C块：未登录须明确引导登录（⛔ 空白页／报错页）；非管理员此处即无权限提示、不露内容 */}
+          <Link to="/auth" data-testid="ops-login-link" className="ml-1 font-medium text-emerald-700 underline hover:text-emerald-800">去登录 →</Link>
         </section>
       ) : (
         <>
