@@ -68,6 +68,13 @@ describe('B26-后 S2：模拟锚认证（四档＋三要素，必须能不通过
     fireEvent.click(screen.getByTestId('lab-topup-100'))
     fireEvent.click(screen.getByTestId('lab-s2-tier-固锚级'))
     expect(screen.getByTestId('lab-s2-tier-desc').textContent).toContain('设备唯一且物理地址保持')
+    // 四档皆有释义（照在册 046 判定语，逐档可见）
+    const descs = screen.getByTestId('lab-s2-tier-descs').textContent ?? ''
+    expect(descs).toContain('固锚级：设备唯一且物理地址保持')
+    expect(descs).toContain('移锚级：设备唯一但物理地址可移')
+    expect(descs).toContain('记名级：设备非唯一但持有注册实名认证账号')
+    expect(descs).toContain('未达门槛：匿名（不称「不可信」；匿名不等于没有身份）')
+    expect(screen.getByTestId('lab-s2').textContent).toContain('档名以在册为准')
     // 通过路径
     fireEvent.click(screen.getByTestId('lab-s2-run'))
     expect(screen.getByTestId('lab-balance').textContent).toBe('80')
@@ -91,29 +98,33 @@ describe('B26-后 S2：模拟锚认证（四档＋三要素，必须能不通过
 })
 
 describe('B26-后 S3：跨域引用（哈希真算）', () => {
-  it('生成 NCA：SHA-256 真算 64 位十六进制（对得上已知值）；公域只验哈希不搬内容；验后出已验', async () => {
+  it('生成 NCA：哈希覆盖件名＋正文，SHA-256 真算 64 位（对得上已知值）；公域只验哈希不搬内容；验后出已验', async () => {
     render(<MemoryRouter><LabPage /></MemoryRouter>)
     fireEvent.change(screen.getByTestId('lab-s3-content'), { target: { value: 'abc' } })
     fireEvent.click(screen.getByTestId('lab-s3-generate'))
-    // SHA-256('abc') 已知值 —— 真算非写死假串之证
-    const expected = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'
+    // SHA-256('示例件 A\nabc')（覆盖件名＋换行＋正文）已知值 —— 真算非写死假串之证
+    const expected = '79ef3175a5b782d91db66921cd576bb15324df54a5bbc24da9fcb6beb16c7463'
     await waitFor(() => {
       expect(screen.getByTestId('lab-s3-hash').textContent).toContain(expected)
     })
     expect(screen.getByTestId('lab-s3-link').textContent).toContain('SIM-LINK-0001')
+    // 页面注明哈希覆盖范围
+    expect(screen.getByTestId('lab-s3').textContent).toContain('哈希覆盖范围：件名＋换行＋正文')
     // 公域侧只显哈希与件名，⛔ 显示内容
     const pub = screen.getByTestId('lab-s3-public').textContent ?? ''
     expect(pub).not.toContain('abc')
     expect(pub).toContain('示例件 A')
     expect(pub).toContain('待公域验哈希')
-    // 交公域验 → 已验（真比对）
+    // 交公域验 → 已验（真比对，覆盖式重算）
     fireEvent.click(screen.getByTestId('lab-s3-verify'))
     await waitFor(() => {
       expect(screen.getByTestId('lab-s3-verdict').textContent).toContain('已验')
     })
     expect(screen.getByTestId('lab-s3-verdict').textContent).toContain('两域互认')
-    // 留痕：跨域引用 0 额流水入表
-    expect(screen.getByTestId('lab-ledger-table').textContent).toContain('跨域引用')
+    // 留痕：跨域引用类型为「不计量」（⛔ 消耗），0 额流水入表
+    const row = screen.getByTestId('lab-ledger-table').textContent ?? ''
+    expect(row).toContain('跨域引用')
+    expect(row).toContain('不计量')
   })
 })
 
@@ -137,6 +148,7 @@ describe('B26-后 硬约束守护（DOM 级）', () => {
     }
     expect(text.match(/(^|[^A-Za-z])([PAMS]-?\d)/g) ?? []).toEqual([])
     expect(text).toContain('示例比例 2%，⛔ 真实税率')
+    expect(text).toContain('每次尝试计 20 积分，无论通过与否')
     expect(text).toContain('本演示为单次会话，刷新即清空；不是你的资产，也不会保存')
     expect(text).toContain('档名以在册为准')
     if (spy) Object.defineProperty(Storage.prototype, 'setItem', spy)
