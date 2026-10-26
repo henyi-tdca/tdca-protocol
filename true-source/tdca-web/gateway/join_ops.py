@@ -65,3 +65,78 @@ def join_list(request: Request):
             "reviewer_note": r.reviewer_note,
         } for r in rows]
     return {"items": items}
+
+
+# ── A-2 审核写 ─────────────────────────────────────────────────────────────
+from pydantic import BaseModel
+
+from api_v1 import _nca_append, _utc  # noqa: E402
+
+
+class ReviewReq(BaseModel):
+    join_request_id: int
+    action: str                # approve｜reject
+    note: str | None = None
+
+
+# 负空间敏感词初始清单（内置起步集；词库扩面另批，不影响本端点契约）。
+# 每次「放行」复核展示名＋审核备注双扫，命中即 409 拦截、状态不变、NCA 留痕。
+_NSFL_WORDS = (
+    "洗钱", "诈骗", "赌博", "贩毒", "色情", "暴力催收",
+    "传销", "非法集资", "走私", "制假", "盗号", "钓鱼网站",
+)
+
+_TRANSITIONS = {
+    # 放行两段 pending→sandbox、sandbox→active；谢绝 →rejected（照令 §二 A-2 业务规则①）
+    ("pending", "approve"): "sandbox",
+    ("sandbox", "approve"): "active",
+    ("pending", "reject"): "rejected",
+    ("sandbox", "reject"): "rejected",
+}
+
+
+def _nsfl_hit(text: str) -> str | None:
+    for w in _NSFL_WORDS:
+        if w in (text or ""):
+            return w
+    return None
+
+
+@router.post("/review")
+def join_review(request: Request, req: ReviewReq):
+    """A-2 审核写。每次操作落 NCA 存证（含审核人标识、动作、备注）。
+
+    - 放行两段 pending→sandbox、sandbox→active；谢绝 →rejected；
+    - 每次放行复核负空间敏感词清单，触负即 409 拦截：状态不变、NCA 留痕；
+    - 重复审核同一单 → 409（本侧取 409 不取幂等：状态机会话已推进，重复即异常，
+      理由随回报 R-4）；
+    - ⛔ 令牌值不落库明文／不回显（令牌只在请求头校验，本端点不落任何凭据值）。
+    """
+    reviewer = reviewer_gate(request)
+    if req.action not in ("approve", "reject"):
+        raise HTTPException(400, "action 仅允许 approve｜reject")
+    with get_session() as s:
+        row = s.get(M.JoinRequest, req.join_request_id)
+        if row is None:
+            raise HTTPException(404, "申请单不存在")
+        if req.action == "approve":
+            hit = _nsfl_hit(row.display_name + "\n" + (req.note or ""))
+            if hit:
+                nca = _nca_append("join-review-nsfl-blocked", reviewer,
+                                  artifact_path=f"join_requests/{row.id}", prov="real")
+                row.reviewer_note = req.note
+                row.nca_ref = nca
+                row.updated_at = _utc()
+                s.commit()
+                raise HTTPException(409, f"触负拦截：命中负空间敏感词「{hit}」，状态未变")
+        new_status = _TRANSITIONS.get((row.status, req.action))
+        if new_status is None:
+            raise HTTPException(409, f"当前状态 {row.status} 不允许 {req.action}（重复审核或已终态）")
+        nca = _nca_append(f"join-review-{req.action}", reviewer,
+                          artifact_path=f"join_requests/{row.id}", prov="real")
+        row.status = new_status
+        row.reviewer_note = req.note
+        row.nca_ref = nca
+        row.updated_at = _utc()
+        s.commit()
+        return {"ok": True, "id": row.id, "status": row.status, "nca_ref": nca}
