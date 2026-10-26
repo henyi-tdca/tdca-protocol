@@ -88,6 +88,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/contribute', title: '我要贡献 · 三级台阶', layer: 'L0', dataSource: '纯前端指路页（零接口调用）；指向既有登记端点', permission: '公开', description: 'viewer→贡献者→节点方三级台阶：每阶写什么件、走哪条路、什么算成。只指路不代办，⛔ 承诺时限必过。' },
   { path: '/private', title: '私域与边界 · 公域守门人', layer: 'L0', dataSource: '纯前端说明页（零接口调用）；口径与体系结构说明一致', permission: '公开', description: '公域与私域的分工、两权闸门、三条铁句；起一个节点之前先读这页。' },
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '四块模拟（虚拟积分／钱包／结算中心／交付税收）＋免责三条；全部演示值，真实功能在三期。' },
+  { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '与 /demo 分工：demo 看懂、lab 走一遍。五张模拟卡＋一张流水表；积分面额照设计件 6146，演练值不入账、不留存。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -163,6 +164,8 @@ import { ContributePage } from './contribute'
 import { PrivateDomainPage } from './private-domain'
 // L1SI175-B25（6188 拆解裁定·6189 施工令）：体验期与模拟演示一页（四块模拟·纯前端演示值）
 import { DemoPage } from './demo'
+// L1SI175-B26（6194 拆批裁定·施工令）：模拟演练区一页（五卡＋流水表·纯前端演练值）
+import { LabPage } from './lab'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -222,6 +225,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/contribute': ContributePage,
   '/private': PrivateDomainPage,
   '/demo': DemoPage,
+  '/lab': LabPage,
 }
 
 export function renderPage(meta: PageMeta) {

@@ -7,6 +7,7 @@
 //   单位只用「积分」；示例比例须标 ⛔ 真实税率；零内部编号
 // =============================================================================
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 
@@ -195,6 +196,11 @@ export function DemoPage() {
             ))}
           </ol>
         </footer>
+
+        {/* L1SI175-B26：一句一链，通往模拟演练区 */}
+        <p data-testid="demo-b2-lab" className="text-center text-xs text-gray-600">
+          想动手走一遍 → <Link to="/lab" className="text-purple-700 underline">模拟演练区</Link>
+        </p>
       </div>
     </PageShell>
   )
