@@ -43,8 +43,8 @@ describe('B26 演练区：页头会话限制句与五卡齐', () => {
       expect(el.textContent).toContain('演示，不涉真实资金与真实税')
       expect(el.textContent).toContain('流水号：')
     }
-    // PageShell 1 ＋五卡 5＋规则表 1＋流水表 1
-    expect(screen.getAllByTestId('simulated-badge').length).toBe(8)
+    // PageShell 1 ＋五卡 5＋规则表 1＋流水表 1＋选剧本区 1（三剧本子区不带独立角标）
+    expect(screen.getAllByTestId('simulated-badge').length).toBe(9)
     const text = document.body.textContent ?? ''
     expect(text).toContain('演示钱包：站内虚拟积分，不可提现、不可转让、不可兑人民币')
     expect(text).toContain('模拟充值：点击即加积分，不发生任何真实支付')
@@ -119,7 +119,7 @@ describe('B26 演练区：结算本批不扣款／计税免费', () => {
     fireEvent.click(screen.getByTestId('lab-topup-100'))
     fireEvent.click(screen.getByTestId('lab-settle-run'))
     expect(screen.getByTestId('lab-balance').textContent).toBe('100')
-    expect(screen.getByTestId('lab-settle-note').textContent).toContain('本批不扣款')
+    expect(screen.getByTestId('lab-settle-note').textContent).toContain('剧本一')
     fireEvent.change(screen.getByTestId('lab-tax-base'), { target: { value: '200' } })
     fireEvent.click(screen.getByTestId('lab-tax-run'))
     expect(screen.getByTestId('lab-balance').textContent).toBe('100')
