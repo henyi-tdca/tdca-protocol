@@ -5,6 +5,9 @@
 //   验证 → /verify（三件自查全路径）
 //   贡献 → /channel/registry（智能体自助登记入口）
 //   带走 → /openapi.json（机器可读面）＋ /docs（文档库）
+// D1-001（依据 6179/6180）改指：openapi.json 实测 404、/docs 为 SPA 壳（200≠真内容）——
+//   「带走」改指 /api/v1/selfcheck/spec（自助验链规格，已上线内容真）；openapi 与 /docs 撤链改为说明。
+//   另：app-shell 资源组亦有 /openapi.json raw 入口（同款断链），不在本令命名范围，已回报登记另案。
 // 口径: 帮助条目仍动态读 /api/site/docs/help（⛔ 不预置）；联系块未入站则如实空栏
 // =============================================================================
 import { useEffect, useState } from 'react'
@@ -36,9 +39,9 @@ const PATHS = [
   {
     key: 'takeaway',
     title: '想带走',
-    desc: '机器可读面全字段表（OpenAPI），或从文档库按族取走制度原文。',
+    desc: '机器可读校验规格：记录哈希公式、字段白名单与「能证什么」免责，任何第三方可据此复算台账。',
     to: '',
-    label: '/openapi.json（机器可读面）＋ /docs（文档库）',
+    label: '',
   },
 ] as const
 
@@ -98,14 +101,14 @@ export function HelpPage() {
                   <div className="px-4 py-3">
                     <div className="font-medium text-gray-800">{p.title}</div>
                     <div className="mt-0.5 text-xs text-gray-500">{p.desc}</div>
-                    <div className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-blue-700">
-                      <a href="/openapi.json" className="underline hover:text-blue-900">
-                        /openapi.json（机器可读面）
+                    <div className="mt-0.5 text-xs text-blue-700">
+                      <a href="/api/v1/selfcheck/spec" className="underline hover:text-blue-900">
+                        /api/v1/selfcheck/spec（自助验链规格）
                       </a>
-                      <Link to="/docs" className="underline hover:text-blue-900">
-                        /docs（文档库）
-                      </Link>
                     </div>
+                    <p className="mt-1 text-[11px] text-gray-400">
+                      原 OpenAPI 机器可读面（/openapi.json）与文档站（/docs）暂未开放，恢复后另行标注。
+                    </p>
                   </div>
                 )}
               </li>
