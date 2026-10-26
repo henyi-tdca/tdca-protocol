@@ -91,7 +91,7 @@ export function ProcessRail() {
           </li>
         ))}
       </ol>
-      <p className="mt-3 text-[10px] text-gray-400">F0 骨架占位（批3 移植 tdca-site 操作进阶流程栏）</p>
+      <p className="mt-3 text-[10px] text-gray-400">流程栏正在补充</p>
       <div className="mt-2 border-t border-gray-100 pt-2 text-[10px] text-gray-400">
         <NavLink to="/" className="underline hover:text-slate-700">回首页</NavLink>
       </div>

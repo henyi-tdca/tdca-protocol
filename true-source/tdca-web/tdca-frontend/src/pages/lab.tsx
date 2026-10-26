@@ -148,7 +148,7 @@ export function LabPage() {
       .join('\n')
     const p = navigator.clipboard?.writeText(text)
     if (p) void p.catch(() => undefined)
-    setExportNote(`已复制 ${filtered.length} 行流水（复制为文本，⛔ 触发文件下载）`)
+    setExportNote(`已复制 ${filtered.length} 行流水（复制为文本，不触发文件下载）`)
   }
 
   return (
