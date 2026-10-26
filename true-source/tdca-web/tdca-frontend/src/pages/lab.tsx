@@ -18,7 +18,7 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 interface Flow {
   no: string // SIM-FLOW-0001（四位序）
   time: string // YYYY-MM-DD HH:mm:ss +08
-  type: '发放' | '消耗'
+  type: '发放' | '消耗' | '不计量'
   scene: Scene
   delta: number // +10 / −30 / −2.4（全角减号展示）
   after: number // 变动后余额
@@ -37,12 +37,12 @@ function fmt(n: number): string {
   return Number.isInteger(n) ? String(n) : n.toFixed(1)
 }
 
-/** 锚四档（照在册 TDCA-PUB-CORPUS-046 定名，⛔ 自造档名） */
+/** 锚四档（照在册 TDCA-PUB-CORPUS-046 定名与判定语，⛔ 自造档名；「待补」为过渡态非档位，不入四档） */
 const ANCHOR_TIERS = [
   { name: '固锚级', desc: '设备唯一且物理地址保持' },
   { name: '移锚级', desc: '设备唯一但物理地址可移' },
   { name: '记名级', desc: '设备非唯一但持有注册实名认证账号' },
-  { name: '未达门槛', desc: '匿名（不称「不可信」；档名以在册为准）' },
+  { name: '未达门槛', desc: '匿名（不称「不可信」；匿名不等于没有身份）' },
 ]
 
 /** 时点格式 YYYY-MM-DD HH:mm:ss +08（手动拼字段，不依赖时区库） */
@@ -52,7 +52,7 @@ function ts08(d: Date): string {
 }
 
 /** 积分面额规则（照设计件 6146 与在册口径，面额一个字不改） */
-const RULES: { type: '发放' | '消耗'; scene: Scene; text: string }[] = [
+const RULES: { type: '发放' | '消耗' | '不计量'; scene: Scene; text: string }[] = [
   { type: '发放', scene: '签到', text: '签到 +10 积分／日（每日一次，断签不补）' },
   { type: '发放', scene: '任务', text: '做任务 +20 积分／件（每日 4 件）' },
   { type: '发放', scene: '充值', text: '充值面额 100／500／1000，支持自定义面额（发放路径，非改余额）' },
@@ -61,7 +61,7 @@ const RULES: { type: '发放' | '消耗'; scene: Scene; text: string }[] = [
   { type: '消耗', scene: '结算', text: '模拟结算额 120 积分（剧本一环销：乙 −120／甲 +120，已开通）' },
   { type: '消耗', scene: '计税', text: '剧本一内按示例比例 2% 演算调度税（120 × 2% = 2.4）；本页独立试算仍免费' },
   { type: '消耗', scene: '锚认证', text: '模拟锚认证 −20 积分／次（剧本二：选等级＋设备／令牌／见证三要素）' },
-  { type: '消耗', scene: '跨域引用', text: '跨域引用不扣积分（剧本三：只传哈希与件名，⛔ 传内容）' },
+  { type: '不计量', scene: '跨域引用', text: '跨域引用不扣积分（剧本三：只传哈希与件名，⛔ 传内容；类型记「不计量」）' },
 ]
 
 interface Receipt {
@@ -87,7 +87,7 @@ export function LabPage() {
   const [taxResult, setTaxResult] = useState<{ base: number; ratioPct: number; due: number } | null>(null)
   const [settleNote, setSettleNote] = useState('')
   const [anchorRecords, setAnchorRecords] = useState<string[]>([])
-  const [typeFilter, setTypeFilter] = useState<'全部' | '发放' | '消耗'>('全部')
+  const [typeFilter, setTypeFilter] = useState<'全部' | '发放' | '消耗' | '不计量'>('全部')
   const [sceneFilter, setSceneFilter] = useState<'全部' | Scene>('全部')
   const [exportNote, setExportNote] = useState('')
   // 剧本一：交付 → 结算 → 计税（步 0~4）
@@ -107,7 +107,7 @@ export function LabPage() {
   const [s3Link, setS3Link] = useState('')
   const [s3Stage, setS3Stage] = useState<'idle' | 'generated' | 'verified' | 'unsupported'>('idle')
 
-  function pushFlow(scene: Scene, delta: number, forceType?: '发放' | '消耗'): Flow {
+  function pushFlow(scene: Scene, delta: number, forceType?: '发放' | '消耗' | '不计量'): Flow {
     const nextFlow = flowSeq + 1
     const nextNca = ncaSeq + 1
     const f: Flow = {
@@ -248,7 +248,9 @@ export function LabPage() {
   function s3Generate() {
     if (!s3Content.trim()) return
     void (async () => {
-      const hex = await sha256Hex(s3Content)
+      // 哈希覆盖范围：件名 + 换行 + 正文（分隔符固定为换行一种；换件名即改哈希，消「同名异件」歧义）
+      const covered = `${s3Name}\n${s3Content}`
+      const hex = await sha256Hex(covered)
       if (hex === null) {
         setS3Stage('unsupported')
         return
@@ -258,13 +260,14 @@ export function LabPage() {
       setS3Hash(hex)
       setS3Link(link)
       setS3Stage('generated')
-      pushFlow('跨域引用', 0, '消耗') // 生成即留痕，不扣积分
+      pushFlow('跨域引用', 0, '不计量') // 生成即留痕，零额不计量（⛔ 标消耗）
     })()
   }
 
   function s3Verify() {
     void (async () => {
-      const hex = await sha256Hex(s3Content)
+      const covered = `${s3Name}\n${s3Content}`
+      const hex = await sha256Hex(covered)
       if (hex === null) {
         setS3Stage('unsupported')
         return
@@ -461,6 +464,7 @@ export function LabPage() {
           <button data-testid="lab-anchor-run" onClick={doAnchor} className="mt-3 rounded bg-gray-800 px-3 py-1.5 text-xs text-white">
             发起模拟锚认证（−20 积分／次）
           </button>
+          <p className="mt-2 text-xs text-gray-600">每次尝试计 20 积分，无论通过与否（按次计，照设计件 6146 §2.2）。</p>
           {anchorRecords.length > 0 && (
             <ul data-testid="lab-anchor-records" className="mt-2 list-inside list-disc space-y-0.5 text-xs text-gray-600">
               {anchorRecords.map((r, i) => (
@@ -576,6 +580,14 @@ export function LabPage() {
                   {s2Tier}：{ANCHOR_TIERS.find((t) => t.name === s2Tier)?.desc}
                 </p>
               )}
+              <ul data-testid="lab-s2-tier-descs" className="list-inside list-disc space-y-0.5 rounded border border-gray-100 bg-gray-50 p-2 text-gray-600">
+                {ANCHOR_TIERS.map((t) => (
+                  <li key={t.name}>
+                    <strong>{t.name}</strong>：{t.desc}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-gray-500">四档定名与判定语照在册 TDCA-PUB-CORPUS-046，档名以在册为准；「待补」为过渡态，非档。</p>
               <div className="flex flex-wrap items-center gap-3">
                 <label className="flex items-center gap-1">
                   <input data-testid="lab-s2-elem-device" type="checkbox" checked={s2Device} onChange={(e) => setS2Device(e.target.checked)} /> 设备要素
@@ -607,6 +619,7 @@ export function LabPage() {
             </summary>
             <div className="space-y-2 border-t border-gray-100 p-3 text-xs text-gray-700">
               <p>步 1 私域沙盒生成一枚 NCA（simulated，有链位与自哈希）→ 步 2 交「件＋哈希」给公域，公域只读验 → 步 3 公域出「已验」标记（只引哈希，⛔ 搬内容）。哈希用浏览器内置 SHA-256 真算，⛔ 写死假串。</p>
+              <p className="text-gray-500">哈希覆盖范围：件名＋换行＋正文（分隔符固定为换行一种；换件名即改哈希，消「同名异件」歧义）。</p>
               <div className="flex flex-wrap items-center gap-2">
                 <input
                   data-testid="lab-s3-name"
@@ -658,7 +671,7 @@ export function LabPage() {
           </h3>
           <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
             <span className="text-gray-500">类型：</span>
-            {(['全部', '发放', '消耗'] as const).map((t) => (
+            {(['全部', '发放', '消耗', '不计量'] as const).map((t) => (
               <button
                 key={t}
                 data-testid={`lab-filter-type-${t}`}
