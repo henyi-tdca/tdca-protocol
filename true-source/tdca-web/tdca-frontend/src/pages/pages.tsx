@@ -87,6 +87,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/start/three-questions', title: '三问向导 · 贡献前自述', layer: 'L0', dataSource: '纯前端表单（零接口调用）；提交功能待后端就绪', permission: '公开', description: '交素材前的三问：原创吗／用过 AI 吗／用在什么场景。系统只汇总成自述草稿，⛔ 代判；提交功能在建，如实标注。' },
   { path: '/contribute', title: '我要贡献 · 三级台阶', layer: 'L0', dataSource: '纯前端指路页（零接口调用）；指向既有登记端点', permission: '公开', description: 'viewer→贡献者→节点方三级台阶：每阶写什么件、走哪条路、什么算成。只指路不代办，⛔ 承诺时限必过。' },
   { path: '/private', title: '私域与边界 · 公域守门人', layer: 'L0', dataSource: '纯前端说明页（零接口调用）；口径与体系结构说明一致', permission: '公开', description: '公域与私域的分工、两权闸门、三条铁句；起一个节点之前先读这页。' },
+  { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '四块模拟（虚拟积分／钱包／结算中心／交付税收）＋免责三条；全部演示值，真实功能在三期。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -160,6 +161,8 @@ import { StatusPage } from './status'
 import { ThreeQuestionsPage } from './three-questions'
 import { ContributePage } from './contribute'
 import { PrivateDomainPage } from './private-domain'
+// L1SI175-B25（6188 拆解裁定·6189 施工令）：体验期与模拟演示一页（四块模拟·纯前端演示值）
+import { DemoPage } from './demo'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -218,6 +221,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/start/three-questions': ThreeQuestionsPage,
   '/contribute': ContributePage,
   '/private': PrivateDomainPage,
+  '/demo': DemoPage,
 }
 
 export function renderPage(meta: PageMeta) {
