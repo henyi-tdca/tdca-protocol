@@ -1054,3 +1054,32 @@ class OpsLog(Base):
         Index("idx_ops_logs_duty_no", "duty_no"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_ops_logs_prov"),
     )
+
+
+class JoinRequest(Base):
+    """38. 缔约申请评审队列（批3「门与闸」A块，TDCA-HANDOFF-EXEC-L1SI176-B3-GATE-001）。
+
+    评审只读队列＋审核写之数据落点；status 五态照前端冻结契约（⛔ 不改名）：
+    pending／sandbox／active／rejected／nsfl_rejected；
+    放行两段 pending→sandbox、sandbox→active，谢绝 →rejected；
+    nsfl_result 记负空间复核结论（触负拦截照 A-2，状态不变）；
+    ⛔ 本表不含凭据值；display_name 为面客展示名（自然人敏感信息不入库）。
+    """
+
+    __tablename__ = "join_requests"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    display_name: Mapped[str] = mapped_column(Text, nullable=False)       # 面客展示名（⛔ 自然人敏感信息）
+    applicant_kind: Mapped[str] = mapped_column(Text, nullable=False)     # 申请主体类别
+    channel: Mapped[str] = mapped_column(Text, nullable=False)            # 缔约通道
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="pending")
+    nsfl_result: Mapped[str] = mapped_column(Text, nullable=False, default="")   # 负空间复核结论
+    reviewer_note: Mapped[str | None] = mapped_column(Text)               # 审核备注（留痕）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                     # 审核存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('pending','sandbox','active','rejected','nsfl_rejected')",
+                        name="ck_join_requests_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_join_requests_prov"),
+    )
