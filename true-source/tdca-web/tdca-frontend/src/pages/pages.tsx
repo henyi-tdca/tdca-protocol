@@ -82,6 +82,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读，任何第三方可复算。' },
   // L1SI175-A1-2：术语检索页（登录可见；服务端 ?q= 过滤；⛔ 匿名开放未授权）
   { path: '/terms', title: '术语检索', layer: 'L0', dataSource: 'A-6 GET /api/v1/knowledge/terms?q=（服务端过滤）', permission: '登录 DID', description: '站内术语注册表检索：词与释义两列，关键词走服务端过滤；登录可见全量，匿名返回已脱敏内部编号。' },
+  { path: '/assets', title: '五序资产总览', layer: 'L0', dataSource: 'GET /api/v1/assets/five-orders（DB 实读）', permission: '公开', description: '五序资产池总览：名称、说明与在册数量；真实资产待生态接入，只读展示，不含交易入口。' },
+  { path: '/status', title: '系统健康', layer: 'L0', dataSource: 'GET /api/v1/system/overview ＋ /api/v1/ci/badge ＋ /api/v1/eios/cluster-status', permission: '公开', description: '运行指标、机验徽章与集群状态三合一健康面；模块状态以「已冻结」呈现，税率仅为在册演示值。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -148,6 +150,9 @@ import { StartPage } from './start/start'
 import { VerifyPage } from './verify'
 // L1SI175-A1-2：术语检索 /terms（登录可见·服务端 ?q= 过滤）
 import { TermsPage } from './terms'
+// L1SI175-B1-1/2/3：五序资产 /assets＋系统健康 /status（匿名可见·集群并入）
+import { AssetsPage } from './assets'
+import { StatusPage } from './status'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -201,6 +206,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/start': StartPage,
   '/verify': VerifyPage,
   '/terms': TermsPage,
+  '/assets': AssetsPage,
+  '/status': StatusPage,
 }
 
 export function renderPage(meta: PageMeta) {
