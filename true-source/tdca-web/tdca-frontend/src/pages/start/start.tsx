@@ -402,6 +402,18 @@ export function StartPageBody({ data }: { data: StartMapData | null }) {
         </p>
       )}
 
+      {/* L1SI175-B2-002 引链（6186 放行令）：六步区以下不动，此处追加一句一链×2 */}
+      <section data-testid="start-b2-links" className="mb-6 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-3 text-xs text-gray-600">
+        <p>
+          动手前先自问三件事：是不是你原创、用没用 AI、用在什么场景 →{' '}
+          <Link data-testid="start-link-threeq" to="/start/three-questions" className="text-emerald-700 underline">先做三问</Link>
+        </p>
+        <p className="mt-1.5">
+          想知道自己能到哪一阶、每阶要什么件 →{' '}
+          <Link data-testid="start-link-contribute" to="/contribute" className="text-emerald-700 underline">我要贡献</Link>
+        </p>
+      </section>
+
       {/* 目录筛（§2.1 批3：类／态／步／关键词四维 AND 叠加·实时计数） */}
       <section data-testid="catalog" className="mb-6">
         <h3 className="mb-2 text-sm font-semibold text-gray-800">制度件目录筛（{docs.length} 件全表）</h3>

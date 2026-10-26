@@ -8,11 +8,25 @@
 // =============================================================================
 import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ThreeQuestionsPage } from '@/pages/three-questions'
 import { ContributePage } from '@/pages/contribute'
 import { PrivateDomainPage } from '@/pages/private-domain'
+import { HelpPage } from '@/pages/help'
+import { AboutPage } from '@/pages/about'
+import { StartPageBody } from '@/pages/start/start'
+import { parseStartMap } from '@/pages/start/parse'
+import startMapYaml from '@/pages/start/start-map.yaml?raw'
 import { PAGE_COMPONENTS, ROUTE_PATHS } from '@/pages/pages'
+
+const startData = parseStartMap(startMapYaml)
+
+beforeEach(() => {
+  localStorage.clear()
+  sessionStorage.clear()
+  vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404, json: async () => ({ detail: 'nf' }) }) as Response))
+})
+afterEach(() => { vi.unstubAllGlobals() })
 
 describe('L1SI175-B2 前三包：路由注册', () => {
   it('三路径入 ROUTE_PATHS 且组件映射齐', () => {
@@ -130,6 +144,33 @@ describe('S2-6 私域与边界（两域两权三铁句）', () => {
   })
 })
 
+describe('B2-002 三处入口引链（6186 放行令：只加一句一链）', () => {
+  it('/start 两处：三问向导＋我要贡献', () => {
+    render(<MemoryRouter initialEntries={['/start']}><StartPageBody data={startData} /></MemoryRouter>)
+    const block = screen.getByTestId('start-b2-links')
+    expect(block.textContent).toContain('动手前先自问三件事：是不是你原创、用没用 AI、用在什么场景')
+    expect(screen.getByTestId('start-link-threeq')).toHaveAttribute('href', '/start/three-questions')
+    expect(block.textContent).toContain('想知道自己能到哪一阶、每阶要什么件')
+    expect(screen.getByTestId('start-link-contribute')).toHaveAttribute('href', '/contribute')
+  })
+
+  it('/help 一处：我要贡献（三条路既有文字未动）', () => {
+    render(<MemoryRouter><HelpPage /></MemoryRouter>)
+    const p = screen.getByTestId('help-b2-contribute')
+    expect(p.textContent).toContain('想知道自己能到哪一阶、每阶要什么件')
+    expect(p.querySelector('a[href="/contribute"]')).not.toBeNull()
+    // 既有三条路文字原样
+    expect(screen.getByTestId('help-path-contribute').textContent).toContain('智能体自助登记入口')
+  })
+
+  it('/about 一处：私域与边界', () => {
+    render(<MemoryRouter><AboutPage /></MemoryRouter>)
+    const p = screen.getByTestId('about-b2-private')
+    expect(p.textContent).toContain('公域与私域怎么分、什么必须走公域')
+    expect(p.querySelector('a[href="/private"]')).not.toBeNull()
+  })
+})
+
 describe('B2 前三包：零内部编号零价格（DOM 级）', () => {
   it('三页渲染文本禁样全零（¥/￥/元/价格/档位/付费/EIOS-/EVT-/族编号）', () => {
     for (const [name, Page] of [
@@ -144,6 +185,24 @@ describe('B2 前三包：零内部编号零价格（DOM 级）', () => {
       }
       expect(text.match(/(^|[^A-Za-z])([PAMS]-?\d)/g) ?? []).toEqual([])
       unmount()
+    }
+  })
+
+  it('引链三处块文本零编号零价格（既有页全文不在本批范围）', () => {
+    const s = render(<MemoryRouter initialEntries={['/start']}><StartPageBody data={startData} /></MemoryRouter>)
+    const startText = s.container.querySelector('[data-testid="start-b2-links"]')?.textContent ?? ''
+    s.unmount()
+    const h = render(<MemoryRouter><HelpPage /></MemoryRouter>)
+    const helpText = h.container.querySelector('[data-testid="help-b2-contribute"]')?.textContent ?? ''
+    h.unmount()
+    const a = render(<MemoryRouter><AboutPage /></MemoryRouter>)
+    const aboutText = a.container.querySelector('[data-testid="about-b2-private"]')?.textContent ?? ''
+    a.unmount()
+    for (const text of [startText, helpText, aboutText]) {
+      expect(text.length).toBeGreaterThan(0)
+      for (const bad of ['¥', '￥', '价格', '档位', '付费', 'EIOS-', 'EVT-']) {
+        expect(text.includes(bad)).toBe(false)
+      }
     }
   })
 })

@@ -116,6 +116,12 @@ export function HelpPage() {
           </ul>
         </section>
 
+        {/* L1SI175-B2-002 引链（6186 放行令）：三条路既有文字一字未动，此处追加一句一链 */}
+        <p data-testid="help-b2-contribute" className="text-xs text-gray-600">
+          想知道自己能到哪一阶、每阶要什么件 →{' '}
+          <Link to="/contribute" className="text-blue-700 underline">我要贡献</Link>
+        </p>
+
         {/* 帮助族条目（动态，⛔ 不预置） */}
         <section data-testid="help-list">
           <h3 className="mb-2 text-sm font-semibold text-gray-800">更多帮助</h3>

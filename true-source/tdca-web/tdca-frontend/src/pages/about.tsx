@@ -4,6 +4,7 @@
 // 约束矩阵: TDCA-RULING-20260905-001（补建单页）+ ID92（静态文案无后端依赖，不落 fail-closed）
 // 预期分配: AboutPage（静态说明页：一句话定位 / 为什么 / 五层能力 / 体验入口 / 三步开始 / 速查表）
 // =============================================================================
+import { Link } from 'react-router'
 import { PageShell } from './PageShell'
 
 const LAYERS = [
@@ -117,6 +118,11 @@ export function AboutPage() {
             </table>
           </div>
         </section>
+
+        <p data-testid="about-b2-private" className="text-xs text-gray-600">
+          公域与私域怎么分、什么必须走公域 →{' '}
+          <Link to="/private" className="text-blue-700 underline">私域与边界</Link>
+        </p>
 
         <p className="text-xs text-gray-400">
           TDCA 通俗能力说明 v1——欢迎转发/指正；术语正式定义见仓库协议文档（本页为面向普通读者的降维版本）。
