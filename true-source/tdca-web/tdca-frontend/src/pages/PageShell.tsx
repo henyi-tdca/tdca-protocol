@@ -33,7 +33,7 @@ export function PageShell({ title, dataSource, permission, description, children
       </div>
       {children ?? (
         <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-400">
-          页面内容将于对应开发阶段填充（F1~F5）
+          本页内容将于后续阶段填充
         </div>
       )}
     </section>
