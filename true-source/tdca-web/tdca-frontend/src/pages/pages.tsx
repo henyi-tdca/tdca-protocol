@@ -84,6 +84,9 @@ export const PAGE_META: PageMeta[] = [
   { path: '/terms', title: '术语检索', layer: 'L0', dataSource: 'A-6 GET /api/v1/knowledge/terms?q=（服务端过滤）', permission: '登录 DID', description: '站内术语注册表检索：词与释义两列，关键词走服务端过滤；登录可见全量，匿名返回已脱敏内部编号。' },
   { path: '/assets', title: '五序资产总览', layer: 'L0', dataSource: 'GET /api/v1/assets/five-orders（DB 实读）', permission: '公开', description: '五序资产池总览：名称、说明与在册数量；真实资产待生态接入，只读展示，不含交易入口。' },
   { path: '/status', title: '系统健康', layer: 'L0', dataSource: 'GET /api/v1/system/overview ＋ /api/v1/ci/badge ＋ /api/v1/eios/cluster-status', permission: '公开', description: '运行指标、机验徽章与集群状态三合一健康面；模块状态以「已冻结」呈现，税率仅为在册演示值。' },
+  { path: '/start/three-questions', title: '三问向导 · 贡献前自述', layer: 'L0', dataSource: '纯前端表单（零接口调用）；提交功能待后端就绪', permission: '公开', description: '交素材前的三问：原创吗／用过 AI 吗／用在什么场景。系统只汇总成自述草稿，⛔ 代判；提交功能在建，如实标注。' },
+  { path: '/contribute', title: '我要贡献 · 三级台阶', layer: 'L0', dataSource: '纯前端指路页（零接口调用）；指向既有登记端点', permission: '公开', description: 'viewer→贡献者→节点方三级台阶：每阶写什么件、走哪条路、什么算成。只指路不代办，⛔ 承诺时限必过。' },
+  { path: '/private', title: '私域与边界 · 公域守门人', layer: 'L0', dataSource: '纯前端说明页（零接口调用）；口径与体系结构说明一致', permission: '公开', description: '公域与私域的分工、两权闸门、三条铁句；起一个节点之前先读这页。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -153,6 +156,10 @@ import { TermsPage } from './terms'
 // L1SI175-B1-1/2/3：五序资产 /assets＋系统健康 /status（匿名可见·集群并入）
 import { AssetsPage } from './assets'
 import { StatusPage } from './status'
+// L1SI175-B2 前三包（6182 拆批裁定·6183 施工令）：三问向导／我要贡献／私域与边界（纯前端）
+import { ThreeQuestionsPage } from './three-questions'
+import { ContributePage } from './contribute'
+import { PrivateDomainPage } from './private-domain'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -208,6 +215,9 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/terms': TermsPage,
   '/assets': AssetsPage,
   '/status': StatusPage,
+  '/start/three-questions': ThreeQuestionsPage,
+  '/contribute': ContributePage,
+  '/private': PrivateDomainPage,
 }
 
 export function renderPage(meta: PageMeta) {
