@@ -32,7 +32,7 @@ export interface NavItem {
   label: string
   /** 在建中角标：内容未完全入站／尚未入站（2026-10-04 创始人明示标注） */
   badge?: string
-  /** raw＝站内原始资源（如 /openapi.json 机读面）：<a> 直开，⛔ 不走 SPA 路由（避免 404 兜底吞掉） */
+  /** raw＝站内原始资源（如 /api/v1/selfcheck/spec 机读规格）：<a> 直开，⛔ 不走 SPA 路由（避免 404 兜底吞掉） */
   raw?: boolean
   /** authOnly＝仅登录态渲染（L1SI175-A1-3）：项进公域组但匿名不可见，不进公域匿名导航面 */
   authOnly?: boolean
@@ -94,7 +94,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/docs', label: '文档库' }, // 裁点2终定：与文库并存（⛔ 不并线——端点不同、族不同）
       { to: '/rules', label: '制度地图' }, // L1SI162-RULES-MAP-001：56 件制度件五类五态六步（公开读；件正文权限照旧）
       { to: '/anchors', label: '模拟锚' }, // 裁定落地件：SIMULATED 模拟态展示＝官方资源呈现 ➜ 公域（随块二落位）
-      { to: '/openapi.json', label: '机器可读面', raw: true }, // AMEND-1：对人的说明书（openapi 字段表）；字段明文人读页＝二期 P1
+      { to: '/api/v1/selfcheck/spec', label: '机器可读规格', raw: true }, // D1-002（裁定 6181）：原 /openapi.json 实测 404，改指 selfcheck/spec（200·六关键词齐）；raw 直开保留
     ],
   },
   {

@@ -59,9 +59,9 @@ describe('二期改版批2块一：公域顶栏六入口', () => {
     expect(text).toContain('模拟锚')
   })
 
-  it('资源组含机器可读面入口（raw 直开 /openapi.json）', () => {
+  it('资源组含机器可读规格入口（raw 直开 /api/v1/selfcheck/spec）', () => {
     const res = APP_NAV.find((e) => e.kind === 'group' && e.group === '资源')
-    expect(res && res.kind === 'group' ? res.items.some((i) => i.raw && i.to === '/openapi.json') : false).toBe(true)
+    expect(res && res.kind === 'group' ? res.items.some((i) => i.raw && i.to === '/api/v1/selfcheck/spec') : false).toBe(true)
   })
 })
 
