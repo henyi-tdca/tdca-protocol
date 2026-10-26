@@ -194,21 +194,23 @@ export function HomePage() {
               <tr>
                 <th className="px-4 py-2">端点</th>
                 <th className="px-4 py-2">说明</th>
+                <th className="px-4 py-2">状态</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {[
-                ['POST /api/site/join', '缔约申请（双通道）'],
-                ['GET /api/site/join/status', '缔约进度查询'],
-                ['POST /api/site/agent-card/handshake', '智能体首呼握手'],
-                ['GET /api/site/agent-card/{id}', '对接卡公开查询'],
-                ['GET /api/site/directory', '名册摘要（脱敏）'],
-                ['GET /api/site/docs/{family}', '文档目录'],
-                ['POST /api/site/meter', '调用计量（仅智能体通道）'],
-              ].map(([ep, desc]) => (
+                ['POST /api/site/join', '缔约申请（双通道）', '在建'],
+                ['GET /api/site/join/status', '缔约进度查询', '在建'],
+                ['POST /api/site/agent-card/handshake', '智能体首呼握手', '在建'],
+                ['GET /api/site/agent-card/{id}', '对接卡公开查询', '在建'],
+                ['GET /api/site/directory', '名册摘要（脱敏）', '在建'],
+                ['GET /api/site/docs/{family}', '文档目录', '在线（help 族未入站）'],
+                ['POST /api/site/meter', '调用计量（仅智能体通道）', '在建'],
+              ].map(([ep, desc, st]) => (
                 <tr key={ep}>
                   <td className="px-4 py-2 font-mono text-xs text-gray-700">{ep}</td>
                   <td className="px-4 py-2 text-gray-500">{desc}</td>
+                  <td className="px-4 py-2 text-gray-500" data-testid={`home-machine-status-${ep.split(' ')[1].replace(/\//g, '-').replace(/{|}/g, '')}`}>{st}</td>
                 </tr>
               ))}
             </tbody>
