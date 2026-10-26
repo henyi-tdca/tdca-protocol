@@ -1,11 +1,12 @@
 // =============================================================================
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 二期改版批2块一 — 壳整改验收测试
 // 约束矩阵: TDCA-FINAL-SITE-PHASE2-REVAMP-001-B2 §二块一 + §三验收六条
+// 导航分组断言随导航-甲（L1SI176-NAV-A-001）更新：七组 → 九栏两轴
 // =============================================================================
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { APP_NAV } from '@/app/app-shell'
+import { APP_NAV, navAllItems } from '@/app/app-shell'
 import { RightRail } from '@/app/right-rail'
 import { AuthProvider } from '@/app/auth-context'
 import App from '@/App'
@@ -26,42 +27,77 @@ vi.mock('cytoscape', () => {
 })
 
 const PUBLIC_NAV_TEXT = () =>
-  APP_NAV.map((e) => (e.kind === 'link' ? [e.label] : [e.group, ...e.items.map((i) => i.label)])).flat()
+  APP_NAV.map((e) =>
+    e.kind === 'link'
+      ? [e.label]
+      : [e.group, ...e.items.flatMap((i) => ('items' in i ? [i.subgroup, ...i.items.map((x) => x.label)] : [i.label]))],
+  ).flat()
 
-describe('二期改版批2块一：公域顶栏入口', () => {
-  it('入口齐备：首页／生态／市场／制度与透明／资源／帮助与联系／私域（B3 C块追加）', () => {
+describe('导航-甲（L1SI176-NAV-A-001）：九栏两轴顶栏', () => {
+  it('九栏可见且顺序如令 §一（1→9）', () => {
     const tops = APP_NAV.map((e) => (e.kind === 'link' ? e.label : e.group))
-    expect(tops).toEqual(['首页', '生态', '市场', '制度与透明', '资源', '帮助与联系', '私域'])
+    expect(tops).toEqual([
+      '首页',
+      '了解 TDCA',
+      '合规与沙盒',
+      '资产与权利',
+      '主体与协作',
+      '服务',
+      '我的',
+      '学习与帮助',
+      'NCA 与透明',
+    ])
   })
 
-  it('公域导航零英文标签（验收三条之零英文）', () => {
+  it('两轴结构可辨（V-2）：栏4 分 所有权／配置权，栏5 分 智能体／协作——层级本身即轴分辨，⛔ 无需读注释', () => {
+    const axis1 = APP_NAV.find((e) => e.kind === 'group' && e.group === '资产与权利')
+    const axis2 = APP_NAV.find((e) => e.kind === 'group' && e.group === '主体与协作')
+    const subgroups = (g: typeof axis1) =>
+      g && g.kind === 'group' ? g.items.flatMap((i) => ('items' in i ? [i.subgroup] : [])) : []
+    expect(subgroups(axis1)).toEqual(['所有权', '配置权'])
+    expect(subgroups(axis2)).toEqual(['智能体', '协作'])
+  })
+
+  it('公域导航零英文标签（验收三条之零英文；「NCA」「TDCA」为令面指定栏名缩写，豁免）', () => {
     for (const label of PUBLIC_NAV_TEXT()) {
-      expect(label).not.toMatch(/[A-Za-z]/)
+      expect(label.replace(/NCA|TDCA/g, '')).not.toMatch(/[A-Za-z]/)
     }
   })
 
-  it('公域导航零智能体通道端点（AMEND-1 硬口径）', () => {
-    const all = APP_NAV.flatMap((e) => (e.kind === 'link' ? [{ to: e.to, label: e.label }] : e.items))
-    for (const item of all) {
+  it('公域导航零智能体通道 API 端点（AMEND-1 硬口径延续）：URL 不含 agent-channel；栏5 两项为页级入口（照令面）', () => {
+    for (const item of navAllItems(APP_NAV)) {
       expect(item.to).not.toContain('agent-channel')
-      expect(item.label).not.toContain('通道')
     }
+    const all = navAllItems(APP_NAV)
+    // 导航-甲 §一.5：自助登记／我的通道入栏5·智能体（页级，⛔ 非 API 端点）
+    expect(all.some((i) => i.to === '/channel/registry' && i.label === '自助登记')).toBe(true)
+    expect(all.some((i) => i.to === '/channel/my' && i.label === '我的通道')).toBe(true)
   })
 
-  it('公域导航零须登录操作栏目：作业／人机协作／确权中心总览／运维端／形式化入站不在公域', () => {
+  it('同一对象全站一名（V-5）：「智能体集群」「智能体区」不再并列；智能体仅「介绍」「能力与观测」两名', () => {
     const text = PUBLIC_NAV_TEXT().join('|')
-    for (const banned of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '授权登记', '规范与沙盒链', '运维端', '形式化入站']) {
-      expect(text).not.toContain(banned)
-    }
-    // 确权历史留公域（制度即公开）；登记两页导航入口留公域（查询公示面，操作面块三收口）
-    // 模拟锚依裁定落地件入公域（资源组，随块二落位）
-    expect(text).toContain('确权历史')
-    expect(text).toContain('模拟锚')
+    expect(text).not.toContain('智能体集群')
+    expect(text).not.toContain('智能体区')
+    const all = navAllItems(APP_NAV)
+    expect(all.some((i) => i.to === '/agents' && i.label === '能力与观测')).toBe(true)
+    expect(all.some((i) => i.to === '/agent-shelf' && i.label === '介绍')).toBe(true)
   })
 
-  it('资源组含机器可读规格入口（raw 直开 /api/v1/selfcheck/spec）', () => {
-    const res = APP_NAV.find((e) => e.kind === 'group' && e.group === '资源')
-    expect(res && res.kind === 'group' ? res.items.some((i) => i.raw && i.to === '/api/v1/selfcheck/spec') : false).toBe(true)
+  it('栏7「我的」含私域并入六项（L1SI176-NAV-A-001 §三.5：原私域组取消并入）', () => {
+    const mine = APP_NAV.find((e) => e.kind === 'group' && e.group === '我的')
+    expect(mine && mine.kind === 'group' ? mine.items.map((i) => ('to' in i ? i.to : '')) : []).toEqual([
+      '/me',
+      '/studio',
+      '/ops',
+      '/ops/me',
+      '/review',
+      '/me/appeal',
+    ])
+  })
+
+  it('NCA 与透明栏含机器可读规格入口（raw 直开 /api/v1/selfcheck/spec）', () => {
+    const res = APP_NAV.find((e) => e.kind === 'group' && e.group === 'NCA 与透明')
+    expect(res && res.kind === 'group' ? navAllItems([res]).some((i) => i.raw && i.to === '/api/v1/selfcheck/spec') : false).toBe(true)
   })
 })
 
@@ -142,11 +178,12 @@ describe('二期改版批2块一：帮助与联系薄占位', () => {
     expect(screen.getByTestId('page-shell').textContent).toContain('复用文档库')
   })
 
-  it('L1SI167-START-ENTRY-001-001：帮助组首项为新手指引（/start）', () => {
-    const helpGroup = APP_NAV.find((e) => e.kind === 'group' && e.group === '帮助与联系')
+  it('导航-甲 §一.8：学习与帮助栏首项为商学院（/academy），新手指引在栏内（顺序以令面为准）', () => {
+    const helpGroup = APP_NAV.find((e) => e.kind === 'group' && e.group === '学习与帮助')
     expect(helpGroup && helpGroup.kind === 'group' ? helpGroup.items[0] : undefined).toEqual({
-      to: '/start',
-      label: '新手指引',
+      to: '/academy',
+      label: '商学院',
     })
+    expect(helpGroup && helpGroup.kind === 'group' ? helpGroup.items.some((i) => 'to' in i && i.to === '/start') : false).toBe(true)
   })
 })

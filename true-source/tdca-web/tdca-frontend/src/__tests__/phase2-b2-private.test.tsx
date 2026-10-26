@@ -128,9 +128,9 @@ describe('二期改版批2块四：运维分区（ops 管理员门＋评审页�
     expect(screen.getByTestId('review-enter')).toBeInTheDocument()
   })
 
-  it('评审页：⛔ 不入公共导航（运维分区独立入口）', async () => {
-    const { APP_NAV } = await import('@/app/app-shell')
-    const all = APP_NAV.flatMap((e) => (e.kind === 'link' ? [{ to: e.to }] : e.items))
-    expect(all.some((i) => i.to === '/review')).toBe(false)
+  it('评审页：依导航-甲令面列入栏7「我的」（缔约评审显性可达；鉴权自守）', async () => {
+    const { APP_NAV, navAllItems } = await import('@/app/app-shell')
+    const all = navAllItems(APP_NAV)
+    expect(all.some((i) => i.to === '/review' && i.label === '缔约评审')).toBe(true)
   })
 })

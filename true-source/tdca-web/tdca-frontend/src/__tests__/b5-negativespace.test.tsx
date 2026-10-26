@@ -39,7 +39,7 @@ describe('B5 项一 · 负空间栏（公域新增）', () => {
     expect(body).not.toMatch(/ghp_[A-Za-z0-9]|PRIVATE KEY|AKID[A-Za-z0-9]/)
   })
 
-  it('公共导航「制度与透明」组含负空间入口', () => {
+  it('公共导航「了解 TDCA」栏含负空间入口', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />

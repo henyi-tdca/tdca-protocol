@@ -62,17 +62,17 @@ beforeEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe('批3 C块：导航露出私域入口（我的／运维）', () => {
-  it('APP_NAV 含「私域」组：/me 与 /ops 两项', async () => {
-    const { APP_NAV } = await import('@/app/app-shell')
-    const priv = APP_NAV.find((e) => e.kind === 'group' && e.group === '私域')
-    expect(priv).toBeDefined()
-    if (priv?.kind === 'group') {
-      expect(priv.items.map((i) => i.to)).toEqual(['/me', '/ops'])
-    }
-    // 评审页仍不入公共导航（运维分区作业页照旧）
-    const all = APP_NAV.flatMap((e) => (e.kind === 'link' ? [{ to: e.to }] : e.items))
-    expect(all.some((i) => i.to === '/review')).toBe(false)
+describe('批3 C块 → 导航-甲：私域入口并入伍栏「我的」', () => {
+  it('APP_NAV 栏7「我的」含 /me 与 /ops（独立入口可见，安全靠鉴权不靠藏）', async () => {
+    const { APP_NAV, navAllItems } = await import('@/app/app-shell')
+    const mine = APP_NAV.find((e) => e.kind === 'group' && e.group === '我的')
+    expect(mine).toBeDefined()
+    const tos = mine?.kind === 'group' ? mine.items.map((i) => ('to' in i ? i.to : '')) : []
+    expect(tos).toContain('/me')
+    expect(tos).toContain('/ops')
+    // 缔约评审 /review 依导航-甲令面（L1SI176-NAV-A-001 §一.7）显性列入栏7；鉴权自守，⛔ 本令不改其页
+    const all = navAllItems(APP_NAV)
+    expect(all.some((i) => i.to === '/review')).toBe(true)
   })
 })
 
