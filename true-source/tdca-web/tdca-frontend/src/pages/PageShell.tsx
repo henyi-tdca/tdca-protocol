@@ -29,7 +29,7 @@ export function PageShell({ title, dataSource, permission, description, children
       <div className="mb-4 flex flex-wrap gap-2 text-[11px]">
         <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">数据源：{dataSource}</span>
         <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-600">权限：{permission}</span>
-        <span className="rounded bg-purple-50 px-2 py-0.5 text-purple-600">F0 框架壳占位（F1~F5 填充）</span>
+        <span className="rounded bg-purple-50 px-2 py-0.5 text-purple-600">本页部分内容还在完善中</span>
       </div>
       {children ?? (
         <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-400">

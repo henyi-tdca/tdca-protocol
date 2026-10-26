@@ -173,7 +173,7 @@ describe('B26 演练区：流水表八字段全值＋筛选＋导出复制', () 
     expect(copied).toContain('SIM-FLOW-0001')
     expect(copied.split('\n')).toHaveLength(3)
     expect(screen.getByTestId('lab-export-note').textContent).toContain('已复制 3 行流水')
-    expect(screen.getByTestId('lab-export-note').textContent).toContain('⛔ 触发文件下载')
+    expect(screen.getByTestId('lab-export-note').textContent).toContain('不触发文件下载')
   })
 })
 
