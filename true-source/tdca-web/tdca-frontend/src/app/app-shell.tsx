@@ -284,6 +284,8 @@ function ShellInner() {
   // 二期改版批1：小屏左右栏折叠开关（宽屏恒显）
   const [showLeft, setShowLeft] = useState(false)
   const [showRight, setShowRight] = useState(false)
+  // 导航-甲补正令（NAV-B1-001 §1.5）折叠态：首屏默认只展开第一栏「了解 TDCA」，其余八栏收起
+  const [expandedCols, setExpandedCols] = useState<Set<string>>(() => new Set(['了解 TDCA']))
   useEffect(() => {
     function onExpired(ev: Event) {
       setSessionExpiredFrom((ev as CustomEvent<{ from?: string }>).detail?.from ?? null)
@@ -357,37 +359,73 @@ function ShellInner() {
             <NotifierBar />
           </div>
         </div>
-        <nav data-testid="app-nav" className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-4 pb-2">
+        {/*
+          导航-甲补正令（L1SI176-NAV-B1-001）视觉编码六条：
+          ① 栏与栏分行（栏块 w-full 纵排，任两栏 top 必不等）
+          ② 三层间距严格递增：项 gap-x-2(8px) ＜ 子组 mb-6(24px) ＜ 栏 pb-8(32px)
+          ③ 三层左边界两两不等：栏名 0 ／ 子组标题 pl-3(12px) ／ 项 pl-6(24px)
+          ④ 子组可见边界：border-l-2 border-gray-200（全站统一这一种）
+          ⑤ 折叠式：栏名 <button aria-expanded>，首屏只展开第一栏（了解 TDCA），收起用 hidden（项留 DOM，测试 textContent 与直链可达不受影响）
+        */}
+        <nav data-testid="app-nav" className="mx-auto flex max-w-6xl flex-col px-4 pb-2">
           {APP_NAV.map((entry) =>
             entry.kind === 'link' ? (
-              <NavLink
-                key={entry.to}
-                to={entry.to}
-                end={entry.to === '/'}
-                className={({ isActive }) =>
-                  `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
-                }
-              >
-                {entry.label}
-              </NavLink>
+              <div key={entry.to} className="w-full pb-8">
+                <NavLink
+                  to={entry.to}
+                  end={entry.to === '/'}
+                  className={({ isActive }) =>
+                    `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
+                  }
+                >
+                  {entry.label}
+                </NavLink>
+              </div>
             ) : (
-              <span key={entry.group} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span className="text-[10px] font-medium tracking-wide text-gray-400">{entry.group}</span>
-                {entry.items.map((content) =>
-                  'subgroup' in content ? (
-                    <span key={content.subgroup} className="flex flex-wrap items-center gap-x-2 gap-y-1" data-subgroup={content.subgroup}>
-                      <span className="text-[10px] font-medium tracking-wide text-slate-500">· {content.subgroup}</span>
-                      {content.items
-                        .filter((item) => !item.authOnly || isAuthenticated)
-                        .map((item) => (
-                          <NavItemLink key={item.to} item={item} />
-                        ))}
-                    </span>
-                  ) : !content.authOnly || isAuthenticated ? (
-                    <NavItemLink key={content.to} item={content} />
-                  ) : null,
-                )}
-              </span>
+              <div key={entry.group} className="w-full pb-8" data-testid={`nav-col-${entry.group}`}>
+                <button
+                  type="button"
+                  aria-expanded={expandedCols.has(entry.group)}
+                  data-testid={`nav-col-btn-${entry.group}`}
+                  onClick={() =>
+                    setExpandedCols((prev) => {
+                      const next = new Set(prev)
+                      if (next.has(entry.group)) {
+                        next.delete(entry.group)
+                      } else {
+                        next.add(entry.group)
+                      }
+                      return next
+                    })
+                  }
+                  // bg-transparent 等覆盖全局兜底 button 蓝条（VISUAL-002 base 层），栏名保持灰色小标签形态
+                  className="block w-full rounded-none border-0 bg-transparent px-0 py-0 text-left text-[10px] font-medium tracking-wide text-gray-400 hover:text-slate-600"
+                >
+                  {entry.group}
+                </button>
+                <div className={expandedCols.has(entry.group) ? 'pt-1' : 'hidden'}>
+                  {entry.items.map((content) =>
+                    'subgroup' in content ? (
+                      <div key={content.subgroup} className="mb-6" data-subgroup={content.subgroup}>
+                        <div className="ml-3 text-[10px] font-medium tracking-wide text-slate-500">{content.subgroup}</div>
+                        <div className="ml-6 border-l-2 border-gray-200">
+                          <div className="flex flex-wrap gap-x-2 gap-y-1 pl-2 pt-1">
+                            {content.items
+                              .filter((item) => !item.authOnly || isAuthenticated)
+                              .map((item) => (
+                                <NavItemLink key={item.to} item={item} />
+                              ))}
+                          </div>
+                        </div>
+                      </div>
+                    ) : !content.authOnly || isAuthenticated ? (
+                      <div key={content.to} className="ml-6 flex flex-wrap gap-x-2 gap-y-1 pt-1">
+                        <NavItemLink item={content} />
+                      </div>
+                    ) : null,
+                  )}
+                </div>
+              </div>
             ),
           )}
         </nav>
