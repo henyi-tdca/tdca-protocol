@@ -188,6 +188,11 @@ app.include_router(public_docs_router)
 from public_docs_ops import alias_router as public_docs_alias_router  # noqa: E402
 app.include_router(public_docs_alias_router)
 
+# A-29: 批3「门与闸」A块·缔约审核（L1SI176-B3-GATE-001——/api/site/join/list 评审只读队列；
+# 审核身份双通道 fail-closed；⛔ 不返回凭据值；前端契约冻结照 /review 页现状）
+from join_ops import router as join_ops_router  # noqa: E402
+app.include_router(join_ops_router)
+
 # A-28: 存证公开自查入口 M1″（/api/v1/selfcheck/*——只读匿名白名单十字段；rec_hash 可真验；
 # 031 令：⛔ 不含部署、⛔ 不出 actor 原值、⛔ 不做列表接口防枚举、限流 60/分/IP）
 from selfcheck_ops import router as selfcheck_ops_router  # noqa: E402
