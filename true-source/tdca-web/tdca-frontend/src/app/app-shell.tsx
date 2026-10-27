@@ -399,7 +399,8 @@ function ShellInner() {
                     })
                   }
                   // bg-transparent 等覆盖全局兜底 button 蓝条（VISUAL-002 base 层），栏名保持灰色小标签形态
-                  className="block w-full rounded-none border-0 bg-transparent px-0 py-0 text-left text-[10px] font-medium tracking-wide text-gray-400 hover:text-slate-600"
+                  // 悬停态同须覆盖：base 层 button:hover:bg-blue-700 未压时悬停出整幅蓝条（NAV-B1 部署复核自纠）
+                  className="block w-full rounded-none border-0 bg-transparent px-0 py-0 text-left text-[10px] font-medium tracking-wide text-gray-400 hover:bg-transparent hover:text-slate-600"
                 >
                   {entry.group}
                 </button>
