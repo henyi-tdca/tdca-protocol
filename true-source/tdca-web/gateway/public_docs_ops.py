@@ -44,13 +44,13 @@ _FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列
 _FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library"}
 _PUBLIC_DOCS = {
     "regulation": (
-    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md",
-    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md",
-    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml",
-    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md",
-    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md",
-    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml",
-    "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md",
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md",
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V1.0-FROZEN）.md",
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V1.0-FROZEN）.yaml",
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V1.0-FROZEN）.md",
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V1.0-FROZEN）.md",
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V1.0-FROZEN）.yaml",
+    "TDCA-PUB-CORPUS-059-场景线相遇专章对外版单独件（V1.0已生效·十七条·供站上替换旧草案版）.md",
     "TDCA-PUB-CORPUS-017-可信协作宪法（对外可读版·V0.1草案候选·十条与序言四支柱）.md",
     "TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md",
     "TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml",
@@ -194,24 +194,25 @@ _PUBLIC_FAMILY = {n: fam for fam, names in _PUBLIC_DOCS.items() for n in names}
 
 # L1SI154-011 段C：清单显示名映射（⛔ 只改显示名，路径与 slug 一字不改，防断链）。
 # 背景：008 段A 只换了六件内容、件名未变，文件名里的 V0.1-DRAFT 与内容面貌（V1.0-FROZEN已生效）
-# 不符；相遇专章已签批生效（V1.0已生效）：白名单只列生效件，旧名留显示名映射作别名。
+# 不符；相遇专章按 L1SI176 REPO-MAIN-SETTLE-001 §三取甲更正：对外通用件 CORPUS-059 真名在册，
+# 条例本体（STD-SCENE-ENCOUNTER-001）留 docs/regulations/ 但⛔不入白名单——内部条例号自己用，名字不互借。
 # 键必须是 _PUBLIC_SET 内的在册件名；未映射件显示名=文件名（默认行为不变）。
 _DISPLAY_NAME = {
-    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md":
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md":
         "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版·V1.0-FROZEN已生效）.md",
-    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md":
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V1.0-FROZEN）.md":
         "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版·V1.0-FROZEN已生效）.md",
-    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml":
+    "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V1.0-FROZEN）.yaml":
         "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版·V1.0-FROZEN已生效）.yaml",
-    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V0.1-DRAFT）.md":
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版V1.0-FROZEN）.md":
         "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（中文人读版·V1.0-FROZEN已生效）.md",
-    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V0.1-DRAFT）.md":
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版V1.0-FROZEN）.md":
         "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（英文人读版·V1.0-FROZEN已生效）.md",
-    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V0.1-DRAFT）.yaml":
+    "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版V1.0-FROZEN）.yaml":
         "TDCA-SPEC-REGISTER-OF-RIGHTS-001-TDCA注册登记制度（机读版·V1.0-FROZEN已生效）.yaml",
-    # 相遇专章：旧名已全库归一，显示名＝在册件名（自映射占位，保持映射表 1 条）
-    "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md":
-        "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（人读版·V1.0已生效）.md",
+    # 相遇专章取甲：键＝在册件名 CORPUS-059 真名（自映射占位，口径见文件头注）
+    "TDCA-PUB-CORPUS-059-场景线相遇专章对外版单独件（V1.0已生效·十七条·供站上替换旧草案版）.md":
+        "TDCA-PUB-CORPUS-059-场景线相遇专章对外版单独件（V1.0已生效·十七条·供站上替换旧草案版）.md",
     # L1SI154-081：去内部批次字样（卷二纯版第N批…），显示名规则＝制度名（形态·版本）；slug/路径不动
     "TDCA-PUB-CORPUS-029-卷二纯版第二批清理版重出-身份可信等级认定条例对外版（仅去符号·语义同028·六检通过）.md":
         "TDCA-PUB-CORPUS-029-身份可信等级认定条例对外版（V1.0已生效）.md",
