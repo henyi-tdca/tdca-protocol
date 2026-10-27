@@ -349,7 +349,9 @@ function ShellInner() {
           <SimulatedBadge nature="simulated" label="全站模拟态 data_nature=simulated (ID92)" />
         </div>
       </div>
-      <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
+      {/* 页头吸顶范围修正（创始人 2026-10-27「重新做」指示）：只吸顶部工具条（HUF 常驻保住），
+          九栏导航随页滚走——原整页头吸顶时页头高达 ~740px，矮视口滚动后内容被全部盖住（现网实测 1440×860 下内容可视仅 121px）。 */}
+      <div className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2">
           <HufBanner />
           <div className="flex flex-wrap items-center gap-2">
@@ -359,6 +361,8 @@ function ShellInner() {
             <NotifierBar />
           </div>
         </div>
+      </div>
+      <header className="border-b border-gray-200">
         {/*
           导航-甲补正令（L1SI176-NAV-B1-001）视觉编码六条：
           ① 栏与栏分行（栏块 w-full 纵排，任两栏 top 必不等）
