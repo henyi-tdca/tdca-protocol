@@ -1,0 +1,198 @@
+# TDCA-SPEC-REGISTER-OF-RIGHTS-001 · 对外机读版（V1.0-FROZEN）
+# 人读版为语义权威；冲突时以人读版为准，机读版不得反向改语义
+# 已生效：2026-10-03（范围期一内部运行；对外上线另须明示）
+spec_id: TDCA-SPEC-REGISTER-OF-RIGHTS-001
+version: V1.0-FROZEN
+status: FROZEN
+effective_from: '2026-10-03'
+draft_basis: 本规范制定依据之一 及 AMEND-001 至 012（权属登记与授权登记二分及历次追加口径）
+draft_source: 创始人 2026-10-03 逐字口径汇集（中文人读版附一 · 八条）
+authority:
+  human_readable_zh: TDCA-PUB-CORPUS-065-注册登记制度对外版（中文·V1.0-FROZEN已生效·零内部编号）.md
+  human_readable_en: TDCA-PUB-CORPUS-066-RegisterOfRights-Spec-EN（V1.0-FROZEN已生效·零内部编号）.md
+  machine_readable: 本件
+  conflict_rule: 人读版为语义权威；机读版不得反向改语义
+locale:
+  zh: present
+  en: present
+  machine: present
+chapter1_general:
+- id: A1
+  article: 1
+  title: 目的
+  text: 规范 TDCA 生态内登记活动，使权属与授权各得其序、可核可查，并使配置（调用）恒有凭据
+- id: A2
+  article: 2
+  title: 适用范围
+  text: 适用于 TDCA 生态内一切资产之登记与其配置准入活动
+- id: A3
+  article: 3
+  title: 依据
+  refs:
+  - 元函数—解释项关系调和规范（配置权 ＝ 元函数与解释项之关系）
+  - 最小配置单元 ＝ 场景 · 内部要素不直接参与配置
+  - 五阶广义效用权利
+  - IP 版权资产评估管理办法（在册条例）
+  - 制度新基线三件
+- id: A4
+  article: 4
+  title: 基本原则
+  items:
+  - key: 合规前置
+    text: 先登记先授权后配置（不可倒序）
+  - key: 二元分列
+    text: 权属登记与授权登记两事两账
+  - key: 凭件配置
+    text: 配置恒须授权件（不论自有或他有）
+  - key: 例外不越柜
+    text: 沙盒与演练内例外；出盒即须授权
+chapter2_binary_registration:
+- id: A5
+  article: 5
+  title: 登记二分
+  map:
+    ownership:
+      governs: 确权（确认权利归属 · 这东西归谁）
+      layer: 所有权层
+      entry: 凡具表达形式皆可登记（宽）
+    authorization:
+      governs: 定权限与场景（谁能以何权限在何场景用）
+      layer: 配置权层
+      entry: 三要件齐备（严 · 见第十一条）
+- id: A6
+  article: 6
+  title: 次序
+  text: 先确权，再授权（须件），方可配置；任一环缺失即不得配置
+chapter3_ownership_registration:
+- id: A7
+  article: 7
+  title: 入口判据
+  text: 凡具表达形式者皆可登记
+- id: A8
+  article: 8
+  title: 法域归口
+  map:
+    表达形式: 著作权
+    发明: 专利法
+    数字结构化: 数据法
+    标识: 商标法
+  note: 与在册 IP 版权资产评估管理办法第二条同构
+- id: A9
+  article: 9
+  title: 与评估之别
+  text: 权属登记属辨明（定性定位）；可评估之标的属估量
+  note: 两者层次不同，不得混用
+chapter4_authorization_registration:
+- id: A10
+  article: 10
+  title: 内容
+  text: 确定权限与场景（谁、以何权限、在何场景使用）
+- id: A11
+  article: 11
+  title: 成立三要件
+  items:
+  - 场景约束_必须
+  - 五阶资产之形态
+  - 所有构成已授权
+  note: 缺一即不予登记（fail-closed）
+- id: A12
+  article: 12
+  title: 授权件
+  items:
+  - 统一都是授权件（不分自授权件与他授权件）
+  - 格式一样（有固定格式）
+  - 特别条款与自定义条款都用智能合约约定
+- id: A13
+  article: 13
+  title: 自有亦须件
+  text: 不论产权自有或他有，授权登记必须有授权件；无件不得配置
+  note: 「是我的」不等于「可配置」
+chapter5_configuration_admission:
+- id: A14
+  article: 14
+  title: 解释项与授权件
+  text: 元函数之解释项皆由授权登记件构成；无授权登记件即不可调用、不可配置
+- id: A15
+  article: 15
+  title: 例外
+  items:
+  - 沙盒内例外（免件）
+  - 演练例外（免件）
+  - 出盒必须取得授权；出盒后之配置回常轨（须件）
+- id: A16
+  article: 16
+  title: 配置之凭据
+  text: 配置之凭据 ＝ 授权登记件（配置权＝元函数与解释项之关系之落凭）
+chapter6_registration_review:
+- id: A17
+  article: 17
+  title: 元函数登记时之审查
+  text: 元函数登记时，其解释项之权属与授权等级须经合规审查；审查通过方准登记
+- id: A18
+  article: 18
+  title: 效果
+  text: 以登记环节之合规审查取代事后清点；不需另立解释项清单
+chapter7_responsibility:
+- id: A19
+  article: 19
+  title: 无授权配置之属性
+  text: 无授权而配置 ＝ 侵权
+- id: A20
+  article: 20
+  title: 合规前置之效果
+  text: 因合规前置，侵权不预期发生（除非系统出问题）
+  note: 系统异常归异常处置线；侵权之法律属性与判定不在本制度解释范围
+chapter8_misc:
+- id: A21
+  article: 21
+  title: 语言与版本
+  text: 须人机双版本（中／英人读 ＋ 机读），同版本号，人读版为语义权威
+- id: A22
+  article: 22
+  title: 程序
+  text: 依在册制度转正四步程序；涉硬约束者不得以草案即生效
+- id: A23
+  article: 23
+  title: 修订
+  text: 修订走追加件（不回改）；涉红线与不代定清单者须最高权力明示
+- id: A24
+  article: 24
+  title: 生效
+  text: 自创始人签批之日起生效；生效范围与批次待创始人明示
+chapter9_interfaces:
+- id: 1
+  instrument: TDCA-SPEC-CONFIGMARKET-001（配置权市场规范 V1.0-FROZEN）
+  point: 市场侧权属登记与授权登记之运行细则以该件为准；本制度定登记制之权属与授权二分及准入要件
+- id: 2
+  instrument: TDCA-TEMPLATE-AUTH-001（授权件模板 V1.0-FROZEN）
+  point: 固定格式之具体八字段以该件为准；本制度第十二条仅定「统一固定格式」之义
+- id: 3
+  instrument: TDCA-REGISTER-CONTRACT-001（缔约注册协议三件套）
+  point: 准入之根；缔约与登记之先后以在册为准
+- id: 4
+  instrument: TDCA-STD-METAFUNC-ACCORD-001（关系面）
+  point: 元函数与解释项之关系面以该件为准；本制度第十四条为其落凭口径
+- id: 5
+  instrument: 本规范制定依据之一 及 AMEND-001 至 012
+  point: 本制度条文之口径来源；追加制且不回改历次件
+source_positions:
+  count: 8
+  location: 中文人读版附一（创始人 2026-10-03 逐字摘录）
+  policy: 逐字以人读版为准；机读版不另立新语义
+pending_founder:
+- 授权件固定格式之具体字段（本侧可先出草案）
+- 智能合约承载特别与自定义条款之接口形态（本侧可先出草案）
+- 合规审查之门槛与授权等级分档（制度层 · 须创始人明示）
+- 一期权属登记之入口表单字段（本侧可先出草案）
+- 本制度之签批与生效批次
+validation:
+  human_readable_precedence: 冲突以人读版为准
+  machine_may_not_reverse_change_semantics: true
+  tri_version_same_number: true
+  no_new_institutional_semantics: true
+  math_content: 无（本制度不涉公式）
+boundaries:
+  external_effect: none
+  credentials_in_spec: forbidden
+  personal_names_in_spec: forbidden
+  amendment_rule: 追加制；改动一律走 PR
