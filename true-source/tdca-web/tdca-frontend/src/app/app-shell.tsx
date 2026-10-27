@@ -286,6 +286,9 @@ function ShellInner() {
   const [showRight, setShowRight] = useState(false)
   // 导航-甲补正令（NAV-B1-001 §1.5）折叠态：首屏默认只展开第一栏「了解 TDCA」，其余八栏收起
   const [expandedCols, setExpandedCols] = useState<Set<string>>(() => new Set(['了解 TDCA']))
+  // 移动端（<768px）站点导航：默认收成一行「☰ 站点导航」toggle，点开为全展开面板——
+  // 形态经创始人 2026-10-27 手机端静态点样亲验点头（行）后施工；桌面端（md+）维持原九栏折叠形态不动
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   useEffect(() => {
     function onExpired(ev: Event) {
       setSessionExpiredFrom((ev as CustomEvent<{ from?: string }>).detail?.from ?? null)
@@ -306,6 +309,10 @@ function ShellInner() {
     // 路由切换时复核：已有会话则收起提示条
     if (authRequired && sessionToken()) setAuthRequired(false)
   }, [location.pathname, authRequired])
+  // 移动端导航面板：路由跳转后自动收起（点样形态：面板只用于选路，选完即收）
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [location.pathname])
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 font-sans">
       {authRequired && !sessionToken() && (
@@ -371,7 +378,68 @@ function ShellInner() {
           ④ 子组可见边界：border-l-2 border-gray-200（全站统一这一种）
           ⑤ 折叠式：栏名 <button aria-expanded>，首屏只展开第一栏（了解 TDCA），收起用 hidden（项留 DOM，测试 textContent 与直链可达不受影响）
         */}
-        <nav data-testid="app-nav" className="mx-auto flex max-w-6xl flex-col px-4 pb-2">
+        <nav data-testid="app-nav" className="mx-auto max-w-6xl px-4 pb-2">
+          {/*
+            移动端（<768px）站点导航（创始人 2026-10-27 静态点样亲验点头后施工）：
+            九栏收成一行「☰ 站点导航」toggle（默认收起，正文第一眼完整可见）；
+            点开为全展开面板（原导航全项一字未减，authOnly 过滤口径与桌面一致）；
+            路由跳转后自动收起。桌面端 md+ 走下方原九栏折叠形态，一行未动。
+          */}
+          <button
+            type="button"
+            data-testid="nav-mobile-toggle"
+            aria-expanded={mobileNavOpen}
+            onClick={() => setMobileNavOpen((v) => !v)}
+            // bg-transparent 等覆盖全局兜底 button 蓝条（VISUAL-002 base 层），同桌面栏名按钮口径
+            className="flex w-full items-center justify-between border-0 bg-transparent px-0 py-2.5 text-left text-[13px] font-semibold text-slate-900 hover:bg-transparent md:hidden"
+          >
+            <span>☰ 站点导航</span>
+            <span aria-hidden="true" className="text-gray-500">{mobileNavOpen ? '▴' : '▾'}</span>
+          </button>
+          <div className={mobileNavOpen ? 'pb-2 md:hidden' : 'hidden'}>
+            {APP_NAV.map((entry) =>
+              entry.kind === 'link' ? (
+                <div key={entry.to} className="pt-1">
+                  <NavLink
+                    to={entry.to}
+                    end={entry.to === '/'}
+                    className={({ isActive }) =>
+                      `text-[13px] font-semibold ${isActive ? 'text-slate-900 underline underline-offset-4' : 'text-slate-700 hover:text-slate-900'}`
+                    }
+                  >
+                    {entry.label}
+                  </NavLink>
+                </div>
+              ) : (
+                <div key={entry.group} className="pt-2">
+                  <div className="text-[11px] font-semibold tracking-wide text-gray-400">{entry.group}</div>
+                  <div className="pl-2 pt-1">
+                    {entry.items.map((content) =>
+                      'subgroup' in content ? (
+                        <div key={content.subgroup} className="pb-2" data-subgroup={content.subgroup}>
+                          <div className="text-[11px] text-gray-500">{content.subgroup}</div>
+                          <div className="ml-1 border-l-2 border-gray-200 pl-2">
+                            <div className="flex flex-wrap gap-x-2.5 gap-y-1.5 pt-0.5">
+                              {content.items
+                                .filter((item) => !item.authOnly || isAuthenticated)
+                                .map((item) => (
+                                  <NavItemLink key={item.to} item={item} />
+                                ))}
+                            </div>
+                          </div>
+                        </div>
+                      ) : !content.authOnly || isAuthenticated ? (
+                        <div key={content.to} className="flex flex-wrap gap-x-2.5 gap-y-1.5 pb-2">
+                          <NavItemLink item={content} />
+                        </div>
+                      ) : null,
+                    )}
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
+          <div className="hidden flex-col md:flex">
           {APP_NAV.map((entry) =>
             entry.kind === 'link' ? (
               <div key={entry.to} className="w-full pb-8">
@@ -433,6 +501,7 @@ function ShellInner() {
               </div>
             ),
           )}
+          </div>
         </nav>
       </header>
       <div className="mx-auto mt-3 w-full max-w-7xl px-4">
