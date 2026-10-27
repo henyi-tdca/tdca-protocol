@@ -52,3 +52,8 @@ export function useAuth(): AuthState {
   if (!ctx) throw new Error('useAuth 必须在 AuthProvider 内使用')
   return ctx
 }
+
+/** 可选登录态：Provider 外（如测试直渲单组件）返回 null 不抛错；调用方自行给默认口径 */
+export function useAuthOptional(): AuthState | null {
+  return useContext(AuthContext)
+}

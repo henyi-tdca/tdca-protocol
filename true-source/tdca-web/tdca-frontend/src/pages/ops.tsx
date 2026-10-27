@@ -77,6 +77,7 @@ export function OpsPage() {
     <PageShell
       title="站点运维端（P7）"
       dataSource="A-18 /api/v1/ops/*（红线八项分类器；NCA 存证＋reconcile 对账）"
+      dataSourceAnon="运维内部数据 · 匿名不公开"
       permission="登录 DID（操作须 operator；管理面内容须管理员身份登录后可见）"
       description="应用测试期运维工作台：反馈→红线分类→提案→沙盒→上线；触碰根本制度即升 DCD，运维端无权处置。">
       <p className="text-xs">
