@@ -1,0 +1,46 @@
+data_nature: synthetic
+source: 编译产物 · 由本侧编译器编译 · 生成日期 2026-08-27
+
+branch: 中国成语·修身与治理·第53条(三思而行)
+stratum: 中国成语·修身与治理
+soul:
+  identity: 中国成语·第53条《三思而行》
+  core: 行事前三度审思，是审慎决策；但以'再思'为度——过度思虑(三思)反致犹豫误机(孔子改评'再斯可矣')。须审而后行，亦防思而不决。负空间：过度审慎=分析瘫痪。
+  verse: 季文子三思而后行，子闻之曰再斯可矣；思贵当，不在频。
+  origin: 《论语·公冶长》：季文子三思而后行，子闻之曰'再，斯可矣。' 言思贵当不宜过。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 修身与治理
+primitives:
+- name: sansi_erxing
+  method: 三思而行
+  signature: fn sansi_erxing(deliberate) -> prudent_action
+  precond: 轻率则殆
+  postcond: 审而后行，不误
+  negative_space: ⊗ 过思则滞
+  steps:
+  - 审势
+  - 校风险
+  - 衡利弊
+  - 乃行
+  nca_emit: true
+dispatch:
+  main_pipeline: sansi_erxing
+  trigger: 季文子三思而后行，子闻之曰再斯可矣；思贵当，不在频。
+  when: 当宜审慎决策、忌轻率时触发
+  graph:
+  - from: sansi_erxing
+    to: []
+decision:
+- if: 需审慎研判
+  call: sansi_erxing
+skills:
+- 三思而行·思维研判
+negative_space:
+- 轻率则殆
+- 过思则分析瘫痪
+- '⊗ 本章协议须以 生态准入基协议 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1

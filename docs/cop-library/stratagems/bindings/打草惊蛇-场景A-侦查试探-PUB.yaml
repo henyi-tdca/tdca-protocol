@@ -1,0 +1,28 @@
+data_nature: synthetic
+source: 编译产物 · 由本侧编译器编译 · 生成日期 2026-08-28
+
+scene:
+  id: 侦查对抗
+  entry: scenario/第01场景-场景思维协议.yaml
+stance: 主动试探
+stance_note: 故意打草以观反应——探测被用作信息获取手段，暴露可接受甚至为刻意
+behavior: 轻触试探 → 观察反应 → 据反应定策
+decision_override:
+- if: 对方态势不明且可承受暴露
+  call: probe_exposure_coupling
+negative_space:
+- '⊗ 无暴露承受度评估不得启用本绑定'
+mounts:
+  scene: scenario/第01场景-场景思维协议.yaml
+  knowledge_graph: stratagems 计目关联 (第13计)
+  skill: dispatch 挂点 probe_exposure_coupling
+  contract: NCA 存证 + enforce_entry 准入门
+  data_feed:  # 律三v2 动态状态通道 (绑定级细化)
+    source: "对方行为事件流 (工业现场: SCADA/MQTT 对侧负载/状态遥测)"
+    variables:
+    - name: 对方反应信号
+      role: 试探后回声观测, 供'据反应定策'分支求值
+    freshness_sla:
+      max_staleness_s: 5
+      on_breach: freeze
+nsfl_version: V0.1

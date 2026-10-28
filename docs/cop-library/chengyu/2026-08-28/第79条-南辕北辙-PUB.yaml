@@ -1,0 +1,46 @@
+data_nature: synthetic
+source: 编译产物 · 由本侧编译器编译 · 生成日期 2026-08-28
+
+branch: 中国成语·认知与辩证·第79条(南辕北辙)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第79条《南辕北辙》
+  core: 方向错误的系统里，资源/能力/效率的每一项优势都在放大偏离；先校准方向再优化速度——劣化方向的优化是负资产，速度为方向服务。
+  verse: 吾马良、用多、御者善——然此数者愈善，而离楚愈远。
+  origin: 《战国策·魏策四》：季梁谏魏王，言其欲伐邯郸而南行反北之驾者：'马虽良，此非楚之路也'；欲攻邯郸，犹往楚而北行。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+primitives:
+- name: nanyuan_beizhe
+  method: 南辕北辙
+  signature: fn nanyuan_beizhe(warn) -> direction_first
+  precond: 方向存疑而提速
+  postcond: 校向，优速乃正
+  negative_space: ⊗ 良马北行则愈远
+  steps:
+  - 定真北
+  - 校罗盘
+  - 验位移
+  - 再提速
+  nca_emit: true
+dispatch:
+  main_pipeline: nanyuan_beizhe
+  trigger: 吾马良、用多、御者善——然此数者愈善，而离楚愈远。
+  when: 当资源投入与效率优化持续加码而目标达成率不升时触发(作警示)
+  graph:
+  - from: nanyuan_beizhe
+    to: []
+decision:
+- if: 需方向先于速度
+  call: nanyuan_beizhe
+skills:
+- 南辕北辙·思维研判
+negative_space:
+- 以速度代方向则愈远
+- 频繁改向则内耗
+- '⊗ 本章协议须以 生态准入基协议 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
