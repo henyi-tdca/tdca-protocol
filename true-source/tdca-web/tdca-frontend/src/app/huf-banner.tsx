@@ -20,7 +20,7 @@ export function HufBanner({ actionLabel = '制度级操作（治理/创建/签�
   return (
     <div data-testid="huf-banner" className="flex items-center justify-between gap-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5">
       <span className="text-xs font-medium text-amber-800">
-        HUF 人类最终签批权（F-4）：AI 无权替代 · {actionLabel}
+        HUF 人类最终签批权：AI 无权替代 · {actionLabel}
       </span>
       <button
         data-testid="huf-banner-open"
@@ -34,7 +34,7 @@ export function HufBanner({ actionLabel = '制度级操作（治理/创建/签�
         onOpenChange={setOpen}
         onConfirm={() => setSigned(true)}
         title="HUF 人类最终签批"
-        description={`确认签批「${actionLabel}」？AI 无权替代人类最终签批权（F-4/HUF）；签批将生成 NCA 存证。`}
+        description={`确认签批「${actionLabel}」？AI 无权替代人类最终签批权（HUF）；签批将生成 NCA 存证。`}
       />
     </div>
   )

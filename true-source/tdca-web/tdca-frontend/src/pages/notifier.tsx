@@ -236,7 +236,7 @@ export function NotifierPage() {
         onOpenChange={setFuseModal}
         onConfirm={() => setFused(true)}
         title="HUF 签批 · 负空间熔断介入"
-        description="紧急熔断（NSFL fail-closed）：人类触发，AI 无权解除（F-4/HUF）。"
+        description="紧急熔断（NSFL fail-closed）：人类触发，AI 无权解除（HUF）。"
       />
     </PageShell>
   )
