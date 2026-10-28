@@ -5,9 +5,96 @@
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
+
+// ---------------------------------------------------------------------------
+// L1SI177 批3 B块：公开货架呈现（照已过点样三卡三态；条目卡五项：
+// 名称／用途一句／数据性质／获取方式／状态徽标＋日期。只做呈现与状态位，
+// ⛔ 不做自助上架后台——上架由 operator 提交、创始人核）
+// ---------------------------------------------------------------------------
+type ToolStatus = 'ok' | 'dev' | 'off'
+type ToolNature = 'real' | 'simulated' | 'synthetic'
+const PUBLIC_TOOLS: { name: string; use: string; nature: ToolNature; status: ToolStatus; getLabel: string; getHref: string; date: string }[] = [
+  {
+    name: '自助验链',
+    use: '输入件名与哈希，自助核验公开件在册状态与链上留痕。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '打开工具',
+    getHref: '/verify',
+    date: '更新 2026-10-28',
+  },
+  {
+    name: '全站检索',
+    use: '四族＋术语＋栏目页的一框检索；静态索引先行，结果带数据性质。',
+    nature: 'simulated',
+    status: 'dev',
+    getLabel: '上线后可用',
+    getHref: '',
+    date: '更新 2026-10-27',
+  },
+  {
+    name: '旧版演示脚本',
+    use: '批 2.6 演示区旧脚本，已由新演示页替代，停止提供。',
+    nature: 'synthetic',
+    status: 'off',
+    getLabel: '暂不可用',
+    getHref: '',
+    date: '下架 2026-10-20',
+  },
+]
+const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
+  ok: { label: '可用', badge: 'bg-emerald-600 text-white' },
+  dev: { label: '在建', badge: 'bg-amber-600 text-white' },
+  off: { label: '下架', badge: 'bg-gray-400 text-white' },
+}
+const TOOL_NATURE: Record<ToolNature, { label: string; badge: string }> = {
+  real: { label: '真实', badge: 'bg-emerald-100 text-emerald-700' },
+  simulated: { label: '模拟', badge: 'bg-amber-100 text-amber-700' },
+  synthetic: { label: '合成', badge: 'bg-slate-200 text-slate-600' },
+}
+
+/** 公开货架三卡（点样形态；窄屏自动单列，卡内不折行霸屏） */
+function PublicToolCards() {
+  return (
+    <section data-testid="toolshelf-cards" aria-label="公开货架">
+      <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+        {PUBLIC_TOOLS.map((t) => {
+          const st = TOOL_STATUS[t.status]
+          const na = TOOL_NATURE[t.nature]
+          return (
+            <div
+              key={t.name}
+              data-testid={`tool-card-${t.status}`}
+              className={`rounded-xl border border-gray-200 bg-white p-4 ${t.status === 'off' ? 'opacity-60' : ''}`}
+            >
+              <h3 className="text-sm font-semibold text-gray-900">{t.name}</h3>
+              <p className="mt-1 min-h-[34px] text-xs leading-relaxed text-gray-600">{t.use}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className={`rounded px-1.5 py-px font-medium ${na.badge}`}>{na.label}</span>
+                <span className={`rounded px-1.5 py-px font-medium ${st.badge}`}>{st.label}</span>
+              </div>
+              <div className="mt-2 text-xs">
+                {t.getHref ? (
+                  <Link to={t.getHref} className="rounded-md border border-blue-700 px-2.5 py-0.5 text-blue-700 hover:bg-blue-50">
+                    {t.getLabel}
+                  </Link>
+                ) : (
+                  <span className="text-gray-400">{t.getLabel}</span>
+                )}
+              </div>
+              <p className="mt-2 text-[11px] text-gray-400">{t.date}</p>
+            </div>
+          )
+        })}
+      </div>
+      <p className="mt-2 text-[11px] text-gray-400">上架／下架由 operator 提交、创始人核；本区只做呈现与状态位。</p>
+    </section>
+  )
+}
 
 interface ToolView {
   tool_id: string
@@ -88,6 +175,7 @@ export function ToolshelfPage() {
       dataSource="A-15 /api/v1/toolshelf/*（工具/模板目录）"
       permission="登录 DID（上架须 operator）"
       description="站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。">
+      <PublicToolCards />
       <section data-testid="toolshelf-list">
         <h2>货架</h2>
         <SimulatedBadge nature="simulated" />

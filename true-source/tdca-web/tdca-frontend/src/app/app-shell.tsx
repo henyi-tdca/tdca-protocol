@@ -13,6 +13,7 @@ import { LayerIndicator, type LayerKey } from './layer-indicator'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 import { useAuth } from './auth-context'
 import { IntentBar } from './intent-bar'
+import { SearchBox } from './search-box'
 import { ProcessRail } from './process-rail'
 import { RightRail } from './right-rail'
 import { AUTH_REQUIRED_EVENT, SESSION_EXPIRED_EVENT, sessionToken } from '@/api/client'
@@ -363,6 +364,7 @@ function ShellInner() {
           <HufBanner />
           <div className="flex flex-wrap items-center gap-2">
             <IntentBar />
+            <SearchBox />
             <AuthStatus />
             <DidSwitcher />
             <NotifierBar />

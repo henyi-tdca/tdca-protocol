@@ -18,6 +18,9 @@ interface AnnouncementView {
   title: string
   body: string
   published_at: string
+  /** 批3 C块：已撤回灰态（含撤回时间）；未撤回为 null／缺省 */
+  withdrawn_at?: string | null
+  withdrawn_reason?: string | null
 }
 
 interface BoardData {
@@ -132,14 +135,43 @@ export function AnnouncementsPage() {
                 暂无公告。
               </p>
             ) : (
-              rows.map((a) => (
-                <article key={a.announcement_id}
-                         className="rounded-lg border border-gray-200 bg-white p-4">
-                  <h3 className="text-sm font-semibold text-gray-900">{a.title}</h3>
-                  <p className="mt-0.5 text-xs text-gray-400">{a.published_at}</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">{a.body}</p>
-                </article>
-              ))
+              rows.map((a) => {
+                const withdrawn = Boolean(a.withdrawn_at)
+                const summary = (a.body.split('\n').find((l) => l.trim().length > 0) ?? '').trim().slice(0, 100)
+                return (
+                  <article
+                    key={a.announcement_id}
+                    data-testid={withdrawn ? 'ann-withdrawn' : 'ann-item'}
+                    className={
+                      withdrawn
+                        ? 'rounded-lg bg-gray-100 p-4 opacity-60'
+                        : 'rounded-lg border border-gray-200 bg-white p-4'
+                    }
+                  >
+                    <h3 className="text-sm font-semibold text-gray-900">
+                      {withdrawn ? '［已撤回］' : ''}
+                      {a.title}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-gray-400">
+                      {withdrawn ? (
+                        <>
+                          原发 {a.published_at} ｜ 撤回 {a.withdrawn_at}
+                          {a.withdrawn_reason ? `（${a.withdrawn_reason}）` : ''}
+                        </>
+                      ) : (
+                        a.published_at
+                      )}
+                    </p>
+                    <p className="mt-2 truncate text-sm text-gray-600">{summary}</p>
+                    {withdrawn && (
+                      <details className="mt-1 text-xs text-gray-500">
+                        <summary className="cursor-pointer">查看原文</summary>
+                        <p className="mt-1 whitespace-pre-wrap">{a.body}</p>
+                      </details>
+                    )}
+                  </article>
+                )
+              })
             )}
           </section>
         )}
