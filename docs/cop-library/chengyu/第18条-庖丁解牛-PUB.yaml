@@ -1,0 +1,46 @@
+data_nature: synthetic
+source: 编译产物 · 由本侧编译器编译 · 生成日期 2026-08-27
+
+branch: 中国成语·认知与辩证·第18条(庖丁解牛)
+stratum: 中国成语·认知与辩证
+soul:
+  identity: 中国成语·第18条《庖丁解牛》
+  core: 洞察系统内在结构(天理/规律)，沿脉络用力，以最小阻力达成目标；顺结构者事半功倍，逆结构者刀刃皆折。是'顺应规律'思维协议。
+  verse: 依乎天理，批郤导窾，十九年刀若新，游刃有余。
+  origin: 《庄子·养生主》：庖丁为文惠君解牛，手触肩倚，莫不中音；自言'依乎天理''因其固然'，十九年刀若新发于硎。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 认知与辩证
+primitives:
+- name: paoding_jieniu
+  method: 庖丁解牛
+  signature: fn paoding_jieniu(flow) -> minimal_resistance
+  precond: 昧结构
+  postcond: 顺天理，游刃余
+  negative_space: ⊗ 逆结构则伤
+  steps:
+  - 察结构
+  - 寻脉络
+  - 顺其理
+  - 省力成
+  nca_emit: true
+dispatch:
+  main_pipeline: paoding_jieniu
+  trigger: 依乎天理，批郤导窾，十九年刀若新，游刃有余。
+  when: 当面对复杂系统、宜先摸清内在结构再发力时触发
+  graph:
+  - from: paoding_jieniu
+    to: []
+decision:
+- if: 需顺应规律发力
+  call: paoding_jieniu
+skills:
+- 庖丁解牛·思维研判
+negative_space:
+- 逆结构硬撬则伤
+- 昧脉络则费而败
+- '⊗ 本章协议须以 生态准入基协议 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
