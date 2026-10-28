@@ -595,6 +595,11 @@ export function MePage() {
                     className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-700 hover:border-emerald-400 hover:text-emerald-700">
                 申诉（对惩罚处置：冻结／降权／吊销）→
               </Link>
+              {/* L1SI178 私域三空间入口（甲案挂接：/me 内挂链接，⛔ 不入公共导航） */}
+              <Link to="/me/node" data-testid="me-comm-node-entry"
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-700 hover:border-emerald-400 hover:text-emerald-700">
+                私域三空间（场景节点管理）→
+              </Link>
               <Link to="/help" data-testid="me-comm-help"
                     className="text-[11px] text-emerald-700 underline">
                 帮助与联系 →

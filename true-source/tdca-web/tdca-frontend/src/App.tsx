@@ -24,6 +24,7 @@ const PROTECTED = new Set([
   '/attestation/history',
   '/me',
   '/me/appeal',
+  '/me/node',
   '/review',
   '/terms', // L1SI175-A1-2：术语页登录可见（⛔ 匿名开放——本批未授权）
 ])

@@ -40,8 +40,8 @@ function renderAt(path: string) {
 }
 
 describe('F0-A2 路由骨架（15 路由 + 404）', () => {
-  it('45 路由全部可达且渲染对应页面标题（41 基线＋乙案 P2 /ops/logs 与 /ops/logs/list＋手册接口化 /ops/manual；15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about + P1 /workbuddy + P2 /cluster + P3 /formal + P4 /toolshelf + P6 /anchors + P7 /ops + P8a /ownership-registry + P8b /authorization-registry + P9 /market-sim + 智能体区 /agent-shelf + 公告栏 /announcements + 文档库 /docs + 流程总览 /process + 申诉 /me/appeal + 评审 /review + 负空间 /negativespace + 官方资产区 /official-assets + 存证说明 /nca-guide + 运维我的 /ops/me + 运维日志 /ops/logs 与 /ops/logs/list + 运维手册 /ops/manual ＋ 制度地图 /rules ＋ 新手指引 /start ＋ 术语检索 /terms ＋ 五序资产 /assets ＋ 系统健康 /status ＋ 三问向导 /start/three-questions ＋ 我要贡献 /contribute ＋ 私域与边界 /private ＋ 体验期与模拟演示 /demo ＋ 模拟演练区 /lab）', () => {
-    expect(PAGE_META).toHaveLength(56)
+  it('45 路由全部可达且渲染对应页面标题（41 基线＋乙案 P2 /ops/logs 与 /ops/logs/list＋手册接口化 /ops/manual；15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about + P1 /workbuddy + P2 /cluster + P3 /formal + P4 /toolshelf + P6 /anchors + P7 /ops + P8a /ownership-registry + P8b /authorization-registry + P9 /market-sim + 智能体区 /agent-shelf + 公告栏 /announcements + 文档库 /docs + 流程总览 /process + 申诉 /me/appeal + 评审 /review + 负空间 /negativespace + 官方资产区 /official-assets + 存证说明 /nca-guide + 运维我的 /ops/me + 运维日志 /ops/logs 与 /ops/logs/list + 运维手册 /ops/manual ＋ 制度地图 /rules ＋ 新手指引 /start ＋ 术语检索 /terms ＋ 五序资产 /assets ＋ 系统健康 /status ＋ 三问向导 /start/three-questions ＋ 我要贡献 /contribute ＋ 私域与边界 /private ＋ 体验期与模拟演示 /demo ＋ 模拟演练区 /lab ＋ 私域三空间 /me/node 与公域披露页 /disclosure（L1SI178））', () => {
+    expect(PAGE_META).toHaveLength(58)
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
       expect(screen.getByRole('heading', { name: meta.title })).toBeInTheDocument()
