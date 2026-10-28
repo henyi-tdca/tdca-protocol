@@ -89,7 +89,11 @@ def regulation_index_entry(key: str) -> dict:
     elif present:
         # 通用读取：机读版 version 字段＋生效凭据件（签批落地件/生效注记件，
         # 照 AUTH 先例：件内版本与生效状态分源标注——正文原样入仓、⛔ 不回改件内字样）
-        machine = next((f for f in files if f["filename"].endswith(".yaml")), None)
+        # TAIL-CLEAN-001 块B：DRAFT/FROZEN 并存时取现行生效件（FROZEN）机读版，
+        # 版本读件内真实值口径不变（⛔ 不硬编码），仅多件并存的选择序收敛到 FROZEN。
+        machine = next((f for f in files
+                        if f["filename"].endswith(".yaml") and "FROZEN" in f["filename"]),
+                       next((f for f in files if f["filename"].endswith(".yaml")), None))
         if machine:
             entry["version"] = _version_from_machine(
                 (_REGULATIONS_DIR / machine["filename"]).read_text(encoding="utf-8"))

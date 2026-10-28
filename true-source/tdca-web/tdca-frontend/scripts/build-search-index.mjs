@@ -6,6 +6,8 @@
 //   ＋术语 151 条（docs/terms 机读快照）＋站点栏目页（pages.tsx PAGE_META 公开项）；
 //   ⛔ 不索引内部件（签批记录／条例本体／草稿件／台账）——白名单外一律不入；
 //   只读仓内公开件，⛔ 不写回、⛔ 不改原文；产物落 public/search-index.json（旁挂不进入包）。
+// 追加约束: L1SI177 TAIL-CLEAN-001 块A —— body 摘录过同一禁则表；件名编号形态剥入 slug 化名，
+//   url 留真名（S-1 防断链），前端跳转以真 url 映射回真名。
 // SPDX-License-Identifier: TDCA-Internal
 // =============================================================================
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
@@ -23,14 +25,22 @@ const FAMILY_DIRS = { regulation: 'regulations', whitepapers: 'whitepapers', pap
 const FAMILY_LABEL = { regulation: '制度', whitepapers: '白皮书', papers: '论文', 'cop-library': '素材' }
 const FAMILY_ORDER = ['制度', '白皮书', '论文', '素材', '术语', '栏目']
 
-// 编号形态禁则（施工令 §三.2）——扫 title/summary/keywords 暴露字段，命中即剥除
-const FORBIDDEN = [/\bCOP-\d+\b/i, /\bGSEQ-\d+\b/, /(^|[^A-Z0-9])A-\d+(?![0-9])/, /\bT-\d{3}\b/, /base_protocol/i]
+// 编号形态禁则（施工令 §三.2；TAIL-CLEAN-001 块A：title/summary/body 共用本表，⛔ 不另写一套）
+// /g：同字段多次命中全部剥除（验收＝逐条扫描零命中，⛔ 只剥首个漏残余）
+const FORBIDDEN = [/\bCOP-\d+\b/gi, /\bGSEQ-\d+\b/g, /(^|[^A-Z0-9])A-\d+(?![0-9])/g, /\bT-\d{3}\b/g, /base_protocol/gi]
 const stripForbidden = (s) => {
   let out = s
   for (const re of FORBIDDEN) out = out.replace(re, '')
   return out.replace(/-{2,}/g, '-').replace(/\s{2,}/g, ' ').trim()
 }
-const isForbiddenToken = (t) => FORBIDDEN.some((re) => re.test(t))
+// slug 化名（TAIL-CLEAN-001 块A#1）：件名编号形态剥除，与剥头共用同一规则表；
+// url 保留真名不改（改则断链，停手 S-1），前端跳转用真 url 即映射回真名。
+const slugFromEntry = (entry) =>
+  stripForbidden(entry.split('/').pop().replace(/\.(md|yaml)$/, '')).replace(/^-+|-+$/g, '')
+const isForbiddenToken = (t) => FORBIDDEN.some((re) => {
+  re.lastIndex = 0 // /g 正则 test 带状态，逐次归位（⛔ 防交替漏判）
+  return re.test(t)
+})
 
 const latinTokens = (s) => {
   const toks = s.match(/[A-Za-z][A-Za-z0-9-]{1,15}/g) ?? []
@@ -232,10 +242,12 @@ for (const [famKey, items] of Object.entries(whitelist)) {
         version: mdVersion(entry, text.slice(0, 4000)),
       }
     }
-    const before = `${meta.title}|${meta.summary}`
+    const bodyRaw = plainBody(text, 1500)
+    const before = `${meta.title}|${meta.summary}|${bodyRaw}`
     meta.title = stripForbidden(meta.title)
     meta.summary = stripForbidden(meta.summary)
-    if (before !== `${meta.title}|${meta.summary}`) {
+    const bodyClean = stripForbidden(bodyRaw)
+    if (before !== `${meta.title}|${meta.summary}|${bodyClean}`) {
       forbiddenStripped++
       stripLog.push(`${famKey}/${entry} :: ${before.slice(0, 90)}`)
     }
@@ -245,9 +257,10 @@ for (const [famKey, items] of Object.entries(whitelist)) {
       summary: meta.summary,
       keywords: latinTokens(`${meta.title} ${entry.split('/').pop()}`),
       url: `/docs/${famKey}/${entry}`,
+      slug: slugFromEntry(entry),
       version: meta.version,
       nature: meta.nature,
-      body: plainBody(text, 1500),
+      body: bodyClean,
     })
   }
 }
