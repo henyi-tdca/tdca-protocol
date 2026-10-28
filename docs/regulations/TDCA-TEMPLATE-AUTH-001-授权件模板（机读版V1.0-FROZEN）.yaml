@@ -1,11 +1,11 @@
-# TDCA-TEMPLATE-AUTH-001 · 授权件模板（机读版 · V0.1-DRAFT）
+# TDCA-TEMPLATE-AUTH-001 · 授权件模板（机读版 · V1.0-FROZEN）
 # ⚠️ 人读版为语义权威；冲突时以人读版为准（不得反向以机读版改语义）
 template_id: TDCA-TEMPLATE-AUTH-001
-version: V0.1-DRAFT
+version: V1.0-FROZEN
 status: DRAFT            # ⚠️ 未生效：须四步程序全过 + 授权方签批
 effective_from: null     # 签批后回填
 authority:
-  human_readable: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT）.md
+  human_readable: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md
   conflict_rule: 人读版为语义权威；机读版不得反向改语义
 locale:
   zh: present

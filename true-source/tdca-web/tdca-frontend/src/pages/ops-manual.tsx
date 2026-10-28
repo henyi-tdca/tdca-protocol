@@ -57,7 +57,7 @@ export function OpsManualPage() {
   const isYaml = active.endsWith('.yaml') || active.endsWith('.yml')
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="运维手册与制度（点击直接阅读）"
       dataSource="/api/v1/ops/files（GET 清单＋按名出件）"
       permission="operator/founder（运维门内）"

@@ -319,7 +319,7 @@ function ShellInner() {
         <div data-testid="auth-required-banner" className="border-b border-blue-200 bg-blue-50">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
             <span className="text-xs text-blue-800">
-              站点一期各页的制度规则与业务内容需登录后可见（注册即 viewer 只读账号）。
+              业务数据与办理面需登录；制度规则与公示说明公开可读
             </span>
             <button
               data-testid="auth-required-login"

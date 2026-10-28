@@ -131,7 +131,7 @@ export function AuditPage() {
   const { status, data, nature } = useApiGet<LedgerData>('/api/v1/audit/ledger-public')
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="审计透明"
       dataSource="A-7 GET /api/v1/audit/ledger-public + /nca/chain"
       permission="公开（制度即公开）"

@@ -75,7 +75,7 @@ export function AnnouncementsPage() {
   }
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="公告栏"
       dataSource="A-23 GET /api/v1/announcements/list（公开读）＋ POST /api/v1/announcements/publish（operator/founder，NCA 存证）"
       permission="公开读 / 发布须 operator"

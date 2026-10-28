@@ -11,7 +11,7 @@ export interface SimulatedBadgeProps {
 }
 
 /** 模拟态角标（ID92）：data_nature=simulated → 显式标注，真实数据不标注 */
-export function SimulatedBadge({ nature, label = 'SIMULATED' }: SimulatedBadgeProps) {
+export function SimulatedBadge({ nature, label = '数据性质 · 模拟（期一内部真跑）' }: SimulatedBadgeProps) {
   if (nature === 'real') return null
   return (
     <span

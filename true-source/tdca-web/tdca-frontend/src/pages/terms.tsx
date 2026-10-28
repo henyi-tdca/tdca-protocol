@@ -52,7 +52,7 @@ export function TermsPage() {
   }, [q])
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="术语检索"
       dataSource="A-6 GET /api/v1/knowledge/terms?q=（服务端过滤）"
       permission="登录 DID"

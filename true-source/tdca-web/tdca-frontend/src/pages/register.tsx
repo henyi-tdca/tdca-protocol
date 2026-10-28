@@ -84,7 +84,7 @@ export function RegisterPage() {
   }
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="注册（人类账号）"
       dataSource="M4 POST /api/v1/auth/register（users 表 + NCA 落链 + 2h 会话）"
       permission="公开"

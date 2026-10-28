@@ -30,7 +30,7 @@ const OFFICIAL_PRODUCTS = [
 
 export function OfficialAssetsPage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="官方资产区（官方工具 · 官方产物）"
       dataSource="静态文案（站内审定口径）＋ 文库产物库只读面"
       permission="公开"
