@@ -58,9 +58,9 @@ This directory is the **index of TDCA institutional regulations** — it registe
 | 4 | 配置权市场规范 | [`TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版）`](<TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V0.1-DRAFT）.md>) | V0.1-DRAFT | `d43d01b0d972e308d370c7702006daeb89035f40918749f167da8b8e302929e0` |
 | 5 | 配置权市场规范 | [`TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版）`](<TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V0.1-DRAFT）.md>) | V0.1-DRAFT | `7f69ac008a8db515edf23d2bc43dd7b2fc7db6019f634a6bf3020224b83bca5a` |
 | 6 | 配置权市场规范 | [`TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版）`](<TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（机读版V0.1-DRAFT）.yaml>) | V0.1-DRAFT | `d8d4685c1d0a4e7ef7f41baae725213eaa10a3092042f64396cb81630f4ceb4d` |
-| 7 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版）`](<TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md>) | V0.1-DRAFT | `9a6287c61f87344c98476ad1804792b26557120327a2d6af97e02ba98326838d` |
-| 8 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版）`](<TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md>) | V0.1-DRAFT | `f73069e66cae0fe04822cab5bb3016be0745474e57d60a5d24a31e3da69afeef` |
-| 9 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-授权件模板（机读版）`](<TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml>) | V0.1-DRAFT | `96ce71e44fa0d5433c36e2214edc829b20607bed2eb225c4434fb805727eaeb0` |
+| 7 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版）`](<TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md>) | V1.0-FROZEN | `4a352c4415ef06e482087ff7e969adbf01ffed4d35b86e8667e8733b65d51134` |
+| 8 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版）`](<TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md>) | V1.0-FROZEN | `b122073cbac2a7aac90e27b0ed01b2da79ce6861b8d84f3afd7de53824a054b2` |
+| 9 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-授权件模板（机读版）`](<TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml>) | V1.0-FROZEN | `b4ac70903e84ffe415c1d684bb8b7f722746903204ce22b375f4ceefc2d8500f` |
 | 10 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-生效注记`](<TDCA-TEMPLATE-AUTH-001-生效注记.md>) | （注记） | `2c7b928f6adc0aa5eb5bad3012c99c0a527730e484ecfd08041e7cc2904181b3` |
 | 11 | NSFL 协作告知 | [`TDCA-NSFL-COLLAB-NOTICE-V0.3`](<TDCA-NSFL-COLLAB-NOTICE-V0.3.md>) | V0.3 | `926b1a1efa2a776f9394515f4ba76416ae4d4309805fd1fafb52bfec2abee404` |
 | 12 | 相遇公开说明 | [`TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）`](<TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md>) | V1.0 | `97d7f39f4560b0efee2694b4ac43de9574bd01d3726b5272cc32dffefbde241c` |
