@@ -100,6 +100,7 @@ export function OwnershipRegistryPage() {
     <PageShell
       title="权属登记管理（P8a）"
       dataSource="A-19 /api/v1/ownership/*（登记／变更／注销／查询）"
+      dataSourceAnon="站内登记数据（登记／变更／注销／查询）· 接口明细登录可见"
       permission="登录 DID"
       description="登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引不代法律判定。">
       <div className="space-y-4">

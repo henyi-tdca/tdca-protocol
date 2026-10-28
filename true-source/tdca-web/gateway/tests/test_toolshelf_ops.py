@@ -161,13 +161,13 @@ def test_register_and_list_filter_201():
 
 
 def test_template_auth_contract_200():
-    """AMEND-002 更正两件：引用源＝在仓三件；版本读件内（V0.1-DRAFT）；生效读注记件（V1.0-FROZEN）。"""
+    """AMEND-002 更正两件：引用源＝在仓三件；版本读件内（V1.0-FROZEN）；生效读注记件（V1.0-FROZEN）。"""
     h = _auth("tstester10")
     r = client.get("/api/v1/toolshelf/template/auth-contract", headers=h)
     assert r.status_code == 200, r.text
     d = r.json()["data"]
     # 更正②：版本不硬编码——读件内真实值
-    assert d["version"] == "V0.1-DRAFT"
+    assert d["version"] == "V1.0-FROZEN"   # 件内真实值：B4-FOLLOWUP 步2 已更正为生效面貌
     assert "机读版件内" in d["version_source"]
     # 生效另源标注（不合并成单一字样）
     assert d["effective_status"] == "V1.0-FROZEN"

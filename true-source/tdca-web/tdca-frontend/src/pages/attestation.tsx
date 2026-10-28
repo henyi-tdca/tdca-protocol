@@ -302,7 +302,7 @@ export function AttestationHistoryPage() {
   const { status, data, nature } = useApiGet<HistoryData>('/api/v1/attestation/history')
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="确权历史（NCA 链跨代）"
       dataSource="A-11 GET /api/v1/attestation/history"
       permission="公开（制度即公开）"

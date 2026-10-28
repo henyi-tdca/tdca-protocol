@@ -149,7 +149,7 @@ export function RulesMapPage() {
   }, [filtered])
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="制度地图"
       dataSource="机读表 _DOC-MAP-RULES-20261021-V6.1-FINAL（页面与检索同一源·仓内单源 ?raw 进包）"
       permission="公开"
