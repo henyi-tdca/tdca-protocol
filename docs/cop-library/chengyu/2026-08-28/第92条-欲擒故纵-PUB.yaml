@@ -1,0 +1,46 @@
+data_nature: synthetic
+source: 编译产物 · 由本侧编译器编译 · 生成日期 2026-08-28
+
+branch: 中国成语·战略与决断·第92条(欲擒故纵)
+stratum: 中国成语·战略与决断
+soul:
+  identity: 中国成语·第92条《欲擒故纵》
+  core: 收紧控制反生逃逸/对抗升级，主动放松以泄其势、察其真图；纵是控制节奏的手段而非放弃目标。与七擒七纵互证：纵为信与势服务。
+  verse: 逼则反兵，走则减势；纵之而后擒，一纵一擒。
+  origin: 三十六计·攻战计第十六计：'逼则反兵，走则减势，紧随勿迫'；诸葛亮七纵七擒孟获为其通行注脚。
+  role: 思维协议 (中方文明 / 成语 / 思维精粹)
+  category: 中方文明 / 成语 / 战略与决断
+primitives:
+- name: yuqin_guzong
+  method: 欲擒故纵
+  signature: fn yuqin_guzong(pacing) -> capture_by_release
+  precond: 对方受困而未溃
+  postcond: 势散而取之
+  negative_space: ⊗ 纵而无收则真逸
+  steps:
+  - 蓄其势
+  - 故其纵
+  - 察其变
+  - 合围收
+  nca_emit: true
+dispatch:
+  main_pipeline: yuqin_guzong
+  trigger: 逼则反兵，走则减势；纵之而后擒，一纵一擒。
+  when: 当控制收紧引发对抗升级、宜松紧交替以溃其势时触发
+  graph:
+  - from: yuqin_guzong
+    to: []
+decision:
+- if: 需节奏式控制
+  call: yuqin_guzong
+skills:
+- 欲擒故纵·思维研判
+negative_space:
+- 纵而无收则真逸
+- 屡纵失信则纵放对方
+- '⊗ 本章协议须以 生态准入基协议 为可信底座: 合作/组合/比配前须加载生态准入基协议'
+nsfl_version: V0.1
+validation:
+  passed: true
+  issues: []
+  primitive_count: 1
