@@ -82,7 +82,7 @@ def test_index_two_specs_present_after_deposit():
                         ("config_market", "TDCA-SPEC-CONFIGMARKET-001")):
         assert by_key[key]["present"] is True
         assert by_key[key]["doc_id"] == doc_id
-        assert by_key[key]["version"] == "V0.1-DRAFT"          # 件内真实值
+        assert by_key[key]["version"] == "V1.0-FROZEN"          # 件内真实值（现行生效件；TAIL-CLEAN-001 块B 改读 FROZEN）
         assert by_key[key]["effective_status"] == "V1.0-FROZEN"  # 签批落地件
         assert "签批落地件" in by_key[key]["effective_source"]
         assert by_key[key]["version_source"] != by_key[key]["effective_source"]
@@ -93,7 +93,7 @@ def test_spec_config_market_present_and_sright_basis():
     r = client.get("/api/v1/regulations/spec/config_market", headers=h)
     assert r.status_code == 200
     d = r.json()["data"]["spec"]
-    assert d["present"] is True and d["version"] == "V0.1-DRAFT"
+    assert d["present"] is True and d["version"] == "V1.0-FROZEN"  # 现行生效件（TAIL-CLEAN-001 块B）
     # L1SI177 块丙：改动态断言——与被测同一事实源（toolshelf_ops._TEMPLATE_DIR 通配计数），
     # b547eaa 六件 FROZEN 回补入仓后由 4 变 7，写死件数必再红；⛔ 只改此一条。
     expected = len([f for f in _TEMPLATE_DIR.glob("*配置权市场*") if f.is_file()])

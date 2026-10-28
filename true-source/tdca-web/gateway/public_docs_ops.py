@@ -186,6 +186,8 @@ _PUBLIC_DOCS = {
     # 收口（L1SI177-B4-FOLLOWUP 块乙）：缓办两件撤条——emissary/谈判者-特使-001-COP-PUB、麦肯锡思维协议-PUB
     # 正文残余注册号（特使 dispatch 图谱 SCEN-COP×7／麦肯锡基协议号×1）已中性化改写，⛔ 未删文件，
     # 留仓待智库核过改写件后另令入站；现网白名单 74→72。
+    # TAIL-CLEAN-001 块C（2026-10-28）：另令已至，两件回收入站——字节实测 3839/2993 与令面相符、
+    # 禁区复扫零命中（承智库核）；本批 72→74、全族 287→289。⛔ 不动既有条、⛔ 不动台账；现网待部署。
     "mechanism_design/第01机制-机制设计-PUB.yaml",
     "games/第01博弈-囚徒困境-PUB.yaml",
     "games/第02博弈-猎鹿博弈-PUB.yaml",
@@ -198,6 +200,8 @@ _PUBLIC_DOCS = {
     "scenario/第05场景-生命周期适配-PUB.yaml",
     "scenario/第06场景-数据治理-PUB.yaml",
     "scenario/第07场景-认知模型衔接-PUB.yaml",
+    "emissary/谈判者-特使-001-COP-PUB.yaml",
+    "麦肯锡思维协议-PUB.yaml",
     # 批 L1SI177-COPLIB-BCBATCH-001 双版令——只列「-PUB」对外版（原件不入册；停手 1 件见台账）
     # 批 B（65 件）：剥注册号头＋补 data_nature/来源句
     "microeconomics/第01条-供给与需求·均衡-PUB.yaml",

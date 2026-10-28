@@ -285,10 +285,8 @@ function ShellInner() {
   // 二期改版批1：小屏左右栏折叠开关（宽屏恒显）
   const [showLeft, setShowLeft] = useState(false)
   const [showRight, setShowRight] = useState(false)
-  // 导航-甲补正令（NAV-B1-001 §1.5）折叠态：首屏默认只展开第一栏「了解 TDCA」，其余八栏收起
-  const [expandedCols, setExpandedCols] = useState<Set<string>>(() => new Set(['了解 TDCA']))
   // 移动端（<768px）站点导航：默认收成一行「☰ 站点导航」toggle，点开为全展开面板——
-  // 形态经创始人 2026-10-27 手机端静态点样亲验点头（行）后施工；桌面端（md+）维持原九栏折叠形态不动
+  // 形态经创始人 2026-10-27 手机端静态点样亲验点头（行）后施工；桌面端（md+）为横排（L1SI178-NAV-PC-HORZ-001），本面板只服务小屏
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   useEffect(() => {
     function onExpired(ev: Event) {
@@ -373,15 +371,10 @@ function ShellInner() {
           </div>
         </div>
       </div>
+      {/* 导航-甲（L1SI176-NAV-A-001）横排形态：七组拍平成九栏，行内流横排。
+          桌面折叠版（NAV-B1）已按创始人 2026-10-28 22:54「回滚到以前的横排版」指示退役；
+          竖版施工存档 tag archive/L1SI176-nav-b2-20261027 保留不删。 */}
       <header className="border-b border-gray-200">
-        {/*
-          导航-甲补正令（L1SI176-NAV-B1-001）视觉编码六条：
-          ① 栏与栏分行（栏块 w-full 纵排，任两栏 top 必不等）
-          ② 三层间距严格递增：项 gap-x-2(8px) ＜ 子组 mb-6(24px) ＜ 栏 pb-8(32px)
-          ③ 三层左边界两两不等：栏名 0 ／ 子组标题 pl-3(12px) ／ 项 pl-6(24px)
-          ④ 子组可见边界：border-l-2 border-gray-200（全站统一这一种）
-          ⑤ 折叠式：栏名 <button aria-expanded>，首屏只展开第一栏（了解 TDCA），收起用 hidden（项留 DOM，测试 textContent 与直链可达不受影响）
-        */}
         <nav data-testid="app-nav" className="mx-auto max-w-6xl px-4 pb-2">
           {/*
             移动端（<768px）站点导航（创始人 2026-10-27 静态点样亲验点头后施工）：
@@ -443,66 +436,38 @@ function ShellInner() {
               ),
             )}
           </div>
-          <div className="hidden flex-col md:flex">
+          {/* 桌面端横排（L1SI178-NAV-PC-HORZ-001）：九栏行内流横排、全部直链常显（NAV-A 同构，创始人 2026-10-28「回滚到以前的横排版」）；authOnly 过滤口径与移动端一致，APP_NAV 数据一字未改 */}
+          <div className="hidden flex-wrap items-center gap-x-4 gap-y-1 pt-1 md:flex">
           {APP_NAV.map((entry) =>
             entry.kind === 'link' ? (
-              <div key={entry.to} className="w-full pb-8">
-                <NavLink
-                  to={entry.to}
-                  end={entry.to === '/'}
-                  className={({ isActive }) =>
-                    `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
-                  }
-                >
-                  {entry.label}
-                </NavLink>
-              </div>
+              <NavLink
+                key={entry.to}
+                to={entry.to}
+                end={entry.to === '/'}
+                className={({ isActive }) =>
+                  `text-xs ${isActive ? 'font-semibold text-slate-900 underline underline-offset-4' : 'text-gray-500 hover:text-slate-800'}`
+                }
+              >
+                {entry.label}
+              </NavLink>
             ) : (
-              <div key={entry.group} className="w-full pb-8" data-testid={`nav-col-${entry.group}`}>
-                <button
-                  type="button"
-                  aria-expanded={expandedCols.has(entry.group)}
-                  data-testid={`nav-col-btn-${entry.group}`}
-                  onClick={() =>
-                    setExpandedCols((prev) => {
-                      const next = new Set(prev)
-                      if (next.has(entry.group)) {
-                        next.delete(entry.group)
-                      } else {
-                        next.add(entry.group)
-                      }
-                      return next
-                    })
-                  }
-                  // bg-transparent 等覆盖全局兜底 button 蓝条（VISUAL-002 base 层），栏名保持灰色小标签形态
-                  // 悬停态同须覆盖：base 层 button:hover:bg-blue-700 未压时悬停出整幅蓝条（NAV-B1 部署复核自纠）
-                  className="block w-full rounded-none border-0 bg-transparent px-0 py-0 text-left text-[10px] font-medium tracking-wide text-gray-400 hover:bg-transparent hover:text-slate-600"
-                >
-                  {entry.group}
-                </button>
-                <div className={expandedCols.has(entry.group) ? 'pt-1' : 'hidden'}>
-                  {entry.items.map((content) =>
-                    'subgroup' in content ? (
-                      <div key={content.subgroup} className="mb-6" data-subgroup={content.subgroup}>
-                        <div className="ml-3 text-[10px] font-medium tracking-wide text-slate-500">{content.subgroup}</div>
-                        <div className="ml-6 border-l-2 border-gray-200">
-                          <div className="flex flex-wrap gap-x-2 gap-y-1 pl-2 pt-1">
-                            {content.items
-                              .filter((item) => !item.authOnly || isAuthenticated)
-                              .map((item) => (
-                                <NavItemLink key={item.to} item={item} />
-                              ))}
-                          </div>
-                        </div>
-                      </div>
-                    ) : !content.authOnly || isAuthenticated ? (
-                      <div key={content.to} className="ml-6 flex flex-wrap gap-x-2 gap-y-1 pt-1">
-                        <NavItemLink item={content} />
-                      </div>
-                    ) : null,
-                  )}
-                </div>
-              </div>
+              <span key={entry.group} className="flex flex-wrap items-center gap-x-3 gap-y-1" data-testid={`nav-col-${entry.group}`}>
+                <span className="text-[10px] font-medium tracking-wide text-gray-400">{entry.group}</span>
+                {entry.items.map((content) =>
+                  'subgroup' in content ? (
+                    <span key={content.subgroup} className="flex flex-wrap items-center gap-x-2 gap-y-1" data-subgroup={content.subgroup}>
+                      <span className="text-[10px] font-medium tracking-wide text-gray-500">· {content.subgroup}</span>
+                      {content.items
+                        .filter((item) => !item.authOnly || isAuthenticated)
+                        .map((item) => (
+                          <NavItemLink key={item.to} item={item} />
+                        ))}
+                    </span>
+                  ) : !content.authOnly || isAuthenticated ? (
+                    <NavItemLink key={content.to} item={content} />
+                  ) : null,
+                )}
+              </span>
             ),
           )}
           </div>
