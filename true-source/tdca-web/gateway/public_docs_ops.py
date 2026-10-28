@@ -181,6 +181,23 @@ _PUBLIC_DOCS = {
     "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT-HONEST.md",
     "simulations/multilateral_search_match/REAL-SUNZI-COLLAB-REPORT.md",
     "simulations/multilateral_search_match/SUNZI-COLLAB-REPORT.md",
+    # 批 L1SI177-B123-RECOMMEND 块乙：素材库双版试点 14 件——只列「-PUB」对外版
+    # （原件带 COP-ID/base_protocol 注册号不入册；对外版已剥件首元数据头＋补 data_nature+来源句；
+    #  正文残余注册号两件照实登记：特使件 dispatch 图谱 SCEN-COP 列 7 处／麦肯锡正文基协议号 1 处，⛔ 不改正文）
+    "emissary/谈判者-特使-001-COP-PUB.yaml",
+    "mechanism_design/第01机制-机制设计-PUB.yaml",
+    "games/第01博弈-囚徒困境-PUB.yaml",
+    "games/第02博弈-猎鹿博弈-PUB.yaml",
+    "games/第03博弈-斗鸡博弈-PUB.yaml",
+    "games/第04博弈-最后通牒博弈-PUB.yaml",
+    "scenario/第01场景-场景思维协议-PUB.yaml",
+    "scenario/第02场景-场景画布-PUB.yaml",
+    "scenario/第03场景-认知涌现-PUB.yaml",
+    "scenario/第04场景-嵌套法则-PUB.yaml",
+    "scenario/第05场景-生命周期适配-PUB.yaml",
+    "scenario/第06场景-数据治理-PUB.yaml",
+    "scenario/第07场景-认知模型衔接-PUB.yaml",
+    "麦肯锡思维协议-PUB.yaml",
     ),
 }
 # L1SI170-COPLIB-008：六件已去编号改写并自查零命中，显式排除整组撤除；
