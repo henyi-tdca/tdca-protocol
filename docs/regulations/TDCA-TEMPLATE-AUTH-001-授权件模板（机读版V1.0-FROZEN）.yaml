@@ -3,7 +3,7 @@
 template_id: TDCA-TEMPLATE-AUTH-001
 version: V1.0-FROZEN
 status: EFFECTIVE       # 已生效：四步已过·授权方已签批（期一内部运行）
-effective_from: null     # 签批后回填
+effective_from: 2026-10-03     # 签批后回填：TDCA-SIGNOFF-CONFIGMARKET-AUTH-001（期一内部运行）
 authority:
   human_readable: TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md
   conflict_rule: 人读版为语义权威；机读版不得反向改语义
