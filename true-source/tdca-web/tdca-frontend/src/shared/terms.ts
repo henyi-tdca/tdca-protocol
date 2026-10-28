@@ -37,7 +37,7 @@ export interface ForbiddenPhrase {
 
 /** 无据声称/漂移词（G-1 强制拦截） */
 export const FORBIDDEN_PHRASES: ForbiddenPhrase[] = [
-  { phrase: 'V2.1', reason: '「术语防火墙 V2.1」为无据声称——注册表 V1.1（G-1 基线）' },
+  { phrase: 'V2.1', reason: '「术语防火墙 V2.1」为无据声称——注册表 V1.1（基线）' },
   { phrase: '配置权重', reason: '非注册术语，应为「配置权」' },
   { phrase: '使用权重', reason: '非注册术语，应为「配置权」' },
 ]

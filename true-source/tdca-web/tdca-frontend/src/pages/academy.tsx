@@ -42,7 +42,7 @@ export function AcademyPage() {
       {status === 'ok' && data && (
         <div data-testid="academy-terms" className="space-y-3">
           <div className="flex items-center gap-2 text-xs text-gray-500">
-            术语基线：注册表 V1.1（G-1）· {data.total} 条（演示子集）
+            术语基线：注册表 V1.1 · {data.total} 条（演示子集）
             <SimulatedBadge nature={nature ?? 'simulated'} />
           </div>
           <TermGuard text={q} />
@@ -50,7 +50,7 @@ export function AcademyPage() {
             data-testid="academy-search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="检索术语（G-1 基线）"
+            placeholder="检索术语（基线）"
             className="w-full max-w-sm rounded border border-gray-300 px-3 py-1.5 text-sm"
           />
           <ul className="space-y-2">

@@ -30,7 +30,7 @@ const WIZARD_STEPS = [
   { key: 'intent', title: '意图声明', plain: '用大白话说清你想让这个智能体干什么。',
     desc: '自然语言描述创建意图 → 辅助智能体解析为六要素草稿' },
   { key: 'six', title: '六要素确认', plain: '把大白话翻译成机器可核验的六项指标（如目标函数＝它要优化什么）。',
-    desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（G-1 校验 + 最小化合检查）' },
+    desc: 'objective_function / constraint_matrix / prior_distribution / config_boundary / expected_allocation / audit_trail（术语校验 + 最小化合检查）' },
   { key: 'nsfl', title: '场景约束 + NSFL', plain: '划定它不许碰的边界，越界即熔断。',
     desc: '场景约束声明 + 负空间边界（NSFL）' },
   { key: 'edu', title: '商学院培训/辅导', plain: '上岗前培训（可选），没达标会如实提示。',
@@ -272,7 +272,7 @@ export function StudioPage() {
         onOpenChange={(o) => setActionModal(o ? actionModal : null)}
         onConfirm={() => setActionModal(null)}
         title={`HUF 签批 · ${actionModal ?? ''}`}
-        description={`生命周期操作「${actionModal ?? ''}」须人类最终签批（F-4/HUF）；AI 无权代行。`}
+        description={`生命周期操作「${actionModal ?? ''}」须人类最终签批（HUF）；AI 无权代行。`}
       />
     </PageShell>
   )
