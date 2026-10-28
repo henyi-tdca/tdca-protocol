@@ -7,6 +7,7 @@
 //       —— standalone header/footer 不搬（壳归 AppShell）；样式变量类名按新基座调色板落；英文栏目名按创始人口径中文化
 // =============================================================================
 import { useApiGet } from '@/shared/useApi'
+import { HomeNoticeBar } from '@/app/notice-bar'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 import { TopologyEngine, hashAgentId, type TopoData } from '@/components/workbuddy/TopologyEngine'
 import { Link } from 'react-router'
@@ -93,6 +94,8 @@ export function HomePage() {
 
   return (
     <div data-testid="home-portal" className="space-y-0">
+      {/* 批3 C块：首页公告条（一行高；无公告／后端不可用 → 不渲染，不占首屏） */}
+      <HomeNoticeBar />
       {/* Hero（正版首屏） */}
       <section className="px-2 py-12 text-center">
         <p className="mb-4 text-sm uppercase tracking-widest text-gray-500">
