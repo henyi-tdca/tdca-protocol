@@ -99,7 +99,7 @@ export function AuthPage() {
       <div className="mb-2 max-w-md text-[10px] uppercase tracking-wide text-gray-400">降级通道：DID 模拟态登录（保留）</div>
       <div data-testid="auth-form" className="max-w-md space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          模拟态登录（ID92）——真实网关鉴权由 B-4 中间件兜底 <SimulatedBadge nature="simulated" />
+          模拟态登录 —— 真实鉴权由网关中间件兜底 <SimulatedBadge nature="simulated" />
         </div>
         <div>
           <div className="mb-1 text-xs text-gray-600">DID 身份</div>
