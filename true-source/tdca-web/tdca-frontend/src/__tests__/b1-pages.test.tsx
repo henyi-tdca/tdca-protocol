@@ -55,12 +55,12 @@ beforeEach(() => { localStorage.clear(); sessionStorage.clear() })
 afterEach(() => { vi.unstubAllGlobals() })
 
 describe('L1SI175-B1-1 五序资产总览', () => {
-  it('count 全 0 出空态「暂无真实资产（待生态接入）」且 SIMULATED 角标在', async () => {
+  it('count 全 0 出空态「暂无真实资产（待生态接入）」且模拟角标在', async () => {
     mockAll()
     render(<MemoryRouter><AssetsPage /></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('assets-empty')).toBeTruthy(), { timeout: 3000 })
     expect(screen.getByText(/暂无真实资产（待生态接入）/)).toBeTruthy()
-    expect(screen.getByText('SIMULATED')).toBeTruthy()
+    expect(screen.getByText('数据性质 · 模拟（期一内部真跑）')).toBeTruthy()
   })
 
   it('非零 count 出列表，五序齐', async () => {
@@ -99,8 +99,8 @@ describe('L1SI175-B1-2/3 系统健康（含集群并入）', () => {
     await waitFor(() => expect(screen.getAllByTestId('cluster-item').length).toBe(2), { timeout: 3000 })
     expect(screen.getByText('正和满意解')).toBeTruthy()
     expect(screen.queryByText(/EIOS-0/)).toBeNull()
-    // SIMULATED 角标
-    expect(screen.getByText('SIMULATED')).toBeTruthy()
+    // 模拟角标（L1SI177 块一新口径）
+    expect(screen.getByText('数据性质 · 模拟（期一内部真跑）')).toBeTruthy()
   })
 
   it('页面全文零价格字样（¥/￥/元/价格/档位/付费 均不出）', async () => {

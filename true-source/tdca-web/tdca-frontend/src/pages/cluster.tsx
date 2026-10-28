@@ -74,6 +74,7 @@ export function ClusterPage() {
     <PageShell
       title="集群编排与准入闸门（P2）"
       dataSource="A-13 /api/v1/cluster/*（授权件四要件机验 + 配置类调用闸门 + 谱系账本）"
+      dataSourceAnon="制度件 · 公开可读（协作规则与谱系说明）· 明细登录可见"
       permission="登录 DID（登记须法律主体签名）"
       description="授权件登记与多层转授链；配置类调用须凭有效授权件过闸门——可信联通 ≠ 可信协作，仅握手不成立。">
       <section data-testid="cluster-grant">
