@@ -28,13 +28,13 @@ dispatch:
   graph:
   - from: negotiate
     to:
-    - SCEN-COP-20260814-01
-    - SCEN-COP-20260814-02
-    - SCEN-COP-20260814-03
-    - SCEN-COP-20260814-04
-    - SCEN-COP-20260814-05
-    - SCEN-COP-20260814-06
-    - SCEN-COP-20260814-07
+    - scene-invocation-01
+    - scene-invocation-02
+    - scene-invocation-03
+    - scene-invocation-04
+    - scene-invocation-05
+    - scene-invocation-06
+    - scene-invocation-07
   note: '主原语 negotiate 即特使执行体; to=必载场景七件组合调用项 (用户裁定: 特使必须具有 TDCA 和场景思维协议); 其余解释项视场景经
     bind_policy 换绑'
 decision:
