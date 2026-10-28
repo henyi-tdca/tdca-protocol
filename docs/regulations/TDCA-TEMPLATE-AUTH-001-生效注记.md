@@ -8,9 +8,11 @@
 
 | 件 | 字节 | sha256_8 |
 |---|---|---|
-| TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md | 10554 | 9a6287c6 |
-| TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V0.1-DRAFT）.md | 13167 | f73069e6 |
-| TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V0.1-DRAFT）.yaml | 3906 | 96ce71e4 |
+| TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md | 10545 | 7184c3f1 |
+| TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md | 13167 | f73069e6 |
+| TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml | 3906 | 9d9921fe |
+
+> 2026-10-28 追认与改名：三件已由 V0.1-DRAFT 名改至 V1.0-FROZEN 生效面貌（改名不动内容，逐字节一致）；签批后三笔改动经 `TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md` 正式追认纳入生效面貌。
 
 - 三件本体为权威源；本注记只载生效信息，不修改三件任何内容（只增不改）。
 - ⛔ 本注记不含凭据值与内部编号；引用三件一律以本目录在仓件为准。
