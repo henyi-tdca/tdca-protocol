@@ -57,9 +57,9 @@ export function AuthPage() {
   return (
     <PageShell
       title="登录（DID）"
-      dataSource="M3 鉴权（users/sessions 表）+ B-4 鉴权中间件（TDCA_GATEWAY_AUTH=1 启用时强制）"
+      dataSource="账号体系鉴权 ＋ 网关鉴权中间件（启用时强制）"
       permission="公开"
-      description="统一认证入口（F-2 落地）：账号密码登录持有 TDCA-SES 会话令牌，受保护路由（/agents /studio /attestation* /governance）方可访问。"
+      description="统一认证入口：账号密码登录后获得会话令牌，受保护路由（/agents /studio /attestation* /governance）方可访问。"
     >
       {expired && (
         <div data-testid="auth-expired-notice" className="mb-4 max-w-md rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
@@ -67,7 +67,7 @@ export function AuthPage() {
         </div>
       )}
       <div data-testid="auth-account-form" className="mb-6 max-w-md space-y-3 rounded border border-gray-200 bg-white p-4">
-        <div className="text-xs font-semibold text-gray-700">账号登录（M3 真实会话，2h 有效期）</div>
+        <div className="text-xs font-semibold text-gray-700">账号登录（真实会话，2h 有效期）</div>
         <input
           data-testid="auth-username"
           value={username}
@@ -93,13 +93,13 @@ export function AuthPage() {
         </button>
         {/* 忘记密码指引（件 B0：零后端文案口径——无自助重置通道，人工重置） */}
         <p data-testid="auth-forgot-hint" className="text-[11px] leading-4 text-gray-500">
-          忘记密码？本站点无自助重置通道，请携带用户名联系站点管理员人工重置（<a href="mailto:xuantan0703@agent.qq.com" className="text-emerald-700 underline">xuantan0703@agent.qq.com</a>）后重新登录。
+          忘记密码？本站点无自助重置通道，请联系站点管理员人工重置（渠道见帮助页）后重新登录。
         </p>
       </div>
       <div className="mb-2 max-w-md text-[10px] uppercase tracking-wide text-gray-400">降级通道：DID 模拟态登录（保留）</div>
       <div data-testid="auth-form" className="max-w-md space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          模拟态登录（ID92）——真实网关鉴权由 B-4 中间件兜底 <SimulatedBadge nature="simulated" />
+          模拟态登录 —— 真实鉴权由网关中间件兜底 <SimulatedBadge nature="simulated" />
         </div>
         <div>
           <div className="mb-1 text-xs text-gray-600">DID 身份</div>
@@ -119,7 +119,7 @@ export function AuthPage() {
           <div className="mt-1 text-xs text-gray-400" data-testid="auth-did-preview">将登录为：{did}</div>
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-600">HUF/API Token（B-4）</label>
+          <label className="mb-1 block text-xs text-gray-600">HUF/API Token</label>
           <input
             data-testid="auth-token"
             value={token}
