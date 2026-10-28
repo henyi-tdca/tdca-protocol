@@ -15,6 +15,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api_v1
+from toolshelf_ops import _TEMPLATE_DIR
 from app import app
 from db import get_sessionmaker
 from db import models as M
@@ -93,7 +94,10 @@ def test_spec_config_market_present_and_sright_basis():
     assert r.status_code == 200
     d = r.json()["data"]["spec"]
     assert d["present"] is True and d["version"] == "V0.1-DRAFT"
-    assert len(d["files"]) == 4  # 中／英／机读＋签批落地件
+    # L1SI177 块丙：改动态断言——与被测同一事实源（toolshelf_ops._TEMPLATE_DIR 通配计数），
+    # b547eaa 六件 FROZEN 回补入仓后由 4 变 7，写死件数必再红；⛔ 只改此一条。
+    expected = len([f for f in _TEMPLATE_DIR.glob("*配置权市场*") if f.is_file()])
+    assert len(d["files"]) == expected
     r2 = client.get("/api/v1/regulations/spec/moon", headers=h)
     assert r2.status_code == 404
 
