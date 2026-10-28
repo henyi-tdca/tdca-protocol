@@ -146,6 +146,7 @@ const PAGE_SHELL_PROPS = {
   permission: '公开',
   description:
     'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表。',
+  dataNature: 'real' as const, // L1SI177-B123 块丁：仓内单源制度件 → real
 }
 
 export function StartPage() {

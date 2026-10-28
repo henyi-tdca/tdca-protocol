@@ -26,7 +26,7 @@ const GLOSSARY = [
 /** /about 关于页：TDCA-PLAIN-001 通俗能力说明（面向普通读者，静态文案） */
 export function AboutPage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="关于 · 一页看懂 TDCA"
       dataSource="静态文案（TDCA-PLAIN-001 通俗能力说明 v1）"
       permission="公开"

@@ -97,7 +97,7 @@ export function ThreeQuestionsPage() {
   }
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="三问向导 · 贡献前自述"
       dataSource="纯前端表单（本页零接口调用）；提交功能待后端就绪"
       permission="公开"

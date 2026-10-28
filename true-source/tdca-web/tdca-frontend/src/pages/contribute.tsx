@@ -59,7 +59,7 @@ const TIERS: Tier[] = [
 
 export function ContributePage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="我要贡献 · 三级台阶"
       dataSource="纯前端指路页（零接口调用）；所指向的登记端点已在站内路由"
       permission="公开"

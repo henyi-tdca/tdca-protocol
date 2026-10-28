@@ -15,15 +15,20 @@ export interface PageShellProps {
   permission: string
   description: string
   children?: ReactNode
+  /**
+   * 页数据性质（L1SI177-B123 块丁）：制度文本/公示说明/仓内真实件 → 'real'（不挂模拟角标）；
+   * 业务/运行/演练数据 → 'simulated'（挂角标）。缺省 'simulated'（54 处既有调用行为不变）。
+   */
+  dataNature?: 'real' | 'simulated'
 }
 
 /** 通用页面占位壳：F1~F5 阶段将替换为具体页面内容 */
-export function PageShell({ title, dataSource, permission, description, children }: PageShellProps) {
+export function PageShell({ title, dataSource, permission, description, children, dataNature = 'simulated' }: PageShellProps) {
   return (
     <section data-testid="page-shell" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-1 flex items-center gap-2">
         <h2 className="text-lg font-bold text-gray-900">{title}</h2>
-        <SimulatedBadge nature="simulated" />
+        <SimulatedBadge nature={dataNature} />
       </div>
       <p className="mb-3 text-sm text-gray-600">{description}</p>
       <div className="mb-4 flex flex-wrap gap-2 text-[11px]">

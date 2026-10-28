@@ -92,7 +92,7 @@ const RINGS: Ring[] = [
 /** 协作流程总览：14 环逐环四能（是什么／如何行动／规则／后果），承办呈现面如实标注 */
 export function ProcessOverviewPage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="流程总览（协作流程 14 环）"
       dataSource="静态文案（站内审定口径）"
       permission="公开"

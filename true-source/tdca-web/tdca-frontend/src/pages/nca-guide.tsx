@@ -46,7 +46,7 @@ const COMPLIANCE_6 = [
 
 export function NcaGuidePage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="存证（NCA）说明"
       dataSource="静态文案（站内审定口径，依在册 NCA 格式标准）"
       permission="公开"

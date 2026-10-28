@@ -57,7 +57,7 @@ const SECTIONS: OpsMeSection[] = [
 
 export function OpsMePage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="运维我的（站与服务的）"
       dataSource="静态占位（六栏只读；功能面随运维制度与在册功能项分批接通）"
       permission="登录 DID（运维身份；沿运维独立入口 tdca-ops 鉴权）"

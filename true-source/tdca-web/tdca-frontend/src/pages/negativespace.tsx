@@ -24,7 +24,7 @@ const MECHANISMS = [
 
 export function NegativeSpacePage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="负空间 · 什么不能做"
       dataSource="静态文案（站内审定口径）"
       permission="公开"
