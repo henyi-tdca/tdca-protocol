@@ -114,7 +114,7 @@ def tool_register(req: ToolRegister, request: Request):
 # 唯一权威源 = docs/regulations/ 之 TDCA-TEMPLATE-AUTH-001（中／英／机读）；
 # ⛔ 与 docs/register-contract/ 之 TDCA-OWNER-CONTRACT-AUTH-001（所有者缔约授权书）
 #    名近而用途不同，不可互替——本端不引用后者。
-# 版本：读件内真实值（机读版 version 字段，现 V0.1-DRAFT），⛔ 不硬编码；
+# 版本：读件内真实值（机读版 version 字段，现 V1.0-FROZEN），⛔ 不硬编码；
 # 「生效」另以在仓注记件为准（TDCA-TEMPLATE-AUTH-001-生效注记.md → V1.0-FROZEN），
 # 两者分别标注来源，⛔ 不得合并成单一字样。
 # =====================================================================
@@ -124,9 +124,9 @@ import re as _re  # noqa: E402
 
 _TEMPLATE_DIR = _Path(__file__).resolve().parents[3] / "docs" / "regulations"
 _TEMPLATE_FILES = (
-    ("zh", "TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md"),
-    ("en", "TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V0.1-DRAFT）.md"),
-    ("machine", "TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V0.1-DRAFT）.yaml"),
+    ("zh", "TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md"),
+    ("en", "TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md"),
+    ("machine", "TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml"),
 )
 _EFFECTIVE_NOTE = "TDCA-TEMPLATE-AUTH-001-生效注记.md"
 

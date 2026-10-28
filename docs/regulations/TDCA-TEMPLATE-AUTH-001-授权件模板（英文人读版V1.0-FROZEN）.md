@@ -1,10 +1,10 @@
-# TDCA-TEMPLATE-AUTH-001 · **Authorization Instrument Template** (English Human-Readable Version · `V0.1-DRAFT` · **Four Requirements** + **Fixed Format: Eight Fields**)
+# TDCA-TEMPLATE-AUTH-001 · **Authorization Instrument Template** (English Human-Readable Version · `V1.0-FROZEN` · **Four Requirements** + **Fixed Format: Eight Fields**)
 
-> Instrument ID: **TDCA-TEMPLATE-AUTH-001** ｜ Version: **`V0.1-DRAFT` (⚠️ NOT IN FORCE · pending four-step procedure + founder sign-off)** ｜ Date: **2026-10-03** (+08)
-> Operation type: **Spec / Draft** ｜ Compiler: **Reasonix** (Think Tank · `L1-SI-103`) ｜ Nature: **Template Draft (internal instrument · ⛔ not a judicial ruling)**
+> Instrument ID: **TDCA-TEMPLATE-AUTH-001** ｜ Version: **`V1.0-FROZEN`** ｜ Date: **2026-10-03** (+08)
+> Operation type: **Spec / Draft** ｜ Compiler: **Reasonix** (Think Tank · `L1-SI-103`) ｜ Nature: **In force (Phase-1 internal operation) (internal instrument · ⛔ not a judicial ruling)**
 > **Authority (upstream)**: ⭐ `TDCA-SPEC-REGISTER-OF-RIGHTS-001` (draft *TDCA Registration System*, Article 12 **fixed format of the authorization instrument**, Article 11 **three requirements**) ｜ ⭐ `TDCA-AMEND-RULING-TDCRA-REG-001-001`~`-006` (four requirements and signature forms) ｜ ⭐ `TDCA-RULING-PHASE1-BUILD-PROPOSAL-003` §1.4 (P0: rewrite the authorization-instrument template against the four requirements)
-> **Human-readable version (semantic authority)**: `TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V0.1-DRAFT·四要件与固定格式八字段）.md` — ⚠️ **on conflict the Chinese human-readable version prevails**; ⛔ the machine-readable version may not be used to reverse-change semantics
-> **Machine-readable version**: `TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V0.1-DRAFT）.yaml` — ⚠️ the `locale.en: pending` flag recorded there is **satisfied as of this instrument** (⛔ the prior instrument is NOT amended; this instrument is the evidence)
+> **Human-readable version (semantic authority)**: `TDCA-TEMPLATE-AUTH-001-授权件模板（中文人读版V1.0-FROZEN·四要件与固定格式八字段）.md` — ⚠️ **on conflict the Chinese human-readable version prevails**; ⛔ the machine-readable version may not be used to reverse-change semantics
+> **Machine-readable version**: `TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml` — ⚠️ the `locale.en: pending` flag recorded there is **satisfied as of this instrument** (⛔ the prior instrument is NOT amended; this instrument is the evidence)
 > ⛔ Not for external use; ⛔ contains no credential values and no personal names; **time zone +08**
 
 ---

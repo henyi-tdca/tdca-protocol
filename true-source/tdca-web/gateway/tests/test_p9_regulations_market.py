@@ -2,7 +2,7 @@
 """P9 规范索引区与沙盒最小链测试（/api/v1/regulations/* + /api/v1/market-sim/*——A-20/21）。
 
 验收映射：① 会话鉴权 fail-closed
-          ② 索引区：三件在册（《授权件模板》present，版本读件内 V0.1-DRAFT、
+          ② 索引区：三件在册（《授权件模板》present，版本读件内 V1.0-FROZEN、
             生效读注记 V1.0-FROZEN——分源标注，⛔ 不硬编码）
           ③ 《注册登记制度》《配置权市场规范》未入册如实报 present=False；
             /spec/{key} 缺失 ⟹ 503 fail-closed（不冒充在册、不回显正文）
@@ -64,7 +64,7 @@ def test_index_template_auth_present():
     by_key = {x["key"]: x for x in d["regulations"]}
     tpl = by_key["template_auth"]
     assert tpl["present"] is True
-    assert tpl["version"] == "V0.1-DRAFT"          # 读件内真实值（非硬编码）
+    assert tpl["version"] == "V1.0-FROZEN"          # 读件内真实值（非硬编码；B4-FOLLOWUP 步2 更正后）
     assert tpl["effective_status"] == "V1.0-FROZEN"  # 读生效注记件
     assert tpl["version_source"] != tpl["effective_source"]
     assert len(tpl["files"]) == 4                   # 三件＋生效注记
