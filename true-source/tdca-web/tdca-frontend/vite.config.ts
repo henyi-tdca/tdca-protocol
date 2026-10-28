@@ -8,6 +8,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    // L1SI177 批3：测试经 ?raw 跨包读 gateway 白名单源（public_docs_ops.py）做索引对账
+    fs: { allow: ['../..'] },
     port: 5173,
     proxy: {
       '/api': 'http://127.0.0.1:8100',

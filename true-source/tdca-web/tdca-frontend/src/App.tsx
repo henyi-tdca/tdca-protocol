@@ -11,6 +11,7 @@ import { RequireAuth } from '@/app/route-guard'
 import { PAGE_META, NotFoundPage, renderPage, DocsIndexPage, DocDetailPage } from '@/pages/pages'
 import { AgentChannelRegisterPage } from '@/pages/agent-channel-register'
 import { ChannelMyPage } from '@/pages/channel-my'
+import { SearchPage } from '@/pages/search'
 
 /** 受保护路由（FRAMEWORK-001 §四：须登录 DID + HUF 鉴权）——未登录重定向 /auth */
 const PROTECTED = new Set([
@@ -48,6 +49,8 @@ export default function App() {
           <Route path="/channel/my" element={<RequireAuth><ChannelMyPage /></RequireAuth>} />
           <Route path="/channel/market" element={<Navigate to="/market" replace />} />
           <Route path="/channel/tools" element={<Navigate to="/toolshelf" replace />} />
+          {/* L1SI177 批3 A块：全站检索页（静态索引＋本地检索；工具条层入口，⛔ 不进导航） */}
+          <Route path="/search" element={<SearchPage />} />
           {/* 二期改版批2块二：文档库两路参数路由（族列表／详情；首页 /docs 走 PAGE_META） */}
           <Route path="/docs/:family" element={<DocsIndexPage />} />
           <Route path="/docs/:family/:slug" element={<DocDetailPage />} />
