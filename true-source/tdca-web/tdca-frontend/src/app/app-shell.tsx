@@ -353,7 +353,8 @@ function ShellInner() {
       )}
       <div className="border-b border-amber-200 bg-amber-50/60">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
-          <span className="text-xs font-semibold text-amber-800">TDCA 官网 · 公域（公开面）／私域（我的）／运维分区（不公开）</span>
+          {/* min-w-0：窄屏允许收缩换行，防顶破 360 布局视口（DEPLOY-003 验收⑦实测） */}
+          <span className="min-w-0 text-xs font-semibold text-amber-800">TDCA 官网 · 公域（公开面）／私域（我的）／运维分区（不公开）</span>
           <SimulatedBadge nature="simulated" label="全站模拟态 data_nature=simulated (ID92)" />
         </div>
       </div>
@@ -362,7 +363,8 @@ function ShellInner() {
       <div className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2">
           <HufBanner />
-          <div className="flex flex-wrap items-center gap-2">
+          {/* min-w-0：窄屏（360px）允许本组收缩到容器内，防 max-content 363px 顶破布局视口致横滚（DEPLOY-003 验收⑦实测） */}
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <IntentBar />
             <SearchBox />
             <AuthStatus />

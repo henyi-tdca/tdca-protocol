@@ -46,7 +46,7 @@ export function NotifierBar({ roles = DEFAULT_ROLES }: NotifierBarProps) {
   }, [])
 
   return (
-    <div data-testid="notifier-bar" data-connected={connected} className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-1.5">
+    <div data-testid="notifier-bar" data-connected={connected} className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5">
       <span className="text-xs font-medium text-gray-600">通知机</span>
       <NotifierRoles roles={roles} />
       <span className="text-xs text-gray-400" data-testid="notifier-msg-count">
