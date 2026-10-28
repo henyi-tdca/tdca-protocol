@@ -59,6 +59,9 @@ export const PAGE_META: PageMeta[] = [
   { path: '/process', title: '流程总览（协作流程 14 环）', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: '14 环逐环四能（是什么／如何行动／规则／后果）；承办呈现面＝站内已有服务/频道名，如实标注。' },
   // 二期改版批2块三：申诉端薄占位（无令载细则，⛔ 不编造受理表单/渠道；受理面随制度入站开通）
   { path: '/me/appeal', title: '申诉', layer: 'L0', dataSource: '—（受理面在建）', permission: '须登录（谁的事谁可见）', description: '惩罚三态申诉受理面：受理通道随制度入站开通，开通前不预置表单与渠道。' },
+  // L1SI178-SITE-PRIVATE-ZONE-002（甲案）：私域三空间独立页 /me/node（⛔ 不入公共导航；/me 内挂入口链接）＋公域披露页 /disclosure（匿名可查）
+  { path: '/me/node', title: '场景节点管理区（私域三空间）', layer: 'L0', dataSource: '纯前端样例态（页内状态）；零接口调用、零后端写入', permission: '须登录（谁的数据谁可见）', description: '私域三空间：负空间／沙盒出盒／正空间；不披露不可启用；六项硬核只读锁定；示例节点与条目均为虚构样例。' },
+  { path: '/disclosure', title: '规则披露公示 · 按节点查阅', layer: 'L0', dataSource: '纯前端样例态（虚构示例条目）；零接口调用', permission: '公开（匿名可读）', description: '私域条目的对外披露面：匿名可查、无需登录，含版本历史；公示才公信。' },
   // B5 新增批项一：负空间栏（公域新增，讲「什么不能做」——只讲原则与类别，⛔ 不列禁项词表）
   { path: '/negativespace', title: '负空间 · 什么不能做', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: 'TDCA 三空间之一：负空间管「什么不能做」——原则与类别级说明，拒绝清单的公众说明面。' },
   // B5 新增批项二：官方资产区（公域新增——工具在上（免费）‧ 产物在下（付费橱窗）；调用未开放态，⛔ 零支付集成）
@@ -166,6 +169,9 @@ import { PrivateDomainPage } from './private-domain'
 import { DemoPage } from './demo'
 // L1SI175-B26（6194 拆批裁定·施工令）：模拟演练区一页（五卡＋流水表·纯前端演练值）
 import { LabPage } from './lab'
+// L1SI178-SITE-PRIVATE-ZONE-002（甲案）：私域三空间 /me/node＋公域披露页 /disclosure
+import { MeNodePage } from './me-node'
+import { NodeDisclosurePage } from './node-disclosure'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -226,6 +232,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/private': PrivateDomainPage,
   '/demo': DemoPage,
   '/lab': LabPage,
+  '/me/node': MeNodePage,
+  '/disclosure': NodeDisclosurePage,
 }
 
 export function renderPage(meta: PageMeta) {
