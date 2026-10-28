@@ -29,7 +29,7 @@ const AGENT_GROUP2: AgentEntry[] = [
 /** 智能体区：组二 10 件呈现（呈现 ≠ 注册；准入与否按在册配置类准入流程另办） */
 export function AgentShelfPage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="智能体区（组二 10 件呈现）"
       dataSource="静态呈现（呈现面；非注册数据）"
       permission="登录 DID"

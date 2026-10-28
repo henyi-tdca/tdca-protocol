@@ -10,7 +10,7 @@ import { PageShell } from './PageShell'
 /** 申诉端（薄占位）：受理通道随制度入站开通；⛔ 不预置受理表单与渠道 */
 export function MeAppealPage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="申诉"
       dataSource="—（受理面在建）"
       permission="须登录（谁的事谁可见）"

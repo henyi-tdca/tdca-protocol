@@ -19,7 +19,7 @@ const IRON_SENTENCES = [
 
 export function PrivateDomainPage() {
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="私域与边界 · 公域守门人"
       dataSource="纯前端说明页（零接口调用）；口径与站内体系结构说明一致"
       permission="公开"

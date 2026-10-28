@@ -78,7 +78,7 @@ export function HelpPage() {
   const contactItems = (items ?? []).filter((it) => it.title.includes('联系'))
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="帮助与联系"
       dataSource="三条路静态指引 ＋ GET /api/site/docs/help（只读面）"
       permission="公开"

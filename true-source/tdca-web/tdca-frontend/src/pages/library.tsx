@@ -136,7 +136,7 @@ export function LibraryPage() {
   const famName = families.find((f) => f.family === family)?.name ?? family
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范 · 法律原文 · 适用说明）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"

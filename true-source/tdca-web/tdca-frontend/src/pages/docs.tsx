@@ -83,7 +83,7 @@ export function DocsIndexPage() {
     <section data-testid="docs-index" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-1 flex items-center gap-2">
         <h2 className="text-lg font-bold text-gray-900">{fam?.label ?? family}（{data ? docs.length : '…'} 件）</h2>
-        <SimulatedBadge nature="simulated" />
+        <SimulatedBadge nature="real" />
       </div>
       <Link to="/docs" className="text-sm text-gray-500 hover:text-gray-800">← 全部文档</Link>
       <div className="mt-4">
@@ -112,7 +112,7 @@ export function DocsHomePage() {
     <section data-testid="docs-home" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-1 flex items-center gap-2">
         <h2 className="text-lg font-bold text-gray-900">文档库</h2>
-        <SimulatedBadge nature="simulated" />
+        <SimulatedBadge nature="real" />
       </div>
       <p className="text-sm text-gray-600">
         制度 / 帮助二族内容已入库，点开即读。

@@ -138,7 +138,7 @@ export function VerifyPage() {
   }
 
   return (
-    <PageShell
+    <PageShell dataNature="real"
       title="怎么验证 · 5 分钟三件自查"
       dataSource="匿名只读三件：ledger-public ／ ci/badge ／ formal/conclusion/catalog"
       permission="公开"
