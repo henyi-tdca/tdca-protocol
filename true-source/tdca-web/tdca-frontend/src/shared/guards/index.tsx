@@ -108,7 +108,7 @@ export function HufModal({ open, onOpenChange, onConfirm, title = 'HUF 人类最
       >
         <h3 className="mb-1 text-base font-bold text-gray-900">{title}</h3>
         <p className="mb-3 text-sm text-gray-600">
-          {description ?? '本操作涉及制度级决策（治理/创建/签批/确权）。AI 无权替代人类最终签批权（F-4/HUF）。'}
+          {description ?? '本操作涉及制度级决策（治理/创建/签批/确权）。AI 无权替代人类最终签批权（HUF）。'}
         </p>
         <div className="flex justify-end gap-2">
           <button
@@ -178,7 +178,7 @@ export function TermGuard({ text }: TermGuardProps) {
   if (hits.length === 0) return null
   return (
     <div data-testid="term-guard" className="rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700">
-      G-1 术语漂移：{hits.map((h) => `「${h.phrase}」${h.reason}`).join('；')}
+      术语漂移：{hits.map((h) => `「${h.phrase}」${h.reason}`).join('；')}
     </div>
   )
 }
