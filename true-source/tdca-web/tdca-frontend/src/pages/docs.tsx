@@ -124,7 +124,7 @@ export function DocsHomePage() {
         </p>
       </div>
       <p className="mt-2 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-xs text-gray-500">
-        分工（LIB-DOCS-SCOPE-001）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，路由不变）。
+        分工（在册口径）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，路由不变）。
       </p>
       <div className="mt-4 rounded-md border border-gray-200 px-4 py-3 text-sm text-gray-600">
         <strong className="text-gray-900">五族说明</strong>

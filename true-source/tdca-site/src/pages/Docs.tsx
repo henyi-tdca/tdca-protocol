@@ -63,7 +63,7 @@ export default function DocsHome() {
         </p>
       </div>
       <p className="mt-2 rounded-md border bg-muted/50 px-4 py-2 text-xs text-muted-foreground">
-        分工（LIB-DOCS-SCOPE-001）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，原名文库，路由不变）。
+        分工（在册口径）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，原名文库，路由不变）。
       </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
         <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按 TDCA 管理方 指令由系统生成，由 TDCA 管理方 转交受邀者；到期失效，不回收。
