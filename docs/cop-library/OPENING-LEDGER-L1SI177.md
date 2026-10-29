@@ -9,7 +9,7 @@
 
 | ①序 | ②件名 | ③字节·sha256_16 | ④筛判 | ⑤判据命中明细 | ⑥白名单 | ⑦在架实测 |
 |---|---|---|---|---|---|---|
-| 1 | `emissary/谈判者-特使-001-COP.yaml` | 5734·`9BF13408FD3EFFBF` | **不放** | 编号式：COP-ID EMISSARY-COP-20260830-01、base_protocol TDCA-CORE-20260815-01、源配置件号、GSEQ-0537/0538、NCA-023、TDCA-REASONIX-20260827-158、TDCA-MEMO-006、SCEN-COP 绑定列 7 件、TDCA-EMISSARY-M2-001、机制名 NCA-ECOACT；无数据性质标注；公式零 | 未入（2026-10-27） | 未入站·不实测（公开面零新增暴露） |
+| 1 | `emissary/谈判者-特使-001-COP.yaml` | 5734·`9BF13408FD3EFFBF` | **不放** | 编号式：COP-ID EMISSARY-COP-20260830-01、base_protocol TDCA-CORE-20260815-01、源配置件号、依对应两份存证件、存证件、TDCA-REASONIX-20260827-158、TDCA-MEMO-006、SCEN-COP 绑定列 7 件、TDCA-EMISSARY-M2-001、机制名 存证件；无数据性质标注；公式零 | 未入（2026-10-27） | 未入站·不实测（公开面零新增暴露） |
 | 2 | `mechanism_design/第01机制-机制设计.yaml` | 5820·`8C89EA4D64CC92B1` | **不放** | 编号式：COP-ID、base_protocol TDCA-CORE-20260815-01（件首元数据）；无数据性质标注；公式零 | 未入（2026-10-27） | 同上 |
 | 3 | `games/第01博弈-囚徒困境.yaml` | 4689·`8F80A832F0A90181` | **不放** | 编号式：COP-ID GAME-COP-20260814-01、base_protocol TDCA-CORE-20260815-01；无数据性质标注；公式零 | 未入（2026-10-27） | 同上 |
 | 4 | `games/第02博弈-猎鹿博弈.yaml` | 4339·`8701F84154666BF8` | **不放** | 同上形态（GAME-COP-20260814-02＋基协议号）；无数据性质标注；公式零 | 未入（2026-10-27） | 同上 |
