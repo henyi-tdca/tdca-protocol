@@ -25,6 +25,8 @@ const PROTECTED = new Set([
   '/me',
   '/me/appeal',
   '/me/node',
+  // L1SI181-USE-U1-001 U-1c：/use/upload 受护——上传入口须登录 DID（后端同守 401），匿名重定向 /auth
+  '/use/upload',
   // NODE-NET-A-001：/me/node/net 受护——本机节点数据只本人可见（卡一规则：根指纹只显本人前 8 位）
   '/me/node/net',
   '/review',

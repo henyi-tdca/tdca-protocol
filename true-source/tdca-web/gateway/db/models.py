@@ -9,7 +9,8 @@
 # 审计轨迹: NCA-KIMIWEB-003/004
 # =============================================================================
 """M1 ORM 模型：10 表。字段命名与设计包 DDL 严格一致。"""
-from sqlalchemy import REAL, CheckConstraint, ForeignKey, Index, Integer, Text, Computed
+from sqlalchemy import (REAL, CheckConstraint, ForeignKey, Index, Integer, Text,
+                        Computed, UniqueConstraint)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from . import Base
@@ -1082,4 +1083,31 @@ class JoinRequest(Base):
         CheckConstraint("status IN ('pending','sandbox','active','rejected','nsfl_rejected')",
                         name="ck_join_requests_status"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_join_requests_prov"),
+    )
+
+
+class UploadRecord(Base):
+    """39. 「用」组 U-1 素材上传留痕（TDCA-HANDOFF-EXEC-L1SI181-USE-U1-001）。
+
+    每次上传落一条（谁、何时、多大、哈希、受理类别）＝站内留痕＋逐件哈希清单；
+    幂等：同 sha256 同 username 唯一（重复传同一件返回既有记录，⛔ 多一条）；
+    磁盘文件名用哈希前段（天然防重，同人同件不重复落盘）；
+    ⛔ 本表不含文件正文；stored_path 为容器内路径（/data/uploads 卷）。
+    """
+
+    __tablename__ = "upload_records"
+    upload_id: Mapped[str] = mapped_column(Text, primary_key=True)        # UPL-<12 位>
+    username: Mapped[str] = mapped_column(ForeignKey("users.username"), nullable=False)  # 归属（登录账号）
+    sha256: Mapped[str] = mapped_column(Text, nullable=False)
+    sha256_16: Mapped[str] = mapped_column(Text, nullable=False)
+    size_bytes: Mapped[int] = mapped_column(Integer, nullable=False)
+    original_filename: Mapped[str] = mapped_column(Text, nullable=False)
+    accept_category: Mapped[str] = mapped_column(Text, nullable=False)    # 受理十类之一
+    stored_path: Mapped[str] = mapped_column(Text, nullable=False)
+    nca_ref: Mapped[str | None] = mapped_column(Text)                     # 上传存证回链
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        UniqueConstraint("sha256", "username", name="uq_upload_records_sha_user"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_upload_records_prov"),
     )
