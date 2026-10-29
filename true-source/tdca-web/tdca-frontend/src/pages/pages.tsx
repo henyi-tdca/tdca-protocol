@@ -92,6 +92,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/private', title: '私域与边界 · 公域守门人', layer: 'L0', dataSource: '纯前端说明页（零接口调用）；口径与体系结构说明一致', permission: '公开', description: '公域与私域的分工、两权闸门、三条铁句；起一个节点之前先读这页。' },
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '四块模拟（虚拟积分／钱包／结算中心／交付税收）＋免责三条；全部演示值，真实功能在三期。' },
   { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '与 /demo 分工：demo 看懂、lab 走一遍。五张模拟卡＋一张流水表；积分面额照设计件 6146，演练值不入账、不留存。' },
+  // L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量；文件＋文件名头直传报文）
+  { path: '/use/upload', title: '交素材（上传一件）', layer: 'L0', dataSource: 'POST /api/v1/use/upload ＋ GET /api/v1/use/upload/{id}', permission: '登录 DID', description: '登录后交一件素材：选择文件上传，系统回收件编号与哈希；受理清单内收、清单外给人话理由；同一人传同一文件只留一条（幂等）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -172,6 +174,8 @@ import { LabPage } from './lab'
 // L1SI178-SITE-PRIVATE-ZONE-002（甲案）：私域三空间 /me/node＋公域披露页 /disclosure
 import { MeNodePage } from './me-node'
 import { NodeDisclosurePage } from './node-disclosure'
+// L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量）
+import { UseUploadPage } from './use-upload'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -234,6 +238,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/lab': LabPage,
   '/me/node': MeNodePage,
   '/disclosure': NodeDisclosurePage,
+  '/use/upload': UseUploadPage,
 }
 
 export function renderPage(meta: PageMeta) {
