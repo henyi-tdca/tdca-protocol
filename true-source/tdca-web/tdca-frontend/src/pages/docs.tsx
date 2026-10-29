@@ -159,7 +159,6 @@ export function DocsHomePage() {
 /** 文档详情（/docs/:family/:slug）——正文按纯文本呈现（Markdown 源不转样式，⛔ 不加依赖） */
 export function DocDetailPage() {
   const { family, slug } = useParams()
-  const fam = DOC_FAMILIES.find((f) => f.key === family)
   const { data, error } = useDoc<PublicDocDetail>(`/docs/${family}/${slug}`)
   // 每页独立标题（SITE-SEO-A-001 乙-1）：件载入后用品名，未载入先以地址件名占位
   useEffect(() => {
@@ -168,9 +167,12 @@ export function DocDetailPage() {
   return (
     <section data-testid="doc-detail" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <nav aria-label="面包屑" className="text-sm text-gray-500">
-        文档库 ›{' '}
-        <Link to={`/docs/${family}`} className="hover:text-gray-800">{fam?.label ?? family}</Link>
-        {data && <> › {docTitle(data.filename)}</>}
+        {/* BREADCRUMB-002：移动端折叠为单条返回链（回族列表），桌面两级 文档库 › 件名 */}
+        <Link to={`/docs/${family}`} className="inline-flex items-center gap-1 hover:text-gray-800 md:hidden">← 返回文档库</Link>
+        <span className="hidden md:inline">
+          <Link to={`/docs/${family}`} className="hover:text-gray-800">文档库</Link>
+          {data && <> › {docTitle(data.filename)}</>}
+        </span>
       </nav>
       <div className="mt-3">
         {(!data || error) && <DocLoading error={error} />}

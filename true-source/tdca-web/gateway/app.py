@@ -246,6 +246,13 @@ def _mount_frontend() -> None:
         app.mount("/", _SPAStaticFiles(directory=static_dir, html=True), name="frontend")
 
 
+# A-30: 「用」组 U-1 素材上传（L1SI181-USE-U1-001——POST /api/v1/use/upload 单文件直传
+# ＋GET /use/upload/{id} 回读；登录归属、哈希防重幂等、十类受理五类拒收（人话理由）、
+# 逐件留痕落链；⛔ 匿名不可传、⛔ 无 multipart 新依赖（直读报文）、⛔ 不含文件正文入库）
+from upload_ops import router as upload_ops_router  # noqa: E402
+app.include_router(upload_ops_router)
+
+
 try:
     from pathlib import Path as _Path
     _mount_frontend()

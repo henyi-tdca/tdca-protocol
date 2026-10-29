@@ -96,6 +96,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/me/node/net', title: '我的节点 · 条例与契约', layer: 'L0', dataSource: '在册条例 V1.0 与本机节点配置（配置未设处如实标「未设置／待复算」）', permission: '登录 DID', description: '私域节点面：卡一「我的节点」只读本人配置（无真值如实标）；卡二「条例与契约」挂在册条例与九类接口清单。' },
   // NODE-NET-A-001 公域四块（可视图只画已披露真节点·状态以最后心跳与截至时刻为准）
   { path: '/nodes', title: '节点网络', layer: 'L0', dataSource: '在册条例 V1.0 与节点现状（真值缺失处如实标「未设置／待复算／尚无」）', permission: '公开', description: '业务端节点接入公开面：可视图只画已披露真节点；状态栏只给最后心跳与数据截至时刻；接口未实现一律不开放。' },
+  // L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量；文件＋文件名头直传报文）
+  { path: '/use/upload', title: '交素材（上传一件）', layer: 'L0', dataSource: 'POST /api/v1/use/upload ＋ GET /api/v1/use/upload/{id}', permission: '登录 DID', description: '登录后交一件素材：选择文件上传，系统回收件编号与哈希；受理清单内收、清单外给人话理由；同一人传同一文件只留一条（幂等）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -179,6 +181,8 @@ import { NodeDisclosurePage } from './node-disclosure'
 // NODE-NET-A-001：私域两卡 /me/node/net＋公域四块 /nodes（三处同源 node-net-data.ts）
 import { MeNodeNetPage } from './me-node-net'
 import { NodeNetPage } from './node-net'
+// L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量）
+import { UseUploadPage } from './use-upload'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -243,6 +247,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/disclosure': NodeDisclosurePage,
   '/me/node/net': MeNodeNetPage,
   '/nodes': NodeNetPage,
+  '/use/upload': UseUploadPage,
 }
 
 export function renderPage(meta: PageMeta) {
