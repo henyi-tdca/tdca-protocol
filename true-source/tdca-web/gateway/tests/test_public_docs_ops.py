@@ -159,12 +159,13 @@ def test_display_name_mapping_no_draft():
 
 
 def test_ingest002_list_42_no_droop():
-    """L1SI155-INGEST-002 防掉条用例：regulation 族 47 条（L1SI180-TERMS-004/005 三件上站后 44→47）；
+    """L1SI155-INGEST-002 防掉条用例：regulation 族 49 条（L1SI180-TERMS-004/005 三件上站后 44→47；
+    L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件入册后 47→49——断言随令更正照报）；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 47, f"清单条数漂移: {data['count']}"
+    assert data["count"] == 49, f"清单条数漂移: {data['count']}"
     返回集 = {e["filename"] for e in data["documents"]}
     在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
     assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
@@ -197,6 +198,9 @@ def test_ingest002_list_42_no_droop():
         "TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md",
         "TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md",
         "TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md",
+        # L1SI181-REG-NODE-ACCESS-PUB-001：节点条例对外公开版两件（人读＋机读）防掉条
+        "TDCA-REG-NODE-ACCESS-001（对外公开版·V1.0）.md",
+        "TDCA-REG-NODE-ACCESS-001-COMPILED（对外公开版·V1.0）.yaml",
     }
     missing = must - names
     assert not missing, f"掉条: {missing}"

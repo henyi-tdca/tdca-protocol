@@ -8,14 +8,14 @@
   <body>
     <div id="root"></div>
     <script>
-      // 裸路径直达引导：HashRouter 只读 location.hash，
-      // 直接访问 /register、/agents 等裸路径时改写为 /index.html#/... 深链接。
-      // 注意：nginx 的 location = / 精确匹配服务门户静态页，故不能改写为 /#/...（会落门户），
-      // 必须显式走 /index.html（经代理至 web 容器 SPA），刷新亦安全。
+      // 旧地址兼容（SITE-SEO-A-001 乙-1）：历史模式启用前的老 #/xxx 深链接
+      // 自动跳到对应新地址（保留至少一个版本周期）；裸路径直访与刷新由
+      // 部署面 nginx try_files 回退到本页（⛔ 本令不部署），此处不再改写裸路径。
       (function () {
-        var p = location.pathname;
-        if (p !== "/" && !/\.html?$/.test(p) && p.indexOf("/assets/") !== 0) {
-          location.replace("/index.html#" + p + location.search);
+        var h = location.hash;
+        if (h.indexOf("#/") === 0) {
+          var t = h.slice(1);
+          location.replace(t.indexOf("?") === -1 ? t + location.search : t);
         }
       })();
     </script>

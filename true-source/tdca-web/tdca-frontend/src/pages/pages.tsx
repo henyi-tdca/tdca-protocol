@@ -92,6 +92,10 @@ export const PAGE_META: PageMeta[] = [
   { path: '/private', title: '私域与边界 · 公域守门人', layer: 'L0', dataSource: '纯前端说明页（零接口调用）；口径与体系结构说明一致', permission: '公开', description: '公域与私域的分工、两权闸门、三条铁句；起一个节点之前先读这页。' },
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '四块模拟（虚拟积分／钱包／结算中心／交付税收）＋免责三条；全部演示值，真实功能在三期。' },
   { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '与 /demo 分工：demo 看懂、lab 走一遍。五张模拟卡＋一张流水表；积分面额照设计件 6146，演练值不入账、不留存。' },
+  // NODE-NET-A-001 私域两卡（⛔ 不动三空间与六项硬核——另立须登录面）
+  { path: '/me/node/net', title: '我的节点 · 条例与契约', layer: 'L0', dataSource: '在册条例 V1.0 与本机节点配置（配置未设处如实标「未设置／待复算」）', permission: '登录 DID', description: '私域节点面：卡一「我的节点」只读本人配置（无真值如实标）；卡二「条例与契约」挂在册条例与九类接口清单。' },
+  // NODE-NET-A-001 公域四块（可视图只画已披露真节点·状态以最后心跳与截至时刻为准）
+  { path: '/nodes', title: '节点网络', layer: 'L0', dataSource: '在册条例 V1.0 与节点现状（真值缺失处如实标「未设置／待复算／尚无」）', permission: '公开', description: '业务端节点接入公开面：可视图只画已披露真节点；状态栏只给最后心跳与数据截至时刻；接口未实现一律不开放。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -172,6 +176,9 @@ import { LabPage } from './lab'
 // L1SI178-SITE-PRIVATE-ZONE-002（甲案）：私域三空间 /me/node＋公域披露页 /disclosure
 import { MeNodePage } from './me-node'
 import { NodeDisclosurePage } from './node-disclosure'
+// NODE-NET-A-001：私域两卡 /me/node/net＋公域四块 /nodes（三处同源 node-net-data.ts）
+import { MeNodeNetPage } from './me-node-net'
+import { NodeNetPage } from './node-net'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -234,6 +241,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/lab': LabPage,
   '/me/node': MeNodePage,
   '/disclosure': NodeDisclosurePage,
+  '/me/node/net': MeNodeNetPage,
+  '/nodes': NodeNetPage,
 }
 
 export function renderPage(meta: PageMeta) {

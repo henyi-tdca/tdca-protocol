@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender-docs.mjs",
     "prebuild": "node scripts/build-search-index.mjs",
     "index": "node scripts/build-search-index.mjs",
     "preview": "vite preview",

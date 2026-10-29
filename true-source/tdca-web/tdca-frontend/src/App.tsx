@@ -25,6 +25,8 @@ const PROTECTED = new Set([
   '/me',
   '/me/appeal',
   '/me/node',
+  // NODE-NET-A-001：/me/node/net 受护——本机节点数据只本人可见（卡一规则：根指纹只显本人前 8 位）
+  '/me/node/net',
   '/review',
   // L1SI181-P0-FIX-002 F-4：/terms 移出受护集——匿名可读（在册：条款对外通用入公域）；
   // A-6 接口匿名实测 200（2026-10-30），仅只读展示、无个人数据；此前 L1SI175-A1-2「本批未授权」由本令解除
