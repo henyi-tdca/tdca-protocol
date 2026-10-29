@@ -3,7 +3,7 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: F0-3 统一 API 客户端（三级接口 + NCA 水印 + fail-closed + WS + HUF token）
 // 约束矩阵: TDCA-TASK-FRONTEND-001（FROZEN）§三 F0-3 + TDCA-FRONTEND-FRAMEWORK-001 §五
 // 制度锚点: ID91（NCA 水印校验）/ ID92（模拟态标注）/ ID85（fail-closed）/ ID71（快慢分工）/ F-4+HUF（写操作 token）
-// 先验分布: tdca-gateway:8100（/api/v1/* A 类 + /ws/events B-5 四通道 + B-4 鉴权中间件，29 测试绿）
+// 先验分布: 统一网关（/api/v1/* A 类 + /ws/events B-5 四通道 + B-4 鉴权中间件，29 测试绿）
 // 配置权边界: L2 前端层；仅消费后端，不修改 FROZEN 库
 // 预期分配: get/post/ws 三级接口 + 水印缺失拒绝 + fail-closed 降级 + HUF 写操作 token 注入
 // 审计轨迹: TDCA-NCA-FRONTEND-F0-001
