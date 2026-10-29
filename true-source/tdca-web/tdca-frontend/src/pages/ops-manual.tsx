@@ -40,7 +40,9 @@ export function OpsManualPage() {
         const first = r.data.files.find((f) => !f.missing)
         if (first) setActive(first.name)
       } else {
-        setError(`手册清单不可用：${r.ok ? '' : r.reason}${r.ok ? '' : ` HTTP ${r.status ?? ''}`}`)
+        // L1SI181-P0-FIX-002 F-3：原始错误只进日志（⛔给用户看路径/堆栈/内部码）
+        console.error('[ops/manual] 手册清单加载失败：', r.status ?? '', r.code ?? '', r.rawDetail ?? r.detail ?? r.reason)
+        setError('本页暂未开放')
       }
     })
   }, [])
@@ -51,7 +53,11 @@ export function OpsManualPage() {
     setError('')
     fetchText(active)
       .then(setBody)
-      .catch((e) => setError(String(e instanceof Error ? e.message : e)))
+      .catch((e) => {
+        // L1SI181-P0-FIX-002 F-3：原始错误只进日志，页面只给一句人话
+        console.error('[ops/manual] 手册取件失败：', e)
+        setError('本页暂未开放')
+      })
   }, [active])
 
   const isYaml = active.endsWith('.yaml') || active.endsWith('.yml')
