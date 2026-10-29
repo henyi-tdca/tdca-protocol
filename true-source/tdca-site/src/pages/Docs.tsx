@@ -56,11 +56,30 @@ export default function DocsHome() {
       <p className="mt-2 text-sm text-muted-foreground">
         内部试运行版 · 制度 / 帮助二族内容已入库，点开即读
       </p>
+      <div className="mt-4 rounded-md border bg-muted/50 px-4 py-3 text-sm">
+        <strong>怎么用</strong>
+        <p className="mt-1 text-muted-foreground">
+          ① 先在下方各族中点开要找的那一类；② 族内按标题浏览，点开即读全文；③ 读完可用浏览器返回，回到族内继续看；④ 需要全站检索，用页顶搜索。
+        </p>
+      </div>
       <p className="mt-2 rounded-md border bg-muted/50 px-4 py-2 text-xs text-muted-foreground">
-        分工（LIB-DOCS-SCOPE-001）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，原名文库，路由不变）。
+        分工（在册口径）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，原名文库，路由不变）。
       </p>
       <p className="mt-3 rounded-md border bg-muted/50 px-4 py-3 text-sm">
         <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按 TDCA 管理方 指令由系统生成，由 TDCA 管理方 转交受邀者；到期失效，不回收。
+      </p>
+      <div className="mt-6 rounded-md border px-4 py-3 text-sm">
+        <strong>五族说明</strong>
+        <ul className="mt-1 space-y-1 text-muted-foreground">
+          <li><strong>白皮书</strong>：制度与技术的总体主张与论证。</li>
+          <li><strong>论文</strong>：专题论文与研究稿。</li>
+          <li><strong>制度规范</strong>：生效中的条例、办法、协议与登记规则。</li>
+          <li><strong>素材库</strong>：思维协议与工程素材的公开集。</li>
+          <li><strong>周刊</strong>：按周发布的动态与观察。</li>
+        </ul>
+      </div>
+      <p className="mt-4 rounded-md border bg-muted/50 px-4 py-3 text-sm">
+        <strong>想了解「是什么」</strong>（概念、理论与术语），请到「知识库」；<strong>想查「怎么做」</strong>（制度、办法与操作规则），留在本页。
       </p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {FAMILIES.map((f) => (
@@ -77,6 +96,7 @@ export default function DocsHome() {
 
 export function DocDetail() {
   const { family, slug } = useParams()
+  const fam = FAMILIES.find((f) => f.key === family)
   const { data, error } = useLoaded(
     () => siteGet<{ title: string; body_md: string; source_path: string; synced_at: string }>(`/docs/${family}/${slug}`),
     [family, slug],
@@ -85,7 +105,11 @@ export function DocDetail() {
   if (!data) return <div className="py-24 text-center text-muted-foreground">加载中…</div>
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
-      <Link to={`/docs/${family}`} className="text-sm text-muted-foreground">← 返回列表</Link>
+      <nav aria-label="面包屑" className="text-sm text-muted-foreground">
+        文档库 ›{' '}
+        <Link to={`/docs/${family}`} className="hover:underline">{fam?.label ?? family}</Link>
+        {' '}› {data.title}
+      </nav>
       <article className="prose prose-neutral mt-4 max-w-none dark:prose-invert">
         <Markdown>{data.body_md}</Markdown>
       </article>

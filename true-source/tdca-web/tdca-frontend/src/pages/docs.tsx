@@ -117,8 +117,27 @@ export function DocsHomePage() {
       <p className="text-sm text-gray-600">
         制度 / 帮助二族内容已入库，点开即读。
       </p>
+      <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
+        <strong>怎么用</strong>
+        <p className="mt-1">
+          ① 先在下方各族中点开要找的那一类；② 族内按标题浏览，点开即读全文；③ 读完可用浏览器返回，回到族内继续看；④ 需要全站检索，用页顶搜索。
+        </p>
+      </div>
       <p className="mt-2 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-xs text-gray-500">
-        分工（LIB-DOCS-SCOPE-001）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，路由不变）。
+        分工（在册口径）：文档库＝制度／条例／指引／章程／规则／办法／说明／示例／帮助；理论／白皮书／术语／知识图谱／思维协议／文献请走「知识库」（/library，路由不变）。
+      </p>
+      <div className="mt-4 rounded-md border border-gray-200 px-4 py-3 text-sm text-gray-600">
+        <strong className="text-gray-900">五族说明</strong>
+        <ul className="mt-1 space-y-1">
+          <li><strong>白皮书</strong>：制度与技术的总体主张与论证。</li>
+          <li><strong>论文</strong>：专题论文与研究稿。</li>
+          <li><strong>制度规范</strong>：生效中的条例、办法、协议与登记规则。</li>
+          <li><strong>素材库</strong>：思维协议与工程素材的公开集。</li>
+          <li><strong>周刊</strong>：按周发布的动态与观察。</li>
+        </ul>
+      </div>
+      <p className="mt-3 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
+        <strong>想了解「是什么」</strong>（概念、理论与术语），请到「知识库」；<strong>想查「怎么做」</strong>（制度、办法与操作规则），留在本页。
       </p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {DOC_FAMILIES.map((f) => (
@@ -136,10 +155,15 @@ export function DocsHomePage() {
 /** 文档详情（/docs/:family/:slug）——正文按纯文本呈现（Markdown 源不转样式，⛔ 不加依赖） */
 export function DocDetailPage() {
   const { family, slug } = useParams()
+  const fam = DOC_FAMILIES.find((f) => f.key === family)
   const { data, error } = useDoc<PublicDocDetail>(`/docs/${family}/${slug}`)
   return (
     <section data-testid="doc-detail" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <Link to={`/docs/${family}`} className="text-sm text-gray-500 hover:text-gray-800">← 返回列表</Link>
+      <nav aria-label="面包屑" className="text-sm text-gray-500">
+        文档库 ›{' '}
+        <Link to={`/docs/${family}`} className="hover:text-gray-800">{fam?.label ?? family}</Link>
+        {data && <> › {docTitle(data.filename)}</>}
+      </nav>
       <div className="mt-3">
         {(!data || error) && <DocLoading error={error} />}
         {data && (
