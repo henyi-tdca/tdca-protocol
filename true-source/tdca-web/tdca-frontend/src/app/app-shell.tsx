@@ -517,7 +517,7 @@ function ShellInner() {
       </div>
       <footer className="border-t border-gray-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-3 text-[10px] text-gray-400">
-          术语基线：TDCA-TERMINOLOGY-REGISTRY V1.1 · 制度依据：宪法十六条 + UPDA-v2.0 + NSFL-V0.2 · 后端对接：gateway:8100（仅消费）
+          术语基线：TDCA-TERMINOLOGY-REGISTRY V1.1 · 制度依据：宪法十六条 + UPDA-v2.0 + NSFL-V0.2 · 后端对接：统一网关（仅消费）
         </div>
       </footer>
     </div>
