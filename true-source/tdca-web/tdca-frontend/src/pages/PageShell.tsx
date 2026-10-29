@@ -4,7 +4,7 @@
 // 约束矩阵: FRAMEWORK-001 §四（路由表：界面域/层级/数据源/权限）+ ID92（模拟态）
 // 预期分配: PageShell（标题/数据源/权限/说明 + 占位内容容器）
 // =============================================================================
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { useAuthOptional } from '@/app/auth-context'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
 
@@ -31,6 +31,10 @@ export function PageShell({ title, dataSource, dataSourceAnon, permission, descr
   const auth = useAuthOptional()
   const isAnon = !(auth?.isAuthenticated ?? false)
   const shownSource = isAnon && dataSourceAnon ? dataSourceAnon : dataSource
+  // 每页独立标题（SITE-SEO-A-001 乙-1：页面标题与地址一致）
+  useEffect(() => {
+    document.title = `${title} · TDCA`
+  }, [title])
   return (
     <section data-testid="page-shell" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-1 flex items-center gap-2">

@@ -35,7 +35,7 @@ router = APIRouter(prefix="/api/public", tags=["public-docs"])
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 
 # ---------------------------------------------------------------------
-# 在册公开清单（regulation 47／whitepapers 2／papers 13 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件）
+# 在册公开清单（regulation 49／whitepapers 2／papers 13 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件 + L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件）
 # 原「乙类 2 件（签批记录／生效注记）不得列入」经 L1SI180-TERMS-001 入站批 2 改写零命中、TERMS-004 放行、TERMS-005 甲案（创始人逐字）解除；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
@@ -96,6 +96,10 @@ _PUBLIC_DOCS = {
     "TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md",
     "TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md",
     "TDCA-TEMPLATE-AUTH-001-生效注记.md",
+    # L1SI181-REG-NODE-ACCESS-PUB-001（创始人逐字「节点条例可以入仓对外公开入站」；条文一字不改）：
+    # 《业务端节点接入与同构契约条例》对外公开版 人读＋机读两件入册——regulation 47→49
+    "TDCA-REG-NODE-ACCESS-001（对外公开版·V1.0）.md",
+    "TDCA-REG-NODE-ACCESS-001-COMPILED（对外公开版·V1.0）.yaml",
     ),
     # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
     "whitepapers": (
