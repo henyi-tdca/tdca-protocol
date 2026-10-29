@@ -78,6 +78,10 @@ export function DocsIndexPage() {
   const { family } = useParams()
   const fam = DOC_FAMILIES.find((f) => f.key === family)
   const { data, error } = useDoc<PublicDocList>(`/docs/${family}`, true)
+  // 每页独立标题（SITE-SEO-A-001 乙-1）
+  useEffect(() => {
+    document.title = `${fam?.label ?? family} · 文档库 · TDCA`
+  }, [fam, family])
   const docs = data?.documents ?? []
   return (
     <section data-testid="docs-index" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -157,6 +161,10 @@ export function DocDetailPage() {
   const { family, slug } = useParams()
   const fam = DOC_FAMILIES.find((f) => f.key === family)
   const { data, error } = useDoc<PublicDocDetail>(`/docs/${family}/${slug}`)
+  // 每页独立标题（SITE-SEO-A-001 乙-1）：件载入后用品名，未载入先以地址件名占位
+  useEffect(() => {
+    document.title = `${data ? docTitle(data.filename) : docTitle(slug ?? '')} · 文档库 · TDCA`
+  }, [data, slug])
   return (
     <section data-testid="doc-detail" className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       <nav aria-label="面包屑" className="text-sm text-gray-500">
