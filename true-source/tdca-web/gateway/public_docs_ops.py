@@ -35,8 +35,8 @@ router = APIRouter(prefix="/api/public", tags=["public-docs"])
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 
 # ---------------------------------------------------------------------
-# 在册公开清单（三族 59 件 · regulation 44／whitepapers 2／papers 13 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件）
-# ⛔ 未入站件与乙类 2 件（签批记录／生效注记）一律不得列入；
+# 在册公开清单（regulation 47／whitepapers 2／papers 13 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件）
+# 原「乙类 2 件（签批记录／生效注记）不得列入」经 L1SI180-TERMS-001 入站批 2 改写零命中、TERMS-004 放行、TERMS-005 甲案（创始人逐字）解除；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
 _FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列 regulation）
@@ -92,6 +92,10 @@ _PUBLIC_DOCS = {
     "TDCA-PUB-NCA-GENESIS-REG-001-TDCA官方可信认知资产登记·创世认知资产区块（人读·已登记·对外节选版）.md",
     # L1SI164-NCA-GENESIS-REG-INSITE-001-AMEND-1（授权追加）：创世区块完整证据件（对外版）——regulation 44→45
     "TDCA-PUB-NCA-GENESIS-EVID-001-官方可信认知资产·创世区块完整证据（三块·算法·签批·自验）-对外版.md",
+    # L1SI180-TERMS-004/005 甲案（创始人逐字「一并上·授权重启」）：入站批 2 三件上站（复扫零命中·磁盘已与树逐字节符）——regulation 44→47
+    "TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md",
+    "TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md",
+    "TDCA-TEMPLATE-AUTH-001-生效注记.md",
     ),
     # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
     "whitepapers": (
@@ -121,6 +125,8 @@ _PUBLIC_DOCS = {
     "cop-library": (
     "README.md",
     "OPENING.md",
+    # L1SI180-TERMS-004/005 甲案上站一件（入站批 2 · 未入册⟹幂等补入 · 磁盘已与 main 树逐字节符）
+    "OPENING-LEDGER-L1SI177.md",
     "COP-MANIFEST-2026-09-13.md",
     "tdca_core/README.md",
     "simulations/multilateral_search_match/README.md",
