@@ -26,7 +26,8 @@ const PROTECTED = new Set([
   '/me/appeal',
   '/me/node',
   '/review',
-  '/terms', // L1SI175-A1-2：术语页登录可见（⛔ 匿名开放——本批未授权）
+  // L1SI181-P0-FIX-002 F-4：/terms 移出受护集——匿名可读（在册：条款对外通用入公域）；
+  // A-6 接口匿名实测 200（2026-10-30），仅只读展示、无个人数据；此前 L1SI175-A1-2「本批未授权」由本令解除
 ])
 
 export default function App() {
