@@ -1295,7 +1295,7 @@ terms:
 - id: T-039
   name: MOU 本体（Minimum Observable Utility）
   group: T-038~T-039 闭环结算核心术语补录（2026-08-14 追加，M3 glossarian 核对）
-  short_def: MOU = 进项税+出项税 = 交换效用的硬可见部分（ID79）
+  short_def: MOU = 进项税+出项税 = 交换效用的硬可见部分（最低可见效用 MOU）
   status: ✅ 已登记（2026-08-14，M3 glossarian D-3 修复）
   keys:
   - T-039
@@ -1689,13 +1689,13 @@ terms:
   - T-087
   - SEA 合规前置 SEA_Pass
 - id: T-088
-  name: ID27↔P-007+AC 映射补登记
+  name: 激活系数统一形式 AC_inst↔P-007+AC 映射补登记
   group: T-080~T-088 场景专题 R-SCENE-5 场景化合与沙盒术语（2026-08-15 追加，（内部台账） 人类 ACCEPT）
-  short_def: TDCA-ID-MAPPING 新增条目（ID27 激活系数 ↔ P-007 沙盒三位一体 ↔ 权威 AC）
+  short_def: TDCA-ID-MAPPING 新增条目（激活系数统一形式 AC_inst ↔ P-007 沙盒三位一体 ↔ 权威 AC）
   status: ✅ 已登记（NC-20260815-009，人类 ACCEPT 2026-08-15）
   keys:
   - T-088
-  - ID27↔P-007+AC 映射补登记
+  - 激活系数统一形式 AC_inst↔P-007+AC 映射补登记
 - id: T-089
   name: 联合演化算子 Λ_SA
   group: T-089~T-102 场景专题 R-SCENE-6 场景自适应术语（2026-08-15 追加，（内部台账） 人类 ACCEPT，场景专题收官）
@@ -2063,7 +2063,7 @@ terms:
   name: 场景互认（SMR）
   group: T-103~T-109 场景形成机制术语（2026-08-15 追加，（内部台账） 人类 ACCEPT）
   short_def: 场景 s_i/s_j 互认关系 R(s_i,s_j)——四条件（D_c∧SC 非死合取[防 κ 除零]/共享上下文或显式声明登记生效/无负空间触碰[锚
-    T-016/017/073]/制度层登记含 ID71）
+    T-016/017/073]/制度层登记含 快慢系统边界）
   status: ✅ 已登记（NC-20260908-005，人类 ACCEPT 2026-09-08）
   keys:
   - T-134
