@@ -2,10 +2,11 @@
 """公开只读制度件取得面自核（丙案 · L1SI151-PUBLIC-ROUTE-001）。
 
 验收映射（施工令 §四步2 四项）：
-  ① 匿名取列表（含甲类 8 件、不含未入站/乙类）
+  ① 匿名取列表（含甲类 8 件、不含未入站件）
   ② 匿名取件（sha256 与内容逐位一致）
   ③ 未入站件取不到（统一 404，fail-closed）
-  ④ 乙类件取不到（且不在列表）
+  ④ ~~乙类件取不到~~（L1SI180-TERMS-004/005 甲案解除：签批记录已改写零命中并入册上站，
+     原「乙类不得出现」之负向用例改为「新三件正向在架」用例，见 test_yilei_batch2_now_listed）
   附：未知族 404／限流 429／旧别名 /api/site/docs 同一实现／写方法 405
 """
 import hashlib
@@ -35,7 +36,7 @@ def _docs_dir(tmp_path, monkeypatch):
         body = (f"件号测试占位\n版本: **V9.9-TEST**\n正文占位 {name}\n").encode("utf-8")
         (d / name).write_bytes(body)
     (d / _EXTRA).write_text("未入站件不得出现", encoding="utf-8")
-    (d / _YILEI).write_text("乙类存证件不得出现 GSEQ-3965", encoding="utf-8")
+    # L1SI180-TERMS-004/005：_YILEI（签批记录）已改写零命中并入册上站，乙类负向前提解除，不再作暗桩
     monkeypatch.setenv("TDCA_PUBLIC_DOCS_DIR", str(d))
     public_docs_ops._hits.clear()
     yield
@@ -49,7 +50,7 @@ def test_anonymous_list_only_public_eight():
     assert data["count"] == len(_DOCS)  # 动态取 regulation 族在册数（多族承载后 _PUBLIC_DOCS 为分族映射）
     names = {e["filename"] for e in data["documents"]}
     assert names == set(_DOCS)
-    assert _EXTRA not in names and _YILEI not in names
+    assert _EXTRA not in names  # L1SI180-TERMS-004/005：_YILEI 已依规入册，不再负向断言
     for e in data["documents"]:
         assert e["family"] == "regulation"
         assert e["sha256_16"] == e["sha256"].upper()[:16]
@@ -72,11 +73,19 @@ def test_unlisted_doc_not_found():
     assert r.status_code == 404
 
 
-def test_evidence_doc_never_appears():
+def test_yilei_batch2_now_listed():
+    """L1SI180-TERMS-004/005 甲案：入站批 2 三件（含原乙类签批记录）已合规入册上站——
+    列表可见且逐件可取（原 test_evidence_doc_never_appears 之负向前提解除，正向替代）。"""
     r_list = client.get("/api/public/docs")
-    assert _YILEI not in {e["filename"] for e in r_list.json()["documents"]}
-    r_get = client.get(f"/api/public/docs/regulation/{_YILEI}")
-    assert r_get.status_code == 404
+    listed = {e["filename"] for e in r_list.json()["documents"]}
+    for name in (
+        "TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md",
+        _YILEI,
+        "TDCA-TEMPLATE-AUTH-001-生效注记.md",
+    ):
+        assert name in listed
+        r_get = client.get(f"/api/public/docs/regulation/{name}")
+        assert r_get.status_code == 200, r_get.text[:200]
 
 
 def test_unknown_family_404():
@@ -150,12 +159,12 @@ def test_display_name_mapping_no_draft():
 
 
 def test_ingest002_list_42_no_droop():
-    """L1SI155-INGEST-002 防掉条用例：regulation 族 44 条；
+    """L1SI155-INGEST-002 防掉条用例：regulation 族 47 条（L1SI180-TERMS-004/005 三件上站后 44→47）；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 44, f"清单条数漂移: {data['count']}"
+    assert data["count"] == 47, f"清单条数漂移: {data['count']}"
     返回集 = {e["filename"] for e in data["documents"]}
     在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
     assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
