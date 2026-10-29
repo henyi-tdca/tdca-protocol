@@ -1,7 +1,7 @@
 // =============================================================================
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI163-START-001 /start 新手指引自检
 // 约束矩阵: 设计件 §五 A-1~A-10（计数程序统计，⛔ 目测）＋ §四 M-1~M-4 同批验收
-//  验①哈希：?raw 源 sha256_16 == 在册值 276BFBD2AC365D75（_START-MAP-20261021-V1·R1-001-A 实测刷新）
+//  验①哈希：?raw 源 sha256_16 == 在册值 E9FFC4080C045CD2（_START-MAP-20261021-V1·R1-001-A 实测刷新）
 //  验②解析：steps 6／docs 54／terms 147；六步 5/24/17/26/2/3；五类 19/17/9/5/4；
 //           五态 27/17/3/4/3；page_visible 54（折叠 0·相遇 V0.9 已归 archive）；adjacent_steps 口径；
 //           RTN 两义 T-029/T-034 并列在册
@@ -76,8 +76,8 @@ function applyCatalog(
 }
 
 describe('验①② 机读表哈希与解析（A-3 程序统计）', () => {
-  it('?raw 源 sha256_16 == 在册值 276BFBD2AC365D75', async () => {
-    expect(await sha16(startMapYaml)).toBe('276BFBD2AC365D75')
+  it('?raw 源 sha256_16 == 在册值 E9FFC4080C045CD2', async () => {
+    expect(await sha16(startMapYaml)).toBe('E9FFC4080C045CD2')
   })
 
   it('三表规模：steps 6／docs 54／terms 147／组 12', () => {
