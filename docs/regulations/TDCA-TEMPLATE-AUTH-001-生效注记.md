@@ -1,6 +1,6 @@
 # TDCA-TEMPLATE-AUTH-001 已生效注记
 
-> 【已生效注记】下列三件（TDCA-TEMPLATE-AUTH-001 中／英／机读）自 GSEQ-3626 创始人签批起生效 V1.0-FROZEN；范围＝期一内部运行。
+> 【已生效注记】下列三件（TDCA-TEMPLATE-AUTH-001 中／英／机读）自 依对应存证件 创始人签批起生效 V1.0-FROZEN；范围＝期一内部运行。
 
 注记日期：2026-10-03
 
