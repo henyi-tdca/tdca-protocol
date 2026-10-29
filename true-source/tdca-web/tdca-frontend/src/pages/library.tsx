@@ -113,8 +113,10 @@ export function LibraryPage() {
   const [err, setErr] = useState('')
 
   useEffect(() => {
-    void api.get<{ families: FamilyView[] }>('/api/v1/library/families').then((r) => {
-      if (r.ok) setFamilies(r.data.families)
+    // L1SI181-P0-FIX-002 F-1 根因修：接口契约返回 {items:[...]}（实测 2026-10-30），
+    // 原读 data.families 恒为 undefined → setFamilies(undefined) → 渲染期 find 崩溃白屏。
+    void api.get<{ items: FamilyView[] }>('/api/v1/library/families').then((r) => {
+      if (r.ok) setFamilies(r.data.items ?? [])
     })
   }, [])
 
