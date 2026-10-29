@@ -51,7 +51,7 @@ def downgrade():
     if BOOKKEEP not in existing:
         return  # 本件未建过任何表（或 bookkeeping 已失）——⛔ 不碰存量表
     created = {
-        row["name"]
+        row[0]  # BATCH-001-FIX-001：照同族 0005/0006 先例 row[0]（SA 2.1 Row 不支持字符串下标）
         for row in bind.execute(sa.text(f"SELECT name FROM {BOOKKEEP}"))
     }
     targets = [t for t in Base.metadata.sorted_tables
