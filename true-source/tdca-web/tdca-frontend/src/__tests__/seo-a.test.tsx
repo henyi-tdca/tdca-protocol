@@ -8,7 +8,7 @@ import { MemoryRouter } from 'react-router'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Route, Routes } from 'react-router'
 import { DocDetailPage } from '@/pages/docs'
-import { NodeNetPage } from '@/pages/node-net'
+import { TermsPage } from '@/pages/terms'
 
 afterEach(() => {
   document.title = '' // 清场，防用例间互染
@@ -16,8 +16,8 @@ afterEach(() => {
 
 describe('SITE-SEO-A-001 乙-1：每页独立标题', () => {
   it('PageShell 页：document.title = 「页名 · TDCA」', () => {
-    render(<MemoryRouter><NodeNetPage /></MemoryRouter>)
-    expect(document.title).toBe('节点网络 · TDCA')
+    render(<MemoryRouter><TermsPage /></MemoryRouter>)
+    expect(document.title).toBe('术语检索 · TDCA')
   })
 
   it('文档详情页：未载入先以地址件名占位，载入后用品名', async () => {
