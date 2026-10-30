@@ -25,6 +25,7 @@ from pydantic import BaseModel, ConfigDict
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from rights_bundle import rb_parse  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/ownership", tags=["ownership"])
 
@@ -134,9 +135,13 @@ def ownership_register(req: RegisterIn, request: Request):
         raise HTTPException(400, "work_title 与 owner_ref 为必填（权属登记）")
     if not req.source_lineage.strip():
         raise HTTPException(400, "登记须载生成来源谱系 source_lineage（⛔ 不得空缺）")
+    try:
+        note_norm, _rb, rb_anomaly = rb_parse(req.note)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
     fields = {"work_title": req.work_title, "owner_ref": req.owner_ref,
               "expression_form": req.expression_form, "source_lineage": req.source_lineage,
-              "scene": req.scene, "note": req.note}
+              "scene": req.scene, "note": note_norm}
     hits = _public_space_hits(fields)
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
@@ -151,13 +156,16 @@ def ownership_register(req: RegisterIn, request: Request):
             expression_form=req.expression_form.strip() or None,
             jurisdiction_branch=req.jurisdiction_branch,
             source_lineage=req.source_lineage.strip(),
-            scene=req.scene.strip() or None, note=req.note.strip() or None,
+            scene=req.scene.strip() or None, note=note_norm.strip() or None,
             status="registered", nca_ref=nca_ref, created_at=_utc(), updated_at=_utc()))
-    return _nca_watermark({
+    payload = {
         "record_id": rid, "status": "registered", "nca_ref": nca_ref,
         "simulated": True,
         "scene_recorded": bool(req.scene.strip()),
-        "note": "权属登记已入册（NCA 存证）；场景非必须——未载明不影响登记"})
+        "note": "权属登记已入册（NCA 存证）；场景非必须——未载明不影响登记"}
+    if rb_anomaly:
+        payload["rb_anomaly"] = rb_anomaly
+    return _nca_watermark(payload)
 
 
 class AmendIn(BaseModel):
@@ -180,8 +188,12 @@ def ownership_amend(req: AmendIn, request: Request):
                 req.scene.strip(), req.note.strip()]):
         raise HTTPException(400, "变更须至少载明一项（expression_form／"
                                  "jurisdiction_branch／scene／note）")
+    try:
+        note_norm, _rb, rb_anomaly = rb_parse(req.note)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
     hits = _public_space_hits({"expression_form": req.expression_form,
-                               "scene": req.scene, "note": req.note})
+                               "scene": req.scene, "note": note_norm})
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
                                  f"{'／'.join(hits)}——已 fail-closed 拦截（⛔ 内容不回显）")
@@ -201,14 +213,17 @@ def ownership_amend(req: AmendIn, request: Request):
             r.jurisdiction_branch = req.jurisdiction_branch.strip()
         if req.scene.strip():
             r.scene = req.scene.strip()
-        if req.note.strip():
-            r.note = req.note.strip()
+        if note_norm.strip():
+            r.note = note_norm.strip()
         r.status = "amended"
         r.nca_ref = nca_ref
         r.updated_at = _utc()
-    return _nca_watermark({"record_id": row.record_id, "status": "amended",
-                           "nca_ref": nca_ref, "simulated": True,
-                           "note": "权属变更已登记（NCA 存证）"})
+    payload = {"record_id": row.record_id, "status": "amended",
+               "nca_ref": nca_ref, "simulated": True,
+               "note": "权属变更已登记（NCA 存证）"}
+    if rb_anomaly:
+        payload["rb_anomaly"] = rb_anomaly
+    return _nca_watermark(payload)
 
 
 class CancelIn(BaseModel):
