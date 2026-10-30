@@ -227,7 +227,7 @@ async def use_upload(request: Request):
     with get_sessionmaker().begin() as s:
         rec = s.get(M.UploadRecord, upload_id)
         return _nca_watermark({**_view(rec), "duplicate": False,
-                               "note": "已收到——下一步：提交登记材料（权属/授权登记）。"},
+                               "note": "已收到——下一步：提交登记材料（权属/合约备案）。"},
                               nature="real")
 
 

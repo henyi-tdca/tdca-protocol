@@ -177,7 +177,7 @@ def authorization_register(req: RegisterIn, request: Request):
     missing = [k for k in ("asset_ref", "grantee_ref", "scene")
                if not str(getattr(req, k)).strip()]
     if missing:
-        raise HTTPException(400, f"{'／'.join(missing)} 为必填（授权登记）")
+        raise HTTPException(400, f"{'／'.join(missing)} 为必填（合约备案）")
     if not all([req.req_scene, req.req_five_forms, req.req_full_grant,
                 req.req_legal_signature]):
         raise HTTPException(400, "四要件（场景约束／五阶资产形态／全构成已授权／"
@@ -211,7 +211,7 @@ def authorization_register(req: RegisterIn, request: Request):
     return _nca_watermark({
         "record_id": rid, "status": "active", "nca_ref": nca_ref,
         "simulated": True,
-        "note": "授权登记已入册（NCA 存证；四要件自证齐全；"
+        "note": "合约备案已入册（NCA 存证；四要件自证齐全；"
                 "授权件仅内部存证，⛔ 不入主仓）"})
 
 
