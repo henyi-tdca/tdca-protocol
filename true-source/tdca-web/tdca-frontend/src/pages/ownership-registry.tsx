@@ -109,6 +109,12 @@ export function OwnershipRegistryPage() {
           <SimulatedBadge nature="simulated" />
         </div>
 
+        {/* L1SI182-RIGHT-CENTER-001 AMEND-1 处5＋处6（照抄落定稿，⛔ 改写；处6 与合约备案页逐字同源） */}
+        <section data-testid="or-asset-axis-notes" className="rounded-lg border border-gray-200 bg-gray-50/60 p-4 text-sm text-gray-700">
+          <p>本系统以「资产标识」为主轴：一次协作从缔约、运行、产出到分润，指的都是同一件资产。权属与权利都挂在资产标识上。</p>
+          <p>使用权的「归属」（这项使用权归谁）属于确权，在权属登记与确权中心办理；使用权的「行使条件与责任」属于合约备案。二者不是一回事，⛔ 不能互相替代。</p>
+        </section>
+
         {rules && (
           <section data-testid="or-rules" className="rounded-lg border border-blue-200 bg-blue-50/50 p-4 text-sm">
             <h3 className="mb-2 font-semibold text-blue-800">登记口径</h3>

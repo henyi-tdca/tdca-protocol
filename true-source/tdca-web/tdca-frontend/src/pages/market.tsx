@@ -175,6 +175,10 @@ export function MarketPage() {
       permission="公开读 / 挂出与状态操作须本人登录"
       description="配置权协议化流转市场——使用权/配置权可流转，所有权不流转（防混淆）。管理面四操作：挂出（先有成件）／查询／状态变更／下架（不溯及授权件）。"
     >
+      {/* L1SI182-RIGHT-CENTER-001 处3（照抄落定稿，⛔ 改写；与 /market-sim 同源）：两轨界线 */}
+      <p data-testid="market-track-note" className="rounded-lg border border-gray-200 bg-gray-50/60 p-3 text-sm text-gray-700">
+        本页是配置权市场：以协作方式取得配置权，不发生所有权转让。所有权转让属交易合约，在所有权市场完成，合约可以备案存档。
+      </p>
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="market-fail-closed">

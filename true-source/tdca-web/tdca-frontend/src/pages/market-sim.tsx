@@ -78,6 +78,10 @@ export function MarketSimPage() {
       permission="登录 DID"
       description="规范入册＋最小可用挂接（不承诺 L2 市场全功能）：索引入口只列名目；最小链发布→准入→撮合→结算全 SIMULATED。">
       <div className="space-y-4">
+        {/* L1SI182-RIGHT-CENTER-001 处3（照抄落定稿，⛔ 改写；与 /market 同源）：两轨界线 */}
+        <p data-testid="market-sim-track-note" className="rounded-lg border border-gray-200 bg-gray-50/60 p-3 text-sm text-gray-700">
+          本页是配置权市场：以协作方式取得配置权，不发生所有权转让。所有权转让属交易合约，在所有权市场完成，合约可以备案存档。
+        </p>
         <div className="flex items-center gap-2 text-xs text-gray-500">
           期一承诺＝规范入册＋最小可用挂接；未入册规范依赖端点 503 fail-closed
           <SimulatedBadge nature="simulated" />

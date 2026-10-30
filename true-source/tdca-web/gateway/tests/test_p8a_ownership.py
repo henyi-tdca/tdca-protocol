@@ -52,13 +52,14 @@ def test_rules_surface():
     assert d["simulated"] is True
     assert d["entry"] == "凡具表达形式者皆可登记"
     assert "归谁" in d["registry_split"]["ownership"]
-    assert "8b" in d["registry_split"]["authorization"]
+    # L1SI182-RIGHT-CENTER-001 处4：authorization 说明改「合约备案＝…（⛔ 非确权）」（照抄令面定稿）
+    assert "合约备案" in d["registry_split"]["authorization"] and "非确权" in d["registry_split"]["authorization"]
     branches = {b["key"]: b for b in d["jurisdiction_branches"]}
     assert branches["copyright"]["branch"] == "著作权"
     assert branches["patent"]["branch"] == "专利法"
     assert branches["data"]["branch"] == "数据法"
     assert branches["trademark"]["branch"] == "商标法"
-    assert d["scene_optional"] and "8b" in d["out_of_scope"]
+    assert d["scene_optional"] and "8b" in d["out_of_scope"] and "可备案存档" in d["out_of_scope"]
     assert len(d["non_public_four"]) == 4
 
 

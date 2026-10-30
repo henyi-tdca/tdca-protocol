@@ -68,6 +68,10 @@ export function AttestationOverviewPage() {
       description="待审队列 + 最近事件 + 确权统计（元函数/动态/历史入口）。"
     >
       <div className="space-y-4">
+        {/* L1SI182-RIGHT-CENTER-001 处2（照抄落定稿，⛔ 改写）：确权四类口径 */}
+        <p data-testid="attestation-scope-note" className="rounded-lg border border-gray-200 bg-gray-50/60 p-3 text-sm text-gray-700">
+          确权中心确认的是权利归属，共四类：① 所有权初始登记确权 ② 权属变更确权 ③ 使用权授权确权 ④ 使用权权利变更确权。合约的履行与备案不在本中心。
+        </p>
         <div className="flex gap-3">
           <Link to="/attestation/meta" data-testid="link-meta" className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800 hover:bg-amber-100">
             元函数初始确权（出盒终裁）→
