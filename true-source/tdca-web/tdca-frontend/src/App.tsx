@@ -8,6 +8,7 @@ import { Navigate, Route, Routes } from 'react-router'
 import { AppShell } from '@/app/app-shell'
 import { AuthProvider } from '@/app/auth-context'
 import { RequireAuth } from '@/app/route-guard'
+import { SeoRobots } from '@/app/seo-robots'
 import { PAGE_META, NotFoundPage, renderPage, DocsIndexPage, DocDetailPage } from '@/pages/pages'
 import { AgentChannelRegisterPage } from '@/pages/agent-channel-register'
 import { ChannelMyPage } from '@/pages/channel-my'
@@ -39,6 +40,8 @@ const PROTECTED = new Set([
 export default function App() {
   return (
     <AuthProvider>
+      {/* L1SI182-BATCH-002：路由级 meta robots 注入（与响应头同一张开面表） */}
+      <SeoRobots />
       <Routes>
         <Route element={<AppShell />}>
           {PAGE_META.map((meta) => (
