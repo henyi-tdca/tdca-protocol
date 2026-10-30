@@ -99,7 +99,7 @@ export function ClusterPage() {
         <h2>准入闸门（配置类调用 · 五闸门合取）</h2>
         <input placeholder="智能体标识" value={agentId} onChange={(e) => setAgentId(e.target.value)} />
         <input placeholder="权属登记成件 ID（G-2）" value={owId} onChange={(e) => setOwId(e.target.value)} />
-        <input placeholder="授权登记成件 ID（G-3~G-5）" value={arId} onChange={(e) => setArId(e.target.value)} />
+        <input placeholder="合约备案成件 ID（G-3~G-5）" value={arId} onChange={(e) => setArId(e.target.value)} />
         <label>
           <input type="checkbox" checked={sandbox} onChange={(e) => setSandbox(e.target.checked)} />
           沙盒／演练例外（出盒须授权）

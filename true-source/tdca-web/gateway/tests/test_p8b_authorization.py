@@ -72,7 +72,7 @@ def test_rules_surface():
     assert r.status_code == 200
     d = r.json()["data"]
     assert d["simulated"] is True
-    assert "谁能怎么用" in d["registry_split"]["authorization"]
+    assert "合约备案" in d["registry_split"]["authorization"] and "非确权" in d["registry_split"]["authorization"]
     assert "归谁" in d["registry_split"]["ownership"]
     assert len(d["four_requirements"]) == 4
     labels = [x["label"] for x in d["four_requirements"]]

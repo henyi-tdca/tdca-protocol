@@ -63,9 +63,9 @@ export function PrivateDomainPage() {
               。
             </p>
             <p>
-              <span className="font-semibold text-gray-700">授权登记（允许谁用、什么条件）：</span>
+              <span className="font-semibold text-gray-700">合约备案（允许谁用、什么条件）：</span>
               四要件缺一即拒；签名须本人，智能体不代持代填。入口：
-              <Link data-testid="private-road-auth" to="/authorization-registry" className="text-blue-700 underline underline-offset-2">授权登记页</Link>
+              <Link data-testid="private-road-auth" to="/authorization-registry" className="text-blue-700 underline underline-offset-2">合约备案页</Link>
               。
             </p>
           </div>
