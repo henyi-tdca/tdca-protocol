@@ -706,7 +706,7 @@ export function MePage() {
           <section data-testid="me-ownership" className="rounded-lg border border-gray-200 p-4">
             <h3 className="mb-2 text-sm font-semibold text-gray-800">我的权属登记（{data.my_ownership?.length ?? 0}）</h3>
             {(data.my_ownership ?? []).length === 0 && (
-              <p className="text-xs text-gray-400">暂无登记——去 <Link to="/ownership-registry" className="text-emerald-700 underline">权属登记管理</Link> 登记第一件</p>
+              <p className="text-xs text-gray-400">暂无登记——可先从 <Link to="/use/upload" className="text-emerald-700 underline">交素材（上传一件）</Link> 起步，机器人只问缺项、出草稿，本人确认后出登记号；或去 <Link to="/ownership-registry" className="text-emerald-700 underline">权属登记管理</Link> 登记第一件</p>
             )}
             {(data.my_ownership ?? []).length > 0 && (
               <table className="w-full text-sm">
@@ -723,6 +723,10 @@ export function MePage() {
               </table>
             )}
             <Link to="/ownership-registry" className="mt-1 inline-block text-[11px] text-emerald-700 underline">登记 / 变更 / 注销 →</Link>
+            <span className="mx-2 text-[11px] text-gray-300">|</span>
+            <Link to="/use/upload" className="mt-1 inline-block text-[11px] text-emerald-700 underline">交素材（上传一件）→</Link>
+            <span className="mx-2 text-[11px] text-gray-300">|</span>
+            <Link to="/use/agent" className="mt-1 inline-block text-[11px] text-emerald-700 underline">代办登记（机器人只跑腿）→</Link>
           </section>
 
           {/* 判定历史（集群准入闸门：只列 CLUSTER_ADMIT* 判定，摘要与 /me/nca 明细同链） */}
