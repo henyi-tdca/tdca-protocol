@@ -25,6 +25,7 @@ interface RecordView {
   record_id: string
   status: string
   asset_ref: string
+  asset_ref_aligned?: boolean
   grantee_ref: string
   scene: string
   scope_note: string | null
@@ -35,6 +36,27 @@ interface RecordView {
   }
   nca_ref: string
   data_provenance: string
+}
+
+interface PublicView {
+  record_id: string
+  status: string
+  权属信息?: string
+  授权信息?: string
+  授权状态?: string
+  获取方式?: string
+  初始条件?: {
+    scene_ok: boolean; five_forms_ok: boolean
+    full_grant_ok: boolean; legal_signature_ok: boolean
+    scope_note: string
+  }
+  期限?: string
+  是否嵌套与调用对象?: { 是否嵌套: string; 调用对象: string }
+}
+
+interface MyOwnershipRow {
+  record_id: string
+  work_title: string
 }
 
 const OP_LABEL: Record<string, string> = {
@@ -65,7 +87,8 @@ export function AuthorizationRegistryPage() {
   const [op, setOp] = useState('activate')
   const [opNote, setOpNote] = useState('')
   const [pubId, setPubId] = useState('')
-  const [pubView, setPubView] = useState<Record<string, string> | null>(null)
+  const [pubView, setPubView] = useState<PublicView | null>(null)
+  const [myOr, setMyOr] = useState<MyOwnershipRow[]>([])
 
   const loadRules = async () => {
     const r = await api.get<RuleView>('/api/v1/authorization/rules')
@@ -79,17 +102,24 @@ export function AuthorizationRegistryPage() {
     void loadRules()
     void loadRecords()
   }, [])
+  // P3：本人权属记录（OR- 号）喂 asset_ref 下拉／可搜（me/dashboard 权属栏本人过滤）
+  useEffect(() => {
+    if (!isAuthenticated) return
+    void api.get<{ my_ownership?: MyOwnershipRow[] }>('/api/v1/me/dashboard')
+      .then((r) => { if (r.ok) setMyOr(r.data.my_ownership ?? []) })
+  }, [isAuthenticated])
 
   const onRegister = async () => {
     setMsg('')
-    const r = await api.post<{ record_id: string }>(
+    const r = await api.post<{ record_id: string; warn?: string }>(
       '/api/v1/authorization/register',
       { asset_ref: asset, grantee_ref: grantee, scene,
         req_scene: reqScene, req_five_forms: reqFive,
         req_full_grant: reqFull, req_legal_signature: reqSign,
         scope_note: scopeNote, term_note: termNote })
     if (!r.ok) { setMsg(`登记失败：${r.reason}`); return }
-    setMsg(`已登记：${r.data.record_id}（四要件自证齐全；授权件仅内部存证）`)
+    setMsg(`已登记：${r.data.record_id}（四要件自证齐全；授权件仅内部存证）`
+           + (r.data.warn ? ` ⚠ ${r.data.warn}` : ''))
     setAsset(''); setGrantee(''); setScene(''); setScopeNote(''); setTermNote('')
     setReqScene(false); setReqFive(false); setReqFull(false); setReqSign(false)
     void loadRecords()
@@ -122,7 +152,7 @@ export function AuthorizationRegistryPage() {
   const onPublicQuery = async () => {
     setMsg('')
     setPubView(null)
-    const r = await api.get<Record<string, string>>(
+    const r = await api.get<PublicView>(
       `/api/v1/authorization/public/${pubId}`)
     if (!r.ok) { setMsg(`公开查失败：${r.reason}`); return }
     setPubView(r.data)
@@ -176,8 +206,13 @@ export function AuthorizationRegistryPage() {
           <>
         <section data-testid="ar-register">
           <h2>合约备案</h2>
-          <input placeholder="授权对象引用（如：deploy/core-go 等五族资产）" value={asset}
-            onChange={(e) => setAsset(e.target.value)} />
+          <input placeholder="授权对象引用（填本人权属登记号 OR-…，可搜可选；未命中照收但标未对齐）" value={asset}
+            onChange={(e) => setAsset(e.target.value)} list="ar-or-options" />
+          <datalist id="ar-or-options">
+            {myOr.map((o) => (
+              <option key={o.record_id} value={o.record_id} label={o.work_title} />
+            ))}
+          </datalist>
           <input placeholder="被授权方引用（如：被授权企业标识）" value={grantee}
             onChange={(e) => setGrantee(e.target.value)} />
           <input placeholder="场景·必填（如：生产交付（内循环部署与运行））" value={scene}
@@ -236,7 +271,7 @@ export function AuthorizationRegistryPage() {
           <ul>
             {records.map((r) => (
               <li key={r.record_id}>
-                [{r.status}] {r.asset_ref} → {r.grantee_ref}
+                [{r.status}] {r.asset_ref}{r.asset_ref_aligned === false ? '（未对齐）' : ''} → {r.grantee_ref}
                 （场景：{r.scene}；四要件：
                 {[r.four_requirements.scene_ok, r.four_requirements.five_forms_ok,
                   r.four_requirements.full_grant_ok, r.four_requirements.legal_signature_ok]
@@ -249,13 +284,13 @@ export function AuthorizationRegistryPage() {
           </>
         ) : (
           <section data-testid="ar-login-gate" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
-            登记／操作／变更／注销／明细查询属登录后的办理面；当前为未登录状态，仅见登记口径与公开查（免会话，仅四字段）。
+            登记／操作／变更／注销／明细查询属登录后的办理面；当前为未登录状态，仅见登记口径与公开查（免会话，公开面六项）。
             <Link to="/auth" className="ml-1 text-blue-700 underline hover:text-blue-900">登录后办理</Link>
           </section>
         )}
 
         <section data-testid="ar-public">
-          <h2>公开查（免会话 · 仅四字段）</h2>
+          <h2>公开查（免会话 · 公开面六项）</h2>
           <input placeholder="record_id（如：AR-a1b2c3d4e5）" value={pubId}
             onChange={(e) => setPubId(e.target.value)} />
           <button onClick={onPublicQuery}>公开查</button>
@@ -265,6 +300,18 @@ export function AuthorizationRegistryPage() {
                 <li key={k}>{k}：{String(pubView[k] ?? '—')}</li>
               ))}
               <li>状态：{pubView.status}</li>
+              {pubView.初始条件 && (
+                <li>初始条件：四要件{' '}
+                  {[pubView.初始条件.scene_ok, pubView.初始条件.five_forms_ok,
+                    pubView.初始条件.full_grant_ok, pubView.初始条件.legal_signature_ok]
+                    .map((x) => (x ? '✓' : '✗')).join('')}；
+                  权限范围 {pubView.初始条件.scope_note}</li>
+              )}
+              {pubView.期限 !== undefined && <li>期限：{pubView.期限}</li>}
+              {pubView.是否嵌套与调用对象 && (
+                <li>是否嵌套与调用对象：{pubView.是否嵌套与调用对象.是否嵌套}；
+                  调用对象 {pubView.是否嵌套与调用对象.调用对象}</li>
+              )}
             </ul>
           )}
         </section>

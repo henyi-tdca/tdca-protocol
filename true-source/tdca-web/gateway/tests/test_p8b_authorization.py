@@ -213,6 +213,15 @@ def test_public_query_four_fields_only():
     assert "内部备注" not in d and tpl["内部备注"] not in str(d)
     assert "nca_ref" not in d and "NCA-WEB" not in str(d)
     assert "授权码" not in str(d.get("授权信息", ""))
+    # P1 公开面扩项：初始条件（req_* 四要件＋scope_note）／期限／是否嵌套与调用对象
+    assert d["status"] == "active"
+    assert d["初始条件"]["scene_ok"] is True
+    assert d["初始条件"]["five_forms_ok"] is True
+    assert d["初始条件"]["full_grant_ok"] is True
+    assert d["初始条件"]["legal_signature_ok"] is True
+    assert d["初始条件"]["scope_note"] == "未提供"
+    assert d["期限"] == "未提供"
+    assert d["是否嵌套与调用对象"] == {"是否嵌套": "未提供", "调用对象": "未提供"}
 
 
 def test_query_filters_and_status_invalid_400():
@@ -228,3 +237,58 @@ def test_query_filters_and_status_invalid_400():
     r3 = client.get("/api/v1/authorization/query",
                     params={"status": "moon"}, headers=h)
     assert r3.status_code == 400
+
+
+def test_public_six_items_filled_no_defaults():
+    """P1：已填项原样公开、未填项不造默认（读 template_fields 可选键）。"""
+    h = _auth("p8btester05")
+    tpl = _full_req()["template_fields"]
+    tpl.update({"是否嵌套": "否（顶层）", "调用对象": "deploy/core-go"})
+    rid = client.post("/api/v1/authorization/register",
+                      json=_full_req(scope_note="仅限内循环部署与运行",
+                                     term_note="自签署日起一年",
+                                     template_fields=tpl),
+                      headers=h).json()["data"]["record_id"]
+    r = client.get(f"/api/v1/authorization/public/{rid}")  # ⛔ 免会话
+    assert r.status_code == 200, r.text
+    d = r.json()["data"]
+    assert d["初始条件"]["scope_note"] == "仅限内循环部署与运行"
+    assert d["期限"] == "自签署日起一年"
+    assert d["是否嵌套与调用对象"] == {"是否嵌套": "否（顶层）",
+                                      "调用对象": "deploy/core-go"}
+
+
+def test_p3_asset_ref_soft_warn_and_readback_flag():
+    """P3：asset_ref 对齐 OR- 软校验——命中无 warn；未命中有 warn 不阻断；读回标未对齐。"""
+    h = _auth("p8btester06")
+    ro = client.post("/api/v1/ownership/register", json={
+        "work_title": "P3 样例作品", "owner_ref": "p8btester06",
+        "source_lineage": "测试生成谱系"}, headers=h)
+    assert ro.status_code == 201, ro.text
+    or_id = ro.json()["data"]["record_id"]
+    assert or_id.startswith("OR-")
+    # 命中：真实 OR- 号 → 201、aligned、无 warn
+    r1 = client.post("/api/v1/authorization/register",
+                     json=_full_req(asset_ref=or_id), headers=h)
+    assert r1.status_code == 201, r1.text
+    d1 = r1.json()["data"]
+    assert d1["asset_ref_aligned"] is True and "warn" not in d1
+    # 未命中：不存在的 OR- 号 → 201 不阻断、warn 提示
+    r2 = client.post("/api/v1/authorization/register",
+                     json=_full_req(asset_ref="OR-deadbeef00"), headers=h)
+    assert r2.status_code == 201, r2.text
+    d2 = r2.json()["data"]
+    assert d2["asset_ref_aligned"] is False and "warn" in d2
+    # 自由文本（存量口径）→ 照收带 warn
+    r3 = client.post("/api/v1/authorization/register",
+                     json=_full_req(asset_ref="资产族样例"), headers=h)
+    assert r3.status_code == 201, r3.text
+    assert r3.json()["data"]["asset_ref_aligned"] is False
+    # 读回：查询面带 asset_ref_aligned（未命中/自由文本 → False＝未对齐标）
+    rq = client.get("/api/v1/authorization/query", headers=h)
+    assert rq.status_code == 200
+    recs = {x["record_id"]: x for x in rq.json()["data"]["records"]}
+    assert recs[d1["record_id"]]["asset_ref_aligned"] is True
+    assert recs[d2["record_id"]]["asset_ref_aligned"] is False
+    # 存量不被改写：asset_ref 原值留存
+    assert recs[d2["record_id"]]["asset_ref"] == "OR-deadbeef00"
