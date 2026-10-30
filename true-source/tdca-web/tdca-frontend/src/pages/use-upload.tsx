@@ -102,6 +102,13 @@ export function UseUploadPage() {
               <div><dt className="inline font-semibold">归属：</dt><dd className="inline">{result.owner}</dd></div>
               <div><dt className="inline font-semibold">时间：</dt><dd className="inline">{result.uploaded_at}</dd></div>
             </dl>
+            {/* L1SI182-USE-U2-001：上传成功下一句——接着办登记（机器人只跑腿，五步入 /use/agent） */}
+            <p className="mt-3">
+              <a data-testid="use-upload-next" href={`/use/agent?u=${encodeURIComponent(result.upload_id)}`}
+                className="inline-block rounded-md border border-blue-600 px-4 py-1.5 text-sm text-blue-700 hover:bg-blue-50">
+                下一步：代办登记（机器人协助）→
+              </a>
+            </p>
           </div>
         )}
         {/* api 引用保持会话接缝一致（fetch 直传另行注入令牌；此引用防 tree-shake 误裁） */}

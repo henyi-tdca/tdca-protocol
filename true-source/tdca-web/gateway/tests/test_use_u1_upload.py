@@ -88,16 +88,51 @@ def test_idempotent_same_hash_same_owner():
 def test_reject_human_reasons():
     h = _auth()
     cases = [
-        (b"MZ-fake-exe", "run.exe", "可执行程序"),
-        (b"#!/bin/sh\n", "deploy.sh", "脚本命令"),
-        (b"", "empty.md", "空文件"),
-        (b"\x00" * (21 * 1024 * 1024), "big.zip", "超过"),      # 超限（21MB > 20MB）
-        (b"\x7fELF-fake", "mystery.bin", "暂不受理"),
+        (b"MZ-fake-exe", "run.exe", "可执行程序"),                                  # 拒收1 可执行
+        (b"fake-docm", "m.docm", "宏"),                                             # 拒收2 带宏
+        (b"", "empty.md", "空文件"),                                                # 空件
+        (b"\x00" * (21 * 1024 * 1024), "big.md", "上限"),                           # 文本文档 21MB > 20MB
+        (b"\x7fELF-fake", "mystery.bin", "暂不受理"),                               # 清单外
     ]
     for body, name, keyword in cases:
         r = _upload(body, name, h)
         assert r.status_code == 400, (name, r.status_code, r.text[:120])
         assert keyword in r.json()["detail"], (name, r.json()["detail"])
+
+
+def test_canonical_accept_flips():
+    """在册十类（USE-U2-001 §三）关键翻转：.sh 入代码／规范类受理；.pptx／.svg 已不在清单（拒）。"""
+    h = _auth()
+    r = _upload(b"echo hi\n", "deploy.sh", h)
+    assert r.status_code == 200, r.text[:200]
+    assert r.json()["data"]["accept_category"] == "代码／规范"
+    for name in ("slides.pptx", "icon.svg"):
+        r = _upload(b"x", name, h)
+        assert r.status_code == 400 and "暂不受理" in r.json()["detail"], (name, r.text[:120])
+
+
+def test_hard_name_constraints():
+    """在册通用硬约束：⛔ 路径穿越／绝对路径；件名 ≤ 110 字符。"""
+    h = _auth()
+    for name in ("../etc/passwd.md", "a/b/c.md", "C:\\tmp\\x.md", "a..b.md"):
+        r = _upload(b"x", name, h)
+        assert r.status_code == 400, (name, r.status_code, r.text[:120])
+    r = _upload(b"x", "长" * 111 + ".md", h)
+    assert r.status_code == 400 and "110" in r.json()["detail"], r.text[:120]
+
+
+def test_utf8_and_pii_and_encrypted():
+    """在册通用硬约束 UTF-8；拒收 3 加密 zip；拒收 5 成批个人信息（≥3 处）。"""
+    h = _auth()
+    r = _upload("你好".encode("gbk"), "gbk.txt", h)
+    assert r.status_code == 400 and "UTF-8" in r.json()["detail"], r.text[:120]
+    # 加密 zip：PK\x03\x04 + 版本(2) + 标志(2, bit0=1)
+    enc_zip = b"PK\x03\x04" + b"\x14\x00" + b"\x01\x00" + b"REST"
+    r = _upload(enc_zip, "locked.zip", h)
+    assert r.status_code == 400 and "加密" in r.json()["detail"], r.text[:120]
+    pii = "姓名,身份证号\n" + "\n".join(f"张{i},11010119900101{i:04d}" for i in range(3))
+    r = _upload(pii.encode("utf-8"), "pii.csv", h)
+    assert r.status_code == 400 and "脱敏" in r.json()["detail"], r.text[:120]
 
 
 def test_get_by_id_owner_and_guard():
