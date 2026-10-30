@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- L1SI182-BATCH-002 §三：只列开放面（内容页 6 ＋ 目录 3 处=4 路，共 10 条）；⛔操作页、⛔/api/site/... 裸文件直链、⛔单件页 -->
+<!-- 对外以服务器侧静态件为准（/usr/share/tdca-ops-files/public-static，宿主 /root/tdca-site/ops-files/public-static）；本件为其可追源仓副本 -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tdca.com.cn/</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/about</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/audit</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/agents</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/academy</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/attestation</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/docs/regulation</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/library</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/docs/whitepapers</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://tdca.com.cn/docs/papers</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+</urlset>
