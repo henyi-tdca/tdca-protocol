@@ -98,6 +98,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/nodes', title: '节点网络', layer: 'L0', dataSource: '在册条例 V1.0 与节点现状（真值缺失处如实标「未设置／待复算／尚无」）', permission: '公开', description: '业务端节点接入公开面：可视图只画已披露真节点；状态栏只给最后心跳与数据截至时刻；接口未实现一律不开放。' },
   // L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量；文件＋文件名头直传报文）
   { path: '/use/upload', title: '交素材（上传一件）', layer: 'L0', dataSource: 'POST /api/v1/use/upload ＋ GET /api/v1/use/upload/{id}', permission: '登录 DID', description: '登录后交一件素材：选择文件上传，系统回收件编号与哈希；受理清单内收、清单外给人话理由；同一人传同一文件只留一条（幂等）。' },
+  // L1SI182-USE-U2-001 U-2 代办机器人（五步：收件→只问缺项→草稿→本人在场签→出号；复用上传与权属登记端点，草稿仅本地态不落库）
+  { path: '/use/agent', title: '代办登记（机器人只跑腿）', layer: 'L0', dataSource: 'GET /api/v1/use/upload/{id} ＋ POST /api/v1/ownership/register（OR- 号沿用）', permission: '登录 DID（须本人确认，未确认不出号）', description: '上传成功后接着办登记：机器人只问缺项、出草稿（不落库不出号）；本人看过草稿、显式点确认才出登记号；机器人不代签、不代判、不对外承诺。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -183,6 +185,7 @@ import { MeNodeNetPage } from './me-node-net'
 import { NodeNetPage } from './node-net'
 // L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量）
 import { UseUploadPage } from './use-upload'
+import { UseAgentPage } from './use-agent'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -248,6 +251,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/me/node/net': MeNodeNetPage,
   '/nodes': NodeNetPage,
   '/use/upload': UseUploadPage,
+  '/use/agent': UseAgentPage,
 }
 
 export function renderPage(meta: PageMeta) {
