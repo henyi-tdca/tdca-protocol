@@ -193,12 +193,12 @@ def _g3_g4_g5_authorization(s, username: str, agent_id: str, rid: str) -> None:
     """G-3 授权成件存在 → G-4 四要件齐 → G-5 非 cancelled（照 authorization_ops 同判据）。"""
     ar = s.get(M.AuthorizationRecord, rid.strip()) if rid.strip() else None
     if ar is None:
-        _deny(agent_id, username, "3", "授权登记成件不存在（无授权不得调用；fail-closed）")
+        _deny(agent_id, username, "3", "合约备案成件不存在（无授权不得调用；fail-closed）")
     if not (ar.req_scene and ar.req_five_forms and ar.req_full_grant
             and ar.req_legal_signature):
         _deny(agent_id, username, "4", "授权四要件未齐（fail-closed）")
     if ar.status == "cancelled":
-        _deny(agent_id, username, "5", "合规前置闸门未过：授权登记已注销"
+        _deny(agent_id, username, "5", "合规前置闸门未过：合约备案已注销"
                                  "（自有亦须件；fail-closed）")
 
 

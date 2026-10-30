@@ -88,6 +88,14 @@ def _redact(fields: dict) -> dict:
     return out
 
 
+def _or_aligned(asset_ref: str) -> bool:
+    """P3 软校验：asset_ref 是否命中在册权属登记号（只查存在性；不阻断、不改写）。"""
+    with get_session() as s:
+        return (s.query(M.OwnershipRecord.record_id)
+                .filter(M.OwnershipRecord.record_id == (asset_ref or ""))
+                .first()) is not None
+
+
 def _record_view(r: M.AuthorizationRecord) -> dict:
     redacted = _redact({
         "asset_ref": r.asset_ref, "grantee_ref": r.grantee_ref,
@@ -96,6 +104,7 @@ def _record_view(r: M.AuthorizationRecord) -> dict:
     })
     return {
         "record_id": r.record_id, "status": r.status,
+        "asset_ref_aligned": _or_aligned(r.asset_ref),
         "four_requirements": {
             "scene_ok": r.req_scene, "five_forms_ok": r.req_five_forms,
             "full_grant_ok": r.req_full_grant, "legal_signature_ok": r.req_legal_signature},
@@ -116,12 +125,26 @@ def _public_view(r: M.AuthorizationRecord) -> dict:
         tpl = {}
     projected = {k: tpl.get(k) for k in PUBLIC_FIELD_KEYS}
     projected = _redact(projected)  # 读取兜底脱敏（公开面亦不例外）
+    extra = _redact({  # P1 扩项同走兜底脱敏（S-2：公开面不得出凭据／敏感信息／内部编号）
+        "scope_note": r.scope_note or "未提供",
+        "term_note": r.term_note or "未提供",
+        "是否嵌套": tpl.get("是否嵌套") or "未提供",
+        "调用对象": tpl.get("调用对象") or "未提供",
+    })
     return _nca_watermark({
         "record_id": r.record_id, "status": r.status,
         "public_fields": dict(zip(PUBLIC_FIELD_KEYS,
                                   ["权属信息", "授权信息", "授权状态", "获取方式"])),
         "权属信息": projected["权属信息"], "授权信息": projected["授权信息"],
         "授权状态": projected["授权状态"] or r.status, "获取方式": projected["获取方式"],
+        "初始条件": {"scene_ok": bool(r.req_scene),
+                      "five_forms_ok": bool(r.req_five_forms),
+                      "full_grant_ok": bool(r.req_full_grant),
+                      "legal_signature_ok": bool(r.req_legal_signature),
+                      "scope_note": extra["scope_note"]},
+        "期限": extra["term_note"],
+        "是否嵌套与调用对象": {"是否嵌套": extra["是否嵌套"],
+                               "调用对象": extra["调用对象"]},
         "simulated": True,
         "note": "公开面仅四字段（初始条件必公开）；不公开四条负空间读取兜底脱敏；"
                 "授权码值与内部编号 ⛔ 不在公开面出现"})
@@ -177,7 +200,7 @@ def authorization_register(req: RegisterIn, request: Request):
     missing = [k for k in ("asset_ref", "grantee_ref", "scene")
                if not str(getattr(req, k)).strip()]
     if missing:
-        raise HTTPException(400, f"{'／'.join(missing)} 为必填（授权登记）")
+        raise HTTPException(400, f"{'／'.join(missing)} 为必填（合约备案）")
     if not all([req.req_scene, req.req_five_forms, req.req_full_grant,
                 req.req_legal_signature]):
         raise HTTPException(400, "四要件（场景约束／五阶资产形态／全构成已授权／"
@@ -208,11 +231,17 @@ def authorization_register(req: RegisterIn, request: Request):
             template_fields=tpl, note=req.note.strip() or None,
             status="active", nca_ref=nca_ref,
             created_at=_utc(), updated_at=_utc()))
-    return _nca_watermark({
+    aligned = _or_aligned(req.asset_ref.strip())
+    payload = {
         "record_id": rid, "status": "active", "nca_ref": nca_ref,
+        "asset_ref_aligned": aligned,
         "simulated": True,
-        "note": "授权登记已入册（NCA 存证；四要件自证齐全；"
-                "授权件仅内部存证，⛔ 不入主仓）"})
+        "note": "合约备案已入册（NCA 存证；四要件自证齐全；"
+                "授权件仅内部存证，⛔ 不入主仓）"}
+    if not aligned:
+        payload["warn"] = ("asset_ref 未命中在册权属登记号（未对齐）——"
+                           "软校验照收不阻断；读回标「未对齐」")
+    return _nca_watermark(payload)
 
 
 class AmendIn(BaseModel):

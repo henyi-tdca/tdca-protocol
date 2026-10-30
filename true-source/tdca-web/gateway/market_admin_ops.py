@@ -78,12 +78,12 @@ def _authorization_gate(s, authorization_record_id: str) -> M.AuthorizationRecor
     缺一即 403 fail-closed（⛔ 不代填代证）。"""
     ar = s.get(M.AuthorizationRecord, authorization_record_id.strip())
     if ar is None:
-        raise HTTPException(403, "挂出前置未过：授权登记成件不存在（fail-closed）")
+        raise HTTPException(403, "挂出前置未过：合约备案成件不存在（fail-closed）")
     if not (ar.req_scene and ar.req_five_forms and ar.req_full_grant
             and ar.req_legal_signature):
         raise HTTPException(403, "挂出前置未过：授权四要件未齐（fail-closed）")
     if ar.status == "cancelled":
-        raise HTTPException(403, "挂出前置未过：授权登记已注销（fail-closed）")
+        raise HTTPException(403, "挂出前置未过：合约备案已注销（fail-closed）")
     return ar
 
 
