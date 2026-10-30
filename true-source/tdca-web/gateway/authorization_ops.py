@@ -31,6 +31,7 @@ from pydantic import BaseModel, ConfigDict
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from rights_bundle import rb_parse  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/authorization", tags=["authorization"])
 
@@ -208,10 +209,14 @@ def authorization_register(req: RegisterIn, request: Request):
                                  "（⛔ 智能体不代持、不代填）")
     if not isinstance(req.template_fields, dict):
         raise HTTPException(400, "template_fields 须为 JSON 对象（授权件模板八字段）")
+    try:
+        note_norm, _rb, rb_anomaly = rb_parse(req.note)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
     tpl = json.dumps(req.template_fields, ensure_ascii=False)
     fields = {"asset_ref": req.asset_ref, "grantee_ref": req.grantee_ref,
               "scene": req.scene, "scope_note": req.scope_note,
-              "term_note": req.term_note, "template_fields": tpl, "note": req.note}
+              "term_note": req.term_note, "template_fields": tpl, "note": note_norm}
     hits = _public_space_hits(fields)
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
@@ -228,7 +233,7 @@ def authorization_register(req: RegisterIn, request: Request):
             req_legal_signature=req.req_legal_signature,
             scope_note=req.scope_note.strip() or None,
             term_note=req.term_note.strip() or None,
-            template_fields=tpl, note=req.note.strip() or None,
+            template_fields=tpl, note=note_norm.strip() or None,
             status="active", nca_ref=nca_ref,
             created_at=_utc(), updated_at=_utc()))
     aligned = _or_aligned(req.asset_ref.strip())
@@ -238,6 +243,8 @@ def authorization_register(req: RegisterIn, request: Request):
         "simulated": True,
         "note": "合约备案已入册（NCA 存证；四要件自证齐全；"
                 "授权件仅内部存证，⛔ 不入主仓）"}
+    if rb_anomaly:
+        payload["rb_anomaly"] = rb_anomaly
     if not aligned:
         payload["warn"] = ("asset_ref 未命中在册权属登记号（未对齐）——"
                            "软校验照收不阻断；读回标「未对齐」")
@@ -262,11 +269,15 @@ def authorization_amend(req: AmendIn, request: Request):
                 req.template_fields is not None, req.note.strip()]):
         raise HTTPException(400, "变更须至少载明一项（scene／scope_note／"
                                  "term_note／template_fields／note）")
+    try:
+        note_norm, _rb, rb_anomaly = rb_parse(req.note)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
     tpl = (json.dumps(req.template_fields, ensure_ascii=False)
            if req.template_fields is not None else "")
     hits = _public_space_hits({"scene": req.scene, "scope_note": req.scope_note,
                                "term_note": req.term_note,
-                               "template_fields": tpl, "note": req.note})
+                               "template_fields": tpl, "note": note_norm})
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
                                  f"{'／'.join(hits)}——已 fail-closed 拦截（⛔ 内容不回显）")
@@ -288,14 +299,17 @@ def authorization_amend(req: AmendIn, request: Request):
             r.term_note = req.term_note.strip()
         if req.template_fields is not None:
             r.template_fields = tpl
-        if req.note.strip():
-            r.note = req.note.strip()
+        if note_norm.strip():
+            r.note = note_norm.strip()
         r.status = "amended"
         r.nca_ref = nca_ref
         r.updated_at = _utc()
-    return _nca_watermark({"record_id": row.record_id, "status": "amended",
-                           "nca_ref": nca_ref, "simulated": True,
-                           "note": "授权变更已登记（NCA 存证）"})
+    payload = {"record_id": row.record_id, "status": "amended",
+               "nca_ref": nca_ref, "simulated": True,
+               "note": "授权变更已登记（NCA 存证）"}
+    if rb_anomaly:
+        payload["rb_anomaly"] = rb_anomaly
+    return _nca_watermark(payload)
 
 
 class CancelIn(BaseModel):

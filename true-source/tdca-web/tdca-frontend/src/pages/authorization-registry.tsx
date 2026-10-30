@@ -11,6 +11,7 @@ import { api } from '@/api/client'
 import { useAuth } from '@/app/auth-context'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
+import { RightsBundlePicker } from '@/shared/RightsBundlePicker'
 
 interface RuleView {
   registry_split: { ownership: string; authorization: string }
@@ -80,6 +81,9 @@ export function AuthorizationRegistryPage() {
   const [reqFive, setReqFive] = useState(false)
   const [reqFull, setReqFull] = useState(false)
   const [reqSign, setReqSign] = useState(false)
+  const [rbNote, setRbNote] = useState('')
+  const [rbActive, setRbActive] = useState(false)
+  const [rbReset, setRbReset] = useState(0)
   const [amendId, setAmendId] = useState('')
   const [amendNote, setAmendNote] = useState('')
   const [cancelId, setCancelId] = useState('')
@@ -111,17 +115,20 @@ export function AuthorizationRegistryPage() {
 
   const onRegister = async () => {
     setMsg('')
-    const r = await api.post<{ record_id: string; warn?: string }>(
+    const r = await api.post<{ record_id: string; warn?: string; rb_anomaly?: string }>(
       '/api/v1/authorization/register',
       { asset_ref: asset, grantee_ref: grantee, scene,
         req_scene: reqScene, req_five_forms: reqFive,
         req_full_grant: reqFull, req_legal_signature: reqSign,
-        scope_note: scopeNote, term_note: termNote })
+        scope_note: scopeNote, term_note: termNote,
+        ...(rbActive && rbNote ? { note: rbNote } : {}) })
     if (!r.ok) { setMsg(`登记失败：${r.reason}`); return }
     setMsg(`已登记：${r.data.record_id}（四要件自证齐全；授权件仅内部存证）`
-           + (r.data.warn ? ` ⚠ ${r.data.warn}` : ''))
+           + (r.data.warn ? ` ⚠ ${r.data.warn}` : '')
+           + (r.data.rb_anomaly ? ` ⚠ ${r.data.rb_anomaly}` : ''))
     setAsset(''); setGrantee(''); setScene(''); setScopeNote(''); setTermNote('')
     setReqScene(false); setReqFive(false); setReqFull(false); setReqSign(false)
+    setRbReset((k) => k + 1)
     void loadRecords()
   }
   const onAmend = async () => {
@@ -232,6 +239,9 @@ export function AuthorizationRegistryPage() {
             <label><input type="checkbox" checked={reqSign}
               onChange={(e) => setReqSign(e.target.checked)} /> ④ 法律主体签名（须本人）</label>
           </fieldset>
+          <RightsBundlePicker
+            onChange={(note, active) => { setRbNote(note); setRbActive(active) }}
+            resetKey={rbReset} />
           <button onClick={onRegister}>登记</button>
         </section>
 

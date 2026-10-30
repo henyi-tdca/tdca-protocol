@@ -11,6 +11,7 @@ import { api } from '@/api/client'
 import { useAuth } from '@/app/auth-context'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
+import { RightsBundlePicker } from '@/shared/RightsBundlePicker'
 
 interface RuleView {
   entry: string
@@ -55,6 +56,9 @@ export function OwnershipRegistryPage() {
   const [amendId, setAmendId] = useState('')
   const [amendNote, setAmendNote] = useState('')
   const [cancelId, setCancelId] = useState('')
+  const [rbNote, setRbNote] = useState('')
+  const [rbActive, setRbActive] = useState(false)
+  const [rbReset, setRbReset] = useState(0)
 
   const loadRules = async () => {
     const r = await api.get<RuleView>('/api/v1/ownership/rules')
@@ -71,13 +75,16 @@ export function OwnershipRegistryPage() {
 
   const onRegister = async () => {
     setMsg('')
-    const r = await api.post<{ record_id: string }>(
+    const r = await api.post<{ record_id: string; rb_anomaly?: string }>(
       '/api/v1/ownership/register',
       { work_title: title, owner_ref: owner, source_lineage: lineage,
-        jurisdiction_branch: branch, scene })
+        jurisdiction_branch: branch, scene,
+        ...(rbActive && rbNote ? { note: rbNote } : {}) })
     if (!r.ok) { setMsg(`登记失败：${r.reason}`); return }
-    setMsg(`已登记：${r.data.record_id}（场景非必须；未载明不影响登记）`)
+    setMsg(`已登记：${r.data.record_id}（场景非必须；未载明不影响登记）`
+           + (r.data.rb_anomaly ? ` ⚠ ${r.data.rb_anomaly}` : ''))
     setTitle(''); setOwner(''); setLineage(''); setScene('')
+    setRbReset((k) => k + 1)
     void loadRecords()
   }
   const onAmend = async () => {
@@ -152,6 +159,9 @@ export function OwnershipRegistryPage() {
           </select>
           <input placeholder="场景·选填（如：scene-painting-01；无场景不拒登记）" value={scene}
             onChange={(e) => setScene(e.target.value)} />
+          <RightsBundlePicker
+            onChange={(note, active) => { setRbNote(note); setRbActive(active) }}
+            resetKey={rbReset} />
           <button onClick={onRegister}>登记</button>
         </section>
 
