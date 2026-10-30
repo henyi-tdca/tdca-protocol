@@ -134,7 +134,7 @@ def authorization_rules(request: Request):
     return _nca_watermark({
         "registry_split": {
             "ownership": "权属登记＝归谁（P8a）",
-            "authorization": "授权登记＝谁能怎么用（本面：登记／变更／注销／查询／操作）"},
+            "authorization": "合约备案＝协作配置中双方约定的权利义务（⛔ 非确权）"},
         "four_requirements": [
             {"key": "scene_ok", "label": "① 场景约束", "rule": "授权场景已载明且属在册范围"},
             {"key": "five_forms_ok", "label": "② 五阶资产形态", "rule": "全阶资产构成已列明"},

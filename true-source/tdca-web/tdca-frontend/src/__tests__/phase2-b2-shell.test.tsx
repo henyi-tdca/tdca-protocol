@@ -113,7 +113,7 @@ describe('二期改版批2块一：私域归「我的」', () => {
       </MemoryRouter>,
     )
     const nav = screen.getByTestId('me-private-nav')
-    for (const label of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '授权登记', '规范与沙盒链']) {
+    for (const label of ['作业', '人机协作', '确权中心', '元函数确权', '动态确权', '集群编排', '权属登记', '合约备案', '规范与沙盒链']) {
       expect(nav.textContent).toContain(label)
     }
     // 模拟锚已依裁定落地件移公域（资源组），⛔ 不再在私域

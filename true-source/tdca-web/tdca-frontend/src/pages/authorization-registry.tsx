@@ -136,7 +136,7 @@ export function AuthorizationRegistryPage() {
       description="登记二分之授权侧：谁能怎么用。四要件缺一即拒；签名须本人、智能体不代持代填；公开面仅四字段。">
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          登记二分：权属登记＝归谁（P8a）／授权登记＝谁能怎么用（本页）
+          登记二分：权属登记＝归谁（P8a）／合约备案＝怎么用与谁担（本页）
           <SimulatedBadge nature="simulated" />
         </div>
 

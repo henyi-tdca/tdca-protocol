@@ -307,7 +307,7 @@ export function StartPageBody({ data }: { data: StartMapData | null }) {
             <h4 className="text-sm font-semibold text-gray-900">我想用别人的东西</h4>
             <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-gray-600">
               <li>看有什么 → <Link className="text-emerald-700 underline" to="/market">市场</Link></li>
-              <li>看授权条件 → <Link className="text-emerald-700 underline" to="/authorization-registry">授权登记</Link></li>
+              <li>看授权条件 → <Link className="text-emerald-700 underline" to="/authorization-registry">合约备案</Link></li>
               <li>申请授权 → <Link className="text-emerald-700 underline" to="/authorization-registry">同页办理</Link></li>
             </ol>
             <Link data-testid="route-r3-btn" to="/market"

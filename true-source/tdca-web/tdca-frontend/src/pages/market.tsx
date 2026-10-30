@@ -73,7 +73,7 @@ function PublishPanel({ onDone }: { onDone: () => void }) {
       <div className="text-sm font-semibold text-gray-800">挂出（A-1：先有成件——权属成件＋授权成件＋四要件齐；例外仅沙盒演练）</div>
       <div className="grid grid-cols-1 gap-2 text-xs">
         <input className="rounded border p-1.5" placeholder="权属登记成件号（OR-xxx，须本人）" value={form.ownership_record_id} onChange={set('ownership_record_id')} />
-        <input className="rounded border p-1.5" placeholder="授权登记成件号（AR-xxx；沙盒例外可空）" value={form.authorization_record_id} onChange={set('authorization_record_id')} />
+        <input className="rounded border p-1.5" placeholder="合约备案成件号（AR-xxx；沙盒例外可空）" value={form.authorization_record_id} onChange={set('authorization_record_id')} />
         <input className="rounded border p-1.5" placeholder="标的（五阶资产形态说明）" value={form.asset_summary} onChange={set('asset_summary')} />
         <input className="rounded border p-1.5" placeholder="场景" value={form.scene} onChange={set('scene')} />
         <input className="rounded border p-1.5" placeholder="权限范围（照授权件载明）" value={form.scope_note} onChange={set('scope_note')} />
