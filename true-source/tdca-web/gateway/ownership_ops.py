@@ -95,14 +95,15 @@ def ownership_rules(request: Request):
     return _nca_watermark({
         "registry_split": {
             "ownership": "权属登记＝归谁（本面四操作：登记／变更／注销／查询）",
-            "authorization": "授权登记＝谁能怎么用（属 8b，⛔ 一期不做）"},
+            "authorization": "合约备案＝协作配置中双方约定的权利义务（⛔ 非确权）"},
         "entry": "凡具表达形式者皆可登记",
         "lineage_required": "每件须载生成来源谱系（登记必填；与 P2 谱系账本口径互通）",
         "scene_optional": "场景非必须——⛔ 不得因无场景拒登记",
         "jurisdiction_branches": [
             {"key": k, **v} for k, v in JURISDICTION_BRANCHES.items()],
         "no_legal_judgement": "法域四支仅为索引分支：⛔ 不代作法律判定、⛔ 不就权利归属下结论",
-        "out_of_scope": "转让／许可属权利处分，⛔ 一期不做（归 8b 后续）",
+        "out_of_scope": "转让／许可属权利处分，⛔ 一期不做（归 8b 后续）；"
+                        "所有权转让属交易合约，可备案存档（⛔ 非确权）",
         "non_public_four": ["内部编号", "凭据密钥", "自然人敏感信息", "负空间词面"],
         "authority": "《TDCA 注册登记制度》（V1.0-FROZEN）为唯一权威源——"
                      "本端只列名目与索引入口（/api/v1/regulations/index），"

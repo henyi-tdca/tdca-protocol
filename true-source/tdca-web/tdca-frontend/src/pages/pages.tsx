@@ -50,7 +50,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/library', title: '内容区文库（白皮书 · 论文 · 产物库 · 制度规范 · 法律原文 · 适用说明）', layer: 'L0', dataSource: 'A-22 GET /api/v1/library/*（docs 表只读面）', permission: '法律原文与适用说明匿名可读；其余族登录 DID', description: '内容区只读索引＋正文阅读：whitepapers/papers/cop-library/regulations/laws/law-notes；以在册仓库为唯一权威源。' },
   { path: '/agent-shelf', title: '智能体区（组二 10 件呈现）', layer: 'L0', dataSource: '静态呈现面（呈现 ≠ 注册）', permission: '登录 DID', description: '组二 10 件以智能体形态呈现：每条只列名称／一句用途／形态；注册与准入另走在册流程，本区不代办。' },
   { path: '/announcements', title: '公告栏', layer: 'L0', dataSource: 'A-23 GET /api/v1/announcements/list（公开读）', permission: '公开', description: '站点对外公告区：公告内容经创始人明示后由运营发布；空栏为常态，不预置内容。' },
-  { path: '/authorization-registry', title: '授权登记管理（P8b）', layer: 'L0', dataSource: 'A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）', permission: '登录 DID（公开查免会话）', description: '登记二分之授权侧：四要件缺一即拒；签名须本人、智能体不代持代填；公开面四字段；四条不公开负空间 fail-closed。' },
+  { path: '/authorization-registry', title: '合约备案（P8b）', layer: 'L0', dataSource: 'A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）', permission: '登录 DID（公开查免会话）', description: '登记二分之合约备案侧：怎么用与谁担；四要件缺一即拒；签名须本人、智能体不代持代填；公开面四字段；四条不公开负空间 fail-closed。' },
   // 二期改版批2块一：公域顶栏第六入口「帮助与联系」——薄占位，内容随文档库「帮助」族入站（块二），联系块同批补入
   { path: '/help', title: '帮助与联系', layer: 'L0', dataSource: '静态占位（帮助族入站前）', permission: '公开', description: '站点帮助与官方联系入口。帮助内容随文档库「帮助」族入站（块二）；论坛暂不落栏，先定位。' },
   // 二期改版批2块二：文档库（裁点2终定：与文库并存，⛔ 不并线——端点不同、族不同）

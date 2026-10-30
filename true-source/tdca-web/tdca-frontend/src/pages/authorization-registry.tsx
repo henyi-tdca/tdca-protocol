@@ -130,15 +130,25 @@ export function AuthorizationRegistryPage() {
 
   return (
     <PageShell
-      title="授权登记管理（P8b）"
+      title="合约备案（P8b）"
       dataSource="A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）"
       permission="登录 DID（公开查免会话）"
       description="登记二分之授权侧：谁能怎么用。四要件缺一即拒；签名须本人、智能体不代持代填；公开面仅四字段。">
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          登记二分：权属登记＝归谁（P8a）／授权登记＝谁能怎么用（本页）
+          登记二分：权属登记＝归谁（P8a）／合约备案＝怎么用与谁担（本页）
           <SimulatedBadge nature="simulated" />
         </div>
+
+        {/* L1SI182-RIGHT-CENTER-001（甲档·创始人逐字口径）＋ AMEND-1 五处 ＋ AMEND-2 公开面一句：以下六句照抄落定稿，⛔ 改写 */}
+        <section data-testid="ar-contract-notes" className="rounded-lg border border-gray-200 bg-gray-50/60 p-4 text-sm text-gray-700">
+          <p>这里登记的是协作配置中双方约定的权利义务——谁按什么条件使用、要担什么。它不是确权：权利归谁，请到「权属登记」与「确权中心」。</p>
+          <p>合约备案件分两处：私域存完整合约（全部条款与签署留痕，仅双方与监管可查）；公域存登记备份（标的、双方、初始条件、授权状态、期限、是否嵌套），公开可读。初始条件设定即公开——因为不公开就算不出「这笔配置能否成立」，智能体也就无法做合规前置。公开不收回；条件变更的，变更后同样公开。</p>
+          <p>使用权的「归属」（这项使用权归谁）属于确权，在权属登记与确权中心办理；使用权的「行使条件与责任」属于合约备案。二者不是一回事，⛔ 不能互相替代。</p>
+          <p>同一件资产在不同合约里，可以是「干活的」（执行者），也可以是「被用的」（标的）。智能体两种都可能是，甚至同时。当前以文字说明角色，⛔ 不单设字段。</p>
+          <p>合约可以嵌套：一份合约的执行者，可以是另一份合约的标的。子合约的约束 ⛔ 不得宽于父合约；冲突时 ⛔ 不得启用（与「子级只能更严」同一条律）。</p>
+          <p>备案件应载明六项：① 标的资产 ② 双方主体 ③ 运用约束（场景 · 资产形态阶 · 权限边界 · 期限，须可核）④ 产出归属 ⑤ 是否嵌套与调用对象 ⑥ 正和效用口径。</p>
+        </section>
 
         {rules && (
           <section data-testid="ar-rules" className="rounded-lg border border-blue-200 bg-blue-50/50 p-4 text-sm">
@@ -165,7 +175,7 @@ export function AuthorizationRegistryPage() {
         {isAuthenticated ? (
           <>
         <section data-testid="ar-register">
-          <h2>授权登记</h2>
+          <h2>合约备案</h2>
           <input placeholder="授权对象引用（如：deploy/core-go 等五族资产）" value={asset}
             onChange={(e) => setAsset(e.target.value)} />
           <input placeholder="被授权方引用（如：被授权企业标识）" value={grantee}

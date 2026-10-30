@@ -105,9 +105,15 @@ export function OwnershipRegistryPage() {
       description="登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引不代法律判定。">
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          登记二分：权属登记＝归谁（本页）／授权登记＝谁能怎么用（8b，一期不做）
+          登记二分：权属登记＝归谁（本页）／合约备案＝怎么用与谁担（协作配置之合约履行，⛔ 非确权）
           <SimulatedBadge nature="simulated" />
         </div>
+
+        {/* L1SI182-RIGHT-CENTER-001 AMEND-1 处5＋处6（照抄落定稿，⛔ 改写；处6 与合约备案页逐字同源） */}
+        <section data-testid="or-asset-axis-notes" className="rounded-lg border border-gray-200 bg-gray-50/60 p-4 text-sm text-gray-700">
+          <p>本系统以「资产标识」为主轴：一次协作从缔约、运行、产出到分润，指的都是同一件资产。权属与权利都挂在资产标识上。</p>
+          <p>使用权的「归属」（这项使用权归谁）属于确权，在权属登记与确权中心办理；使用权的「行使条件与责任」属于合约备案。二者不是一回事，⛔ 不能互相替代。</p>
+        </section>
 
         {rules && (
           <section data-testid="or-rules" className="rounded-lg border border-blue-200 bg-blue-50/50 p-4 text-sm">

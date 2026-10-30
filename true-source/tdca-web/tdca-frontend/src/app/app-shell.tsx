@@ -136,7 +136,7 @@ export const APP_NAV: NavEntry[] = [
       {
         subgroup: '配置权',
         items: [
-          { to: '/authorization-registry', label: '授权登记' },
+          { to: '/authorization-registry', label: '合约备案' },
           { to: '/cluster#auth', label: '多层转授' }, // /cluster 双入口之一（页内拆段留导航-乙）
           { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
           { to: '/market-sim', label: '使用记录与结算' }, // 税收与结算并为一项；/tax 保留为页内入口，不在导航单列

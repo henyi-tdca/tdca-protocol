@@ -124,7 +124,7 @@ describe('S2-6 私域与边界（两域两权三铁句）', () => {
     expect(text).toContain('公域（站上管）')
     expect(text).toContain('私域（节点所有者管）')
     expect(text).toContain('权属登记（这是谁的）')
-    expect(text).toContain('授权登记（允许谁用、什么条件）')
+    expect(text).toContain('合约备案（允许谁用、什么条件）')
     expect(screen.getByTestId('private-road-ownership').getAttribute('href')).toBe('/ownership-registry')
     expect(screen.getByTestId('private-road-auth').getAttribute('href')).toBe('/authorization-registry')
     expect(screen.getByTestId('private-road-channel').getAttribute('href')).toBe('/channel/registry')

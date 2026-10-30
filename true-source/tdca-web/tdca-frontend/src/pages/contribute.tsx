@@ -36,7 +36,7 @@ const TIERS: Tier[] = [
     items: '素材原件 ＋ 一段登记自述。自述可以用「三问向导」生成（新手指引页内），照实回答、真实性由你本人负责。',
     road: [
       { label: '权属登记页（登记「这是谁的」）', href: '/ownership-registry' },
-      { label: '授权登记页（登记「允许谁用、什么条件」）', href: '/authorization-registry' },
+      { label: '合约备案页（登记「允许谁用、什么条件」）', href: '/authorization-registry' },
       { label: '三问向导（先生成登记自述草稿）', href: '/start/three-questions' },
     ],
     done: '登记被受理、取得登记号，即算站上第二阶。登记端点已在站内路由（提交须登录态）；不承诺时限，也不承诺必过——受理与否以登记簿为准。',
@@ -50,7 +50,7 @@ const TIERS: Tier[] = [
       { label: '私域与边界（先读这页再决定）', href: '/private' },
       { label: '智能体通道登记入口（通道登记端点已在站内路由）', href: '/channel/registry' },
       { label: '权属登记页', href: '/ownership-registry' },
-      { label: '授权登记页', href: '/authorization-registry' },
+      { label: '合约备案页', href: '/authorization-registry' },
     ],
     done: '节点在你一侧跑起来、两权落进登记簿，即算第三阶。同前：不承诺时限，不承诺必过。',
     pending: '本地部署包：建设中。真因：「私域可带走」属批 4 段，待后端就绪——可先完成两权登记与通道登记。',

@@ -24,7 +24,9 @@ const PRIVATE_NAV: { to: string; label: string }[] = [
   { to: '/attestation/dynamic', label: '动态确权' },
   { to: '/cluster', label: '集群编排' },
   { to: '/ownership-registry', label: '权属登记' },
-  { to: '/authorization-registry', label: '授权登记' },
+  { to: '/authorization-registry', label: '合约备案' },
+  { to: '/use/upload', label: '交素材' }, // L1SI182-USE-U2-001：U-2 起步页（创始人裁定：入口挂私域我的·确权栏目）
+  { to: '/use/agent', label: '代办登记' }, // L1SI182-USE-U2-001：机器人只跑腿五步流程（同裁定）
   { to: '/market-sim', label: '规范与沙盒链' },
   { to: '/channel/my', label: '我的通道' }, // L1SI167-CHANNEL-UI-001：四屏流水线（押金→令牌→转正→沙盒；私域）
   { to: '/terms', label: '术语检索' }, // L1SI175-A1-3：术语页进私域（登录可见；⛔ 公域匿名导航——匿名开放另候创始人一句）
