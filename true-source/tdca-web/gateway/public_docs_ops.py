@@ -130,7 +130,7 @@ _PUBLIC_DOCS = {
     "README.md",
     "OPENING.md",
     # L1SI180-TERMS-004/005 甲案上站一件（入站批 2 · 未入册⟹幂等补入 · 磁盘已与 main 树逐字节符）
-    "OPENING-LEDGER-L1SI177.md",
+    "OPENING-LEDGER.md",
     "COP-MANIFEST-2026-09-13.md",
     "tdca_core/README.md",
     "simulations/multilateral_search_match/README.md",
