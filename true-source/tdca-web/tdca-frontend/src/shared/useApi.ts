@@ -10,7 +10,7 @@ import { api, type GetOptions } from '@/api/client'
 export interface UseApiState<T> {
   status: 'loading' | 'ok' | 'fail'
   data: T | null
-  nature: 'real' | 'simulated' | null
+  nature: 'real' | 'mixed' | 'simulated' | null
   reason?: string
 }
 

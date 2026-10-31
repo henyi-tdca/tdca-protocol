@@ -12,10 +12,16 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 import { PageShell } from '@/pages/PageShell'
 
 describe('F0-A5 模拟态标注（ID92）', () => {
-  it('SimulatedBadge：simulated → 显示角标；real → 不渲染', () => {
+  it('SimulatedBadge：三档映射——simulated/mixed 显示且属性如实，real 不渲染', () => {
     const r1 = render(<SimulatedBadge nature="simulated" />)
     expect(screen.getByTestId('simulated-badge')).toHaveTextContent('数据性质 · 模拟（期一内部真跑）')
+    expect(screen.getByTestId('simulated-badge')).toHaveAttribute('data-nature', 'simulated')
     r1.unmount()
+    const r2 = render(<SimulatedBadge nature="mixed" />)
+    // L1SI183-SITEOBS-001 任务A：mixed ⛔ 显示为「模拟」
+    expect(screen.getByTestId('simulated-badge')).toHaveTextContent('数据性质 · 混合')
+    expect(screen.getByTestId('simulated-badge')).toHaveAttribute('data-nature', 'mixed')
+    r2.unmount()
     render(<SimulatedBadge nature="real" />)
     expect(screen.queryByTestId('simulated-badge')).not.toBeInTheDocument()
   })
@@ -58,7 +64,9 @@ describe('F0-A5 模拟态标注（ID92）', () => {
         <App />
       </MemoryRouter>,
     )
-    expect(screen.getByText(/全站模拟态 data_nature=simulated/)).toBeInTheDocument()
+    // L1SI183-SITEOBS-001 任务A：全站角标并入单一映射表（文案＝映射表 simulated 档）；
+    // 首页路由另渲染页面级角标，故允许多处命中
+    expect(screen.getAllByText(/数据性质 · 模拟（期一内部真跑）/).length).toBeGreaterThan(0)
   })
 })
 
