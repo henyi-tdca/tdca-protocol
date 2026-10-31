@@ -180,6 +180,12 @@ _PUBLIC_DOCS = {
     "simulations/multilateral_search_match/SEARCH-MATCH-SCALE600.md",
     "simulations/multilateral_search_match/SEARCH-MATCH-V2.md",
     "simulations/multilateral_search_match/SEARCH-MATCH-V3.md",
+    # UNLIST-RESTORE-001（L1SI185）：待改名五件改名后重上（去 REAL-/-HONEST/TEST，统一 SIM- 前缀；正文一字节未动）
+    "simulations/multilateral_search_match/SIM-MCP-LIVE-REPORT.md",
+    "simulations/multilateral_search_match/SIM-SUNZI-3PHASE-REPORT.md",
+    "simulations/multilateral_search_match/SIM-SUNZI-3PHASE-REPORT-CHECK.md",
+    "simulations/multilateral_search_match/SIM-SUNZI-COLLAB-REPORT.md",
+    "simulations/multilateral_search_match/SIM-SUNZI-COLLAB-REPORT-BASE.md",
     "simulations/positivesum_negotiation/POSITIVE-SUM-RESULT.md",
     "simulations/positivesum_negotiation/SIMULATION-TRACE.md",
     "simulations/zou_wei_shang_transformation/BUSINESS-TRANSFORMATION-PLAN.md",
