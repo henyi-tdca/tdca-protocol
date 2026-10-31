@@ -33,6 +33,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import base64
 import os
 import re
 import sqlite3
@@ -44,7 +45,7 @@ from typing import Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import func, or_
+from sqlalchemy import and_, func, or_
 from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix="/api/v1")
@@ -543,17 +544,62 @@ def knowledge_terms(q: Optional[str] = None, request: Request = None):
     return _nca_watermark({"terms": items, "total": len(items), "note": note}, nature=nature)
 
 
-@router.get("/audit/ledger-public")
-def audit_ledger_public():
-    """A-7: 公共账本查询（tax_events 最近 100 条；制度即公开，O(n) 可审计）。"""
+def _encode_cursor(row) -> str:
+    """AUDIT-ANCHOR-001：不透明游标（base64url(JSON{ts,event_id}) 复合位标，⛔ 暴露内部序号）。"""
+    raw = json.dumps({"ts": row.ts, "event_id": row.event_id},
+                     separators=(",", ":")).encode("utf-8")
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _decode_cursor(cursor: str):
+    """游标解码；非法游标 fail-closed（400，⛔ 静默当首页）。"""
     try:
+        pad = "=" * (-len(cursor) % 4)
+        obj = json.loads(base64.urlsafe_b64decode(cursor + pad).decode("utf-8"))
+        ts, eid = obj["ts"], obj["event_id"]
+        if not isinstance(ts, str) or not isinstance(eid, str):
+            raise ValueError
+        return ts, eid
+    except Exception:
+        raise HTTPException(400, "cursor 非法或已损坏")
+
+
+@router.get("/audit/ledger-public")
+def audit_ledger_public(limit: int = 100, cursor: str = "", since: str = "", until: str = ""):
+    """A-7: 公共账本查询（tax_events 最近 100 条；制度即公开，O(n) 可审计）。
+
+    AUDIT-ANCHOR-001 补真分页：limit 真生效（默认 100、上限 500）、cursor 不透明复合位标、
+    since/until 区间过滤；既有事件字段、note 与水位一字不改（currency 按规格五项补齐——
+    库无该列，缺者空串）。total＝区间内事件总数（与游标无关）。"""
+    try:
+        if not 1 <= limit <= 500:
+            raise HTTPException(400, "limit 须为 1..500 之整数")
         with get_session() as s:
-            rows = s.query(M.TaxEvent).order_by(M.TaxEvent.ts.desc()).limit(100).all()
+            q = s.query(M.TaxEvent)
+            if since:
+                q = q.filter(M.TaxEvent.ts >= since)
+            if until:
+                q = q.filter(M.TaxEvent.ts <= until)
+            total = q.count()
+            if cursor:
+                cts, ceid = _decode_cursor(cursor)
+                q = q.filter(or_(M.TaxEvent.ts < cts,
+                                 and_(M.TaxEvent.ts == cts,
+                                      M.TaxEvent.event_id < ceid)))
+            rows = q.order_by(M.TaxEvent.ts.desc(), M.TaxEvent.event_id.desc()) \
+                    .limit(limit + 1).all()
+        next_cursor = ""
+        if len(rows) > limit:
+            rows = rows[:limit]
+            next_cursor = _encode_cursor(rows[-1])
         events = [{"event_id": r.event_id, "type": r.type, "ts": r.ts,
-                   "amount": f"{r.amount / 100:.2f}"} for r in rows]
-        return _nca_watermark({"events": events, "total": len(events),
+                   "amount": f"{r.amount / 100:.2f}", "currency": ""} for r in rows]
+        return _nca_watermark({"events": events, "total": total,
+                               "next_cursor": next_cursor,
                                "note": "公共账本（只读，BV-3）"},
                               nature=_nature_of([r.data_provenance for r in rows]))
+    except HTTPException:
+        raise
     except Exception as e:
         # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
         _ERR_LOG.exception("A-7 ledger-public 失败: %s", e)
