@@ -33,7 +33,7 @@ export function PrivateDomainPage() {
               <div className="mb-1 text-xs font-semibold text-gray-800">公域（站上管）</div>
               <ul className="list-inside list-disc space-y-0.5 text-xs leading-relaxed text-gray-600">
                 <li>站点本身与各公开页面</li>
-                <li>只读接口（任何第三方可复算的公开面）</li>
+                <li>只读接口（锚点摘要可复算、单条记录哈希可核对的公开面）</li>
                 <li>公开账本与存证核验</li>
                 <li>沙盒（制度化学反应釜，全程留痕）</li>
                 <li>负空间检查（「什么不能做」的公开面）</li>

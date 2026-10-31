@@ -26,4 +26,4 @@ curl -s http://localhost:8080/mcp/health; echo
 curl -s -X POST http://localhost:8080/mcp/call -H 'Content-Type: application/json' \
   -d '{"name":"tdca:echo","arguments":{"text":"install smoke (GSEQ-0642)"}}'; echo
 
-echo "== DONE → http://$(curl -s ifconfig.me 2>/dev/null || echo '<服务器IP>'):8080 =="
+echo "== DONE → https://tdca.com.cn/ （公网正式面；内网调试口 8080 已收口，仅本机冒烟用 localhost:8080）=="

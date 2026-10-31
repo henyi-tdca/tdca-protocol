@@ -112,6 +112,13 @@ app.include_router(ci_ops_router)
 from anchor_ops import router as anchor_ops_router  # noqa: E402
 app.include_router(anchor_ops_router)
 
+# AUDIT-ANCHOR-001：账本锚点内部面（/api/v1/audit/anchors*——⛔ 对外暴露：仅当内部环境显式置旗才挂载；
+# 规格 TDCA-SPEC-AUDIT-ANCHOR-001 V1.0-FROZEN-INTERNAL；生产实例不置旗 ⟹ 路由不存在（404），非 401 泄露存在性）
+import os as _os  # noqa: E402
+if _os.environ.get("TDCA_AUDIT_ANCHOR_INTERNAL") == "1":
+    from ledger_anchor_ops import router as audit_anchor_router  # noqa: E402
+    app.include_router(audit_anchor_router)
+
 # A-18: P7 站点运维端（/api/v1/ops/*——红线八项分类器；触碰升 DCD；上线 NCA 存证＋对账可回滚）
 from ops_ops import router as ops_ops_router  # noqa: E402
 app.include_router(ops_ops_router)

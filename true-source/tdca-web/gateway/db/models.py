@@ -1111,3 +1111,37 @@ class UploadRecord(Base):
         UniqueConstraint("sha256", "username", name="uq_upload_records_sha_user"),
         CheckConstraint(_PROVENANCE_CHECK, name="ck_upload_records_prov"),
     )
+
+
+class AuditBatchAnchor(Base):
+    """AUDIT-ANCHOR-001：批锚表（一日一批一期实现；更正留新版，旧版不删）。"""
+
+    __tablename__ = "audit_batch_anchors"
+    batch_id: Mapped[str] = mapped_column(Text, primary_key=True)          # B<YYYY-MM-DD>
+    version: Mapped[int] = mapped_column(Integer, primary_key=True)        # 日锚版本（同进退）
+    date: Mapped[str] = mapped_column(Text, nullable=False)                # +08 日界 YYYY-MM-DD
+    batch_root: Mapped[str] = mapped_column(Text, nullable=False)          # sha256: 64 位小写十六进制
+    event_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    first_event_id: Mapped[str] = mapped_column(Text, nullable=False)
+    last_event_id: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        Index("idx_audit_batch_date", "date"),
+    )
+
+
+class AuditDayAnchor(Base):
+    """AUDIT-ANCHOR-001：日锚表（anchored/none；缺日仍出行；更正＝新版行，旧行原样保留）。"""
+
+    __tablename__ = "audit_day_anchors"
+    date: Mapped[str] = mapped_column(Text, primary_key=True)              # +08 日界 YYYY-MM-DD
+    version: Mapped[int] = mapped_column(Integer, primary_key=True)
+    status: Mapped[str] = mapped_column(Text, nullable=False)              # anchored | none
+    day_anchor: Mapped[str | None] = mapped_column(Text)                   # none 日恒 null（⛔ 占位哈希）
+    prev_day_anchor: Mapped[str | None] = mapped_column(Text)              # none 日返回 null，不入链
+    batch_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    event_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    published_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("status IN ('anchored','none')", name="ck_audit_day_status"),
+    )

@@ -652,7 +652,7 @@
     <div class="asset-card">
       <h3>⑥ 门户闭环</h3>
       <ul>
-        <li><a href="http://47.76.42.139:8080/" target="_blank">测试云主入口</a>（NL real / MCP 实测 / 哨兵实时）</li>
+        <li><a href="https://tdca.com.cn/" target="_blank">测试云主入口</a>（NL real / MCP 实测 / 哨兵实时；SCRUB-002：8080 调试口已收口，入口改指 443 正式面）</li>
         <li><a href="https://henyi-tdca.github.io/tdca-protocol/" target="_blank">静态门面（离线备用）</a>（gh-pages，停机时可达）</li>
         <li>双端同源构建，互链互备</li>
       </ul>
@@ -688,7 +688,7 @@
 <script>
 // 双端同源（GSEQ-0650）：测试云=实时态；gh-pages 静态门面=提示跳转（跨端直连受 CORS 与停机约束）
 const LIVE = (location.hostname === '47.76.42.139');
-const CLOUD_URL = 'http://47.76.42.139:8080/';
+const CLOUD_URL = 'https://tdca.com.cn/';
 const STATIC_HINT = '本端为静态门面（离线备用）。实时演示（NL 真实算力 / MCP 实测 / 哨兵实时）请至测试云主入口：' + CLOUD_URL;
 
 const INTENTS = [

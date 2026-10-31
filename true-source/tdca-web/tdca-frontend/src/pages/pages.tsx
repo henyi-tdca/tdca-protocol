@@ -34,7 +34,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/attestation', title: '确权中心总览', layer: 'L0', dataSource: '确权 API（A-11 待补）+ WS attestation', permission: '登录 DID + HUF', description: '待审队列 + 最近事件 + 确权统计（元函数/动态/历史入口）。' },
   { path: '/attestation/meta', title: '元函数初始确权（出盒终裁）', layer: 'L0', dataSource: '确权 API + 沙盒验证报告', permission: 'HUF 强制', description: '沙盒验证后、进入配置权市场前的人类确权（先验证后背书，REV-002 修正）。' },
   { path: '/attestation/dynamic', title: '动态确权请求队列', layer: 'L0', dataSource: '确权 API + WS', permission: '登录 DID + HUF', description: '五类动态确权请求（场景扩展/认知演化/化合授权/负空间逼近/目标修正）紧急度排序。' },
-  { path: '/attestation/history', title: '确权历史（NCA 链跨代）', layer: 'L0', dataSource: '确权 API', permission: '公开（制度即公开）', description: 'Meta-Attestation-NCA 跨代追溯 + 拒绝事件高亮 + 延迟分析。' },
+  { path: '/attestation/history', title: '确权历史', layer: 'L0', dataSource: '确权 API', permission: '公开（制度即公开）', description: '确权事件公开视图：时间／事件类型／公开状态／公开摘要（拒绝事件高亮）。' },
   { path: '/auth', title: '登录（DID）', layer: 'L0', dataSource: 'B-4 鉴权中间件（TDCA_GATEWAY_AUTH=1 启用时强制）', permission: '公开', description: '统一 DID 认证入口（F-2 落地）：token 持有 + 受保护路由守卫。' },
   { path: '/register', title: '注册（人类账号）', layer: 'L0', dataSource: 'M4 POST /api/v1/auth/register', permission: '公开', description: '注册即 viewer 只读账号（人机面）；注册存证落 NCA 链，成功自动登录进个人后台。' },
   { path: '/me', title: '个人后台（我的）', layer: 'L0', dataSource: 'M5 GET /api/v1/me/dashboard', permission: '须登录（谁的数据谁可见）', description: '我的智能体 / 签批待办 / 我批过的 / 沙盒申请 / 治理操作，一屏聚合。' },
@@ -82,7 +82,7 @@ export const PAGE_META: PageMeta[] = [
   // L1SI163-START-001：新手指引（六步＋目录筛四维＋147 术语检索·页面与检索共读 _START-MAP-20261021-V1·0CE5C89A957B6B60）
   { path: '/start', title: '新手指引 · 六步上手 TDCA', layer: 'L0', dataSource: '_START-MAP 三表（单一事实源·仓内单源 ?raw 进包）', permission: '公开', description: 'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表。' },
   // L1SI175-B1 S1-5：怎么验证常设页（三件自查全路径，匿名面）
-  { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读，任何第三方可复算。' },
+  { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读：锚点摘要可复算，记录哈希可核对不可复算（ATTEST-SCRUB-001）。' },
   // L1SI175-A1-2：术语检索页（登录可见；服务端 ?q= 过滤；⛔ 匿名开放未授权）
   { path: '/terms', title: '术语检索', layer: 'L0', dataSource: 'A-6 GET /api/v1/knowledge/terms?q=（服务端过滤）', permission: '登录 DID', description: '站内术语注册表检索：词与释义两列，关键词走服务端过滤；登录可见全量，匿名返回已脱敏内部编号。' },
   { path: '/assets', title: '五序资产总览', layer: 'L0', dataSource: 'GET /api/v1/assets/five-orders（DB 实读）', permission: '公开', description: '五序资产池总览：名称、说明与在册数量；真实资产待生态接入，只读展示，不含交易入口。' },

@@ -156,23 +156,30 @@ def _latest_anchor() -> dict | None:
 
 @router.get("/spec")
 def selfcheck_spec():
-    """口径公开：重算公式与字段白名单（第三方按此可独立验证，无需我方额外说明）。"""
+    """ATTEST-SCRUB-001：白名单公开规格——只列检查项名称与公开结论。
+    ⛔ 内部重算构成（含永不出字段，公开亦不可复算）、内部字段名、内部路径不公开；
+    返回字段白名单（第三方核对着字段清单即可）。"""
     return _nca_watermark({
         "entry": {"record": "GET /api/v1/selfcheck/nca/{nca_id}",
                   "anchor": "GET /api/v1/selfcheck/anchor"},
-        "rec_hash_spec": _RECHASH_SPEC,
-        "anchor_digest_spec": _ANCHOR_SPEC,
-        "fields_whitelist": ["nca_id", "action", "ts", "artifact_filename_sha256_16",
-                             "artifact_ext", "sha256_8", "rec_hash", "prev_hash", "detached",
-                             "detach_reason", "actor_hash"],
-        "not_returned": ["actor（原值，自然人标识一律不出）", "handshake_id",
-                         "chain_id", "side", "凭据", "内部编号", "负空间词面",
-                         "artifact_filename（台账件名原值，035-A2 令脱敏）"],
-        "artifact_filename_note": ("台账件名原值不入响应；以 artifact_filename_sha256_16 供给"
-                                   "（sha256(件名 UTF-8) 前 16 位大写），artifact_ext 为扩展名"),
+        "checks": [
+            {"name": "存在性自查", "entry": "GET /api/v1/selfcheck/nca/{nca_id}",
+             "conclusion": "公开清单内记录可查；不存在与清单外返回统一口径，不可区分"},
+            {"name": "单行一致性自查", "entry": "GET /api/v1/selfcheck/nca/{nca_id}",
+             "conclusion": "响应供公开哈希字段核对；自然人标识以指纹供给，原值不出"},
+            {"name": "台账级一致自查", "entry": "GET /api/v1/selfcheck/anchor",
+             "conclusion": "当日锚可用时可核；锚不可用如实 503，不编造"},
+        ],
+        "returned_fields": ["nca_id", "action", "ts",
+                            "artifact_filename_sha256_16", "artifact_ext", "sha256_8",
+                            "rec_hash", "prev_hash", "detached", "detach_reason",
+                            "actor_hash"],
+        "not_returned": ("自然人标识原值、凭据、内部编号、台账件名原值"
+                         "及一切白名单外字段（默认不返回）"),
         "rate_limit": f"{_RATE_PER_MIN}/min/IP（内存滑窗，单实例口径）",
-        "sha256_8_note": "sha256_8 系 artifact_path 之哈希，非记录哈希（如实标注）",
         "page_disclaimer": _PAGE_DISCLAIMER,
+        "note": ("本规格只列检查项与公开结论（ATTEST-SCRUB-001）；"
+                 "内部重算构成含永不出字段，公开亦不可复算，故不公开"),
     })
 
 
