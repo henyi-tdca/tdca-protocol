@@ -14,7 +14,7 @@ echo "== [2/4] 会话令牌（仅本次 shell，不落盘） =="
 export TDCA_GATEWAY_TOKEN="${TDCA_GATEWAY_TOKEN:-$(openssl rand -hex 16)}"
 echo "TDCA_GATEWAY_TOKEN 已生成（session-only）"
 
-echo "== [3/4] 编排构建上线（nginx:8080 / gateway / mcp-bridge） =="
+echo "== [3/4] 编排构建上线（nginx:8080 仅本机回环冒烟口 / gateway / mcp-bridge） =="
 docker compose -f deploy/docker-compose.yml up -d --build
 sleep 12
 docker compose -f deploy/docker-compose.yml ps
