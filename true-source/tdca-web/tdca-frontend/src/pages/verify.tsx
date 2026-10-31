@@ -11,18 +11,17 @@ import { PageShell } from './PageShell'
 
 // ── 1.6-C 自助验链四区块（TDCA-HANDOFF-EXEC-L1SI175-C1-001）──
 // 纯只读面追加：spec／anchor／nca-history 三源并行拉取，C3 单条查按需触发；
-// C3 只显 fields_whitelist（运行时以 spec 负载为准），404 显人话＋错误码；
+// C3 只显 returned_fields（运行时以 spec 负载为准），404 显人话＋错误码；
 // EVT- 族登记待核：event_id 整串可显，⛔ 再拆 CASE 段；四区块各带 disclaimer 原样＋限速。
 interface SpecData {
   entry: { record: string; anchor: string }
-  rec_hash_spec: string
-  anchor_digest_spec: string
-  fields_whitelist: string[]
+  // SCRUB-002：接口新结构（a12b7d2 已撤内部口径），前端随适配
+  checks: { name: string; entry: string; conclusion: string }[]
+  returned_fields: string[]
   not_returned: string[]
-  artifact_filename_note: string
   rate_limit: string
-  sha256_8_note: string
   page_disclaimer: string
+  note: string
 }
 
 interface AnchorData {
@@ -116,7 +115,7 @@ export function VerifyPage() {
     return () => { alive = false }
   }, [])
 
-  /** C3：只显 fields_whitelist 内字段（运行时以 spec 负载为准） */
+  /** C3：只显 returned_fields 内字段（运行时以 spec 负载为准） */
   async function queryOne(id: string) {
     const clean = id.trim()
     if (!clean) return
@@ -142,7 +141,7 @@ export function VerifyPage() {
       title="怎么验证 · 5 分钟三件自查"
       dataSource="匿名只读三件：ledger-public ／ ci/badge ／ formal/conclusion/catalog"
       permission="公开"
-      description="不注册、不登录，5 分钟三件自查：公开账本 → 机验徽章 → 形式化清单。三个端点都是匿名只读，任何第三方可复算。体验期免费使用，收费标准另定。"
+      description="不注册、不登录，5 分钟三件自查：公开账本 → 机验徽章 → 形式化清单。三个端点都是匿名只读：锚点摘要可独立复算，记录哈希可核对不可复算（ATTEST-SCRUB-001）。体验期免费使用，收费标准另定。"
     >
       <div data-testid="verify-page" className="space-y-6">
         <section data-testid="verify-intro">
@@ -170,7 +169,7 @@ export function VerifyPage() {
         <section data-testid="verify-note" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">口径</h3>
           <ul className="space-y-1.5 text-xs leading-relaxed text-gray-600">
-            <li>三件全部匿名可读——验证不需要信任本站，只需要复算公开面。</li>
+            <li>三件全部匿名可读——验证不需要信任本站：锚点摘要任何第三方可复算；单条记录哈希只供核对（响应内公开哈希），不复算（ATTEST-SCRUB-001）。</li>
             <li>徽章＝最近一回手动机验结果（非自动门禁）；账本与清单以在册仓库为唯一权威源。</li>
             <li>工具货架公开目录（/api/v1/toolshelf/catalog）与文献族公开目录（/api/v1/library/paper/catalog）同属匿名面，可一并走查。</li>
           </ul>
@@ -183,22 +182,30 @@ export function VerifyPage() {
           </p>
         )}
 
-        {/* C1 校验规格：spec 原文照排 */}
+        {/* C1 校验规格：spec 原文照排（SCRUB-002：随 a12b7d2 新结构——撤内部口径，改可核对不可复算表述） */}
         <section data-testid="verify-spec" className="rounded-lg border border-gray-200 p-4">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">校验规格（原文照排）</h3>
           {spec ? (
             <div className="space-y-3 text-xs leading-relaxed text-gray-600">
               <div>
-                <div className="mb-1 font-semibold text-gray-700">记录哈希公式</div>
-                <pre data-testid="spec-rec-hash" className="overflow-x-auto rounded bg-gray-100 p-2 text-[11px]">{spec.rec_hash_spec}</pre>
+                <div className="mb-1 font-semibold text-gray-700">记录哈希（可核对 · 不可复算）</div>
+                <p data-testid="spec-rec-hash" className="rounded bg-gray-50 p-2">{spec.note}</p>
               </div>
               <div>
-                <div className="mb-1 font-semibold text-gray-700">锚点摘要公式</div>
-                <pre data-testid="spec-anchor-spec" className="overflow-x-auto rounded bg-gray-100 p-2 text-[11px]">{spec.anchor_digest_spec}</pre>
+                <div className="mb-1 font-semibold text-gray-700">锚点摘要（仍可独立复算）</div>
+                <p className="rounded bg-gray-50 p-2">复算口径写死在当日锚件 canonicalization 原文——见下方「锚点核验」区块；任何第三方可按该口径独立复算并与 anchor_digest 对读。</p>
+              </div>
+              <div>
+                <div className="mb-1 font-semibold text-gray-700">检查项与公开结论（三项）</div>
+                <ul className="list-inside list-disc space-y-0.5">
+                  {spec.checks.map((c) => (
+                    <li key={c.name}><span className="font-semibold">{c.name}</span>（{c.entry}）：{c.conclusion}</li>
+                  ))}
+                </ul>
               </div>
               <div>
                 <div className="mb-1 font-semibold text-gray-700">响应字段白名单（只显这些）</div>
-                <p data-testid="spec-whitelist" className="rounded bg-gray-50 p-2 font-mono text-[11px] break-all">{spec.fields_whitelist.join(' ／ ')}</p>
+                <p data-testid="spec-whitelist" className="rounded bg-gray-50 p-2 font-mono text-[11px] break-all">{spec.returned_fields.join(' ／ ')}</p>
               </div>
               <div>
                 <div className="mb-1 font-semibold text-gray-700">不返回（明确不出）</div>
@@ -208,10 +215,6 @@ export function VerifyPage() {
                   ))}
                 </ul>
               </div>
-              <ul className="list-inside list-disc space-y-0.5">
-                <li>{spec.sha256_8_note}</li>
-                <li>{spec.artifact_filename_note}</li>
-              </ul>
               <footer className="space-y-1 border-t border-gray-100 pt-2 text-[11px] text-gray-500">
                 <p>能证什么：{spec.page_disclaimer}</p>
                 <p>限速：{spec.rate_limit}</p>
@@ -258,7 +261,7 @@ export function VerifyPage() {
                 <pre data-testid="anchor-canonicalization" className="overflow-x-auto rounded bg-gray-100 p-2 text-[11px]">{anchor.canonicalization}</pre>
               </div>
               <p className="rounded bg-blue-50 p-2 text-blue-700">
-                怎么自己算：取当日台账全部叶哈希按字典序排序，与 date、row_count 按上方「锚点摘要公式」拼接求 SHA-256，取十六进制大写前 16 位，与此处 anchor_digest 对读——一致即「当日台账形态与公开锚一致」。
+                怎么自己算：取当日台账全部叶哈希按字典序排序，与 date、row_count 按上方 canonicalization 口径拼接求 SHA-256，取十六进制大写前 16 位，与此处 anchor_digest 对读——一致即「当日台账形态与公开锚一致」。
               </p>
               <footer className="space-y-1 border-t border-gray-100 pt-2 text-[11px] text-gray-500">
                 <p>能证什么：{anchor.page_disclaimer}</p>
@@ -270,7 +273,7 @@ export function VerifyPage() {
           )}
         </section>
 
-        {/* C3 单条自助查：只显 fields_whitelist；404 显人话＋错误码 */}
+        {/* C3 单条自助查：只显 returned_fields；404 显人话＋错误码 */}
         <section data-testid="verify-selfcheck" className="rounded-lg border border-gray-200 p-4">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">单条自助查（台账记录）</h3>
           <p className="mb-2 text-xs text-gray-500">
@@ -306,7 +309,7 @@ export function VerifyPage() {
           )}
           {record && spec && (
             <dl data-testid="c3-record" className="space-y-1.5">
-              {spec.fields_whitelist.map((k) =>
+              {spec.returned_fields.map((k) =>
                 record[k] !== undefined && record[k] !== null ? (
                   <div key={k} className="flex gap-2 text-xs">
                     <dt className="w-44 shrink-0 font-mono text-gray-500">{k}</dt>

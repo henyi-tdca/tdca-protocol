@@ -16,9 +16,13 @@ function envelope(payload: unknown) {
 
 const SPEC = {
   entry: { record: 'GET /api/v1/selfcheck/nca/{nca_id}', anchor: 'GET /api/v1/selfcheck/anchor' },
-  rec_hash_spec: "rec_hash = sha256('nca_id|prev_nca|action|actor|artifact_path|sha256_8|handshake_id|data_provenance|ts') → 十六进制大写前 16 位（空值按空串计；actor 计入哈希但不出原值，以 actor_hash 脱敏供给）",
-  anchor_digest_spec: "anchor_digest = sha256('date|row_count|sorted(leaf_hashes).join(\",\")') → 十六进制大写前 16 位（口径写死在当日锚件 canonicalization 字段）",
-  fields_whitelist: [
+  // SCRUB-002：随 a12b7d2 新结构 mock——内部口径字段已撤
+  checks: [
+    { name: '存在性自查', entry: 'GET /api/v1/selfcheck/nca/{nca_id}', conclusion: '公开清单内记录可查；不存在与清单外返回统一口径，不可区分' },
+    { name: '单行一致性自查', entry: 'GET /api/v1/selfcheck/nca/{nca_id}', conclusion: '响应供公开哈希字段，第三方可核对不可复算' },
+    { name: '锚点一致性自查', entry: 'GET /api/v1/selfcheck/anchor', conclusion: '当日锚与台账形态一致；历史连续性取决于每日锚可核' },
+  ],
+  returned_fields: [
     'nca_id', 'action', 'ts', 'artifact_filename_sha256_16', 'artifact_ext',
     'sha256_8', 'rec_hash', 'prev_hash', 'detached', 'detach_reason', 'actor_hash',
   ],
@@ -26,10 +30,9 @@ const SPEC = {
     'actor（原值，自然人标识一律不出）', 'handshake_id', 'chain_id', 'side', '凭据', '内部编号', '负空间词面',
     'artifact_filename（台账件名原值，035-A2 令脱敏）',
   ],
-  artifact_filename_note: '台账件名原值不入响应；以 artifact_filename_sha256_16 供给（sha256(件名 UTF-8) 前 16 位大写），artifact_ext 为扩展名',
   rate_limit: '60/min/IP（内存滑窗，单实例口径）',
-  sha256_8_note: 'sha256_8 系 artifact_path 之哈希，非记录哈希（如实标注）',
   page_disclaimer: '本查询可证：该条记录存在于台账，且其内容与写入时一致；台账当日形态与公开锚一致。历史各日是否被改写，取决于每日锚是否连续可核。',
+  note: '本规格只列检查项与公开结论（ATTEST-SCRUB-001）；内部重算构成含永不出字段，公开亦不可复算，故不公开',
 }
 
 const ANCHOR = {
@@ -98,15 +101,16 @@ describe('L1SI175-C1 自助验链四区块（并入 /verify）', () => {
     expect(screen.getAllByText(/体验期免费使用，收费标准另定/).length).toBeGreaterThanOrEqual(1)
   })
 
-  it('C1 校验规格：公式/白名单/不返回/双注记/免责/限速全齐（原文照排）', async () => {
+  it('C1 校验规格：可核对口径/检查项/白名单/不返回/免责/限速全齐（原文照排·SCRUB-002 新结构）', async () => {
     mockAll()
     render(<MemoryRouter><VerifyPage /></MemoryRouter>)
     await waitFor(() => expect(screen.getByTestId('verify-spec')).toBeTruthy(), { timeout: 3000 })
-    expect(screen.getByText(/rec_hash = sha256/)).toBeTruthy()
-    expect(screen.getByText(/anchor_digest = sha256/)).toBeTruthy()
+    expect(screen.getByTestId('spec-rec-hash').textContent).toContain('公开亦不可复算')
+    expect(screen.getAllByText(/canonicalization 口径/).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText(/存在性自查/)).toBeTruthy()
+    expect(screen.getByText(/锚点一致性自查/)).toBeTruthy()
     expect(screen.getByTestId('spec-whitelist').textContent).toContain('actor_hash')
     expect(screen.getByText(/actor（原值，自然人标识一律不出）/)).toBeTruthy()
-    expect(screen.getByText(/sha256_8 系 artifact_path 之哈希/)).toBeTruthy()
     expect(screen.getAllByText(/60\/min\/IP/).length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText(/本查询可证：该条记录存在于台账/).length).toBeGreaterThanOrEqual(1)
   })
