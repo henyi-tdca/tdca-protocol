@@ -36,7 +36,7 @@ KEY_ENDPOINTS = [
     "/api/v1/knowledge/terms",
 ]
 
-BASE_URL = "http://47.76.42.139:8080"
+BASE_URL = "http://10.0.0.1:8080"  # EXPOSURE-002 S1：公网明文 ⟹ wg 内网（站机 wg 地址 10.0.0.1）
 
 
 def md5(b: bytes) -> str:
