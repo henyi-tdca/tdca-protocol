@@ -186,11 +186,6 @@ _PUBLIC_DOCS = {
     "simulations/zou_wei_shang_transformation/SIMULATION-TRACE.md",
     # 六件去编号改写后放行（L1SI170-COPLIB-008，承 007 硬排除解除）
     "simulations/README.md",
-    "simulations/multilateral_search_match/MCP-LIVE-TEST-REPORT.md",
-    "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT.md",
-    "simulations/multilateral_search_match/REAL-SUNZI-3PHASE-REPORT-HONEST.md",
-    "simulations/multilateral_search_match/REAL-SUNZI-COLLAB-REPORT.md",
-    "simulations/multilateral_search_match/SUNZI-COLLAB-REPORT.md",
     # 批 L1SI177-B123-RECOMMEND 块乙：素材库双版试点 14 件——只列「-PUB」对外版
     # （原件带 COP-ID/base_protocol 注册号不入册；对外版已剥件首元数据头＋补 data_nature+来源句）
     # 收口（L1SI177-B4-FOLLOWUP 块乙）：缓办两件撤条——emissary/谈判者-特使-001-COP-PUB、麦肯锡思维协议-PUB
