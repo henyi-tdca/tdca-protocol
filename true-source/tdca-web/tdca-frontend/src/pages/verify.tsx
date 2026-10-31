@@ -169,7 +169,7 @@ export function VerifyPage() {
         <section data-testid="verify-note" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">口径</h3>
           <ul className="space-y-1.5 text-xs leading-relaxed text-gray-600">
-            <li>三件全部匿名可读——验证不需要信任本站：锚点摘要任何第三方可复算；单条记录哈希只供核对（响应内公开哈希），不复算（ATTEST-SCRUB-001）。</li>
+            <li>三件全部匿名可读——验证不需要信任本站：锚点摘要可复算；单条记录哈希只供核对（响应内公开哈希），不复算（ATTEST-SCRUB-001）。</li>
             <li>徽章＝最近一回手动机验结果（非自动门禁）；账本与清单以在册仓库为唯一权威源。</li>
             <li>工具货架公开目录（/api/v1/toolshelf/catalog）与文献族公开目录（/api/v1/library/paper/catalog）同属匿名面，可一并走查。</li>
           </ul>
