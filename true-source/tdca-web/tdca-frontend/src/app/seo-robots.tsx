@@ -8,14 +8,13 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
 
-/** 收录开放面（BATCH-002 §二 最终清单，共 10 路） */
+/** 收录开放面（L1SI183-SITEOBS-001 任务B：9 路；/attestation 为登录页已剔出；/agents 需登录使用仍收录） */
 export const SEO_OPEN_FACES = [
   '/',
   '/about',
   '/audit',
-  '/agents',
+  '/agents', // 需登录使用（裁定注明）
   '/academy',
-  '/attestation',
   '/docs/regulation',
   '/library',
   '/docs/whitepapers',

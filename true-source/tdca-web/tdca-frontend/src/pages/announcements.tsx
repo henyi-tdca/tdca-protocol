@@ -34,7 +34,7 @@ export function AnnouncementsPage() {
   const [rows, setRows] = useState<AnnouncementView[]>([])
   const [count, setCount] = useState(0)
   const [note, setNote] = useState('')
-  const [nature, setNature] = useState<'real' | 'simulated' | null>(null)
+  const [nature, setNature] = useState<'real' | 'mixed' | 'simulated' | null>(null)
   const [status, setStatus] = useState<'loading' | 'ok' | 'fail'>('loading')
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')

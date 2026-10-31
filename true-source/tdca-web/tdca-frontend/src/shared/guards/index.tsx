@@ -22,7 +22,7 @@ const FUSE_META: Record<FuseState, { label: string; dot: string; desc: string }>
 export interface ReadOnlyStreamProps {
   title: string
   data: unknown
-  nature?: 'real' | 'simulated'
+  nature?: 'real' | 'mixed' | 'simulated'
 }
 export function ReadOnlyStream({ title, data, nature = 'simulated' }: ReadOnlyStreamProps) {
   return (

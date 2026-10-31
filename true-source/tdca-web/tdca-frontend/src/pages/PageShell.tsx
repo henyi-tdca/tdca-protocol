@@ -23,7 +23,7 @@ export interface PageShellProps {
    * 页数据性质（L1SI177-B123 块丁）：制度文本/公示说明/仓内真实件 → 'real'（不挂模拟角标）；
    * 业务/运行/演练数据 → 'simulated'（挂角标）。缺省 'simulated'（54 处既有调用行为不变）。
    */
-  dataNature?: 'real' | 'simulated'
+  dataNature?: 'real' | 'mixed' | 'simulated'
 }
 
 /** 通用页面占位壳：F1~F5 阶段将替换为具体页面内容 */

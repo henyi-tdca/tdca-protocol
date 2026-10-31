@@ -2,15 +2,14 @@
 import { describe, expect, it } from 'vitest'
 import { isSeoOpen, SEO_OPEN_FACES } from '@/app/seo-robots'
 
-describe('L1SI182-BATCH-002 收录开面表（与 deploy/nginx/default.conf map $uri $seo_robots 同源）', () => {
-  it('开放面恰为内容页 6 ＋ 目录 3 处（共 10 路），不多不少', () => {
+describe('L1SI182-BATCH-002 收录开面表（与 deploy/nginx/default.conf map $uri $seo_robots 同源；L1SI183-SITEOBS-001 任务B：/attestation 登录页剔出后共 9 路）', () => {
+  it('开放面恰为 9 路（登录页 /attestation 已剔出；/agents 需登录使用仍收录），不多不少', () => {
     expect([...SEO_OPEN_FACES].sort()).toEqual(
       [
         '/',
         '/about',
         '/academy',
         '/agents',
-        '/attestation',
         '/audit',
         '/docs/papers',
         '/docs/regulation',

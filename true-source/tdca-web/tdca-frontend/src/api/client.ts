@@ -18,7 +18,10 @@ export const BASE = import.meta.env.VITE_API_BASE ?? '' // M4 一体部署默认
 export const WS_CHANNELS = ['handshake', 'tax_mou', 'notifier', 'audit'] as const
 export type WsChannel = (typeof WS_CHANNELS)[number]
 
-export type DataNature = 'real' | 'simulated'
+// L1SI183-SITEOBS-001 任务A：三档单一真源（type re-export，档位与映射表同存 shared/dataNature.ts）
+export type { DataNature } from '@/shared/dataNature'
+import type { DataNature } from '@/shared/dataNature'
+import { coerceDataNature } from '@/shared/dataNature'
 
 /** NCA 水印校验结果：缺失或哈希不符 → 拒绝渲染（ID91） */
 export type WatermarkVerdict = 'ok' | 'missing'
@@ -208,7 +211,7 @@ async function request<T>(
     if (verdict !== 'ok' && !opts.tolerateMissingWatermark) {
       return { ok: false, reason: 'watermark_missing', detail: 'NCA 水印缺失，拒绝渲染' }
     }
-    const nature: DataNature = raw.data_nature === 'real' ? 'real' : 'simulated' // ID92：非 real 一律模拟标注
+    const nature: DataNature = coerceDataNature(raw.data_nature) // L1SI183：三档直通（mixed 不再坍缩），未知值 fail-closed 归 simulated
     const data = (raw.data ?? raw) as T
     return { ok: true, data, watermark: raw.nca_watermark ?? '', nature }
   } catch (err) {

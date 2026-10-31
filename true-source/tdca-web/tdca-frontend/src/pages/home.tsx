@@ -116,12 +116,12 @@ export function HomePage() {
           >
             我要缔约（注册即缔约） <ArrowRight className="h-4 w-4" />
           </Link>
-          <a
-            href="#machine"
+          <Link
+            to="/agents"
             className="inline-flex items-center gap-2 rounded-md border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
           >
             <Bot className="h-4 w-4" /> 智能体通道
-          </a>
+          </Link>
         </div>
       </section>
 
