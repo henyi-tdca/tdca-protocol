@@ -25,15 +25,13 @@ interface QueueData {
   note: string
 }
 interface HistoryItem {
-  index: number
-  nca_ref: string
-  agent: string
-  type: string
+  time: string
+  event_type: string
   status: string
-  ts: string
+  summary: string
 }
 interface HistoryData {
-  chain: HistoryItem[]
+  events: HistoryItem[]
   total: number
   note: string
 }
@@ -300,17 +298,17 @@ export function AttestationDynamicPage() {
 }
 
 // =============================================================================
-// /attestation/history 确权历史（NCA 链跨代 + 拒绝高亮）
+// /attestation/history 确权历史（公开视图：时间／事件类型／公开状态／公开摘要 · ATTEST-SCRUB-001）
 // =============================================================================
 export function AttestationHistoryPage() {
   const { status, data, nature } = useApiGet<HistoryData>('/api/v1/attestation/history')
 
   return (
     <PageShell dataNature="real"
-      title="确权历史（NCA 链跨代）"
+      title="确权历史"
       dataSource="A-11 GET /api/v1/attestation/history"
       permission="公开（制度即公开）"
-      description="Meta-Attestation-NCA 跨代追溯 + 拒绝事件高亮 + 延迟分析。"
+      description="确权事件公开视图：时间／事件类型／公开状态／公开摘要。"
     >
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
@@ -322,30 +320,26 @@ export function AttestationHistoryPage() {
         <div data-testid="history-chain" className="space-y-3">
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <SimulatedBadge nature={nature ?? 'simulated'} />
-            <span>NCA 链跨代：{data.total} 条 · {data.note}</span>
+            <span>确权事件：{data.total} 条 · {data.note}</span>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
-                <th className="py-1.5">#</th>
-                <th className="py-1.5">NCA 引用</th>
-                <th className="py-1.5">智能体</th>
-                <th className="py-1.5">类型</th>
-                <th className="py-1.5">状态</th>
                 <th className="py-1.5">时间</th>
+                <th className="py-1.5">事件类型</th>
+                <th className="py-1.5">状态</th>
+                <th className="py-1.5">摘要</th>
               </tr>
             </thead>
             <tbody>
-              {data.chain.map((c) => (
-                <tr key={c.index} data-nca={c.nca_ref} data-status={c.status} className={`border-b border-gray-100 ${c.status === 'REJECTED' ? 'bg-red-50' : ''}`}>
-                  <td className="py-1.5 text-xs text-gray-400">{c.index}</td>
-                  <td className="py-1.5 font-mono text-xs text-blue-700">{c.nca_ref}</td>
-                  <td className="py-1.5 text-xs text-gray-600">{c.agent}</td>
-                  <td className="py-1.5 text-xs text-gray-600">{c.type}</td>
-                  <td className={`py-1.5 text-xs font-medium ${c.status === 'REJECTED' ? 'text-red-600' : 'text-emerald-600'}`}>
-                    {c.status}
+              {data.events.map((e, i) => (
+                <tr key={i} data-status={e.status} className={`border-b border-gray-100 ${e.status === 'REJECTED' ? 'bg-red-50' : ''}`}>
+                  <td className="py-1.5 font-mono text-[10px] text-gray-400">{e.time}</td>
+                  <td className="py-1.5 text-xs text-gray-600">{e.event_type}</td>
+                  <td className={`py-1.5 text-xs font-medium ${e.status === 'REJECTED' ? 'text-red-600' : 'text-emerald-600'}`}>
+                    {e.status}
                   </td>
-                  <td className="py-1.5 font-mono text-[10px] text-gray-400">{c.ts}</td>
+                  <td className="py-1.5 text-xs text-gray-600">{e.summary}</td>
                 </tr>
               ))}
             </tbody>
