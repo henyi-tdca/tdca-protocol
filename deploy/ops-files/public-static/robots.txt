@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
-
+Disallow: /auth
+Disallow: /ops
+Disallow: /studio
+Disallow: /governance
+Disallow: /api/
 Sitemap: https://tdca.com.cn/sitemap.xml
