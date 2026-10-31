@@ -970,20 +970,39 @@ def attestation_dynamic(req: DynamicAttestationRequest, request: Request):
     })
 
 
+# ATTEST-SCRUB-001：确权类型 → 对外语义名（内部枚举值不出）
+_PUBLIC_EVENT_TYPE = {
+    "META": "确权体系初始化",
+    "META_CHILD": "继承确权（子事项）",
+    "SCENE_EXTENSION": "场景延展确权",
+    "COGNITION_EVOLUTION": "认知演进确权",
+    "OBJECTIVE_FIX": "目标修正确权",
+    "COMPOUND_AUTH": "复合授权确权",
+    "NSFL_APPROACH": "渐近自由逼近确权",
+}
+_PUBLIC_EVENT_SUMMARY = {
+    "APPROVED": "已通过",
+    "REJECTED": "已拒绝（留痕公开）",
+}
+
+
 @router.get("/attestation/history")
 def attestation_history(agent_id: Optional[str] = None):
-    """A-11: 确权历史查询（attestation_requests 已决 rows + NCA 链）。"""
+    """A-11: 确权历史查询（ATTEST-SCRUB-001：白名单公开视图——时间/事件类型/公开状态/公开摘要；
+    ⛔ 内部编号（nca_ref）、智能体名、内部枚举值、内部字段名一律不出）。"""
     with get_session() as s:
         q = s.query(M.AttestationRequest).filter(M.AttestationRequest.status != "pending")
         if agent_id:
             q = q.filter_by(agent_id=agent_id)
         rows = q.order_by(M.AttestationRequest.ts).all()
-    chain = [{"index": i + 1, "nca_ref": r.nca_ref or "", "agent": r.agent_id,
-              "type": r.request_type.upper(), "status": r.status.upper(), "ts": r.ts}
-             for i, r in enumerate(rows)]
+    events = [{"time": r.ts,
+               "event_type": _PUBLIC_EVENT_TYPE.get(r.request_type.upper(), "确权事件"),
+               "status": r.status.upper(),
+               "summary": _PUBLIC_EVENT_SUMMARY.get(r.status.upper(), "已决")}
+              for r in rows]
     return _nca_watermark({
-        "chain": chain, "total": len(chain),
-        "note": "确权历史（DB 实读；Meta-Attestation → Dynamic → 子体继承）",
+        "events": events, "total": len(events),
+        "note": "确权历史公开视图（时间／事件类型／公开状态／公开摘要）",
     }, nature=_nature_of([r.data_provenance for r in rows]))
 
 

@@ -59,17 +59,20 @@ def test_a11_dynamic_reject_and_defer():
     assert d2["status"] == "DEFERRED"
 
 
-# ---- A-11 确权历史查询（NCA 链跨代）----
+# ---- A-11 确权历史查询（ATTEST-SCRUB-001 公开视图）----
 # M2 起本端点为 DB 实读且有状态：上文 4 个 POST 产生 4 条已决记录
 # （meta approved / meta rejected / DAR-001 approved / DAR-002 rejected），
 # DAR-003 defer 后仍为 pending 不计入。断言改为集合语义（同秒 ts 不定序）。
 def test_a11_history_chain():
     d = _get("/api/v1/attestation/history")
     assert d["total"] == 4
-    assert all(c["nca_ref"] for c in d["chain"])            # 每条均有 NCA 存证
-    assert {c["status"] for c in d["chain"]} == {"APPROVED", "REJECTED"}
-    assert any(c["type"] == "META" for c in d["chain"])     # 元函数确权在链
-    assert sum(c["status"] == "REJECTED" for c in d["chain"]) == 2  # 拒绝事件保留
+    assert {c["status"] for c in d["events"]} == {"APPROVED", "REJECTED"}
+    assert any(c["event_type"] == "确权体系初始化" for c in d["events"])   # 元函数确权在链（对外语义名）
+    assert sum(c["status"] == "REJECTED" for c in d["events"]) == 2  # 拒绝事件保留
+    # ATTEST-SCRUB-001：白名单字段，内部编号/智能体名/内部枚举值一律不出
+    for c in d["events"]:
+        assert set(c.keys()) == {"time", "event_type", "status", "summary"}
+        assert "NCA" not in str(c.values()) and "AGENT" not in str(c.values())
 
 
 def test_a11_history_filter_by_agent():

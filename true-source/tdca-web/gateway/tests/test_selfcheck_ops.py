@@ -131,11 +131,19 @@ def test_m1pp_anchor_missing_fail_closed(tmp_path, monkeypatch):
     assert "ANCHOR_UNAVAILABLE" in r.text                # 不编造
 
 
-# ---- spec 端点：口径公开（第三方可独立重算） ----
+# ---- spec 端点：ATTEST-SCRUB-001 白名单公开规格（检查项名称＋公开结论） ----
 def test_m1pp_spec_public():
     r = client.get("/api/v1/selfcheck/spec")
     assert r.status_code == 200
-    assert "rec_hash = sha256(" in r.json()["data"]["rec_hash_spec"]
+    d = r.json()["data"]
+    names = [c["name"] for c in d["checks"]]
+    assert names == ["存在性自查", "单行一致性自查", "台账级一致自查"]
+    assert all(c["conclusion"] for c in d["checks"])
+    # 脱敏判据：内部重算构成/内部字段名/内部路径一律不出
+    blob = str(d)
+    for leak in ("sha256(", "handshake_id", "artifact_path", "data_provenance",
+                 "prev_nca", "rec_hash =", "anchor_digest ="):
+        assert leak not in blob, f"内部参数外泄: {leak}"
 
 
 # ---- AMEND-1①：artifact_ext 收紧（路径内嵌 ':sha1'／'rtbase=' 不外泄） ----
