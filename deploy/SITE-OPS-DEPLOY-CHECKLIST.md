@@ -40,5 +40,5 @@
 
 ## 挂账
 
-- 自动 CI 门禁待白名单（期一后半再补）；GitHub 端账号冻结，镜像端＝AtomGit＋Gitee。
+- 自动 CI 门禁待白名单（期一后半再补）；GitHub 端账号冻结已解除（2026-11 更正），镜像端＝AtomGit＋Gitee＋GitHub 三端，GitHub 同步照 align-tree 法（树同头不同属）。
 - dist 备份（`dist.bak-*`）累积未清理，待创始人示下。
