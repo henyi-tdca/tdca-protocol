@@ -390,7 +390,8 @@ class FormalConclusion(Base):
     conclusion_id: Mapped[str] = mapped_column(Text, primary_key=True)  # FC-xxx
     claim_text: Mapped[str] = mapped_column(Text, nullable=False)       # 结论面（纯文字）
     data_nature: Mapped[str] = mapped_column(Text, nullable=False)      # formal-proved/simulated/assessed
-    scope_note: Mapped[str | None] = mapped_column(Text)                # 适用边界（条件形态须载明）
+    scope_note: Mapped[str | None] = mapped_column(Text)                # 适用边界（条件形态须载明；内部版保留不动）
+    scope_summary: Mapped[str | None] = mapped_column(Text)             # 对外版适用范围（纯中文；⛔内部假设标号/件名编号；CLAIMFIX-001）
     nca_ref: Mapped[str | None] = mapped_column(ForeignKey("nca_chain.nca_id"))
     data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
     created_at: Mapped[str] = mapped_column(Text, nullable=False)
