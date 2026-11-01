@@ -7,7 +7,7 @@ NSFL-Declaration:
   - 状态转移必须遵循 112 单元格转移矩阵
   - 熔断 Level-1/2/3 对应 ID89 三档
   - 穿越条件不满足时不得静默推进
-SPDX-License-Identifier: Apache-2.0
+SPDX-License-Identifier: TDCA-Internal
 """
 
 from typing import Optional

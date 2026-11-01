@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
 """
 TDCA-FC-012 C-3 Fuse-Adapter
 制度锚定: ID89（化学热力学三档熔断）+ UI-006 熔断器联动
