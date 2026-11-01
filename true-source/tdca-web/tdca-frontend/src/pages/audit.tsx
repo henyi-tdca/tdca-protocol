@@ -36,7 +36,6 @@ interface SelfCheckRecord {
 
 interface SelfCheckResult {
   record: SelfCheckRecord
-  rec_hash_spec: string
   page_disclaimer: string
   note: string
 }
