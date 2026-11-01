@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
 """
 TDCA-FC-012 C-3 NCA-Reporter
 制度锚定: 宪法第1条（可观测性），每 Phase 生成 NCA

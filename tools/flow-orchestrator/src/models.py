@@ -7,7 +7,7 @@ NSFL-Declaration:
   - FlowState 的 phase 字段必须符合 12 状态集合
   - NCA 记录必须由 FC-001 生成，禁止伪造
   - context 不得包含敏感/负空间数据
-SPDX-License-Identifier: Apache-2.0
+SPDX-License-Identifier: TDCA-Internal
 """
 
 import uuid
