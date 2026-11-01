@@ -139,6 +139,10 @@ def test_m1pp_spec_public():
     names = [c["name"] for c in d["checks"]]
     assert names == ["存在性自查", "单行一致性自查", "台账级一致自查"]
     assert all(c["conclusion"] for c in d["checks"])
+    # 契约钉死（/verify 白屏修复 2026-11-01）：not_returned 必须为列表——
+    # 前端 verify.tsx 对其 .map，后端曾误发字符串致公开页整页白屏
+    assert isinstance(d["not_returned"], list) and all(isinstance(x, str) for x in d["not_returned"])
+    assert isinstance(d["returned_fields"], list) and all(isinstance(x, str) for x in d["returned_fields"])
     # 脱敏判据：内部重算构成/内部字段名/内部路径一律不出
     blob = str(d)
     for leak in ("sha256(", "handshake_id", "artifact_path", "data_provenance",
