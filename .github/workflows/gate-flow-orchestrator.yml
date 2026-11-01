@@ -28,4 +28,4 @@ jobs:
       - name: 导入门（src 包可导入）
         env:
           PYTHONPATH: ${{ github.workspace }}
-        run: python -c "import sys; sys.path.insert(0,'tdca-flow-orchestrator'); import src"
+        run: python -c "import sys; sys.path.insert(0,'tdca-flow-orchestrator'); import src; import src.api; assert src.api.app is not None or not src.api.FASTAPI_AVAILABLE"
