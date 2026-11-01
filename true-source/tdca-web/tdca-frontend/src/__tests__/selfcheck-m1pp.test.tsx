@@ -51,7 +51,7 @@ describe('M1″ 存证自查（031 令页面标注）', () => {
         return {
           ok: true, status: 200,
           json: async () => envelope({
-            record, rec_hash_spec: 'rec_hash = sha256(...)',
+            record,
             page_disclaimer: '本查询可证：…',
             note: '只读自查；⛔ 响应不含 actor 原值/凭据/内部编号/台账件名原值；⛔ 不构成对外证明（存证对外可验证性之宣称，另候明示）',
           }),
