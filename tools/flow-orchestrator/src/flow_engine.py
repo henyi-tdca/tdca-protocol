@@ -7,7 +7,7 @@ NSFL-Declaration:
   - 快系统推进前提是慢系统制度编码完成（ID84）
   - P8 交付前必须人类最终签名
   - MOU 闭环验证：Tax_in + Tax_out > 0（ID79）
-SPDX-License-Identifier: Apache-2.0
+SPDX-License-Identifier: TDCA-Internal
 """
 
 from datetime import datetime, timezone

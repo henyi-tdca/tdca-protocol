@@ -4,12 +4,9 @@ TDCA-FC-012 C-3 FastAPI 服务（6 接口）
 Granted-By: TDCA-FC-012-DESIGN-002
 NSFL: Token 验证委托 FC-002；NCA 由 FC-001 生成
 """
-import os
-import sys
+import sys  # noqa: F401（__main__ 起服用）
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from flow_engine import FlowEngine
+from .flow_engine import FlowEngine  # 包式导入（门禁约定：父目录上 path 后 import src；入口 python -m src.api）
 
 try:
     from fastapi import FastAPI, Header, HTTPException

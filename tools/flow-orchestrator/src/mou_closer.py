@@ -1,4 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
 """
 TDCA-FC-012 C-3 MOU-Closer
 制度锚定: 宪法第3条（自证清白）+ ID79（MOU 税收锚定）+ ID70（CBDC 唯一性）
