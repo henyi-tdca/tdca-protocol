@@ -50,7 +50,7 @@ export function TaxPage() {
       title="税收仪表盘（L3 效用计量）"
       dataSource="A-2 GET /api/v1/tax/mou/{agent_id} + WS tax_mou"
       permission="公开（只读）"
-      description="每次调用产生 MOU 税收锚定：计税/预缴/MOU 归零只读看板。"
+      description="每次调用产生 MOU 税收锚定：计税/预缴/MOU 归零只读看板。（演示数据）"
     >
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (

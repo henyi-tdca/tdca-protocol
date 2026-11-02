@@ -49,13 +49,13 @@ describe('导航-甲（L1SI176-NAV-A-001）：九栏两轴顶栏', () => {
     ])
   })
 
-  it('两轴结构可辨（V-2）：栏4 分 所有权／配置权，栏5 分 智能体／协作——层级本身即轴分辨，⛔ 无需读注释', () => {
+  it('两轴结构可辨（V-2）：栏4 分 所有权／配置权，栏5 分 智能体／节点／协作——层级本身即轴分辨，⛔ 无需读注释（节点 subgroup 为 L1SI188-NAV-FIX-004 项8 新增）', () => {
     const axis1 = APP_NAV.find((e) => e.kind === 'group' && e.group === '资产与权利')
     const axis2 = APP_NAV.find((e) => e.kind === 'group' && e.group === '主体与协作')
     const subgroups = (g: typeof axis1) =>
       g && g.kind === 'group' ? g.items.flatMap((i) => ('items' in i ? [i.subgroup] : [])) : []
     expect(subgroups(axis1)).toEqual(['所有权', '配置权'])
-    expect(subgroups(axis2)).toEqual(['智能体', '协作'])
+    expect(subgroups(axis2)).toEqual(['智能体', '节点', '协作'])
   })
 
   it('公域导航零英文标签（验收三条之零英文；「NCA」「TDCA」为令面指定栏名缩写，豁免）', () => {
@@ -83,7 +83,7 @@ describe('导航-甲（L1SI176-NAV-A-001）：九栏两轴顶栏', () => {
     expect(all.some((i) => i.to === '/agent-shelf' && i.label === '介绍')).toBe(true)
   })
 
-  it('栏7「我的」含私域并入六项（L1SI176-NAV-A-001 §三.5：原私域组取消并入）', () => {
+  it('栏7「我的」含私域并入七项（L1SI176-NAV-A-001 §三.5 原六项＋L1SI188-NAV-FIX-004 项8 新增 /me/node/net）', () => {
     const mine = APP_NAV.find((e) => e.kind === 'group' && e.group === '我的')
     expect(mine && mine.kind === 'group' ? mine.items.map((i) => ('to' in i ? i.to : '')) : []).toEqual([
       '/me',
@@ -92,6 +92,7 @@ describe('导航-甲（L1SI176-NAV-A-001）：九栏两轴顶栏', () => {
       '/ops/me',
       '/review',
       '/me/appeal',
+      '/me/node/net',
     ])
   })
 

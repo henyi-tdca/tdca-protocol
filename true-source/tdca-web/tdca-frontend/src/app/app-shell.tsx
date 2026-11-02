@@ -140,6 +140,7 @@ export const APP_NAV: NavEntry[] = [
           { to: '/cluster#auth', label: '多层转授' }, // /cluster 双入口之一（页内拆段留导航-乙）
           { to: '/market', label: '配置权市场', badge: '在建中' }, // 无真实挂牌（auth_grants=0），SIMULATED 演示
           { to: '/market-sim', label: '使用记录与结算' }, // 税收与结算并为一项；/tax 保留为页内入口，不在导航单列
+          { to: '/tax', label: '税收仪表盘', badge: '演示数据' }, // L1SI188-NAV-FIX-004 项8：页在册（导航首挂；样例态标注页内另加）
         ],
       },
     ],
@@ -156,6 +157,12 @@ export const APP_NAV: NavEntry[] = [
           { to: '/agents', label: '能力与观测' }, // 官方智能体观测橱窗；同一对象全站一名（原「智能体集群」）
           { to: '/channel/registry', label: '自助登记' },
           { to: '/channel/my', label: '我的通道' },
+        ],
+      },
+      {
+        subgroup: '节点', // L1SI188-NAV-FIX-004 项8：公开面节点网络首挂导航（样例态 badge）
+        items: [
+          { to: '/nodes', label: '节点网络', badge: '样例态' },
         ],
       },
       {
@@ -197,6 +204,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/ops/me', label: '运维我的' },
       { to: '/review', label: '缔约评审' }, // 令面（NAV-A-001 §一.7）显性列入；鉴权自守，⛔ 本令不改其页
       { to: '/me/appeal', label: '申诉' },
+      { to: '/me/node/net', label: '我的节点网络', badge: '样例态' }, // L1SI188-NAV-FIX-004 项8：私域节点面挂「我的」组（样例态 badge）
     ],
   },
   {
