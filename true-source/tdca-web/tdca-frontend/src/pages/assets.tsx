@@ -1,6 +1,6 @@
 // =============================================================================
 // TDCA 制度水印
-// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI175-B1-1 · 五序资产总览 /assets（匿名可见）
+// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI175-B1-1 · 五序资产总览 /five-orders（匿名可见；L1SI188 项1 自 /assets 改名，旧路跳转）
 // 约束矩阵: TDCA-HANDOFF-EXEC-L1SI175-B1-001 §三 B1-1——五序名称+一句说明+count；
 //   count 全 0 显「暂无真实资产（待生态接入）」；SIMULATED 角标；⛔ 购买/定价/挂牌入口
 // 口径: 只读 GET /api/v1/assets/five-orders；匿名开放面（接口匿名 200）；⛔ 改后端
