@@ -14,6 +14,53 @@ import { api, setSessionToken } from '@/api/client'
 
 const DEFAULT_TOKEN = 'TDCA-CRT-demo-2026' // 与 gateway B-4 默认 TDCA_GATEWAY_TOKEN 一致
 
+// ── L1SI188-NAV-FIX-004 项4：登录墙三要素（只改文案，⛔ 不改鉴权逻辑/接口名/对外承诺）──
+// 六条一级主栏（登录墙 26 路由中的六个一级落地栏，均经 PROTECTED 集与公共导航双重核对）；
+// /ops 为页内自闸（非路由守卫重定向），不在六栏之列——第六栏取 /review（缔约评审，导航「我的」组在册入口）。
+// 子路归并：/attestation/* → /attestation，/me/* → /me（含 /me/appeal、/me/node、/me/node/net）。
+// 「登录后可见」逐条照实（取该栏在册元数据口径），无则写「在建」，⛔ 画饼。
+const LOGIN_WALL_COPY: Record<string, { column: string; what: string; visible: string[] }> = {
+  '/me': {
+    column: '身份与账户（我的）',
+    what: '个人私域总栏：本人身份、名下智能体与办理事务的聚合入口。',
+    visible: ['我的智能体清单', '签批待办与我批过的', '沙盒申请与治理操作（一屏聚合）'],
+  },
+  '/studio': {
+    column: '工作台（作业）',
+    what: '智能体全生命周期作业栏：从诞生到出盒再到市场的办理面。',
+    visible: ['智能体全生命周期办理（诞生→教育→沙盒→出盒终裁→市场→化合衍生）', 'HUF 签批通道'],
+  },
+  '/review': {
+    column: '缔约评审',
+    what: '缔约申请评审队列栏：申请的放行与谢绝留痕办理面（须登录＋审核身份）。',
+    visible: ['缔约申请评审队列', '放行／谢绝留痕操作（写令牌校验）'],
+  },
+  '/agents': {
+    column: '能力与观测（智能体集群）',
+    what: '官方智能体运行观测栏：五大智能体的状态与协作拓扑。',
+    visible: ['五大智能体面板（Trainer/Executor/Auditor/Service/Genie）', '确权状态灯', '协作拓扑'],
+  },
+  '/attestation': {
+    column: '确权中心',
+    what: '确权办理与公开留痕栏：待审、最近事件与历史，全部事件留痕可查。',
+    visible: ['待审队列与最近事件', '确权统计', '元函数／动态／历史三个入口'],
+  },
+  '/governance': {
+    column: '治理中心',
+    what: '站内治理操作栏：签批、确权队列、紧急熔断与升级（须 HUF）。',
+    visible: ['HUF 签批', '动态确权队列', '紧急熔断与 OTA'],
+  },
+}
+
+/** 登录墙解析：精确命中 → 前缀归并（/attestation/*、/me/*）→ null（非六栏，走原通用口径） */
+function resolveLoginWall(from: string): { key: string; copy: (typeof LOGIN_WALL_COPY)[string] } | null {
+  const exact = LOGIN_WALL_COPY[from]
+  if (exact) return { key: from, copy: exact }
+  if (from.startsWith('/attestation')) return { key: '/attestation', copy: LOGIN_WALL_COPY['/attestation'] }
+  if (from.startsWith('/me')) return { key: '/me', copy: LOGIN_WALL_COPY['/me'] }
+  return null
+}
+
 /** F-2 统一 DID 认证入口：M3 账号密码登录（真实会话）+ 既有 DID 模拟态登录（保留） */
 export function AuthPage() {
   const { login } = useAuth()
@@ -22,6 +69,7 @@ export function AuthPage() {
   const state = location.state as { from?: string; expired?: boolean } | null
   const from = state?.from ?? '/'
   const expired = state?.expired === true
+  const wall = from !== '/' ? resolveLoginWall(from) : null
 
   const [role, setRole] = useState<DIDRole>('H')
   const [token, setToken] = useState(DEFAULT_TOKEN)
@@ -61,12 +109,35 @@ export function AuthPage() {
       permission="公开"
       description="统一认证入口：账号密码登录后获得会话令牌，受保护路由（/agents /studio /attestation* /governance）方可访问。"
     >
+      {wall && (
+        /* L1SI188-NAV-FIX-004 项4：登录墙三要素（该栏是什么／登录后可见什么／登录入口就地可点） */
+        <div data-testid="login-wall" className="mb-6 max-w-md rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <div data-testid="login-wall-column" className="mb-1 text-sm font-semibold text-blue-900">
+            「{wall.copy.column}」栏需登录
+          </div>
+          <p data-testid="login-wall-what" className="mb-2 text-xs leading-5 text-blue-800">
+            {wall.copy.what}
+          </p>
+          <ul data-testid="login-wall-visible" className="mb-2 list-disc space-y-0.5 pl-5 text-xs leading-5 text-blue-800">
+            {wall.copy.visible.map((v) => (
+              <li key={v}>登录后可见：{v}</li>
+            ))}
+          </ul>
+          <a
+            href="#auth-account-form"
+            data-testid="login-wall-goto-login"
+            className="inline-block rounded bg-blue-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-800"
+          >
+            去登录（下方表单）
+          </a>
+        </div>
+      )}
       {expired && (
         <div data-testid="auth-expired-notice" className="mb-4 max-w-md rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
           会话已过期或在其他处登录。您之前的页面内容未丢失，重新登录后可返回继续。
         </div>
       )}
-      <div data-testid="auth-account-form" className="mb-6 max-w-md space-y-3 rounded border border-gray-200 bg-white p-4">
+      <div id="auth-account-form" data-testid="auth-account-form" className="mb-6 max-w-md space-y-3 rounded border border-gray-200 bg-white p-4">
         <div className="text-xs font-semibold text-gray-700">账号登录（真实会话，2h 有效期）</div>
         <input
           data-testid="auth-username"
