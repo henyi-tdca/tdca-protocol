@@ -10,7 +10,7 @@ import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 
 interface FamilyView { family: string; name: string; count: number }
-interface ItemView { slug: string; title: string; synced_at: string; has_content?: boolean }
+interface ItemView { slug: string; title: string; synced_at: string; has_content?: boolean; summary?: string }
 interface DetailView {
   family: string; slug: string; title: string; body_md: string
   source_path: string; synced_at: string; note?: string
@@ -20,7 +20,6 @@ const FAMILY_TABS: { key: string; label: string }[] = [
   { key: 'whitepaper', label: '白皮书' },
   { key: 'paper', label: '论文与实证' },
   { key: 'cop-library', label: '产物库' },
-  { key: 'regulation', label: '制度规范' },
   { key: 'laws', label: '法律原文' },
   { key: 'law-notes', label: '适用说明' },
 ]
@@ -96,6 +95,12 @@ function CopItem({ it, detail, onPick }: {
         )}
       </span>
       <span className={`block truncate text-xs ${openable ? 'text-gray-400' : 'text-gray-300'}`}>{it.slug}</span>
+      {/* L1SI189-KB-FAMILY-FIX-001 项2：论文目录带摘要则如实呈现（空摘要不显示，⛔ 编造） */}
+      {it.summary && (
+        <span className="block text-xs leading-4 text-gray-500" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {it.summary}
+        </span>
+      )}
     </button>
   )
   return <li>{btn}</li>
@@ -105,12 +110,14 @@ export function LibraryPage() {
   const [params] = useSearchParams()
   const [families, setFamilies] = useState<FamilyView[]>([])
   const [family, setFamily] = useState(
-    ['whitepaper', 'paper', 'cop-library', 'regulation', 'laws', 'law-notes'].includes(params.get('family') ?? '')
+    ['whitepaper', 'paper', 'cop-library', 'laws', 'law-notes'].includes(params.get('family') ?? '')
       ? (params.get('family') as string)
       : 'whitepaper')
   const [items, setItems] = useState<ItemView[]>([])
   const [detail, setDetail] = useState<DetailView | null>(null)
   const [err, setErr] = useState('')
+  // L1SI189-KB-FAMILY-FIX-001 项3：族未返（须登录族）如实标，⛔ 渲染成 0 件
+  const [needLogin, setNeedLogin] = useState(false)
 
   useEffect(() => {
     // L1SI181-P0-FIX-002 F-1 根因修：接口契约返回 {items:[...]}（实测 2026-10-30），
@@ -121,9 +128,14 @@ export function LibraryPage() {
   }, [])
 
   useEffect(() => {
-    setDetail(null); setErr('')
-    void api.get<{ items: ItemView[] }>(`/api/v1/library/${family}`).then((r) => {
+    setDetail(null); setErr(''); setNeedLogin(false)
+    // L1SI189-KB-FAMILY-FIX-001 项2：论文页签改接匿名目录端点（匿名 200，照实呈现 25 件＋摘要）
+    const listUrl = family === 'paper'
+      ? '/api/v1/library/paper/catalog'
+      : `/api/v1/library/${family}`
+    void api.get<{ items: ItemView[] }>(listUrl).then((r) => {
       if (r.ok) setItems(r.data.items)
+      else if (r.status === 401) setNeedLogin(true) // 项3：401 显「须登录」引导，⛔ 空白/报错
       else setErr(`文库加载失败：${r.reason}`)
     })
   }, [family])
@@ -131,6 +143,7 @@ export function LibraryPage() {
   const onPick = (slug: string) => {
     void api.get<DetailView>(`/api/v1/library/${family}/${encodeURIComponent(slug)}`).then((r) => {
       if (r.ok) setDetail(r.data)
+      else if (r.status === 401) setErr('本页正文须登录后阅读') // 项2：⛔ 「加载失败」/空白
       else setErr(`正文加载失败：${r.reason}`)
     })
   }
@@ -139,7 +152,7 @@ export function LibraryPage() {
 
   return (
     <PageShell dataNature="real"
-      title="内容区文库（白皮书 · 论文 · 产物库 · 制度规范 · 法律原文 · 适用说明）"
+      title="内容区文库（白皮书 · 论文 · 产物库 · 法律原文 · 适用说明）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
       permission="登录 DID"
       description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。">
@@ -156,8 +169,9 @@ export function LibraryPage() {
                   : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'}`}
               onClick={() => setFamily(t.key)}>
               {t.label}
-              <span className="ml-1 text-xs opacity-75">
-                {families.find((f) => f.family === t.key)?.count ?? 0}
+              <span className="ml-1 text-xs opacity-75" data-testid={`lib-tab-count-${t.key}`}>
+                {/* L1SI189-KB-FAMILY-FIX-001 项3：族未返（须登录族）如实标「须登录」，⛔ 渲染成 0 */}
+                {families.find((f) => f.family === t.key) ? families.find((f) => f.family === t.key)!.count : '须登录'}
               </span>
             </button>
           ))}
@@ -167,6 +181,12 @@ export function LibraryPage() {
         {err && <p className="rounded bg-red-50 p-3 text-sm text-red-600" role="alert">{err}</p>}
 
         <div className="grid gap-3 md:grid-cols-3">
+          {needLogin ? (
+            /* L1SI189-KB-FAMILY-FIX-001 项3：须登录族 401 时引导，⛔ 空白列表 */
+            <p data-testid="lib-login-required" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 md:col-span-3">
+              本族内容须登录后浏览（匿名只见目录口径；登录入口见右上「登录（DID）」）。
+            </p>
+          ) : (
           <ul className="max-h-[70vh] space-y-1 overflow-auto md:col-span-1" data-testid="lib-list">
             {family === 'cop-library'
               ? groupCopItems(items).map((g) => (
@@ -187,6 +207,7 @@ export function LibraryPage() {
               <li className="text-sm text-gray-400">本族暂无已入站件</li>
             )}
           </ul>
+          )}
 
           <div className="md:col-span-2">
             {detail ? (
