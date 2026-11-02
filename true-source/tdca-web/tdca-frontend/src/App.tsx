@@ -60,6 +60,8 @@ export default function App() {
           <Route path="/channel/my" element={<RequireAuth><ChannelMyPage /></RequireAuth>} />
           <Route path="/channel/market" element={<Navigate to="/market" replace />} />
           <Route path="/channel/tools" element={<Navigate to="/toolshelf" replace />} />
+          {/* L1SI188-NAV-FIX 项1：五序资产栏名 /assets 被静态资源目录遮蔽（403），改名 /five-orders；旧路前端跳转（nginx 层跳转另案待 S-2 明示） */}
+          <Route path="/assets" element={<Navigate to="/five-orders" replace />} />
           {/* L1SI177 批3 A块：全站检索页（静态索引＋本地检索；工具条层入口，⛔ 不进导航） */}
           <Route path="/search" element={<SearchPage />} />
           {/* 二期改版批2块二：文档库两路参数路由（族列表／详情；首页 /docs 走 PAGE_META） */}
