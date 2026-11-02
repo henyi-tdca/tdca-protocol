@@ -49,6 +49,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/market-sim', title: '规范索引与沙盒最小链（P9）', layer: 'L0', dataSource: 'A-20 /api/v1/regulations/* + A-21 /api/v1/market-sim/*', permission: '登录 DID', description: '规范索引入口（版本读件内不硬编码）＋最小链：发布→准入→撮合→结算，全程 SIMULATED，NCA 全链留痕。' },
   { path: '/library', title: '内容区文库（白皮书 · 论文 · 产物库 · 制度规范 · 法律原文 · 适用说明）', layer: 'L0', dataSource: 'A-22 GET /api/v1/library/*（docs 表只读面）', permission: '法律原文与适用说明匿名可读；其余族登录 DID', description: '内容区只读索引＋正文阅读：whitepapers/papers/cop-library/regulations/laws/law-notes；以在册仓库为唯一权威源。' },
   { path: '/agent-shelf', title: '智能体区（组二 10 件呈现）', layer: 'L0', dataSource: '静态呈现面（呈现 ≠ 注册）', permission: '登录 DID', description: '组二 10 件以智能体形态呈现：每条只列名称／一句用途／形态；注册与准入另走在册流程，本区不代办。' },
+  // L1SI188-NAV-FIX-004 项2：智能体通道总入口（六步照在册条例第 19 条＋六子页入口，只指不建）
+  { path: '/channel', title: '智能体通道', layer: 'L0', dataSource: '在册《智能体定义条例》第 19 条（六步硬序）＋既有 /channel/* 路由', permission: '公开', description: '智能体经站点通道接入的总入口：先登记（前置），再按六步硬序走通；六步不可跳过、不可互替。' },
   { path: '/announcements', title: '公告栏', layer: 'L0', dataSource: 'A-23 GET /api/v1/announcements/list（公开读）', permission: '公开', description: '站点对外公告区：公告内容经创始人明示后由运营发布；空栏为常态，不预置内容。' },
   { path: '/authorization-registry', title: '合约备案（P8b）', layer: 'L0', dataSource: 'A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）', permission: '登录 DID（公开查免会话）', description: '登记二分之合约备案侧：怎么用与谁担；四要件缺一即拒；签名须本人、智能体不代持代填；公开面四字段；四条不公开负空间 fail-closed。' },
   // 二期改版批2块一：公域顶栏第六入口「帮助与联系」——薄占位，内容随文档库「帮助」族入站（块二），联系块同批补入
@@ -186,6 +188,8 @@ import { NodeNetPage } from './node-net'
 // L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量）
 import { UseUploadPage } from './use-upload'
 import { UseAgentPage } from './use-agent'
+// L1SI188-NAV-FIX-004 项2：智能体通道总入口页（六步照在册＋六子页入口）
+import { ChannelPortalPage } from './channel'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -252,6 +256,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/nodes': NodeNetPage,
   '/use/upload': UseUploadPage,
   '/use/agent': UseAgentPage,
+  '/channel': ChannelPortalPage,
 }
 
 export function renderPage(meta: PageMeta) {
