@@ -41,8 +41,13 @@ alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 # ---------------------------------------------------------------------
 _FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列 regulation）
 # L1SI154-010：多族承载——族 → 容器内目录（/docs/<dir>，只读挂载）
-_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library"}
+_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library", "help": "help"}
 _PUBLIC_DOCS = {
+    # L1SI188-NAV-FIX-003 项3（依据链：RULING-L1SI188-SITE-NAV-001「整组按推荐」→ NAV-FIX-001 → -003；非静默扩面）：
+    # 「帮助」族立族一件——文字逐字搬自前端 /help 页（三条路＋联系块空栏口径），⛔ 未新写内容；件在 docs/help/
+    "help": (
+    "TDCA-HELP-PATHS-001-帮助·三条路与联系方式指引（同源-help页文字）.md",
+    ),
     "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md",
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（英文人读版V1.0-FROZEN）.md",
