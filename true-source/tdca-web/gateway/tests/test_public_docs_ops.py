@@ -23,6 +23,7 @@ from app import app
 client = TestClient(app)
 
 _DOCS = list(public_docs_ops._PUBLIC_DOCS["regulation"])  # 本面既有用例锁定 regulation 族
+_HELP_DOCS = list(public_docs_ops._PUBLIC_DOCS["help"])  # L1SI188-NAV-FIX-003 项3：帮助族
 
 _EXTRA = "README.md"
 _YILEI = "TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md"
@@ -34,6 +35,10 @@ def _docs_dir(tmp_path, monkeypatch):
     d.mkdir(parents=True)
     for name in _DOCS:
         body = (f"件号测试占位\n版本: **V9.9-TEST**\n正文占位 {name}\n").encode("utf-8")
+        (d / name).write_bytes(body)
+    # L1SI188-NAV-FIX-003 项3：帮助族夹具（覆盖目录全族共用，平铺同夹）
+    for name in _HELP_DOCS:
+        body = (f"件号测试占位\n版本: **V1.0-TEST**\n想验证 想贡献 想带走 {name}\n").encode("utf-8")
         (d / name).write_bytes(body)
     (d / _EXTRA).write_text("未入站件不得出现", encoding="utf-8")
     # L1SI180-TERMS-004/005：_YILEI（签批记录）已改写零命中并入册上站，乙类负向前提解除，不再作暗桩
@@ -91,6 +96,21 @@ def test_yilei_batch2_now_listed():
 def test_unknown_family_404():
     assert client.get("/api/public/docs/whitepaper").status_code == 404
     assert client.get("/api/public/docs/whitepaper/x.md").status_code == 404
+
+
+def test_help_family_list_and_detail():
+    """L1SI188-NAV-FIX-003 项3：「帮助」族立族——列表可入、详情可读、三条路关键句在位（与 /help 页同源口径）。"""
+    r = client.get("/api/public/docs/help")
+    assert r.status_code == 200, r.text[:200]
+    data = r.json()
+    assert data["count"] == len(_HELP_DOCS)
+    assert all(e["family"] == "help" for e in data["documents"])
+    name = _HELP_DOCS[0]
+    r2 = client.get(f"/api/public/docs/help/{name}")
+    assert r2.status_code == 200, r2.text[:200]
+    assert "想验证" in r2.json()["content"] and "想带走" in r2.json()["content"]
+    # 别名路由同实现
+    assert client.get("/api/site/docs/help").json() == data
 
 
 def test_alias_same_implementation():

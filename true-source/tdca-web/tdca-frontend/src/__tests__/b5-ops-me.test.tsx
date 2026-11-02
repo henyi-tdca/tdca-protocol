@@ -22,8 +22,8 @@ describe('B5 项四 · 运维「我的」（/ops/me 只读六栏）', () => {
     for (const key of ['ops-me-site', 'ops-me-service', 'ops-me-governance', 'ops-me-audit', 'ops-me-emergency', 'ops-me-account']) {
       expect(screen.getByTestId(key)).toBeInTheDocument()
     }
-    // 申诉受理为只读口径
-    expect(screen.getByTestId('ops-me-service')).toHaveTextContent(/申诉受理（只读队列）/)
+    // 申诉受理与用户端同口径（L1SI188-NAV-FIX-003 项7：受理通道在建，当前仅登记不处置）
+    expect(screen.getByTestId('ops-me-service')).toHaveTextContent(/申诉受理（受理通道在建，当前仅登记不处置）/)
     // 只读占位声明：无任何可点操作按钮（页壳 HUF 横幅除外）
     const page = screen.getByTestId('ops-me-page')
     expect(page.querySelectorAll('button').length).toBe(0)
