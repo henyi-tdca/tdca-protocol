@@ -42,7 +42,8 @@ export function OpsManualPage() {
       } else {
         // L1SI181-P0-FIX-002 F-3：原始错误只进日志（⛔给用户看路径/堆栈/内部码）
         console.error('[ops/manual] 手册清单加载失败：', r.status ?? '', r.code ?? '', r.rawDetail ?? r.detail ?? r.reason)
-        setError('本页暂未开放')
+        // L1SI188-NAV-FIX 项5：匿名态文案直说门槛（须运维身份登录后查阅），不再误导「暂未开放」
+        setError(sessionToken() ? '本页暂未开放' : '须运维身份（operator/founder）登录后查阅')
       }
     })
   }, [])
