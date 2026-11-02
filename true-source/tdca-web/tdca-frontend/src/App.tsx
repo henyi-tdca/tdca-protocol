@@ -13,6 +13,7 @@ import { PAGE_META, NotFoundPage, renderPage, DocsIndexPage, DocDetailPage } fro
 import { AgentChannelRegisterPage } from '@/pages/agent-channel-register'
 import { ChannelMyPage } from '@/pages/channel-my'
 import { SearchPage } from '@/pages/search'
+import { MainChainGuide, MAIN_CHAIN_PAGES } from '@/pages/main-chain-guide'
 
 /** 受保护路由（FRAMEWORK-001 §四：须登录 DID + HUF 鉴权）——未登录重定向 /auth */
 const PROTECTED = new Set([
@@ -48,7 +49,19 @@ export default function App() {
             <Route
               key={meta.path}
               path={meta.path}
-              element={PROTECTED.has(meta.path) ? <RequireAuth>{renderPage(meta)}</RequireAuth> : renderPage(meta)}
+              element={
+                // L1SI188-NAV-FIX-006 P2-1：主链导轨仅挂主链八页（纯新增，⛔ 不动 RequireAuth 守卫与既有导航）
+                MAIN_CHAIN_PAGES.has(meta.path) ? (
+                  <>
+                    <MainChainGuide />
+                    {PROTECTED.has(meta.path) ? <RequireAuth>{renderPage(meta)}</RequireAuth> : renderPage(meta)}
+                  </>
+                ) : PROTECTED.has(meta.path) ? (
+                  <RequireAuth>{renderPage(meta)}</RequireAuth>
+                ) : (
+                  renderPage(meta)
+                )
+              }
             />
           ))}
           {/* 二期改版批2块一：/channel/* 五路保留为极简入口（重定向，⛔ 不裁撤——删路由＝公开面 404 风险；内容已融入新壳导航）；
