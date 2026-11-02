@@ -16,7 +16,7 @@ export function MeNodeNetPage() {
       title="我的节点 · 条例与契约"
       dataSource="在册条例 V1.0 与本机节点配置（配置未设处如实标「未设置／待复算」）"
       permission="登录 DID（本机数据只本人可见）"
-      description="私域节点面：卡一只读本人节点配置；卡二挂在册条例与契约。字段无真值如实标，不预填。"
+      description="私域节点面：卡一只读本人节点配置；卡二挂在册条例与契约。字段无真值如实标，不预填。（样例态）"
       dataNature="real"
     >
       <div data-testid="me-node-net-page" className="space-y-6">

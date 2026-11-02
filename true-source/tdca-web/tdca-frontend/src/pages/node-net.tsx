@@ -19,7 +19,7 @@ export function NodeNetPage() {
       title="节点网络"
       dataSource="在册条例 V1.0 与节点现状（真值缺失处如实标「未设置／待复算／尚无」）"
       permission="公开"
-      description="业务端节点接入的公开面：可视图只画已披露真节点；状态只给最后心跳与数据截至时刻；接口未实现一律不开放。"
+      description="业务端节点接入的公开面：可视图只画已披露真节点；状态只给最后心跳与数据截至时刻；接口未实现一律不开放。（样例态）"
       dataNature="real"
     >
       <div data-testid="node-net-page" className="space-y-8">
