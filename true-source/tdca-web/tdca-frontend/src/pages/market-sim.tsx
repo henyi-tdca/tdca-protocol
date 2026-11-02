@@ -97,7 +97,10 @@ export function MarketSimPage() {
                   <span className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">在建中</span>
                 )}
                 {s.present && (
-                  <Link to="/library?family=regulation" className="ml-2 text-sm font-medium text-blue-600 underline">
+                  /* L1SI189-KB-FAMILY-FIX-002 项1：改指文档库制度族列表页（创始人裁定：改指文档库；
+                     原 /library?family=regulation 深链随 KB-FAMILY-FIX-001 删页签已失锚；
+                     每号规范在文档库对应多件（中文/英文/机读），无唯一对应件，故依令回退指列表页） */
+                  <Link to="/docs/regulation" className="ml-2 text-sm font-medium text-blue-600 underline">
                     读全文 →
                   </Link>
                 )}
