@@ -30,6 +30,9 @@ const SUB_ENTRIES = [
   { to: '/agent-shelf', label: '智能体货架', note: '组二 10 件呈现（呈现≠注册）' },
   { to: '/market', label: '配置权市场', note: '使用权／配置权可流转市场' },
   { to: '/toolshelf', label: '工具货架', note: '官方工具展示面' },
+  // NAV-FIX-005 顺手①：两条旧路子路由站内零入链，纳入清单并照实标注「跳转等同」
+  { to: '/channel/agents', label: '能力直达（旧路）', note: '旧路跳转，等同「能力与观测」/agents' },
+  { to: '/channel/tools', label: '工具直达（旧路）', note: '旧路跳转，等同「工具货架」/toolshelf' },
 ] as const
 
 /** 智能体通道总入口（NAV-FIX-004 项2）：六步照在册＋六子页入口 */
