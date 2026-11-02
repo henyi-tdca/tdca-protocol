@@ -170,6 +170,11 @@ export function AuditPage() {
           </table>
         </div>
       )}
+      {/* L1SI188-NAV-FIX-003 项6：存证链段降级为说明文字（/api/v1/audit/nca/chain 端点未建、补建另案）——⛔ 不留空段、⛔ 不造假数据 */}
+      <section data-testid="audit-chain-note" className="mt-6 space-y-2 border-t border-gray-200 pt-4">
+        <div className="text-sm font-medium">存证链</div>
+        <p className="text-xs text-gray-600">存证链另册，公开账本与熔断历史见本页。</p>
+      </section>
       <SelfCheckBlock />
     </PageShell>
   )
