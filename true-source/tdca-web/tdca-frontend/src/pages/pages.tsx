@@ -47,7 +47,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/ops', title: '站点运维端（P7）', layer: 'L0', dataSource: 'A-18 /api/v1/ops/*（红线八项分类器；NCA 存证＋对账）', permission: '登录 DID（操作须 operator）', description: '应用测试期运维工作台：反馈→红线分类→提案→沙盒→上线；触碰根本制度即升 DCD，运维端无权处置。' },
   { path: '/ownership-registry', title: '权属登记管理（P8a）', layer: 'L0', dataSource: 'A-19 /api/v1/ownership/*（登记／变更／注销／查询）', permission: '登录 DID', description: '登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引；四条不公开负空间 fail-closed。' },
   { path: '/market-sim', title: '规范索引与沙盒最小链（P9）', layer: 'L0', dataSource: 'A-20 /api/v1/regulations/* + A-21 /api/v1/market-sim/*', permission: '登录 DID', description: '规范索引入口（版本读件内不硬编码）＋最小链：发布→准入→撮合→结算，全程 SIMULATED，NCA 全链留痕。' },
-  { path: '/library', title: '内容区文库（白皮书 · 论文 · 产物库 · 制度规范 · 法律原文 · 适用说明）', layer: 'L0', dataSource: 'A-22 GET /api/v1/library/*（docs 表只读面）', permission: '法律原文与适用说明匿名可读；其余族登录 DID', description: '内容区只读索引＋正文阅读：whitepapers/papers/cop-library/regulations/laws/law-notes；以在册仓库为唯一权威源。' },
+  { path: '/library', title: '内容区文库（白皮书 · 论文 · 产物库 · 法律原文 · 适用说明）', layer: 'L0', dataSource: 'A-22 GET /api/v1/library/*（docs 表只读面）', permission: '法律原文与适用说明匿名可读；其余族登录 DID', description: '内容区只读索引＋正文阅读：whitepapers/papers/cop-library/regulations/laws/law-notes；以在册仓库为唯一权威源。' },
   { path: '/agent-shelf', title: '智能体区（组二 10 件呈现）', layer: 'L0', dataSource: '静态呈现面（呈现 ≠ 注册）', permission: '登录 DID', description: '组二 10 件以智能体形态呈现：每条只列名称／一句用途／形态；注册与准入另走在册流程，本区不代办。' },
   // L1SI188-NAV-FIX-004 项2：智能体通道总入口（六步照在册条例第 19 条＋六子页入口，只指不建）
   { path: '/channel', title: '智能体通道', layer: 'L0', dataSource: '在册《智能体定义条例》第 19 条（六步硬序）＋既有 /channel/* 路由', permission: '公开', description: '智能体经站点通道接入的总入口：先登记（前置），再按六步硬序走通；六步不可跳过、不可互替。' },
