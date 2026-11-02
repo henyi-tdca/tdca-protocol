@@ -18,7 +18,7 @@ export function MeAppealPage() {
     >
       <section data-testid="me-appeal-placeholder" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-sm text-gray-600">
         <p className="mb-2">
-          申诉受理通道<strong>在建中</strong>：受理范围、材料要件与办理时限以制度入站件为准，本站不预置、不代拟。
+          受理通道在建，当前仅登记不处置：受理范围、材料要件与办理时限以制度入站件为准，本站不预置、不代拟。
         </p>
         <p>
           通用操作指引可先查 <Link to="/help" className="text-blue-700 underline hover:text-blue-900">帮助与联系</Link>；
