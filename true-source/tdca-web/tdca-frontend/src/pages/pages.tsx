@@ -92,6 +92,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/start/three-questions', title: '三问向导 · 贡献前自述', layer: 'L0', dataSource: '纯前端表单（零接口调用）；提交功能待后端就绪', permission: '公开', description: '交素材前的三问：原创吗／用过 AI 吗／用在什么场景。系统只汇总成自述草稿，⛔ 代判；提交功能在建，如实标注。' },
   { path: '/contribute', title: '我要贡献 · 三级台阶', layer: 'L0', dataSource: '纯前端指路页（零接口调用）；指向既有登记端点', permission: '公开', description: 'viewer→贡献者→节点方三级台阶：每阶写什么件、走哪条路、什么算成。只指路不代办，⛔ 承诺时限必过。' },
   { path: '/private', title: '私域与边界 · 公域守门人', layer: 'L0', dataSource: '纯前端说明页（零接口调用）；口径与体系结构说明一致', permission: '公开', description: '公域与私域的分工、两权闸门、三条铁句；起一个节点之前先读这页。' },
+  // L1SI188-NAV-FIX-006 P2-2：匿名可见面清单一页三栏（照实取数·只读事实·⛔ 承诺）
+  { path: '/public-face', title: '匿名可见面', layer: 'L0', dataSource: '包内路由表＋匿名实测状态码（线上只读直核）', permission: '公开', description: '匿名来访能看什么、什么要登录、什么不开放——可看／需登录／不开放三栏照实清单，逐条可复核。' },
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '四块模拟（虚拟积分／钱包／结算中心／交付税收）＋免责三条；全部演示值，真实功能在三期。' },
   { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '与 /demo 分工：demo 看懂、lab 走一遍。五张模拟卡＋一张流水表；积分面额照设计件 6146，演练值不入账、不留存。' },
   // NODE-NET-A-001 私域两卡（⛔ 不动三空间与六项硬核——另立须登录面）
@@ -190,6 +192,8 @@ import { UseUploadPage } from './use-upload'
 import { UseAgentPage } from './use-agent'
 // L1SI188-NAV-FIX-004 项2：智能体通道总入口页（六步照在册＋六子页入口）
 import { ChannelPortalPage } from './channel'
+// L1SI188-NAV-FIX-006 P2-2：匿名可见面清单一页三栏
+import { PublicFacePage } from './public-face'
 export { DocsIndexPage, DocDetailPage }
 import type { ComponentType } from 'react'
 
@@ -257,6 +261,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/use/upload': UseUploadPage,
   '/use/agent': UseAgentPage,
   '/channel': ChannelPortalPage,
+  '/public-face': PublicFacePage,
 }
 
 export function renderPage(meta: PageMeta) {
