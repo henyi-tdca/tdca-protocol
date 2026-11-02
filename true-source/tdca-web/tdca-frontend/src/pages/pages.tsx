@@ -87,7 +87,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读：锚点摘要可复算，记录哈希可核对不可复算（ATTEST-SCRUB-001）。' },
   // L1SI175-A1-2：术语检索页（登录可见；服务端 ?q= 过滤；⛔ 匿名开放未授权）
   { path: '/terms', title: '术语检索', layer: 'L0', dataSource: 'A-6 GET /api/v1/knowledge/terms?q=（服务端过滤）', permission: '登录 DID', description: '站内术语注册表检索：词与释义两列，关键词走服务端过滤；登录可见全量，匿名返回已脱敏内部编号。' },
-  { path: '/five-orders', title: '五序资产总览', layer: 'L0', dataSource: 'GET /api/v1/assets/five-orders（DB 实读）', permission: '公开', description: '五序资产池总览：名称、说明与在册数量；真实资产待生态接入，只读展示，不含交易入口。（L1SI188-NAV-FIX 项1：栏名 /assets 让位于静态资源目录改此；旧路 /assets 前端跳转新路）' },
+  { path: '/five-orders', title: '五序资产总览', layer: 'L0', dataSource: 'GET /api/v1/assets/five-orders（DB 实读）', permission: '公开', description: '五序资产池总览：名称、说明与在册数量；真实资产待生态接入，只读展示，不含交易入口。（原 /assets 栏名已迁移至本页，旧链接自动跳转）' },
   { path: '/status', title: '系统健康', layer: 'L0', dataSource: 'GET /api/v1/system/overview ＋ /api/v1/ci/badge ＋ /api/v1/eios/cluster-status', permission: '公开', description: '运行指标、机验徽章与集群状态三合一健康面；模块状态以「已冻结」呈现，税率仅为在册演示值。' },
   { path: '/start/three-questions', title: '三问向导 · 贡献前自述', layer: 'L0', dataSource: '纯前端表单（零接口调用）；提交功能待后端就绪', permission: '公开', description: '交素材前的三问：原创吗／用过 AI 吗／用在什么场景。系统只汇总成自述草稿，⛔ 代判；提交功能在建，如实标注。' },
   { path: '/contribute', title: '我要贡献 · 三级台阶', layer: 'L0', dataSource: '纯前端指路页（零接口调用）；指向既有登记端点', permission: '公开', description: 'viewer→贡献者→节点方三级台阶：每阶写什么件、走哪条路、什么算成。只指路不代办，⛔ 承诺时限必过。' },
