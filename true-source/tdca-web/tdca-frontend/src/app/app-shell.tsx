@@ -105,6 +105,7 @@ export const APP_NAV: NavEntry[] = [
       { to: '/negativespace', label: '负空间' }, // B5：管「什么不能做」（原则与类别，⛔ 不列禁项词表）
       { to: '/verify', label: '怎么验证' }, // L1SI175-B1 S1-5：三件自查全路径（匿名面）
       { to: '/private', label: '私域与边界' },
+      { to: '/public-face', label: '匿名可见面' }, // L1SI188-NAV-FIX-006 P2-2：清单页站内置入口（纯新增项）
       { to: '/demo', label: '体验演示' },
       { to: '/lab', label: '模拟演练' },
     ],
