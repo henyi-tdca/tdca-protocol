@@ -174,8 +174,8 @@ def selfcheck_spec():
                             "artifact_filename_sha256_16", "artifact_ext", "sha256_8",
                             "rec_hash", "prev_hash", "detached", "detach_reason",
                             "actor_hash"],
-        "not_returned": ("自然人标识原值、凭据、内部编号、台账件名原值"
-                         "及一切白名单外字段（默认不返回）"),
+        "not_returned": ["自然人标识原值", "凭据", "内部编号", "台账件名原值",
+                         "白名单外字段（默认不返回）"],
         "rate_limit": f"{_RATE_PER_MIN}/min/IP（内存滑窗，单实例口径）",
         "page_disclaimer": _PAGE_DISCLAIMER,
         "note": ("本规格只列检查项与公开结论（ATTEST-SCRUB-001）；"
