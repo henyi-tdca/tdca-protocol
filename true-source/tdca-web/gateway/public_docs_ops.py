@@ -72,6 +72,9 @@ _PUBLIC_DOCS = {
     "TDCA-OPS-13-验收.md",
     "TDCA-OPS-14-履约.md",
     "TDCA-OPS-15-结算分配.md",
+    # L1SI193-OPSGUIDE-005 §二 段C（末批；件名逐字取该件 §一 仓内落点列，顺序 16→17）
+    "TDCA-OPS-16-信用及遗产管理.md",
+    "TDCA-OPS-17-争议裁决.md",
     ),
     "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md",
