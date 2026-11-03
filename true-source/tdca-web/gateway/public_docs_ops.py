@@ -53,10 +53,15 @@ _PUBLIC_DOCS = {
     ),
     # L1SI192-OPSGUIDE-003 步3②（依据 HANDOFF-EXEC-L1SI192-OPSGUIDE-003 §一 白名单件名逐字写死；⛔手打）：
     # 「操作指引」族首批三件——对外版（去会话号），件在 docs/ops-guides/；放行令明示仅此三件
+    # L1SI193-OPSGUIDE-002 AMEND-1 §三：批 2 四件追加（逐字取该件 §二 末列，顺序 04→07；依据位注释同前例）
     "ops-guides": (
     "TDCA-OPS-01-授权配置.md",
     "TDCA-OPS-02-结算计税.md",
     "TDCA-OPS-03-注册缔约.md",
+    "TDCA-OPS-04-发现.md",
+    "TDCA-OPS-05-相遇.md",
+    "TDCA-OPS-06-握手.md",
+    "TDCA-OPS-07-谈判.md",
     ),
     "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md",
