@@ -21,6 +21,8 @@ from sqlalchemy import text
 
 from api_v1 import _nca_watermark, _require_session_user  # noqa: E402
 from db import get_session  # noqa: E402
+# TWO-001 B-1：脱敏单一真源——一处定义、多处调用（library 与 toolshelf 两处公开面同扫）
+from public_sanitize import CATALOG_SENSITIVE as _CATALOG_SENSITIVE  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/library", tags=["library"])
 
@@ -45,11 +47,8 @@ _SEL_COUNTS = text("SELECT family, COUNT(*) AS n FROM docs GROUP BY family")
 _SEL_PAPER_CATALOG = text("SELECT slug, title, body_md, synced_at FROM docs"
                           " WHERE family = 'paper' ORDER BY slug")
 
-# L1SI175-B1 S1-4：匿名摘要面脱敏正则——内部件号/存证指针/凭据措辞/自然人邮箱，
-# 命中任一即 fail-closed（摘处置 null 或整件不列）
-_CATALOG_SENSITIVE = re.compile(
-    r"\b(FC|TL|CI)-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES|"
-    r"\bNC-\d|[\w.+-]+@[\w-]+\.[\w.]+|(密码|口令|token|secret|凭据)", re.IGNORECASE)
+# L1SI175-B1 S1-4：匿名摘要面脱敏——正则本体已并入单一真源 public_sanitize
+# （TWO-001 B-1/B-2：凭据八形态＋内部编号族两族同扫），此处仅保留别名与长度口径
 _SUMMARY_LEN = 200
 
 

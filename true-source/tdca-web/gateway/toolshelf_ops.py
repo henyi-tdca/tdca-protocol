@@ -17,13 +17,12 @@ from pydantic import BaseModel, ConfigDict
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+# TWO-001 B-1：脱敏单一真源——一处定义、多处调用（toolshelf 与 library 两处公开面同扫）
+from public_sanitize import CATALOG_SENSITIVE as _CATALOG_SENSITIVE  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/toolshelf", tags=["toolshelf"])
 
-# 匿名面脱敏：内部件号/存证指针/凭据措辞，任一命中即不列（fail-closed）
-_CATALOG_SENSITIVE = re.compile(
-    r"\b(TL|FC|CI)-[A-Z0-9]|GSEQ-\d+|L1SI\d+|NCA-|TDCA-CRT|TDCA-SES|"
-    r"(密码|口令|token|secret|凭据)", re.IGNORECASE)
+# 匿名面脱敏：正则本体已并入单一真源 public_sanitize（TWO-001 B-1/B-2），此处仅保留别名
 _CATALOG_PURPOSE_LEN = 80
 
 
