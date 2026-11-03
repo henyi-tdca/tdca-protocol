@@ -11,6 +11,8 @@ git clone --depth 1 https://gitee.com/siweihanshuzhineng_0/tdca-protocol.git /ro
 cd /root/tdca && bash deploy/install.sh
 ```
 
+部署一律使用 `deploy/docker-compose.station-20261103.yml`；⛔ 不得使用 `deploy/docker-compose.yml`（已停用）；⛔ 不得裸执行 `docker compose up`（默认读旧件）。
+
 ## 架构（单机 Compose 编排）
 
 | 服务 | 镜像 | 职责 |
