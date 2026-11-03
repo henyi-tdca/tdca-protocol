@@ -5,7 +5,7 @@
 口径（入站判据 P-1~P-5之前置 · TDCA-RULING-SITE-INGEST-DEFINITION-001）：
   - 入站＝公网可取得件：本面即「可发现（P-1）＋可取得（P-2）」之公开承载面；
   - 匿名只读：仅 GET；写方法一律不开放（未定义即 405 fail-closed）；
-  - 只列已入站公开件：以在册公开清单为准（regulation 17 · whitepapers 2 · papers 13 · L1SI154-010 扩面），
+  - 只列已入站公开件：以在册公开清单为准（regulation 49 · whitepapers 2 · papers 16 · L1SI154-010 扩面），
     ⛔ 未入站件不出现、⛔ 乙类存证件永不出现（fail-closed：越界取件 404，
     ⛔ 不借 404/200 之差泄露在仓与否之外的信息——统一 404）；
   - 单一事实源：件即容器内只读文件（docs/regulations/），sha256 由文件现算，
@@ -35,7 +35,7 @@ router = APIRouter(prefix="/api/public", tags=["public-docs"])
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 
 # ---------------------------------------------------------------------
-# 在册公开清单（regulation 49／whitepapers 2／papers 13 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件 + L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件）
+# 在册公开清单（regulation 49／whitepapers 2／papers 16 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件 + L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件 + L1SI193-PAPER-001 三件）
 # 原「乙类 2 件（签批记录／生效注记）不得列入」经 L1SI180-TERMS-001 入站批 2 改写零命中、TERMS-004 放行、TERMS-005 甲案（创始人逐字）解除；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
@@ -139,7 +139,7 @@ _PUBLIC_DOCS = {
     "TDCA-AI-GOVERNANCE-WP-001.md",
     "TDCA-COG-WP-001.md",
     ),
-    # L1SI154-010：论文顶层正文 13 件（README/.gitattributes 元数据件不入；evidence/ 默认排除）
+    # L1SI154-010：论文顶层正文 16 件（README/.gitattributes 元数据件不入；evidence/ 默认排除；PAPER-001 三件对外净版 13→16）
     "papers": (
     "TDCA-FUNCTION-WP-002-APPX-G-附录G-制度大模型与制度孪生函数化登记.md",
     "TDCA-FUNCTION-WP-002-函数白皮书.md",
@@ -154,6 +154,10 @@ _PUBLIC_DOCS = {
     "TDCA-WP-MATERIALISM-001.md",
     "TDCA-paper-CN.md",
     "TDCA-paper-EN.md",
+    # L1SI193-PAPER-001 §四（三件对外净版入册；落点名逐字取令面 §一；13→16）：
+    "TDCA-MONOGRAPH-AGENT-001-智能体协作范式跃迁-对外净版（零星号禁符内部编号·与内部稿同源）.md",
+    "TDCA-MONOGRAPH-COP-002-思维协议的运用-对外净版（零星号禁符内部编号·与内部稿同源）.md",
+    "TDCA-REPORT-U-RUN-FINAL-002-效用线注入实验报告-对外净版（零星号禁符内部编号·与内部稿同源）.md",
     ),
     # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
     # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）
