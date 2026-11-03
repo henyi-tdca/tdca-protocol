@@ -62,6 +62,11 @@ _PUBLIC_DOCS = {
     "TDCA-OPS-05-相遇.md",
     "TDCA-OPS-06-握手.md",
     "TDCA-OPS-07-谈判.md",
+    # L1SI193-OPSGUIDE-003 §四（依据位注释同前例；件名逐字取该件 §一 仓内落点列，顺序 08→11）
+    "TDCA-OPS-08-签约.md",
+    "TDCA-OPS-09-试错.md",
+    "TDCA-OPS-10-验证.md",
+    "TDCA-OPS-11-履约准备.md",
     ),
     "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md",
