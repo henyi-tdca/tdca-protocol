@@ -12,6 +12,7 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 export const DOC_FAMILIES: { key: string; label: string; desc: string }[] = [
   { key: 'regulation', label: '制度', desc: '制度／条例／规则／办法／章程／指引' },
   { key: 'help', label: '帮助', desc: '说明／示例／帮助' },
+  { key: 'ops-guides', label: '操作指引', desc: '步骤／做法／操作指引' }, // DOCS-FAMILY-001：新族（避「操作文档」同名异指）
 ]
 
 /** 公开只读面封套（public_docs_ops · PR197）：列表 documents[]／详情 content */
@@ -94,6 +95,10 @@ export function DocsIndexPage() {
       {family === 'regulation' && (
         <p className="mt-2 text-sm text-gray-600">本族为管理性文件（规则与条文，现行生效版本），与操作指引类文档分列。</p>
       )}
+      {/* DOCS-FAMILY-001：操作指引族性质说明（仅本族显示；照令逐字） */}
+      {family === 'ops-guides' && (
+        <p className="mt-2 text-sm text-gray-600">本族为实操性文档（步骤与做法、操作指引），与制度条文分列；制度条文见『制度规范』族。</p>
+      )}
       <div className="mt-4">
         {(!data || error) && <DocLoading error={error} />}
         {data && docs.length === 0 && <p className="text-sm text-gray-500">该族暂无入库文档。</p>}
@@ -145,7 +150,7 @@ export function DocsHomePage() {
         </ul>
       </div>
       <p className="mt-3 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
-        <strong>想了解「是什么」</strong>（概念、理论与术语），请到「知识库」；<strong>想查「怎么做」</strong>（制度、办法与操作规则），留在本页。
+        <strong>想了解「是什么」</strong>（概念、理论与术语），请到「知识库」；本页为文档库总入口。制度的规则与条文，见『制度规范』族；具体步骤与做法，见『操作指引』族。
       </p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {DOC_FAMILIES.map((f) => (
