@@ -31,6 +31,8 @@ const PROTECTED = new Set([
   '/use/upload',
   // L1SI182-USE-U2-001 U-2：/use/agent 受护——登记办理须本人登录态（出号端后端同守 401），匿名重定向 /auth
   '/use/agent',
+  // L1SI193-B1-001 C-1：/authorization/panel 受护——起草/签署/撤回须本人登录态（后端同守 401），匿名重定向 /auth
+  '/authorization/panel',
   // NODE-NET-A-001：/me/node/net 受护——本机节点数据只本人可见（卡一规则：根指纹只显本人前 8 位）
   '/me/node/net',
   '/review',
