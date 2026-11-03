@@ -41,12 +41,22 @@ alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 # ---------------------------------------------------------------------
 _FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列 regulation）
 # L1SI154-010：多族承载——族 → 容器内目录（/docs/<dir>，只读挂载）
-_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library", "help": "help"}
+_FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library", "help": "help",
+    # L1SI192-OPSGUIDE-003 步3①（依据链：SPEC-L1SI192-OPSGUIDE-001 §三「族名与源目录一对一」→ HANDOFF-EXEC-L1SI192-OPSGUIDE-003 §二 步3；非静默扩面）：
+    # 「操作指引」族立族——源目录 docs/ops-guides/；放行令明示仅此一族
+    "ops-guides": "ops-guides"}
 _PUBLIC_DOCS = {
     # L1SI188-NAV-FIX-003 项3（依据链：RULING-L1SI188-SITE-NAV-001「整组按推荐」→ NAV-FIX-001 → -003；非静默扩面）：
     # 「帮助」族立族一件——文字逐字搬自前端 /help 页（三条路＋联系块空栏口径），⛔ 未新写内容；件在 docs/help/
     "help": (
     "TDCA-HELP-PATHS-001-帮助·三条路与联系方式指引（同源-help页文字）.md",
+    ),
+    # L1SI192-OPSGUIDE-003 步3②（依据 HANDOFF-EXEC-L1SI192-OPSGUIDE-003 §一 白名单件名逐字写死；⛔手打）：
+    # 「操作指引」族首批三件——对外版（去会话号），件在 docs/ops-guides/；放行令明示仅此三件
+    "ops-guides": (
+    "TDCA-OPS-01-授权配置.md",
+    "TDCA-OPS-02-结算计税.md",
+    "TDCA-OPS-03-注册缔约.md",
     ),
     "regulation": (
     "TDCA-SPEC-CONFIGMARKET-001-配置权市场规范（单一权威稿·中文人读版V1.0-FROZEN）.md",
