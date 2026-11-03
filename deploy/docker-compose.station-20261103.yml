@@ -1,0 +1,74 @@
+# 站机生效版 docker-compose 原文照录（deploy-gateway-1 /root/tdca/deploy/docker-compose.yml）
+# 以站机实况为准；⛔ 为仓内运行配置，登记用（依据 TDCA-HANDOFF-EXEC-L1SI192-OPSGUIDE-004 段 C）
+# 取证：scp root@47.76.42.139:/root/tdca/deploy/docker-compose.yml ｜ 时点 2026-11-03 19:2x（+08）｜ 站机版 2,320 B／sha256_16=91E7383917A984F5
+services:
+  gateway:
+    image: deploy-gateway:frozen-1009
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.gateway
+    environment:
+      TDCA_GATEWAY_AUTH: "1"
+      TDCA_GATEWAY_TOKEN: "${TDCA_GATEWAY_TOKEN:?token required}"
+      MOONSHOT_API_KEY: "${MOONSHOT_API_KEY:-}"
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
+      DATABASE_URL: "sqlite:////data/tdca.db"
+      TDCA_UTILITY_DEPOSIT_MIN_MOU: "1"
+      TDCA_AGENT_REG_OPEN: "0"
+      OPS_FILES_DIR: "/var/lib/tdca-ops-files"
+    volumes:
+      - tdca-db:/data
+      - /root/tdca/docs/regulations:/docs/regulations:ro
+      - /root/tdca/docs/whitepapers:/docs/whitepapers:ro
+      - /root/tdca/docs/papers:/docs/papers:ro
+      - /root/tdca/docs/cop-library:/docs/cop-library:ro
+      - /root/tdca/docs/help:/docs/help:ro  # L1SI188-NAV-FIX-003B 项3：帮助族只读卷（创始人明示仅此一卷）
+      - /root/tdca/docs/ops-guides:/docs/ops-guides:ro  # L1SI192-OPSGUIDE-003 步2：操作指引族只读卷（放行令明示仅此一条）
+      - /root/tdca-site/gateway-channel-cc0c5fd:/app/tdca-web/gateway:ro
+      - /root/tdca-site/ops-files:/var/lib/tdca-ops-files:ro
+      - /root/tdca-site/gateway:/app/tdca-site/gateway:ro
+    restart: always
+  mcp-bridge:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.mcp
+    volumes:
+      - mcp-evidence:/evidence
+    restart: always
+  nl:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.nl
+    environment:
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
+    volumes:
+      - nl-evidence:/evidence-nl
+    restart: always
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.web
+    restart: always
+  nginx:
+    image: deploy-nginx:frozen-1009
+    ports:
+      - "8080:80"
+      - "80:88"
+      - "443:443"
+    volumes:
+      - /root/tdca-site/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /root/tdca-site/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - /root/tdca-site/nginx/tls:/etc/nginx/tls:ro
+      - /root/tdca-site/dist:/usr/share/tdca-site:ro
+      - /root/tdca/deploy/portal:/usr/share/nginx/html:ro
+      - /root/tdca-site/ops-files:/usr/share/tdca-ops-files:ro
+    depends_on:
+      - gateway
+      - mcp-bridge
+      - nl
+      - web
+    restart: always
+volumes:
+  tdca-db:
+  mcp-evidence:
+  nl-evidence:
