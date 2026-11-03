@@ -1,3 +1,6 @@
+# ⛔ 已停用（2026-11-03）：本件不再用于部署。
+# 现行唯一版本：deploy/docker-compose.station-20261103.yml（站机生效版原文照录）。
+# 依据停用件条款；如需恢复用途请另出启用件，⛔ 勿改本注记。
 services:
   gateway:
     image: deploy-gateway:frozen-1009

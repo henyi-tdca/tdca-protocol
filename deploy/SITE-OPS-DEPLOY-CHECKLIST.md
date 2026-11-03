@@ -2,6 +2,7 @@
 
 > 用途：每次站点部署（新端点／网关改动／dist 发布／nginx 变更）逐项照勾。
 > 口径：只增不改；挂账项如实登记，⛔ 不自行越界。
+> 部署一律使用 `deploy/docker-compose.station-20261103.yml`；⛔ 不得使用 `deploy/docker-compose.yml`（已停用）；⛔ 不得裸执行 `docker compose up`（默认读旧件）。
 
 ## 〇、操作指引族正文源（照在册）
 
