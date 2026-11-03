@@ -157,6 +157,12 @@ app.include_router(announcements_ops_router)
 from authorization_ops import router as authorization_ops_router  # noqa: E402
 app.include_router(authorization_ops_router)
 
+# L1SI193-B1-001: C1 授权配置面板（/api/v1/authorization/draft|sign|revoke＋GET /{auth_id} 公开读；
+# 五操作八字段四要件·本人签署·五态机·可靠性九项；与 P8b 分立并存，⛔ 不改其逻辑与文案；
+# 本件挂载须在 authorization_ops 之后——GET /{auth_id} 兜底不得抢既有字面路由）
+from authorization_panel_ops import router as authorization_panel_router  # noqa: E402
+app.include_router(authorization_panel_router)
+
 # A-25: 配置权市场「管理」面（/api/v1/market-admin/*——挂出／查询／状态变更／下架；
 # 先有成件＋四要件合取闸门（例外仅沙盒演练）；限权属登记人本人；下架不溯及授权件；
 # 公开面四字段；每操作落 NCA＋事件双留痕）

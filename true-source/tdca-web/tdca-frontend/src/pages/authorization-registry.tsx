@@ -325,6 +325,11 @@ export function AuthorizationRegistryPage() {
             </ul>
           )}
         </section>
+        {/* L1SI193-B1-001：与 C-1 授权配置面板互链（只此一条；本页逻辑与文案零改） */}
+        <p className="text-xs text-gray-500">
+          相关面：<a className="underline" href="/authorization/panel">授权配置面板（C-1）</a>
+          ——五操作授权件起草／本人签署／撤回（与 P8b 分立并存）。
+        </p>
       </div>
     </PageShell>
   )
