@@ -90,6 +90,10 @@ export function DocsIndexPage() {
         <SimulatedBadge nature="real" />
       </div>
       <Link to="/docs" className="text-sm text-gray-500 hover:text-gray-800">← 全部文档</Link>
+      {/* PUB-001 B-1：制度规范族性质说明（仅本族显示；照令逐字） */}
+      {family === 'regulation' && (
+        <p className="mt-2 text-sm text-gray-600">本族为管理性文件（规则与条文，现行生效版本），与操作指引类文档分列。</p>
+      )}
       <div className="mt-4">
         {(!data || error) && <DocLoading error={error} />}
         {data && docs.length === 0 && <p className="text-sm text-gray-500">该族暂无入库文档。</p>}
