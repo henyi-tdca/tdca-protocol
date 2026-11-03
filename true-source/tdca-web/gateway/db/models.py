@@ -1146,3 +1146,83 @@ class AuditDayAnchor(Base):
     __table_args__ = (
         CheckConstraint("status IN ('anchored','none')", name="ck_audit_day_status"),
     )
+
+
+class AuthorizationPanelDoc(Base):
+    """L1SI193-B1-001：C1 授权配置面板授权件（五操作／八字段四要件／本人签署／五态机）。
+
+    与 P8b 合约备案（authorization_records）分立：本面管「授权配置面板」的
+    起草→签署→生效→停权／撤回流程；五态 draft→pending_sign→active→
+    suspended/revoked（可回摆：suspended→active 经 operator 复核解冻）。
+    每次状态推进逐笔落 NCA（nca_seq＝最新一笔指针；rec_hash＝该笔对拍副本，
+    双库哈希对拍与断链恢复（从 NCA 反查复建）之用）；凭据值 ⛔ 不入件。
+    """
+
+    __tablename__ = "authorization_panel_docs"
+    auth_id: Mapped[str] = mapped_column(Text, primary_key=True)       # AP-xxx
+    operation: Mapped[str] = mapped_column(Text, nullable=False)       # 五操作之一
+    grantor: Mapped[str] = mapped_column(Text, nullable=False)         # ① 授权方（主体名称）
+    grantee: Mapped[str] = mapped_column(Text, nullable=False)         # ② 被授权方（主体名称）
+    subject: Mapped[str] = mapped_column(Text, nullable=False)         # ③a 标的
+    scope: Mapped[str] = mapped_column(Text, nullable=False)           # ③b 范围
+    term: Mapped[str] = mapped_column(Text, nullable=False)            # ④a 期限
+    conditions: Mapped[str] = mapped_column(Text, nullable=False)      # ④b 条件 JSON（再授权/商用/标注来源）
+    signer: Mapped[str | None] = mapped_column(Text)                   # 签署人（须＝起草人本人）
+    drafter: Mapped[str] = mapped_column(Text, nullable=False)         # 起草人（未登录⛔起草；签署须本人）
+    credential_ref: Mapped[str | None] = mapped_column(Text)           # 凭据号（只回指针，⛔ 值不入件）
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="draft")
+    nca_seq: Mapped[str | None] = mapped_column(Text)                  # 最新 NCA 指针（无存证＝未发生）
+    rec_hash: Mapped[str | None] = mapped_column(Text)                 # NCA 行哈希对拍副本
+    hash_mismatch_streak: Mapped[int] = mapped_column(nullable=False, default=0)  # 熔断②计数
+    note: Mapped[str | None] = mapped_column(Text)
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="simulated")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('draft','pending_sign','active','suspended','revoked')",
+            name="ck_authz_panel_status"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_authz_panel_prov"),
+        Index("idx_authz_panel_grantor", "grantor"),
+    )
+
+
+class AuthorizationPanelEvent(Base):
+    """L1SI193-B1-001：面板事件流水（append-only——撤回后已发生使用另记一笔，⛔ 抹）。
+
+    每笔事件自带 NCA 指针；编号与字段可从 NCA 反查复建（可靠性·恢复）。
+    """
+
+    __tablename__ = "authorization_panel_events"
+    event_id: Mapped[str] = mapped_column(Text, primary_key=True)      # APE-xxx
+    auth_id: Mapped[str] = mapped_column(Text, nullable=False)
+    event_type: Mapped[str] = mapped_column(Text, nullable=False)      # draft/submit/sign/suspend/resume/revoke
+    actor: Mapped[str] = mapped_column(Text, nullable=False)           # 操作人（签署须本人）
+    nca_ref: Mapped[str | None] = mapped_column(Text)                  # 本笔 NCA 指针
+    detail: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        Index("idx_authz_panel_ev_auth", "auth_id"),
+    )
+
+
+class AuthorizationPanelFreeze(Base):
+    """L1SI193-B1-001：熔断冻结表（触发即停该链，后续全拒；operator 复核解冻，⛔ 自动恢复）。
+
+    reason：resign（同一 auth_id 短时重复签署异常）／hash（哈希连续不符≥3）／
+            standard（标准无法对应）。每链至多一条活跃冻结（unfrozen_at 非空即解冻）。
+    """
+
+    __tablename__ = "authorization_panel_freezes"
+    freeze_id: Mapped[str] = mapped_column(Text, primary_key=True)     # APF-xxx
+    auth_id: Mapped[str] = mapped_column(Text, nullable=False)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    detail: Mapped[str | None] = mapped_column(Text)
+    frozen_by: Mapped[str] = mapped_column(Text, nullable=False)       # 触发来源（system/操作人）
+    unfrozen_by: Mapped[str | None] = mapped_column(Text)              # operator 复核解冻人（⛔ 空＝仍冻结）
+    unfrozen_note: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    unfrozen_at: Mapped[str | None] = mapped_column(Text)
+    __table_args__ = (
+        Index("idx_authz_panel_freeze_auth", "auth_id"),
+    )

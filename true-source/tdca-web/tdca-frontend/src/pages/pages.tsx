@@ -53,6 +53,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/channel', title: '智能体通道', layer: 'L0', dataSource: '在册《智能体定义条例》第 19 条（六步硬序）＋既有 /channel/* 路由', permission: '公开', description: '智能体经站点通道接入的总入口：先登记（前置），再按六步硬序走通；六步不可跳过、不可互替。' },
   { path: '/announcements', title: '公告栏', layer: 'L0', dataSource: 'A-23 GET /api/v1/announcements/list（公开读）', permission: '公开', description: '站点对外公告区：公告内容经创始人明示后由运营发布；空栏为常态，不预置内容。' },
   { path: '/authorization-registry', title: '合约备案（P8b）', layer: 'L0', dataSource: 'A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）', permission: '登录 DID（公开查免会话）', description: '登记二分之合约备案侧：怎么用与谁担；四要件缺一即拒；签名须本人、智能体不代持代填；公开面四字段；四条不公开负空间 fail-closed。' },
+  // L1SI193-B1-001 C-1：授权配置面板（与 P8b 分立并存；五操作八字段四要件·本人签署·五态机·可靠性九项；⛔ 部署对外另令）
+  { path: '/authorization/panel', title: '授权配置面板（C-1）', layer: 'L0', dataSource: 'POST /api/v1/authorization/draft|sign|revoke ＋ GET /api/v1/authorization/{auth_id}（公开读）', permission: '登录 DID（起草／签署／撤回须本人；公开查免会话）', description: '五操作授权件：八字段逐项填、四要件缺一即拒（提示缺哪项）；签署须本人、⛔ 智能体代签代填；五态 draft→pending_sign→active→suspended/revoked；每次推进落 NCA 存证与双库对拍；凭据值 ⛔ 不入件。' },
   // 二期改版批2块一：公域顶栏第六入口「帮助与联系」——薄占位，内容随文档库「帮助」族入站（块二），联系块同批补入
   { path: '/help', title: '帮助与联系', layer: 'L0', dataSource: '静态占位（帮助族入站前）', permission: '公开', description: '站点帮助与官方联系入口。帮助内容随文档库「帮助」族入站（块二）；论坛暂不落栏，先定位。' },
   // 二期改版批2块二：文档库（裁点2终定：与文库并存，⛔ 不并线——端点不同、族不同）
@@ -150,6 +152,7 @@ import { LibraryPage } from './library'
 import { AgentShelfPage } from './agent-shelf'
 import { AnnouncementsPage } from './announcements'
 import { AuthorizationRegistryPage } from './authorization-registry'
+import { AuthorizationPanelPage } from './authorization-panel'
 import { HelpPage } from './help'
 import { DocsHomePage, DocsIndexPage, DocDetailPage } from './docs'
 import { ProcessOverviewPage } from './process'
@@ -231,6 +234,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/agent-shelf': AgentShelfPage,
   '/announcements': AnnouncementsPage,
   '/authorization-registry': AuthorizationRegistryPage,
+  '/authorization/panel': AuthorizationPanelPage,
   '/help': HelpPage,
   '/docs': DocsHomePage,
   '/process': ProcessOverviewPage,
