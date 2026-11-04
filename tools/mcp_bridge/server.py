@@ -160,7 +160,8 @@ class BridgeServer:
         self.state.admit_sbx(fp, cert)
         out = f"[SIMULATED] echo: {args.get('text', '')}"
         nca = self.wm.stamp(self.caller, "tdca:echo", args, out,
-                            space_id=trispace.SPACE_SBX, status=trispace.ST_SBX_ACTIVE)
+                            space_id=trispace.SPACE_SBX, status=trispace.ST_SBX_ACTIVE,
+                            recognition=trispace.recognition_bundle(fp, j))
         self.state.data["agents"][fp]["writes"] += 1
         self.state.save()
         return self._ok(rid, {"content": [{"type": "text", "text":
