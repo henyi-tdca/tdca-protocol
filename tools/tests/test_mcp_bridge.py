@@ -20,6 +20,20 @@ def srv(tmp_path):
     return BridgeServer(tmp_path / "evidence", caller="test-client")
 
 
+# TRISPACE-001 A1/A2：写路须随调用提交 agent_card（双轨身份§三）。
+# 本套件为「持卡直通」正向路径；匿名零消耗拒绝与四判对抗在 test_trispace_gate.py。
+_CARD = {"identity_type": "external", "data_provenance": "simulated",
+         "ns_types": {"absolute": ["发币", "公售"],
+                      "scene_limited": ["跨境数据"],
+                      "approval_required": ["对外缔约"]},
+         "forbidden_operators": ["发币"],
+         "declared_fields": ["text"]}
+
+
+def _echo_args(text: str) -> dict:
+    return {"text": text, "agent_card": dict(_CARD)}
+
+
 def _j(obj):
     return json.dumps(obj, ensure_ascii=False)
 
@@ -60,7 +74,7 @@ def test_stdio_end_to_end(tmp_path):
     lines = [
         _j({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}),
         _j({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
-            "params": {"name": "tdca:echo", "arguments": {"text": "hello tdca"}}}),
+            "params": {"name": "tdca:echo", "arguments": _echo_args("hello tdca")}}),
         _j({"jsonrpc": "2.0", "id": 3, "method": "tools/call",
             "params": {"name": "nca:chain", "arguments": {}}}),
     ]
@@ -82,7 +96,7 @@ def test_stdio_end_to_end(tmp_path):
 
 def test_echo_auto_nca(srv, tmp_path):
     srv.handle_line(_j({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-                        "params": {"name": "tdca:echo", "arguments": {"text": "存证我"}}}))
+                        "params": {"name": "tdca:echo", "arguments": _echo_args("存证我")}}))
     files = list((tmp_path / "evidence").glob("NCA-MCP-*.yaml"))
     assert len(files) == 1
     doc = yaml.safe_load(files[0].read_text(encoding="utf-8"))
@@ -95,7 +109,7 @@ def test_echo_auto_nca(srv, tmp_path):
 def test_chain_continuity(srv):
     for i in range(3):
         srv.handle_line(_j({"jsonrpc": "2.0", "id": i, "method": "tools/call",
-                            "params": {"name": "tdca:echo", "arguments": {"text": f"m{i}"}}}))
+                            "params": {"name": "tdca:echo", "arguments": _echo_args(f"m{i}")}}))
     chain = srv.wm.chain()
     assert len(chain) == 3
     assert len({c["Hash"] for c in chain}) == 3  # 哈希各异 = 链式演进
@@ -106,7 +120,7 @@ def test_chain_continuity(srv):
 def test_fuse_reject(srv):
     r = srv.handle_line(_j({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
                             "params": {"name": "tdca:echo",
-                                       "arguments": {"text": "我们计划发币募资"}}}))
+                                       "arguments": _echo_args("我们计划发币募资")}}))
     assert r["result"]["isError"] is True
     assert srv.fuse_log.is_file()  # 熔断日志已落
     assert "发币" in srv.fuse_log.read_text(encoding="utf-8")
@@ -114,7 +128,7 @@ def test_fuse_reject(srv):
 
 def test_fuse_reject_also_stamped(srv, tmp_path):
     srv.handle_line(_j({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-                        "params": {"name": "tdca:echo", "arguments": {"text": "搞个代币"}}}))
+                        "params": {"name": "tdca:echo", "arguments": _echo_args("搞个代币")}}))
     doc = srv.wm.get("NCA-MCP-" + __import__("datetime").datetime.now(
         __import__("datetime").timezone.utc).strftime("%Y%m%d") + "-001")
     assert doc["Operation-Type"] == "FuseReject"
@@ -123,7 +137,7 @@ def test_fuse_reject_also_stamped(srv, tmp_path):
 def test_fuse_negation_exempt(srv):
     r = srv.handle_line(_j({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
                             "params": {"name": "tdca:echo",
-                                       "arguments": {"text": "我们承诺不发币、不代币化"}}}))
+                                       "arguments": _echo_args("我们承诺不发币、不代币化")}}))
     assert "isError" not in r["result"]
 
 
@@ -138,7 +152,7 @@ def test_precheck_unit(tmp_path):
 
 def test_nca_get(srv):
     srv.handle_line(_j({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-                        "params": {"name": "tdca:echo", "arguments": {"text": "x"}}}))
+                        "params": {"name": "tdca:echo", "arguments": _echo_args("x")}}))
     nid = srv.wm.chain()[-1]["NCA-ID"]
     r = srv.handle_line(_j({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
                             "params": {"name": "nca:get", "arguments": {"nca_id": nid}}}))

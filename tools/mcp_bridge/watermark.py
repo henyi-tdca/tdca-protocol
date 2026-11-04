@@ -27,7 +27,11 @@ class Watermark:
         return str((doc.get("Post-State") or {}).get("Hash", "genesis"))
 
     def stamp(self, caller: str, tool: str, arguments: dict,
-              output: str, rejected: bool = False) -> dict:
+              output: str, rejected: bool = False,
+              space_id: str = "SBX", status: str = "SBX-ACTIVE") -> dict:
+        # TRISPACE-001 A4：每件必带 space_id 与状态位（⛔由件名/目录推断，由调用方显式传入）；
+        # A8：跨段引用走 chain_ref；A5：SBX/PCM 面以 Post-State.Path 逻辑前缀分卷。
+        from .trispace import CHAIN_REF
         prev = self._prev_hash()
         in_digest = hashlib.sha256(
             json.dumps(arguments, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
@@ -41,9 +45,12 @@ class Watermark:
             "Operation-Type": "FuseReject" if rejected else "ToolCall",
             "Operator": caller,
             "Timestamp": now,
+            "space_id": space_id,
+            "status": status,
+            "chain_ref": CHAIN_REF,
             "Scope": f"MCP 工具调用: {tool}（输入摘要 sha256:{in_digest[:16]}…）",
             "Pre-State": {"Path": "", "Hash": prev, "Size": 0},
-            "Post-State": {"Path": f"mcp-bridge:{tool}", "Hash": f"sha256:{out_hash}",
+            "Post-State": {"Path": f"{space_id.lower()}:{tool}", "Hash": f"sha256:{out_hash}",
                            "Size": len(output)},
             "Config-Right-Token": {"Scope": "MCP 桥接存证（只读存证，不代执行业务）",
                                    "Rollback": "链式回退", "Audit-Trail": "NCA 链",
@@ -69,5 +76,6 @@ class Watermark:
             d = yaml.safe_load(p.read_text(encoding="utf-8"))
             out.append({"NCA-ID": d.get("NCA-ID"), "Operation-Type": d.get("Operation-Type"),
                         "Timestamp": d.get("Timestamp"),
+                        "space_id": d.get("space_id"), "status": d.get("status"),
                         "Hash": (d.get("Post-State") or {}).get("Hash")})
         return out
