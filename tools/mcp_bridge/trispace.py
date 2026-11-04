@@ -78,6 +78,7 @@ ST_SBX_BANNED = "SBX-BANNED"
 CHAIN_REF = "TDCA-MCP-CHAIN-001"
 
 # 拒绝码（A1/A2：码与文案稳定可测）
+# TODO(批4)：拒绝码形（-32001 等数字码）与规范闭集（E-*）统一，批4一并处理（TRISPACE-002 附条1，本批⛔改行为）
 CODE_NO_CARD = -32001           # 写无 agent_card（fail-closed 零消耗）
 CODE_BANNED = -32002            # 指纹已 SBX-BANNED
 CODE_SUSPENDED = -32003         # 指纹 SBX-SUSPENDED（限期重整中）
@@ -191,6 +192,9 @@ def judge_absolute_negative_space(card: dict, arg_text: str,
 def judge_minimal_composition(card: dict, arguments: dict,
                               max_depth: int) -> tuple[bool, str]:
     """J4 最小化合：是否过度设计。
+    【机读化收窄版】（TRISPACE-002 附条2 标注）：制度上位口径为 DSA-001 §3.1
+    「最小化合原则验证」，此处为其施工侧确定性收窄实现（字段集 + 深度边界），
+    不等同制度原文全量语义。
     机读判据：实参键 ⊆ 卡声明的 declared_fields（未声明则默认只收 text），
     且实参 JSON 深度 ≤ 配置上限；超限即过度设计（fail-closed）。"""
     allowed = card.get("declared_fields", ["text"])
