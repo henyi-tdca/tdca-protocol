@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import json
+import os
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 from .core import load_core
@@ -31,7 +34,28 @@ TOOLS = [
     {"name": "tdca:core",
      "description": "读取 TDCA_CORE 基协议声明（接入即加载）",
      "inputSchema": {"type": "object", "properties": {}}},
+    {"name": "official:invoke",
+     "description": "官方能力调用（INTERFACE-001 批4）：薄封装转发 API 面"
+                    " /api/v1/official/invoke——判据/存证/账全在 API 面完成，"
+                    "本工具零业务判断零自落证（传输失败 -32603）[SIMULATED]",
+     "inputSchema": {"type": "object",
+                     "properties": {
+                         "caller_id": {"type": "string"},
+                         "callee_id": {"type": "string"},
+                         "operation": {"type": "string"},
+                         "arguments": {"type": "object"},
+                         "authz_ref": {"type": "string"},
+                         "space_id": {"type": "string"},
+                         "request_id": {"type": "string"},
+                         "agent_card": {"type": "object"},
+                         "contract": {"type": "string"}},
+                     "required": ["caller_id", "callee_id", "operation",
+                                  "arguments", "space_id", "request_id"]}},
 ]
+
+# INTERFACE-001：official:invoke 转发目标（本地 shim 默认口；站机经容器网络可达）
+OFFICIAL_INVOKE_URL = os.environ.get(
+    "TDCA_OFFICIAL_INVOKE_URL", "http://127.0.0.1:8001/api/v1/official/invoke")
 
 
 class BridgeServer:
@@ -161,7 +185,41 @@ class BridgeServer:
         if name == "tdca:core":
             return self._ok(rid, {"content": [{"type": "text",
                 "text": json.dumps(self.core, ensure_ascii=False)}]})
+        if name == "official:invoke":
+            return self._official_invoke(rid, dict(args))
         return self._err(rid, -32602, f"Unreachable: {name}")
+
+    # ---- INTERFACE-001：official:invoke 薄封装（零业务判断零自落证） ----
+    def _official_invoke(self, rid, args: dict) -> dict:
+        """仅 HTTP 转发：agent_card/contract 由 arguments 弹出进 Header；
+        业务拒绝/存证/账全在 API 面（official_invoke.handle）。传输层失败 -32603。"""
+        card = args.pop("agent_card", None)
+        contract = args.pop("contract", None)
+        headers = {"Content-Type": "application/json"}
+        if card is not None:
+            # HTTP 头只承 latin-1：卡 JSON 以 ASCII 转义承载（JSON 语义不变，≤4KB 口径不变）
+            headers["X-TDCA-Agent-Card"] = json.dumps(card, ensure_ascii=True)
+        if contract:
+            headers["X-TDCA-Contract"] = str(contract)
+        req = urllib.request.Request(
+            OFFICIAL_INVOKE_URL,
+            data=json.dumps(args, ensure_ascii=False).encode("utf-8"),
+            headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:  # API 面 4xx/5xx：原样承载，不包传输错
+            try:
+                payload = json.loads(e.read().decode("utf-8"))
+            except Exception:
+                return self._err(rid, -32603, f"invoke upstream HTTP {e.code} 且无 JSON 体")
+            return self._ok(rid, {"isError": e.code >= 400,
+                                  "content": [{"type": "text",
+                                               "text": json.dumps(payload, ensure_ascii=False)}]})
+        except Exception as e:
+            return self._err(rid, -32603, f"invoke transport error: {e}")
+        return self._ok(rid, {"content": [{"type": "text",
+                                           "text": json.dumps(payload, ensure_ascii=False)}]})
 
     @staticmethod
     def _ok(rid, result) -> dict:
