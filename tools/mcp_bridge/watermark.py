@@ -28,9 +28,12 @@ class Watermark:
 
     def stamp(self, caller: str, tool: str, arguments: dict,
               output: str, rejected: bool = False,
-              space_id: str = "SBX", status: str = "SBX-ACTIVE") -> dict:
+              space_id: str = "SBX", status: str = "SBX-ACTIVE",
+              extra: dict | None = None) -> dict:
         # TRISPACE-001 A4：每件必带 space_id 与状态位（⛔由件名/目录推断，由调用方显式传入）；
         # A8：跨段引用走 chain_ref；A5：SBX/PCM 面以 Post-State.Path 逻辑前缀分卷。
+        # INTERFACE-001：extra 为 API 面扩展字段（ledger/authz_ref/Source/operation 等），
+        # 缺省 None 行为与批2逐字节一致（纯追加参数，既有调用零影响）。
         from .trispace import CHAIN_REF
         prev = self._prev_hash()
         in_digest = hashlib.sha256(
@@ -62,6 +65,8 @@ class Watermark:
             "payload_ref": f"sha256:{out_hash}",
             "data_provenance": "simulated",
         }
+        if extra:
+            doc.update(extra)
         (self.dir / f"{nca_id}.yaml").write_text(
             yaml.safe_dump(doc, allow_unicode=True, sort_keys=False), encoding="utf-8")
         return doc
