@@ -1,10 +1,9 @@
 # gate-seal —— TDCA-HANDOFF-EXEC-L1SI196-SEALCHECK-001 NCA 封块体检器
 #
-# 只读体检门：链尾对齐 / 重复块 / 签名滞后 / 缺日，只报差。
-# 独立作业（令面 §四：⛔ 并入既有全量跑）；手动 + 每周定时各一触发。
-#
-# 退出码：0 全 OK / 1 有差 / 2 读数不可得（三分 ⛔ 混）。
-# 数据面：封块与台账不在仓内（私域），CI 侧预期报「读数不可得」属设计内 UNKNOWN。
+# 自测门（SEALCHECK-MERGE-001 追加要求）：跑仓内夹具，断言三态可达——
+#   态一 干净（exit 0）／态二 有差·撤签名册 UNSIGNED（exit 1）／态三 读数不可得（exit 2）。
+# ⛔ 指向真数据面（--nca-dir 只用临时目录＋夹具）；作业红 ⟹ 判脚本坏，非账本坏。
+# 台账真态由智库侧每日自跑报。独立作业（⛔ 并入既有全量跑）；手动 + 每周定时。
 
 name: gate-seal
 
@@ -14,13 +13,34 @@ on:
     - cron: "41 3 * * 1"   # 每周一 03:41 UTC（+08 为周一 11:41，与 gate-samesource 03:23 错开）
 
 jobs:
-  sealcheck:
+  sealcheck-selftest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: NCA 封块体检（只读）
-        run: python tools/ops/nca_seal_check.py --nca-dir .tdca-nca
-        # 数据面不在 CI 机时 exit 2（UNKNOWN），与有差（exit 1）分道辨认
+      - name: 三态自测（夹具·不指向真数据面）
+        shell: bash
+        run: |
+          set -u
+          FIX=tools/ops/_sealcheck_selftest
+          TMP="$RUNNER_TEMP/sealcheck"
+
+          echo "== 态一：干净（期望 exit 0） =="
+          rc=0; python tools/ops/nca_seal_check.py --nca-dir "$FIX/clean" || rc=$?
+          S0=$rc
+
+          echo "== 态二：有差（撤签名册 -> UNSIGNED，期望 exit 1） =="
+          rm -rf "$TMP"; mkdir -p "$TMP"
+          cp -r "$FIX/clean" "$TMP/unsigned"
+          rm -f "$TMP/unsigned/reports/"_NCA-BLOCK-SIGNREG-*.json
+          rc=0; python tools/ops/nca_seal_check.py --nca-dir "$TMP/unsigned" || rc=$?
+          S1=$rc
+
+          echo "== 态三：读数不可得（无 reports 目录，期望 exit 2） =="
+          rc=0; python tools/ops/nca_seal_check.py --nca-dir "$TMP/none" || rc=$?
+          S2=$rc
+
+          echo "SELFTEST clean=$S0 diff=$S1 unreadable=$S2"
+          test "$S0" -eq 0 -a "$S1" -eq 1 -a "$S2" -eq 2

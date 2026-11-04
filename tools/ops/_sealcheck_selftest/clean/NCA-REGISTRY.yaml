@@ -1,0 +1,7 @@
+# 样例台账（SEALCHECK 自测夹具·非真数据面）
+# 制式须合 nca_seal_check.load_records 极简解析：条目行「- gseq:」＋timestamp 行。
+records:
+  - gseq: 'GSEQ-0001'
+    timestamp: '2026-11-05T08:00:00+08:00'
+  - gseq: 'GSEQ-0002'
+    timestamp: '2026-11-05T08:05:00+08:00'
