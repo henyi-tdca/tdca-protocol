@@ -163,6 +163,18 @@ app.include_router(authorization_ops_router)
 from authorization_panel_ops import router as authorization_panel_router  # noqa: E402
 app.include_router(authorization_panel_router)
 
+# L1SI195-B1-001: C2 交付清单（/api/v1/delivery/manifest|items|confirm＋GET /{delivery_id} 公开读；
+# 逐件哈希必填·auth_id 闸·四态机·可靠性九项；存储＝/data/delivery JSON 仓（⛔ 不改库表 S-3）；
+# ⛔ 不含部署）
+from delivery_ops import router as delivery_ops_router  # noqa: E402
+app.include_router(delivery_ops_router)
+
+# L1SI195-B1-001: C3 验收记录（/api/v1/acceptance/standard|verdict|rectify＋GET /{acceptance_id} 公开读；
+# 标准事前登记·逐条结论须对应事前标准·整改复判·passed 只显「可结算」（⛔ 接结算 S-4）；
+# 存储＝/data/acceptance JSON 仓；⛔ 不含部署）
+from acceptance_ops import router as acceptance_ops_router  # noqa: E402
+app.include_router(acceptance_ops_router)
+
 # A-25: 配置权市场「管理」面（/api/v1/market-admin/*——挂出／查询／状态变更／下架；
 # 先有成件＋四要件合取闸门（例外仅沙盒演练）；限权属登记人本人；下架不溯及授权件；
 # 公开面四字段；每操作落 NCA＋事件双留痕）
