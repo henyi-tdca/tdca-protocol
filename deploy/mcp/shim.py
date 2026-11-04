@@ -31,14 +31,14 @@ def call(req: CallReq):
     msgs = [
         {"jsonrpc": "2.0", "id": 1, "method": "initialize",
          "params": {"protocolVersion": "2025-06-18", "capabilities": {},
-                    "clientInfo": {"name": "cloud-portal", "version": "1.0"}}},
+                    "clientInfo": {"name": "anonymous", "version": "1.0"}}},
         {"jsonrpc": "2.0", "method": "notifications/initialized"},
         {"jsonrpc": "2.0", "id": 2, "method": "tools/call",
          "params": {"name": req.name, "arguments": req.arguments}},
     ]
     try:
         proc = subprocess.Popen(
-            [sys.executable, "-m", "mcp_bridge", "--evidence", str(EV), "--caller", "cloud-portal"],
+            [sys.executable, "-m", "mcp_bridge", "--evidence", str(EV), "--caller", "anonymous"],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             text=True, encoding="utf-8")
         out, _ = proc.communicate("\n".join(json.dumps(m, ensure_ascii=False) for m in msgs) + "\n",
