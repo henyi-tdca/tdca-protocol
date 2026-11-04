@@ -137,6 +137,8 @@ class BridgeServer:
 
         # 越界（A7）：实参触及卡声明的场景限制/需审批档 ⟹ 降级 SBX-SUSPENDED + 熔断 NCA
         ns = card.get("ns_types", {})
+        if not isinstance(ns, dict):
+            ns = {}  # MCPDIAG-001 批1：非对象视同空对象（无声明边界→不越界）
         text = json.dumps(args, ensure_ascii=False)
         crossed = [str(x) for k in ("scene_limited", "approval_required")
                    for x in ns.get(k, []) if str(x) and str(x) in text]

@@ -162,6 +162,8 @@ def judge_operator_coverage(card: dict) -> tuple[bool, str]:
     if not isinstance(ops, list):
         return False, "forbidden_operators 须为列表"
     ns = card.get("ns_types", {})
+    if not isinstance(ns, dict):
+        ns = {}  # MCPDIAG-001 批1：非对象视同空对象（fail-closed 语义不变）
     covered = set()
     for k in _NS_TYPE_KEYS:
         covered |= {str(x) for x in ns.get(k, [])}
@@ -180,6 +182,8 @@ def judge_absolute_negative_space(card: dict, arg_text: str,
          → 触碰绝对负空间（运行时侧，由调用方转 SBX-BANNED）。
     """
     ns = card.get("ns_types", {})
+    if not isinstance(ns, dict):
+        ns = {}  # MCPDIAG-001 批1：非对象视同空对象（fail-closed 语义不变）
     bad = [str(x) for x in ns.get("absolute", [])
            if _EXEMPTION_RE.search(str(x))]
     if bad:
