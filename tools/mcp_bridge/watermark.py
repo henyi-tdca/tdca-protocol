@@ -29,11 +29,14 @@ class Watermark:
     def stamp(self, caller: str, tool: str, arguments: dict,
               output: str, rejected: bool = False,
               space_id: str = "SBX", status: str = "SBX-ACTIVE",
-              extra: dict | None = None) -> dict:
+              extra: dict | None = None,
+              recognition: dict | None = None) -> dict:
         # TRISPACE-001 A4：每件必带 space_id 与状态位（⛔由件名/目录推断，由调用方显式传入）；
         # A8：跨段引用走 chain_ref；A5：SBX/PCM 面以 Post-State.Path 逻辑前缀分卷。
         # INTERFACE-001：extra 为 API 面扩展字段（ledger/authz_ref/Source/operation 等），
         # 缺省 None 行为与批2逐字节一致（纯追加参数，既有调用零影响）。
+        # MCPDIAG-002 批2：recognition 为认定面扩展（agent_card_fingerprint 顶层字段
+        # ＋Audit-Trail 认定步），缺省 None 时成件与批2逐字节一致（纯追加，零影响）。
         from .trispace import CHAIN_REF
         prev = self._prev_hash()
         in_digest = hashlib.sha256(
@@ -65,6 +68,11 @@ class Watermark:
             "payload_ref": f"sha256:{out_hash}",
             "data_provenance": "simulated",
         }
+        if recognition:
+            doc["agent_card_fingerprint"] = recognition["agent_card_fingerprint"]
+            step2 = dict(recognition["step"])
+            step2.setdefault("Time", now)
+            doc["Audit-Trail"].append(step2)
         if extra:
             doc.update(extra)
         (self.dir / f"{nca_id}.yaml").write_text(

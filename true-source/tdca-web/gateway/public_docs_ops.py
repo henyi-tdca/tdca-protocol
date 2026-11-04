@@ -158,6 +158,9 @@ _PUBLIC_DOCS = {
     "TDCA-MONOGRAPH-AGENT-001-智能体协作范式跃迁-对外净版（零星号禁符内部编号·与内部稿同源）.md",
     "TDCA-MONOGRAPH-COP-002-思维协议的运用-对外净版（零星号禁符内部编号·与内部稿同源）.md",
     "TDCA-REPORT-U-RUN-FINAL-002-效用线注入实验报告-对外净版（零星号禁符内部编号·与内部稿同源）.md",
+    # L1SI196-PAPER-SITE-001 §二（欠账补齐：站上 11-05 已在架两件回写入册，使仓站同源；16→18；⛔视为扩面）：
+    "TDCA-TOPIC-AGENT-CREATION-001-智能体创建论专题报告-V1.2-PUBLIC.md",
+    "TDCA-TOPIC-PARADIGM-001-主流智能体构建范式六分法-V1.2-PUBLIC.md",
     ),
     # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
     # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）
