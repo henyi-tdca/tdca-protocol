@@ -137,6 +137,8 @@ class BridgeServer:
 
         # 越界（A7）：实参触及卡声明的场景限制/需审批档 ⟹ 降级 SBX-SUSPENDED + 熔断 NCA
         ns = card.get("ns_types", {})
+        if not isinstance(ns, dict):
+            ns = {}  # MCPDIAG-001 批1：非对象视同空对象（无声明边界→不越界）
         text = json.dumps(args, ensure_ascii=False)
         crossed = [str(x) for k in ("scene_limited", "approval_required")
                    for x in ns.get(k, []) if str(x) and str(x) in text]
@@ -158,7 +160,8 @@ class BridgeServer:
         self.state.admit_sbx(fp, cert)
         out = f"[SIMULATED] echo: {args.get('text', '')}"
         nca = self.wm.stamp(self.caller, "tdca:echo", args, out,
-                            space_id=trispace.SPACE_SBX, status=trispace.ST_SBX_ACTIVE)
+                            space_id=trispace.SPACE_SBX, status=trispace.ST_SBX_ACTIVE,
+                            recognition=trispace.recognition_bundle(fp, j))
         self.state.data["agents"][fp]["writes"] += 1
         self.state.save()
         return self._ok(rid, {"content": [{"type": "text", "text":
