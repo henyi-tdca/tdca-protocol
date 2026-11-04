@@ -158,6 +158,8 @@ class OfficialInvokeService:
 
         # ⑪ 越界：触及声明边界 ⟹ SBX-SUSPENDED + 熔断件（限期重整）
         ns = card.get("ns_types", {})
+        if not isinstance(ns, dict):
+            ns = {}  # MCPDIAG-001/002：非对象视同空对象（无声明边界→不越界）
         text = json.dumps(args, ensure_ascii=False)
         crossed = [str(x) for k in ("scene_limited", "approval_required")
                    for x in ns.get(k, []) if str(x) and str(x) in text]
@@ -188,7 +190,8 @@ class OfficialInvokeService:
         out = json.dumps({"operation": operation, "echo": args}, ensure_ascii=False)
         nca = self.wm.stamp("anonymous", "official:invoke", args, out,
                             space_id=trispace.SPACE_SBX, status=trispace.ST_SBX_ACTIVE,
-                            extra=extra)
+                            extra=extra,
+                            recognition=trispace.recognition_bundle(fp, j))
         resp = {"result": {"ack": operation, "echo": args},
                 "nca_id": nca["NCA-ID"], "space_id": trispace.SPACE_SBX,
                 "ledger": ledger, "billing": {"status": "pending-declaration"}}
