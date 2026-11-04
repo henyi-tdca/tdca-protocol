@@ -141,7 +141,7 @@ def test_audit_trail_order_and_literals(srv):
                                     "J3_法律负空间绝对化", "J4_最小化合"}
     assert all(v["pass"] is True and isinstance(v["detail"], str)
                for v in s2["Judgments"].values())
-    assert s2["Gate"] == "SBX→PCM PASS"
+    assert s2["Gate"] == "not_evaluated"
     assert s2["RateLimit"] is True
     assert s2["Fuse"] is False
     assert s2["AgentCardFingerprint"] == fp.upper()

@@ -247,7 +247,8 @@ def issue_cert(fp: str, judgments: dict, config: dict) -> dict:
 def recognition_bundle(fp: str, judgments: dict) -> dict:
     """MCPDIAG-002 批2：认定面——新证两字段（卡指纹顶层字段＋Audit-Trail 认定步）。
 
-    仅在四判全过、CERT 已出的成功路调用（此时三闸已定：Gate=PASS、
+    仅在四判全过、CERT 已出的成功路调用（此时三闸已定：Gate=not_evaluated
+    （系统从未求值之常量，GATE-001 改标——真求值另案）、
     RateLimit=allow、Fuse=未命中）。指纹为 16 位大写十六进制，独立成字段
     （⛔唯一活在证书号里）。旧证一字不回填，缺字段读取不判缺（P2-3）。"""
     fp16 = fp.upper()[:16]
@@ -255,7 +256,7 @@ def recognition_bundle(fp: str, judgments: dict) -> dict:
             "step": {"Step": "认定: 四判+闸门",
                      "Judgments": {k: {"pass": v["pass"], "detail": v["detail"]}
                                    for k, v in judgments["judgments"].items()},
-                     "Gate": "SBX→PCM PASS",
+                     "Gate": "not_evaluated",
                      "RateLimit": True,
                      "Fuse": False,
                      "AgentCardFingerprint": fp16}}
