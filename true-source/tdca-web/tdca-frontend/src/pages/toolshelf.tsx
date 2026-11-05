@@ -215,6 +215,22 @@ const PUBLIC_TOOLS: PublicTool[] = [
     sha256: 'b318a3a827e5d31782c139eaabeea5409d8c76a770d0948bf51bfe615a2b9401',
     license: 'Apache-2.0（各件头部标注为准）',
   },
+  // L1SI198 TOOLS5-MERGE-001 skill 包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: '技能包（tdca-skills）',
+    use: '在册对外 5 件技能定义（SKILL.md）：计量池／存证标准化／编排编译／制度编译／设备池接入。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-skills-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-skills',
+    deps: 'Markdown 文本（零依赖）；运行时工具本体须配协议仓公开 tools/',
+    pkg: 'tdca-skills-v1.0.zip',
+    sha256_16: 'b0e97fedd95f0acf',
+    sha256: 'b0e97fedd95f0acf5fecd4d1bae54a2de7ac9e5d45441446551fc56bedd59c0e',
+    license: '随仓公开区（各件头部标注为准）',
+  },
 ]
 const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
   ok: { label: '可用', badge: 'bg-emerald-600 text-white' },
