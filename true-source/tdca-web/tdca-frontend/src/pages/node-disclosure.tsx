@@ -5,6 +5,8 @@
 //   rule_digest 16 位大写／rule_ref／effective_at ISO 8601 +08）＋簿字段（contract nd/1.0／
 //   record_no／recorded_at／supersedes／status）；只登记不审批；只增不改；撤回置 WITHDRAWN ⛔ 删；
 //   三式查（node_id／rule_type／effective_at）只读；形状不合 fail-closed；⛔ 全文入库 ⛔ 内部编号形态
+// ENUMIDX-001 令 A：rule_type 查询由自由精确匹配收敛为下拉枚举（三值，照令面）；
+//   形状闸兜底保留不撤，并补 rule_type 枚举校验（双层）；禁自增删枚举值
 // =============================================================================
 import { useMemo, useState } from 'react'
 import { PageShell } from './PageShell'
@@ -28,6 +30,15 @@ interface LedgerFile {
 }
 
 const LEDGER = ledger as LedgerFile
+// ENUMIDX-001 令 A：rule_type 枚举三值（照令面，禁自增删）
+const RULE_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: 'negative_space', label: '负空间判据' },
+  { value: 'sandbox_exit', label: '沙盒出盒条件' },
+  { value: 'positive_space_internal', label: '正空间内部制度' },
+]
+const RULE_TYPE_LABEL: Record<string, string> = Object.fromEntries(
+  RULE_TYPE_OPTIONS.map((o) => [o.value, o.label]),
+)
 const STATUS_LABEL: Record<LedgerRecord['status'], string> = {
   ACTIVE: '现行有效',
   SUPERSEDED: '已被替代',
@@ -51,6 +62,10 @@ export function validateShape(file: LedgerFile): string | null {
       return `effective_at 须 ISO 8601（+08）（record_no=${r.record_no}）`
     }
     if (!['ACTIVE', 'SUPERSEDED', 'WITHDRAWN'].includes(r.status)) return `status 枚举不合（record_no=${r.record_no}）`
+    // 枚举校验置后（双层保留）：digest/status 报错序与在册旧断言一致（pz-private-zone fail-closed 用例），枚举闸仍在，仅序后移
+    if (!RULE_TYPE_OPTIONS.some((o) => o.value === r.rule_type)) {
+      return `rule_type 枚举不合（record_no=${r.record_no}）`
+    }
     if (r.supersedes !== null && typeof r.supersedes !== 'string') return 'supersedes 非串非空'
   }
   return null
@@ -134,14 +149,21 @@ export function NodeDisclosurePage() {
               </div>
               <div>
                 <label className="mb-1 block text-xs text-gray-500" htmlFor="pz-f-type">按规则类型查</label>
-                <input
+                {/* ENUMIDX-001 令 A：下拉枚举（三值）替代自由精确匹配；形状闸兜底仍在 */}
+                <select
                   id="pz-f-type"
                   data-testid="disclosure-q-type"
                   value={type}
-                  onChange={(e) => setType(e.target.value.trim())}
-                  placeholder="精确匹配"
+                  onChange={(e) => setType(e.target.value)}
                   className="min-w-[180px] rounded-md border border-gray-300 px-2.5 py-1.5 text-[13px]"
-                />
+                >
+                  <option value="">全部类型</option>
+                  {RULE_TYPE_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}（{o.value}）
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="mb-1 block text-xs text-gray-500" htmlFor="pz-f-date">按生效日查</label>
@@ -194,7 +216,7 @@ export function NodeDisclosurePage() {
                       <tr key={r.record_no} data-testid={`disclosure-record-${r.record_no}`} className="border-b border-gray-100 last:border-0">
                         <td className="px-3 py-2.5 font-medium text-gray-900">{r.record_no}</td>
                         <td className="px-3 py-2.5 text-gray-700">{r.node_id}</td>
-                        <td className="px-3 py-2.5 text-gray-700">{r.rule_type}</td>
+                        <td className="px-3 py-2.5 text-gray-700">{RULE_TYPE_LABEL[r.rule_type] ?? r.rule_type}（{r.rule_type}）</td>
                         <td className="px-3 py-2.5 font-mono text-xs text-gray-700">{r.rule_digest}</td>
                         <td className="px-3 py-2.5 text-gray-700">{r.rule_ref}</td>
                         <td className="px-3 py-2.5 text-gray-700">{r.effective_at}</td>
