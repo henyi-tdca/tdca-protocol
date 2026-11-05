@@ -167,6 +167,22 @@ const PUBLIC_TOOLS: PublicTool[] = [
     sha256: '5afc6a786257ed711ebb08a89922f2cb9eed3cc9852a4a8a61e76b4b4af9df3f',
     license: 'Apache-2.0',
   },
+  // L1SI198 TOOLS5-PKG-001 模板包（草稿用途句：卡面用途句⛔自拟，定稿待本侧回呈后替换）
+  {
+    name: '表单等模板（tdca-templates）',
+    use: '公开区模板 21 件归并一包：智能合约／授权件（冻结四件）／六要素声明／研发治理记录 12 份。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-templates-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-templates',
+    deps: '纯文本 Markdown／YAML（零依赖）；自测仅标准库',
+    pkg: 'tdca-templates-v1.0.zip',
+    sha256_16: '7c9b521ec4446a3a',
+    sha256: '7c9b521ec4446a3a6c64ede56f4a68e3d611761c57fcedabf51e5e34aba08448',
+    license: 'Apache-2.0（各件头部标注为准）',
+  },
 ]
 const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
   ok: { label: '可用', badge: 'bg-emerald-600 text-white' },
