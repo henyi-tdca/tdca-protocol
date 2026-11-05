@@ -31,6 +31,17 @@ function ToolManualSection() {
         人读版供人类通道，机读版供智能体通道（下载即判用途／能力／边界）。
       </p>
       <p className="mb-2 text-xs text-gray-600">
+        速查页（九包各一节）<strong className="text-gray-700">V1.0-FROZEN</strong> · 生效于{' '}
+        <strong className="text-gray-700">2026-11-05</strong>：
+        <a
+          className="ml-1 text-blue-700 underline hover:bg-blue-50"
+          href="/downloads/tdca-man-tools-quickref-v1.0.md"
+        >
+          tdca-man-tools-quickref-v1.0.md
+        </a>
+        （7,940 B · sha256 前 16 位 D10A4B6D2896B9C4）
+      </p>
+      <p className="mb-2 text-xs text-gray-600">
         下载：
         <a className="ml-1 text-blue-700 underline hover:bg-blue-50" href="/downloads/tdca-man-tools-v1.0.md">
           人读版 tdca-man-tools-v1.0.md
