@@ -8,7 +8,7 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { CurationPoolPage } from '@/pages/curation'
-import { NodeDisclosurePage } from '@/pages/node-disclosure'
+import { NodeDisclosurePage, validateShape } from '@/pages/node-disclosure'
 import pool from '@/data/curation-pool.json'
 import ledger from '@/data/node-rule-ledger.json'
 
@@ -82,6 +82,28 @@ describe('节点规则披露登记簿（块 B）', () => {
     expect(screen.getByTestId('disclosure-q-node')).toBeTruthy()
     expect(screen.getByTestId('disclosure-q-type')).toBeTruthy()
     expect(screen.getByTestId('disclosure-q-date')).toBeTruthy()
+  })
+
+  // ENUMIDX-001 令 A：rule_type 收敛为下拉枚举（三值），形状闸兜底保留
+  it('rule_type 查询为下拉枚举：全部＋三值，⛔ 自由文本输入', () => {
+    render(<MemoryRouter><NodeDisclosurePage /></MemoryRouter>)
+    const sel = screen.getByTestId('disclosure-q-type') as HTMLSelectElement
+    expect(sel.tagName).toBe('SELECT')
+    const values = [...sel.options].map((o) => o.value)
+    expect(values).toEqual(['', 'negative_space', 'sandbox_exit', 'positive_space_internal'])
+    // 形状闸兜底仍在：contract 不合即整簿不渲染
+    const bad = validateShape({ contract: 'nd/0.9', records: [] })
+    expect(bad).toContain('contract')
+    // rule_type 枚举校验（双层兜底）
+    const badType = validateShape({
+      contract: 'nd/1.0',
+      records: [{
+        record_no: 'R-1', recorded_at: '2026-11-05T00:00:00+08:00', node_id: 'n1',
+        rule_type: 'unknown_kind', rule_digest: '0123456789ABCDEF', rule_ref: 'ref',
+        effective_at: '2026-11-05T00:00:00+08:00', supersedes: null, status: 'ACTIVE',
+      }],
+    })
+    expect(badType).toContain('rule_type 枚举不合')
   })
 })
 
