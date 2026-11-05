@@ -1,0 +1,7 @@
+{
+  "note": "封块体检已知项（⛔ 静默消差：仍打印，仅不计入 DIFF）",
+  "dup": [["TDCA-NCA-BLOCK-20261022-002","TDCA-NCA-BLOCK-20261022-003"]],
+  "dup_reason": "002/003 同 prev 同 root 同区间，height 2 空跳；照 GSEQ-7131 取甲：具名在案、链不动、⛔ 删块",
+  "gap_allow": 0,
+  "updated": "2026-11-05"
+}

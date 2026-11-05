@@ -6,8 +6,62 @@
 //   ＋ AMEND-3（工具不收费·协议层免费＋资产配置收费同源）
 //   ＋ B5-AMEND-1（调用计价 0.01 元/次·未通支付渠道前暂不开放调用→展示＋未开放态，⛔ 不做支付集成）
 // 呈现: 同区并陈 —— 工具在上 ‧ 产物在下
-// =============================================================================
+// L1SI197 MANUPLOAD-001：官方工具使用手册上站（V1.0-FROZEN 生效 2026-11-05，
+// 人读＋机读双通道；人读版站内可读可下，机读版 /downloads/ 直链供智能体直取）。
+// ---------------------------------------------------------------------------
+import { useEffect, useState } from 'react'
 import { PageShell } from './PageShell'
+
+/** 官方工具使用手册区（MANUPLOAD-001）：人读版站内可读／可下＋机读版直链 */
+function ToolManualSection() {
+  const [md, setMd] = useState<string | null>(null)
+  const [loadErr, setLoadErr] = useState('')
+  useEffect(() => {
+    fetch('/downloads/tdca-man-tools-v1.0.md')
+      .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
+      .then(setMd)
+      .catch((e: unknown) => setLoadErr(`手册载入失败：${e instanceof Error ? e.message : String(e)}`))
+  }, [])
+  return (
+    <section data-testid="official-tool-manual">
+      <h3 className="mb-2 text-sm font-semibold text-gray-900">官方工具使用手册</h3>
+      <p className="mb-2 text-xs text-gray-500">
+        《TDCA 官方工具使用手册》<strong className="text-gray-700">V1.0-FROZEN</strong> 生效于{' '}
+        <strong className="text-gray-700">2026-11-05</strong>：拿到／验真／跑法／排错，及对有约束力的边界六条；
+        人读版供人类通道，机读版供智能体通道（下载即判用途／能力／边界）。
+      </p>
+      <p className="mb-2 text-xs text-gray-600">
+        速查页（九包各一节）<strong className="text-gray-700">V1.0-FROZEN</strong> · 生效于{' '}
+        <strong className="text-gray-700">2026-11-05</strong>：
+        <a
+          className="ml-1 text-blue-700 underline hover:bg-blue-50"
+          href="/downloads/tdca-man-tools-quickref-v1.0.md"
+        >
+          tdca-man-tools-quickref-v1.0.md
+        </a>
+        （7,940 B · sha256 前 16 位 D10A4B6D2896B9C4）
+      </p>
+      <p className="mb-2 text-xs text-gray-600">
+        下载：
+        <a className="ml-1 text-blue-700 underline hover:bg-blue-50" href="/downloads/tdca-man-tools-v1.0.md">
+          人读版 tdca-man-tools-v1.0.md
+        </a>
+        （8,331 B · sha256 前 16 位 693BCE15C134F41A）｜
+        <a className="ml-1 text-blue-700 underline hover:bg-blue-50" href="/downloads/tdca-man-tools-v1.0.yaml">
+          机读版 tdca-man-tools-v1.0.yaml
+        </a>
+        （9,480 B · 812CF890C448D8D2）
+      </p>
+      <details className="rounded-lg border border-gray-200 bg-white p-3">
+        <summary className="cursor-pointer text-xs font-medium text-gray-700">人读版全文（站内可读）</summary>
+        {loadErr && <p className="mt-2 text-xs text-red-600">{loadErr}</p>}
+        {md !== null && (
+          <pre data-testid="tool-manual-body" className="mt-2 max-h-[480px] overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed text-gray-600">{md}</pre>
+        )}
+      </details>
+    </section>
+  )
+}
 
 /** 官方工具（照 AMEND-2 逐字清单；官方开发·官方智能体与用户皆可用·免费） */
 const OFFICIAL_TOOLS = [
@@ -59,6 +113,9 @@ export function OfficialAssetsPage() {
           </div>
           <p className="mt-2 text-xs text-gray-400">工具上架与取用入口：工具货架（/toolshelf）。清单非穷举，同类官方开发之工具皆入。</p>
         </section>
+
+        {/* ── 官方工具使用手册（MANUPLOAD-001）── */}
+        <ToolManualSection />
 
         {/* ── 产物在下 ── */}
         <section data-testid="official-products">

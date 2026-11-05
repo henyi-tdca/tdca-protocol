@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+# 同源派生校验 gate 例外表（TDCA-HANDOFF-EXEC-L1SI196-SAMESOURCE-001 · C-8）
+#
+# 逐行格式（一行一件，TAB 分隔四字段，⛔ 不用 YAML 解析器）：
+#   family <TAB> name <TAB> reason <TAB> expires(YYYY-MM-DD)
+#
+# 规则（令面写死）：
+#   - 例外须「本侧裁」后入表，脚本绝不自加；
+#   - 到期日先于当日 = 过期，过期例外不再抵扣，差照报；
+#   - 初始为空表（本文件只留注释）。
+#
+# 示例（仅为格式示范，⛔ 不是生效条目——生效条目不得带 # 前缀）：
+#   # papers	TDCA-XXX-示例.md	候部署令	2026-12-31
