@@ -1,0 +1,18 @@
+{
+  "parameters": [
+    {
+      "name": "a",
+      "min": -5.0,
+      "max": 5.0,
+      "unit": "u",
+      "initial": 0.0
+    },
+    {
+      "name": "b",
+      "min": -5.0,
+      "max": 5.0,
+      "unit": "u/x",
+      "initial": 1.0
+    }
+  ]
+}
