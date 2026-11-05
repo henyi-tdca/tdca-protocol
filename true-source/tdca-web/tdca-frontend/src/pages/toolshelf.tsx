@@ -20,6 +20,11 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 // A-1/A-6 源缺口不做卡（回报 -089 具名停报）。
 // L1SI197 MERGEUP-001：A-1 治理七件＋A-6 法务智能体两包上卡（回报 -094/-095 出包毕），
 // 与四卡同式；A-1 卡 deps 显标「依赖 PyYAML，非零依赖」（令面硬要求）。
+// L1SI197 MBUP-001：信箱协作（MAILBOX-COLLAB）独立产品线一卡（回报 -097 三包出包毕），
+// ⛔ 与上列六卡混列——独立成区；卡内三分下载（spec／refimpl／bundle，⛔ 合成一 zip）；
+// 卡面三标：零依赖（三包皆纯标准库，venv 无 PyYAML 实证）／协议附条件生效
+// （条例 V1.0-FROZEN 乙案，灰度补录条件未竟前不视为完全生效）／半自动档（全自动 ⛔ 上线）。
+// spec 条例四件之在册编号属已裁保留（核证单在册），其余件六模式复扫零命中。
 // ---------------------------------------------------------------------------
 type ToolStatus = 'ok' | 'dev' | 'off'
 type ToolNature = 'real' | 'simulated' | 'synthetic'
@@ -217,6 +222,83 @@ function PublicToolCards() {
   )
 }
 
+/** 信箱协作产品线（MAILBOX-COLLAB）三包：卡内三分下载，独立成区（MBUP-001） */
+interface MailboxPkg {
+  pkg: string
+  bytes: number
+  sha256_16: string
+  sha256: string
+  note: string
+}
+const MAILBOX_PKGS: MailboxPkg[] = [
+  {
+    pkg: 'tdca-mailbox-spec-v1.0.zip',
+    bytes: 25662,
+    sha256_16: '3E7677933BDD75A5',
+    sha256: '3e7677933bdd75a5d35433d6576842617ecb90818078fc6edc842e3c8774d9a1',
+    note: '协议条例 V1.0-FROZEN（人读版＋机读版）＋附件A（全部条款并入）＋五夹目录约定／回报首行七段／状态机图',
+  },
+  {
+    pkg: 'tdca-mailbox-refimpl-v1.0.zip',
+    bytes: 19630,
+    sha256_16: 'B0FE22EB52FF2DBC',
+    sha256: 'b0fe22eb52ff2dbcaa20f8dbfaf89daeae0d9077752a2dbf44ac7e6c93d0dea0',
+    note: '参考实现五件（台账／扫描／归位／投放／断言集）＋JSON→YAML 发射器，默认信箱根取脚本同级 mailbox/，可 --mailbox-root 覆盖',
+  },
+  {
+    pkg: 'tdca-mailbox-bundle-v1.0.zip',
+    bytes: 7383,
+    sha256_16: '834DA8BB322D6C50',
+    sha256: '834da8bb322d6c50c00de3d55750f7e3ad82ffd1de6b62dadc19cde38441e865',
+    note: '一键起盘（建五夹＋写样例＋自测＋打印态分布）＋脱敏样例台账 ledger.sample.json',
+  },
+]
+
+/** 信箱协作独立卡区：⛔ 与公开货架六卡混列 */
+function MailboxCollabSection() {
+  return (
+    <section data-testid="toolshelf-mailbox" aria-label="信箱协作产品线">
+      <h2 className="mt-6 text-base font-semibold text-gray-900">信箱协作（MAILBOX-COLLAB）</h2>
+      <div className="mt-2 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+        <div data-testid="tool-card-mailbox" className="rounded-xl border border-indigo-200 bg-white p-4">
+          <h3 className="text-sm font-semibold text-gray-900">信箱协作协议与工具链（tdca-mailbox）</h3>
+          <p className="mt-1 text-xs leading-relaxed text-gray-600">
+            人机协作信箱协议（五夹目录／回报首行七段／件态状态机）＋纯标准库参考实现＋一键起盘；
+            执行侧与智库之间件流 mailbox-collab 的产品化三包。
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+            <span className="rounded bg-emerald-100 px-1.5 py-px font-medium text-emerald-700">零依赖（纯标准库）</span>
+            <span className="rounded bg-amber-100 px-1.5 py-px font-medium text-amber-700">协议附条件生效</span>
+            <span className="rounded bg-sky-100 px-1.5 py-px font-medium text-sky-700">半自动档</span>
+            <span className="rounded bg-amber-600 px-1.5 py-px font-medium text-white">在建</span>
+          </div>
+          <p className="mt-2 text-[11px] leading-relaxed text-gray-500">
+            附条件生效：条例 V1.0-FROZEN（乙案）须于灰度门补录条件成就后方完全生效，此前以在册条件为准；
+            半自动档：全自动档 ⛔ 上线。三包皆经干净 venv（不装 PyYAML）四路冒烟实证零依赖。
+          </p>
+          <dl className="mt-2 space-y-1.5 text-[11px] leading-relaxed text-gray-500">
+            {MAILBOX_PKGS.map((p) => (
+              <div key={p.pkg} className="rounded-md border border-gray-100 p-1.5">
+                <div>
+                  <dt className="inline text-gray-400">下载：</dt>
+                  <dd className="inline">
+                    <a className="text-blue-700 underline hover:bg-blue-50" href={`/downloads/${p.pkg}`}>{p.pkg}</a>
+                    （{p.bytes} B）
+                  </dd>
+                </div>
+                <div><dt className="inline text-gray-400">sha256：</dt><dd className="inline" title={p.sha256}>{p.sha256_16}（前 16 位）</dd></div>
+                <div><dt className="inline text-gray-400">许可：</dt><dd className="inline">Apache-2.0</dd></div>
+                <div><dt className="inline text-gray-400">含：</dt><dd className="inline">{p.note}</dd></div>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-2 text-[11px] text-gray-400">上卡 2026-11-05；上架由 operator 提交、创始人核；本区只做呈现与状态位。</p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 interface ToolView {
   tool_id: string
   name: string
@@ -297,6 +379,7 @@ export function ToolshelfPage() {
       permission="登录 DID（上架须 operator）"
       description="站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。">
       <PublicToolCards />
+      <MailboxCollabSection />
       <section data-testid="toolshelf-list">
         <h2>货架</h2>
         <SimulatedBadge nature="simulated" />
