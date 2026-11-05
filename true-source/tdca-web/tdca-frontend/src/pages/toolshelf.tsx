@@ -167,7 +167,7 @@ const PUBLIC_TOOLS: PublicTool[] = [
     sha256: '5afc6a786257ed711ebb08a89922f2cb9eed3cc9852a4a8a61e76b4b4af9df3f',
     license: 'Apache-2.0',
   },
-  // L1SI198 TOOLS5-PKG-001 连接器包（草稿用途句：卡面用途句⛔自拟，定稿待本侧回呈后替换）
+  // L1SI198 TOOLS5-MERGE-001 连接器包（卡面用途句照 §三 定稿，⛔ 改一字）
   {
     name: 'TDCA 连接器（tdca-connector）',
     use: '适配器匹配辅助（合规条款→原理条目 Top-K）＋ COP 语料语义连接器（TF-IDF 加权＋负空间反向降权）。',
