@@ -161,6 +161,10 @@ _PUBLIC_DOCS = {
     # L1SI196-PAPER-SITE-001 §二（欠账补齐：站上 11-05 已在架两件回写入册，使仓站同源；16→18；⛔视为扩面）：
     "TDCA-TOPIC-AGENT-CREATION-001-智能体创建论专题报告-V1.2-PUBLIC.md",
     "TDCA-TOPIC-PARADIGM-001-主流智能体构建范式六分法-V1.2-PUBLIC.md",
+    "TDCA-MONOGRAPH-SANDBOX-001-沙盒正反化合机制.md",
+    "TDCA-MONOGRAPH-DC-001-REV-1-数字人民币智能体协作-修订版.md",
+    "TDCA-TREATISE-026-REV-002-复核修正版.md",
+    "tdca-paper-realtime-001/TDCA-PAPER-REALTIME-001-V1.3-PUBLISH-数模结合实时数据流下快慢系统的制度均衡.md",
     ),
     # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
     # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）

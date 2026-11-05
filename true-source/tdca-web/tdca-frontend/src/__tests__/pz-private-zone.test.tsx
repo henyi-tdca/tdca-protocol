@@ -9,7 +9,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { MeNodePage } from '@/pages/me-node'
-import { NodeDisclosurePage } from '@/pages/node-disclosure'
+import { NodeDisclosurePage, validateShape } from '@/pages/node-disclosure'
 import { PAGE_COMPONENTS, ROUTE_PATHS } from '@/pages/pages'
 
 const BANNED = [/GSEQ-/, /T-/, /COP-/, /A-/, /base_protocol/]
@@ -92,33 +92,47 @@ describe('私域三空间页：披露强制与六项硬核只读', () => {
   })
 })
 
-describe('公域披露页：匿名可查＋版本历史＋筛选', () => {
-  it('匿名标识在，条目含三空间', () => {
+describe('公域披露登记簿：公域可查＋登记约定＋三式查', () => {
+  it('匿名只读标识在，登记约定三硬句齐', () => {
     render(<MemoryRouter><NodeDisclosurePage /></MemoryRouter>)
-    expect(screen.getByTestId('disclosure-header').textContent).toContain('匿名可查 · 无需登录 · 公示才公信')
-    const list = screen.getByTestId('disclosure-list').textContent ?? ''
-    expect(list).toContain('否决动作留痕判据')
-    expect(list).toContain('沙盒出盒门槛（三次演练）')
-    expect(list).toContain('域内知识库分层上架约定（披露节选）')
+    expect(screen.getByTestId('disclosure-header').textContent).toContain('匿名可查 · 只读 · 只登记不审批')
+    const contract = screen.getByTestId('disclosure-contract').textContent ?? ''
+    expect(contract).toContain('披露')
+    expect(contract).toContain('改变规则效力边界')
+    expect(contract).toContain('只登记、不审批')
+    expect(contract).toContain('只增不改')
+    expect(contract).toContain('全文不入本簿')
   })
 
-  it('版本历史默认收起 → 点开可见旧版（含失效原因）', () => {
+  it('空簿如实：无在册记录文案在，无形状不合', () => {
     render(<MemoryRouter><NodeDisclosurePage /></MemoryRouter>)
-    expect(screen.queryByTestId('disclosure-hist-否决动作留痕判据')).toBeNull()
-    fireEvent.click(screen.getByTestId('disclosure-hist-toggle-否决动作留痕判据'))
-    const hist = screen.getByTestId('disclosure-hist-否决动作留痕判据').textContent ?? ''
-    expect(hist).toContain('第 1 版')
-    expect(hist).toContain('已失效')
-    expect(hist).toContain('被第 2 版替代。')
+    expect(screen.queryByTestId('disclosure-shape-error')).toBeNull()
+    expect(screen.getByTestId('disclosure-list').textContent).toContain('登记簿现无在册记录')
   })
 
-  it('按节点／按空间两维筛选生效', () => {
+  it('三式查输入具在（节点／类型／生效日），空簿查询仍如实', () => {
     render(<MemoryRouter><NodeDisclosurePage /></MemoryRouter>)
-    fireEvent.change(screen.getByLabelText('按节点名筛选'), { target: { value: '示例节点·白鹿' } })
-    expect(screen.getByTestId('disclosure-list').textContent).toContain('域内知识库分层上架约定（披露节选）')
-    expect(screen.queryByTestId('disclosure-card-否决动作留痕判据')).toBeNull()
-    fireEvent.change(screen.getByLabelText('按空间筛选'), { target: { value: '负空间' } })
-    expect(screen.getByTestId('disclosure-list').textContent).toContain('当前筛选条件下暂无披露条目')
+    expect(screen.getByTestId('disclosure-q-node')).toBeTruthy()
+    expect(screen.getByTestId('disclosure-q-type')).toBeTruthy()
+    expect(screen.getByTestId('disclosure-q-date')).toBeTruthy()
+    fireEvent.change(screen.getByTestId('disclosure-q-node'), { target: { value: 'node-a' } })
+    expect(screen.getByTestId('disclosure-list').textContent).toContain('登记簿现无在册记录')
+  })
+
+  it('形状闸 fail-closed：digest 非 16 位大写 ⟹ 拒渲染', () => {
+    expect(validateShape({ contract: 'nd/1.0', records: [] })).toBeNull()
+    const bad = {
+      contract: 'nd/1.0',
+      records: [{
+        record_no: 'R-1', recorded_at: '2026-11-05T10:00:00+08:00', node_id: 'n1',
+        rule_type: 't1', rule_digest: 'xyz', rule_ref: 'ref', effective_at: '2026-11-05T00:00:00+08:00',
+        supersedes: null, status: 'ACTIVE' as const,
+      }],
+    }
+    expect(validateShape(bad)).toContain('rule_digest')
+    expect(validateShape({ contract: 'nd/2.0', records: [] })).toContain('contract')
+    const badStatus = { ...bad, records: [{ ...bad.records[0], rule_digest: '0123456789ABCDEF', status: 'OK' as never }] }
+    expect(validateShape(badStatus)).toContain('status')
   })
 })
 
