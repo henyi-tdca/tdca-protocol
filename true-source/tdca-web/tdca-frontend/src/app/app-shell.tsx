@@ -94,6 +94,8 @@ function NavItemLink({ item }: { item: NavItem }) {
 
 export const APP_NAV: NavEntry[] = [
   { kind: 'link', to: '/', label: '首页' },
+  // L1SI197-PUBLIC2-001 块 A：严选池一级栏目（单页；⛔ 详情页 ⛔ sitemap 多层）
+  { kind: 'link', to: '/curation', label: '严选池' },
   {
     kind: 'group',
     group: '了解 TDCA',
