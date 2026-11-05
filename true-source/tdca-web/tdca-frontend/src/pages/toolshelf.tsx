@@ -167,7 +167,7 @@ const PUBLIC_TOOLS: PublicTool[] = [
     sha256: '5afc6a786257ed711ebb08a89922f2cb9eed3cc9852a4a8a61e76b4b4af9df3f',
     license: 'Apache-2.0',
   },
-  // L1SI198 TOOLS5-PKG-001 反函数求解器包（草稿用途句：卡面用途句⛔自拟，定稿待本侧回呈后替换）
+  // L1SI198 TOOLS5-MERGE-001 反函数求解器包（卡面用途句照 §三 定稿，⛔ 改一字）
   {
     name: '反函数求解器（tdca-inverse-solver）',
     use: '给定目标效用反推配置方案：可行域随机采样＋硬约束预筛＋成本最小择优；无解即熔断留痕。',
@@ -179,9 +179,9 @@ const PUBLIC_TOOLS: PublicTool[] = [
     tid: 'tool-card-inverse',
     deps: 'Python≥3.8 标准库（零依赖）',
     pkg: 'tdca-inverse-solver-v1.0.zip',
-    sha256_16: '1dd76d414a5f440a',
-    sha256: '1dd76d414a5f440af07c76f100da84f585bb9642f9432802b3010d22de269a0e',
-    license: '件内标注 TDCA-Internal（出包许可口径请裁）',
+    sha256_16: '2724ab9c7985bd2a',
+    sha256: '2724ab9c7985bd2a94af631a38fbcf3a213445b52363c7bb900d9c9434b2e308',
+    license: 'Apache-2.0',
   },
 ]
 const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
