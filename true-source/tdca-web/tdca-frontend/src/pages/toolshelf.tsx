@@ -18,6 +18,8 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 // 沿用本卡壳（S-3），卡内加行呈现 依赖／下载／sha256／许可 四小字段；
 // 四卡均 status=dev（包已备、货架可见，下载／试算入口待部署后可用）。
 // A-1/A-6 源缺口不做卡（回报 -089 具名停报）。
+// L1SI197 MERGEUP-001：A-1 治理七件＋A-6 法务智能体两包上卡（回报 -094/-095 出包毕），
+// 与四卡同式；A-1 卡 deps 显标「依赖 PyYAML，非零依赖」（令面硬要求）。
 // ---------------------------------------------------------------------------
 type ToolStatus = 'ok' | 'dev' | 'off'
 type ToolNature = 'real' | 'simulated' | 'synthetic'
@@ -124,6 +126,36 @@ const PUBLIC_TOOLS: PublicTool[] = [
     pkg: 'tdca-call-rules-A5-v1.0.zip（下载待部署）',
     sha256_16: 'e8a80d05dc9d6456',
     sha256: 'e8a80d05dc9d6456fd43de3a125a8c228564baca4f109b2dd29b8f1ed06adb53',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '治理工具集（tdca-govtools）',
+    use: '治理侧七件单文件工具：链验／纪律核／信箱台账／日巡检／周深核／运维日报／交付封签。',
+    nature: 'real',
+    status: 'dev',
+    getLabel: '下载（待部署）',
+    getHref: '',
+    date: '上卡 2026-11-05（待部署）',
+    tid: 'tool-card-a1',
+    deps: 'Python≥3.10 标准库＋PyYAML（依赖 PyYAML，非零依赖）',
+    pkg: 'tdca-govtools-A1-v1.0.zip（下载待部署）',
+    sha256_16: 'a1716bf9cd8a71c7',
+    sha256: 'a1716bf9cd8a71c7ff542cf13f44cd7e100f08b560712ea34ea10b504b6542f2',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '法务智能体（tdca-legal-agent）',
+    use: '法学家工作的放大器与一致性校验器：批量初筛／交叉验证／NCA 铸造，不替代法学家。',
+    nature: 'real',
+    status: 'dev',
+    getLabel: '下载（待部署）',
+    getHref: '',
+    date: '上卡 2026-11-05（待部署）',
+    tid: 'tool-card-a6',
+    deps: 'Python≥3.10 标准库（零依赖）',
+    pkg: 'tdca-legal-agent-A6-v1.0.zip（下载待部署）',
+    sha256_16: '5afc6a786257ed71',
+    sha256: '5afc6a786257ed711ebb08a89922f2cb9eed3cc9852a4a8a61e76b4b4af9df3f',
     license: 'Apache-2.0',
   },
 ]
