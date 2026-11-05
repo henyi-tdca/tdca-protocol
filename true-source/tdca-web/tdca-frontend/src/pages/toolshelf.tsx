@@ -179,8 +179,8 @@ const PUBLIC_TOOLS: PublicTool[] = [
     tid: 'tool-card-connector',
     deps: 'Python≥3.10 标准库；连接器本体需 PyYAML（依赖 PyYAML，非零依赖）',
     pkg: 'tdca-connector-v1.0.zip',
-    sha256_16: '2f97cb9281b8a140',
-    sha256: '2f97cb9281b8a14026f5f066921b056a4b21f5edd96bb139f5aba49f55b38a35',
+    sha256_16: '9cd07b1276743d1c',
+    sha256: '9cd07b1276743d1cd97f3df466584eccb56bd4a3a4f9037ebc6b90bc41199828',
     license: 'Apache-2.0',
   },
 ]
