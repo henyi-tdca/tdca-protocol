@@ -56,15 +56,16 @@ export function validateShape(file: LedgerFile): string | null {
     if (!r.record_no || typeof r.record_no !== 'string') return 'record_no 缺失或非串'
     if (!r.node_id || typeof r.node_id !== 'string') return 'node_id 缺失或非串'
     if (!r.rule_type || typeof r.rule_type !== 'string') return 'rule_type 缺失或非串'
-    if (!RULE_TYPE_OPTIONS.some((o) => o.value === r.rule_type)) {
-      return `rule_type 枚举不合（record_no=${r.record_no}）`
-    }
     if (!DIGEST.test(r.rule_digest ?? '')) return `rule_digest 须 16 位大写十六进制（record_no=${r.record_no}）`
     if (!r.rule_ref || typeof r.rule_ref !== 'string') return 'rule_ref 缺失或非串'
     if (!TS.test(r.effective_at ?? '') && !DATE.test(r.effective_at ?? '')) {
       return `effective_at 须 ISO 8601（+08）（record_no=${r.record_no}）`
     }
     if (!['ACTIVE', 'SUPERSEDED', 'WITHDRAWN'].includes(r.status)) return `status 枚举不合（record_no=${r.record_no}）`
+    // 枚举校验置后（双层保留）：digest/status 报错序与在册旧断言一致（pz-private-zone fail-closed 用例），枚举闸仍在，仅序后移
+    if (!RULE_TYPE_OPTIONS.some((o) => o.value === r.rule_type)) {
+      return `rule_type 枚举不合（record_no=${r.record_no}）`
+    }
     if (r.supersedes !== null && typeof r.supersedes !== 'string') return 'supersedes 非串非空'
   }
   return null
