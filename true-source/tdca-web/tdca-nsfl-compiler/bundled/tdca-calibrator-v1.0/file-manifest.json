@@ -1,0 +1,53 @@
+{
+  "package": "tdca-calibrator",
+  "version": "1.0",
+  "license": "Apache-2.0",
+  "self_developed": true,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4169,
+      "sha256": "62397b612939087a6ea9c095c06a493ab7e9043bb0501905228c9c3e21a6029f"
+    },
+    {
+      "path": "calibrator.py",
+      "bytes": 14198,
+      "sha256": "1fcd9c0f6225c25854f4d1adfffcd27e7d8d74ff1e6f0616ddcffe54712374db"
+    },
+    {
+      "path": "samples/criteria.json",
+      "bytes": 72,
+      "sha256": "d7c1c56f1af112ab93355b03e9ad2c32ef573a749cd4f2a5b3aea008bc2788b8"
+    },
+    {
+      "path": "samples/model.txt",
+      "bytes": 9,
+      "sha256": "6ade5a4f4c31c90199bd8246a8b7ad7f4b5fa01fa0373ea1802834e32ea204fb"
+    },
+    {
+      "path": "samples/params.json",
+      "bytes": 261,
+      "sha256": "016cc19105c7fb9ae66d607792dd3862872b08cb1d2223fc71edef145dc7b029"
+    },
+    {
+      "path": "samples/sample-output.json",
+      "bytes": 710,
+      "sha256": "a47e14443d860de2f036f65625873da16626b4e17d0318a58724c4682e978949"
+    },
+    {
+      "path": "samples/samples.json",
+      "bytes": 1153,
+      "sha256": "06b2043c383394ac5145a08bb7bbc023d0a9941b73ec82172d7b3eb17f945300"
+    },
+    {
+      "path": "selftest.py",
+      "bytes": 5757,
+      "sha256": "8fedc3e7ac9cca1d4e2c7d7c5e42b46f3d082ca36102248597457abac52d78fe"
+    }
+  ]
+}
