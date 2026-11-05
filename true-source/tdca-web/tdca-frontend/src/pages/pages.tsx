@@ -65,7 +65,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/me/appeal', title: '申诉', layer: 'L0', dataSource: '—（受理面在建）', permission: '须登录（谁的事谁可见）', description: '惩罚三态申诉受理面：受理通道随制度入站开通，开通前不预置表单与渠道。' },
   // L1SI178-SITE-PRIVATE-ZONE-002（甲案）：私域三空间独立页 /me/node（⛔ 不入公共导航；/me 内挂入口链接）＋公域披露页 /disclosure（匿名可查）
   { path: '/me/node', title: '场景节点管理区（私域三空间）', layer: 'L0', dataSource: '纯前端样例态（页内状态）；零接口调用、零后端写入', permission: '须登录（谁的数据谁可见）', description: '私域三空间：负空间／沙盒出盒／正空间；不披露不可启用；六项硬核只读锁定；示例节点与条目均为虚构样例。' },
-  { path: '/disclosure', title: '规则披露公示 · 按节点查阅', layer: 'L0', dataSource: '纯前端样例态（虚构示例条目）；零接口调用', permission: '公开（匿名可读）', description: '私域条目的对外披露面：匿名可查、无需登录，含版本历史；公示才公信。' },
+  // L1SI197-PUBLIC2-001 块 B：节点规则披露登记簿（私域期样例面平移公域可查；只登记不审批·三式查·形状闸 fail-closed）
+  { path: '/disclosure', title: '节点规则披露登记簿 · 公域可查', layer: 'L0', dataSource: '披露登记簿（仓内单源，只读渲染）', permission: '公开（匿名可读 · 只读）', description: '节点规则对外披露面：只登记、不审批；披露不改变效力边界，未披露不构成对外依据；三式查阅（节点／类型／生效日）。' },
   // B5 新增批项一：负空间栏（公域新增，讲「什么不能做」——只讲原则与类别，⛔ 不列禁项词表）
   { path: '/negativespace', title: '负空间 · 什么不能做', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: 'TDCA 三空间之一：负空间管「什么不能做」——原则与类别级说明，拒绝清单的公众说明面。' },
   // B5 新增批项二：官方资产区（公域新增——工具在上（免费）‧ 产物在下（付费橱窗）；调用未开放态，⛔ 零支付集成）
@@ -106,6 +107,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/use/upload', title: '交素材（上传一件）', layer: 'L0', dataSource: 'POST /api/v1/use/upload ＋ GET /api/v1/use/upload/{id}', permission: '登录 DID', description: '登录后交一件素材：选择文件上传，系统回收件编号与哈希；受理清单内收、清单外给人话理由；同一人传同一文件只留一条（幂等）。' },
   // L1SI182-USE-U2-001 U-2 代办机器人（五步：收件→只问缺项→草稿→本人在场签→出号；复用上传与权属登记端点，草稿仅本地态不落库）
   { path: '/use/agent', title: '代办登记（机器人只跑腿）', layer: 'L0', dataSource: 'GET /api/v1/use/upload/{id} ＋ POST /api/v1/ownership/register（OR- 号沿用）', permission: '登录 DID（须本人确认，未确认不出号）', description: '上传成功后接着办登记：机器人只问缺项、出草稿（不落库不出号）；本人看过草稿、显式点确认才出登记号；机器人不代签、不代判、不对外承诺。' },
+  // L1SI197-PUBLIC2-001 块 A：严选池专栏（一级栏目单页；只出三项＋逐项六字段；清单唯一源；⛔ 详情页 ⛔ sitemap 多层）
+  { path: '/curation', title: '严选池 · 精选项目一栏', layer: 'L0', dataSource: '严选池清单（本侧供给，逐项照单渲染）', permission: '公开（匿名可读）', description: '严选池：经在册严选流程留池的项目清单，只出汇总数／项目名／用途一句，逐项六字段照单如实呈现，留白如实标注。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -187,6 +190,8 @@ import { LabPage } from './lab'
 // L1SI178-SITE-PRIVATE-ZONE-002（甲案）：私域三空间 /me/node＋公域披露页 /disclosure
 import { MeNodePage } from './me-node'
 import { NodeDisclosurePage } from './node-disclosure'
+// L1SI197-PUBLIC2-001 块 A：严选池专栏 /curation（清单照单渲染）
+import { CurationPoolPage } from './curation'
 // NODE-NET-A-001：私域两卡 /me/node/net＋公域四块 /nodes（三处同源 node-net-data.ts）
 import { MeNodeNetPage } from './me-node-net'
 import { NodeNetPage } from './node-net'
@@ -266,6 +271,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/use/agent': UseAgentPage,
   '/channel': ChannelPortalPage,
   '/public-face': PublicFacePage,
+  '/curation': CurationPoolPage,
 }
 
 export function renderPage(meta: PageMeta) {

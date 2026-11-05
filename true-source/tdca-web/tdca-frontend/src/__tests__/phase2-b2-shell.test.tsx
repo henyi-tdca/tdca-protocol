@@ -34,10 +34,11 @@ const PUBLIC_NAV_TEXT = () =>
   ).flat()
 
 describe('导航-甲（L1SI176-NAV-A-001）：九栏两轴顶栏', () => {
-  it('九栏可见且顺序如令 §一（1→9）', () => {
+  it('九栏可见且顺序如令 §一（1→9）；严选池为 PUBLIC2-001 新增一级直链栏（首页后）', () => {
     const tops = APP_NAV.map((e) => (e.kind === 'link' ? e.label : e.group))
     expect(tops).toEqual([
       '首页',
+      '严选池', // L1SI197-PUBLIC2-001 块 A：严选池一级栏目（单页直链）
       '了解 TDCA',
       '合规与沙盒',
       '资产与权利',

@@ -1,0 +1,166 @@
+{
+  "items": [
+    {
+      "name": "modelcontextprotocol/servers",
+      "url": "https://github.com/modelcontextprotocol/servers",
+      "purpose": "MCP 协议官方参考实现库（协议层对齐基准）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "modelcontextprotocol/python-sdk",
+      "url": "https://github.com/modelcontextprotocol/python-sdk",
+      "purpose": "MCP Python 官方 SDK（Python 工具链对接首选）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "modelcontextprotocol/typescript-sdk",
+      "url": "https://github.com/modelcontextprotocol/typescript-sdk",
+      "purpose": "MCP TypeScript 官方 SDK（跨语言与前端侧集成）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "langchain-ai/langchain",
+      "url": "https://github.com/langchain-ai/langchain",
+      "purpose": "Agent 编排事实标准（只当工具不当核，不化合）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "getzep/graphiti",
+      "url": "https://github.com/getzep/graphiti",
+      "purpose": "时序知识图谱记忆层（记忆与归因上下文供给）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "letta-ai/letta",
+      "url": "https://github.com/letta-ai/letta",
+      "purpose": "记忆增强 Agent 运行时（与审计轨迹对齐度高）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "microsoft/semantic-kernel",
+      "url": "https://github.com/microsoft/semantic-kernel",
+      "purpose": "多语言 Agent 编排 SDK（技能与编排挂载位）",
+      "status": "已挂载",
+      "license": null,
+      "first_public": "2026-09-04"
+    },
+    {
+      "name": "punkpeye/awesome-mcp-servers",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "purpose": "MCP 生态索引（生态侦察与发现层参照）",
+      "status": "已签批",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "openai/openai-agents-python",
+      "url": "https://github.com/openai/openai-agents-python",
+      "purpose": "官方多 Agent 框架（Agent 范式参照与互操作对象）",
+      "status": "已签批",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "crewAIInc/crewAI",
+      "url": "https://github.com/crewAIInc/crewAI",
+      "purpose": "多 Agent 协作编排（角色化协作协议叙事对照）",
+      "status": "已签批",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "langflow-ai/langflow",
+      "url": "https://github.com/langflow-ai/langflow",
+      "purpose": "可视化 Agent 与工作流构建（工具生态观察位）",
+      "status": "已签批",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "calcom/cal.diy",
+      "url": "https://github.com/calcom/cal.diy",
+      "purpose": "日程协作基础设施（生态广度位）",
+      "status": "已签批",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "microsoft/autogen",
+      "url": "https://github.com/microsoft/autogen",
+      "purpose": "多 Agent 框架鼻祖（观察期 90 日）",
+      "status": "观察中",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "google/adk-python",
+      "url": "https://github.com/google/adk-python",
+      "purpose": "Google 官方 Agent SDK（官方参照位，观察期 180 日）",
+      "status": "观察中",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "lastmile-ai/mcp-agent",
+      "url": "https://github.com/lastmile-ai/mcp-agent",
+      "purpose": "MCP 与工作流模式 Agent（观察期 90 日）",
+      "status": "观察中",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "OpenHands/OpenHands",
+      "url": "https://github.com/OpenHands/OpenHands",
+      "purpose": "自主开发 Agent（观察期 90 日）",
+      "status": "观察中",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "agent-network-protocol/ANP",
+      "url": "https://github.com/agent-network-protocol/ANP",
+      "purpose": "Agent 通信协议（缺价值结算层之补位论据）",
+      "status": "已签批",
+      "license": "Apache-2.0",
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "larksuite/aamp",
+      "url": "https://github.com/larksuite/aamp",
+      "purpose": "字节官方异步协作协议（异步协作制度化衔接候选）",
+      "status": "已签批",
+      "license": null,
+      "first_public": "2026-09-06"
+    },
+    {
+      "name": "nanoMuse",
+      "url": null,
+      "purpose": "执行端候选（worker 节点，观察期锁版本）",
+      "status": "观察中",
+      "license": "GPL-3.0-or-later",
+      "first_public": "2026-10-22",
+      "note": "arXiv 2610.08699；GPL 边界：独立进程调用、不并入分发件；制度性使用须自托管中继"
+    },
+    {
+      "name": "NVIDIA OpenShell",
+      "url": null,
+      "purpose": "worker 隔离候选（策略即代码，可接形式化线）",
+      "status": "观察中",
+      "license": "Apache-2.0",
+      "first_public": "2026-10-22",
+      "note": "尚未评估，⛔ 视作已选型"
+    }
+  ]
+}
