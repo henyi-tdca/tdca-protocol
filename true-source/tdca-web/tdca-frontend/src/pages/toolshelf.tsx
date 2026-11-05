@@ -199,6 +199,22 @@ const PUBLIC_TOOLS: PublicTool[] = [
     sha256: '2724ab9c7985bd2a94af631a38fbcf3a213445b52363c7bb900d9c9434b2e308',
     license: 'Apache-2.0',
   },
+  // L1SI198 TOOLS5-MERGE-001 模板包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: '表单等模板（tdca-templates）',
+    use: '公开区模板 21 件归并一包：智能合约／授权件（冻结四件）／六要素声明／研发治理记录 12 份。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-templates-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-templates',
+    deps: '纯文本 Markdown／YAML（零依赖）；自测仅标准库',
+    pkg: 'tdca-templates-v1.0.zip',
+    sha256_16: 'b318a3a827e5d317',
+    sha256: 'b318a3a827e5d31782c139eaabeea5409d8c76a770d0948bf51bfe615a2b9401',
+    license: 'Apache-2.0（各件头部标注为准）',
+  },
 ]
 const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
   ok: { label: '可用', badge: 'bg-emerald-600 text-white' },
