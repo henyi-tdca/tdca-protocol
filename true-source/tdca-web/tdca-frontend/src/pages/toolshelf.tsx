@@ -25,6 +25,7 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 // 卡面三标：零依赖（三包皆纯标准库，venv 无 PyYAML 实证）／协议附条件生效
 // （条例 V1.0-FROZEN 乙案，灰度补录条件未竟前不视为完全生效）／半自动档（全自动 ⛔ 上线）。
 // spec 条例四件之在册编号属已裁保留（核证单在册），其余件六模式复扫零命中。
+// L1SI197 MANUPLOAD-001：六卡＋信箱卡各加「使用手册 V1.0-FROZEN」行（链 /official-assets）。
 // ---------------------------------------------------------------------------
 type ToolStatus = 'ok' | 'dev' | 'off'
 type ToolNature = 'real' | 'simulated' | 'synthetic'
@@ -210,6 +211,7 @@ function PublicToolCards() {
                   <div><dt className="inline text-gray-400">下载：</dt><dd className="inline">{t.pkg}</dd></div>
                   <div><dt className="inline text-gray-400">sha256：</dt><dd className="inline" title={t.sha256}>{t.sha256_16}（前 16 位）</dd></div>
                   <div><dt className="inline text-gray-400">许可：</dt><dd className="inline">{t.license}</dd></div>
+                  <div><dt className="inline text-gray-400">手册：</dt><dd className="inline"><Link to="/official-assets" className="text-blue-700 underline hover:bg-blue-50">使用手册 V1.0-FROZEN</Link></dd></div>
                 </dl>
               )}
               <p className="mt-2 text-[11px] text-gray-400">{t.date}</p>
@@ -288,6 +290,7 @@ function MailboxCollabSection() {
                 </div>
                 <div><dt className="inline text-gray-400">sha256：</dt><dd className="inline" title={p.sha256}>{p.sha256_16}（前 16 位）</dd></div>
                 <div><dt className="inline text-gray-400">许可：</dt><dd className="inline">Apache-2.0</dd></div>
+                <div><dt className="inline text-gray-400">手册：</dt><dd className="inline"><Link to="/official-assets" className="text-blue-700 underline hover:bg-blue-50">使用手册 V1.0-FROZEN</Link></dd></div>
                 <div><dt className="inline text-gray-400">含：</dt><dd className="inline">{p.note}</dd></div>
               </div>
             ))}
