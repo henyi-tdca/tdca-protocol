@@ -14,10 +14,31 @@ import { SimulatedBadge } from '@/shared/SimulatedBadge'
 // L1SI177 批3 B块：公开货架呈现（照已过点样三卡三态；条目卡五项：
 // 名称／用途一句／数据性质／获取方式／状态徽标＋日期。只做呈现与状态位，
 // ⛔ 不做自助上架后台——上架由 operator 提交、创始人核）
+// L1SI197 TOOLSHELF-001：A 档四包上卡（A-2/A-3/A-4/A-5，白名单制出包），
+// 沿用本卡壳（S-3），卡内加行呈现 依赖／下载／sha256／许可 四小字段；
+// 四卡均 status=dev（包已备、货架可见，下载／试算入口待部署后可用）。
+// A-1/A-6 源缺口不做卡（回报 -089 具名停报）。
 // ---------------------------------------------------------------------------
 type ToolStatus = 'ok' | 'dev' | 'off'
 type ToolNature = 'real' | 'simulated' | 'synthetic'
-const PUBLIC_TOOLS: { name: string; use: string; nature: ToolNature; status: ToolStatus; getLabel: string; getHref: string; date: string }[] = [
+interface PublicTool {
+  name: string
+  use: string
+  nature: ToolNature
+  status: ToolStatus
+  getLabel: string
+  getHref: string
+  date: string
+  /** 卡壳 testid：缺省沿用 tool-card-<status>（兼容批3 B块断言），新卡各自独立 */
+  tid?: string
+  /** 以下四小字段为 A 档包卡加行呈现（令面六字段之余三项：依赖／下载／sha256／许可） */
+  deps?: string
+  pkg?: string
+  sha256_16?: string
+  sha256?: string
+  license?: string
+}
+const PUBLIC_TOOLS: PublicTool[] = [
   {
     name: '自助验链',
     use: '输入件名与哈希，自助核验公开件在册状态与链上留痕。',
@@ -45,6 +66,66 @@ const PUBLIC_TOOLS: { name: string; use: string; nature: ToolNature; status: Too
     getHref: '',
     date: '下架 2026-10-20',
   },
+  {
+    name: '微交付税收（tdca-microtax）',
+    use: '智能体微交付实时计税与税款预缴托管：T(y_t) 分项税额 → 预缴 → 税后净额分配。',
+    nature: 'simulated',
+    status: 'dev',
+    getLabel: '在线试算（待部署）',
+    getHref: '',
+    date: '上卡 2026-11-05（待部署）',
+    tid: 'tool-card-a2',
+    deps: 'Python≥3.10 标准库＋同货架 tdca-nsfl-compiler（A-3）',
+    pkg: 'tdca-microtax-A2-v1.0.zip（下载待部署）',
+    sha256_16: 'f830375cc327bdbe',
+    sha256: 'f830375cc327bdbea6af3c2968bb0a71c1f7b69d8cc7cb6a68c34555cb272f50',
+    license: 'Apache-2.0',
+  },
+  {
+    name: 'NSFL 编译器（tdca-nsfl-compiler）',
+    use: '负空间约束语言编译器核心：词法／语法／语义＋⊗⊘⊙ 运算符＋schema 校验＋IR。',
+    nature: 'real',
+    status: 'dev',
+    getLabel: '下载（待部署）',
+    getHref: '',
+    date: '上卡 2026-11-05（待部署）',
+    tid: 'tool-card-a3',
+    deps: 'Python≥3.10 标准库',
+    pkg: 'tdca-nsfl-compiler-A3-v1.0.zip（下载待部署）',
+    sha256_16: '333c8bcb12c026cc',
+    sha256: '333c8bcb12c026cc169bd2e64bee1952a6c143a72a0382d6aa5328bda51200af',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '证书工具（tdca-cert-tool）',
+    use: 'TDCA L1 兼容性认证：MCP 连通／准入三态／存证哈希链／NSFL 熔断分级／可审计性。',
+    nature: 'real',
+    status: 'dev',
+    getLabel: '下载（待部署）',
+    getHref: '',
+    date: '上卡 2026-11-05（待部署）',
+    tid: 'tool-card-a4',
+    deps: 'Python≥3.10 标准库',
+    pkg: 'tdca-cert-tool-A4-v1.0.zip（下载待部署）',
+    sha256_16: 'abb847f4cecab262',
+    sha256: 'abb847f4cecab262693da4aac7d752a8648c7965a7f44e533b92f250bd48a610',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '商业调用规则（tdca-call-rules）',
+    use: '商业调用规则引擎：日抛判定／MOU 硬锚定／停机定理／税收计算与调用记录。',
+    nature: 'simulated',
+    status: 'dev',
+    getLabel: '下载（待部署）',
+    getHref: '',
+    date: '上卡 2026-11-05（待部署）',
+    tid: 'tool-card-a5',
+    deps: 'Python≥3.10 标准库',
+    pkg: 'tdca-call-rules-A5-v1.0.zip（下载待部署）',
+    sha256_16: 'e8a80d05dc9d6456',
+    sha256: 'e8a80d05dc9d6456fd43de3a125a8c228564baca4f109b2dd29b8f1ed06adb53',
+    license: 'Apache-2.0',
+  },
 ]
 const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
   ok: { label: '可用', badge: 'bg-emerald-600 text-white' },
@@ -68,7 +149,7 @@ function PublicToolCards() {
           return (
             <div
               key={t.name}
-              data-testid={`tool-card-${t.status}`}
+              data-testid={t.tid ?? `tool-card-${t.status}`}
               className={`rounded-xl border border-gray-200 bg-white p-4 ${t.status === 'off' ? 'opacity-60' : ''}`}
             >
               <h3 className="text-sm font-semibold text-gray-900">{t.name}</h3>
@@ -86,6 +167,14 @@ function PublicToolCards() {
                   <span className="text-gray-400">{t.getLabel}</span>
                 )}
               </div>
+              {t.deps && (
+                <dl className="mt-2 space-y-0.5 text-[11px] leading-relaxed text-gray-500">
+                  <div><dt className="inline text-gray-400">依赖：</dt><dd className="inline">{t.deps}</dd></div>
+                  <div><dt className="inline text-gray-400">下载：</dt><dd className="inline">{t.pkg}</dd></div>
+                  <div><dt className="inline text-gray-400">sha256：</dt><dd className="inline" title={t.sha256}>{t.sha256_16}（前 16 位）</dd></div>
+                  <div><dt className="inline text-gray-400">许可：</dt><dd className="inline">{t.license}</dd></div>
+                </dl>
+              )}
               <p className="mt-2 text-[11px] text-gray-400">{t.date}</p>
             </div>
           )
