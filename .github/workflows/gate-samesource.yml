@@ -23,5 +23,5 @@ jobs:
         with:
           python-version: "3.12"
       - name: 同源派生校验（只报差）
-        run: python tools/ops/samesource_check.py --rev HEAD
+        run: python tools/ops/samesource_check.py --rev HEAD --base-url https://tdca.com.cn --verify-tls
         # 有差时 exit 1 置红（门之本义）；UNKNOWN exit 2 另行辨认

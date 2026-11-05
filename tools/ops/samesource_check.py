@@ -19,7 +19,11 @@
 用法：
   python tools/ops/samesource_check.py [--base-url URL] [--rev REV]
       [--exceptions tools/ops/samesource_exceptions.yaml] [--timeout 15] [--verify-tls]
-"""
+      [--insecure-local]
+
+GATE-001 块 B 默认形态（2026-11-05）：默认档 = 域名 https://tdca.com.cn ＋ TLS 验签开；
+显式调试档 --insecure-local = 裸 IP 47.76.42.139 ＋ 不验签，输出必含 UNVERIFIED-TLS 标记，
+⛔ 禁止入 CI 默认与在册作业单。"""
 import argparse
 import ast
 import datetime
@@ -133,15 +137,25 @@ def fetch_content(base, family, slug, timeout, ctx):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base-url", default="https://47.76.42.139",
-                    help="站机公开面基址（默认 https://47.76.42.139）")
+    ap.add_argument("--base-url", default=None,
+                    help="站机公开面基址（默认档 https://tdca.com.cn；--insecure-local 档 https://47.76.42.139）")
     ap.add_argument("--rev", default="HEAD", help="仓内对比基准 rev（默认 HEAD）")
     ap.add_argument("--exceptions",
                     default="tools/ops/samesource_exceptions.yaml")
     ap.add_argument("--timeout", type=float, default=15.0)
-    ap.add_argument("--verify-tls", action="store_true",
-                    help="强制校验 TLS（默认关：站机证书自签，关校验只取公开只读面）")
+    ap.add_argument("--verify-tls", action="store_true", default=True,
+                    help="校验 TLS（GATE-001 起默认开；--insecure-local 时强制关）")
+    ap.add_argument("--insecure-local", action="store_true",
+                    help="显式调试档：裸 IP 47.76.42.139 ＋ 不验签（输出必含 UNVERIFIED-TLS 标记，⛔ 禁入 CI 默认）")
     args = ap.parse_args()
+
+    # GATE-001 块 B：默认档 = 域名＋验签开；--insecure-local = 裸 IP＋不验签（显式 opt-in）
+    if args.insecure_local:
+        base = args.base_url or "https://47.76.42.139"
+        args.verify_tls = False
+        print("UNVERIFIED-TLS: --insecure-local 显式调试档（裸 IP＋不验签）——⛔ 禁入 CI 默认")
+    else:
+        base = args.base_url or "https://tdca.com.cn"
 
     ctx = ssl.create_default_context() if args.verify_tls \
         else ssl._create_unverified_context()
@@ -167,7 +181,7 @@ def main():
 
         # C-1/C-7：站侧
         try:
-            data = fetch_family(args.base_url, family, args.timeout, ctx)
+            data = fetch_family(base, family, args.timeout, ctx)
         except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as e:
             print(f"UNKNOWN station-side family={family}: {e}")
             station_unreachable = True
@@ -216,7 +230,7 @@ def main():
                 if name not in repo_names:
                     continue  # 站有仓无已由 C-3 报告，不再重复
                 try:
-                    content = fetch_content(args.base_url, family, name,
+                    content = fetch_content(base, family, name,
                                             args.timeout, ctx)
                 except Exception as e:
                     print(f"UNKNOWN content family={family} name={name}: {e}")
@@ -247,7 +261,7 @@ def main():
     # ---------- 输出：人读栏 ----------
     print("=" * 72)
     print(f"{GATE_ID} 同源派生校验 gate（只报差·只读）")
-    print(f"base={args.base_url}  rev={args.rev}  "
+    print(f"base={base}  rev={args.rev}  verify_tls={args.verify_tls}  "
           f"date={datetime.date.today().isoformat()}")
     print("=" * 72)
     for r in results:
@@ -267,7 +281,7 @@ def main():
 
     # ---------- 输出：机器可读栏 ----------
     print("\n--- JSON ---")
-    print(json.dumps({"gate": GATE_ID, "base": args.base_url, "rev": args.rev,
+    print(json.dumps({"gate": GATE_ID, "base": base, "rev": args.rev,
                       "families": results}, ensure_ascii=False, indent=2))
 
     if station_unreachable:
