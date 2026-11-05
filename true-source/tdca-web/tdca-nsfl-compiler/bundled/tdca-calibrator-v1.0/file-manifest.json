@@ -3,6 +3,7 @@
   "version": "1.0",
   "license": "Apache-2.0",
   "self_developed": true,
+  "note": "清单不含自身（本清单列 9 项，目录实 10 件，含本清单文件）",
   "files": [
     {
       "path": "LICENSE",
@@ -11,8 +12,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4169,
-      "sha256": "62397b612939087a6ea9c095c06a493ab7e9043bb0501905228c9c3e21a6029f"
+      "bytes": 4216,
+      "sha256": "99b384a8e4695c7db8674f3613f4b27d9bc1cae1d1342db6beef11734e29ae39"
     },
     {
       "path": "calibrator.py",
@@ -21,28 +22,28 @@
     },
     {
       "path": "samples/criteria.json",
-      "bytes": 72,
-      "sha256": "d7c1c56f1af112ab93355b03e9ad2c32ef573a749cd4f2a5b3aea008bc2788b8"
+      "bytes": 68,
+      "sha256": "671b5d0a0bd05c37ff8c97143fbe9b6ecd4af6d5485d1567d6c73f63de50afd2"
     },
     {
       "path": "samples/model.txt",
-      "bytes": 9,
-      "sha256": "6ade5a4f4c31c90199bd8246a8b7ad7f4b5fa01fa0373ea1802834e32ea204fb"
+      "bytes": 8,
+      "sha256": "763e1ca0ab80b839422a911e6b49d7bbcecca67b335de4d23cecc0ae1249ee33"
     },
     {
       "path": "samples/params.json",
-      "bytes": 261,
-      "sha256": "016cc19105c7fb9ae66d607792dd3862872b08cb1d2223fc71edef145dc7b029"
+      "bytes": 244,
+      "sha256": "45c393e425b0a18993676120bbcb5a64d0cb255ad8f8578ffae01fd3ce991872"
     },
     {
       "path": "samples/sample-output.json",
-      "bytes": 710,
-      "sha256": "a47e14443d860de2f036f65625873da16626b4e17d0318a58724c4682e978949"
+      "bytes": 680,
+      "sha256": "23083ddbb6fcf7e250b8fb8151cd6145ead09bd48136139928caec14004bd817"
     },
     {
       "path": "samples/samples.json",
-      "bytes": 1153,
-      "sha256": "06b2043c383394ac5145a08bb7bbc023d0a9941b73ec82172d7b3eb17f945300"
+      "bytes": 1080,
+      "sha256": "03d7ceba6a9c1d0ac70175b3dc7eabaa2af34838d07b25a2da3176aff6d6349d"
     },
     {
       "path": "selftest.py",
