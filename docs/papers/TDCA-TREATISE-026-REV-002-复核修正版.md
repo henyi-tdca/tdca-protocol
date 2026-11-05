@@ -17,7 +17,7 @@
 
 > 【符号消歧注·V1.2 修订】原稿五维向量写作 S=(A,D,L,C,SC)。证据核查确认：**权威空间自身对 S 存在两套定义并存**——
 > ① 智能体认知状态向量（AUTHORITY-ECONOMICS L1145-1146/L1953 等）：A=感知(perception)、D=距离(distance)、L=层级、C=置信、SC=自认知（NIA-MACM 3.0 认知层核心数据结构，L2344「度量认知成熟度」）；
-> ② 不对称地图生成语境（A-ECON L2385-2390）：A=Attention、C=Communication、SC=Self-Correction。
+> ② 不对称地图生成语境（经济项区间）：A=Attention、C=Communication、SC=Self-Correction。
 > 本稿分量（不对称对齐/数据确权/制度合规/协作可信/场景权重）为第三套，与两套权威定义均不同——**SEMANTIC_DRIFT 判定成立**。按 glossarian 消歧方案，本版**全篇更名「S_协作」（S_collab）**；分量最终定义**交 R1 人类裁决**，并启动 S 术语考古（多义性清理清单，见 TDCA-TERMINOLOGY-REGISTRY 草案）。
 
 ## 一、问题域：为什么传统成交计算失效
