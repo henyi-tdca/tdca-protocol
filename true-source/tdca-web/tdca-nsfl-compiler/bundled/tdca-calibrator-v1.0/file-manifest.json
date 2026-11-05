@@ -1,0 +1,54 @@
+{
+  "package": "tdca-calibrator",
+  "version": "1.0",
+  "license": "Apache-2.0",
+  "self_developed": true,
+  "note": "清单不含自身（本清单列 9 项，目录实 10 件，含本清单文件）",
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4216,
+      "sha256": "99b384a8e4695c7db8674f3613f4b27d9bc1cae1d1342db6beef11734e29ae39"
+    },
+    {
+      "path": "calibrator.py",
+      "bytes": 14198,
+      "sha256": "1fcd9c0f6225c25854f4d1adfffcd27e7d8d74ff1e6f0616ddcffe54712374db"
+    },
+    {
+      "path": "samples/criteria.json",
+      "bytes": 68,
+      "sha256": "671b5d0a0bd05c37ff8c97143fbe9b6ecd4af6d5485d1567d6c73f63de50afd2"
+    },
+    {
+      "path": "samples/model.txt",
+      "bytes": 8,
+      "sha256": "763e1ca0ab80b839422a911e6b49d7bbcecca67b335de4d23cecc0ae1249ee33"
+    },
+    {
+      "path": "samples/params.json",
+      "bytes": 244,
+      "sha256": "45c393e425b0a18993676120bbcb5a64d0cb255ad8f8578ffae01fd3ce991872"
+    },
+    {
+      "path": "samples/sample-output.json",
+      "bytes": 680,
+      "sha256": "23083ddbb6fcf7e250b8fb8151cd6145ead09bd48136139928caec14004bd817"
+    },
+    {
+      "path": "samples/samples.json",
+      "bytes": 1080,
+      "sha256": "03d7ceba6a9c1d0ac70175b3dc7eabaa2af34838d07b25a2da3176aff6d6349d"
+    },
+    {
+      "path": "selftest.py",
+      "bytes": 5757,
+      "sha256": "8fedc3e7ac9cca1d4e2c7d7c5e42b46f3d082ca36102248597457abac52d78fe"
+    }
+  ]
+}

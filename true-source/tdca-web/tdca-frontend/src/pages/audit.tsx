@@ -132,7 +132,7 @@ export function AuditPage() {
   return (
     <PageShell dataNature="real"
       title="审计透明"
-      dataSource="A-7 GET /api/v1/audit/ledger-public + /nca/chain"
+      dataSource="A-7 GET /api/v1/audit/ledger-public（/nca/chain 端点未上线，本页不请求）"
       permission="公开（制度即公开）"
       description="NCA 存证链 + 熔断历史 + 哈希审计（宪法第十六条 可观测）。"
     >
@@ -170,10 +170,12 @@ export function AuditPage() {
           </table>
         </div>
       )}
-      {/* L1SI188-NAV-FIX-003 项6：存证链段降级为说明文字（/api/v1/audit/nca/chain 端点未建、补建另案）——⛔ 不留空段、⛔ 不造假数据 */}
+      {/* L1SI198-SITE-GAP-001 件1（选项②）：存证链段如实标注数据源未上线（/api/v1/audit/nca/chain 端点未建、补建另案）——⛔ 不留空段、⛔ 不造假数据、⛔ 不发断链请求 */}
       <section data-testid="audit-chain-note" className="mt-6 space-y-2 border-t border-gray-200 pt-4">
         <div className="text-sm font-medium">存证链</div>
-        <p className="text-xs text-gray-600">存证链另册，公开账本与熔断历史见本页。</p>
+        <p className="text-xs text-gray-600" data-testid="audit-chain-offline">
+          存证链数据源未上线（只读端点另案补建），本段不请求、不渲染链数据；公开账本见上表，熔断历史同页。
+        </p>
       </section>
       <SelfCheckBlock />
     </PageShell>
