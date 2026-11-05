@@ -167,6 +167,38 @@ const PUBLIC_TOOLS: PublicTool[] = [
     sha256: '5afc6a786257ed711ebb08a89922f2cb9eed3cc9852a4a8a61e76b4b4af9df3f',
     license: 'Apache-2.0',
   },
+  // L1SI198 TOOLS5-MERGE-001 连接器包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: 'TDCA 连接器（tdca-connector）',
+    use: '适配器匹配辅助（合规条款→原理条目 Top-K）＋ COP 语料语义连接器（TF-IDF 加权＋负空间反向降权）。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-connector-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-connector',
+    deps: 'Python≥3.10 标准库；连接器本体需 PyYAML（依赖 PyYAML，非零依赖）',
+    pkg: 'tdca-connector-v1.0.zip',
+    sha256_16: '9cd07b1276743d1c',
+    sha256: '9cd07b1276743d1cd97f3df466584eccb56bd4a3a4f9037ebc6b90bc41199828',
+    license: 'Apache-2.0',
+  },
+  // L1SI198 TOOLS5-MERGE-001 反函数求解器包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: '反函数求解器（tdca-inverse-solver）',
+    use: '给定目标效用反推配置方案：可行域随机采样＋硬约束预筛＋成本最小择优；无解即熔断留痕。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-inverse-solver-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-inverse',
+    deps: 'Python≥3.8 标准库（零依赖）',
+    pkg: 'tdca-inverse-solver-v1.0.zip',
+    sha256_16: '2724ab9c7985bd2a',
+    sha256: '2724ab9c7985bd2a94af631a38fbcf3a213445b52363c7bb900d9c9434b2e308',
+    license: 'Apache-2.0',
+  },
   // L1SI198 TOOLS5-MERGE-001 模板包（卡面用途句照 §三 定稿，⛔ 改一字）
   {
     name: '表单等模板（tdca-templates）',
