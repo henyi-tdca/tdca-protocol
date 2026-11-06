@@ -253,9 +253,15 @@ const TOOL_NATURE: Record<ToolNature, { label: string; badge: string }> = {
 }
 
 /** 公开货架三卡（点样形态；窄屏自动单列，卡内不折行霸屏） */
+// USABILITY4-001 2-3（D-2 口径）：C-ALL＝全部卡（含无下载位）；C-DL＝有下载位之卡（getHref 指向 /downloads/* 落地包）
+const C_ALL_PUBLIC = PUBLIC_TOOLS.length
+const C_DL_PUBLIC = PUBLIC_TOOLS.filter((t) => (t.getHref ?? '').startsWith('/downloads/')).length
 function PublicToolCards() {
   return (
     <section data-testid="toolshelf-cards" aria-label="公开货架">
+      <p data-testid="toolshelf-card-count" className="mb-2 text-[11px] text-gray-400">
+        卡数口径（D-2）：C-ALL（全部卡，含无下载位）＝{C_ALL_PUBLIC}；C-DL（有下载位之卡）＝{C_DL_PUBLIC}。
+      </p>
       <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
         {PUBLIC_TOOLS.map((t) => {
           const st = TOOL_STATUS[t.status]
@@ -337,6 +343,10 @@ function MailboxCollabSection() {
   return (
     <section data-testid="toolshelf-mailbox" aria-label="信箱协作产品线">
       <h2 className="mt-6 text-base font-semibold text-gray-900">信箱协作（MAILBOX-COLLAB）</h2>
+      {/* USABILITY4-001 2-3（D-2 口径）：本区一卡三分下载 */}
+      <p data-testid="toolshelf-mailbox-count" className="mt-1 text-[11px] text-gray-400">
+        卡数口径（D-2）：C-ALL＝1；C-DL＝1（卡内三分下载）。
+      </p>
       <div className="mt-2 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
         <div data-testid="tool-card-mailbox" className="rounded-xl border border-indigo-200 bg-white p-4">
           <h3 className="text-sm font-semibold text-gray-900">信箱协作协议与工具链（tdca-mailbox）</h3>
