@@ -321,8 +321,12 @@ def tax_nca_history():
 
 
 @router.get("/tax/shapley/{call_id}")
-def tax_shapley(call_id: str):
-    """A-2: Shapley 分账观测（tax_events 按 call_id 聚合）。"""
+def tax_shapley(call_id: str, request: Request):
+    """A-2: Shapley 分账观测（tax_events 按 call_id 聚合）。
+    SITE-AUTH-TIER-001 S-A（2026-11-06）：B 档收紧——本接口只收登录面，
+    沿用既有 _require_session_user（⛔新造⛔改路由⛔改 nginx），
+    匿名 401＋结构化错误体；登录态返回逐字段不变。"""
+    _require_session_user(request)
     try:
         with get_session() as s:
             rows = s.query(M.TaxEvent).filter_by(call_id=call_id).all()
