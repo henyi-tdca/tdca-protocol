@@ -79,6 +79,9 @@ describe('F5 确权中心', () => {
     expect(screen.getByText(/DAR-DEMO-001/)).toBeInTheDocument()
     expect(screen.getByTestId('link-meta')).toHaveTextContent('元函数初始确权')
     expect(screen.getByTestId('link-dynamic')).toHaveTextContent('1 紧急')
+    // USABILITY4-001 2-4：匿名面明写须登录＋理由
+    expect(screen.getByTestId('attestation-anon-note')).toHaveTextContent('本页数据须登录后查看')
+    expect(screen.getByTestId('attestation-anon-note')).toHaveTextContent('涉主体权利鉴证')
   })
 
   it('元函数确权：激活系数 + 六要素全勾选 + HUF → POST meta（needHuf）', async () => {
