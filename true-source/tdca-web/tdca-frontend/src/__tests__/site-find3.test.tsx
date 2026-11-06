@@ -277,6 +277,20 @@ describe('批3 B块 · 公开货架三卡三态', () => {
     // 只做呈现：卡区明示上架权归属（operator 提＋创始人核）
     expect(screen.getByTestId('toolshelf-cards').textContent).toContain('本区只做呈现与状态位')
   })
+
+  it('USABILITY4-001 2-3（D-2 口径）：卡数双口径明示 C-ALL／C-DL', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404, json: async () => ({ detail: 'not found' }) }) as Response))
+    render(
+      <MemoryRouter>
+        <ToolshelfPage />
+      </MemoryRouter>,
+    )
+    await waitFor(() => expect(screen.getByTestId('toolshelf-card-count')).toBeTruthy())
+    const pub = screen.getByTestId('toolshelf-card-count').textContent ?? ''
+    expect(pub).toContain('C-ALL（全部卡，含无下载位）＝13')
+    expect(pub).toContain('C-DL（有下载位之卡）＝10')
+    expect(screen.getByTestId('toolshelf-mailbox-count').textContent).toContain('C-ALL＝1；C-DL＝1')
+  })
 })
 
 // ------------------------------------------------------------ C 块：公告两态

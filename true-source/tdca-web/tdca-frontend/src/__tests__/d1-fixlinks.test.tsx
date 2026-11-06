@@ -45,8 +45,9 @@ describe('L1SI175-D1 修「带走」断链（改指 /api/v1/selfcheck/spec）', 
     // ⛔ 失效指向：openapi.json 不再是链接；/docs 不再是站内路由链接
     expect(takeaway.querySelector('a[href="/openapi.json"]')).toBeNull()
     expect(takeaway.querySelector('a[href="/docs"]')).toBeNull()
-    // 改为说明：两处字样以说明形态保留
-    expect(takeaway.textContent).toContain('暂未开放，恢复后另行标注')
+    // 改为说明：/docs 已开放，openapi.json 待开放
+    expect(takeaway.textContent).toContain('文档站（/docs）已开放')
+    expect(takeaway.textContent).toContain('待开放')
   })
 
   it('帮助族 404 走如实空栏（fail-soft 不受影响）', async () => {

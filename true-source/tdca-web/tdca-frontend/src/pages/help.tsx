@@ -107,7 +107,7 @@ export function HelpPage() {
                       </a>
                     </div>
                     <p className="mt-1 text-[11px] text-gray-400">
-                      原 OpenAPI 机器可读面（/openapi.json）与文档站（/docs）暂未开放，恢复后另行标注。
+                      机器可读面（/openapi.json）待开放；文档站（/docs）已开放。
                     </p>
                   </div>
                 )}
