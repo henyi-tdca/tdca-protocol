@@ -148,8 +148,10 @@ def _effective_from_note() -> dict:
 
 @router.get("/template/auth-contract")
 def template_auth_contract(request: Request):
-    """授权件模板（四要件＋固定格式八字段）——实时引用在仓三件，可查看/可下载。"""
-    _require_session_user(request)
+    """授权件模板（四要件＋固定格式八字段）——实时引用在仓三件，可查看/可下载。
+
+    TPL-FIX-001 段A：放行匿名只读 GET——该模板已在公开包 tdca-templates-v1.0.zip
+    内可下，放行不增暴露面，只消「包公开、页面须登录」之两面不一致；写面与他接口不动。"""
     import hashlib
     files = []
     version = None
