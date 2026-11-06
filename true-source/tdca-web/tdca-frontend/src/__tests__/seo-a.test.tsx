@@ -46,4 +46,22 @@ describe('SITE-SEO-A-001 乙-1：每页独立标题', () => {
     expect(document.title).toBe('SAMPLE-001（对外公开版·V1.0） · 文档库 · TDCA')
     window.fetch = orig
   })
+
+  it('USABILITY4-001 2-2：正文未到先出骨架（doc-skeleton 先呈现，取件未返也存在）', async () => {
+    // fetch 打桩：永不返回——骨架须随路由即时出现，不依赖取件往返
+    const orig = window.fetch
+    window.fetch = (() => new Promise<Response>(() => {})) as typeof window.fetch
+    render(
+      <MemoryRouter initialEntries={['/docs/whitepapers/SAMPLE-WP-001.md']}>
+        <Routes>
+          <Route path="/docs/:family/:slug" element={<DocDetailPage />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+    // 骨架即时在位（同步断言，不等 waitFor）
+    expect(screen.getByTestId('doc-skeleton')).toBeTruthy()
+    expect(screen.getByTestId('doc-skeleton').textContent).toContain('正文加载中')
+    expect(screen.getByTestId('doc-skeleton').textContent).toContain('SAMPLE-WP-001')
+    window.fetch = orig
+  })
 })

@@ -29,6 +29,12 @@
 
 - [ ] 替换 dist 用**目录内换内容**（备份后解压回同一目录），⛔ 不 `mv dist dist.bak && mkdir dist`
       （目录换新＝新 inode，bind mount 仍指旧目录，nginx 继续 serve 旧版）。
+- [ ] **dist 发布一律经 `deploy/publish_dist_safe.sh`**（或严格同口径手工）：`downloads/` **只增、不删、不覆盖**
+      （同名不覆盖——迭代＝重新打包新包名；2026-11-06 事故根因＝整目录替换清空 downloads）。
+- [ ] 发布后核对：`downloads` **件数发布前后各记一次（应不减）**＋全部 `.zip` 经站点面直链 `200` 抽核
+      （脚本自动报数；手工则 `find dist/downloads -maxdepth 1 -type f | wc -l` 与逐条 `curl -sk -o /dev/null -w '%{http_code}'`）。
+- [ ] 打包产物版本留存：发布前 `backups/downloads-backup-<名>-<时间>.tgz` 与 `dist-backup-<名>-<时间>` 已建
+      （⛔ 入仓 ⛔ 入 `docs/`，只留站机＋回退点）。
 - [ ] 发布后核对：nginx 容器内 `grep` 新包 hash 与页面标记词；入口 `index.html` 引用新 js。
 - [ ] 提示创始人 **Ctrl+F5**（index.html 为 no-cache，但 js/css 按 hash 缓存）。
 

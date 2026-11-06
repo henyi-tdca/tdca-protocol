@@ -1,10 +1,45 @@
 # -*- coding: utf-8 -*-
-"""A-11 确权 API 测试（F5 前置缺口补建——meta/dynamic/history/queue 四端点）。"""
+"""A-11 确权 API 测试（F5 前置缺口补建——meta/dynamic/history/queue 四端点）。
+
+AMEND-1（2026-11-06）：history/queue 只收登录面——匿名 401＋结构化错误体；
+登录态读数沿用 _mkuser 会话（范式同 test_dashboard_m5）。"""
+from datetime import datetime, timezone
+
 from fastapi.testclient import TestClient
 
 from app import app
+from auth import hash_password
+from db import get_sessionmaker
+from db import models as M
 
 client = TestClient(app)
+
+_NOW = datetime.now(timezone.utc).isoformat()
+
+
+def _mkuser(username: str, role: str = "viewer") -> str:
+    """建用户 + 登录拿会话 token（沿用 test_auth_m3 / test_dashboard_m5 范式）。"""
+    ph, salt, iters = hash_password(f"pw-{username}")
+    with get_sessionmaker().begin() as s:
+        if s.get(M.User, username) is None:
+            s.add(M.User(username=username, password_hash=ph, salt=salt,
+                         iterations=iters, role=role, created_at=_NOW))
+    r = client.post("/api/v1/auth/login", json={"username": username, "password": f"pw-{username}"})
+    assert r.status_code == 200, r.text[:200]
+    return r.json()["data"]["token"]
+
+
+def _h(token: str) -> dict:
+    return {"Authorization": token}
+
+
+def _get(path, headers=None):
+    r = client.get(path, headers=headers)
+    assert r.status_code == 200, f"{path} → {r.status_code}: {r.text[:200]}"
+    body = r.json()
+    assert "nca_watermark" in body
+    assert body["data_nature"] == "simulated"
+    return body["data"]
 
 
 def _post(path, payload):
@@ -12,15 +47,6 @@ def _post(path, payload):
     assert r.status_code == 200, f"{path} → {r.status_code}: {r.text[:200]}"
     body = r.json()
     assert "nca_watermark" in body       # 全链路 NCA 水印（ID91）
-    assert body["data_nature"] == "simulated"
-    return body["data"]
-
-
-def _get(path):
-    r = client.get(path)
-    assert r.status_code == 200, f"{path} → {r.status_code}: {r.text[:200]}"
-    body = r.json()
-    assert "nca_watermark" in body
     assert body["data_nature"] == "simulated"
     return body["data"]
 
@@ -64,7 +90,7 @@ def test_a11_dynamic_reject_and_defer():
 # （meta approved / meta rejected / DAR-001 approved / DAR-002 rejected），
 # DAR-003 defer 后仍为 pending 不计入。断言改为集合语义（同秒 ts 不定序）。
 def test_a11_history_chain():
-    d = _get("/api/v1/attestation/history")
+    d = _get("/api/v1/attestation/history", _h(_mkuser("viewer-a11-hist")))  # AMEND-1：登录面读数不变
     assert d["total"] == 4
     assert {c["status"] for c in d["events"]} == {"APPROVED", "REJECTED"}
     assert any(c["event_type"] == "确权体系初始化" for c in d["events"])   # 元函数确权在链（对外语义名）
@@ -76,14 +102,37 @@ def test_a11_history_chain():
 
 
 def test_a11_history_filter_by_agent():
-    d = _get("/api/v1/attestation/history?agent_id=AGENT-007")
+    d = _get("/api/v1/attestation/history?agent_id=AGENT-007", _h(_mkuser("viewer-a11-hist")))
     assert d["total"] == 3
 
 
 # ---- A-11 待审队列（紧急度排序）----
 # M2 有状态：DAR-001/002 已决，仅 DAR-003（defer）仍在 pending 队列。
 def test_a11_queue():
-    d = _get("/api/v1/attestation/queue")
+    d = _get("/api/v1/attestation/queue", _h(_mkuser("viewer-a11-queue")))  # AMEND-1：登录面读数不变
     assert d["total"] == 1
     assert d["queue"][0]["request_id"] == "DAR-003"
     assert d["queue"][0]["urgency"] == "normal"
+
+
+# ---- AMEND-1（2026-11-06）：history/queue 只收登录面 ----
+def test_amend1_history_anonymous_401():
+    r = client.get("/api/v1/attestation/history")
+    assert r.status_code == 401
+    body = r.json()
+    assert body.get("detail")            # 结构化错误体（error_codes 全局整形）
+    assert body.get("code")
+
+
+def test_amend1_queue_anonymous_401():
+    r = client.get("/api/v1/attestation/queue")
+    assert r.status_code == 401
+    body = r.json()
+    assert body.get("detail")
+    assert body.get("code")
+
+
+def test_amend1_ledger_public_untouched():
+    # ⛔不动面照核：公共账本匿名仍 200
+    r = client.get("/api/v1/audit/ledger-public")
+    assert r.status_code == 200

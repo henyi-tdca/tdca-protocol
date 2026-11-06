@@ -9,6 +9,15 @@ import { Link } from 'react-router'
 import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
+// TPL-FIX-001 段B/段D：模板区指路数据（内容逐字取自公开包 tdca-templates-v1.0.zip）
+import {
+  TPL_PACKAGE, CONTRACT_TEMPLATES, SIX_ELEMENTS_TEMPLATES,
+  GOV_REC_NOTICE, GOV_RECORDS,
+} from './toolshelf-template-data'
+
+// TPL-FIX-001 段C：接口异常（含 401/5xx/超时）逐字降级文案（⛔ 区块不留空白）
+const TPL_FALLBACK =
+  '模板数据暂不可取；可直下公开包：tdca-templates-v1.0.zip（含授权件模板 4 件、契约模板 3 件、六要素模板 1 件、研发治理记录 12 份）。'
 
 // ---------------------------------------------------------------------------
 // L1SI177 批3 B块：公开货架呈现（照已过点样三卡三态；条目卡五项：
@@ -244,9 +253,15 @@ const TOOL_NATURE: Record<ToolNature, { label: string; badge: string }> = {
 }
 
 /** 公开货架三卡（点样形态；窄屏自动单列，卡内不折行霸屏） */
+// USABILITY4-001 2-3（D-2 口径）：C-ALL＝全部卡（含无下载位）；C-DL＝有下载位之卡（getHref 指向 /downloads/* 落地包）
+const C_ALL_PUBLIC = PUBLIC_TOOLS.length
+const C_DL_PUBLIC = PUBLIC_TOOLS.filter((t) => (t.getHref ?? '').startsWith('/downloads/')).length
 function PublicToolCards() {
   return (
     <section data-testid="toolshelf-cards" aria-label="公开货架">
+      <p data-testid="toolshelf-card-count" className="mb-2 text-[11px] text-gray-400">
+        卡数口径（D-2）：C-ALL（全部卡，含无下载位）＝{C_ALL_PUBLIC}；C-DL（有下载位之卡）＝{C_DL_PUBLIC}。
+      </p>
       <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
         {PUBLIC_TOOLS.map((t) => {
           const st = TOOL_STATUS[t.status]
@@ -328,6 +343,10 @@ function MailboxCollabSection() {
   return (
     <section data-testid="toolshelf-mailbox" aria-label="信箱协作产品线">
       <h2 className="mt-6 text-base font-semibold text-gray-900">信箱协作（MAILBOX-COLLAB）</h2>
+      {/* USABILITY4-001 2-3（D-2 口径）：本区一卡三分下载 */}
+      <p data-testid="toolshelf-mailbox-count" className="mt-1 text-[11px] text-gray-400">
+        卡数口径（D-2）：C-ALL＝1；C-DL＝1（卡内三分下载）。
+      </p>
       <div className="mt-2 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
         <div data-testid="tool-card-mailbox" className="rounded-xl border border-indigo-200 bg-white p-4">
           <h3 className="text-sm font-semibold text-gray-900">信箱协作协议与工具链（tdca-mailbox）</h3>
@@ -429,7 +448,7 @@ export function ToolshelfPage() {
       authority: string
       files: { lang: string; filename: string; content: string; sha256_8: string }[]
     }>('/api/v1/toolshelf/template/auth-contract')
-    if (!r.ok) { setTplMsg(`模板加载失败：${r.reason}`); return }
+    if (!r.ok) { setTplMsg(TPL_FALLBACK); return }
     setTpl(r.data)
   }
 
@@ -503,6 +522,50 @@ export function ToolshelfPage() {
             </ul>
           </div>
         )}
+      </section>
+      {/* TPL-FIX-001 段B：契约模板 3 件上页（指路＋包下载链接；⛔ 逐件正文全量上页·⛔ 新建路由） */}
+      <section data-testid="toolshelf-template-contracts">
+        <h2>模板区 · 契约模板</h2>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/contracts/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {CONTRACT_TEMPLATES.map((t) => (
+            <li key={t.path}>
+              <strong>{t.name}</strong>——{t.purpose}；包内路径：<code>{t.path}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/* TPL-FIX-001 段B：六要素声明模板 1 件上页（同上口径） */}
+      <section data-testid="toolshelf-template-six-elements">
+        <h2>模板区 · 六要素声明模板</h2>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/six-elements/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {SIX_ELEMENTS_TEMPLATES.map((t) => (
+            <li key={t.path}>
+              <strong>{t.name}</strong>——{t.purpose}；包内路径：<code>{t.path}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/* TPL-FIX-D-001：研发治理记录 12 份上页（筛单 12/12 通过；列名＋指路＋可展开正文） */}
+      <section data-testid="toolshelf-template-govrec">
+        <h2>模板区 · 研发治理记录模板（12 份）</h2>
+        <p>{GOV_REC_NOTICE}</p>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/gov-kit/templates/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {GOV_RECORDS.map((g) => (
+            <li key={g.path}>
+              <strong>{g.code}</strong>（<code>{g.file}</code>）；包内路径：<code>{g.path}</code>
+              <details>
+                <summary>查看正文</summary>
+                <pre>{g.content}</pre>
+              </details>
+            </li>
+          ))}
+        </ul>
       </section>
     </PageShell>
   )

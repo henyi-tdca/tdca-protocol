@@ -21,20 +21,58 @@ _PORT = 8123
 _BASE = f"http://127.0.0.1:{_PORT}"
 
 # 五页面数据源端点（/studio 无后端依赖，见 F3 签批件；此处覆盖有后端的数据源端点）
+# SITE-AUTH-TIER-001 S-B（甲案）：
+#  - ("/attestation", …) 行第三元素 "session"＝登录面探（建巡检用户→auth/login 拿 TDCA-SES 头探）；
+#  - ("/tax", …) 行经 S-4 实测为公开页数据源、保持匿名，仍匿名探。
 _READS = [
-    ("/", "/api/v1/system/overview"),
-    ("/tax", "/api/v1/tax/mou/AGENT-GENIE"),
-    ("/sandbox", "/api/v1/sandbox/sea-status"),
-    ("/notifier", "/api/v1/notifier/mrcr-status"),
-    ("/academy", "/api/v1/knowledge/terms"),
-    ("/audit", "/api/v1/audit/ledger-public"),
-    ("/attestation", "/api/v1/attestation/queue"),
-    ("/cluster", "/api/v1/eios/cluster-status"),
+    ("/", "/api/v1/system/overview", None),
+    ("/tax", "/api/v1/tax/mou/AGENT-GENIE", None),
+    ("/sandbox", "/api/v1/sandbox/sea-status", None),
+    ("/notifier", "/api/v1/notifier/mrcr-status", None),
+    ("/academy", "/api/v1/knowledge/terms", None),
+    ("/audit", "/api/v1/audit/ledger-public", None),
+    ("/attestation", "/api/v1/attestation/queue", "session"),
+    ("/cluster", "/api/v1/eios/cluster-status", None),
 ]
+
+# 登录面巡检用户（幂等预置：固定盐、PBKDF2-SHA256·120000 轮，与 auth.hash_password 同构；
+# ⛔真实口令——仅本脚本演示库使用）
+_CHECK_USER = "m4-live-check"
+_CHECK_PW = "pw-m4-live-check"
+_SALT_HEX = "6d346c697665636865636b757365723132"   # 固定盐（b"m4livecheckuser12"）
+_ITERATIONS = 120000
 
 _ENV = dict(os.environ, TDCA_GATEWAY_AUTH="1",
             TDCA_GATEWAY_TOKEN="m4-live-check", PYTHONUTF8="1")
 _CRT = {"Authorization": "TDCA-CRT-m4-live-check"}   # 静态降级令牌（不触碰真实口令）
+
+
+def _session_headers() -> dict:
+    """登录面巡检：幂等预置巡检用户（演示库）→ auth/login 取 TDCA-SES 会话头。
+    SITE-AUTH-TIER-001 S-B（甲案）：attestation/queue 已归登录面，须带会话探；
+    ⛔ CRT 令牌——会话校验不认 CRT（validate_session 只认 TDCA-SES），故走真登录。"""
+    import hashlib
+    db = _ROOT / "tdca.db"
+    h = hashlib.pbkdf2_hmac("sha256", _CHECK_PW.encode("utf-8"),
+                            bytes.fromhex(_SALT_HEX), _ITERATIONS).hex()
+    con = sqlite3.connect(str(db))
+    try:
+        exists = con.execute("SELECT 1 FROM users WHERE username=?",
+                             (_CHECK_USER,)).fetchone()
+        if not exists:
+            from datetime import datetime, timezone
+            con.execute(
+                "INSERT INTO users(username,password_hash,salt,iterations,role,"
+                "data_provenance,created_at) VALUES(?,?,?,?,?,?,?)",
+                (_CHECK_USER, h, _SALT_HEX, _ITERATIONS, "viewer", "real",
+                 datetime.now(timezone.utc).isoformat()))
+            con.commit()
+    finally:
+        con.close()
+    r = httpx.post(f"{_BASE}/api/v1/auth/login",
+                   json={"username": _CHECK_USER, "password": _CHECK_PW}, timeout=10)
+    assert r.status_code == 200, f"巡检登录失败 → {r.status_code}: {r.text[:200]}"
+    return {"Authorization": r.json()["data"]["token"]}
 
 
 def _start() -> subprocess.Popen:
@@ -68,11 +106,14 @@ def main() -> int:
     p = _start()
     try:
         # 第一轮：读回归 + 一次写（鉴权启用态，CRT 降级令牌）
-        for page, ep in _READS:
-            r = httpx.get(f"{_BASE}{ep}", timeout=5)
+        sess = _session_headers()   # S-B：登录面探会话（attestation/queue 用）
+        for page, ep, mode in _READS:
+            headers = sess if mode == "session" else None
+            r = httpx.get(f"{_BASE}{ep}", timeout=5, headers=headers)
             good = r.status_code == 200
             ok &= good
-            print(f"[轮1] {page:<14} {ep:<38} {r.status_code} {'PASS' if good else 'FAIL'}")
+            tag = "（登录面）" if mode == "session" else ""
+            print(f"[轮1] {page:<14} {ep:<38} {r.status_code} {'PASS' if good else 'FAIL'}{tag}")
         # 轮1 写入载荷带时间戳：apply 主键 = sha256(sponsor_did+scene_ids)，
         # 唯一载荷保证每轮插入新行，「行数增长」断言在重复执行时仍成立
         payload = {"sponsor_did": f"did:tdca:m4-live-check:{time.time()}"}
@@ -102,8 +143,10 @@ def main() -> int:
             "SELECT COUNT(*) FROM sandbox_applications").fetchone()[0]
         print(f"[轮2] sandbox_applications 行数 {before} → {after}（重启后保留）")
         ok &= after > before
-        for page, ep in _READS[:3]:
-            r = httpx.get(f"{_BASE}{ep}", timeout=5)
+        sess = _session_headers()   # S-B：重启后会话表仍在库，但单会话制下重新登录最稳
+        for page, ep, mode in _READS[:3]:
+            headers = sess if mode == "session" else None
+            r = httpx.get(f"{_BASE}{ep}", timeout=5, headers=headers)
             ok &= r.status_code == 200
             print(f"[轮2] {page:<14} {ep:<38} {r.status_code}")
     finally:

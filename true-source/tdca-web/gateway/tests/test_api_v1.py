@@ -1,14 +1,41 @@
 # -*- coding: utf-8 -*-
-"""A 类 API 面包装层测试（/api/v1/*，10 项端点冒烟 + 核心断言）。"""
+"""A 类 API 面包装层测试（/api/v1/*，10 项端点冒烟 + 核心断言）。
+
+SITE-AUTH-TIER-001 S-A（2026-11-06）：tax/shapley 收登录面——
+匿名 401＋结构化体；登录面读数不变（_mkuser 会话，范式同 test_dashboard_m5）。
+tax/mou、tax/nca-history 因公开页消费（/tax、/verify）按令面 S-4 停手未收。"""
+from datetime import datetime, timezone
+
 from fastapi.testclient import TestClient
 
 from app import app
+from auth import hash_password
+from db import get_sessionmaker
+from db import models as M
 
 client = TestClient(app)
 
+_NOW = datetime.now(timezone.utc).isoformat()
 
-def _get(path):
-    r = client.get(path)
+
+def _mkuser(username: str, role: str = "viewer") -> str:
+    """建用户 + 登录拿会话 token（沿用 test_auth_m3 / test_dashboard_m5 范式）。"""
+    ph, salt, iters = hash_password(f"pw-{username}")
+    with get_sessionmaker().begin() as s:
+        if s.get(M.User, username) is None:
+            s.add(M.User(username=username, password_hash=ph, salt=salt,
+                         iterations=iters, role=role, created_at=_NOW))
+    r = client.post("/api/v1/auth/login", json={"username": username, "password": f"pw-{username}"})
+    assert r.status_code == 200, r.text[:200]
+    return r.json()["data"]["token"]
+
+
+def _h(token: str) -> dict:
+    return {"Authorization": token}
+
+
+def _get(path, headers=None):
+    r = client.get(path, headers=headers)
     assert r.status_code == 200, f"{path} → {r.status_code}: {r.text[:200]}"
     body = r.json()
     assert "nca_watermark" in body       # 全链路 NCA 水印
@@ -35,8 +62,16 @@ def test_a2_tax_nca_history():
 
 
 def test_a2_tax_shapley():
-    d = _get("/api/v1/tax/shapley/CALL-1")
+    d = _get("/api/v1/tax/shapley/CALL-1", _h(_mkuser("viewer-tier-sa")))  # S-A：登录面读数不变
     assert d["call_id"] == "CALL-1"
+
+
+def test_s_a_shapley_anonymous_401():
+    r = client.get("/api/v1/tax/shapley/CALL-1")
+    assert r.status_code == 401
+    body = r.json()
+    assert body.get("detail")            # 结构化错误体（error_codes 全局整形）
+    assert body.get("code")
 
 
 # ---- A-3 配置权市场调用 ----

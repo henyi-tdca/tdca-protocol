@@ -27,12 +27,14 @@ from app import app  # noqa: E402
 
 _ENDPOINTS = [
     "/api/v1/system/overview",
+    # SITE-AUTH-TIER-001 S-B（甲案）：/tax/mou 经 S-4 实测为公开页 /tax 数据源，保持匿名（未收紧），留在公开延迟清单。
     "/api/v1/tax/mou/AGENT-GENIE",
     "/api/v1/sandbox/sea-status",
     "/api/v1/notifier/mrcr-status",
     "/api/v1/eios/cluster-status",
     "/api/v1/audit/ledger-public",
-    "/api/v1/attestation/queue",
+    # SITE-AUTH-TIER-001 S-A：/attestation/queue 已归登录面——移出公开延迟清单；
+    # 该端点已归登录面；其延迟与可用性由 test_api_v11 登录面用例覆盖。
 ]
 _THRESHOLD_MS = 200.0
 _WARMUP = 2       # 预热（惰性引擎绑定 + SQLite 连接）
