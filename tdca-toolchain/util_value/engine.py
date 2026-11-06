@@ -202,7 +202,7 @@ class UtilValueService:
         """估值安全熔断检查。
 
         proposed > 3×U_observed → CRITICAL 熔断（强制锚定 U_observed×1.5）
-        proposed > 2.7×U_observed → WARNING（需补充非交易效用强证据链）
+        proposed > 2.7×U_observed → WARNING（需补充非交换效用强证据链）
         否则 SAFE。
         """
         if not isinstance(proposed_valuation, (int, float)) or proposed_valuation < 0:
@@ -228,7 +228,7 @@ class UtilValueService:
             return ValuationSafety(
                 proposed=proposed_valuation, u_observed=u_observed, ratio=ratio,
                 status="WARNING",
-                action="估值 > 2.7×U_observed → 要求补充非交易效用强证据链（文化资产评估/专利池/用户粘性）",
+                action="估值 > 2.7×U_observed → 要求补充非交换效用强证据链（文化资产评估/专利池/用户粘性）",
             )
         return ValuationSafety(
             proposed=proposed_valuation, u_observed=u_observed, ratio=ratio,
