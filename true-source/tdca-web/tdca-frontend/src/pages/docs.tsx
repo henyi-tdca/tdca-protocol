@@ -184,7 +184,19 @@ export function DocDetailPage() {
         </span>
       </nav>
       <div className="mt-3">
-        {(!data || error) && <DocLoading error={error} />}
+        {/* USABILITY4-001 2-2（D-4 案）：正文未到先出骨架——首屏骨架随路由即时呈现（不依赖取件往返），正文到后整体替换 */}
+        {!data && !error && (
+          <div data-testid="doc-skeleton" aria-busy="true">
+            <h2 className="text-lg font-bold text-gray-900">{docTitle(slug ?? '')}</h2>
+            <div className="mt-4 space-y-2" aria-hidden="true">
+              {[92, 100, 78, 100, 60, 88].map((w, i) => (
+                <div key={i} className="h-3 animate-pulse rounded bg-gray-100" style={{ width: `${w}%` }} />
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-gray-400">骨架先出，正文加载中…</p>
+          </div>
+        )}
+        {error && <DocLoading error={error} />}
         {data && (
           <>
             <h2 className="text-lg font-bold text-gray-900">{docTitle(data.filename)}</h2>
