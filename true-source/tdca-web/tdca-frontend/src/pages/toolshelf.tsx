@@ -94,7 +94,7 @@ const PUBLIC_TOOLS: PublicTool[] = [
   },
   {
     name: 'NSFL 编译器（tdca-nsfl-compiler）',
-    use: '负空间约束语言编译器核心：词法／语法／语义＋⊗⊘⊙ 运算符＋schema 校验＋IR。随包附通用校准器（v1.0）：三输入缺一拒跑，四输出齐，失败面四类如实报。',
+    use: '负空间约束语言编译器核心：词法／语法／语义＋⊗⊘⊙ 运算符＋schema 校验＋IR。随包附通用校准器（v1.0）：三输入缺一拒跑，四输出齐，失败面四类如实报。\n历史版本 v1.0 保留供回退与对核，新装请用 v1.1。',
     nature: 'real',
     status: 'ok',
     getLabel: '下载',
