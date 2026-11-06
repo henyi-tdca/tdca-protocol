@@ -43,7 +43,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import and_, func, or_
 from sqlalchemy.exc import IntegrityError
@@ -987,9 +987,13 @@ _PUBLIC_EVENT_SUMMARY = {
 
 
 @router.get("/attestation/history")
-def attestation_history(agent_id: Optional[str] = None):
+def attestation_history(request: Request, agent_id: Optional[str] = None):
     """A-11: 确权历史查询（ATTEST-SCRUB-001：白名单公开视图——时间/事件类型/公开状态/公开摘要；
-    ⛔ 内部编号（nca_ref）、智能体名、内部枚举值、内部字段名一律不出）。"""
+    ⛔ 内部编号（nca_ref）、智能体名、内部枚举值、内部字段名一律不出）。
+    AMEND-1（2026-11-06，创始人逐字「需要顺手做掉」）：本接口只收登录面——
+    沿用站内既有 _require_session_user（⛔新造⛔改路由⛔改 nginx），
+    匿名 401＋结构化错误体；登录态返回逐字段不变。"""
+    _require_session_user(request)
     with get_session() as s:
         q = s.query(M.AttestationRequest).filter(M.AttestationRequest.status != "pending")
         if agent_id:
@@ -1007,8 +1011,11 @@ def attestation_history(agent_id: Optional[str] = None):
 
 
 @router.get("/attestation/queue")
-def attestation_queue():
-    """A-11: 动态确权待审队列（attestation_requests pending，紧急度排序）。"""
+def attestation_queue(request: Request):
+    """A-11: 动态确权待审队列（attestation_requests pending，紧急度排序）。
+    AMEND-1（2026-11-06）：本接口只收登录面——匿名 401＋结构化错误体；
+    登录态返回逐字段不变（沿用既有 _require_session_user）。"""
+    _require_session_user(request)
     order = {"urgent": 0, "normal": 1, "low": 2}
     with get_session() as s:
         rows = s.query(M.AttestationRequest).filter_by(status="pending").all()
@@ -1025,8 +1032,6 @@ def attestation_queue():
 # =====================================================================
 # M3 鉴权（F-2）：login / logout / me
 # =====================================================================
-from fastapi import Request  # noqa: E402
-
 from auth import (SESSION_PREFIX, hash_password, issue_session,  # noqa: E402
                   revoke_session, validate_session, verify_password)
 
