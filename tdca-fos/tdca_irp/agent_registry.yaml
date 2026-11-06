@@ -5,7 +5,7 @@
 # 生成链说明: 源库 tdca-official-kb 不在本仓；本表暂为权威，15 份 *-config.yaml 为旁证源
 #   （forbid = config.approval_required；eios_type/dims 由 verbs 按职能归纳，规则见回报 -117）。
 #   tax-officer 无 config，依据 microtax/microtax/tax_officer.py（TaxOfficerAgent 实体）从严登记。
-# tax_base 逐智能体映射无制度明文（开放判断点），按职能归并，候裁——见回报 -117 项 1。
+# tax_base 归并暂定，判定序 R-1~R-4 见 TDCA-RULING-L1SI199-AGENTDEF5-TAXBASE-001；⛔ 视为制度明文。
 # SPDX-License-Identifier: TDCA-Internal
 agents:
   # ---- 既有三条（AGENT-TASK-008-IMPL 示例，eios_type/dims/forbid 原值不动）----
