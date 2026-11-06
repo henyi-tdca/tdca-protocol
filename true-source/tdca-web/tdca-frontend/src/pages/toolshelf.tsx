@@ -9,6 +9,15 @@ import { Link } from 'react-router'
 import { api } from '@/api/client'
 import { PageShell } from './PageShell'
 import { SimulatedBadge } from '@/shared/SimulatedBadge'
+// TPL-FIX-001 段B/段D：模板区指路数据（内容逐字取自公开包 tdca-templates-v1.0.zip）
+import {
+  TPL_PACKAGE, CONTRACT_TEMPLATES, SIX_ELEMENTS_TEMPLATES,
+  GOV_REC_NOTICE, GOV_RECORDS,
+} from './toolshelf-template-data'
+
+// TPL-FIX-001 段C：接口异常（含 401/5xx/超时）逐字降级文案（⛔ 区块不留空白）
+const TPL_FALLBACK =
+  '模板数据暂不可取；可直下公开包：tdca-templates-v1.0.zip（含授权件模板 4 件、契约模板 3 件、六要素模板 1 件、研发治理记录 12 份）。'
 
 // ---------------------------------------------------------------------------
 // L1SI177 批3 B块：公开货架呈现（照已过点样三卡三态；条目卡五项：
@@ -429,7 +438,7 @@ export function ToolshelfPage() {
       authority: string
       files: { lang: string; filename: string; content: string; sha256_8: string }[]
     }>('/api/v1/toolshelf/template/auth-contract')
-    if (!r.ok) { setTplMsg(`模板加载失败：${r.reason}`); return }
+    if (!r.ok) { setTplMsg(TPL_FALLBACK); return }
     setTpl(r.data)
   }
 
@@ -503,6 +512,50 @@ export function ToolshelfPage() {
             </ul>
           </div>
         )}
+      </section>
+      {/* TPL-FIX-001 段B：契约模板 3 件上页（指路＋包下载链接；⛔ 逐件正文全量上页·⛔ 新建路由） */}
+      <section data-testid="toolshelf-template-contracts">
+        <h2>模板区 · 契约模板</h2>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/contracts/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {CONTRACT_TEMPLATES.map((t) => (
+            <li key={t.path}>
+              <strong>{t.name}</strong>——{t.purpose}；包内路径：<code>{t.path}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/* TPL-FIX-001 段B：六要素声明模板 1 件上页（同上口径） */}
+      <section data-testid="toolshelf-template-six-elements">
+        <h2>模板区 · 六要素声明模板</h2>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/six-elements/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {SIX_ELEMENTS_TEMPLATES.map((t) => (
+            <li key={t.path}>
+              <strong>{t.name}</strong>——{t.purpose}；包内路径：<code>{t.path}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/* TPL-FIX-D-001：研发治理记录 12 份上页（筛单 12/12 通过；列名＋指路＋可展开正文） */}
+      <section data-testid="toolshelf-template-govrec">
+        <h2>模板区 · 研发治理记录模板（12 份）</h2>
+        <p>{GOV_REC_NOTICE}</p>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/gov-kit/templates/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {GOV_RECORDS.map((g) => (
+            <li key={g.path}>
+              <strong>{g.code}</strong>（<code>{g.file}</code>）；包内路径：<code>{g.path}</code>
+              <details>
+                <summary>查看正文</summary>
+                <pre>{g.content}</pre>
+              </details>
+            </li>
+          ))}
+        </ul>
       </section>
     </PageShell>
   )
