@@ -265,9 +265,9 @@ function PublicToolCards() {
               </div>
               <div className="mt-2 text-xs">
                 {t.getHref ? (
-                  <Link to={t.getHref} className="rounded-md border border-blue-700 px-2.5 py-0.5 text-blue-700 hover:bg-blue-50">
+                  <a href={t.getHref} className="rounded-md border border-blue-700 px-2.5 py-0.5 text-blue-700 hover:bg-blue-50">
                     {t.getLabel}
-                  </Link>
+                  </a>
                 ) : (
                   <span className="text-gray-400">{t.getLabel}</span>
                 )}
