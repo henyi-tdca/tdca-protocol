@@ -165,6 +165,8 @@ _PUBLIC_DOCS = {
     "TDCA-MONOGRAPH-DC-001-REV-1-数字人民币智能体协作-修订版.md",
     "TDCA-TREATISE-026-REV-002-复核修正版.md",
     "tdca-paper-realtime-001/TDCA-PAPER-REALTIME-001-V1.3-PUBLISH-数模结合实时数据流下快慢系统的制度均衡.md",
+    # L1SI200-PAPER-ANCHOR-SITE-001 §二（ANCHOR-001 上站：仓内已在（sha256_16=CEA8F1D8D30D84C3·25,900B）站上未列直取404；带子路径前缀＝realtime 先例同款；22→23）：
+    "tdca-proposal-anchor-001/TDCA-PROPOSAL-ANCHOR-001-V1.4-PUBLISH-断言锚点与混合法系的判例层机制.md",
     ),
     # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
     # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）
