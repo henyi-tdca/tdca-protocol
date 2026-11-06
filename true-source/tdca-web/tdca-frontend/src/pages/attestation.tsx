@@ -70,6 +70,10 @@ export function AttestationOverviewPage() {
         <p data-testid="attestation-scope-note" className="rounded-lg border border-gray-200 bg-gray-50/60 p-3 text-sm text-gray-700">
           确权中心确认的是权利归属，共四类：① 所有权初始登记确权 ② 权属变更确权 ③ 使用权授权确权 ④ 使用权权利变更确权。合约的履行与备案不在本中心。
         </p>
+        {/* USABILITY4-001 2-4：匿名面明写（页面鉴权行为照旧，路由守卫不变） */}
+        <p data-testid="attestation-anon-note" className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
+          本页数据须登录后查看（涉主体权利鉴证，匿名不开放只读）。
+        </p>
         <div className="flex gap-3">
           <Link to="/attestation/meta" data-testid="link-meta" className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800 hover:bg-amber-100">
             元函数初始确权（出盒终裁）→
