@@ -1,6 +1,172 @@
-# 16 智能体 IRP 注册表（AGENT-TASK-008-IMPL 示例，完整 16 条由 config.yaml 生成）
+# TDCA 智能体 IRP 注册表（AGENTDEF5-001 扩编：四字段 + 十六类逐条齐）
+# 制度锚定: TDCA-AGENT-EXEC-001 | TDCA-PUB-CORPUS-048 条例机读版（时间型/来源/主体/税两层）
+#          | TDCA-AGENT-MATRIX-V2.2（V1 十六类）| TDCA-RULING-AGENT-DEFINITION-TERM-NORM-001
+# 版本: V2.0 | 状态: M1-CODED | FC: TDCA-FC-20260804-006
+# 生成链说明: 源库 tdca-official-kb 不在本仓；本表暂为权威，15 份 *-config.yaml 为旁证源
+#   （forbid = config.approval_required；eios_type/dims 由 verbs 按职能归纳，规则见回报 -117）。
+#   tax-officer 无 config，依据 microtax/microtax/tax_officer.py（TaxOfficerAgent 实体）从严登记。
+# tax_base 逐智能体映射无制度明文（开放判断点），按职能归并，候裁——见回报 -117 项 1。
+# SPDX-License-Identifier: TDCA-Internal
 agents:
-  - {agent: entropy-guard,  eios_type: AUDITOR,  dims: [interface_entropy, nsfl_scan], forbid: [contract.compile, contract.deploy, nsfl.fuse]}
-  - {agent: notary,         eios_type: AUDITOR,  dims: [nca, chain_verify, trace],     forbid: [contract.deploy, mou.anchor_real, contract.compile]}
-  - {agent: contract-coder, eios_type: EXECUTOR, dims: [const_encoding, mou_anchor],   forbid: [contract.deploy, nsfl.fuse, mou.anchor_real]}
-  # 其余 13 条按各自 tdca-official-kb/agents/*-config.yaml 的 verbs/approval_required 生成
+  # ---- 既有三条（AGENT-TASK-008-IMPL 示例，eios_type/dims/forbid 原值不动）----
+  - agent: entropy-guard
+    eios_type: AUDITOR
+    dims: [interface_entropy, nsfl_scan]
+    forbid: [contract.compile, contract.deploy, nsfl.fuse]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "治理/支撑类，审查与存证对象横跨交易与调度两层（职能归并，候裁）"
+  - agent: notary
+    eios_type: AUDITOR
+    dims: [nca, chain_verify, trace]
+    forbid: [contract.deploy, mou.anchor_real, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "治理/支撑类，审查与存证对象横跨交易与调度两层（职能归并，候裁）"
+  - agent: contract-coder
+    eios_type: EXECUTOR
+    dims: [const_encoding, mou_anchor]
+    forbid: [contract.deploy, nsfl.fuse, mou.anchor_real]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "合约同时编码交易税与调度税两层条款（职能归并，候裁）"
+  # ---- AGENTDEF5-001 新增十三条（forbid 取自各自 config.approval_required）----
+  - agent: code-reviewer
+    eios_type: AUDITOR
+    dims: [code_review, nsfl_scan, nca]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "治理/支撑类，审查与存证对象横跨交易与调度两层（职能归并，候裁）"
+  - agent: compliance-auditor
+    eios_type: AUDITOR
+    dims: [compliance_audit, nsfl_scan, nca]
+    forbid: [nsfl.fuse, mou.anchor_real, ota.apply_production]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "治理/支撑类，审查与存证对象横跨交易与调度两层（职能归并，候裁）"
+  - agent: economist
+    eios_type: EXECUTOR
+    dims: [mou_calc, shapley_alloc, upda_price, value_vector]
+    forbid: [mou.anchor_real, ota.apply_production, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "MOU=Tax_in+Tax_out 涉交易层，Shapley/UPDA 涉配置权调度层（职能归并，候裁）"
+  - agent: examiner
+    eios_type: AUDITOR
+    dims: [exam_generate, nca]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "治理/支撑类，审查与存证对象横跨交易与调度两层（职能归并，候裁）"
+  - agent: glossarian
+    eios_type: AUDITOR
+    dims: [terms_query]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "只读咨询类，术语对象横跨两层（职能归并，候裁）"
+  - agent: industry-advisor
+    eios_type: AUDITOR
+    dims: [industry_match, nca]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "咨询类，落地方案横跨交易与调度两层（职能归并，候裁）"
+  - agent: kg-qa
+    eios_type: AUDITOR
+    dims: [kg_query]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "只读咨询类，KG 对象横跨两层（职能归并，候裁）"
+  - agent: mou-anchor
+    eios_type: EXECUTOR
+    dims: [mou_anchor, mou_calc]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "MOU 锚定涉税收计算（交易层）与锚定配置（调度层）（职能归并，候裁）"
+  - agent: ota-manager
+    eios_type: AUDITOR
+    dims: [ota_design, nca]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "治理/支撑类，升级对象横跨两层（职能归并，候裁）"
+  - agent: pricer
+    eios_type: EXECUTOR
+    dims: [config_pricing, upda_price, value_vector]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: L2_调度
+    tax_note: "配置权定价 P_C 直接构成调度税对象（职能归并，候裁）"
+  - agent: scenario-designer
+    eios_type: AUDITOR
+    dims: [scenario_canvas, nsfl_scan, nca]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: L2_调度
+    tax_note: "场景画布/边界配置直接构成调度配置对象（职能归并，候裁）"
+  - agent: ta
+    eios_type: AUDITOR
+    dims: [ta_grading, nca]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: 双
+    tax_note: "教育支撑类，教学对象横跨两层（职能归并，候裁）"
+  - agent: tax-officer
+    eios_type: EXECUTOR
+    dims: [microtax_calc, prepay, settle]
+    forbid: [mou.anchor_real, ota.apply_production, nsfl.fuse, contract.deploy, contract.compile]
+    asset_temporality: 连续运行
+    derivation: {source: 原生, from: "", note: "官方智能体原生登记（NATIVE，条例机读版 genesis）"}
+    usage_mode: 被使用
+    usage_note: "执行体受权运行，受编排调用，无自运行面"
+    tax_base: L1_交易
+    tax_note: "微交付税收全流程（计税/预缴/结算）即交易税基（职能归并，候裁）"
