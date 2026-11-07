@@ -1,20 +1,23 @@
-# DUALCOPY-FIX-001 步2：双副本漂移门（WARN 级，不阻断合并；工具上架前须清零）
+# DUALCOPY-FIX-001 步2：双副本漂移门（11 组 WARN 级；
+# INVSOLVER-README-001 第 3 事起第 12 组 tdca-utility-genie 对为阻断级）
 name: dualcopy-drift-gate
 on:
   workflow_dispatch:
   push:
     paths: ["tools/**", "tdca-toolchain/**", "tdca-flow-orchestrator/**",
+            "tdca-utility-genie/**", "true-source/**",
             ".github/workflows/dualcopy-drift-gate.yml",
             ".github/scripts/dualcopy_drift_check.py"]
   pull_request:
     paths: ["tools/**", "tdca-toolchain/**", "tdca-flow-orchestrator/**",
+            "tdca-utility-genie/**", "true-source/**",
             ".github/workflows/dualcopy-drift-gate.yml",
             ".github/scripts/dualcopy_drift_check.py"]
 permissions:
   contents: read
 jobs:
   drift:
-    name: 11 组双副本同路径漂移检查（WARN）
+    name: 双副本同路径漂移检查（11 组 WARN ＋ tdca-utility-genie 组阻断）
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -22,5 +25,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: 漂移检查（WARN 级，退出码恒 0）
+      - name: 漂移检查（WARN 组只报告；阻断组新增漂移即红）
         run: python .github/scripts/dualcopy_drift_check.py
