@@ -23,13 +23,28 @@ class ConfigSpace:
 
 @dataclass
 class InverseSolution:
-    """反函数求解结果"""
+    """反函数求解结果
+
+    命名口径（2026-11-07 更正，依据 TDCA-DELIV-L1SI201-INVGOOD-MEAS-001 两实测）：
+      - candidate_utility_range 是**候选效用区间**（候选解效用的 min/max），
+        **不具覆盖率保证**，⛔ 不得读作置信区间（实测：宽度随采样变宽而精度改善）。
+      - confidence_interval 为**弃用兼容别名**，值同 candidate_utility_range，
+        仅为不破坏既有调用方而保留；新代码一律用 candidate_utility_range。
+    """
     config_vector: dict             # 配置权向量
     predicted_utility: float
-    confidence_interval: tuple      # (lo, hi)
     feasibility: str                # feasible / infeasible / conditional
     cost: float
     nca_trace: list = field(default_factory=list)
+    candidate_utility_range: tuple = ()           # (lo, hi) 候选效用区间，⛔ 置信区间
+    confidence_interval: Optional[tuple] = None  # ⚠️ 弃用兼容别名，请用 candidate_utility_range
+
+    def __post_init__(self):
+        # 兼容旧入参：只传 confidence_interval 而未传 candidate_utility_range 时回填
+        if not self.candidate_utility_range and self.confidence_interval:
+            self.candidate_utility_range = tuple(self.confidence_interval)
+        if self.confidence_interval is None:
+            self.confidence_interval = self.candidate_utility_range
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -44,7 +59,8 @@ class InverseFunctionSolver:
       - 给定目标效用 U_target，反推配置权输入 X
       - 满足: f(X) ≥ U_target，且 X 在配置权边界内
       - 若多解，选择总成本最小（或正和性最大）的解
-      - 若无解，触发负空间熔断，返回"不可行"+原因
+      - 若 ⭐ 在 n 次采样内 ⭐ 未找到解，触发负空间熔断，返回"不可行"+原因
+        （⚠️ 此判 ⛔ 等同「结构上无解」；见 TDCA-DELIV-L1SI201-INVGOOD-MEAS-001 假不可行率实测）
     """
 
     def __init__(self, samples: int = 1000, random_seed: Optional[int] = None):
@@ -66,7 +82,7 @@ class InverseFunctionSolver:
         返回反函数解:
           - config_vector: 配置权向量
           - predicted_utility: 预测效用值
-          - confidence_interval: 置信区间
+          - candidate_utility_range: 候选效用区间（候选解 min/max，⛔ 置信区间）
           - feasibility: 可行/不可行/条件可行
           - nca_trace: 求解过程 NCA
         """
@@ -96,25 +112,35 @@ class InverseFunctionSolver:
                 })
 
         if not candidates:
+            # ⚠️ 语义更正（2026-11-07）：此分支只表示「在 n 次采样内未找到」，
+            # ⛔ 不得读作「结构上无解」。依据 TDCA-DELIV-L1SI201-INVGOOD-MEAS-001：
+            # n≤30 时假不可行率 42%~82%。
             return InverseSolution(
                 config_vector={},
                 predicted_utility=0.0,
-                confidence_interval=(0.0, 0.0),
+                candidate_utility_range=(0.0, 0.0),
                 feasibility='infeasible',
                 cost=0.0,
-                nca_trace=[{'status': 'NSFL-TRIGGER', 'reason': '无可行解满足目标效用'}],
+                nca_trace=[{
+                    'status': 'NSFL-TRIGGER',
+                    'reason': '在 %d 次采样内未找到满足目标的解' % self.samples,
+                    'samples': self.samples,
+                    'candidates_found': 0,
+                }],
             )
 
         # 多解选择：成本最小优先，其次效用最大
         best = min(candidates, key=lambda c: (c['cost'], -c['utility']))
 
-        # 置信区间：基于候选解的效用分布（简化：min-max）
+        # 候选效用区间：基于候选解的效用分布（简化：min-max）
+        # ⚠️ 名实口径（2026-11-07）：此区间 ⛔ 置信区间，无覆盖率保证
         utilities = [c['utility'] for c in candidates]
         ci_lo = min(utilities)
         ci_hi = max(utilities)
 
         nca_trace.append({
             'candidates_found': len(candidates),
+            'samples': self.samples,
             'selected_cost': best['cost'],
             'selected_utility': best['utility'],
             'feasibility': 'feasible',
@@ -123,7 +149,7 @@ class InverseFunctionSolver:
         return InverseSolution(
             config_vector=best['config'],
             predicted_utility=best['utility'],
-            confidence_interval=(ci_lo, ci_hi),
+            candidate_utility_range=(ci_lo, ci_hi),
             feasibility='feasible',
             cost=best['cost'],
             nca_trace=nca_trace,
