@@ -1,0 +1,174 @@
+# -*- coding: utf-8 -*-
+# gate-deploy —— 部署面门禁（TDCA-HANDOFF-EXEC-L1SI205-CI-DEPLOY-GATE-001）
+# 触发面：deploy/** 与本工作流自身。五作业皆硬挡（⛔ continue-on-error）。
+# 核心断言：nginx 白名单只增不减（减词＝对外页面静默 404）；nginx 语法；
+# compose 双件服务名集合一致；deploy/** 编码静态（UTF-8 无 BOM、LF）。
+name: gate-deploy
+
+on:
+  push:
+    paths:
+      - "deploy/**"
+      - ".github/workflows/gate-deploy.yml"
+  pull_request:
+    paths:
+      - "deploy/**"
+      - ".github/workflows/gate-deploy.yml"
+
+permissions:
+  contents: read
+
+env:
+  CONF: deploy/nginx/default.conf
+
+jobs:
+  whitelist-monotonic:
+    name: 主白名单只增不减＋必含七词
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 主白名单单调断言
+        run: |
+          python3 - <<'PY'
+          import re, subprocess, sys
+          def wl(text):
+              for l in text.splitlines():
+                  m = re.search(r'~\*\^/\(([^)]+)\)', l)
+                  if m:
+                      return set(m.group(1).split('|'))
+              raise SystemExit('未找到主白名单行')
+          new = wl(open('deploy/nginx/default.conf', encoding='utf-8').read())
+          base = wl(subprocess.run(
+              ['git', 'show', 'origin/main:deploy/nginx/default.conf'],
+              capture_output=True, check=True).stdout.decode('utf-8'))
+          missing = base - new
+          assert not missing, f'白名单减词（只增不减违例）: {sorted(missing)}'
+          need = {'registrations', 'authorization', 'curation', 'docs', 'library', 'ops', 'me'}
+          lack = need - new
+          assert not lack, f'必含词缺失: {sorted(lack)}'
+          print(f'PASS base={len(base)} new={len(new)} 增词={sorted(new - base)}')
+          PY
+
+  whitelist-api:
+    name: API白名单只增不减
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: API白名单单调断言
+        run: |
+          python3 - <<'PY'
+          import re, subprocess
+          def api_words(text):
+              for l in text.splitlines():
+                  if re.search(r'location ~ \^/api/', l):
+                      return set(re.findall(r'[a-z][a-z0-9-]*', l.split('(', 1)[1]))
+              raise SystemExit('未找到 API 白名单行')
+          new = api_words(open('deploy/nginx/default.conf', encoding='utf-8').read())
+          base = api_words(subprocess.run(
+              ['git', 'show', 'origin/main:deploy/nginx/default.conf'],
+              capture_output=True, check=True).stdout.decode('utf-8'))
+          missing = base - new
+          assert not missing, f'API 白名单减词（只增不减违例）: {sorted(missing)}'
+          print(f'PASS base={len(base)} new={len(new)} 增词={sorted(new - base)}')
+          PY
+
+  nginx-syntax:
+    name: nginx语法（docker优先·退化明示）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: docker nginx -t（自备哑证与主机名）
+        run: |
+          set -e
+          if docker info >/dev/null 2>&1; then
+            mkdir -p /tmp/tls
+            openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+              -subj '/CN=tdca.com.cn' \
+              -keyout /tmp/tls/tdca.com.cn.key -out /tmp/tls/tdca.com.cn.pem >/dev/null 2>&1
+            docker run --rm \
+              --add-host gateway:127.0.0.1 --add-host nl:127.0.0.1 --add-host mcp-bridge:127.0.0.1 \
+              -v "$PWD/deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro" \
+              -v /tmp/tls:/etc/nginx/tls:ro \
+              nginx:alpine nginx -t
+          else
+            echo "DEGRADED: docker-unavailable"
+            python3 - <<'PY'
+            s = open('deploy/nginx/default.conf', encoding='utf-8').read()
+            assert s.count('{') == s.count('}'), '花括号不配平'
+            assert s.count('(') == s.count(')'), '圆括号不配平'
+            for i, l in enumerate(s.splitlines(), 1):
+                t = l.strip()
+                if not t or t.startswith('#') or t.endswith('{') or t.endswith('}'):
+                    continue
+                assert t.endswith(';'), f'第 {i} 行指令未以 ; 结尾: {t[:60]}'
+            print('DEGRADED-PASS 配平与指令尾断言过')
+            PY
+          fi
+
+  compose-parse:
+    name: compose双件YAML可解析＋服务名同集
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: 解析并比对服务名
+        run: |
+          pip install -q pyyaml
+          python3 - <<'PY'
+          import yaml
+          a = yaml.safe_load(open('deploy/docker-compose.yml', encoding='utf-8')) or {}
+          b = yaml.safe_load(open('deploy/docker-compose.station-20261103.yml', encoding='utf-8')) or {}
+          sa, sb = set((a.get('services') or {}).keys()), set((b.get('services') or {}).keys())
+          print('docker-compose.yml services:', sorted(sa))
+          print('station-20261103 services:', sorted(sb))
+          assert sa == sb, f'服务名集合不同（⛔ 就地统一，停手回报）: 仅A={sorted(sa-sb)} 仅B={sorted(sb-sa)}'
+          print('PASS 服务名集合一致')
+          PY
+
+  encoding-static:
+    name: deploy编码静态＋公共静件五件在位
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: UTF-8无BOM＋LF＋五件非空
+        run: |
+          python3 - <<'PY'
+          import os, sys
+          BIN = {'.ico', '.zip', '.png', '.jpg', '.jpeg', '.gz', '.tgz', '.pem', '.key', '.woff', '.woff2'}
+          bad = []
+          n = 0
+          for root, dirs, files in os.walk('deploy'):
+              dirs[:] = [d for d in dirs if d != '__pycache__']
+              for f in files:
+                  p = os.path.join(root, f)
+                  ext = os.path.splitext(f)[1].lower()
+                  if ext in BIN:
+                      continue
+                  n += 1
+                  b = open(p, 'rb').read()
+                  if b.startswith(b'\xef\xbb\xbf'):
+                      bad.append(f'{p}: 有 BOM')
+                  try:
+                      b.decode('utf-8')
+                  except UnicodeDecodeError:
+                      bad.append(f'{p}: 非 UTF-8')
+                      continue
+                  if b'\r' in b:
+                      bad.append(f'{p}: 行尾非 LF（含 CR）')
+          for line in bad:
+              print('BAD', line)
+          assert not bad, f'编码违规 {len(bad)} 处'
+          five = ['favicon.ico', 'llms.txt', 'manifest.json', 'robots.txt', 'sitemap.xml']
+          for f in five:
+                  p = os.path.join('deploy/ops-files/public-static', f)
+                  assert os.path.isfile(p) and os.path.getsize(p) > 0, f'{f} 缺或空'
+          print(f'PASS 文本件 {n} 件编码合规；五件公共静件在位非空')
+          PY
