@@ -42,6 +42,8 @@ import { SiteLayout } from './components/SiteLayout'
 import { ChannelHome } from './pages/ChannelHome'
 // 批 3：协作流程汇总页（/process）——新增路由，现有路径不动
 import { ProcessOverviewPage } from './pages/ProcessOverview'
+// REGISTRY-PAGE-001：公域登记查询页（/registrations——匿名只读公域区，新增路由，现有路径不动）
+import { RegistrationsPage } from './pages/RegistrationsPage'
 
 export default function App() {
   return (
@@ -57,6 +59,8 @@ export default function App() {
         <Route path="/channel/tools" element={<ChannelHome channel="tools" />} />
         {/* 批 3：协作流程汇总页（新增，不改现有路径） */}
         <Route path="/process" element={<ProcessOverviewPage />} />
+        {/* REGISTRY-PAGE-001：公域登记查询（匿名只读；零新后端，三端点全匿名 GET） */}
+        <Route path="/registrations" element={<RegistrationsPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/me" element={<MePage />} />

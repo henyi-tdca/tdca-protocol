@@ -57,6 +57,7 @@ const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] =
     items: [
       { to: '/about', label: '关于' },
       { to: '/announcements', label: '公告栏' },
+      { to: '/registrations', label: '登记查询' },
       { to: '/library', label: '知识库' },
       { to: '/academy', label: '商学院（在建中）' },
     ],
