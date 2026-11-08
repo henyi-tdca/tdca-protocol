@@ -1,0 +1,62 @@
+# gate-site —— L1-SI-205 前端门禁：tdca-site 全量测试硬门 + 全仓件名 UTF-8 字节断言
+# 令：TDCA-HANDOFF-EXEC-L1SI205-GATE-SITE-002（GSEQ-7646 原令因存量 12 红 S-1 停手，GSEQ-7649 清零后恢复施工）
+name: gate-site
+on:
+  workflow_dispatch:
+  push:
+    paths: ["true-source/tdca-site/**", ".github/workflows/gate-site.yml"]
+  pull_request:
+    paths: ["true-source/tdca-site/**", ".github/workflows/gate-site.yml"]
+permissions:
+  contents: read
+jobs:
+  site-tests:
+    name: tdca-site 全量测试（硬门）
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: true-source/tdca-site/package-lock.json
+      - name: 安装依赖
+        working-directory: true-source/tdca-site
+        run: npm ci
+      - name: 全量 vitest（硬门：有红即败，存量已对齐 155 全绿）
+        working-directory: true-source/tdca-site
+        run: npx vitest run
+  filename-bytes:
+    name: 件名 UTF-8 字节断言（最后一分量 >200 即红）
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: 逐件名计字节（存量 18 件走基线豁免；此后新件一律不得入基线）
+        run: |
+          git -c core.quotepath=false ls-tree -r --name-only HEAD > /tmp/repo_paths.txt
+          python3 - <<'EOF'
+          import sys
+          baseline = set()
+          with open('tools/ci_filename_baseline.txt', encoding='utf-8') as f:
+              baseline = {l.strip() for l in f if l.strip()}
+          exempt_hits = 0
+          bad = []
+          with open('/tmp/repo_paths.txt', encoding='utf-8') as f:
+              for line in f:
+                  path = line.rstrip('\n')
+                  comp = path.split('/')[-1]
+                  n = len(comp.encode('utf-8'))
+                  if n > 200:
+                      if path in baseline:
+                          exempt_hits += 1
+                      else:
+                          bad.append((n, path))
+          print(f'baseline exempt hits = {exempt_hits} (expect 18)')
+          for n, p in sorted(bad, key=lambda x: -x[0]):
+              print(f'OVER200 {n}B {p}')
+          if bad:
+              print(f'::error::件名 UTF-8 字节 >200 且不在基线：{len(bad)} 件（逐件见上；⛔就地放宽基线）')
+              sys.exit(1)
+          EOF
