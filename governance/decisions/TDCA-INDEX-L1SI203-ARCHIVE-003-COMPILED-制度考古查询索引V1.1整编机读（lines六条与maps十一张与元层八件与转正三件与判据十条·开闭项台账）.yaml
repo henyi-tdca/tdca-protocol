@@ -1,0 +1,75 @@
+index_id: 'TDCA-INDEX-L1SI203-ARCHIVE-003-COMPILED'
+version: 'V1.1'
+kind: 'CONSOLIDATED'
+generated_at: '2026-11-08T12:50:00+08:00'
+paired_with: 'TDCA-INDEX-L1SI203-ARCHIVE-003'
+supersedes: ['TDCA-INDEX-L1SI203-ARCHIVE-001', 'TDCA-INDEX-L1SI203-ARCHIVE-001-COMPILED', 'TDCA-INDEX-L1SI203-ARCHIVE-002', 'TDCA-INDEX-L1SI203-ARCHIVE-002-COMPILED']
+supersede_rule: '整编替代其现行地位；旧四件保真不回改'
+authority: '账本为权威；本索引为检索工具；不符出更正件'
+lines:
+  - id: 'B线横切'
+    scale: 2180
+    lead: {id: 'TDCA-CLOSE-L1SI201-ARCHIVE-B-LINE-001', book: 'checks'}
+  - id: '纵切首件'
+    scale: 27
+    lead: {id: 'TDCA-CASE-L1SI203-ENTROPY-001', book: 'assessments', sha256_16: '28FB3BB289A3A011'}
+  - id: '纵切余六组'
+    scale: 162
+    read_ratio: 0.09
+    lead: {id: 'TDCA-CASE-L1SI203-MULTI6-001', book: 'assessments'}
+  - id: '过程面十一张图'
+    lead: {id: 'TDCA-MAP-L1SI203-DISCIPLINE-PIPELINE-001', book: 'designs'}
+  - id: '元层工作制度'
+    scale: 5
+    lead: {id: 'TDCA-REG-HUMAN-AI-COLLAB-001', book: 'documents', status: 'V1.0-FROZEN'}
+  - id: '收口'
+    lead: {id: 'TDCA-REPORT-L1SI203-ARCHIVE-CLOSE-001', book: 'assessments'}
+maps:
+  - {no: 1, id: 'TDCA-CLOSE-L1SI201-ARCHIVE-B-LINE-001', book: 'checks', sha256_16: '1F35E3A014C435BB'}
+  - {no: 2, id: 'TDCA-CASE-L1SI203-ENTROPY-001', book: 'assessments', sha256_16: '28FB3BB289A3A011'}
+  - {no: 3, id: 'TDCA-ASSESS-COLLAB-FULLCHAIN-MAP-001', book: 'designs', sha256_16: '09B1EF64AD58629F'}
+  - {no: 4, id: 'TDCA-ASSESS-INST-WORK-COUPLING-AUDIT-001', book: 'designs', sha256_16: '419B9DB08158684B'}
+  - {no: 5, id: 'TDCA-MAP-L1SI203-DISCIPLINE-PIPELINE-001', book: 'designs', sha256_16: '3BF47D5CF25AE31C'}
+  - {no: 6, id: 'TDCA-MAP-L1SI203-FAILLINE-001', book: 'designs', sha256_16: '635DFFD96CBDCA27'}
+  - {no: 7, id: 'TDCA-MAP-L1SI203-CROSSREF-001', book: 'designs', sha256_16: '8BC0AC8E9F36A37E'}
+  - {no: 8, id: 'TDCA-MAP-L1SI203-REVIVAL-001', book: 'designs', sha256_16: 'E30F01295D851993'}
+  - {no: 9, id: 'TDCA-MAP-L1SI203-CROSSREF2-001', book: 'designs', sha256_16: '12151685ACD9935B'}
+  - {no: 10, id: 'TDCA-MAP-L1SI203-CROSSREF3-001', book: 'designs', sha256_16: 'C16A7CF501A7C111'}
+  - {no: 11, id: 'TDCA-REPORT-L1SI203-ARCHIVE-CLOSE-001', book: 'assessments', sha256_16: 'SEE-LEDGER'}
+meta_layer:
+  - {id: 'TDCA-SELFREPORT-REASONIX-L1SI203-001', book: 'assessments', role: '自报清单第一轮', sha256_16: 'E5275B07C1775A67'}
+  - {id: 'TDCA-PROPOSAL-HUMAN-AI-COLLAB-001', book: 'proposals', role: '机制提案（提案层被取代）', sha256_16: '9DEA59407512450A'}
+  - {id: 'TDCA-ASSESS-L1SI203-LONGSESSION-001', book: 'assessments', role: '外部纪要评估', sha256_16: '881272BEC559D549'}
+  - {id: 'TDCA-STD-HUMAN-AI-COLLAB-001', book: 'standards', role: '方法论与制度草案', sha256_16: 'C2C4DD2DC5056FBF'}
+  - {id: 'TDCA-REG-HUMAN-AI-COLLAB-001', book: 'documents', role: '条例人读 V1.0-FROZEN'}
+  - {id: 'TDCA-REG-HUMAN-AI-COLLAB-001-COMPILED', book: 'documents', role: '条例机读'}
+  - {id: 'TDCA-SIGNOFF-REG-HUMAN-AI-COLLAB-001', book: 'documents', role: '生效签批落地件'}
+  - {id: 'TDCA-REG-HUMAN-AI-COLLAB-001-COMPILED-AMEND-1', book: 'documents', role: '生效增量机读'}
+promotion_evidence:
+  - {stage: 2, id: 'TDCA-GOVKIT-HUMAN-AI-COLLAB-001', book: 'checks'}
+  - {stage: 3, id: 'TDCA-ASSERT-HUMAN-AI-COLLAB-001', book: 'checks'}
+  - {stage: 4, id: 'TDCA-SANDBOX-HUMAN-AI-COLLAB-001', book: 'checks'}
+criteria_index:
+  - {name: '必要性审 4a', first: '研究治理包'}
+  - {name: 'GK-01 试验门', first: '研究治理包'}
+  - {name: '形状先于立项', first: 'TDCA-RULING-LEAN-ENTROPY-SANDBOX-001'}
+  - {name: '四步证据齐', first: '制度转正四步程序'}
+  - {name: '追加制（前件不回改）', first: '在册红线'}
+  - {name: '册内锚点（件号＋所在册）', first: 'TDCA-RULING-L1SI203-CATALOG-ANCHOR-001'}
+  - {name: '明示两类', first: '创始人 2026-11-06 逐字'}
+  - {name: '失效三级转化', first: 'GSEQ-6635~6637'}
+  - {name: '一般性与长尾分野', first: 'TDCA-RULING-SRTA-TIER-CRITERIA-003'}
+  - {name: '满意解（非最优）', first: 'TDCA-AMEND-EXP-IPASSESS-001 系列'}
+open_items:
+  - {id: 'N-3', desc: '挂起项逐件人核（次批；本批抽样 6：等条件 4／疑死项 2／已复活 0）', status: 'NEXT-BATCH'}
+closed_items:
+  - {id: 'N-1', desc: '余六组课题考古', done_by: 'TDCA-CASE-L1SI203-MULTI6-001'}
+  - {id: 'N-2', desc: '条级被引排行', done_by: 'TDCA-PLAN-L1SI203-ARCHIVE-CLOSE-001'}
+  - {id: 'N-4', desc: '失败线对外面', done_by: 'TDCA-PLAN-L1SI203-ARCHIVE-CLOSE-001'}
+  - {id: 'N-5', desc: '报告入仓口径', done_by: 'TDCA-AMEND-HANDOFF-EXEC-L1SI203-ARCHIVE-REPO-001-001'}
+maintenance:
+  - '新增当批补入（人读＋机读同批）'
+  - '改名或重出出更正件指名，不回改旧行'
+  - '哈希实测，不符以实物为准'
+  - '不收未登记件'
+  - '条目超 40 条出 V1.2 整编（阈值自 30 上调）'
