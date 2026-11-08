@@ -6,8 +6,9 @@
         POST /api/v1/ci/run           匿名 401（触发仍须登录）
         GET  /api/v1/ci/runs          匿名 401（历史仍须登录）
   S1-1  GET /api/v1/formal/conclusion/catalog 匿名 200，字段只含
-        claim_text/data_nature（⛔ conclusion_id/nca_ref/scope_note）；
-        含内部编号存量行整行不列（fail-closed）
+        claim_text/data_nature/scope_summary（⛔ conclusion_id/nca_ref/scope_note）；
+        含内部编号存量行整行不列（fail-closed）；
+        formal-proved 无对外版 scope_summary 亦不列（CLAIMFIX-001 A-3）
   S1-2  GET /api/v1/toolshelf/catalog 匿名 200，字段只含 name/category/purpose；
         命中脱敏正则整件不列；POST /register 匿名 401
   S1-4  GET /api/v1/library/paper/catalog 匿名 200（slug/title/摘要）；
@@ -46,11 +47,17 @@ def _seed():
         s.add(M.FormalConclusion(
             conclusion_id="FC-B1TEST-01", claim_text="协调天花板在有限层级内成立",
             data_nature="formal-proved", scope_note="限于离散层级",
+            scope_summary="限于离散层级的对外版表述",
             nca_ref=None, created_at="2026-10-26T00:00:00+00:00"))
         s.add(M.FormalConclusion(
             conclusion_id="FC-B1TEST-02", claim_text="本结论引用内部件号 TL-ABC123 须被挡",
             data_nature="assessed", scope_note=None,
             nca_ref=None, created_at="2026-10-26T00:01:00+00:00"))
+        s.add(M.FormalConclusion(
+            conclusion_id="FC-B1TEST-03", claim_text="本结论无对外版故不列",
+            data_nature="formal-proved", scope_note="内部边界备注",
+            scope_summary=None,
+            nca_ref=None, created_at="2026-10-26T00:02:00+00:00"))
         s.add(M.ToolItem(tool_id="TL-B1TEST-01", name="NSFL 编译器", category="compiler",
                          description="将 NSFL 源编译为可执行目标。第二句不返。",
                          version="1.0", requires_grant=1, status="available",
@@ -64,7 +71,7 @@ def _seed():
         for m, col, vals in [
                 (M.CiRun, M.CiRun.run_id, ["CI-B1TEST-01"]),
                 (M.FormalConclusion, M.FormalConclusion.conclusion_id,
-                 ["FC-B1TEST-01", "FC-B1TEST-02"]),
+                 ["FC-B1TEST-01", "FC-B1TEST-02", "FC-B1TEST-03"]),
                 (M.ToolItem, M.ToolItem.tool_id, ["TL-B1TEST-01", "TL-B1TEST-02"])]:
             for v in vals:
                 s.query(m).filter(col == v).delete()
@@ -122,10 +129,12 @@ def test_s11_conclusion_catalog_anonymous(_seed):
     r = client.get("/api/v1/formal/conclusion/catalog")
     assert r.status_code == 200, r.text[:200]
     items = r.json()["data"]["conclusions"]
-    assert len(items) == 1            # FC-B1TEST-02 含内部编号 → 整行不列
+    # FC-B1TEST-02 含内部编号 → 整行不列；FC-B1TEST-03 formal-proved 无对外版 → A-3 不列
+    assert len(items) == 1
     row = items[0]
-    assert set(row.keys()) == {"claim_text", "data_nature"}
+    assert set(row.keys()) == {"claim_text", "data_nature", "scope_summary"}
     assert row["data_nature"] == "formal-proved"
+    assert row["scope_summary"] == "限于离散层级的对外版表述"
 
 
 def test_s11_conclusion_list_still_authed(_seed):
