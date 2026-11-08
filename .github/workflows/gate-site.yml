@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: 逐件名计字节（存量 18 件走基线豁免；此后新件一律不得入基线）
         run: |
-          git ls-tree -r --name-only HEAD > /tmp/repo_paths.txt
+          git -c core.quotepath=false ls-tree -r --name-only HEAD > /tmp/repo_paths.txt
           python3 - <<'EOF'
           import sys
           baseline = set()
