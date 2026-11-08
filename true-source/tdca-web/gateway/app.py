@@ -148,6 +148,10 @@ app.include_router(market_sim_ops_router)
 from library_ops import router as library_ops_router  # noqa: E402
 app.include_router(library_ops_router)
 
+# GENESIS-007: 内部权属登记（建设期）公域匿名只读面（/api/public/registrations/*；三组字+双向两行；四条扫描）
+from registrations_public_ops import router as registrations_public_ops_router  # noqa: E402
+app.include_router(registrations_public_ops_router)
+
 # A-23: 公告栏（/api/v1/announcements/*——对外公告区；公开读；发布须 operator/founder 且经创始人明示；NCA 存证）
 from announcements_ops import router as announcements_ops_router  # noqa: E402
 app.include_router(announcements_ops_router)
