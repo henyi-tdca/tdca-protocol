@@ -82,9 +82,16 @@ def test_family_closed_set(_docs_table):
     h = _auth("libtester01")
     r = client.get("/api/v1/library/unknown", headers=h)
     assert r.status_code == 404
-    # LIB-DOCS-SCOPE-001：regulation（制度类）归文档库 /api/site/docs——知识库闭集
-    # 收窄为 whitepaper/paper/terms/kg/cop-library，regulation 须 404（零重叠）
+    # ANON-READ-001（2026-11-08，依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions
+    # 「对外公开制度不需要注册可见」取甲）：regulation 制度族并入知识库匿名只读面——
+    # 件目即白名单（200；与 LIB-DOCS-SCOPE-001 旧口径的更迭在册）
     r = client.get("/api/v1/library/regulation", headers=h)
+    assert r.status_code == 200, r.text[:200]
+    # 写方法守卫：制度族只读（fail-closed 403）
+    r = client.post("/api/v1/library/regulation", headers=h)
+    assert r.status_code == 403
+    # 白名单外 slug 404
+    r = client.get("/api/v1/library/regulation/NO-SUCH-REG.md", headers=h)
     assert r.status_code == 404
     # 新族位 terms/kg：零行只建位，族面可列（200）
     r = client.get("/api/v1/library/terms", headers=h)
