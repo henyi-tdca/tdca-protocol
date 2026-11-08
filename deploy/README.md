@@ -64,3 +64,5 @@ rm -f /etc/ssh/sshd_config.d/00-tdca.conf; usermod -p '*' root; systemctl restar
 - **运行源＝仓内正源**：gateway/web 镜像由 `true-source/tdca-web/` 构建；FROZEN zip 转归档（`deploy/archive/`），⛔ 不再作源。
 - **部署后必对账**：`python deploy/reconcile.py collect --out remote.json`（SSH 取线上指纹）→ `python deploy/reconcile.py compare --remote remote.json`；FAIL 即停手查因，⛔ 不得部署/不得结案。
 - **部署登记**：每次部署登记所用 commit 与构建产物指纹（无登记＝未部署）。
+
+<!-- gate-deploy 触发试验注记（跑完即撤，不入 main）2026-11-09 -->
