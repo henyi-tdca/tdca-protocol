@@ -99,17 +99,7 @@ jobs:
               nginx:alpine nginx -t
           else
             echo "DEGRADED: docker-unavailable"
-            python3 - <<'PY'
-            s = open('deploy/nginx/default.conf', encoding='utf-8').read()
-            assert s.count('{') == s.count('}'), '花括号不配平'
-            assert s.count('(') == s.count(')'), '圆括号不配平'
-            for i, l in enumerate(s.splitlines(), 1):
-                t = l.strip()
-                if not t or t.startswith('#') or t.endswith('{') or t.endswith('}'):
-                    continue
-                assert t.endswith(';'), f'第 {i} 行指令未以 ; 结尾: {t[:60]}'
-            print('DEGRADED-PASS 配平与指令尾断言过')
-            PY
+            python3 -c "s=open('deploy/nginx/default.conf',encoding='utf-8').read(); assert s.count('{')==s.count('}'),'花括号不配平'; assert s.count('(')==s.count(')'),'圆括号不配平'; bad=[(i,l.strip()) for i,l in enumerate(s.splitlines(),1) if (t:=l.split('#',1)[0].strip()) and not t.endswith('{') and not t.endswith('}') and not t.endswith(';')]; assert not bad,'第 %d 行指令未以 ; 结尾: %s'%(bad[0][0],bad[0][1][:60]); print('DEGRADED-PASS 配平与指令尾断言过（行尾注释已容忍）')"
           fi
 
   compose-parse:
