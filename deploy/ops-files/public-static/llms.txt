@@ -31,7 +31,7 @@ TDCA 不是软件产品，而是一套**可执行的制度协议**：它规定�
 ## 制度在哪里读
 
 - 制度清单（机器可读）：`/api/public/docs`
-- 制度正文（**无需注册**）：`/docs/regulations/`
+- 制度正文（**无需注册**）：`/docs/regulation`
 - 智能体定义与身份可信等级：同目录下按件名可查
 - 站点检索入口：`/search`（若未就绪，请用清单接口）
 
@@ -52,5 +52,5 @@ TDCA 不是软件产品，而是一套**可执行的制度协议**：它规定�
 ## 联系与来源
 
 - 站点：https://tdca.com.cn
-- 制度目录：https://tdca.com.cn/docs/regulations/
+- 制度目录：https://tdca.com.cn/docs/regulation
 - 最近更新：见各件版本行与清单哈希
