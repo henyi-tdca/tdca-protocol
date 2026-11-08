@@ -10,7 +10,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import Home from '@/pages/Home'
+// 对齐令 SITE-TESTFIX-001（甲组）：F1 橱窗层 KPI/fail-closed 面已随迁 /overview（FRONTEND-MERGE
+// 新壳首页改为静态落地页，无 A-1 接线）——本件改渲染对象为 OverviewPage，断言（home-kpi /
+// home-fail-closed testid）随面随迁、一字未动。
+import { OverviewPage } from '@/pages/Overview'
+
+// /overview 面内嵌五元拓扑 Ω（TopologyEngine/Cytoscape）——jsdom 无 canvas 环境，
+// 照 visual-home / routing 同款做法 stub 布局计算（仅脚手架，不动断言）
+vi.mock('cytoscape', () => {
+  const fakeNode = () => ({ position: () => ({ x: 10, y: 10 }), id: () => 'n' })
+  const fakeCore = {
+    nodes: () => [fakeNode()],
+    elements: () => ({ boundingBox: () => ({ x1: 0, y1: 0, x2: 100, y2: 100 }), nodes: () => [fakeNode()] }),
+    ready: (cb: () => void) => cb(),
+    destroy: () => {},
+  }
+  return { default: () => fakeCore }
+})
 
 function envelope(payload: unknown) {
   return { data: payload, nca_watermark: 'sha256:test', ts: '2026-08-12T00:00:00Z', data_nature: 'simulated' }
@@ -48,7 +64,7 @@ describe('F1 橱窗层页面接线 · 首页', () => {
     })
     render(
       <MemoryRouter>
-        <Home />
+        <OverviewPage />
       </MemoryRouter>,
     )
     await waitFor(() => expect(screen.getByTestId('home-kpi')).toBeInTheDocument())
@@ -60,7 +76,7 @@ describe('F1 橱窗层页面接线 · 首页', () => {
     mockApi('/api/v1/system/overview', {}, true)
     render(
       <MemoryRouter>
-        <Home />
+        <OverviewPage />
       </MemoryRouter>,
     )
     await waitFor(() => expect(screen.getByTestId('home-fail-closed')).toBeInTheDocument())

@@ -24,17 +24,20 @@ describe('F0-A5 模拟态标注（ID92）', () => {
     expect(screen.getByTestId('simulated-badge')).toBeInTheDocument()
   })
 
-  it('应用壳顶部全站模拟态横幅', () => {
+  it('模拟态标注随件呈现：模拟面经 App 渲染带 SIMULATED 角标（旧「全站顶部横幅」已随壳改撤，ID92 标注下沉为 SimulatedBadge 逐件呈现）', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/studio']}>
         <App />
       </MemoryRouter>,
     )
-    expect(screen.getByText(/全站模拟态 data_nature=simulated/)).toBeInTheDocument()
+    // /studio 化合衍生与通道实况两节各带一枚角标——断言「至少一枚 SIMULATED」
+    const badges = screen.getAllByTestId('simulated-badge')
+    expect(badges.length).toBeGreaterThan(0)
+    expect(badges[0]).toHaveTextContent('SIMULATED')
   })
 })
 
-// HomePage 新增五元拓扑 Ω（TopologyEngine/Cytoscape）——jsdom stub 布局计算
+// App 级渲染可能经 TopologyEngine（Cytoscape）——jsdom 无布局环境，stub 布局计算
 vi.mock('cytoscape', () => {
   const fakeNode = () => ({ position: () => ({ x: 10, y: 10 }), id: () => 'n' })
   const fakeCore = {
