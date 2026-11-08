@@ -40,12 +40,21 @@ function renderAt(path: string) {
 }
 
 describe('F0-A2 路由骨架（15 路由 + 404）', () => {
-  it('29 路由全部可达且渲染对应页面标题（15 + F-2 /auth + M4 /register + M5 双后台 + ABT-1 /about + P1 /workbuddy + P2 /cluster + P3 /formal + P4 /toolshelf + P6 /anchors + P7 /ops + P8a /ownership-registry + P8b /authorization-registry + P9 /market-sim + 智能体区 /agent-shelf + 公告栏 /announcements）', () => {
-    expect(PAGE_META).toHaveLength(32)
+  it('在册 8 面全部可达且各面渲染标题（册题权威在站点地图逐字呈现）', () => {
+    // 对齐令 SITE-TESTFIX-001（甲组）：缩面为有意——PagesIndex 并轨注记自陈「本批四面＋新版既有四面共 8 条」；
+    // 缔约申请页已撤（ACCESS-FIX-001-AMEND-1 交付二：注册已含缔约同意）。旧期望 32 系滞后。
+    expect(PAGE_META).toHaveLength(8)
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
-      expect(screen.getByRole('heading', { name: meta.title })).toBeInTheDocument()
+      // 逐面可达且渲染至少一枚标题（壳题以页面实读为准：册题与壳题注记差异存在——
+      // 如 册题「审查」对页题「缔约审核」、册题「注册（缔约）」对页题「注册（人类账号）」，不判错）
+      expect(screen.getAllByRole('heading').length).toBeGreaterThan(0)
       unmount()
+    }
+    // 册题权威：站点地图逐字呈现 8 条登记标题
+    renderAt('/pages')
+    for (const meta of PAGE_META) {
+      expect(screen.getAllByText((_, el) => el?.textContent === meta.title).length).toBeGreaterThan(0)
     }
   })
 
@@ -62,25 +71,28 @@ describe('F0-A2 路由骨架（15 路由 + 404）', () => {
     }
   })
 
-  it('应用壳常驻：导航 / HUF Banner / 层级指示器在每个路由渲染', () => {
-    const { unmount } = renderAt('/tax')
-    expect(screen.getByTestId('app-nav')).toBeInTheDocument()
-    expect(screen.getByTestId('huf-banner')).toBeInTheDocument()
-    expect(screen.getByTestId('layer-indicator')).toBeInTheDocument()
-    unmount()
+  it('应用壳常驻：导航在每个路由渲染（HUF Banner 与层级指示器已随 FRONTEND-MERGE 壳改撤出，见 PagesIndex 并轨注记「层级指示器未随迁」）', () => {
+    for (const p of ['/tax', '/studio', '/overview']) {
+      const { unmount } = renderAt(p)
+      expect(screen.getByTestId('app-nav')).toBeInTheDocument()
+      unmount()
+    }
   })
 
-  it('路由层级映射：/tax → L3 高亮', () => {
-    renderAt('/tax')
-    expect(screen.getByTestId('layer-indicator')).toHaveAttribute('data-current', 'L3')
+  it('路由层级数据契约：PAGE_META 逐条带非空 layer 字段（层级指示器已撤，layer 降为纯数据字段）', () => {
+    for (const meta of PAGE_META) {
+      expect(meta.layer).toMatch(/^\S+$/)
+    }
+    // 现册 8 面均为 L0（制度橱窗层）；层级映射随未来批次扩面时再按在册值断言
+    expect(PAGE_META.every((m) => m.layer === 'L0')).toBe(true)
   })
 
-  it('路由层级映射：/ownership → L1；/studio → STUDIO', () => {
+  it('/ownership 与 /studio 可达且渲染对应面（壳直挂，不设登录门槛——照 FRONTEND-MERGE 批3 核可口径）', () => {
     const r1 = renderAt('/ownership')
-    expect(screen.getByTestId('layer-indicator')).toHaveAttribute('data-current', 'L1')
+    expect(screen.getByTestId('page-shell')).toBeInTheDocument()
     r1.unmount()
     const r2 = renderAt('/studio')
-    expect(screen.getByTestId('layer-indicator')).toHaveAttribute('data-current', 'STUDIO')
+    expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
     r2.unmount()
   })
 })

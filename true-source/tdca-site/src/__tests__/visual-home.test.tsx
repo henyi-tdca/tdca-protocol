@@ -11,7 +11,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import Home from '@/pages/Home'
+// 对齐令 SITE-TESTFIX-001（甲组）：五元拓扑 Ω 面已随迁 /overview（home-omega 等 testid 在
+// OverviewPage 在位）——本件改渲染对象为 OverviewPage，Ω 断言（ID81）一字未动。
+import { OverviewPage } from '@/pages/Overview'
 
 vi.mock('cytoscape', () => {
   const fakeNode = () => ({ position: () => ({ x: 10, y: 10 }), id: () => 'n' })
@@ -57,10 +59,10 @@ afterEach(() => {
 })
 
 describe('VISUAL-001 可视化增强 · /home', () => {
-  it('/home：五元拓扑 Ω 挂载（H/M/L 顶点 + 五关系边，ID81）', async () => {
+  it('/overview：五元拓扑 Ω 挂载（H/M/L 顶点 + 五关系边，ID81）', async () => {
     const r = render(
       <MemoryRouter>
-        <Home />
+        <OverviewPage />
       </MemoryRouter>,
     )
     await waitFor(() => expect(screen.getByTestId('home-omega')).toBeInTheDocument())
