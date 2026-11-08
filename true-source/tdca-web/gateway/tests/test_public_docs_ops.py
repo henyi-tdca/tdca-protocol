@@ -84,7 +84,7 @@ def test_yilei_batch2_now_listed():
     r_list = client.get("/api/public/docs")
     listed = {e["filename"] for e in r_list.json()["documents"]}
     for name in (
-        "TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md",
+        "配置权市场授权追认附记.md",
         _YILEI,
         "TDCA-TEMPLATE-AUTH-001-生效注记.md",
     ):
@@ -179,48 +179,49 @@ def test_display_name_mapping_no_draft():
 
 
 def test_ingest002_list_42_no_droop():
-    """L1SI155-INGEST-002 防掉条用例：regulation 族 49 条（L1SI180-TERMS-004/005 三件上站后 44→47；
-    L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件入册后 47→49——断言随令更正照报）；
+    """L1SI155-INGEST-002 防掉条用例：regulation 族 50 条（L1SI180-TERMS-004/005 三件上站后 44→47；
+    L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件入册后 47→49；
+    L1SI204-REG-PUBLISH-001《人机协作工作条例》净名进站后 49→50——断言随令更正照报）；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 49, f"清单条数漂移: {data['count']}"
+    assert data["count"] == 50, f"清单条数漂移: {data['count']}"
     返回集 = {e["filename"] for e in data["documents"]}
     在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
     assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
     names = {e["filename"] for e in data["documents"]}
     must = {
         # L1SI154-028 九件（部署面已入册，⛔ 不得掉回不可见）
-        "TDCA-PUB-CORPUS-083-流程环节卡发现（五问·六类失败·第4张卡）.md",
-        "TDCA-PUB-CORPUS-084-流程环节卡相遇（五问·六类失败·第5张卡）.md",
-        "TDCA-PUB-CORPUS-085-流程环节卡握手（五问·七类失败·第6张卡）.md",
-        "TDCA-PUB-CORPUS-086-流程环节卡签约（五问·七类失败·第7张卡）.md",
-        "TDCA-PUB-CORPUS-087-流程环节卡交付（五问·七类失败·第8张卡）.md",
-        "TDCA-PUB-CORPUS-088-流程环节卡验收（五问·七类失败·第9张卡）.md",
-        "TDCA-PUB-CORPUS-090-卷四治理卷对外版（谁定规则与怎么改与怎么监督与争议边界·首件）.md",
-        "TDCA-PUB-CORPUS-091-卷五同构卷对外版（制度与技术同构与本体同构与场景嵌套·移植四步·边界四条）.md",
-        "TDCA-PUB-CORPUS-092-卷六助手与入口对外版（三类入口与助手四步接入与代签红线）.md",
+        "流程环节卡发现（五问·六类失败·第4张卡）.md",
+        "流程环节卡相遇（五问·六类失败·第5张卡）.md",
+        "流程环节卡握手（五问·七类失败·第6张卡）.md",
+        "流程环节卡签约（五问·七类失败·第7张卡）.md",
+        "流程环节卡交付（五问·七类失败·第8张卡）.md",
+        "流程环节卡验收（五问·七类失败·第9张卡）.md",
+        "卷四治理卷对外版（谁定规则与怎么改与怎么监督与争议边界·首件）.md",
+        "卷五同构卷对外版（制度与技术同构与本体同构与场景嵌套·移植四步·边界四条）.md",
+        "卷六助手与入口对外版（三类入口与助手四步接入与代签红线）.md",
         # L1SI155-INGEST-002 新 16 件
-        "TDCA-PUB-CORPUS-069-惩罚三态与守门器对外纯版（二十五条与AB九条·V1.0已生效2026-10-16）.md",
-        "TDCA-PUB-CORPUS-070-租户与环境作用域凭证绑定条例对外纯版（三规则一通路一分层·V1.0已生效2026-09-25）.md",
-        "TDCA-PUB-CORPUS-071-IP版权资产评估管理办法对外纯版（三十一条齐·V1.0已生效2026-09-30）.md",
-        "TDCA-PUB-CORPUS-074-制度治理规范对外纯版（六判据链·英文待补）.md",
-        "TDCA-PUB-CORPUS-058-流程环节卡注册缔约（五问·七类失败·三句固定·第三张卡）.md",
-        "TDCA-PUB-CORPUS-101-流程环节卡授权配置（五问·七类失败·第1张卡补五问版）.md",
-        "TDCA-PUB-CORPUS-102-流程环节卡结算计税（五问·七类失败·第2张卡补五问版）.md",
-        "TDCA-PUB-CORPUS-097-流程环节卡谈判（五问·七类失败·第10张卡）.md",
-        "TDCA-PUB-CORPUS-098-流程环节卡试错（五问·七类失败·第11张卡）.md",
-        "TDCA-PUB-CORPUS-099-流程环节卡验证（五问·七类失败·第12张卡）.md",
-        "TDCA-PUB-CORPUS-100-流程环节卡履约准备（五问·七类失败·第13张卡）.md",
-        "TDCA-PUB-CORPUS-093-流程环节卡履约（五问·七类失败·第14张卡）.md",
-        "TDCA-PUB-CORPUS-094-流程环节卡结算分配（五问·七类失败·第15张卡）.md",
-        "TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md",
-        "TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md",
-        "TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md",
+        "惩罚三态与守门器对外纯版（二十五条与AB九条·V1.0已生效2026-10-16）.md",
+        "租户与环境作用域凭证绑定条例对外纯版（三规则一通路一分层·V1.0已生效2026-09-25）.md",
+        "IP版权资产评估管理办法对外纯版（三十一条齐·V1.0已生效2026-09-30）.md",
+        "制度治理规范对外纯版（六判据链）.md",
+        "流程环节卡注册缔约（五问·七类失败·三句固定·第三张卡）.md",
+        "流程环节卡授权配置（五问·七类失败·第1张卡）.md",
+        "流程环节卡结算计税（五问·七类失败·第2张卡）.md",
+        "流程环节卡谈判（五问·七类失败·第10张卡）.md",
+        "流程环节卡试错（五问·七类失败·第11张卡）.md",
+        "流程环节卡验证（五问·七类失败·第12张卡）.md",
+        "流程环节卡履约准备（五问·七类失败·第13张卡）.md",
+        "流程环节卡履约（五问·七类失败·第14张卡）.md",
+        "流程环节卡结算分配（五问·七类失败·第15张卡）.md",
+        "流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md",
+        "流程环节卡争议裁决（五问·七类失败·第17张卡）.md",
+        "惩罚三态与守门器对外纯版（二十五条与AB九条·V1.0已生效2026-10-16）.md",
         # L1SI181-REG-NODE-ACCESS-PUB-001：节点条例对外公开版两件（人读＋机读）防掉条
-        "TDCA-REG-NODE-ACCESS-001（对外公开版·V1.0）.md",
-        "TDCA-REG-NODE-ACCESS-001-COMPILED（对外公开版·V1.0）.yaml",
+        "业务端节点接入与同构契约条例（对外公开版·V1.0）.md",
+        "业务端节点接入与同构契约条例（对外公开版·V1.0）.md",
     }
     missing = must - names
     assert not missing, f"掉条: {missing}"
