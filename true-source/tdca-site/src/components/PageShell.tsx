@@ -23,12 +23,17 @@ export interface PageShellProps {
 /** 通用页面壳：标题 + 制度水印（数据源/权限）+ 模拟态标注 + 内容容器 */
 export function PageShell({ title, dataSource, permission, description, children }: PageShellProps) {
   return (
-    <section data-testid="page-shell" className="rounded-xl border bg-card p-6 shadow-sm">
+    <section
+      data-testid="page-shell"
+      /* 移动修复批：min-w-0+break-words 全局兜长 token（overflow-wrap 可继承），护所有 PageShell 面 */
+      className="min-w-0 break-words rounded-xl border bg-card p-6 shadow-sm"
+    >
       <div className="mb-1 flex items-center gap-2">
         <h2 className="text-lg font-bold text-card-foreground">{title}</h2>
         <SimulatedBadge nature="simulated" />
       </div>
-      <p className="mb-3 text-sm text-muted-foreground">{description}</p>
+      {/* 移动修复批：长拉丁串（如 Trainer/Executor/…）无断点致小屏撑破，break-words 兜全局面 */}
+      <p className="mb-3 break-words text-sm text-muted-foreground">{description}</p>
       <div className="mb-4 flex flex-wrap gap-2 text-[11px]">
         <span className="rounded bg-muted px-2 py-0.5 text-muted-foreground">数据源：{dataSource}</span>
         <span className="rounded bg-muted px-2 py-0.5 text-muted-foreground">权限：{permission}</span>
