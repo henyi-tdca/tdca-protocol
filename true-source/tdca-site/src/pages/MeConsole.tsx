@@ -586,6 +586,19 @@ export function MePage() {  const { status, data } = useApiGet<MeData>('/api/v1/
             {data.pending_count > 0 && <Link to="/attestation/dynamic" className="text-xs font-medium text-red-700 underline">去签批 →</Link>}
           </section>
 
+          {/* 我的沟通（MIGRATE 批7：申诉端＝私域；入口补建于「我的」界面，直达 /me/appeal 受理面，提交路径与旧版同） */}
+          <section data-testid="me-comm" className="rounded-lg border border-gray-200 bg-white p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">我的沟通</h3>
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+              <Link to="/me/appeal" data-testid="me-comm-appeal-entry"
+                    className="block rounded-md border border-gray-200 bg-white p-3 hover:border-gray-400">
+                <div className="text-sm font-medium text-gray-800">申诉（对惩罚处置：冻结／降权／吊销）→</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">受理面 /me/appeal</div>
+              </Link>
+            </div>
+            <p className="mt-2 text-[11px] text-gray-500">申诉受理面（/me/appeal）在建中：受理范围、材料要件与办理时限以制度入站件为准，本站不预置、不代拟。</p>
+          </section>
+
           {/* 运营管理入口（仅 operator/founder 可见；后端闸门照守，前端只是入口） */}
           {(data.session.role === 'operator' || data.session.role === 'founder') && (
             <section data-testid="me-operator" className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
