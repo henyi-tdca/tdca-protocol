@@ -8,6 +8,18 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import App from '@/App'
 
+// 追平批B1 随批维护：Ω 图入首页后，全 App 渲染经 TopologyEngine（cytoscape）——jsdom 无 canvas，照旧例打桩
+vi.mock('cytoscape', () => {
+  const fakeNode = () => ({ position: () => ({ x: 10, y: 10 }), id: () => 'n' })
+  const fakeCore = {
+    nodes: () => [fakeNode()],
+    elements: () => ({ boundingBox: () => ({ x1: 0, y1: 0, x2: 100, y2: 100 }), nodes: () => [fakeNode()] }),
+    ready: (cb: () => void) => cb(),
+    destroy: () => {},
+  }
+  return { default: () => fakeCore }
+})
+
 const mockFetch = vi.fn()
 
 function renderApp(path = '/') {

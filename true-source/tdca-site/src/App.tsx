@@ -40,6 +40,11 @@ import { NotifierPage } from './pages/NotifierPage'
 import { SandboxPage } from './pages/SandboxPage'
 // 用组批（L1SI206-USE-GROUP-B1）：「用」组两面迁入（U-1 交素材＋U-2 代办登记，旧版权直拷·接缝仅适配）；
 // 两面为登录动作面——照 /auth /register 动作页豁免口径 ⛔ 入栏目检索索引（脚本 COLUMN_EXCLUDE 同步）
+// 追平批B1（L1SI206-PARITY-B1）：制度地图／帮助与联系／负空间／教材目录四面迁入（旧版权直拷·公开栏目面）
+import { RulesMapPage } from './pages/rules/rules'
+import { HelpPage } from './pages/HelpPage'
+import { NegativeSpacePage } from './pages/NegativeSpacePage'
+import { AcademyOutlinePage } from './pages/academy/AcademyOutlinePage'
 import { UseUploadPage } from './pages/use/UseUploadPage'
 import { UseAgentPage } from './pages/use/UseAgentPage'
 import { OpsPage } from './pages/OpsPage'
@@ -162,6 +167,11 @@ export default function App() {
         <Route path="/start" element={<StartPage />} />
         <Route path="/nca-guide" element={<NcaGuidePage />} />
         {/* 用组批（L1SI206-USE-GROUP-B1）：U-1 交素材（上传一件）→ U-2 代办登记（?u= 串接，两页互链） */}
+        {/* 追平批B1：四面新增路由（现有路径不动） */}
+        <Route path="/rules" element={<RulesMapPage />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path="/negativespace" element={<NegativeSpacePage />} />
+        <Route path="/academy/outline" element={<AcademyOutlinePage />} />
         <Route path="/use/upload" element={<UseUploadPage />} />
         <Route path="/use/agent" element={<UseAgentPage />} />
         <Route path="*" element={<NotFoundPage />} />
