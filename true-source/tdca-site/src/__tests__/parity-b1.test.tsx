@@ -145,7 +145,7 @@ describe('追平批B1·10a：首页五元拓扑 Ω（AMEND-1 必办）', () => {
 
 describe('追平批B1：站点地图入册（26→30）', () => {
   it('四面入册 ROUTE_PATHS（题名净名照旧版）', () => {
-    expect(PAGE_META).toHaveLength(30)
+    expect(PAGE_META).toHaveLength(34)
     const titles: Record<string, string> = {
       '/rules': '制度地图',
       '/help': '帮助与联系',

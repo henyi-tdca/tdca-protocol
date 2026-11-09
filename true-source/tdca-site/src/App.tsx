@@ -45,6 +45,14 @@ import { RulesMapPage } from './pages/rules/rules'
 import { HelpPage } from './pages/HelpPage'
 import { NegativeSpacePage } from './pages/NegativeSpacePage'
 import { AcademyOutlinePage } from './pages/academy/AcademyOutlinePage'
+// 追平批B2（L1SI206-PARITY-B2）：五序资产／官方资产／系统健康／术语检索四面＋运维日志两件（旧版权直拷·接缝仅适配）
+// 四面为公开栏目面入索引；ops/logs 两件为运维私域面——⛔ 入栏目检索索引
+import { FiveOrdersPage } from './pages/FiveOrdersPage'
+import { OfficialAssetsPage } from './pages/OfficialAssetsPage'
+import { StatusPage } from './pages/StatusPage'
+import { TermsPage } from './pages/TermsPage'
+import { OpsLogsPage } from './pages/OpsLogsPage'
+import { OpsLogsListPage } from './pages/OpsLogsListPage'
 import { UseUploadPage } from './pages/use/UseUploadPage'
 import { UseAgentPage } from './pages/use/UseAgentPage'
 import { OpsPage } from './pages/OpsPage'
@@ -174,6 +182,14 @@ export default function App() {
         <Route path="/academy/outline" element={<AcademyOutlinePage />} />
         <Route path="/use/upload" element={<UseUploadPage />} />
         <Route path="/use/agent" element={<UseAgentPage />} />
+        {/* 追平批B2（L1SI206-PARITY-B2）：五序资产／官方资产／系统健康／术语检索四面（旧版权直拷·接缝仅适配） */}
+        <Route path="/five-orders" element={<FiveOrdersPage />} />
+        <Route path="/official-assets" element={<OfficialAssetsPage />} />
+        <Route path="/status" element={<StatusPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        {/* 追平批B2：运维日志两件（填写＋列表导出）——运维私域内路由（须鉴权取件）；⛔ 不入公开导航／⛔ 不入检索索引 */}
+        <Route path="/ops/logs" element={<OpsLogsPage />} />
+        <Route path="/ops/logs/list" element={<OpsLogsListPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </SiteLayout>

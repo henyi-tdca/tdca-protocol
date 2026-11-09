@@ -151,8 +151,9 @@ describe('MIGRATE 批7：主链导轨挂载（仅主链在册实路由七页）'
     }
   })
 
-  it('/five-orders 如实登记：新版无此路由，导轨第八环暂悬空（候智库裁，⛔不自造路由）', () => {
-    expect(ROUTES).not.toContain('/five-orders')
-    expect(SITEMAP_ENTRIES).not.toContain('/five-orders')
+  it('/five-orders 追平批B2 已入册：路由＋sitemap 均在架（导轨第八环挂载与否候令，本批未动）', () => {
+    // 追平批B2（L1SI206-PARITY-B2）：照 PARITY-FILL 令 #1 迁入五序资产总览，旧「无此路由」口径随之作废
+    expect(ROUTES).toContain('/five-orders')
+    expect(SITEMAP_ENTRIES).toContain('/five-orders')
   })
 })
