@@ -144,7 +144,7 @@ describe('追平批B2：/ops/logs/list 区间筛选＋CSV 导出', () => {
 
 describe('追平批B2：站点地图入册（30→34）', () => {
   it('四面入册 ROUTE_PATHS（题名净名照旧版）', () => {
-    expect(PAGE_META).toHaveLength(34)
+    expect(PAGE_META).toHaveLength(35)
     const titles: Record<string, string> = {
       '/five-orders': '五序资产总览',
       '/official-assets': '官方资产区',

@@ -101,9 +101,12 @@ describe('MIGRATE 批7：申诉面（me-appeal 直拷·薄占位口径）', () =
 })
 
 describe('MIGRATE 批7：站点地图 ≡ 静态路由数（/ops* 私域不入）', () => {
-  it('条目数≡静态路由数−/ops*（机取机算，⛔手编塞条目）', () => {
+  it('条目数≡静态路由数−/ops*−受护面（机取机算，⛔手编塞条目）', () => {
+    // 追平批B3：/authorization/panel 为受护面（PARITY-B3-001 §三「⛔ 入公域栏目索引」），
+    // 与 /ops* 私域同口径零入图；公式随批更正，⛔ 手编塞条目
+    const PROTECTED_FROM_SITEMAP = ['/authorization/panel']
     const ops = ROUTES.filter((p) => p === '/ops' || p.startsWith('/ops/'))
-    const expected = ROUTES.filter((p) => !ops.includes(p))
+    const expected = ROUTES.filter((p) => !ops.includes(p) && !PROTECTED_FROM_SITEMAP.includes(p))
     expect(ops.length).toBeGreaterThan(0)
     expect(SITEMAP_ENTRIES).toHaveLength(expected.length)
     expect(new Set(SITEMAP_ENTRIES)).toEqual(new Set(expected))
