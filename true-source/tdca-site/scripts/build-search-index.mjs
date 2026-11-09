@@ -163,12 +163,18 @@ const COLUMN_TITLES = {
   '/help': '帮助与联系',
   '/negativespace': '负空间 · 什么不能做',
   '/academy/outline': '教材目录（纲要）',
+  // 追平批B2（L1SI206-PARITY-B2）：五序资产／官方资产／系统健康／术语检索四面题名照旧版净名入栏目索引
+  // （/ops/logs 两件为运维私域面 ⛔入索引——与上方 MIGRATE 批5 同红线）
+  '/five-orders': '五序资产总览',
+  '/official-assets': '官方资产区',
+  '/status': '系统健康',
+  '/terms': '术语检索',
 }
 // MIGRATE 批5（L1SI206）：运维手册三界面（README/OPS/CHANGELOG）⛔入栏目索引（私域隔离红线——
 // 令面 §三.2「内容⛔入检索索引」；照旧版动作页豁免口径，路由可达但不收录不题名）
 // 用组批（L1SI206-USE-GROUP-B1）：「用」组两面（U-1 交素材／U-2 代办登记）⛔入栏目索引——
 // 登录动作面，照 /auth /register 旧版动作页豁免口径（路由可达、两页互链、不收录不题名）
-const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', '/ops/ops', '/ops/changelog', '/use/upload', '/use/agent'])
+const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', '/ops/ops', '/ops/changelog', '/ops/logs', '/ops/logs/list', '/use/upload', '/use/agent'])
 
 // 编号形态禁则（旧版施工令 §三.2；TAIL-CLEAN-001 块A：title/summary/body 共用本表）
 // B1 追加（硬约束第8条「索引内容零内部编号」，旧表未覆盖 registry 件号形态，旧索引曾残留 20 条）：
