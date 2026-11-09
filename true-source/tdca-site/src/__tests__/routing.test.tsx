@@ -45,7 +45,8 @@ describe('F0-A2 路由骨架（15 路由 + 404）', () => {
     // 缔约申请页已撤（ACCESS-FIX-001-AMEND-1 交付二：注册已含缔约同意）。旧期望 32 系滞后。
     // MIGRATE 批1（L1SI206）追加 /search 检索面：8→9。
     // MIGRATE 批2（L1SI206）追加 /channel/my 与 /channel/register 通道两面：9→11。
-    expect(PAGE_META).toHaveLength(11)
+    // MIGRATE 批3（L1SI206）追加严选与节点八面＋/channel 总入口：11→20。
+    expect(PAGE_META).toHaveLength(20)
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
       // 逐面可达且渲染至少一枚标题（壳题以页面实读为准：册题与壳题注记差异存在——
