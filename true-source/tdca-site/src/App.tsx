@@ -37,6 +37,11 @@ import { ToolshelfPage } from './pages/ToolshelfPage'
 import { NotifierPage } from './pages/NotifierPage'
 import { SandboxPage } from './pages/SandboxPage'
 import { OpsPage } from './pages/OpsPage'
+// MIGRATE 批5（L1SI206）：运维手册三界面（README/OPS/CHANGELOG）——运维私域内路由（须鉴权取件）；
+// ⛔ 不入公开导航／⛔ 不入检索索引（索引唯一权威源＝public_docs_ops.py 在册公开清单，本批未动）
+import { OpsReadmePage } from './pages/OpsReadmePage'
+import { OpsOpsPage } from './pages/OpsOpsPage'
+import { OpsChangelogPage } from './pages/OpsChangelogPage'
 // 批 2 骨架：全局壳（两轴）＋频道首页五件——仅加包裹层与新路由，现有路径不动
 import { SiteLayout } from './components/SiteLayout'
 import { ChannelHome } from './pages/ChannelHome'
@@ -134,6 +139,10 @@ export default function App() {
         <Route path="/notifier" element={<NotifierPage />} />
         <Route path="/sandbox" element={<SandboxPage />} />
         <Route path="/ops" element={<OpsPage />} />
+        {/* MIGRATE 批5（L1SI206）：运维手册三界面（同栈直拷 ops-manual 一路·内容=在册白名单源件直读·只进运维私域） */}
+        <Route path="/ops/readme" element={<OpsReadmePage />} />
+        <Route path="/ops/ops" element={<OpsOpsPage />} />
+        <Route path="/ops/changelog" element={<OpsChangelogPage />} />
         {/* MIGRATE 批4（L1SI206）：演练与实验两面（同栈直拷·场景数8不缩·仅人） */}
         <Route path="/lab" element={<LabPage />} />
         <Route path="/demo" element={<DemoPage />} />
