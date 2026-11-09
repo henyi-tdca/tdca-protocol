@@ -50,6 +50,17 @@ import { SearchPage } from './pages/SearchPage'
 // 登记面改挂 /channel/register——旧路 /channel/registry 在新版已居「登记与存证」频道首页，⛔ 动他面）
 import { ChannelMyPage } from './pages/ChannelMy'
 import { AgentChannelRegisterPage } from './pages/AgentChannelRegister'
+// MIGRATE 批3（L1SI206）：严选与节点八面 ＋ 补 /channel 总入口（批2 令面漏项补做，九面新增路由，
+// 现有路径不动；权限字段照 route-parity.md 原栏——私域两面由 API 层 401/403 fail-closed 把守）
+import { ChannelPortalPage } from './pages/ChannelPortal'
+import { CurationPoolPage } from './pages/Curation'
+import { ContributePage } from './pages/Contribute'
+import { PublicFacePage } from './pages/PublicFace'
+import { PrivateDomainPage } from './pages/PrivateDomain'
+import { NodeNetPage } from './pages/NodeNet'
+import { MeNodePage } from './pages/MeNode'
+import { MeNodeNetPage } from './pages/MeNodeNet'
+import { NodeDisclosurePage } from './pages/NodeDisclosure'
 
 export default function App() {
   return (
@@ -79,6 +90,16 @@ export default function App() {
         {/* MIGRATE 批2：智能体通道两面（私域门槛由 API 层 401/403 fail-closed 把守，照批3核可口径直挂） */}
         <Route path="/channel/my" element={<ChannelMyPage />} />
         <Route path="/channel/register" element={<AgentChannelRegisterPage />} />
+        {/* MIGRATE 批3：/channel 总入口（批2 漏项补做）＋严选与节点八面（九面新增） */}
+        <Route path="/channel" element={<ChannelPortalPage />} />
+        <Route path="/curation" element={<CurationPoolPage />} />
+        <Route path="/contribute" element={<ContributePage />} />
+        <Route path="/public-face" element={<PublicFacePage />} />
+        <Route path="/private" element={<PrivateDomainPage />} />
+        <Route path="/nodes" element={<NodeNetPage />} />
+        <Route path="/me/node" element={<MeNodePage />} />
+        <Route path="/me/node/net" element={<MeNodeNetPage />} />
+        <Route path="/disclosure" element={<NodeDisclosurePage />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/pages" element={<PagesIndexPage />} />

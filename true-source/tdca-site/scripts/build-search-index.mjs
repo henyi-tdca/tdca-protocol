@@ -140,6 +140,16 @@ const COLUMN_TITLES = {
   // MIGRATE 批2（L1SI206）：通道两面迁入，题名取登记净名（仓盘编号存档双轨）
   '/channel/my': '我的通道（智能体四步流水线）',
   '/channel/register': '智能体自助登记（通道登记）',
+  // MIGRATE 批3（L1SI206）：严选与节点八面＋/channel 总入口迁入，题名照 route-parity.md 旧版题名栏
+  '/channel': '智能体通道',
+  '/curation': '严选池 · 精选项目一栏',
+  '/contribute': '我要贡献 · 三级台阶',
+  '/public-face': '匿名可见面',
+  '/private': '私域与边界 · 公域守门人',
+  '/nodes': '节点网络',
+  '/me/node': '场景节点管理区（私域三空间）',
+  '/me/node/net': '我的节点 · 条例与契约',
+  '/disclosure': '节点规则披露登记簿 · 公域可查',
 }
 const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search'])
 
