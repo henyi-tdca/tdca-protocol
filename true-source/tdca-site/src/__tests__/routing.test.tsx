@@ -47,7 +47,7 @@ describe('F0-A2 路由骨架（15 路由 + 404）', () => {
     // MIGRATE 批2（L1SI206）追加 /channel/my 与 /channel/register 通道两面：9→11。
     // MIGRATE 批3（L1SI206）追加严选与节点八面＋/channel 总入口：11→20。
     // MIGRATE 批4（L1SI206）追加 /lab 与 /demo 演练实验两面：20→22。
-    expect(PAGE_META).toHaveLength(22)
+    expect(PAGE_META).toHaveLength(24) /* MIGRATE 批6：+2（/start /nca-guide） */
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
       // 逐面可达且渲染至少一枚标题（壳题以页面实读为准：册题与壳题注记差异存在——

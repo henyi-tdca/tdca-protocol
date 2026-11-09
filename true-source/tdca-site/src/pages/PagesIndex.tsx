@@ -10,6 +10,7 @@
 //           MIGRATE 批2（L1SI206）追加 /channel/my 与 /channel/register 通道两面（9→11）；
 //           MIGRATE 批3（L1SI206）追加严选与节点八面＋/channel 总入口（11→20；权限照 route-parity.md 原栏）；
 //           MIGRATE 批4（L1SI206）追加 /lab 与 /demo 演练实验两面（20→22；同栈直拷·场景数8不缩·仅人）
+//           MIGRATE 批6（L1SI206）追加 /start 与 /nca-guide 入门指南两面（22→24；start-map.yaml 原字节随批）
 // =============================================================================
 import { Link } from 'react-router'
 import { PageShell } from '@/components/PageShell'
@@ -47,6 +48,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/disclosure', title: '节点规则披露登记簿 · 公域可查', layer: 'L0', dataSource: '披露登记簿（仓内单源，只读渲染）', permission: '公开（匿名可读 · 只读）', description: '节点规则对外披露面：只登记不审批，三式查阅，形状不合 fail-closed（MIGRATE 批3 迁入）。' },
   { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '五张模拟卡＋三段剧本＋一张流水表：八场景逐项走一遍，积分面额照设计件 6146（MIGRATE 批4 迁入，演练值不入账不留存）。' },
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '体验期有什么、演示区在演什么、什么是真什么是假，一页讲清（MIGRATE 批4 迁入，演示值非真实交易）。' },
+  { path: '/start', title: '新手指引 · 六步上手 TDCA', layer: 'L0', dataSource: '_START-MAP 三表（单一事实源·仓内单源 ?raw 进包）', permission: '公开', description: 'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表（MIGRATE 批6 迁入）。' },
+  { path: '/nca-guide', title: '存证（NCA）说明', layer: 'L0', dataSource: '静态文案（站内审定口径，依在册 NCA 格式标准）', permission: '公开', description: 'NCA 存证格式＝全站唯一标准：每一场景皆存、官方与用户一致、人类与智能体一致——十三字段／带链／义务块六键／合规六条之公众说明面（MIGRATE 批6 迁入）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
