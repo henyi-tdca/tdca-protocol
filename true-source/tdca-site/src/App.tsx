@@ -42,6 +42,9 @@ import { OpsPage } from './pages/OpsPage'
 import { OpsReadmePage } from './pages/OpsReadmePage'
 import { OpsOpsPage } from './pages/OpsOpsPage'
 import { OpsChangelogPage } from './pages/OpsChangelogPage'
+// MIGRATE 批6（L1SI206）：入门与指南四件（同栈直拷·start-map.yaml 数据件原字节随批·公开面入册）
+import { StartPage } from './pages/start/start'
+import { NcaGuidePage } from './pages/NcaGuidePage'
 // 批 2 骨架：全局壳（两轴）＋频道首页五件——仅加包裹层与新路由，现有路径不动
 import { SiteLayout } from './components/SiteLayout'
 import { ChannelHome } from './pages/ChannelHome'
@@ -146,6 +149,9 @@ export default function App() {
         {/* MIGRATE 批4（L1SI206）：演练与实验两面（同栈直拷·场景数8不缩·仅人） */}
         <Route path="/lab" element={<LabPage />} />
         <Route path="/demo" element={<DemoPage />} />
+        {/* MIGRATE 批6（L1SI206）：入门与指南——/start 六步指引（yaml 单一事实源直拷）＋/nca-guide 存证说明 */}
+        <Route path="/start" element={<StartPage />} />
+        <Route path="/nca-guide" element={<NcaGuidePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </SiteLayout>

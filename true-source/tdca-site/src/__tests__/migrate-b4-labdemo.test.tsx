@@ -19,7 +19,7 @@ describe('MIGRATE 批4：/lab 与 /demo 入册与演练标识', () => {
   it('两面入 ROUTE_PATHS 且 PAGE_META 在册（20→22）', () => {
     expect(ROUTE_PATHS).toContain('/lab')
     expect(ROUTE_PATHS).toContain('/demo')
-    expect(PAGE_META).toHaveLength(22)
+    expect(PAGE_META).toHaveLength(24) /* MIGRATE 批6：+2（/start /nca-guide） */
     const lab = PAGE_META.find((m) => m.path === '/lab')
     const demo = PAGE_META.find((m) => m.path === '/demo')
     expect(lab?.permission).toBe('公开')
