@@ -8,7 +8,8 @@
 //           layer 降为纯数据字段（层级指示器未随迁，不引旧版 @/app/layer-indicator）；
 //           MIGRATE 批1（2026-11-09）追加 /search 检索面（8→9）；
 //           MIGRATE 批2（L1SI206）追加 /channel/my 与 /channel/register 通道两面（9→11）；
-//           MIGRATE 批3（L1SI206）追加严选与节点八面＋/channel 总入口（11→20；权限照 route-parity.md 原栏）
+//           MIGRATE 批3（L1SI206）追加严选与节点八面＋/channel 总入口（11→20；权限照 route-parity.md 原栏）；
+//           MIGRATE 批4（L1SI206）追加 /lab 与 /demo 演练实验两面（20→22；同栈直拷·场景数8不缩·仅人）
 // =============================================================================
 import { Link } from 'react-router'
 import { PageShell } from '@/components/PageShell'
@@ -44,6 +45,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/me/node', title: '场景节点管理区（私域三空间）', layer: 'L0', dataSource: '纯前端样例态（页内状态）；载入门禁 GET /api/v1/auth/me', permission: '须登录（谁的数据谁可见）', description: '私域三空间：负空间／沙盒出盒／正空间；六项硬核只读锁定（MIGRATE 批3 迁入，API 401/403 把守）。' },
   { path: '/me/node/net', title: '我的节点 · 条例与契约', layer: 'L0', dataSource: '在册条例 V1.0 与本机节点配置；载入门禁 GET /api/v1/auth/me', permission: '登录 DID', description: '私域节点面：我的节点配置与在册条例契约（MIGRATE 批3 迁入，API 401/403 把守）。' },
   { path: '/disclosure', title: '节点规则披露登记簿 · 公域可查', layer: 'L0', dataSource: '披露登记簿（仓内单源，只读渲染）', permission: '公开（匿名可读 · 只读）', description: '节点规则对外披露面：只登记不审批，三式查阅，形状不合 fail-closed（MIGRATE 批3 迁入）。' },
+  { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '五张模拟卡＋三段剧本＋一张流水表：八场景逐项走一遍，积分面额照设计件 6146（MIGRATE 批4 迁入，演练值不入账不留存）。' },
+  { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '体验期有什么、演示区在演什么、什么是真什么是假，一页讲清（MIGRATE 批4 迁入，演示值非真实交易）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
