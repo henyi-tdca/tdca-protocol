@@ -46,6 +46,10 @@ import { ProcessOverviewPage } from './pages/ProcessOverview'
 import { RegistrationsPage } from './pages/RegistrationsPage'
 // MIGRATE 批1：全站检索页（/search——检索整块迁产线，新增路由，现有路径不动）
 import { SearchPage } from './pages/SearchPage'
+// MIGRATE 批2：智能体通道两面迁入（我的通道＋通道登记，新增路由，现有路径不动；
+// 登记面改挂 /channel/register——旧路 /channel/registry 在新版已居「登记与存证」频道首页，⛔ 动他面）
+import { ChannelMyPage } from './pages/ChannelMy'
+import { AgentChannelRegisterPage } from './pages/AgentChannelRegister'
 
 export default function App() {
   return (
@@ -72,6 +76,9 @@ export default function App() {
         <Route path="/docs/:family/:slug" element={<DocDetail />} />
         {/* MIGRATE 批1：全站检索（静态索引＋本地排序，无后端） */}
         <Route path="/search" element={<SearchPage />} />
+        {/* MIGRATE 批2：智能体通道两面（私域门槛由 API 层 401/403 fail-closed 把守，照批3核可口径直挂） */}
+        <Route path="/channel/my" element={<ChannelMyPage />} />
+        <Route path="/channel/register" element={<AgentChannelRegisterPage />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/pages" element={<PagesIndexPage />} />

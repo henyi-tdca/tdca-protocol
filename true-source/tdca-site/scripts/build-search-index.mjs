@@ -135,6 +135,9 @@ const COLUMN_TITLES = {
   '/channel/registry': '智能体通道 · 登记指引',
   '/channel/market': '智能体通道 · 市场接入',
   '/channel/tools': '智能体通道 · 工具接入',
+  // MIGRATE 批2（L1SI206）：通道两面迁入，题名取登记净名（仓盘编号存档双轨）
+  '/channel/my': '我的通道（智能体四步流水线）',
+  '/channel/register': '智能体自助登记（通道登记）',
 }
 const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search'])
 
