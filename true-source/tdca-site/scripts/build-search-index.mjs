@@ -103,6 +103,8 @@ const COLUMN_TITLES = {
   '/pages': '站点地图',
   '/announcements': '公告栏',
   '/me': '个人后台（我的）',
+  // MIGRATE 批7（L1SI206）：申诉面迁入（旧版权 me-appeal 直拷；须登录但照 /me 惯例入栏目索引）
+  '/me/appeal': '申诉（对惩罚处置：冻结／降权／吊销）',
   '/review': '评审（缔约审核）',
   '/docs': '文档库',
   '/agents': '智能体集群观测',
