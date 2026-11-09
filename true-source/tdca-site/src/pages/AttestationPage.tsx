@@ -68,7 +68,8 @@ export function AttestationOverviewPage() {
       description="待审队列 + 最近事件 + 确权统计（元函数/动态/历史入口）。"
     >
       <div className="space-y-4">
-        <div className="flex gap-3">
+        {/* 移动修复批：三入口卡小屏竖排（宽屏不换行行为不变） */}
+        <div className="flex flex-wrap gap-3">
           <Link to="/attestation/meta" data-testid="link-meta" className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800 hover:bg-amber-100">
             元函数初始确权（出盒终裁）→
           </Link>
@@ -93,8 +94,9 @@ export function AttestationOverviewPage() {
             </div>
             <ul className="space-y-1.5">
               {data.queue.map((q) => (
-                <li key={q.request_id} data-queue-item={q.request_id} className="flex items-center justify-between rounded border border-gray-100 px-3 py-1.5 text-xs">
-                  <span className="text-gray-700">{q.request_id} · {q.agent_id} · {q.reason}</span>
+                <li key={q.request_id} data-queue-item={q.request_id} className="flex min-w-0 items-center justify-between gap-2 rounded border border-gray-100 px-3 py-1.5 text-xs">
+                  {/* 移动修复批：长 token（request_id/agent_id）可断行，⛔撑破队列行 */}
+                  <span className="min-w-0 break-all text-gray-700">{q.request_id} · {q.agent_id} · {q.reason}</span>
                   <span className={URGENCY[q.urgency]?.cls}>{URGENCY[q.urgency]?.label}</span>
                 </li>
               ))}
