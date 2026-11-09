@@ -38,6 +38,10 @@ import { AcademyPage } from './pages/AcademyPage'
 import { ToolshelfPage } from './pages/ToolshelfPage'
 import { NotifierPage } from './pages/NotifierPage'
 import { SandboxPage } from './pages/SandboxPage'
+// 用组批（L1SI206-USE-GROUP-B1）：「用」组两面迁入（U-1 交素材＋U-2 代办登记，旧版权直拷·接缝仅适配）；
+// 两面为登录动作面——照 /auth /register 动作页豁免口径 ⛔ 入栏目检索索引（脚本 COLUMN_EXCLUDE 同步）
+import { UseUploadPage } from './pages/use/UseUploadPage'
+import { UseAgentPage } from './pages/use/UseAgentPage'
 import { OpsPage } from './pages/OpsPage'
 // MIGRATE 批5（L1SI206）：运维手册三界面（README/OPS/CHANGELOG）——运维私域内路由（须鉴权取件）；
 // ⛔ 不入公开导航／⛔ 不入检索索引（索引唯一权威源＝public_docs_ops.py 在册公开清单，本批未动）
@@ -157,6 +161,9 @@ export default function App() {
         {/* MIGRATE 批6（L1SI206）：入门与指南——/start 六步指引（yaml 单一事实源直拷）＋/nca-guide 存证说明 */}
         <Route path="/start" element={<StartPage />} />
         <Route path="/nca-guide" element={<NcaGuidePage />} />
+        {/* 用组批（L1SI206-USE-GROUP-B1）：U-1 交素材（上传一件）→ U-2 代办登记（?u= 串接，两页互链） */}
+        <Route path="/use/upload" element={<UseUploadPage />} />
+        <Route path="/use/agent" element={<UseAgentPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </SiteLayout>
