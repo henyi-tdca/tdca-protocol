@@ -63,13 +63,14 @@ beforeEach(() => { localStorage.clear(); sessionStorage.clear() })
 afterEach(() => { vi.unstubAllGlobals() })
 
 describe('M5 双后台', () => {
-  it('路由注册：meta 路由表为在册八面（/me 与 /agents/:id 为 App.tsx 直挂路由，随后续批次入册）', () => {
+  it('路由注册：meta 路由表为在册九面（/me 与 /agents/:id 为 App.tsx 直挂路由，随后续批次入册）', () => {
     // 对齐令 SITE-TESTFIX-001（甲组）：新树注册表（@/pages/PagesIndex）在册口径＝
-    // 「本批四面＋新版既有四面共 8 条，未迁面不登记」（件内并轨注记自陈）；
+    // 「本批四面＋新版既有四面，未迁面不登记」（件内并轨注记自陈）；
     // /me、/agents/:id 仍在 App.tsx 直挂（路由照存），不在登记表面——旧断言「均在 meta 路由表」滞后。
+    // MIGRATE 批1（L1SI206）追加 /search 检索面：8→9。
     const paths = PAGE_META.map((m) => m.path)
-    expect(PAGE_META).toHaveLength(8)
-    for (const p of ['/overview', '/about', '/pages', '/announcements', '/', '/register', '/review', '/docs']) {
+    expect(PAGE_META).toHaveLength(9)
+    for (const p of ['/overview', '/about', '/pages', '/announcements', '/', '/register', '/review', '/docs', '/search']) {
       expect(paths).toContain(p)
     }
   })

@@ -40,10 +40,11 @@ function renderAt(path: string) {
 }
 
 describe('F0-A2 路由骨架（15 路由 + 404）', () => {
-  it('在册 8 面全部可达且各面渲染标题（册题权威在站点地图逐字呈现）', () => {
-    // 对齐令 SITE-TESTFIX-001（甲组）：缩面为有意——PagesIndex 并轨注记自陈「本批四面＋新版既有四面共 8 条」；
+  it('在册 9 面全部可达且各面渲染标题（册题权威在站点地图逐字呈现）', () => {
+    // 对齐令 SITE-TESTFIX-001（甲组）：缩面为有意——PagesIndex 并轨注记自陈「本批四面＋新版既有四面」；
     // 缔约申请页已撤（ACCESS-FIX-001-AMEND-1 交付二：注册已含缔约同意）。旧期望 32 系滞后。
-    expect(PAGE_META).toHaveLength(8)
+    // MIGRATE 批1（L1SI206）追加 /search 检索面：8→9。
+    expect(PAGE_META).toHaveLength(9)
     for (const meta of PAGE_META) {
       const { unmount } = renderAt(meta.path)
       // 逐面可达且渲染至少一枚标题（壳题以页面实读为准：册题与壳题注记差异存在——
