@@ -6,7 +6,8 @@
 //           元数据裁至「本批已迁入之面 ＋ 新版既有之面」；
 //           未迁面 ⛔ 不登记（随后续批次渐进扩充）；
 //           layer 降为纯数据字段（层级指示器未随迁，不引旧版 @/app/layer-indicator）；
-//           MIGRATE 批1（2026-11-09）追加 /search 检索面（8→9）
+//           MIGRATE 批1（2026-11-09）追加 /search 检索面（8→9）；
+//           MIGRATE 批2（L1SI206）追加 /channel/my 与 /channel/register 通道两面（9→11）
 // =============================================================================
 import { Link } from 'react-router'
 import { PageShell } from '@/components/PageShell'
@@ -31,6 +32,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/review', title: '审查', layer: 'L0', dataSource: '静态文案', permission: '公开', description: '审查面（新版既有面，Review ⛔ 不动）。' },
   { path: '/docs', title: '文档库', layer: 'L0', dataSource: '静态索引', permission: '公开', description: '协议文档站内索引（新版既有面）。' },
   { path: '/search', title: '全站检索', layer: 'L0', dataSource: '静态索引 search-index.json（构建时生成）', permission: '公开', description: '四族公开件＋术语＋栏目页一框检索；本地排序，无后端（MIGRATE 批1 迁入）。' },
+  { path: '/channel/my', title: '我的通道', layer: 'L0', dataSource: 'GET /api/v1/agent-channel/gate/{reg_no} ＋ deposits ＋ ns-review ＋ sandbox ＋ promotion-token ＋ promotion', permission: '私域（须登录；仅登记主体本人可操作）', description: '四步流水线：交押金⟹过闸（审查＋沙盒）⟹领转正令牌⟹办转正（MIGRATE 批2 迁入）。' },
+  { path: '/channel/register', title: '智能体自助登记（通道登记）', layer: 'L0', dataSource: 'POST /api/v1/agent-channel/register', permission: '公开（ANCHOR 路须登录；GUEST 路免会话）', description: '登记即创建：六要素 fail-closed、缺项点名、成功回登记号；原 /channel/registry 改路径（MIGRATE 批2 迁入）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -51,7 +54,7 @@ export function PagesIndexPage() {
   return (
     <PageShell
       title="站点地图"
-      dataSource="静态元数据（PAGE_META 9 条）"
+      dataSource="静态元数据（PAGE_META 11 条）"
       permission="公开"
       description="本站已迁入之面的索引：每面标注数据源与访问权限；未迁面不登记，随批扩充。"
     >
