@@ -44,6 +44,8 @@ import { ChannelHome } from './pages/ChannelHome'
 import { ProcessOverviewPage } from './pages/ProcessOverview'
 // REGISTRY-PAGE-001：公域登记查询页（/registrations——匿名只读公域区，新增路由，现有路径不动）
 import { RegistrationsPage } from './pages/RegistrationsPage'
+// MIGRATE 批1：全站检索页（/search——检索整块迁产线，新增路由，现有路径不动）
+import { SearchPage } from './pages/SearchPage'
 
 export default function App() {
   return (
@@ -68,6 +70,8 @@ export default function App() {
         <Route path="/docs" element={<DocsHome />} />
         <Route path="/docs/:family" element={<DocsIndex />} />
         <Route path="/docs/:family/:slug" element={<DocDetail />} />
+        {/* MIGRATE 批1：全站检索（静态索引＋本地排序，无后端） */}
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/pages" element={<PagesIndexPage />} />

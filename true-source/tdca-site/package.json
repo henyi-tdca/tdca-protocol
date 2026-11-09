@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "prebuild": "node scripts/build-search-index.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
