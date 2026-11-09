@@ -53,6 +53,12 @@ import { StatusPage } from './pages/StatusPage'
 import { TermsPage } from './pages/TermsPage'
 import { OpsLogsPage } from './pages/OpsLogsPage'
 import { OpsLogsListPage } from './pages/OpsLogsListPage'
+// 追平批B3（L1SI206-PARITY-B3）：授权配置面板（受护）／三问向导／运维我的 三件直拷＋RequireAuth 最小守卫
+// （授权面板与 ops/me 为私域/受护面 ⛔ 入公域栏目索引；三问向导公开入册）
+import { AuthorizationPanelPage } from './pages/AuthorizationPanelPage'
+import { ThreeQuestionsPage } from './pages/ThreeQuestionsPage'
+import { OpsMePage } from './pages/OpsMePage'
+import { RequireAuth } from './components/RequireAuth'
 import { UseUploadPage } from './pages/use/UseUploadPage'
 import { UseAgentPage } from './pages/use/UseAgentPage'
 import { OpsPage } from './pages/OpsPage'
@@ -96,7 +102,9 @@ export default function App() {
     <AuthProvider>
       <SiteLayout>
       <Routes>
-        {/* MIGRATE 批7：主链导轨挂载（仅主链在册实路由七页；/five-orders 新版尚无路由，⛔不挂，照实回报） */}
+        {/* MIGRATE 批7：主链导轨挂载（主链八环在册实路由） */}
+        {/* 追平批B3（PARITY-B3-001 §二#5）：/five-orders＝主链第二环「五序资产」补挂导轨；
+            「新版尚无路由，⛔不挂」之旧注记已失效（该面批B2 已迁入），本件更替 */}
         <Route path="/" element={<><MainChainGuide /><Home /></>} />
         {/* 批 2：频道首页五路（新增，不改现有路径） */}
         <Route path="/channel/portal" element={<ChannelHome channel="portal" />} />
@@ -183,13 +191,18 @@ export default function App() {
         <Route path="/use/upload" element={<UseUploadPage />} />
         <Route path="/use/agent" element={<UseAgentPage />} />
         {/* 追平批B2（L1SI206-PARITY-B2）：五序资产／官方资产／系统健康／术语检索四面（旧版权直拷·接缝仅适配） */}
-        <Route path="/five-orders" element={<FiveOrdersPage />} />
+        {/* 追平批B3：/five-orders＝主链第二环，补挂 MainChainGuide（导轨裁示·八环之内皆挂） */}
+        <Route path="/five-orders" element={<><MainChainGuide /><FiveOrdersPage /></>} />
         <Route path="/official-assets" element={<OfficialAssetsPage />} />
         <Route path="/status" element={<StatusPage />} />
         <Route path="/terms" element={<TermsPage />} />
         {/* 追平批B2：运维日志两件（填写＋列表导出）——运维私域内路由（须鉴权取件）；⛔ 不入公开导航／⛔ 不入检索索引 */}
         <Route path="/ops/logs" element={<OpsLogsPage />} />
         <Route path="/ops/logs/list" element={<OpsLogsListPage />} />
+        {/* 追平批B3（L1SI206-PARITY-B3）：授权配置面板（受护·RequireAuth 未登录重定向 /auth）＋三问向导（公开·同批接通悬空链接）＋运维我的（私域） */}
+        <Route path="/authorization/panel" element={<RequireAuth><AuthorizationPanelPage /></RequireAuth>} />
+        <Route path="/start/three-questions" element={<ThreeQuestionsPage />} />
+        <Route path="/ops/me" element={<OpsMePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </SiteLayout>

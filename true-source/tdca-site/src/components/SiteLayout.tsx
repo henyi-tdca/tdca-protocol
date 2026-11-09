@@ -9,10 +9,14 @@ import { IntentBar } from './IntentBar'
 import { AuthStatus } from './AuthStatus'
 import { TopNav } from './TopNav'
 import { ProcessNav } from './ProcessNav'
+import { RightRail } from './RightRail'
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   // 甲案：小屏侧栏默认收起，汉堡展开；md 及以上恒显（md:block 覆盖 hidden）
   const [navOpen, setNavOpen] = useState(false)
+  // 追平批B3（PARITY-B3-001 §二#3）：右栏「我的＋AI 助手」——可收展；
+  // 常驻 flex 流内（⛔ absolute 遮挡正文）；小屏隐藏（main 全宽口径不动）
+  const [railOpen, setRailOpen] = useState(true)
   return (
     <div className="flex min-h-screen flex-col">
       {/* 全局细横条：原有二件原样保留（意图直达左、登录状态/登出右） */}
@@ -43,6 +47,18 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <ProcessNav />
         </div>
         <main className="min-w-0 flex-1 p-4">{children}</main>
+        {/* 追平批B3：右栏可收展——收起时只余切换条；展开为 flex 流内常住院子（⛔ 遮挡正文） */}
+        <div className="hidden md:block" data-testid="right-rail">
+          <button
+            type="button"
+            data-testid="right-rail-toggle"
+            onClick={() => setRailOpen(!railOpen)}
+            className="w-full border-b px-2 py-1 text-left text-[11px] text-muted-foreground"
+          >
+            我的与助手 {railOpen ? '▾ 收起' : '▸ 展开'}
+          </button>
+          {railOpen && <div className="w-72 p-2"><RightRail /></div>}
+        </div>
       </div>
     </div>
   )
