@@ -12,6 +12,8 @@ import { AuthProvider } from './lib/auth-context'
 import { RegisterPage } from './pages/Register'
 import { AuthPage } from './pages/AuthLogin'
 import { MePage } from './pages/MeConsole'
+import { MeAppealPage } from './pages/MeAppealPage'
+import { MainChainGuide } from './pages/MainChainGuide'
 // FRONTEND-MERGE 批3（智能体面）：agents/agent-dashboard/agent-shelf/studio/workbuddy 五面迁入
 import { AgentsPage } from './pages/AgentsCluster'
 import { AgentDashboardPage } from './pages/AgentDashboard'
@@ -77,7 +79,8 @@ export default function App() {
     <AuthProvider>
       <SiteLayout>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* MIGRATE 批7：主链导轨挂载（仅主链在册实路由七页；/five-orders 新版尚无路由，⛔不挂，照实回报） */}
+        <Route path="/" element={<><MainChainGuide /><Home /></>} />
         {/* 批 2：频道首页五路（新增，不改现有路径） */}
         <Route path="/channel/portal" element={<ChannelHome channel="portal" />} />
         <Route path="/channel/agents" element={<ChannelHome channel="agents" />} />
@@ -91,6 +94,8 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/me" element={<MePage />} />
+        {/* MIGRATE 批7：申诉面（旧版权 me-appeal 直拷，受理通道随制度入站开通） */}
+        <Route path="/me/appeal" element={<MeAppealPage />} />
         <Route path="/review" element={<Review />} />
         <Route path="/docs" element={<DocsHome />} />
         <Route path="/docs/:family" element={<DocsIndex />} />
@@ -101,7 +106,7 @@ export default function App() {
         <Route path="/channel/my" element={<ChannelMyPage />} />
         <Route path="/channel/register" element={<AgentChannelRegisterPage />} />
         {/* MIGRATE 批3：/channel 总入口（批2 漏项补做）＋严选与节点八面（九面新增） */}
-        <Route path="/channel" element={<ChannelPortalPage />} />
+        <Route path="/channel" element={<><MainChainGuide /><ChannelPortalPage /></>} />
         <Route path="/curation" element={<CurationPoolPage />} />
         <Route path="/contribute" element={<ContributePage />} />
         <Route path="/public-face" element={<PublicFacePage />} />
@@ -115,7 +120,7 @@ export default function App() {
         <Route path="/pages" element={<PagesIndexPage />} />
         <Route path="/announcements" element={<AnnouncementsPage />} />
         {/* FRONTEND-MERGE 批3：智能体面五路（路由照存；不设登录门槛——照本批核可口径） */}
-        <Route path="/agents" element={<AgentsPage />} />
+        <Route path="/agents" element={<><MainChainGuide /><AgentsPage /></>} />
         <Route path="/agents/:id" element={<AgentDashboardPage />} />
         <Route path="/agent-shelf" element={<AgentShelfPage />} />
         <Route path="/studio" element={<StudioPage />} />
@@ -123,17 +128,17 @@ export default function App() {
         {/* FRONTEND-MERGE 批4：登记与存证面八路（attestation 一件四面 → 四路；照复核件更正补 /anchors） */}
         <Route path="/ownership" element={<OwnershipPage />} />
         <Route path="/ownership-registry" element={<OwnershipRegistryPage />} />
-        <Route path="/authorization-registry" element={<AuthorizationRegistryPage />} />
-        <Route path="/attestation" element={<AttestationOverviewPage />} />
+        <Route path="/authorization-registry" element={<><MainChainGuide /><AuthorizationRegistryPage /></>} />
+        <Route path="/attestation" element={<><MainChainGuide /><AttestationOverviewPage /></>} />
         <Route path="/attestation/meta" element={<AttestationMetaPage />} />
         <Route path="/attestation/dynamic" element={<AttestationDynamicPage />} />
         <Route path="/attestation/history" element={<AttestationHistoryPage />} />
         <Route path="/anchors" element={<AnchorsPage />} />
-        <Route path="/audit" element={<AuditPage />} />
+        <Route path="/audit" element={<><MainChainGuide /><AuditPage /></>} />
         <Route path="/governance" element={<GovernancePage />} />
         <Route path="/formal" element={<FormalPage />} />
         <Route path="/cluster" element={<ClusterPage />} />
-        <Route path="/market" element={<MarketPage />} />
+        <Route path="/market" element={<><MainChainGuide /><MarketPage /></>} />
         <Route path="/market-sim" element={<MarketSimPage />} />
         <Route path="/tax" element={<TaxPage />} />
         <Route path="/library" element={<LibraryPage />} />
