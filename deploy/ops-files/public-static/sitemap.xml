@@ -30,6 +30,7 @@
   <url><loc>https://tdca.com.cn/demo</loc></url>
   <url><loc>https://tdca.com.cn/disclosure</loc></url>
   <url><loc>https://tdca.com.cn/docs</loc></url>
+  <url><loc>https://tdca.com.cn/five-orders</loc></url>
   <url><loc>https://tdca.com.cn/formal</loc></url>
   <url><loc>https://tdca.com.cn/governance</loc></url>
   <url><loc>https://tdca.com.cn/lab</loc></url>
@@ -43,6 +44,7 @@
   <url><loc>https://tdca.com.cn/nca-guide</loc></url>
   <url><loc>https://tdca.com.cn/nodes</loc></url>
   <url><loc>https://tdca.com.cn/notifier</loc></url>
+  <url><loc>https://tdca.com.cn/official-assets</loc></url>
   <url><loc>https://tdca.com.cn/negativespace</loc></url>
   <url><loc>https://tdca.com.cn/overview</loc></url>
   <url><loc>https://tdca.com.cn/ownership</loc></url>
@@ -56,10 +58,12 @@
   <url><loc>https://tdca.com.cn/review</loc></url>
   <url><loc>https://tdca.com.cn/rules</loc></url>
   <url><loc>https://tdca.com.cn/sandbox</loc></url>
+  <url><loc>https://tdca.com.cn/status</loc></url>
   <url><loc>https://tdca.com.cn/search</loc></url>
   <url><loc>https://tdca.com.cn/start</loc></url>
   <url><loc>https://tdca.com.cn/studio</loc></url>
   <url><loc>https://tdca.com.cn/tax</loc></url>
+  <url><loc>https://tdca.com.cn/terms</loc></url>
   <url><loc>https://tdca.com.cn/toolshelf</loc></url>
   <url><loc>https://tdca.com.cn/use/agent</loc></url>
   <url><loc>https://tdca.com.cn/use/upload</loc></url>
