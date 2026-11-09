@@ -61,6 +61,8 @@ import { NodeNetPage } from './pages/NodeNet'
 import { MeNodePage } from './pages/MeNode'
 import { MeNodeNetPage } from './pages/MeNodeNet'
 import { NodeDisclosurePage } from './pages/NodeDisclosure'
+import { LabPage } from './pages/Lab'
+import { DemoPage } from './pages/Demo'
 
 export default function App() {
   return (
@@ -132,6 +134,9 @@ export default function App() {
         <Route path="/notifier" element={<NotifierPage />} />
         <Route path="/sandbox" element={<SandboxPage />} />
         <Route path="/ops" element={<OpsPage />} />
+        {/* MIGRATE 批4（L1SI206）：演练与实验两面（同栈直拷·场景数8不缩·仅人） */}
+        <Route path="/lab" element={<LabPage />} />
+        <Route path="/demo" element={<DemoPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </SiteLayout>

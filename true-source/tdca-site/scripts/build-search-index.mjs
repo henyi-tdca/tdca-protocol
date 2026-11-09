@@ -150,6 +150,9 @@ const COLUMN_TITLES = {
   '/me/node': '场景节点管理区（私域三空间）',
   '/me/node/net': '我的节点 · 条例与契约',
   '/disclosure': '节点规则披露登记簿 · 公域可查',
+  // MIGRATE 批4（L1SI206）：演练与实验两面迁入，题名照旧版页头（同栈直拷）
+  '/lab': '模拟演练区',
+  '/demo': '体验期与模拟演示',
 }
 const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search'])
 
