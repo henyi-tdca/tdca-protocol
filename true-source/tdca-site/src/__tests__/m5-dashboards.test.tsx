@@ -69,9 +69,10 @@ describe('M5 双后台', () => {
     // /me、/agents/:id 仍在 App.tsx 直挂（路由照存），不在登记表面——旧断言「均在 meta 路由表」滞后。
     // MIGRATE 批1（L1SI206）追加 /search 检索面：8→9。
     // MIGRATE 批2（L1SI206）追加 /channel/my 与 /channel/register 通道两面：9→11。
+    // MIGRATE 批3（L1SI206）追加严选与节点八面＋/channel 总入口：11→20。
     const paths = PAGE_META.map((m) => m.path)
-    expect(PAGE_META).toHaveLength(11)
-    for (const p of ['/overview', '/about', '/pages', '/announcements', '/', '/register', '/review', '/docs', '/search', '/channel/my', '/channel/register']) {
+    expect(PAGE_META).toHaveLength(20)
+    for (const p of ['/overview', '/about', '/pages', '/announcements', '/', '/register', '/review', '/docs', '/search', '/channel/my', '/channel/register', '/channel', '/curation', '/contribute', '/public-face', '/private', '/nodes', '/me/node', '/me/node/net', '/disclosure']) {
       expect(paths).toContain(p)
     }
   })
