@@ -57,6 +57,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/negativespace', title: '负空间 · 什么不能做', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: 'TDCA 三空间之一：负空间管「什么不能做」——只讲原则与类别，是拒绝清单面向公众的说明面（追平批B1·批A-B5 迁入）。' },
   { path: '/academy/outline', title: '教材目录（纲要）', layer: 'L0', dataSource: '静态文案（照贴）', permission: '公开', description: '商学院教材目录（纲要）：五卷 35 章编排（原文明载「章」，旧记「册」留档），正文不入站（追平批B1 迁入）。' },
   { path: '/start/three-questions', title: '三问向导 · 贡献前自述', layer: 'L0', dataSource: '纯前端表单（零接口调用）；提交功能待后端就绪', permission: '公开', description: '交素材前的三问：原创吗／用过 AI 吗／用在什么场景。系统只汇总成自述草稿，⛔ 代判；提交功能在建，如实标注（追平批B3 迁入）。' },
+  { path: '/verify', title: '怎么验证 · 5 分钟三件自查', layer: 'L0', dataSource: '匿名只读三件：/api/v1/audit/ledger-public ＋ /api/v1/ci/badge ＋ /api/v1/formal/conclusion/catalog', permission: '公开', description: '不注册 5 分钟三件自查全路径：公开账本 → 机验徽章 → 形式化清单；三个端点匿名只读：锚点摘要可复算，记录哈希可核对不可复算（ATTEST-SCRUB-001）（追平批B4 迁入）。' },
   { path: '/five-orders', title: '五序资产总览', layer: 'L0', dataSource: 'GET /api/v1/assets/five-orders（DB 实读）', permission: '公开', description: '五序资产池总览：效用权／配置权／NCA 资产／MOU 凭证／跨场景画像；真实资产待生态接入，本页只读展示，不含任何交易入口（追平批B2 迁入）。' },
   { path: '/official-assets', title: '官方资产区', layer: 'L0', dataSource: '静态文案（站内审定口径）＋ 文库产物库只读面', permission: '公开', description: '官方工具（免费）在上、官方产物在下；调用计价未通支付渠道前如实标未开放，零支付集成（追平批B2 迁入）。' },
   { path: '/status', title: '系统健康', layer: 'L0', dataSource: 'GET /api/v1/system/overview ＋ /api/v1/ci/badge ＋ /api/v1/eios/cluster-status', permission: '公开', description: '三源合一系统健康面；接口失败 fail-soft 人话兜底，不白屏（追平批B2 迁入）。' },
@@ -83,7 +84,7 @@ export function PagesIndexPage() {
   return (
     <PageShell
       title="站点地图"
-      dataSource="静态元数据（PAGE_META 35 条）"
+      dataSource="静态元数据（PAGE_META 36 条）"
       permission="公开"
       description="本站已迁入之面的索引：每面标注数据源与访问权限；未迁面不登记，随批扩充。"
     >
