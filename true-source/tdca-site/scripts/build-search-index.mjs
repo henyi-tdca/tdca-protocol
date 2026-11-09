@@ -158,6 +158,11 @@ const COLUMN_TITLES = {
   // MIGRATE 批6（L1SI206）：入门与指南两面迁入，题名照旧版页头（/start 为公开指引面入栏目索引）
   '/start': '新手指引 · 六步上手 TDCA',
   '/nca-guide': '存证（NCA）说明',
+  // 追平批B1（L1SI206-PARITY-B1）：制度地图／帮助／负空间／教材目录四面题名照旧版净名入栏目索引
+  '/rules': '制度地图',
+  '/help': '帮助与联系',
+  '/negativespace': '负空间 · 什么不能做',
+  '/academy/outline': '教材目录（纲要）',
 }
 // MIGRATE 批5（L1SI206）：运维手册三界面（README/OPS/CHANGELOG）⛔入栏目索引（私域隔离红线——
 // 令面 §三.2「内容⛔入检索索引」；照旧版动作页豁免口径，路由可达但不收录不题名）
