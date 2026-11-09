@@ -10,6 +10,25 @@ import {
   Boxes,
   Users,
 } from 'lucide-react'
+import { TopologyEngine, hashAgentId, type TopoData } from '@/lib/TopologyEngine'
+import { SimulatedBadge } from '@/lib/SimulatedBadge'
+
+// 追平批B1·10a（L1SI206-PARITY-B1·AMEND-1 必办）：五元拓扑 Ω 图加回首页——
+// 形状与旧版一致（H/M/L 顶点＋五关系边，官网＝Ω 前端坐标卡），常量照旧版 home.tsx 逐字
+const OMEGA_TOPO: TopoData = {
+  nodes: [
+    { id: hashAgentId('NODE-H'), label: 'H 人类', type: 'gov', status: 'active' },
+    { id: hashAgentId('NODE-M'), label: 'M 智能体', type: 'official', status: 'active' },
+    { id: hashAgentId('NODE-L'), label: 'L 学习体', type: 'user', status: 'active' },
+  ],
+  edges: [
+    { from: hashAgentId('NODE-H'), to: hashAgentId('NODE-M'), label: '确权（HUF）', state: 'flowing' },
+    { from: hashAgentId('NODE-M'), to: hashAgentId('NODE-L'), label: '教育（E-EDU）', state: 'flowing' },
+    { from: hashAgentId('NODE-L'), to: hashAgentId('NODE-H'), label: '学习回馈', state: 'flowing' },
+    { from: hashAgentId('NODE-M'), to: hashAgentId('NODE-H'), label: '税收锚定', state: 'flowing' },
+    { from: hashAgentId('NODE-H'), to: hashAgentId('NODE-L'), label: '化合授权', state: 'flowing' },
+  ],
+}
 
 const trinity = [
   {
@@ -308,6 +327,22 @@ export default function Home() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      {/* 追平批B1·10a（AMEND-1 必办）：五元拓扑 Ω（ID81，官网＝Ω 前端坐标卡）；⛔ 不动以上五段 */}
+      <section id="omega" className="border-t bg-muted/40">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">五元拓扑 Ω（H/M/L 顶点 ＋ 五关系边）</h2>
+            <SimulatedBadge nature="simulated" />
+          </div>
+          <p className="mb-4 text-sm text-muted-foreground">
+            H 人类 · M 智能体 · L 学习体三元顶点，确权／教育／回馈／税收／化合五关系边——三体协作的拓扑坐标卡。
+          </p>
+          <div data-testid="home-omega" className="overflow-hidden rounded-lg border bg-background p-4">
+            <TopologyEngine data={OMEGA_TOPO} height={260} />
           </div>
         </div>
       </section>
