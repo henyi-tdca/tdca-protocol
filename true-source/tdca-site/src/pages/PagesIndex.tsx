@@ -52,6 +52,10 @@ export const PAGE_META: PageMeta[] = [
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '体验期有什么、演示区在演什么、什么是真什么是假，一页讲清（MIGRATE 批4 迁入，演示值非真实交易）。' },
   { path: '/start', title: '新手指引 · 六步上手 TDCA', layer: 'L0', dataSource: '_START-MAP 三表（单一事实源·仓内单源 ?raw 进包）', permission: '公开', description: 'S1~S6 六步了解 TDCA：每步挂接该步制度件，缺口步如实标「待补」；目录四维筛选与 147 条术语检索同读 _START-MAP 三表（MIGRATE 批6 迁入）。' },
   { path: '/nca-guide', title: '存证（NCA）说明', layer: 'L0', dataSource: '静态文案（站内审定口径，依在册 NCA 格式标准）', permission: '公开', description: 'NCA 存证格式＝全站唯一标准：每一场景皆存、官方与用户一致、人类与智能体一致——十三字段／带链／义务块六键／合规六条之公众说明面（MIGRATE 批6 迁入）。' },
+  { path: '/rules', title: '制度地图', layer: 'L0', dataSource: '机读表 doc-map-rules.yaml（页面与检索同一源·仓内单源 ?raw 进包）', permission: '公开', description: '56 件制度件按五类分组、五态如实标、S1~S6 六步导航；五态与版本以在册机读表为唯一口径（追平批B1 迁入）。' },
+  { path: '/help', title: '帮助与联系', layer: 'L0', dataSource: 'GET /api/site/docs/help（只读面）', permission: '公开', description: '站点帮助与官方联系入口；帮助族未入站则如实空栏（空栏为常态，不预置）（追平批B1 迁入）。' },
+  { path: '/negativespace', title: '负空间 · 什么不能做', layer: 'L0', dataSource: '静态文案（站内审定口径）', permission: '公开', description: 'TDCA 三空间之一：负空间管「什么不能做」——只讲原则与类别，是拒绝清单面向公众的说明面（追平批B1·批A-B5 迁入）。' },
+  { path: '/academy/outline', title: '教材目录（纲要）', layer: 'L0', dataSource: '静态文案（照贴）', permission: '公开', description: '商学院教材目录（纲要）：五卷 35 册编排，正文不入站（追平批B1 迁入）。' },
   { path: '/use/upload', title: '交素材（上传一件）', layer: 'L0', dataSource: 'POST /api/v1/use/upload（登录后单件直传；哈希防重）', permission: '登录 DID（未登录请先登录）', description: '把素材原件交给站方：选一件文件传上来，当场看到哈希与归属。同一件重复传不会重复收（用组批 U-1 迁入）。' },
   { path: '/use/agent', title: '代办登记（机器人只跑腿）', layer: 'L0', dataSource: '复用 POST /api/v1/ownership/register＋ GET /api/v1/use/upload/{id}；草稿仅本地态，不落库不出号', permission: '登录 DID（须本人登录态；未确认 ⛔ 出号）', description: '上传成功后接着办登记：机器人只问缺项、出草稿；本人看过草稿、显式点确认，才出登记号。机器人不代签、不代判、不对外承诺（用组批 U-2 迁入）。' },
 ]
@@ -74,7 +78,7 @@ export function PagesIndexPage() {
   return (
     <PageShell
       title="站点地图"
-      dataSource="静态元数据（PAGE_META 26 条）"
+      dataSource="静态元数据（PAGE_META 30 条）"
       permission="公开"
       description="本站已迁入之面的索引：每面标注数据源与访问权限；未迁面不登记，随批扩充。"
     >
