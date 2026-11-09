@@ -468,7 +468,8 @@ export function StartPageBody({ data }: { data: StartMapData | null }) {
             value={kw}
             onChange={(e) => setKw(e.target.value)}
             placeholder="命中显示名／件名／类／态／步／slug，大小写不敏感"
-            className="w-72 rounded border border-gray-300 px-2 py-1 text-xs"
+            /* 移动修复批：原 w-72=288px 定宽撑破小屏容器（页 sw=732 元凶之一），改响应式 */
+            className="w-full rounded border border-gray-300 px-2 py-1 text-xs sm:w-72"
           />
         </div>
         <p data-testid="catalog-count" className="mb-2 text-xs text-gray-600">
@@ -496,7 +497,8 @@ export function StartPageBody({ data }: { data: StartMapData | null }) {
           value={termKw}
           onChange={(e) => setTermKw(e.target.value)}
           placeholder="按 T-###／术语名／定义检索，同词多义并列显示"
-          className="mb-3 w-72 rounded border border-gray-300 px-2 py-1 text-xs"
+          /* 移动修复批：同 catalog-kw，定宽 288px 撑破小屏，改响应式 */
+          className="mb-3 w-full rounded border border-gray-300 px-2 py-1 text-xs sm:w-72"
         />
         {termResults.length === 0 ? (
           <p className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-500">本组合无件，换个条件试试。</p>

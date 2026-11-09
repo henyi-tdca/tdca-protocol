@@ -706,6 +706,8 @@ export function LabPage() {
               还没有流水 —— 先签到，或点开任意一卡试一次
             </p>
           ) : (
+            /* 移动修复批：8 列宽表包内滚容器，⛔撑破文档宽 */
+            <div className="overflow-x-auto">
             <table data-testid="lab-ledger-table" className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-left text-xs text-gray-600">
@@ -734,6 +736,7 @@ export function LabPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </section>
       </div>
