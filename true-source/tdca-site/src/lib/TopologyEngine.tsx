@@ -200,11 +200,11 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
     s === 'fused' ? '#f43f5e' : s === 'idle' ? '#475569' : '#C9A45C'
 
   return (
-    <div className="relative" style={{ height }}>
+    <div className="relative overflow-hidden" style={{ height }}>
       {/* B3：物理/智能体世界坐标卡（双卡，300ms 过渡） */}
       <div className="flex h-full transition-transform duration-300 ease-in-out" style={{ transform }}>
-        {/* 智能体世界卡 */}
-        <div className="h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#081222]">
+        {/* 智能体世界卡（移动修复批：卡自 relative——切换按钮定位上下文归本卡，⛔双按钮同点互遮） */}
+        <div className="relative h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#081222]">
           <svg className="h-full w-full">
             {safeEdges.map((e) => {
               const a = positions[e.from], b = positions[e.to]
@@ -254,8 +254,8 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
             切换到物理世界
           </button>
         </div>
-        {/* 物理世界卡（脱敏：仅制度关系概览，无具体个体） */}
-        <div className="h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#0A1830]">
+        {/* 物理世界卡（脱敏：仅制度关系概览，无具体个体；移动修复批：卡自 relative，同智能体卡） */}
+        <div className="relative h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#0A1830]">
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
               <p className="text-xs text-slate-400">物理世界坐标卡（制度关系概览）</p>
