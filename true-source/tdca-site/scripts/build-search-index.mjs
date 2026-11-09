@@ -82,10 +82,12 @@ const RENAME_MAP_REG = {
   '业务端节点接入与同构契约条例（对外公开版·V1.0）.md': 'TDCA-REG-NODE-ACCESS-001（对外公开版·V1.0）.md',
   '业务端节点接入与同构契约条例（机读版·对外公开版·V1.0）.yaml': 'TDCA-REG-NODE-ACCESS-001-COMPILED（对外公开版·V1.0）.yaml',
   '配置权市场授权追认附记.md': 'TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md',
+  // MIGRATE 批2补件入仓（TDCA-HANDOFF-EXEC-L1SI206-CORPUS104-001）：白名单在册而仓内无源→补件
+  '人机协作工作条例.md': 'TDCA-PUB-CORPUS-104-人机协作工作条例（V1.0已生效）.md',
 }
 // 豁免缺件（⛔ 静默跳过）：白名单在册而仓内无源，逐件须有据并回报挂账。
+// 2026-11-09：人机协作工作条例已补件入仓（PUB-CORPUS-104），豁免条清零。
 const EXEMPT_MISSING = {
-  'regulation/人机协作工作条例.md': '仓内无源（governance 两件人机协作件同名异题、字节不符）；站上在架 6596B/69D9F6D44E139BC9（NETNAME-001 第50行实拉）；候智库裁定补件入仓或白名单除名',
 }
 const resolveDiskName = (famKey, entry) =>
   famKey === 'regulation' ? (RENAME_MAP_REG[entry] ?? entry) : entry
@@ -135,6 +137,9 @@ const COLUMN_TITLES = {
   '/channel/registry': '智能体通道 · 登记指引',
   '/channel/market': '智能体通道 · 市场接入',
   '/channel/tools': '智能体通道 · 工具接入',
+  // MIGRATE 批2（L1SI206）：通道两面迁入，题名取登记净名（仓盘编号存档双轨）
+  '/channel/my': '我的通道（智能体四步流水线）',
+  '/channel/register': '智能体自助登记（通道登记）',
 }
 const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search'])
 
