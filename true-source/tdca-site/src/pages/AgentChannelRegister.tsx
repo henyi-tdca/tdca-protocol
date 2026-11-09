@@ -134,7 +134,8 @@ export function AgentChannelRegisterPage() {
       permission="公开（ANCHOR 路提交须登录；GUEST 路免会话）"
       description="登记即创建：六要素逐项 fail-closed、缺项逐项点名；成功当场回登记号；每条落 NCA 存证。"
     >
-      <div className="space-y-4">
+      {/* 移动修复批（批2两面挂账 441/455 同修）：min-w-0+break-words 兜长 token；文本 input 默认宽约 170px 撑破小屏容器，统改 w-full（radio 豁免） */}
+      <div className="min-w-0 break-words space-y-4 [&_input:not([type=radio])]:w-full">
         {/* 六步展示（E-4.3：照条例第19条；登记为创世前置，单列六步之外） */}
         <section data-testid="reg-six-steps" className="rounded-lg border border-gray-200 p-4">
           <h3 className="mb-2 text-sm font-semibold text-gray-800">通道六步（条例第19条）</h3>

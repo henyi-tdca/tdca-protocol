@@ -96,3 +96,13 @@ button[class*="text-primary-foreground"],
 [role="button"][class*="text-primary-foreground"] {
   color: #ffffff;
 }
+
+/* =============================================================================
+ * 移动修复批（L1SI206-MOBILE-FIX-B1）：文本输入框 max-width:100% 全局兜
+ * 由：input 默认宽约 170px（size=20），小屏 main 净宽 199px  minus 壳衬后
+ *     容器常不足 170px ⟹ 文档级横向溢出（批2两面 441/455、授权面 395 之主因之一）。
+ * 口径：只限宽不改正宽——宽屏容器大时行为不变；checkbox/radio/按钮型豁免。
+ * ========================================================================== */
+input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="number"]) {
+  max-width: 100%;
+}

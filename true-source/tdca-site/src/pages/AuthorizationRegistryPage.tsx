@@ -131,7 +131,8 @@ export function AuthorizationRegistryPage() {
       dataSource="A-24 /api/v1/authorization/*（登记／变更／注销／查询／操作＋公开查）"
       permission="登录 DID（公开查免会话）"
       description="登记二分之授权侧：谁能怎么用。四要件缺一即拒；签名须本人、智能体不代持代填；公开面仅四字段。">
-      <div className="space-y-4">
+      {/* 移动修复批：min-w-0+break-words 兜长 token（AR-xxx 等）；文本 input 默认宽约 170px 撑破 165px 容器，统改 w-full（复选框豁免） */}
+      <div className="min-w-0 break-words space-y-4 [&_input:not([type=checkbox])]:w-full">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           登记二分：权属登记＝归谁（P8a）／授权登记＝谁能怎么用（本页）
           <SimulatedBadge nature="simulated" />
