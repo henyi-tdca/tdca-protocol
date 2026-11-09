@@ -1,0 +1,125 @@
+# ============================================================
+# 追平判据机读件（迁移批 0 基线 · 八项）
+# 件号：TDCA-PARITY-GATE-L1SI205-B0
+# 来源：TDCA-RULING-L1SI205-SITE-PARITY-001 §三（门槛五项 ①~⑤）
+#       ＋ MIGRATE-B0-001 本侧已定第 3 项（⑥⑦＋金丝雀）
+#       ＋ AMEND-1（GSEQ-7673 照准，第 ⑧ 项移动端）
+# 读法：criteria 下八键即八项判据；任一项 pass=false ⟹ 换版门槛不过。
+# ============================================================
+meta:
+  id: TDCA-PARITY-GATE-L1SI205-B0
+  version: "1.0"
+  date: "2026-11-09"
+  timezone: "+08"
+  read_point: "atomgit/main @ a4f4e222"
+  plan: TDCA-PLAN-L1SI205-SITE-MIGRATE-001
+  batches: "0→1→2→3→4→5→6→7→移动专项半批→8"
+
+criteria:
+  g1_groups_four_requirements:
+    seq: 1
+    name: 十组功能面四要件全备
+    source: "PARITY-001 §三.1"
+    desc: "G-1~G-10 十组各组四要件全备；任一组缺一件即不过"
+    four_requirements:
+      - page_present          # ①页面在位
+      - anonymous_nonempty    # ②匿名可达且非空壳
+      - discoverable          # ③导航或站点地图可发现
+      - no_placeholder        # ④无「在建」占位字样
+    pass_rule: "all_groups_and_all_requirements_true"
+    groups:
+      G-1:  ["/curation", "/contribute", "/public-face", "/private"]
+      G-2:  ["/nodes", "/me/node", "/me/node/net", "/disclosure"]
+      G-3:  ["/lab", "/demo", "/negativespace"]
+      G-4:  ["/help", "/start", "/rules", "/terms", "/start/three-questions", "/verify", "/status"]
+      G-5:  ["/main-chain-guide", "/nca-guide", "/markdown"]
+      G-6:  ["/academy/outline", "/biz-intro"]
+      G-7:  ["/ops/manual", "/ops/me", "/ops/logs", "/ops/logs/list"]
+      G-8:  ["/five-orders", "/official-assets", "/anchors"]
+      G-9:  ["/me/appeal", "/authorization/panel", "/register-contract", "/channel-my"]
+      G-10: ["/search"]
+
+  g2_route_coverage:
+    seq: 2
+    name: 路由覆盖
+    source: "PARITY-001 §三.2"
+    desc: "旧版 66 面逐面在新版有对应且可达（允许改路径，但须报对照）"
+    old_page_count: 66
+    mapping_table: "docs/route-parity.md"
+    pass_rule: "every_old_page_has_live_new_counterpart"
+
+  g3_search:
+    seq: 3
+    name: 检索可用
+    source: "PARITY-001 §三.3"
+    checks:
+      search_index_json_http_200: true
+      search_index_entries_min: 549
+      search_page_nonempty: true
+      keyword_spot_hits: "3/3"
+
+  g4_sitemap:
+    seq: 4
+    name: 站点地图全列
+    source: "PARITY-001 §三.4"
+    desc: "PAGE_META 条数 ≡ 实际路由数"
+    pass_rule: "page_meta_count == actual_route_count"
+
+  g5_tests_and_gates:
+    seq: 5
+    name: 测试与门禁
+    source: "PARITY-001 §三.5"
+    checks:
+      tdca_site_tests_failed: 0
+      gate_site_present: true
+      gate_site_green: true
+
+  g6_regression_compare:
+    seq: 6
+    name: 回归对比
+    source: "MIGRATE-B0-001 本侧已定第 3 项"
+    desc: "换版前后 66 面逐面 HTTP＋渲染关键词抽检全过"
+    checks:
+      pages_spot_checked: 66
+      http_all_200: true
+      render_keyword_all_hit: true
+
+  g7_observation_window:
+    seq: 7
+    name: 观察窗与金丝雀
+    source: "MIGRATE-B0-001 本侧已定第 3 项"
+    window_hours: 24
+    anchors:
+      - home_shell_hash
+      - search_index_bytes
+      - family_counts
+    canary:
+      port: 8080
+      rule: "新包先上 8080 内部口，智库匿名抽验 PASS 后切 443"
+      rollback: "旧包在站机原位，切回秒级"
+
+  g8_mobile:
+    seq: 8
+    name: 移动端硬门槛
+    source: "AMEND-1（GSEQ-7673 照准）"
+    viewport_px: 375
+    orientation: portrait
+    fields:
+      no_horizontal_overflow: {type: bool, desc: "无横向溢出（无横向滚动条、无越界元素）"}
+      no_overlap:             {type: bool, desc: "无元素重叠遮挡（含吸顶/固定元素遮正文）"}
+      nav_reachable:          {type: bool, desc: "导航可达（抽屉可开、当前页高亮、返回可回）"}
+      no_hover_only:          {type: bool, desc: "主内容不依赖悬停（触屏可直接见/可点）"}
+    sampled_pages: 65          # 34 在位＋31 迁面；新版独有面（如 /registrations）只须过四项、不比较
+    pass_rule: "every_page_every_field_true"
+
+shrink:
+  audit_table: "docs/shrink-audit.md"
+  thresholds_percent:
+    equivalent_max_delta: 10     # ±10% 内判等价
+    shrink_min_delta: 30         # >30% 记「缩水」入待补清单
+    manual_review_range: [10, 30]  # 10~30% 逐面人工裁
+  method_by_class:
+    logic_page: "byte_compare"        # 逻辑型页：字节判线适用
+    catalog_page: "entry_count_compare"  # 清单型/目录型页：⛔字节比，比条目数（库内条数/下载面可达数）
+  entity_location_enum: [代码内, 库内, 站上文件, 仓内件]
+  note: "toolshelf 更正（MIGRATE-ASSESS-001-AMEND-1）：-79.5% 系硬编码→库驱动迁移，非缩水；真缺陷=清单接口匿名 401，批 5 修。"
