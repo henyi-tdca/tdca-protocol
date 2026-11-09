@@ -3,9 +3,10 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: F0-2 站点地图（页面元数据索引）
 // 约束矩阵: FRAMEWORK-001 §四（路由表：界面域/层级/数据源/权限）+ ID92（模拟态）
 // 并轨注记: 自旧版 pages.tsx 改造并入（FRONTEND-MERGE 批1）——
-//           元数据裁至「本批已迁入之面 ＋ 新版既有之面」共 8 条；
+//           元数据裁至「本批已迁入之面 ＋ 新版既有之面」；
 //           未迁面 ⛔ 不登记（随后续批次渐进扩充）；
-//           layer 降为纯数据字段（层级指示器未随迁，不引旧版 @/app/layer-indicator）
+//           layer 降为纯数据字段（层级指示器未随迁，不引旧版 @/app/layer-indicator）；
+//           MIGRATE 批1（2026-11-09）追加 /search 检索面（8→9）
 // =============================================================================
 import { Link } from 'react-router'
 import { PageShell } from '@/components/PageShell'
@@ -29,6 +30,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/register', title: '注册（缔约）', layer: 'L0', dataSource: 'M4 POST /api/v1/auth/register（缔约落 NCA 链）', permission: '公开', description: '注册即缔约入口（注册流程内含缔约协议同意勾选）。' },
   { path: '/review', title: '审查', layer: 'L0', dataSource: '静态文案', permission: '公开', description: '审查面（新版既有面，Review ⛔ 不动）。' },
   { path: '/docs', title: '文档库', layer: 'L0', dataSource: '静态索引', permission: '公开', description: '协议文档站内索引（新版既有面）。' },
+  { path: '/search', title: '全站检索', layer: 'L0', dataSource: '静态索引 search-index.json（构建时生成）', permission: '公开', description: '四族公开件＋术语＋栏目页一框检索；本地排序，无后端（MIGRATE 批1 迁入）。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -49,7 +51,7 @@ export function PagesIndexPage() {
   return (
     <PageShell
       title="站点地图"
-      dataSource="静态元数据（PAGE_META 8 条）"
+      dataSource="静态元数据（PAGE_META 9 条）"
       permission="公开"
       description="本站已迁入之面的索引：每面标注数据源与访问权限；未迁面不登记，随批扩充。"
     >
