@@ -104,7 +104,9 @@ describe('MIGRATE 批7：站点地图 ≡ 静态路由数（/ops* 私域不入�
   it('条目数≡静态路由数−/ops*−受护面（机取机算，⛔手编塞条目）', () => {
     // 追平批B3：/authorization/panel 为受护面（PARITY-B3-001 §三「⛔ 入公域栏目索引」），
     // 与 /ops* 私域同口径零入图；公式随批更正，⛔ 手编塞条目
-    const PROTECTED_FROM_SITEMAP = ['/authorization/panel']
+    // 追平批B4（PARITY-B4-001 §三）：/assets 为重定向旧链（→/five-orders），重定向⛔入图；
+    // /ops/manual 已被 /ops* 私域规则滤除（等价裁示 GSEQ-7743：→/ops/readme）
+    const PROTECTED_FROM_SITEMAP = ['/authorization/panel', '/assets']
     const ops = ROUTES.filter((p) => p === '/ops' || p.startsWith('/ops/'))
     const expected = ROUTES.filter((p) => !ops.includes(p) && !PROTECTED_FROM_SITEMAP.includes(p))
     expect(ops.length).toBeGreaterThan(0)

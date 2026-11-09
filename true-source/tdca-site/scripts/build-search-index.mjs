@@ -171,12 +171,15 @@ const COLUMN_TITLES = {
   '/terms': '术语检索',
   // 追平批B3（L1SI206-PARITY-B3）：三问向导题名照旧版净名入栏目索引
   '/start/three-questions': '三问向导 · 贡献前自述',
+  // 追平批B4（L1SI206-PARITY-B4-001）：/verify 三件自查（公开面·匿名可读）题名照旧版净名入栏目索引；
+  // 两旧链重定向（/assets、/ops/manual）照旧版口径⛔入栏目索引
+  '/verify': '怎么验证 · 5 分钟三件自查',
 }
 // MIGRATE 批5（L1SI206）：运维手册三界面（README/OPS/CHANGELOG）⛔入栏目索引（私域隔离红线——
 // 令面 §三.2「内容⛔入检索索引」；照旧版动作页豁免口径，路由可达但不收录不题名）
 // 用组批（L1SI206-USE-GROUP-B1）：「用」组两面（U-1 交素材／U-2 代办登记）⛔入栏目索引——
 // 登录动作面，照 /auth /register 旧版动作页豁免口径（路由可达、两页互链、不收录不题名）
-const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', '/ops/ops', '/ops/changelog', '/ops/logs', '/ops/logs/list', '/use/upload', '/use/agent', '/authorization/panel', '/ops/me'])
+const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', '/ops/ops', '/ops/changelog', '/ops/logs', '/ops/logs/list', '/use/upload', '/use/agent', '/authorization/panel', '/ops/me', '/assets', '/ops/manual'])
 
 // 编号形态禁则（旧版施工令 §三.2；TAIL-CLEAN-001 块A：title/summary/body 共用本表）
 // B1 追加（硬约束第8条「索引内容零内部编号」，旧表未覆盖 registry 件号形态，旧索引曾残留 20 条）：
