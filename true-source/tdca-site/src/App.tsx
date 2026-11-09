@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
 import Home from './pages/Home'
 import DocsHome, { DocsIndex, DocDetail } from './pages/Docs'
 import Review from './pages/Review'
@@ -59,6 +59,7 @@ import { AuthorizationPanelPage } from './pages/AuthorizationPanelPage'
 import { ThreeQuestionsPage } from './pages/ThreeQuestionsPage'
 import { OpsMePage } from './pages/OpsMePage'
 import { RequireAuth } from './components/RequireAuth'
+import { VerifyPage } from './pages/VerifyPage'
 import { UseUploadPage } from './pages/use/UseUploadPage'
 import { UseAgentPage } from './pages/use/UseAgentPage'
 import { OpsPage } from './pages/OpsPage'
@@ -203,6 +204,10 @@ export default function App() {
         <Route path="/authorization/panel" element={<RequireAuth><AuthorizationPanelPage /></RequireAuth>} />
         <Route path="/start/three-questions" element={<ThreeQuestionsPage />} />
         <Route path="/ops/me" element={<OpsMePage />} />
+        {/* 追平批B4（L1SI206-PARITY-B4-001）：/verify 怎么验证·5分钟三件自查（公开面·匿名可达·直拷接缝适配）＋两旧链重定向（旧版逐字同形·不破旧链） */}
+        <Route path="/verify" element={<VerifyPage />} />
+        <Route path="/assets" element={<Navigate to="/five-orders" replace />} />
+        <Route path="/ops/manual" element={<Navigate to="/ops/readme" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </SiteLayout>
