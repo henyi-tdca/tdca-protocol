@@ -39,10 +39,13 @@ interface RunView {
 // L1SI207-MOBILE-ENTRY-AND-REF-001 任务B（乙案）：读全文深链只指公开清单内现行版——
 // template_auth 行原被指「生效注记」已在公开 50（清单命中 1，⛔404——前判 404 系 slug 未带 .md 之路径误）；
 // registration_registry 行原被指「签批落地件」确未公开（命中 0）⟹ 改指《TDCA 注册登记制度》中文人读现行版。
-// ⛔不动公开白名单、⛔不动后端；config_market 行同款未令改，维持原 library 族入口（另报候裁）。
+// config_market 行原维持 library 族入口（L1SI207-241 另报候裁）⟹ 已裁：同乙案口径改指
+// 《配置权市场规范（单一权威稿·中文人读版V1.0（现行））》（公开 53 件内实测命中，TDCA-RULING-L1SI207-PR495-MERGE-AND-TWO-FOLLOWUPS-001 §二.1）。
+// ⛔不动公开白名单、⛔不动后端、⛔不扩公开面。
 const READ_FULL_PUBLIC: Record<string, string> = {
   template_auth: '/docs/regulation/授权件模板对外版（中文人读·V1.0（现行）·八字段与四要件）.md',
   registration_registry: '/docs/regulation/TDCA注册登记制度（中文人读版V1.0（现行））.md',
+  config_market: '/docs/regulation/配置权市场规范（单一权威稿·中文人读版V1.0（现行））.md',
 }
 
 export function MarketSimPage() {
