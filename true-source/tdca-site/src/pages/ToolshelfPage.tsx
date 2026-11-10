@@ -3,11 +3,391 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: P4 /toolshelf 工具货架（上站）
 // 约束矩阵: 期一开工令 P4（站内工具/模板目录；配置类须过准入闸门）
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
+// 并轨注记: 自旧版 toolshelf.tsx 迁入（L1SI206 TOOLSHELF-RESTORE-001），卡面/信箱区/模板区文案与字段语义一字未改，仅四处 import 接缝按新树惯例改写
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/lib/client'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
+// TPL-FIX-001 段B/段D：模板区指路数据（内容逐字取自公开包 tdca-templates-v1.0.zip）
+import {
+  TPL_PACKAGE, CONTRACT_TEMPLATES, SIX_ELEMENTS_TEMPLATES,
+  GOV_REC_NOTICE, GOV_RECORDS,
+} from './toolshelf-template-data'
+
+// TPL-FIX-001 段C：接口异常（含 401/5xx/超时）逐字降级文案（⛔ 区块不留空白）
+const TPL_FALLBACK =
+  '模板数据暂不可取；可直下公开包：tdca-templates-v1.0.zip（含授权件模板 4 件、契约模板 3 件、六要素模板 1 件、研发治理记录 12 份）。'
+
+// ---------------------------------------------------------------------------
+// L1SI177 批3 B块：公开货架呈现（照已过点样三卡三态；条目卡五项：
+// 名称／用途一句／数据性质／获取方式／状态徽标＋日期。只做呈现与状态位，
+// ⛔ 不做自助上架后台——上架由 operator 提交、创始人核）
+// L1SI197 TOOLSHELF-001：A 档四包上卡（A-2/A-3/A-4/A-5，白名单制出包），
+// 沿用本卡壳（S-3），卡内加行呈现 依赖／下载／sha256／许可 四小字段；
+// 四卡均 status=dev（包已备、货架可见，下载／试算入口待部署后可用）。
+// L1SI198 TOOLCARD-DEPLOY-001：六卡接真链转可用态（getHref 接 /downloads/<包>.zip，
+// getLabel「下载」、status=ok、date 去待部署字样；sha256/deps/license/nature 未动；
+// 信箱区三包链接本已为真链，不动）。
+// A-1/A-6 源缺口不做卡（回报 -089 具名停报）。
+// L1SI197 MERGEUP-001：A-1 治理七件＋A-6 法务智能体两包上卡（回报 -094/-095 出包毕），
+// 与四卡同式；A-1 卡 deps 显标「依赖 PyYAML，非零依赖」（令面硬要求）。
+// L1SI197 MBUP-001：信箱协作（MAILBOX-COLLAB）独立产品线一卡（回报 -097 三包出包毕），
+// ⛔ 与上列六卡混列——独立成区；卡内三分下载（spec／refimpl／bundle，⛔ 合成一 zip）；
+// 卡面三标：零依赖（三包皆纯标准库，venv 无 PyYAML 实证）／协议附条件生效
+// （条例 V1.0-FROZEN 乙案，灰度补录条件未竟前不视为完全生效）／半自动档（全自动 ⛔ 上线）。
+// spec 条例四件之在册编号属已裁保留（核证单在册），其余件六模式复扫零命中。
+// L1SI197 MANUPLOAD-001：六卡＋信箱卡各加「使用手册 V1.0-FROZEN」行（链 /official-assets）。
+// ---------------------------------------------------------------------------
+type ToolStatus = 'ok' | 'dev' | 'off'
+type ToolNature = 'real' | 'simulated' | 'synthetic'
+interface PublicTool {
+  name: string
+  use: string
+  nature: ToolNature
+  status: ToolStatus
+  getLabel: string
+  getHref: string
+  date: string
+  /** 卡壳 testid：缺省沿用 tool-card-<status>（兼容批3 B块断言），新卡各自独立 */
+  tid?: string
+  /** 以下四小字段为 A 档包卡加行呈现（令面六字段之余三项：依赖／下载／sha256／许可） */
+  deps?: string
+  pkg?: string
+  sha256_16?: string
+  sha256?: string
+  license?: string
+}
+const PUBLIC_TOOLS: PublicTool[] = [
+  {
+    name: '自助验链',
+    use: '输入件名与哈希，自助核验公开件在册状态与链上留痕。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '打开工具',
+    getHref: '/verify',
+    date: '更新 2026-10-28',
+  },
+  {
+    name: '全站检索',
+    use: '四族＋术语＋栏目页的一框检索；静态索引先行，结果带数据性质。',
+    nature: 'simulated',
+    status: 'dev',
+    getLabel: '上线后可用',
+    getHref: '',
+    date: '更新 2026-10-27',
+  },
+  {
+    name: '旧版演示脚本',
+    use: '批 2.6 演示区旧脚本，已由新演示页替代，停止提供。',
+    nature: 'synthetic',
+    status: 'off',
+    getLabel: '暂不可用',
+    getHref: '',
+    date: '下架 2026-10-20',
+  },
+  {
+    name: '微交付税收（tdca-microtax）',
+    use: '智能体微交付实时计税与税款预缴托管：T(y_t) 分项税额 → 预缴 → 税后净额分配。',
+    nature: 'simulated',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-microtax-A2-v1.0.zip',
+    date: '上卡 2026-11-05',
+    tid: 'tool-card-a2',
+    deps: 'Python≥3.10 标准库＋同货架 tdca-nsfl-compiler（A-3）',
+    pkg: 'tdca-microtax-A2-v1.0.zip',
+    sha256_16: 'f830375cc327bdbe',
+    sha256: 'f830375cc327bdbea6af3c2968bb0a71c1f7b69d8cc7cb6a68c34555cb272f50',
+    license: 'Apache-2.0',
+  },
+  {
+    name: 'NSFL 编译器（tdca-nsfl-compiler）',
+    use: '负空间约束语言编译器核心：词法／语法／语义＋⊗⊘⊙ 运算符＋schema 校验＋IR。随包附通用校准器（v1.0）：三输入缺一拒跑，四输出齐，失败面四类如实报。\n历史版本 v1.0 保留供回退与对核，新装请用 v1.1。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-nsfl-compiler-A3-v1.1.zip',
+    date: '上卡 2026-11-05',
+    tid: 'tool-card-a3',
+    deps: 'Python≥3.10 标准库',
+    pkg: 'tdca-nsfl-compiler-A3-v1.1.zip',
+    sha256_16: 'ba0e6385e9f19f2f',
+    sha256: 'ba0e6385e9f19f2f874422579cc4c13eae16001e26ccfe8f3aef076938153ed8',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '证书工具（tdca-cert-tool）',
+    use: 'TDCA L1 兼容性认证：MCP 连通／准入三态／存证哈希链／NSFL 熔断分级／可审计性。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-cert-tool-A4-v1.0.zip',
+    date: '上卡 2026-11-05',
+    tid: 'tool-card-a4',
+    deps: 'Python≥3.10 标准库',
+    pkg: 'tdca-cert-tool-A4-v1.0.zip',
+    sha256_16: 'abb847f4cecab262',
+    sha256: 'abb847f4cecab262693da4aac7d752a8648c7965a7f44e533b92f250bd48a610',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '商业调用规则（tdca-call-rules）',
+    use: '商业调用规则引擎：日抛判定／MOU 硬锚定／停机定理／税收计算与调用记录。',
+    nature: 'simulated',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-call-rules-A5-v1.0.zip',
+    date: '上卡 2026-11-05',
+    tid: 'tool-card-a5',
+    deps: 'Python≥3.10 标准库',
+    pkg: 'tdca-call-rules-A5-v1.0.zip',
+    sha256_16: 'e8a80d05dc9d6456',
+    sha256: 'e8a80d05dc9d6456fd43de3a125a8c228564baca4f109b2dd29b8f1ed06adb53',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '治理工具集（tdca-govtools）',
+    use: '治理侧七件单文件工具：链验／纪律核／信箱台账／日巡检／周深核／运维日报／交付封签。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-govtools-A1-v1.0.zip',
+    date: '上卡 2026-11-05',
+    tid: 'tool-card-a1',
+    deps: 'Python≥3.10 标准库＋PyYAML（依赖 PyYAML，非零依赖）',
+    pkg: 'tdca-govtools-A1-v1.0.zip',
+    sha256_16: 'a1716bf9cd8a71c7',
+    sha256: 'a1716bf9cd8a71c7ff542cf13f44cd7e100f08b560712ea34ea10b504b6542f2',
+    license: 'Apache-2.0',
+  },
+  {
+    name: '法务智能体（tdca-legal-agent）',
+    use: '法学家工作的放大器与一致性校验器：批量初筛／交叉验证／NCA 铸造，不替代法学家。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-legal-agent-A6-v1.0.zip',
+    date: '上卡 2026-11-05',
+    tid: 'tool-card-a6',
+    deps: 'Python≥3.10 标准库（零依赖）',
+    pkg: 'tdca-legal-agent-A6-v1.0.zip',
+    sha256_16: '5afc6a786257ed71',
+    sha256: '5afc6a786257ed711ebb08a89922f2cb9eed3cc9852a4a8a61e76b4b4af9df3f',
+    license: 'Apache-2.0',
+  },
+  // L1SI198 TOOLS5-MERGE-001 连接器包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: 'TDCA 连接器（tdca-connector）',
+    use: '适配器匹配辅助（合规条款→原理条目 Top-K）＋ COP 语料语义连接器（TF-IDF 加权＋负空间反向降权）。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-connector-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-connector',
+    deps: 'Python≥3.10 标准库；连接器本体需 PyYAML（依赖 PyYAML，非零依赖）',
+    pkg: 'tdca-connector-v1.0.zip',
+    sha256_16: '9cd07b1276743d1c',
+    sha256: '9cd07b1276743d1cd97f3df466584eccb56bd4a3a4f9037ebc6b90bc41199828',
+    license: 'Apache-2.0',
+  },
+  // L1SI198 TOOLS5-MERGE-001 反函数求解器包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: '反函数求解器（tdca-inverse-solver）',
+    use: '给定目标效用反推配置方案：可行域随机采样＋硬约束预筛＋成本最小择优；无解即熔断留痕。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-inverse-solver-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-inverse',
+    deps: 'Python≥3.8 标准库（零依赖）',
+    pkg: 'tdca-inverse-solver-v1.0.zip',
+    sha256_16: '2724ab9c7985bd2a',
+    sha256: '2724ab9c7985bd2a94af631a38fbcf3a213445b52363c7bb900d9c9434b2e308',
+    license: 'Apache-2.0',
+  },
+  // L1SI198 TOOLS5-MERGE-001 模板包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: '表单等模板（tdca-templates）',
+    use: '公开区模板 21 件归并一包：智能合约／授权件（冻结四件）／六要素声明／研发治理记录 12 份。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-templates-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-templates',
+    deps: '纯文本 Markdown／YAML（零依赖）；自测仅标准库',
+    pkg: 'tdca-templates-v1.0.zip',
+    sha256_16: 'b318a3a827e5d317',
+    sha256: 'b318a3a827e5d31782c139eaabeea5409d8c76a770d0948bf51bfe615a2b9401',
+    license: 'Apache-2.0（各件头部标注为准）',
+  },
+  // L1SI198 TOOLS5-MERGE-001 skill 包（卡面用途句照 §三 定稿，⛔ 改一字）
+  {
+    name: '技能包（tdca-skills）',
+    use: '在册对外 5 件技能定义（SKILL.md）：计量池／存证标准化／编排编译／制度编译／设备池接入。',
+    nature: 'real',
+    status: 'ok',
+    getLabel: '下载',
+    getHref: '/downloads/tdca-skills-v1.0.zip',
+    date: '出包 2026-11-06',
+    tid: 'tool-card-skills',
+    deps: 'Markdown 文本（零依赖）；运行时工具本体须配协议仓公开 tools/',
+    pkg: 'tdca-skills-v1.0.zip',
+    sha256_16: 'b0e97fedd95f0acf',
+    sha256: 'b0e97fedd95f0acf5fecd4d1bae54a2de7ac9e5d45441446551fc56bedd59c0e',
+    license: '随仓公开区（各件头部标注为准）',
+  },
+]
+const TOOL_STATUS: Record<ToolStatus, { label: string; badge: string }> = {
+  ok: { label: '可用', badge: 'bg-emerald-600 text-white' },
+  dev: { label: '在建', badge: 'bg-amber-600 text-white' },
+  off: { label: '下架', badge: 'bg-gray-400 text-white' },
+}
+const TOOL_NATURE: Record<ToolNature, { label: string; badge: string }> = {
+  real: { label: '真实', badge: 'bg-emerald-100 text-emerald-700' },
+  simulated: { label: '模拟', badge: 'bg-amber-100 text-amber-700' },
+  synthetic: { label: '合成', badge: 'bg-slate-200 text-slate-600' },
+}
+
+/** 公开货架三卡（点样形态；窄屏自动单列，卡内不折行霸屏） */
+// USABILITY4-001 2-3（D-2 口径）：C-ALL＝全部卡（含无下载位）；C-DL＝有下载位之卡（getHref 指向 /downloads/* 落地包）
+const C_ALL_PUBLIC = PUBLIC_TOOLS.length
+const C_DL_PUBLIC = PUBLIC_TOOLS.filter((t) => (t.getHref ?? '').startsWith('/downloads/')).length
+function PublicToolCards() {
+  return (
+    <section data-testid="toolshelf-cards" aria-label="公开货架">
+      <p data-testid="toolshelf-card-count" className="mb-2 text-[11px] text-gray-400">
+        卡数口径（D-2）：C-ALL（全部卡，含无下载位）＝{C_ALL_PUBLIC}；C-DL（有下载位之卡）＝{C_DL_PUBLIC}。
+      </p>
+      <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+        {PUBLIC_TOOLS.map((t) => {
+          const st = TOOL_STATUS[t.status]
+          const na = TOOL_NATURE[t.nature]
+          return (
+            <div
+              key={t.name}
+              data-testid={t.tid ?? `tool-card-${t.status}`}
+              className={`rounded-xl border border-gray-200 bg-white p-4 ${t.status === 'off' ? 'opacity-60' : ''}`}
+            >
+              <h3 className="text-sm font-semibold text-gray-900">{t.name}</h3>
+              <p className="mt-1 min-h-[34px] text-xs leading-relaxed text-gray-600">{t.use}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className={`rounded px-1.5 py-px font-medium ${na.badge}`}>{na.label}</span>
+                <span className={`rounded px-1.5 py-px font-medium ${st.badge}`}>{st.label}</span>
+              </div>
+              <div className="mt-2 text-xs">
+                {t.getHref ? (
+                  <a href={t.getHref} className="rounded-md border border-blue-700 px-2.5 py-0.5 text-blue-700 hover:bg-blue-50">
+                    {t.getLabel}
+                  </a>
+                ) : (
+                  <span className="text-gray-400">{t.getLabel}</span>
+                )}
+              </div>
+              {t.deps && (
+                <dl className="mt-2 space-y-0.5 text-[11px] leading-relaxed text-gray-500">
+                  <div><dt className="inline text-gray-400">依赖：</dt><dd className="inline">{t.deps}</dd></div>
+                  <div><dt className="inline text-gray-400">下载：</dt><dd className="inline">{t.pkg}</dd></div>
+                  <div><dt className="inline text-gray-400">sha256：</dt><dd className="inline" title={t.sha256}>{t.sha256_16}（前 16 位）</dd></div>
+                  <div><dt className="inline text-gray-400">许可：</dt><dd className="inline">{t.license}</dd></div>
+                  <div><dt className="inline text-gray-400">手册：</dt><dd className="inline"><Link to="/official-assets" className="text-blue-700 underline hover:bg-blue-50">使用手册 V1.0-FROZEN</Link></dd></div>
+                </dl>
+              )}
+              <p className="mt-2 text-[11px] text-gray-400">{t.date}</p>
+            </div>
+          )
+        })}
+      </div>
+      <p className="mt-2 text-[11px] text-gray-400">上架／下架由 operator 提交、创始人核；本区只做呈现与状态位。</p>
+    </section>
+  )
+}
+
+/** 信箱协作产品线（MAILBOX-COLLAB）三包：卡内三分下载，独立成区（MBUP-001） */
+interface MailboxPkg {
+  pkg: string
+  bytes: number
+  sha256_16: string
+  sha256: string
+  note: string
+}
+const MAILBOX_PKGS: MailboxPkg[] = [
+  {
+    pkg: 'tdca-mailbox-spec-v1.0.zip',
+    bytes: 25662,
+    sha256_16: '3E7677933BDD75A5',
+    sha256: '3e7677933bdd75a5d35433d6576842617ecb90818078fc6edc842e3c8774d9a1',
+    note: '协议条例 V1.0-FROZEN（人读版＋机读版）＋附件A（全部条款并入）＋五夹目录约定／回报首行七段／状态机图',
+  },
+  {
+    pkg: 'tdca-mailbox-refimpl-v1.0.zip',
+    bytes: 19630,
+    sha256_16: 'B0FE22EB52FF2DBC',
+    sha256: 'b0fe22eb52ff2dbcaa20f8dbfaf89daeae0d9077752a2dbf44ac7e6c93d0dea0',
+    note: '参考实现五件（台账／扫描／归位／投放／断言集）＋JSON→YAML 发射器，默认信箱根取脚本同级 mailbox/，可 --mailbox-root 覆盖',
+  },
+  {
+    pkg: 'tdca-mailbox-bundle-v1.0.zip',
+    bytes: 7383,
+    sha256_16: '834DA8BB322D6C50',
+    sha256: '834da8bb322d6c50c00de3d55750f7e3ad82ffd1de6b62dadc19cde38441e865',
+    note: '一键起盘（建五夹＋写样例＋自测＋打印态分布）＋脱敏样例台账 ledger.sample.json',
+  },
+]
+
+/** 信箱协作独立卡区：⛔ 与公开货架六卡混列 */
+function MailboxCollabSection() {
+  return (
+    <section data-testid="toolshelf-mailbox" aria-label="信箱协作产品线">
+      <h2 className="mt-6 text-base font-semibold text-gray-900">信箱协作（MAILBOX-COLLAB）</h2>
+      {/* USABILITY4-001 2-3（D-2 口径）：本区一卡三分下载 */}
+      <p data-testid="toolshelf-mailbox-count" className="mt-1 text-[11px] text-gray-400">
+        卡数口径（D-2）：C-ALL＝1；C-DL＝1（卡内三分下载）。
+      </p>
+      <div className="mt-2 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+        <div data-testid="tool-card-mailbox" className="rounded-xl border border-indigo-200 bg-white p-4">
+          <h3 className="text-sm font-semibold text-gray-900">信箱协作协议与工具链（tdca-mailbox）</h3>
+          <p className="mt-1 text-xs leading-relaxed text-gray-600">
+            人机协作信箱协议（五夹目录／回报首行七段／件态状态机）＋纯标准库参考实现＋一键起盘；
+            执行侧与智库之间件流 mailbox-collab 的产品化三包。
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+            <span className="rounded bg-emerald-100 px-1.5 py-px font-medium text-emerald-700">零依赖（纯标准库）</span>
+            <span className="rounded bg-amber-100 px-1.5 py-px font-medium text-amber-700">协议附条件生效</span>
+            <span className="rounded bg-sky-100 px-1.5 py-px font-medium text-sky-700">半自动档</span>
+            <span className="rounded bg-amber-600 px-1.5 py-px font-medium text-white">在建</span>
+          </div>
+          <p className="mt-2 text-[11px] leading-relaxed text-gray-500">
+            附条件生效：条例 V1.0-FROZEN（乙案）须于灰度门补录条件成就后方完全生效，此前以在册条件为准；
+            半自动档：全自动档 ⛔ 上线。三包皆经干净 venv（不装 PyYAML）四路冒烟实证零依赖。
+          </p>
+          <dl className="mt-2 space-y-1.5 text-[11px] leading-relaxed text-gray-500">
+            {MAILBOX_PKGS.map((p) => (
+              <div key={p.pkg} className="rounded-md border border-gray-100 p-1.5">
+                <div>
+                  <dt className="inline text-gray-400">下载：</dt>
+                  <dd className="inline">
+                    <a className="text-blue-700 underline hover:bg-blue-50" href={`/downloads/${p.pkg}`}>{p.pkg}</a>
+                    （{p.bytes} B）
+                  </dd>
+                </div>
+                <div><dt className="inline text-gray-400">sha256：</dt><dd className="inline" title={p.sha256}>{p.sha256_16}（前 16 位）</dd></div>
+                <div><dt className="inline text-gray-400">许可：</dt><dd className="inline">Apache-2.0</dd></div>
+                <div><dt className="inline text-gray-400">手册：</dt><dd className="inline"><Link to="/official-assets" className="text-blue-700 underline hover:bg-blue-50">使用手册 V1.0-FROZEN</Link></dd></div>
+                <div><dt className="inline text-gray-400">含：</dt><dd className="inline">{p.note}</dd></div>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-2 text-[11px] text-gray-400">上卡 2026-11-05；上架由 operator 提交、创始人核；本区只做呈现与状态位。</p>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 interface ToolView {
   tool_id: string
@@ -69,7 +449,7 @@ export function ToolshelfPage() {
       authority: string
       files: { lang: string; filename: string; content: string; sha256_8: string }[]
     }>('/api/v1/toolshelf/template/auth-contract')
-    if (!r.ok) { setTplMsg(`模板加载失败：${r.reason}`); return }
+    if (!r.ok) { setTplMsg(TPL_FALLBACK); return }
     setTpl(r.data)
   }
 
@@ -88,6 +468,8 @@ export function ToolshelfPage() {
       dataSource="A-15 /api/v1/toolshelf/*（工具/模板目录）"
       permission="登录 DID（上架须 operator）"
       description="站内工具与模板目录：编译器、适配器等；配置类工具须凭授权件过准入闸门。">
+      <PublicToolCards />
+      <MailboxCollabSection />
       <section data-testid="toolshelf-list">
         <h2>货架</h2>
         <SimulatedBadge nature="simulated" />
@@ -141,6 +523,50 @@ export function ToolshelfPage() {
             </ul>
           </div>
         )}
+      </section>
+      {/* TPL-FIX-001 段B：契约模板 3 件上页（指路＋包下载链接；⛔ 逐件正文全量上页·⛔ 新建路由） */}
+      <section data-testid="toolshelf-template-contracts">
+        <h2>模板区 · 契约模板</h2>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/contracts/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {CONTRACT_TEMPLATES.map((t) => (
+            <li key={t.path}>
+              <strong>{t.name}</strong>——{t.purpose}；包内路径：<code>{t.path}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/* TPL-FIX-001 段B：六要素声明模板 1 件上页（同上口径） */}
+      <section data-testid="toolshelf-template-six-elements">
+        <h2>模板区 · 六要素声明模板</h2>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/six-elements/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {SIX_ELEMENTS_TEMPLATES.map((t) => (
+            <li key={t.path}>
+              <strong>{t.name}</strong>——{t.purpose}；包内路径：<code>{t.path}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+      {/* TPL-FIX-D-001：研发治理记录 12 份上页（筛单 12/12 通过；列名＋指路＋可展开正文） */}
+      <section data-testid="toolshelf-template-govrec">
+        <h2>模板区 · 研发治理记录模板（12 份）</h2>
+        <p>{GOV_REC_NOTICE}</p>
+        <p>包内路径前缀 <code>tdca-templates-v1.0/gov-kit/templates/</code>；公开包：
+          <a href={TPL_PACKAGE.href}>{TPL_PACKAGE.name}</a></p>
+        <ul>
+          {GOV_RECORDS.map((g) => (
+            <li key={g.path}>
+              <strong>{g.code}</strong>（<code>{g.file}</code>）；包内路径：<code>{g.path}</code>
+              <details>
+                <summary>查看正文</summary>
+                <pre>{g.content}</pre>
+              </details>
+            </li>
+          ))}
+        </ul>
       </section>
     </PageShell>
   )
