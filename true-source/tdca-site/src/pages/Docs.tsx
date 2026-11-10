@@ -22,7 +22,9 @@ export function DocsIndex() {
   const { family } = useParams()
   const fam = FAMILIES.find((f) => f.key === family)
   const { data, error } = useLoaded(
-    () => siteGet<{ items: { slug: string; title: string; synced_at: string }[] }>(`/docs/${family}`),
+    () => siteGet<{
+      documents: { slug: string; filename: string; display_name: string; version: string; sha256_16: string }[]
+    }>(`/docs/${family}`),
     [family],
   )
   if (error) return <div className="py-24 text-center text-destructive">加载失败：{error}</div>
@@ -30,16 +32,16 @@ export function DocsIndex() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
       <Link to="/docs" className="text-sm text-muted-foreground">← 全部文档</Link>
-      <h1 className="mt-2 text-2xl font-bold">{fam?.label ?? family}（{data.items.length} 件）</h1>
-      {data.items.length === 0 ? (
+      <h1 className="mt-2 text-2xl font-bold">{fam?.label ?? family}（{data.documents.length} 件）</h1>
+      {data.documents.length === 0 ? (
         <p className="mt-6 text-muted-foreground">该族暂无入库文档。</p>
       ) : (
         <ul className="mt-6 divide-y rounded-lg border">
-          {data.items.map((d) => (
+          {data.documents.map((d) => (
             <li key={d.slug}>
               <Link to={`/docs/${family}/${d.slug}`} className="block px-4 py-3 hover:bg-muted">
-                <div className="font-medium">{d.title}</div>
-                <div className="text-xs text-muted-foreground">{d.slug} · {d.synced_at}</div>
+                <div className="font-medium">{d.display_name ?? d.slug}</div>
+                <div className="text-xs text-muted-foreground">{d.slug} · {d.version} · {d.sha256_16}</div>
               </Link>
             </li>
           ))}
@@ -98,7 +100,9 @@ export function DocDetail() {
   const { family, slug } = useParams()
   const fam = FAMILIES.find((f) => f.key === family)
   const { data, error } = useLoaded(
-    () => siteGet<{ title: string; body_md: string; source_path: string; synced_at: string }>(`/docs/${family}/${slug}`),
+    () => siteGet<{
+      display_name: string; content: string; filename: string; version: string; sha256_16: string
+    }>(`/docs/${family}/${slug}`),
     [family, slug],
   )
   if (error) return <div className="py-24 text-center text-destructive">加载失败：{error}</div>
@@ -108,13 +112,13 @@ export function DocDetail() {
       <nav aria-label="面包屑" className="text-sm text-muted-foreground">
         文档库 ›{' '}
         <Link to={`/docs/${family}`} className="hover:underline">{fam?.label ?? family}</Link>
-        {' '}› {data.title}
+        {' '}› {data.display_name}
       </nav>
       <article className="prose prose-neutral mt-4 max-w-none dark:prose-invert">
-        <Markdown>{data.body_md}</Markdown>
+        <Markdown>{data.content}</Markdown>
       </article>
       <footer className="mt-12 border-t pt-4 text-xs text-muted-foreground">
-        源路径：{data.source_path} · 入库：{data.synced_at}
+        源路径：{data.filename} · 版本 {data.version} · sha256_16 {data.sha256_16}
       </footer>
     </div>
   )
