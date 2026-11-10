@@ -13,7 +13,7 @@
         命中脱敏正则整件不列；POST /register 匿名 401
   S1-4  GET /api/v1/library/paper/catalog 匿名 200（slug/title/摘要）；
         摘要命中脱敏正则 → summary=null 标「待核定」；
-        GET /api/v1/library/paper/{slug} 正文匿名 401（paper 未入 _OPEN_FAMILIES）
+        GET /api/v1/library/paper/{slug} 正文匿名 200（CONTENT-LIVE-ALL-001 案甲：paper/whitepaper 入 _OPEN_FAMILIES）
 """
 import sqlite3
 
@@ -176,6 +176,8 @@ def test_s14_paper_catalog_anonymous(_docs_table):
     assert items["paper-quote-dirty"]["summary_note"] == "摘要待核定"
 
 
-def test_s14_paper_body_still_401(_docs_table):
-    """正文端点不变：paper 未入 _OPEN_FAMILIES，匿名 401。"""
-    assert client.get("/api/v1/library/paper/paper-clean").status_code == 401
+def test_s14_paper_body_anon_open(_docs_table):
+    """CONTENT-LIVE-ALL-001 案甲（2026-11-10）：paper 入 _OPEN_FAMILIES，匿名正文 200。"""
+    r = client.get("/api/v1/library/paper/paper-clean")
+    assert r.status_code == 200
+    assert "本文提出协作架构" in r.json()["data"]["body_md"]

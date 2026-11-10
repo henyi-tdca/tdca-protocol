@@ -16,6 +16,9 @@
 #           白名单＝/api/public/docs 在册 49 件（slug＋sha256_16 逐件固定，⛔ 泛化）；
 #           件即容器只读文件 docs/regulations/（与 public_docs_ops 同一事实源，⛔ 另建副本）；
 #           fail-closed：白名单外／哈希不符／非 GET／路径穿越一律拒绝；⛔ 改 _require_session_user 本体
+# 匿名放行追加: CONTENT-LIVE-ALL-001（2026-11-10，TDCA-HANDOFF-EXEC-L1SI206-CONTENT-LIVE-ALL-001
+#           §二取甲＋L1SI189 在册裁定）——whitepaper/paper 两族并入匿名只读（六族）；两族源件
+#           已过在册净名批与 S-2 复扫（凭据／自然人 0；4 处 NCA/GSEQ 为论文正文概念引用非工作件号）
 # =============================================================================
 from __future__ import annotations
 
@@ -194,12 +197,16 @@ def paper_catalog(request: Request):
 
 # COP-LIB-OPEN-001 + TERMS-OPEN-001：匿名放行两族（2026-10-21 并入同轮）
 # LAWINGEST-001（批C-C2）：追加 laws/law-notes 两族匿名只读（法律原文属公域材料）
-_OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes")
+# CONTENT-LIVE-001（2026-11-10，依 TDCA-HANDOFF-EXEC-L1SI206-CONTENT-LIVE-ALL-001 §二取甲
+#           ＋在册 L1SI189「论文与白皮书须可见」＋GSEQ-3694/3695 四族入站放行口径）：
+#           追加 whitepaper/paper 两族匿名只读（目录＋正文同 cop-library 口径：只读、
+#           ⛔ 下载原件若在册另有约束则照旧）；weekly 无此族端点（不存在悬空 401 待处置项）
+_OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "paper")
 
 
 def _session_or_open(request: Request, family: str = "") -> None:
-    """会话要求分派：_OPEN_FAMILIES 四族（cop-library/terms/laws/law-notes）匿名放行；
-    其余（含未点名）照旧会话鉴权。
+    """会话要求分派：_OPEN_FAMILIES 六族（cop-library/terms/laws/law-notes/whitepaper/paper）
+    匿名放行；其余（含未点名）照旧会话鉴权。
     ⛔ 不改 _require_session_user 本体（不动其签名与行为），仅在本族分支不调用之。"""
     if family in _OPEN_FAMILIES:
         return
@@ -234,8 +241,9 @@ def library_families(request: Request):
         items = [{"family": f, "name": _FAMILIES[f],
                   "count": counts.get(f, 0)} for f in _OPEN_FAMILIES]
         return _nca_watermark(
-            {"items": items, "note": "匿名只读面：cop-library＋terms＋laws＋law-notes 四族开放"
-                                     "（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001）"},
+            {"items": items, "note": "匿名只读面：cop-library＋terms＋laws＋law-notes＋whitepaper＋paper "
+                                     "六族开放（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001／"
+                                     "CONTENT-LIVE-ALL-001 案甲）"},
             nature="real")
     items = [{"family": k, "name": v, "count": counts.get(k, 0)} for k, v in _FAMILIES.items()]
     return _nca_watermark({"families": items, "note": "内容区只读面；以在册仓库为唯一权威源"},
