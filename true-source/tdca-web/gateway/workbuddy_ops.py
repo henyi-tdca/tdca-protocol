@@ -250,7 +250,9 @@ def wb_sig_confirm(req: SigConfirm, request: Request):
 
 @router.get("/log-integrity")
 def wb_log_integrity(request: Request):
-    _require_session_user(request)
+    """WORM 完整性＋计数（RULING-ENTRY-CONTENT-DEPLOY-001 裁示3：恢复匿名可见——
+    本端点仅完整性布尔与计数，⛔ 不含个体工作流明细／nca 指针／用户标识，匿名直出；
+    workflow/status 仍登录（按 execution_id 的个人执行数据＋nca_refs 不出）。"""
     with get_session() as s:
         defs = s.query(M.WorkflowDef).count()
         runs = s.query(M.WorkflowRun).count()

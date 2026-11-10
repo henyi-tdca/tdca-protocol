@@ -203,8 +203,9 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
     <div className="relative overflow-hidden" style={{ height }}>
       {/* B3：物理/智能体世界坐标卡（双卡，300ms 过渡） */}
       <div className="flex h-full transition-transform duration-300 ease-in-out" style={{ transform }}>
-        {/* 智能体世界卡（移动修复批：卡自 relative——切换按钮定位上下文归本卡，⛔双按钮同点互遮） */}
-        <div className="relative h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#081222]">
+        {/* 智能体世界卡（移动修复批：卡自 relative——切换按钮定位上下文归本卡，⛔双按钮同点互遮；
+            RULING 裁示2 提亮：深底改浅底（原 #081222 黑框不可见），标签前景同步提深保对比） */}
+        <div className="relative h-full w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-[#F8FAFC]">
           <svg className="h-full w-full">
             {safeEdges.map((e) => {
               const a = positions[e.from], b = positions[e.to]
@@ -235,13 +236,10 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
                     stroke={fused ? '#f43f5e' : isOfficial ? '#C9A45C' : '#3B82F6'}
                     strokeWidth={fused ? 2 : 1.5}
                   />
-                  <text y={isOfficial ? -16 : -12} textAnchor="middle" className="fill-slate-300" style={{ fontSize: 9 }}>
+                  <text y={isOfficial ? -16 : -12} textAnchor="middle" className="fill-slate-700" style={{ fontSize: 9 }}>
                     {n.label.length > 8 ? n.label.slice(0, 7) + '…' : n.label}
                   </text>
-                  {/* B2：主体标识哈希化（仅展示哈希，不暴露真实 ID） */}
-                  <text y={isOfficial ? -4 : 0} textAnchor="middle" className="fill-slate-500" style={{ fontSize: 7 }}>
-                    {hashAgentId(n.id)}
-                  </text>
+                  {/* RULING-ENTRY-CONTENT-DEPLOY-001 裁示1：副标签（哈希式样内部码）必删——公开首页渲染即对外，⛔候裁 */}
                 </g>
               )
             })}
@@ -255,11 +253,11 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
           </button>
         </div>
         {/* 物理世界卡（脱敏：仅制度关系概览，无具体个体；移动修复批：卡自 relative，同智能体卡） */}
-        <div className="relative h-full w-full shrink-0 overflow-hidden rounded-lg bg-[#0A1830]">
+        <div className="relative h-full w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-[#F1F5F9]">
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <p className="text-xs text-slate-400">物理世界坐标卡（制度关系概览）</p>
-              <p className="mt-2 text-[10px] text-slate-600">
+              <p className="text-xs text-slate-600">物理世界坐标卡（制度关系概览）</p>
+              <p className="mt-2 text-[10px] text-slate-500">
                 物理节点：TCN 可信算力节点 / NM 通知机<br />
                 连接权重 &gt;0.8 已聚合为强关系边（脱敏）
               </p>
@@ -267,7 +265,7 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
           </div>
           <button
             onClick={switchWorld}
-            className="absolute left-3 top-3 rounded-md border border-white/15 bg-[#0E2142]/80 px-3 py-1.5 text-[10px] text-[#E8CD8F] hover:bg-[#12305E]"
+            className="absolute left-3 top-3 rounded-md border border-slate-300 bg-white/80 px-3 py-1.5 text-[10px] text-slate-700 hover:bg-slate-100"
           >
             切换到智能体世界
           </button>

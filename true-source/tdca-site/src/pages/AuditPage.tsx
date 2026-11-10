@@ -78,7 +78,7 @@ function SelfCheckBlock() {
         <input
           data-testid="selfcheck-input"
           className="w-64 rounded border border-gray-300 px-2 py-1 font-mono text-xs"
-          placeholder="输入 nca_id（如 example-nca-demo）"
+          placeholder="输入 nca_id（可查示例：NCA-SEED-001）"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && run()}
@@ -183,6 +183,9 @@ export function AuditPage() {
         <div className="text-sm font-medium">存证链</div>
         <p className="text-xs text-gray-600" data-testid="audit-chain-offline">
           本页展示示例/混合来源数据（公开账本接口匿名可取，data_nature=mixed，样例 3 条）；正式存证链数据源上线后另行标注。本段不请求、不渲染链数据；公开账本见上表，熔断历史同页。
+          <span className="mt-1 block" data-testid="audit-chain-example">
+            可查示例：在下方「存证自查」输入 <code className="font-mono">NCA-SEED-001</code> 即可试查一条公开样例存证（RULING-ENTRY-CONTENT-DEPLOY-001 裁示6）。
+          </span>
         </p>
       </section>
       <SelfCheckBlock />

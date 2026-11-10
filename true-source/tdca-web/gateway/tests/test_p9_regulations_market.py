@@ -52,8 +52,14 @@ def _mk_grant(seller: str, scene: str) -> None:
 
 
 def test_no_session_401():
-    assert client.get("/api/v1/regulations/index").status_code == 401
-    assert client.get("/api/v1/market-sim/chains").status_code == 401
+    # RULING-ENTRY-CONTENT-DEPLOY-001 裁示3（2026-11-10）：index/chains 恢复匿名可见（公开视图）
+    assert client.get("/api/v1/regulations/index").status_code == 200
+    r = client.get("/api/v1/market-sim/chains")
+    assert r.status_code == 200
+    for run in r.json()["data"]["runs"]:
+        assert "nca_ref" not in run            # 匿名脱敏：存证指针不出
+    # /spec/{key} 维持登录
+    assert client.get("/api/v1/regulations/spec/template_auth").status_code == 401
 
 
 def test_index_template_auth_present():

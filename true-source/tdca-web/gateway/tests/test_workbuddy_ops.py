@@ -60,7 +60,7 @@ def _create(headers, dsl=None):
 
 # ---- ① 会话鉴权 fail-closed ----
 
-def test_auth_required_on_all_endpoints():
+def test_auth_required_on_write_and_status():
     assert client.post("/api/v1/workbuddy/workflow/create",
                        json={"workflow_template": _DSL}).status_code == 401
     assert client.post("/api/v1/workbuddy/workflow/execute",
@@ -72,7 +72,10 @@ def test_auth_required_on_all_endpoints():
     assert client.post("/api/v1/workbuddy/signature/confirm",
                        json={"request_id": "SR-X",
                              "hardware_signature": "abcdefgh"}).status_code == 401
-    assert client.get("/api/v1/workbuddy/log-integrity").status_code == 401
+    # RULING-ENTRY-CONTENT-DEPLOY-001 裁示3：log-integrity 恢复匿名可见（仅完整性＋计数）
+    r = client.get("/api/v1/workbuddy/log-integrity")
+    assert r.status_code == 200
+    assert set(r.json()["data"].keys()) >= {"integrity", "workflow_defs"}
 
 
 # ---- ② create→execute→status 闭环 ----

@@ -100,8 +100,14 @@ def market_sim_chain(req: OfferIn, request: Request):
 
 @router.get("/chains")
 def market_sim_chains(request: Request, result: str = ""):
-    """最小链运行清单（内部呈现；SIMULATED 硬标注）。"""
-    _require_session_user(request)
+    """最小链运行清单（内部呈现；SIMULATED 硬标注）。
+    RULING-ENTRY-CONTENT-DEPLOY-001 裁示3：恢复匿名可见——匿名脱敏视图（⛔ nca_ref 存证指针不出），
+    登录态返回逐字段不变。"""
+    try:
+        _require_session_user(request)
+        authed = True
+    except HTTPException:
+        authed = False
     if result and result not in ("settled", "denied"):
         raise HTTPException(400, "result 过滤值非法")
     with get_session() as s:
@@ -109,6 +115,14 @@ def market_sim_chains(request: Request, result: str = ""):
         if result:
             q = q.filter_by(result=result)
         rows = q.all()
+    if not authed:
+        return _nca_watermark({
+            "simulated": True, "count": len(rows),
+            "runs": [{"run_id": r.run_id, "result": r.result,
+                      "offer": json.loads(r.offer_json),
+                      "steps": json.loads(r.steps_json),
+                      "created_at": r.created_at} for r in rows],
+            "note": "沙盒最小链清单·匿名公开视图（SIMULATED；存证指针登录可见）"})
     return _nca_watermark({
         "simulated": True, "count": len(rows),
         "runs": [{"run_id": r.run_id, "result": r.result,
@@ -120,12 +134,26 @@ def market_sim_chains(request: Request, result: str = ""):
 
 @router.get("/chain/{run_id}")
 def market_sim_chain_one(run_id: str, request: Request):
-    """单条运行留痕（逐步 NCA refs 可查）。"""
-    _require_session_user(request)
+    """单条运行留痕（逐步 NCA refs 可查）。
+    RULING-ENTRY-CONTENT-DEPLOY-001 裁示3：恢复匿名可见——匿名脱敏视图（⛔ nca_ref 不出），
+    登录态返回逐字段不变。"""
+    try:
+        _require_session_user(request)
+        authed = True
+    except HTTPException:
+        authed = False
     with get_session() as s:
         row = s.get(M.MarketSimRun, run_id)
     if row is None:
         raise HTTPException(404, "run_id 不存在")
+    if not authed:
+        return _nca_watermark({
+            "simulated": True,
+            "run": {"run_id": row.run_id, "result": row.result,
+                    "offer": json.loads(row.offer_json),
+                    "steps": json.loads(row.steps_json),
+                    "created_at": row.created_at},
+            "note": "最小链单条留痕·匿名公开视图（存证指针登录可见）"})
     return _nca_watermark({
         "simulated": True,
         "run": {"run_id": row.run_id, "result": row.result,
