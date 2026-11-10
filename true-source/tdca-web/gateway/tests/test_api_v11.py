@@ -115,21 +115,24 @@ def test_a11_queue():
     assert d["queue"][0]["urgency"] == "normal"
 
 
-# ---- AMEND-1（2026-11-06）：history/queue 只收登录面 ----
-def test_amend1_history_anonymous_401():
+# ---- RULING-ENTRY-CONTENT-DEPLOY-001 裁示3（2026-11-10，较 AMEND-1 新）：恢复匿名可见 ----
+def test_ruling_history_anonymous_public_view():
+    """匿名 200：白名单公开视图（时间/公开类型/公开状态/公开摘要），逐字段同登录态。"""
     r = client.get("/api/v1/attestation/history")
-    assert r.status_code == 401
-    body = r.json()
-    assert body.get("detail")            # 结构化错误体（error_codes 全局整形）
-    assert body.get("code")
+    assert r.status_code == 200, r.text[:200]
+    d = r.json()["data"]
+    assert "events" in d and "total" in d
+    for ev in d["events"]:
+        assert set(ev.keys()) == {"time", "event_type", "status", "summary"}
 
 
-def test_amend1_queue_anonymous_401():
+def test_ruling_queue_anonymous_scrubbed():
+    """匿名 200 脱敏视图：⛔ request_id／agent_id／reason 不出；登录态全字段不变（上）。"""
     r = client.get("/api/v1/attestation/queue")
-    assert r.status_code == 401
-    body = r.json()
-    assert body.get("detail")
-    assert body.get("code")
+    assert r.status_code == 200, r.text[:200]
+    d = r.json()["data"]
+    for item in d["queue"]:
+        assert set(item.keys()) == {"request_type", "urgency"}
 
 
 def test_amend1_ledger_public_untouched():

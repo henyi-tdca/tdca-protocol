@@ -996,11 +996,18 @@ def attestation_history(request: Request, agent_id: Optional[str] = None):
     ⛔ 内部编号（nca_ref）、智能体名、内部枚举值、内部字段名一律不出）。
     AMEND-1（2026-11-06，创始人逐字「需要顺手做掉」）：本接口只收登录面——
     沿用站内既有 _require_session_user（⛔新造⛔改路由⛔改 nginx），
-    匿名 401＋结构化错误体；登录态返回逐字段不变。"""
-    _require_session_user(request)
+    匿名 401＋结构化错误体；登录态返回逐字段不变。
+    RULING-ENTRY-CONTENT-DEPLOY-001 裁示3（2026-11-10，较 AMEND-1 新）：响应本即白名单公开视图
+    （⛔ nca_ref／智能体名／内部枚举），恢复匿名可见——匿名与登录返回逐字段一致；agent_id
+    过滤参数匿名态忽略（⛔ 不以匿名身份探他人确权轨迹），登录态照旧。"""
+    try:
+        _require_session_user(request)
+        authed = True
+    except HTTPException:
+        authed = False
     with get_session() as s:
         q = s.query(M.AttestationRequest).filter(M.AttestationRequest.status != "pending")
-        if agent_id:
+        if agent_id and authed:
             q = q.filter_by(agent_id=agent_id)
         rows = q.order_by(M.AttestationRequest.ts).all()
     events = [{"time": r.ts,
@@ -1018,12 +1025,27 @@ def attestation_history(request: Request, agent_id: Optional[str] = None):
 def attestation_queue(request: Request):
     """A-11: 动态确权待审队列（attestation_requests pending，紧急度排序）。
     AMEND-1（2026-11-06）：本接口只收登录面——匿名 401＋结构化错误体；
-    登录态返回逐字段不变（沿用既有 _require_session_user）。"""
-    _require_session_user(request)
+    登录态返回逐字段不变（沿用既有 _require_session_user）。
+    RULING-ENTRY-CONTENT-DEPLOY-001 裁示3（2026-11-10，较 AMEND-1 新）：恢复匿名可见——
+    匿名只给脱敏公开视图（⛔ request_id／agent_id／reason 内部标识与自由文本不出），
+    仅列公开类型名＋紧急度＋总数；登录态返回逐字段不变。"""
+    try:
+        _require_session_user(request)
+        authed = True
+    except HTTPException:
+        authed = False
     order = {"urgent": 0, "normal": 1, "low": 2}
     with get_session() as s:
         rows = s.query(M.AttestationRequest).filter_by(status="pending").all()
     rows.sort(key=lambda r: order.get(r.urgency or "normal", 1))
+    if not authed:
+        queue = [{"request_type": _PUBLIC_EVENT_TYPE.get(r.request_type.upper(), "确权请求"),
+                  "urgency": r.urgency or "normal"} for r in rows]
+        return _nca_watermark({
+            "queue": queue, "total": len(queue),
+            "note": "动态确权待审队列·匿名公开视图（公开类型名＋紧急度；"
+                    "内部标识与理由文本不出；登录可见全字段）",
+        }, nature=_nature_of([r.data_provenance for r in rows]))
     queue = [{"request_id": r.request_id, "agent_id": r.agent_id,
               "request_type": r.request_type, "urgency": r.urgency or "normal",
               "reason": r.reason or ""} for r in rows]

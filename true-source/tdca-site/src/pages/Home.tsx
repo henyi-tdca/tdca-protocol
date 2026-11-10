@@ -79,6 +79,17 @@ const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] =
       { to: '/registrations', label: '登记查询' },
       { to: '/library', label: '知识库' },
       { to: '/academy', label: '商学院（在建中）' },
+      // NAV-ENTRY-FILL-001（AMEND-2 精确清单·无门面补入口·只增不动）
+      { to: '/pages', label: '站点地图' },
+      { to: '/rules', label: '制度地图' },
+      { to: '/help', label: '帮助与联系' },
+      { to: '/process', label: '协作流程总览' },
+      { to: '/public-face', label: '匿名可见面' },
+      { to: '/private', label: '私域与边界' },
+      { to: '/negativespace', label: '负空间' },
+      { to: '/terms', label: '术语检索' },
+      // NAV-ENTRY-FILL-001 补偏：机验判定无门（/academy 页内无链接转出）
+      { to: '/academy/outline', label: '教材目录' },
     ],
   },
   {
@@ -88,6 +99,7 @@ const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] =
       { to: '/studio', label: 'Agent Studio' },
       { to: '/workbuddy', label: 'WorkBuddy' },
       { to: '/agent-shelf', label: '智能体区' },
+      { to: '/authorization/panel', label: '授权配置面板' },
     ],
   },
   {
@@ -102,6 +114,7 @@ const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] =
       { to: '/governance', label: '治理' },
       { to: '/formal', label: '形式化入站' },
       { to: '/cluster', label: '集群编排' },
+      { to: '/demo', label: '体验期与模拟演示' },
     ],
   },
   {
@@ -110,6 +123,9 @@ const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] =
       { to: '/market', label: '配置权市场（在建中）' },
       { to: '/market-sim', label: '规范与沙盒链（在建中）' },
       { to: '/tax', label: '税收仪表盘' },
+      { to: '/curation', label: '严选池' },
+      { to: '/contribute', label: '我要贡献' },
+      { to: '/official-assets', label: '官方资产区' },
     ],
   },
   {
@@ -119,6 +135,31 @@ const MORE_GROUPS: { label: string; items: { to: string; label: string }[] }[] =
       { to: '/notifier', label: '通知机（在建中）' },
       { to: '/sandbox', label: '沙盒' },
       { to: '/ops', label: '运维端' },
+      // NAV-ENTRY-FILL-001（AMEND-2：节点两面与严选池同列第一批必补）
+      { to: '/nodes', label: '节点网络' },
+      { to: '/disclosure', label: '节点规则披露' },
+      { to: '/lab', label: '模拟演练区' },
+      { to: '/search', label: '全站检索' },
+      { to: '/nca-guide', label: '存证说明' },
+      { to: '/status', label: '系统健康' },
+      { to: '/use/upload', label: '交素材' },
+      { to: '/use/agent', label: '代办登记' },
+      // NAV-ENTRY-FILL-001 补偏：机验判定无门（运维手册三页与运维我的无入口转出；/ops/logs 两件按批B2在册约束不入公开导航）
+      { to: '/ops/readme', label: '运维手册' },
+      { to: '/ops/ops', label: '运维操作' },
+      { to: '/ops/changelog', label: '运维变更志' },
+      { to: '/ops/me', label: '运维我的' },
+    ],
+  },
+  {
+    label: '我的',
+    items: [
+      { to: '/review', label: '缔约评审' },
+      { to: '/start', label: '新手指引' },
+      { to: '/start/three-questions', label: '三问向导' },
+      // NAV-ENTRY-FILL-001 补偏：AMEND-2 追加核项1 证实 /me 页内点不到节点两面
+      { to: '/me/node', label: '场景节点管理' },
+      { to: '/me/node/net', label: '我的节点·条例与契约' },
     ],
   },
 ]

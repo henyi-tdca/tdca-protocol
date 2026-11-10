@@ -121,6 +121,9 @@ export function NcaGuidePage() {
         <section className="rounded-lg border border-gray-200 bg-gray-50/60 p-3">
           <p className="text-xs leading-relaxed text-gray-500">
             边界：本栏为制度说明面——只讲格式标准、义务与适用口径；真实存证件与链上数据经审计透明等既有在册入口公开可查，本栏不陈列具体存证内容。
+            <span className="mt-1 block" data-testid="nca-guide-example">
+              可查示例：到「审计透明」页的存证自查输入 <code className="font-mono">NCA-SEED-001</code>，即可独立核验一条公开样例存证（RULING-ENTRY-CONTENT-DEPLOY-001 裁示6）。
+            </span>
           </p>
         </section>
       </div>

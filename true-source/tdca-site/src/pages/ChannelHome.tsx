@@ -87,8 +87,11 @@ export function ChannelHome({ channel }: { channel: ChannelKey }) {
           </Link>
         ))}
       </div>
-      <footer className="text-xs text-muted-foreground">
-        相关协作环节：{c.rings.join(' · ')}
+      <footer className="space-y-1 text-xs text-muted-foreground">
+        <div>
+          本频道全部 {c.entries.length} 面 · 全部页面见<Link to="/pages" className="underline hover:text-foreground">「站点地图」→</Link>
+        </div>
+        <div>相关协作环节：{c.rings.join(' · ')}</div>
       </footer>
     </section>
   )

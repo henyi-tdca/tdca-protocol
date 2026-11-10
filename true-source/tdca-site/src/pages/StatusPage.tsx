@@ -129,10 +129,10 @@ export function StatusPage() {
           </section>
         )}
 
-        {/* B1-2 机验徽章（一行） */}
-        {badge && (
-          <section data-testid="status-badge">
-            <h3 className="mb-2 text-sm font-bold text-gray-700">机验徽章</h3>
+        {/* B1-2 机验徽章（一行）；badge 为空＝尚未运行（触发须 operator 角色会话，见 L1SI206 回报） */}
+        <section data-testid="status-badge">
+          <h3 className="mb-2 text-sm font-bold text-gray-700">机验徽章</h3>
+          {badge ? (
             <p className="rounded-lg border border-gray-200 px-4 py-2 text-sm">
               <span
                 data-testid="badge-status"
@@ -148,8 +148,12 @@ export function StatusPage() {
               </span>
               <span className="ml-2 text-gray-500">{badge.note}</span>
             </p>
-          </section>
-        )}
+          ) : (
+            <p data-testid="badge-none" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-500">
+              尚未运行：CI 自检须 operator 角色登录后从站内触发（同步执行 lake build / core-go / pytest 三套件）。
+            </p>
+          )}
+        </section>
 
         {/* B1-3 集群状态：⛔ id（EIOS-xx），只显能力名＋endpoint＋status */}
         <section data-testid="status-cluster">

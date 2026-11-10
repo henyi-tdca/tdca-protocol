@@ -113,8 +113,9 @@ def regulation_index_entry(key: str) -> dict:
 
 @router.get("/index")
 def regulations_index(request: Request):
-    """规范索引区总目（只列名目与在仓状态；版本/生效读件内，⛔ 不硬编码）。"""
-    _require_session_user(request)
+    """规范索引区总目（只列名目与在仓状态；版本/生效读件内，⛔ 不硬编码）。
+    RULING-ENTRY-CONTENT-DEPLOY-001 裁示3：恢复匿名可见——索引只列名目/键/在册状态
+    （regulation_index_entry 白名单口径，⛔ 无内部字段），匿名直出；/spec/{key} 维持登录。"""
     return _nca_watermark({
         "simulated": True,
         "index_dir": "docs/regulations/",

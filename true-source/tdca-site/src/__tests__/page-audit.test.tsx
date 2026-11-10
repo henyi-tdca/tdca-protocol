@@ -5,7 +5,7 @@
 // 拆搬说明：旧 pages-f1.test.tsx 按页拆为 8 件，本件为审计透明 1 用例，字句未改。
 // =============================================================================
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import { AuditPage } from '@/pages/AuditPage'
 
 function envelope(payload: unknown) {
@@ -41,6 +41,7 @@ describe('F1 橱窗层页面接线 · 审计透明', () => {
     render(<AuditPage />)
     await waitFor(() => expect(screen.getByTestId('audit-ledger')).toBeInTheDocument())
     expect(screen.getByText('EV-001')).toBeInTheDocument()
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    // L1SI206：审计页新增公开存证自查块（自带查询按钮），无按钮断言收窄到账本块内
+    expect(within(screen.getByTestId('audit-ledger')).queryByRole('button')).not.toBeInTheDocument()
   })
 })
