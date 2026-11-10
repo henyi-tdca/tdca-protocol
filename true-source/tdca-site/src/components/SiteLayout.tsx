@@ -9,11 +9,15 @@ import { IntentBar } from './IntentBar'
 import { AuthStatus } from './AuthStatus'
 import { TopNav } from './TopNav'
 import { ProcessNav } from './ProcessNav'
-import { RightRail } from './RightRail'
+import { RightRail, MeCard, AssistantPanel } from './RightRail'
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   // 甲案：小屏侧栏默认收起，汉堡展开；md 及以上恒显（md:block 覆盖 hidden）
   const [navOpen, setNavOpen] = useState(false)
+  // L1SI207-MOBILE-ENTRY-AND-REF-001 任务A：小屏「我的／AI 助手」入口（乙案·流入式收展）——
+  // 展开面板压入正文流（⛔ absolute 遮挡正文；⛔横向溢出 w-72=288≤375）；桌面右栏口径不动
+  const [meOpen, setMeOpen] = useState(false)
+  const [assistantOpen, setAssistantOpen] = useState(false)
   // 追平批B3（PARITY-B3-001 §二#3）：右栏「我的＋AI 助手」——可收展；
   // 常驻 flex 流内（⛔ absolute 遮挡正文）；小屏隐藏（main 全宽口径不动）
   const [railOpen, setRailOpen] = useState(true)
@@ -38,6 +42,33 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         {navOpen && (
           <div className="absolute left-0 top-full z-40 w-56 border-r border-b bg-background shadow-lg">
             <ProcessNav />
+          </div>
+        )}
+        {/* 任务A：小屏「我的」「AI 助手」入口——流入式收展面板（互斥，压入正文流不遮挡） */}
+        <button
+          type="button"
+          data-testid="mobile-me-toggle"
+          onClick={() => { setMeOpen(!meOpen); setAssistantOpen(false) }}
+          className="w-full border-t px-4 py-1.5 text-left text-xs font-semibold text-muted-foreground"
+        >
+          我的 {meOpen ? '▾' : '▸'}
+        </button>
+        {meOpen && (
+          <div data-testid="mobile-me-panel" className="border-t bg-background px-2 py-2">
+            <MeCard />
+          </div>
+        )}
+        <button
+          type="button"
+          data-testid="mobile-assistant-toggle"
+          onClick={() => { setAssistantOpen(!assistantOpen); setMeOpen(false) }}
+          className="w-full border-t px-4 py-1.5 text-left text-xs font-semibold text-muted-foreground"
+        >
+          AI 助手 {assistantOpen ? '▾' : '▸'}
+        </button>
+        {assistantOpen && (
+          <div data-testid="mobile-assistant-panel" className="border-t bg-background px-2 py-2">
+            <AssistantPanel />
           </div>
         )}
       </div>

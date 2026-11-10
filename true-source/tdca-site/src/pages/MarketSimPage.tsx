@@ -36,6 +36,15 @@ interface RunView {
   steps: StepView[]
 }
 
+// L1SI207-MOBILE-ENTRY-AND-REF-001 任务B（乙案）：读全文深链只指公开清单内现行版——
+// template_auth 行原被指「生效注记」已在公开 50（清单命中 1，⛔404——前判 404 系 slug 未带 .md 之路径误）；
+// registration_registry 行原被指「签批落地件」确未公开（命中 0）⟹ 改指《TDCA 注册登记制度》中文人读现行版。
+// ⛔不动公开白名单、⛔不动后端；config_market 行同款未令改，维持原 library 族入口（另报候裁）。
+const READ_FULL_PUBLIC: Record<string, string> = {
+  template_auth: '/docs/regulation/授权件模板对外版（中文人读·V1.0（现行）·八字段与四要件）.md',
+  registration_registry: '/docs/regulation/TDCA注册登记制度（中文人读版V1.0（现行））.md',
+}
+
 export function MarketSimPage() {
   const [specs, setSpecs] = useState<SpecEntry[]>([])
   const [runs, setRuns] = useState<RunView[]>([])
@@ -93,7 +102,7 @@ export function MarketSimPage() {
                   <span className="ml-1 rounded bg-amber-100 px-1 py-px text-[9px] font-medium text-amber-700">在建中</span>
                 )}
                 {s.present && (
-                  <Link to="/library?family=regulation" className="ml-2 text-sm font-medium text-blue-600 underline">
+                  <Link to={READ_FULL_PUBLIC[s.key] ?? '/library?family=regulation'} className="ml-2 text-sm font-medium text-blue-600 underline">
                     读全文 →
                   </Link>
                 )}
