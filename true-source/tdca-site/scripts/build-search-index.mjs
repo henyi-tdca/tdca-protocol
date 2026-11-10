@@ -179,7 +179,9 @@ const COLUMN_TITLES = {
 // 令面 §三.2「内容⛔入检索索引」；照旧版动作页豁免口径，路由可达但不收录不题名）
 // 用组批（L1SI206-USE-GROUP-B1）：「用」组两面（U-1 交素材／U-2 代办登记）⛔入栏目索引——
 // 登录动作面，照 /auth /register 旧版动作页豁免口径（路由可达、两页互链、不收录不题名）
-const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', '/ops/ops', '/ops/changelog', '/ops/logs', '/ops/logs/list', '/use/upload', '/use/agent', '/authorization/panel', '/ops/me', '/assets', '/ops/manual'])
+const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', '/ops/ops', '/ops/changelog', '/ops/logs', '/ops/logs/list', '/use/upload', '/use/agent', '/authorization/panel', '/ops/me', '/assets', '/ops/manual',
+  // MYSPACE-PHASE1-001（L1SI207）：私域新建面不入公域栏目索引（照 /authorization/panel、/ops/me 先例）
+  '/me/asset', '/me/registry', '/me/config', '/me/nca'])
 
 // 编号形态禁则（旧版施工令 §三.2；TAIL-CLEAN-001 块A：title/summary/body 共用本表）
 // B1 追加（硬约束第8条「索引内容零内部编号」，旧表未覆盖 registry 件号形态，旧索引曾残留 20 条）：

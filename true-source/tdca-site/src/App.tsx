@@ -20,6 +20,11 @@ const RegisterPage = lazy(() => import('./pages/Register').then((m) => ({ defaul
 const AuthPage = lazy(() => import('./pages/AuthLogin').then((m) => ({ default: m.AuthPage })))
 const MePage = lazy(() => import('./pages/MeConsole').then((m) => ({ default: m.MePage })))
 const MeAppealPage = lazy(() => import('./pages/MeAppealPage').then((m) => ({ default: m.MeAppealPage })))
+// MYSPACE-PHASE1-001（L1SI207）区 2/5 新建三面＋存证查看（复用现端点，零新后端）
+const MeAssetPage = lazy(() => import('./pages/MeAssetPage').then((m) => ({ default: m.MeAssetPage })))
+const MeRegistryPage = lazy(() => import('./pages/MeRegistryPage').then((m) => ({ default: m.MeRegistryPage })))
+const MeConfigPage = lazy(() => import('./pages/MeConfigPage').then((m) => ({ default: m.MeConfigPage })))
+const MeNcaPage = lazy(() => import('./pages/MeNcaPage').then((m) => ({ default: m.MeNcaPage })))
 const MainChainGuide = lazy(() => import('./pages/MainChainGuide').then((m) => ({ default: m.MainChainGuide })))
 const AgentsPage = lazy(() => import('./pages/AgentsCluster').then((m) => ({ default: m.AgentsPage })))
 const AgentDashboardPage = lazy(() => import('./pages/AgentDashboard').then((m) => ({ default: m.AgentDashboardPage })))
@@ -112,7 +117,13 @@ export default function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/me" element={<MePage />} />
         {/* MIGRATE 批7：申诉面（旧版权 me-appeal 直拷，受理通道随制度入站开通） */}
+        {/* MYSPACE-PHASE1-001 §一.4 补齐：事由/对象/诉求/附件 最小必填登记＋三态展示（受理通道开通后接账） */}
         <Route path="/me/appeal" element={<MeAppealPage />} />
+        {/* MYSPACE-PHASE1-001 §一.2/§一.3：区 2 三新建面＋区 5 存证查看（匿名 PrivateGate 引导登录，零数据渲染） */}
+        <Route path="/me/asset" element={<MeAssetPage />} />
+        <Route path="/me/registry" element={<MeRegistryPage />} />
+        <Route path="/me/config" element={<MeConfigPage />} />
+        <Route path="/me/nca" element={<MeNcaPage />} />
         <Route path="/review" element={<Review />} />
         <Route path="/docs" element={<DocsHome />} />
         <Route path="/docs/:family" element={<DocsIndex />} />

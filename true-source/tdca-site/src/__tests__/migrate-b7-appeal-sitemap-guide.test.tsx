@@ -79,19 +79,29 @@ async function renderAt(path: string) {
 beforeEach(() => { localStorage.clear(); sessionStorage.clear() })
 afterEach(() => { vi.unstubAllGlobals() })
 
-describe('MIGRATE 批7：申诉面（me-appeal 直拷·薄占位口径）', () => {
-  it('受理面渲染：占位 testid 在页＋登记不处置口径逐字', () => {
+describe('MIGRATE 批7：申诉面（MYSPACE-PHASE1-001 §一.4 补齐口径，2026-11-11 更替薄占位）', () => {
+  it('受理面渲染：最小必填登记表单在页＋口径逐字（事由/对象/诉求必填，附件选填不整包索取）', async () => {
+    // PrivateGate 探针放行（登录态）后渲染表单本体
+    mockByUrl({ '/api/v1/auth/me': { username: 'tester' } })
     render(<MemoryRouter><MeAppealPage /></MemoryRouter>)
-    const box = screen.getByTestId('me-appeal-placeholder')
-    expect(box.textContent).toContain('受理通道在建，当前仅登记不处置')
-    expect(box.textContent).toContain('本站不预置、不代拟')
-    // ⛔ 不预置受理表单/渠道（直拷口径自守）
-    expect(box.querySelector('form')).toBeNull()
+    await waitFor(() => expect(screen.getByTestId('me-appeal-form')).toBeTruthy())
+    expect(screen.getByTestId('me-appeal-reason')).toBeTruthy()
+    expect(screen.getByTestId('me-appeal-target')).toBeTruthy()
+    expect(screen.getByTestId('me-appeal-claim')).toBeTruthy()
+    expect(screen.getByTestId('me-appeal-attachment')).toBeTruthy()
+    // 最小必填标注（照 GSEQ-7831 最小集）＋站内登记口径如实
+    expect(screen.getByTestId('me-appeal-form').textContent).toContain('最小必填：事由／对象／诉求')
+    expect(screen.getByTestId('me-appeal-form').textContent).toContain('不入账、不产生存证号')
+    // 三态状态机展示（已提交/受理中/已裁定）
+    expect(screen.getByTestId('me-appeal-states').textContent).toContain('已提交')
+    expect(screen.getByTestId('me-appeal-states').textContent).toContain('已裁定')
   })
 
-  it('路由可达：App /me/appeal 渲染受理面', async () => {
+  it('匿名不可见：未登录（401）⟹ 引导登录＋零数据渲染（§一.5 口径，PrivateGate 把守）', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 401, json: async () => ({ detail: 'unauthorized' }) }) as Response))
     await renderAt('/me/appeal')
-    expect(screen.getByTestId('me-appeal-placeholder')).toBeTruthy()
+    await waitFor(() => expect(screen.getByTestId('private-gate-denied')).toBeTruthy())
+    expect(screen.queryByTestId('me-appeal-form')).toBeNull()
   })
 
   it('个人面入口可寻：me 登录态见申诉入口，提交路径与旧版同（/me/appeal）', async () => {
@@ -108,7 +118,9 @@ describe('MIGRATE 批7：站点地图 ≡ 静态路由数（/ops* 私域不入�
     // 与 /ops* 私域同口径零入图；公式随批更正，⛔ 手编塞条目
     // 追平批B4（PARITY-B4-001 §三）：/assets 为重定向旧链（→/five-orders），重定向⛔入图；
     // /ops/manual 已被 /ops* 私域规则滤除（等价裁示 GSEQ-7743：→/ops/readme）
-    const PROTECTED_FROM_SITEMAP = ['/authorization/panel', '/assets']
+    // MYSPACE-PHASE1-001（L1SI207 §一.5）：/me/asset /me/registry /me/config /me/nca 为私域新建面
+    // （匿名 PrivateGate 引导登录），照 /authorization/panel 受护面同口径零入图
+    const PROTECTED_FROM_SITEMAP = ['/authorization/panel', '/assets', '/me/asset', '/me/registry', '/me/config', '/me/nca']
     const ops = ROUTES.filter((p) => p === '/ops' || p.startsWith('/ops/'))
     const expected = ROUTES.filter((p) => !ops.includes(p) && !PROTECTED_FROM_SITEMAP.includes(p))
     expect(ops.length).toBeGreaterThan(0)

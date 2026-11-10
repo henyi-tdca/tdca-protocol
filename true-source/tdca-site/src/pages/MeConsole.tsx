@@ -498,6 +498,55 @@ export function MePage() {  const { status, data } = useApiGet<MeData>('/api/v1/
               </Link>
             ))}
           </nav>
+          {/* 空间导航（MYSPACE-PHASE1-001 §一.1：/me 扩为空间首页＋区导航；区 2A／4 未开放占位，二批令另发） */}
+          <section data-testid="me-zone-nav" className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+            <h3 className="mb-2 text-sm font-semibold text-gray-800">空间导航（一期区目录）</h3>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <Link to="/me" data-testid="me-zone-account"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">账户与本钥</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">本页：账户管理／四把钥匙／会话与用量</div>
+              </Link>
+              <Link to="/me/node" data-testid="me-zone-node"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">我的节点</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">区 2 · 场景节点管理（私域三空间）</div>
+              </Link>
+              <Link to="/me/asset" data-testid="me-zone-asset"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">我的资产</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">区 2 · 资产五阶形态目录（与 /me 同账）</div>
+              </Link>
+              <Link to="/me/registry" data-testid="me-zone-registry"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">我的权属登记</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">区 2 · 本人名下登记（登记存证可回查区 5）</div>
+              </Link>
+              <Link to="/me/config" data-testid="me-zone-config"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">我的配置</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">区 2 · 配置记录留痕（只读）</div>
+              </Link>
+              <Link to="/me/nca" data-testid="me-zone-nca"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">存证查看</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">区 5 · 我之动作列表（筛选/导出）</div>
+              </Link>
+              <Link to="/me/appeal" data-testid="me-zone-appeal"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">申诉</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">区 6 · 最小必填登记（受理通道开通后接账）</div>
+              </Link>
+              <div data-testid="me-zone-2a" className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3 text-sm">
+                <div className="font-medium text-gray-500">编译流水线（区 2A）</div>
+                <div className="mt-0.5 text-[11px] text-gray-400">未开放 · 二批令另发（GSEQ-7828）</div>
+              </div>
+              <div data-testid="me-zone-4" className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3 text-sm">
+                <div className="font-medium text-gray-500">守门区（区 4）</div>
+                <div className="mt-0.5 text-[11px] text-gray-400">未开放 · 二批令另发（GSEQ-7829）</div>
+              </div>
+            </div>
+          </section>
           {/* 账户管理栏目（件 A：账户信息＋修改密码＋忘记密码指引；2026-10-09 令） */}
           <section data-testid="me-account" className="rounded-lg border border-gray-200 bg-white p-4">
             <h3 className="mb-2 text-sm font-semibold text-gray-800">账户管理</h3>
