@@ -25,6 +25,8 @@ const MeAssetPage = lazy(() => import('./pages/MeAssetPage').then((m) => ({ defa
 const MeRegistryPage = lazy(() => import('./pages/MeRegistryPage').then((m) => ({ default: m.MeRegistryPage })))
 const MeConfigPage = lazy(() => import('./pages/MeConfigPage').then((m) => ({ default: m.MeConfigPage })))
 const MeNcaPage = lazy(() => import('./pages/MeNcaPage').then((m) => ({ default: m.MeNcaPage })))
+const MeCompilePage = lazy(() => import('./pages/MeCompilePage').then((m) => ({ default: m.MeCompilePage })))
+const MePrivacyPage = lazy(() => import('./pages/MePrivacyPage').then((m) => ({ default: m.MePrivacyPage })))
 const MainChainGuide = lazy(() => import('./pages/MainChainGuide').then((m) => ({ default: m.MainChainGuide })))
 const AgentsPage = lazy(() => import('./pages/AgentsCluster').then((m) => ({ default: m.AgentsPage })))
 const AgentDashboardPage = lazy(() => import('./pages/AgentDashboard').then((m) => ({ default: m.AgentDashboardPage })))
@@ -124,6 +126,10 @@ export default function App() {
         <Route path="/me/registry" element={<MeRegistryPage />} />
         <Route path="/me/config" element={<MeConfigPage />} />
         <Route path="/me/nca" element={<MeNcaPage />} />
+        {/* SEG2-BATCH2-001 A块：区 2A 编译转化向导（六步流水线·六态·私料边界） */}
+        <Route path="/me/compile" element={<MeCompilePage />} />
+        {/* SEG2-BATCH2-001 B块：数据四档 L0-L3 与合规三守（默认 L1·L3 单独勾选二次确认） */}
+        <Route path="/me/privacy" element={<MePrivacyPage />} />
         <Route path="/review" element={<Review />} />
         <Route path="/docs" element={<DocsHome />} />
         <Route path="/docs/:family" element={<DocsIndex />} />

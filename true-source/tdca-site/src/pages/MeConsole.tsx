@@ -537,10 +537,11 @@ export function MePage() {  const { status, data } = useApiGet<MeData>('/api/v1/
                 <div className="font-medium text-gray-800">申诉</div>
                 <div className="mt-0.5 text-[11px] text-gray-500">区 6 · 最小必填登记（受理通道开通后接账）</div>
               </Link>
-              <div data-testid="me-zone-2a" className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3 text-sm">
-                <div className="font-medium text-gray-500">编译流水线（区 2A）</div>
-                <div className="mt-0.5 text-[11px] text-gray-400">未开放 · 二批令另发（GSEQ-7828）</div>
-              </div>
+              <Link to="/me/compile" data-testid="me-zone-2a"
+                    className="rounded-md border border-gray-200 bg-white p-3 text-sm hover:border-emerald-400">
+                <div className="font-medium text-gray-800">编译流水线（区 2A）</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">六步向导 · 可停可回退 · 私料边界明示</div>
+              </Link>
               <div data-testid="me-zone-4" className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-3 text-sm">
                 <div className="font-medium text-gray-500">守门区（区 4）</div>
                 <div className="mt-0.5 text-[11px] text-gray-400">未开放 · 二批令另发（GSEQ-7829）</div>
