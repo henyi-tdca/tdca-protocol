@@ -179,14 +179,15 @@ def test_display_name_mapping_no_draft():
 
 
 def test_ingest002_list_42_no_droop():
-    """L1SI155-INGEST-002 防掉条用例：regulation 族 50 条（L1SI180-TERMS-004/005 三件上站后 44→47；
+    """L1SI155-INGEST-002 防掉条用例：regulation 族 53 条（L1SI180-TERMS-004/005 三件上站后 44→47；
     L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件入册后 47→49；
-    L1SI204-REG-PUBLISH-001《人机协作工作条例》净名进站后 49→50——断言随令更正照报）；
+    L1SI204-REG-PUBLISH-001《人机协作工作条例》净名进站后 49→50；
+    L1SI207-MOBILE-ENTRY-AND-REF-001-AMEND-1 相遇公开说明三件纳入后 50→53——断言随令更正照报）；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 50, f"清单条数漂移: {data['count']}"
+    assert data["count"] == 53, f"清单条数漂移: {data['count']}"
     返回集 = {e["filename"] for e in data["documents"]}
     在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
     assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
