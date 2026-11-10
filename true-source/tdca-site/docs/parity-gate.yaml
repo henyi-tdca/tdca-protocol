@@ -112,6 +112,15 @@ criteria:
     sampled_pages: 65          # 34 在位＋31 迁面；新版独有面（如 /registrations）只须过四项、不比较
     pass_rule: "every_page_every_field_true"
 
+  g9_data_contract:
+    seq: 9
+    name: 数据契约闸
+    source: "TDCA-AMEND-PARITY-GATE-001（GSEQ-7851）"
+    desc: "取线上实况（包裹键／容器键／条目必填字段集）与正本 TDCA-SPEC-API-CONTRACT-001 逐项比对；任一不一致即 pass=false；未登记端点报「未覆盖」，不判通过也不判失败"
+    runner: "tools/ci_g9_contract_gate.py（gate-site 工作流 g9 步调用；只读、只取键名与类型）"
+    pass_rule: "已登记端点全 EQUAL 且零 DIFF"
+    note: "批 1（2026-11-11 实测补登）：library/whitepaper·paper·terms·cop-library 条目字段=(has_content, slug, synced_at, title)；knowledge/terms 条目字段=(def, term)；/api/v1/library/kg 匿名 401 未覆盖，不登记不判"
+
 shrink:
   audit_table: "docs/shrink-audit.md"
   thresholds_percent:
