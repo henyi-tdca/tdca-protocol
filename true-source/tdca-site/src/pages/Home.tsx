@@ -34,7 +34,7 @@ const trinity = [
   {
     icon: FileText,
     title: '协议本体面',
-    desc: '白皮书 · 论文 · 规范制度 · COP 权威库 · Weekly 周刊 —— 协议文档的站内真源呈现，运行时零平台依赖。',
+    desc: '白皮书 · 论文 · 制度 · 素材库 · 周刊 —— 协议文档的站内真源呈现，运行时零平台依赖。',
   },
   {
     icon: Boxes,
