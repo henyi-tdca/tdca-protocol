@@ -19,7 +19,7 @@ describe('MIGRATE 批4：/lab 与 /demo 入册与演练标识', () => {
   it('两面入 ROUTE_PATHS 且 PAGE_META 在册（20→22）', () => {
     expect(ROUTE_PATHS).toContain('/lab')
     expect(ROUTE_PATHS).toContain('/demo')
-    expect(PAGE_META).toHaveLength(36) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 用组批：+2（/use/upload /use/agent） */ /* 追平批B2：+4（/five-orders /official-assets /status /terms） */ /* 追平批B3：+1（/start/three-questions） */ /* 追平批B4：+1（/verify） */
+    expect(PAGE_META).toHaveLength(38) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 用组批：+2（/use/upload /use/agent） */ /* 追平批B2：+4（/five-orders /official-assets /status /terms） */ /* 追平批B3：+1（/start/three-questions） */ /* 追平批B4：+1（/verify） */ /* SMALL2-001：+2（/me/compile /me/privacy 入册） */
     const lab = PAGE_META.find((m) => m.path === '/lab')
     const demo = PAGE_META.find((m) => m.path === '/demo')
     expect(lab?.permission).toBe('公开')

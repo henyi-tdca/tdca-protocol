@@ -57,7 +57,7 @@ describe('追平批B4：两旧链重定向（重定向实测·⛔ 只看代码�
 
 describe('追平批B4：索引入册（/verify 入册·两旧链重定向 ⛔ 入册）', () => {
   it('PAGE_META 35→36（+1 /verify）；两旧链 ⛔ 入册', () => {
-    expect(PAGE_META).toHaveLength(36)
+    expect(PAGE_META).toHaveLength(38) /* SMALL2-001：+2（/me/compile /me/privacy 入册） */
     expect(PAGE_META.find((m) => m.path === '/verify')?.title).toBe('怎么验证 · 5 分钟三件自查')
     expect(ROUTE_PATHS).toContain('/verify')
     expect(ROUTE_PATHS).not.toContain('/assets')

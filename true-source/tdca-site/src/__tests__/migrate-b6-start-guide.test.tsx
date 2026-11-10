@@ -87,7 +87,7 @@ describe('MIGRATE 批6：两面入册（ROUTE_PATHS＋PAGE_META·22→24）', ()
   it('/start 与 /nca-guide 在册，权限照在册=公开', () => {
     expect(ROUTE_PATHS).toContain('/start')
     expect(ROUTE_PATHS).toContain('/nca-guide')
-    expect(PAGE_META).toHaveLength(36) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 用组批：+2（/use/upload /use/agent） */ /* 追平批B2：+4（/five-orders /official-assets /status /terms） */ /* 追平批B3：+1（/start/three-questions） */ /* 追平批B4：+1（/verify） */
+    expect(PAGE_META).toHaveLength(38) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 用组批：+2（/use/upload /use/agent） */ /* 追平批B2：+4（/five-orders /official-assets /status /terms） */ /* 追平批B3：+1（/start/three-questions） */ /* 追平批B4：+1（/verify） */ /* SMALL2-001：+2（/me/compile /me/privacy 入册） */
     expect(PAGE_META.find((m) => m.path === '/start')?.permission).toBe('公开')
     expect(PAGE_META.find((m) => m.path === '/nca-guide')?.permission).toBe('公开')
   })
