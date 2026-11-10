@@ -242,3 +242,55 @@ def test_p1_me_accountinfo_readonly_and_no_write_endpoint():
     me_posts = sorted(p for p, ops in spec["paths"].items() if "post" in ops and "/me/" in p)
     assert me_posts == ["/api/v1/me/anchor/verify", "/api/v1/me/password",
                         "/api/v1/me/sessions/revoke", "/api/v1/me/sessions/revoke-all"]
+
+
+# ---- SMALL2-001 块 B（迁移 0018）：举证三字段读端/写端（受核 SMALL2-WIT-001 A-1~A-3/C-1~C-3） ----
+
+def test_p1_me_nca_attestation3_null_compat():
+    """历史行三列无源：subject_ref 回脱敏推导形（sha256(actor)[:12]，不可逆），
+    authz_ref/compare_result 如实 null（读端 fail-soft，⛔ 造值）。"""
+    import hashlib
+    actor = "p1-nca-att3-null"
+    tok = _mkuser(actor)
+    _mk_nca("NCA-P1-ATT3-N1", actor, "P1_NULL", "2026-11-11T00:00:00Z")
+    r = client.get("/api/v1/me/nca?action=P1_NULL&limit=10", headers=_h(tok))
+    assert r.status_code == 200
+    it = r.json()["data"]["items"][0]
+    assert it["subject_ref"] == hashlib.sha256(actor.encode()).hexdigest()[:12]
+    assert it["authz_ref"] is None and it["compare_result"] is None
+    # 既有四字段不受影响
+    assert it["action"] == "P1_NULL" and "nca_id" in it and "sha256_8" in it and "ts" in it
+
+
+def test_p1_me_nca_attestation3_values():
+    """有源行：三字段如实回读（值在则显，存什么读什么）。"""
+    actor = "p1-nca-att3-val"
+    tok = _mkuser(actor)
+    with get_sessionmaker().begin() as s:
+        s.add(M.NcaChain(nca_id="NCA-P1-ATT3-V1", prev_nca="GENESIS", action="P1_VAL",
+                         actor=actor, data_provenance="real", ts="2026-11-11T00:01:00Z",
+                         subject_ref="sha256mask9ab", authz_ref="AUTHZ-DOC-0018",
+                         compare_result="match"))
+    r = client.get("/api/v1/me/nca?action=P1_VAL&limit=10", headers=_h(tok))
+    it = r.json()["data"]["items"][0]
+    assert it["subject_ref"] == "sha256mask9ab"
+    assert it["authz_ref"] == "AUTHZ-DOC-0018"
+    assert it["compare_result"] == "match"
+
+
+def test_p1_nca_append_compare_result_fail_closed():
+    """写端 fail-closed（C-1）：compare_result 非法值写前即拒，库中无落条。"""
+    import pytest
+    from api_v1 import _nca_append
+    with pytest.raises(ValueError):
+        _nca_append("P1_BAD", "p1-nca-att3-bad", "gw:test", prov="real",
+                    compare_result="almost_match")
+    with get_session() as s:
+        rows = s.query(M.NcaChain).filter(M.NcaChain.action == "P1_BAD").all()
+        assert rows == []
+    # 三值封闭内可写
+    nid = _nca_append("P1_OK", "p1-nca-att3-ok", "gw:test", prov="real",
+                      compare_result="not_compared", authz_ref="AUTHZ-DOC-OK")
+    with get_session() as s:
+        row = s.get(M.NcaChain, nid)
+        assert row.compare_result == "not_compared" and row.authz_ref == "AUTHZ-DOC-OK"

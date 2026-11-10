@@ -127,8 +127,15 @@ def init_nca_fork_baseline() -> None:
         _NCA_FORK_BASELINE = None
 
 
-def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "simulated") -> str:
+def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "simulated",
+                subject_ref: str | None = None, authz_ref: str | None = None,
+                compare_result: str | None = None) -> str:
     """写路径通用：向 nca_chain 追加一条存证（链式 prev_nca 自动取最新）。
+
+    SMALL2-001 块 B（迁移 0018）：可选带举证三字段——subject_ref（主体脱敏形）、
+    authz_ref（授权件编号）、compare_result（比对结论）。写端 fail-closed（C-1）：
+    compare_result 非法值在写前即拒（值域封闭三值；库层另有 CHECK 双保险）；
+    无源不传即 null，读端 fail-soft 如实显「本期无」（C-2）。⛔ 不回填历史行。
 
     NCA-ATOMIC-001 原子性整改（只防新断，不重接历史断链）：
       · 原始连接显式 BEGIN IMMEDIATE + BUSY 退避重试——"取尾号→落本行"成
@@ -142,6 +149,10 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
     """
     import secrets
     nonce = secrets.token_hex(8)   # 同秒同参重复写入防主键碰撞（M3 测试实证）
+    if compare_result is not None and compare_result not in (
+            "match", "mismatch", "not_compared"):
+        raise ValueError("compare_result 值域封闭：match/mismatch/not_compared"
+                         "（fail-closed，拒写非法值）")
     engine = get_engine()
     nca_id: Optional[str] = None
     last_err: Optional[Exception] = None
@@ -174,9 +185,11 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
             cur.execute(
                 "INSERT INTO nca_chain (nca_id, prev_nca, action, actor, artifact_path,"
                 " sha256_8, data_provenance, ts, rec_hash, prev_hash, anchor_ok,"
-                " detached, detach_reason) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                " detached, detach_reason, subject_ref, authz_ref, compare_result)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (nca_id, tail, action, actor, artifact_path or None, sha8,
-                 prov, ts, rh, prev_hash, 0, detached, detach_reason))
+                 prov, ts, rh, prev_hash, 0, detached, detach_reason,
+                 subject_ref, authz_ref, compare_result))
             dbapi.commit()
             break
         except sqlite3.OperationalError as e:
@@ -1618,7 +1631,11 @@ def me_nca(request: Request, page: int = 1, limit: int = 20, action: str = ""):
         "total": total, "page": page, "limit": limit,
         "items": [{"nca_id": n.nca_id, "action": n.action,
                    "artifact_path": n.artifact_path, "sha256_8": n.sha256_8,
-                   "ts": n.ts} for n in rows],
+                   "ts": n.ts,
+                   "subject_ref": n.subject_ref or hashlib.sha256(
+                       n.actor.encode("utf-8")).hexdigest()[:12],
+                   "authz_ref": n.authz_ref, "compare_result": n.compare_result}
+                  for n in rows],
     }, nature="real")
 
 
