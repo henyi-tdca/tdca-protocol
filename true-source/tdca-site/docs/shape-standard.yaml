@@ -1,0 +1,127 @@
+# ============================================================
+# TDCA 站内接口统一返回形态施工标准（shape-standard）
+# 件号：TDCA-HANDOFF-EXEC-L1SI208-API-SHAPE-001（三项照准：R-1=ⓐ 向 v1 收敛／R-2=1 版兼容／R-3=F-1、F-5 最后迁）
+# 依据：TDCA-SPEC-API-SHAPE-001（V0.1-DRAFT）／TDCA-SPEC-API-CONTRACT-001（V0.1-SNAPSHOT，正本口径 P-1~P-3）
+#       ／TDCA-AMEND-L1SI208-API-CONTRACT-002（V1.0，F-1~F-6 形态编号＋批 2A 七端点登记）
+# 性质：内部施工标准 · ⛔ 非对外 · 本文档只定形态与硬序，字段语义改名／写操作请求体／错误信封／认证鉴权一律另案
+# 日期：2026-11-11（+08）｜ 状态：V1.0 照准施工
+# 红线：地址、包名、计数一律实测复取；任一步白屏或 G9 DIFF ⟹ 回滚该端点，⛔ 全站推进
+# ============================================================
+
+meta:
+  件号: TDCA-API-SHAPE-STANDARD-001
+  版本: V1.0
+  施工令: TDCA-HANDOFF-EXEC-L1SI208-API-SHAPE-001
+  生成方式: 规范三件逐条对齐 ＋ 只读预备底账（api-shape-001-prep-readings）难点并入
+  时点口径: ISO8601（+08）
+
+# ------------------------------------------------------------
+# 一、统一信封（R-1=ⓐ 向既有 v1 主流收敛；信封四键 ⛔ 可缺其一）
+# ------------------------------------------------------------
+envelope:
+  data: "业务内容，唯一出口（对象或数组，⛔ 顶层散落业务键）"
+  data_nature: "real | simulated | mixed（⛔ 可缺）"
+  nca_watermark: "<str | null>（存证水印）"
+  ts: "<ISO8601 +08>"
+  键序: 不约束（键序各异不影响机读，实测四键序为 data/nca_watermark/ts/data_nature）
+
+# ------------------------------------------------------------
+# 二、三条统一规则（S-1~S-3，⛔ 跳步）
+# ------------------------------------------------------------
+rules:
+  S-1: "业务内容只出现在 data 下；⛔ 顶层散落业务键"
+  S-2: "列表一律 data.items[]（⛔ documents/terms/announcements/records 等各写一名）；单件一律 data.item（⛔ 直接铺在 data 下）"
+  S-3: "分页与计数一律 data.total ＋ data.page ＋ data.limit（⛔ count/face 等别名）"
+
+# ------------------------------------------------------------
+# 三、六形态 → 目标形态映射（端点归属照 AMEND-2 §二，⛔ 以「形态已统一」误判）
+# ------------------------------------------------------------
+shapes:
+  F-1:
+    端点: "GET /api/site/docs[/{family}]"
+    现结构: "count/documents[]/family/principle/source（无信封，一层）"
+    目标: "data.items[] ＋ data.total（加信封＋容器改名）"
+    改动量: 中
+    批次: 最后迁（R-3，连带面最广之一）
+    连带: "端点树非单端点：4 种路径同一实现（public_docs_ops.py），一处改四处连带；旧路径 /api/site/docs/* 别名双挂，兼容期证据两个路径都须实测"
+  F-2:
+    端点: "GET /api/site/docs/{family}/{slug}"
+    现结构: "无包裹单件直出（display_name/content/filename/version/sha256_16/bytes/family/sha256/slug）"
+    目标: "data.item（小）"
+    批次: 常规批
+  F-3:
+    端点: "GET /api/v1/...（列表类）"
+    现结构: "标准信封 ＋ data.{terms|announcements|items|events|assets|conclusions} 等命名复数键；data 子形态实测至少 5 种（count+命名复数键／items／events 游标／单件指标／单件普通）"
+    目标: "data.items[]（小，改容器名）"
+    批次: 常规批
+    前端消费面: "announcements/list、assets/five-orders、audit/ledger-public（游标 events）、knowledge/terms、library/families、formal/conclusion/catalog 六端点（页数随施工报实测）"
+  F-4:
+    端点: "GET /api/v1/library/{family}/{slug}"
+    现结构: "标准信封 ＋ data 内单件直铺（body_md/family/note/slug/source_path/synced_at/title）"
+    目标: "data.item（小）"
+    批次: 常规批
+  F-5:
+    端点: "GET /api/public/registrations"
+    现结构: "无 data 包裹（face/count/items/labels/proof_boundary，一层）；count=645 实测（时点 05:2x）"
+    目标: "data.items[] ＋ data.total（中）"
+    批次: 最后迁（R-3，连带面最广之一）
+    连带: "evidence 子端点为中文栏键（用途声明/栏一~栏四），与 data.item 距离最远；迁移前先实测 RegistrationsPage 证据包消费面再定并存方案，⛔ 顺手删；详情子端点（/{id}）裸单件同并"
+  F-6:
+    端点: "GET /api/v1/selfcheck/nca/{id}"
+    现结构: "标准信封 ＋ record 单件（含 page_disclaimer/note 等）"
+    目标: "data.item（小）"
+    批次: 常规批
+
+# ------------------------------------------------------------
+# 四、迁移硬序（⛔ 一次性切换，⛔ 跳步；停手铁律：1→2 任一步白屏或 G9 DIFF ⟹ 回滚该端点）
+# ------------------------------------------------------------
+migration:
+  步1_兼容期:
+    做: "后端在同一端点增新形态字段，旧键全保留至少 1 个版本（R-2），⛔ 删旧键"
+    判据: "同端点新旧键并存实测；旧前端 ⛔ 坏"
+    并存细则: "旧键原样保留（含 count/face/documents/terms 等别名）；新键一律 data.items/data.item/data.total/data.page/data.limit＋信封四键；新旧两形态同响应并存"
+  步2_前端读新:
+    做: "前端改读 data.items/data.item"
+    判据: "前端全量测试绿 ＋ 逐面渲染实测"
+    私域端点: "/me/*、/ops/* 匿名 401 不可测，由执行侧登录态自测并回报（X-3）"
+  步3_G9换版:
+    做: "G9 正本改记新形态，G9 以新形态为判据"
+    判据: "G9 全项 EQUAL"
+  步4_观察窗:
+    做: "≥24h 线上两面并发；G9 每换版跑一次"
+    判据: "零 DIFF"
+  步5_删旧键:
+    做: "删旧键（另令）"
+    判据: "全站搜旧键零引用"
+  批次排序: "F-1、F-5 最后迁（R-3）；其余形态常规批先走通全五步再动两树"
+
+# ------------------------------------------------------------
+# 五、登记端点清单（批 2A 已登记 15：一致 12／未覆盖 3；写操作族未纳）
+# ------------------------------------------------------------
+endpoints:
+  已登记: "GET /api/site/docs、/api/site/docs/{family}、/api/v1/library/{family}、/api/v1/announcements/list、/api/v1/knowledge/terms、/api/v1/intent、/api/v1/library/{family}/{slug}、/api/site/docs/{family}/{slug}、/api/public/registrations、/api/v1/selfcheck/nca/{id}（一致 10）；/api/v1/me/nca、/api/v1/ops/logs（401 未覆盖）"
+  错误形态: "匿名 401 实测裸 {detail,code}，无信封；是否属六形态之一/错误信封另案（⛔ 混入本标准）"
+  写操作族: "POST/PUT/PATCH/DELETE 请求体形态另案；契约正本对写操作不实测"
+
+# ------------------------------------------------------------
+# 六、⛔ 不在本标准（夹带禁令）
+# ------------------------------------------------------------
+out_of_scope:
+  - "字段语义改名（display_name ↔ title 等）——影响面大于形态，须另案"
+  - "写操作请求体形态"
+  - "错误码与错误信封"
+  - "认证与鉴权"
+
+# ------------------------------------------------------------
+# 七、风险与须辨（X-1~X-4 ＋ 预备底账难点）
+# ------------------------------------------------------------
+risks:
+  X-1: "兼容期若省略 ⟹ 前端必炸（四次白屏同类事故重演）"
+  X-2: "F-1/F-5 前端消费面最广，最后迁（R-3）"
+  X-3: "私域端点迁移后须执行侧登录态自测并回报"
+  X-4: "本标准照 API-SHAPE-001 令三项照准施工；⛔ 越令扩面"
+  D-1: "F-1 是端点树非单端点，兼容期一处改四处连带"
+  D-2: "F-5 evidence 中文栏键距离最远，先实测消费面再定并存方案"
+  D-3: "v1 data 子形态至少 5 种，步 2 波及六端点前端消费面"
+  D-4: "别名双挂：改实现即两端同时变，兼容期证据两路径都实测"
+  D-5: "私域端点形态实况待登录态自测段补"
