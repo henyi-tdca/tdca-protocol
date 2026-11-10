@@ -24,4 +24,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // FRONTEND-PERF-001（L1SI207）：路由级分包配套——react 全家固化 vendor-react 长缓存；
+  // 其余 node_modules 不强制归并（随动态 import 落页面块，防重依赖被拉回首屏）
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (!id.includes('node_modules')) return undefined
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|@remix-run)[\\/]/.test(id))
+            return 'vendor-react'
+          return undefined
+        },
+      },
+    },
+  },
 });

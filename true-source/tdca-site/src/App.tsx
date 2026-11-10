@@ -1,107 +1,98 @@
+// FRONTEND-PERF-001（L1SI207）路由级分包：页面件全部 React.lazy 动态装载，
+// 首屏主包 ≤800KB；vendor-react 由 vite manualChunks 固化长缓存。路由表与路径一字未动。
+import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router'
-import Home from './pages/Home'
-import DocsHome, { DocsIndex, DocDetail } from './pages/Docs'
-import Review from './pages/Review'
-// FRONTEND-MERGE 批1（骨架与门户）：旧版 home/about/pages/announcements 四面迁入
-import { OverviewPage } from './pages/Overview'
-import { AboutPage } from './pages/About'
-import { PagesIndexPage, NotFoundPage } from './pages/PagesIndex'
-import { AnnouncementsPage } from './pages/Announcements'
-// FRONTEND-MERGE 批2（身份与缔约）：register/auth/me 三面迁入＋AuthProvider 最小接线
 import { AuthProvider } from './lib/auth-context'
-import { RegisterPage } from './pages/Register'
-import { AuthPage } from './pages/AuthLogin'
-import { MePage } from './pages/MeConsole'
-import { MeAppealPage } from './pages/MeAppealPage'
-import { MainChainGuide } from './pages/MainChainGuide'
-// FRONTEND-MERGE 批3（智能体面）：agents/agent-dashboard/agent-shelf/studio/workbuddy 五面迁入
-import { AgentsPage } from './pages/AgentsCluster'
-import { AgentDashboardPage } from './pages/AgentDashboard'
-import { AgentShelfPage } from './pages/AgentShelfPage'
-import { StudioPage } from './pages/StudioPage'
-import { WorkbuddyPage } from './pages/WorkbuddyPage'
-// FRONTEND-MERGE 批4（登记与存证面）：五面迁入（attestation 一件四面 → 四路）
-import { OwnershipPage } from './pages/OwnershipPage'
-import { OwnershipRegistryPage } from './pages/OwnershipRegistryPage'
-import { AuthorizationRegistryPage } from './pages/AuthorizationRegistryPage'
-import { AttestationOverviewPage, AttestationMetaPage, AttestationDynamicPage, AttestationHistoryPage } from './pages/AttestationPage'
-import { AnchorsPage } from './pages/AnchorsPage'
-import { AuditPage } from './pages/AuditPage'
-import { GovernancePage } from './pages/GovernancePage'
-import { FormalPage } from './pages/FormalPage'
-import { ClusterPage } from './pages/ClusterPage'
-import { MarketPage } from './pages/MarketPage'
-import { MarketSimPage } from './pages/MarketSimPage'
-import { TaxPage } from './pages/TaxPage'
-import { LibraryPage } from './pages/LibraryPage'
-import { AcademyPage } from './pages/AcademyPage'
-import { ToolshelfPage } from './pages/ToolshelfPage'
-import { NotifierPage } from './pages/NotifierPage'
-import { SandboxPage } from './pages/SandboxPage'
-// 用组批（L1SI206-USE-GROUP-B1）：「用」组两面迁入（U-1 交素材＋U-2 代办登记，旧版权直拷·接缝仅适配）；
-// 两面为登录动作面——照 /auth /register 动作页豁免口径 ⛔ 入栏目检索索引（脚本 COLUMN_EXCLUDE 同步）
-// 追平批B1（L1SI206-PARITY-B1）：制度地图／帮助与联系／负空间／教材目录四面迁入（旧版权直拷·公开栏目面）
-import { RulesMapPage } from './pages/rules/rules'
-import { HelpPage } from './pages/HelpPage'
-import { NegativeSpacePage } from './pages/NegativeSpacePage'
-import { AcademyOutlinePage } from './pages/academy/AcademyOutlinePage'
-// 追平批B2（L1SI206-PARITY-B2）：五序资产／官方资产／系统健康／术语检索四面＋运维日志两件（旧版权直拷·接缝仅适配）
-// 四面为公开栏目面入索引；ops/logs 两件为运维私域面——⛔ 入栏目检索索引
-import { FiveOrdersPage } from './pages/FiveOrdersPage'
-import { OfficialAssetsPage } from './pages/OfficialAssetsPage'
-import { StatusPage } from './pages/StatusPage'
-import { TermsPage } from './pages/TermsPage'
-import { OpsLogsPage } from './pages/OpsLogsPage'
-import { OpsLogsListPage } from './pages/OpsLogsListPage'
-// 追平批B3（L1SI206-PARITY-B3）：授权配置面板（受护）／三问向导／运维我的 三件直拷＋RequireAuth 最小守卫
-// （授权面板与 ops/me 为私域/受护面 ⛔ 入公域栏目索引；三问向导公开入册）
-import { AuthorizationPanelPage } from './pages/AuthorizationPanelPage'
-import { ThreeQuestionsPage } from './pages/ThreeQuestionsPage'
-import { OpsMePage } from './pages/OpsMePage'
 import { RequireAuth } from './components/RequireAuth'
-import { VerifyPage } from './pages/VerifyPage'
-import { UseUploadPage } from './pages/use/UseUploadPage'
-import { UseAgentPage } from './pages/use/UseAgentPage'
-import { OpsPage } from './pages/OpsPage'
-// MIGRATE 批5（L1SI206）：运维手册三界面（README/OPS/CHANGELOG）——运维私域内路由（须鉴权取件）；
-// ⛔ 不入公开导航／⛔ 不入检索索引（索引唯一权威源＝public_docs_ops.py 在册公开清单，本批未动）
-import { OpsReadmePage } from './pages/OpsReadmePage'
-import { OpsOpsPage } from './pages/OpsOpsPage'
-import { OpsChangelogPage } from './pages/OpsChangelogPage'
-// MIGRATE 批6（L1SI206）：入门与指南四件（同栈直拷·start-map.yaml 数据件原字节随批·公开面入册）
-import { StartPage } from './pages/start/start'
-import { NcaGuidePage } from './pages/NcaGuidePage'
-// 批 2 骨架：全局壳（两轴）＋频道首页五件——仅加包裹层与新路由，现有路径不动
 import { SiteLayout } from './components/SiteLayout'
-import { ChannelHome } from './pages/ChannelHome'
-// 批 3：协作流程汇总页（/process）——新增路由，现有路径不动
-import { ProcessOverviewPage } from './pages/ProcessOverview'
-// REGISTRY-PAGE-001：公域登记查询页（/registrations——匿名只读公域区，新增路由，现有路径不动）
-import { RegistrationsPage } from './pages/RegistrationsPage'
-// MIGRATE 批1：全站检索页（/search——检索整块迁产线，新增路由，现有路径不动）
-import { SearchPage } from './pages/SearchPage'
-// MIGRATE 批2：智能体通道两面迁入（我的通道＋通道登记，新增路由，现有路径不动；
-// 登记面改挂 /channel/register——旧路 /channel/registry 在新版已居「登记与存证」频道首页，⛔ 动他面）
-import { ChannelMyPage } from './pages/ChannelMy'
-import { AgentChannelRegisterPage } from './pages/AgentChannelRegister'
-// MIGRATE 批3（L1SI206）：严选与节点八面 ＋ 补 /channel 总入口（批2 令面漏项补做，九面新增路由，
-// 现有路径不动；权限字段照 route-parity.md 原栏——私域两面由 API 层 401/403 fail-closed 把守）
-import { ChannelPortalPage } from './pages/ChannelPortal'
-import { CurationPoolPage } from './pages/Curation'
-import { ContributePage } from './pages/Contribute'
-import { PublicFacePage } from './pages/PublicFace'
-import { PrivateDomainPage } from './pages/PrivateDomain'
-import { NodeNetPage } from './pages/NodeNet'
-import { MeNodePage } from './pages/MeNode'
-import { MeNodeNetPage } from './pages/MeNodeNet'
-import { NodeDisclosurePage } from './pages/NodeDisclosure'
-import { LabPage } from './pages/Lab'
-import { DemoPage } from './pages/Demo'
+
+const Home = lazy(() => import('./pages/Home'))
+const DocsHome = lazy(() => import('./pages/Docs'))
+const DocsIndex = lazy(() => import('./pages/Docs').then((m) => ({ default: m.DocsIndex })))
+const DocDetail = lazy(() => import('./pages/Docs').then((m) => ({ default: m.DocDetail })))
+const Review = lazy(() => import('./pages/Review'))
+const OverviewPage = lazy(() => import('./pages/Overview').then((m) => ({ default: m.OverviewPage })))
+const AboutPage = lazy(() => import('./pages/About').then((m) => ({ default: m.AboutPage })))
+const PagesIndexPage = lazy(() => import('./pages/PagesIndex').then((m) => ({ default: m.PagesIndexPage })))
+const NotFoundPage = lazy(() => import('./pages/PagesIndex').then((m) => ({ default: m.NotFoundPage })))
+const AnnouncementsPage = lazy(() => import('./pages/Announcements').then((m) => ({ default: m.AnnouncementsPage })))
+const RegisterPage = lazy(() => import('./pages/Register').then((m) => ({ default: m.RegisterPage })))
+const AuthPage = lazy(() => import('./pages/AuthLogin').then((m) => ({ default: m.AuthPage })))
+const MePage = lazy(() => import('./pages/MeConsole').then((m) => ({ default: m.MePage })))
+const MeAppealPage = lazy(() => import('./pages/MeAppealPage').then((m) => ({ default: m.MeAppealPage })))
+const MainChainGuide = lazy(() => import('./pages/MainChainGuide').then((m) => ({ default: m.MainChainGuide })))
+const AgentsPage = lazy(() => import('./pages/AgentsCluster').then((m) => ({ default: m.AgentsPage })))
+const AgentDashboardPage = lazy(() => import('./pages/AgentDashboard').then((m) => ({ default: m.AgentDashboardPage })))
+const AgentShelfPage = lazy(() => import('./pages/AgentShelfPage').then((m) => ({ default: m.AgentShelfPage })))
+const StudioPage = lazy(() => import('./pages/StudioPage').then((m) => ({ default: m.StudioPage })))
+const WorkbuddyPage = lazy(() => import('./pages/WorkbuddyPage').then((m) => ({ default: m.WorkbuddyPage })))
+const OwnershipPage = lazy(() => import('./pages/OwnershipPage').then((m) => ({ default: m.OwnershipPage })))
+const OwnershipRegistryPage = lazy(() => import('./pages/OwnershipRegistryPage').then((m) => ({ default: m.OwnershipRegistryPage })))
+const AuthorizationRegistryPage = lazy(() => import('./pages/AuthorizationRegistryPage').then((m) => ({ default: m.AuthorizationRegistryPage })))
+const AttestationOverviewPage = lazy(() => import('./pages/AttestationPage').then((m) => ({ default: m.AttestationOverviewPage })))
+const AttestationMetaPage = lazy(() => import('./pages/AttestationPage').then((m) => ({ default: m.AttestationMetaPage })))
+const AttestationDynamicPage = lazy(() => import('./pages/AttestationPage').then((m) => ({ default: m.AttestationDynamicPage })))
+const AttestationHistoryPage = lazy(() => import('./pages/AttestationPage').then((m) => ({ default: m.AttestationHistoryPage })))
+const AnchorsPage = lazy(() => import('./pages/AnchorsPage').then((m) => ({ default: m.AnchorsPage })))
+const AuditPage = lazy(() => import('./pages/AuditPage').then((m) => ({ default: m.AuditPage })))
+const GovernancePage = lazy(() => import('./pages/GovernancePage').then((m) => ({ default: m.GovernancePage })))
+const FormalPage = lazy(() => import('./pages/FormalPage').then((m) => ({ default: m.FormalPage })))
+const ClusterPage = lazy(() => import('./pages/ClusterPage').then((m) => ({ default: m.ClusterPage })))
+const MarketPage = lazy(() => import('./pages/MarketPage').then((m) => ({ default: m.MarketPage })))
+const MarketSimPage = lazy(() => import('./pages/MarketSimPage').then((m) => ({ default: m.MarketSimPage })))
+const TaxPage = lazy(() => import('./pages/TaxPage').then((m) => ({ default: m.TaxPage })))
+const LibraryPage = lazy(() => import('./pages/LibraryPage').then((m) => ({ default: m.LibraryPage })))
+const AcademyPage = lazy(() => import('./pages/AcademyPage').then((m) => ({ default: m.AcademyPage })))
+const ToolshelfPage = lazy(() => import('./pages/ToolshelfPage').then((m) => ({ default: m.ToolshelfPage })))
+const NotifierPage = lazy(() => import('./pages/NotifierPage').then((m) => ({ default: m.NotifierPage })))
+const SandboxPage = lazy(() => import('./pages/SandboxPage').then((m) => ({ default: m.SandboxPage })))
+const RulesMapPage = lazy(() => import('./pages/rules/rules').then((m) => ({ default: m.RulesMapPage })))
+const HelpPage = lazy(() => import('./pages/HelpPage').then((m) => ({ default: m.HelpPage })))
+const NegativeSpacePage = lazy(() => import('./pages/NegativeSpacePage').then((m) => ({ default: m.NegativeSpacePage })))
+const AcademyOutlinePage = lazy(() => import('./pages/academy/AcademyOutlinePage').then((m) => ({ default: m.AcademyOutlinePage })))
+const FiveOrdersPage = lazy(() => import('./pages/FiveOrdersPage').then((m) => ({ default: m.FiveOrdersPage })))
+const OfficialAssetsPage = lazy(() => import('./pages/OfficialAssetsPage').then((m) => ({ default: m.OfficialAssetsPage })))
+const StatusPage = lazy(() => import('./pages/StatusPage').then((m) => ({ default: m.StatusPage })))
+const TermsPage = lazy(() => import('./pages/TermsPage').then((m) => ({ default: m.TermsPage })))
+const OpsLogsPage = lazy(() => import('./pages/OpsLogsPage').then((m) => ({ default: m.OpsLogsPage })))
+const OpsLogsListPage = lazy(() => import('./pages/OpsLogsListPage').then((m) => ({ default: m.OpsLogsListPage })))
+const AuthorizationPanelPage = lazy(() => import('./pages/AuthorizationPanelPage').then((m) => ({ default: m.AuthorizationPanelPage })))
+const ThreeQuestionsPage = lazy(() => import('./pages/ThreeQuestionsPage').then((m) => ({ default: m.ThreeQuestionsPage })))
+const OpsMePage = lazy(() => import('./pages/OpsMePage').then((m) => ({ default: m.OpsMePage })))
+const VerifyPage = lazy(() => import('./pages/VerifyPage').then((m) => ({ default: m.VerifyPage })))
+const UseUploadPage = lazy(() => import('./pages/use/UseUploadPage').then((m) => ({ default: m.UseUploadPage })))
+const UseAgentPage = lazy(() => import('./pages/use/UseAgentPage').then((m) => ({ default: m.UseAgentPage })))
+const OpsPage = lazy(() => import('./pages/OpsPage').then((m) => ({ default: m.OpsPage })))
+const OpsReadmePage = lazy(() => import('./pages/OpsReadmePage').then((m) => ({ default: m.OpsReadmePage })))
+const OpsOpsPage = lazy(() => import('./pages/OpsOpsPage').then((m) => ({ default: m.OpsOpsPage })))
+const OpsChangelogPage = lazy(() => import('./pages/OpsChangelogPage').then((m) => ({ default: m.OpsChangelogPage })))
+const StartPage = lazy(() => import('./pages/start/start').then((m) => ({ default: m.StartPage })))
+const NcaGuidePage = lazy(() => import('./pages/NcaGuidePage').then((m) => ({ default: m.NcaGuidePage })))
+const ChannelHome = lazy(() => import('./pages/ChannelHome').then((m) => ({ default: m.ChannelHome })))
+const ProcessOverviewPage = lazy(() => import('./pages/ProcessOverview').then((m) => ({ default: m.ProcessOverviewPage })))
+const RegistrationsPage = lazy(() => import('./pages/RegistrationsPage').then((m) => ({ default: m.RegistrationsPage })))
+const SearchPage = lazy(() => import('./pages/SearchPage').then((m) => ({ default: m.SearchPage })))
+const ChannelMyPage = lazy(() => import('./pages/ChannelMy').then((m) => ({ default: m.ChannelMyPage })))
+const AgentChannelRegisterPage = lazy(() => import('./pages/AgentChannelRegister').then((m) => ({ default: m.AgentChannelRegisterPage })))
+const ChannelPortalPage = lazy(() => import('./pages/ChannelPortal').then((m) => ({ default: m.ChannelPortalPage })))
+const CurationPoolPage = lazy(() => import('./pages/Curation').then((m) => ({ default: m.CurationPoolPage })))
+const ContributePage = lazy(() => import('./pages/Contribute').then((m) => ({ default: m.ContributePage })))
+const PublicFacePage = lazy(() => import('./pages/PublicFace').then((m) => ({ default: m.PublicFacePage })))
+const PrivateDomainPage = lazy(() => import('./pages/PrivateDomain').then((m) => ({ default: m.PrivateDomainPage })))
+const NodeNetPage = lazy(() => import('./pages/NodeNet').then((m) => ({ default: m.NodeNetPage })))
+const MeNodePage = lazy(() => import('./pages/MeNode').then((m) => ({ default: m.MeNodePage })))
+const MeNodeNetPage = lazy(() => import('./pages/MeNodeNet').then((m) => ({ default: m.MeNodeNetPage })))
+const NodeDisclosurePage = lazy(() => import('./pages/NodeDisclosure').then((m) => ({ default: m.NodeDisclosurePage })))
+const LabPage = lazy(() => import('./pages/Lab').then((m) => ({ default: m.LabPage })))
+const DemoPage = lazy(() => import('./pages/Demo').then((m) => ({ default: m.DemoPage })))
+
 
 export default function App() {
   return (
     <AuthProvider>
       <SiteLayout>
+      {/* FRONTEND-PERF-001：路由级分包后的统一挂起兜底（首屏主包 ≤800KB） */}
+      <Suspense fallback={<div data-testid="route-loading" className="p-8 text-center text-slate-500">加载中…</div>}>
       <Routes>
         {/* MIGRATE 批7：主链导轨挂载（主链八环在册实路由） */}
         {/* 追平批B3（PARITY-B3-001 §二#5）：/five-orders＝主链第二环「五序资产」补挂导轨；
@@ -210,6 +201,7 @@ export default function App() {
         <Route path="/ops/manual" element={<Navigate to="/ops/readme" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
       </SiteLayout>
     </AuthProvider>
   )

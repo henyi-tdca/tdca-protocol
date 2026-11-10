@@ -53,6 +53,29 @@ const TIER_BODY = 1
 
 let cache: Promise<SearchIndexDoc | null> | null = null
 
+/** FRONTEND-PERF-001（L1SI207）：旁挂索引「清单＋按族分段」按需装载。
+ *  清单无 entries 而有 segments 时，并行取全部分段合并后返回（对调用方同构）；
+ *  任一分段失败即 null（fail-closed 不臆造）；旧单件形态（entries 直接在清单内）原样兼容。 */
+async function loadFromManifest(doc: SearchIndexDoc & { segments?: { family: string; file: string; count: number }[] }): Promise<SearchIndexDoc | null> {
+  const segs = doc.segments
+  if (!segs || segs.length === 0) return null
+  const base = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/'
+  try {
+    const parts = await Promise.all(
+      segs.map((s) =>
+        fetch(`${base}${s.file}`)
+          .then((r) => (r.ok ? (r.json() as Promise<{ entries?: SearchIndexEntry[] }>) : null))
+          .then((d) => (d && Array.isArray(d.entries) ? d.entries : null)),
+      ),
+    )
+    if (parts.some((p) => p === null)) return null
+    const { segments: _drop, ...rest } = doc
+    return { ...rest, entries: parts.flatMap((p) => p as SearchIndexEntry[]) }
+  } catch {
+    return null
+  }
+}
+
 /** 旁挂索引（public/search-index.json）一次性装载；失败即 null（fail-closed，不臆造） */
 export function loadSearchIndex(): Promise<SearchIndexDoc | null> {
   if (!cache) {
@@ -60,7 +83,12 @@ export function loadSearchIndex(): Promise<SearchIndexDoc | null> {
     cache =
       typeof fetch === 'function'
         ? fetch(`${base}search-index.json`)
-            .then((r) => (r.ok ? (r.json() as Promise<SearchIndexDoc>) : null))
+            .then((r) => (r.ok ? (r.json() as Promise<SearchIndexDoc & { segments?: { family: string; file: string; count: number }[] }>) : null))
+            .then((doc) => {
+              if (!doc) return null
+              if (Array.isArray(doc.entries)) return doc // 旧单件形态（V1）兼容
+              return loadFromManifest(doc)
+            })
             .catch(() => null)
         : Promise.resolve(null)
   }

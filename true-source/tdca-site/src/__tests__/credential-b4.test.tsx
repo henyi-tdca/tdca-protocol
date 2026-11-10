@@ -1,6 +1,6 @@
 // 批 4 凭证自证：四令牌明型、账户四分面、授权行权两段要素
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import App from '../App'
 import {
@@ -13,12 +13,14 @@ function jsonResponse(body: unknown, ok = true, status = 200) {
   return { ok, status, json: async () => body } as Response
 }
 
-function renderAt(path: string) {
-  return render(
+async function renderAt(path: string) {
+  const __r = render(
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
   )
+  await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
+  return __r
 }
 
 beforeEach(() => {
@@ -67,8 +69,8 @@ describe('批 4：四令牌明型（工程落法）', () => {
 })
 
 describe('批 4：账户四分面与授权行权两段要素', () => {
-  it('/me 追加呈现：四分面齐（账户读写/账户管理/事务执行/资产使用）', () => {
-    renderAt('/me')
+  it('/me 追加呈现：四分面齐（账户读写/账户管理/事务执行/资产使用）', async () => {
+    await renderAt('/me')
     expect(screen.getByTestId('cred-quadrants')).toBeInTheDocument()
     expect(screen.getByTestId('quad-access')).toBeInTheDocument()
     expect(screen.getByTestId('quad-identity')).toBeInTheDocument()
@@ -76,16 +78,16 @@ describe('批 4：账户四分面与授权行权两段要素', () => {
     expect(screen.getByTestId('quad-authcode')).toBeInTheDocument()
   })
 
-  it('待建者如实标：账户管理含「须强核身」「待建」；资产使用含「不等于授权本身」「待建」', () => {
-    renderAt('/me')
+  it('待建者如实标：账户管理含「须强核身」「待建」；资产使用含「不等于授权本身」「待建」', async () => {
+    await renderAt('/me')
     expect(screen.getByTestId('quad-identity-note').textContent).toContain('须强核身')
     expect(screen.getByTestId('quad-identity-note').textContent).toContain('待建')
     expect(screen.getByTestId('quad-authcode-note').textContent).toContain('不等于授权本身')
     expect(screen.getByTestId('quad-authcode-note').textContent).toContain('待建')
   })
 
-  it('事务执行面必现「由人类签发」；授权与行权两段要素（谁＋干什么）齐', () => {
-    renderAt('/me')
+  it('事务执行面必现「由人类签发」；授权与行权两段要素（谁＋干什么）齐', async () => {
+    await renderAt('/me')
     expect(screen.getByTestId('quad-execution-note').textContent).toContain('由人类签发')
     const panel = screen.getByTestId('authz-action-elements').textContent ?? ''
     expect(panel).toContain('谁')
@@ -94,8 +96,8 @@ describe('批 4：账户四分面与授权行权两段要素', () => {
     expect(panel).toContain('不得代签')
   })
 
-  it('协作流程页：环 7 必现「人类签署」，环 9 必现「人类签发」', () => {
-    renderAt('/process')
+  it('协作流程页：环 7 必现「人类签署」，环 9 必现「人类签发」', async () => {
+    await renderAt('/process')
     expect(screen.getByTestId('ring-7').textContent).toContain('人类签署')
     expect(screen.getByTestId('ring-7').textContent).toContain('不得代签')
     expect(screen.getByTestId('ring-9').textContent).toContain('人类签发')

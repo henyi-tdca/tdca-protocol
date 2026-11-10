@@ -66,12 +66,14 @@ function mockByUrl(routes: Record<string, unknown>) {
   }))
 }
 
-function renderAt(path: string) {
-  return render(
+async function renderAt(path: string) {
+  const __r = render(
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
   )
+  await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
+  return __r
 }
 
 beforeEach(() => { localStorage.clear(); sessionStorage.clear() })
@@ -87,8 +89,8 @@ describe('MIGRATE 批7：申诉面（me-appeal 直拷·薄占位口径）', () =
     expect(box.querySelector('form')).toBeNull()
   })
 
-  it('路由可达：App /me/appeal 渲染受理面', () => {
-    renderAt('/me/appeal')
+  it('路由可达：App /me/appeal 渲染受理面', async () => {
+    await renderAt('/me/appeal')
     expect(screen.getByTestId('me-appeal-placeholder')).toBeTruthy()
   })
 
@@ -143,14 +145,14 @@ describe('MIGRATE 批7：主链导轨挂载（仅主链在册实路由七页）'
     ['/authorization-registry', '合约备案'],
     ['/market', '配置权市场'],
     ['/audit', '审计透明'],
-  ])('导轨挂在 %s（主链环节在页）', (path) => {
-    renderAt(path)
+  ])('导轨挂在 %s（主链环节在页）', async (path) => {
+    await renderAt(path)
     expect(screen.getByTestId('main-chain-guide')).toBeTruthy()
   })
 
-  it('非主链页不挂导轨（⛔全站：/about、/search 对照）', () => {
+  it('非主链页不挂导轨（⛔全站：/about、/search 对照）', async () => {
     for (const path of ['/about', '/search']) {
-      const { container, unmount } = renderAt(path)
+      const { container, unmount } = await renderAt(path)
       expect(container.querySelector('[data-testid="main-chain-guide"]')).toBeNull()
       unmount()
     }
