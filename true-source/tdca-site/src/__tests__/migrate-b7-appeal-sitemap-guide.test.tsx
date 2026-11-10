@@ -120,7 +120,10 @@ describe('MIGRATE 批7：站点地图 ≡ 静态路由数（/ops* 私域不入�
     // /ops/manual 已被 /ops* 私域规则滤除（等价裁示 GSEQ-7743：→/ops/readme）
     // MYSPACE-PHASE1-001（L1SI207 §一.5）：/me/asset /me/registry /me/config /me/nca 为私域新建面
     // （匿名 PrivateGate 引导登录），照 /authorization/panel 受护面同口径零入图
-    const PROTECTED_FROM_SITEMAP = ['/authorization/panel', '/assets', '/me/asset', '/me/registry', '/me/config', '/me/nca']
+    // SEG2-BATCH2-001（L1SI208 REFIRE A/B 块）：/me/compile 区 2A 编译向导＋/me/privacy 数据四档
+    // 同为私域新建面（匿名 PrivateGate 零数据渲染），照同口径零入图；公开站点地图册亦不入
+    // （照 MYSPACE 受护面先例：/pages PAGE_META 不收匿名引导登录之私域面，发现性由 /me 控制台实链卡承担）
+    const PROTECTED_FROM_SITEMAP = ['/authorization/panel', '/assets', '/me/asset', '/me/registry', '/me/config', '/me/nca', '/me/compile', '/me/privacy']
     const ops = ROUTES.filter((p) => p === '/ops' || p.startsWith('/ops/'))
     const expected = ROUTES.filter((p) => !ops.includes(p) && !PROTECTED_FROM_SITEMAP.includes(p))
     expect(ops.length).toBeGreaterThan(0)

@@ -4,6 +4,9 @@
 // 约束矩阵: §三.3 每个操作/单据可关联存证号（区 5 可查）；H-2 数据同源（复用现端点
 //           GET /api/v1/me/nca——actor=本人强制过滤、action 精确过滤、分页，零新后端）；
 //           §一.5 匿名不可见（PrivateGate）
+//           SEG2-B2-REFIRE-001 B2 增补（AMEND-3 §三/§四）：权限边界举证六项×三时点块——
+//           数据从本端点行映射（action/artifact_path/sha256_8/ts），端点未载字段明标「本期无」，
+//           ⛔ 留空 ⛔ 臆造；原文 ⛔ 入证（只存哈希与摘要）
 // 口径: 列表＝时点／动作／对象／结果／存证号；筛选＝动作类（服务端）＋存证号/关键字（本页内）；
 //       导出＝当前筛选结果 CSV（浏览器本地下载，⛔整包索取、只出本人已载页）
 // =============================================================================
@@ -143,6 +146,65 @@ export function MeNcaPage() {
             <button type="button" data-testid="me-nca-next" disabled={page >= totalPages} onClick={() => setPage(page + 1)}
                     className="rounded border border-gray-300 px-2 py-1 disabled:opacity-40">下一页</button>
           </div>
+
+          {/* 权限边界举证（AMEND-3 §三/§四）：存证＝未越服务权限之证明；六项×三时点 */}
+          <section data-testid="nca-boundary-proof" className="mt-4 rounded-lg border border-gray-200 bg-white p-4">
+            <h3 className="mb-1 text-sm font-semibold text-gray-800">权限边界举证（AMEND-3：每次服务存证必含六项·三时点）</h3>
+            <p className="mb-2 text-[11px] text-gray-400">
+              读数映射自本页 GET /api/v1/me/nca 行；端点未载之字段如实标「本期无」（⛔ 留空 ⛔ 臆造）；原文 ⛔ 入证（只存哈希与摘要）。
+            </p>
+            <div className="overflow-x-auto">
+              <table data-testid="nca-proof-six" className="w-full min-w-[720px] text-left text-xs">
+                <thead>
+                  <tr className="border-b text-gray-500">
+                    <th className="py-1.5 pr-3">存证号</th>
+                    <th className="py-1.5 pr-3">①主体（工具／智能体 TDID）</th>
+                    <th className="py-1.5 pr-3">②授权依据（件号＋档位＋期限）</th>
+                    <th className="py-1.5 pr-3">③触发事由</th>
+                    <th className="py-1.5 pr-3">④访问范围（类·对象·时间窗）</th>
+                    <th className="py-1.5 pr-3">⑤比对结论（实际⊆授权？）</th>
+                    <th className="py-1.5 pr-3">⑥对象指纹</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr key={r.nca_id} data-testid={`nca-proof-${r.nca_id}`} className="border-b border-gray-100 align-top">
+                      <td className="py-1.5 pr-3 font-mono text-emerald-700">{r.nca_id}</td>
+                      <td className="py-1.5 pr-3 text-gray-400">本期无（端点未载主体字段）</td>
+                      <td className="py-1.5 pr-3 text-gray-400">本期无（端点未载授权件号／档位／期限）</td>
+                      <td className="py-1.5 pr-3 text-gray-700">{r.action || '—'}</td>
+                      <td className="py-1.5 pr-3 text-gray-700">
+                        对象：{r.artifact_path ?? '—'} · 时间窗：{r.ts?.slice(0, 19).replace('T', ' ') ?? '—'}（类数本期无）
+                      </td>
+                      <td className="py-1.5 pr-3 text-gray-400">本期无（端点未载比对结论）</td>
+                      <td className="py-1.5 pr-3 font-mono text-gray-700">{r.sha256_8 ?? '—'}</td>
+                    </tr>
+                  ))}
+                  {rows.length === 0 && (
+                    <tr><td colSpan={7} className="py-2 text-gray-400">本页无行（筛选结果为空）——举证读数与列表同口径。</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            {/* 三时点（§四） */}
+            <div data-testid="nca-proof-moments" className="mt-3 grid gap-2 sm:grid-cols-3">
+              <div className="rounded-md border border-gray-100 bg-gray-50 p-2">
+                <div className="font-medium text-gray-700">授权时 · 授权存证</div>
+                <div className="mt-0.5 text-[11px] text-gray-400">谁授·授什么·到何时·怎么撤＋档位：本期无（端点未载授权面字段，接账候后续令）。</div>
+              </div>
+              <div className="rounded-md border border-emerald-200 bg-emerald-50/50 p-2">
+                <div className="font-medium text-gray-700">执行时 · 逐次访问存证（六项齐）</div>
+                <div className="mt-0.5 text-[11px] text-gray-500">在册 {rows.length} 行（本页筛选结果），事由／对象／时间窗／指纹见上表。</div>
+              </div>
+              <div className="rounded-md border border-gray-100 bg-gray-50 p-2">
+                <div className="font-medium text-gray-700">结束时 · 汇总与回落存证</div>
+                <div className="mt-0.5 text-[11px] text-gray-400">共读几次·是否按约回落档位：本期无（端点未载回落字段，接账候后续令）。</div>
+              </div>
+            </div>
+            <p className="mt-2 text-[11px] text-gray-400">
+              越界处理四步（§五，越权必留痕）：①即时中止该访问（⛔ 继续执行）；②记录越界事实（第⑤项判「否」之具体项与差额）；③告知用户（哪一项越界·已中止·可选处理）；④报运维并登记（D-3 紧急激活档）。
+            </p>
+          </section>
         </>
       )}
     </PageShell>
