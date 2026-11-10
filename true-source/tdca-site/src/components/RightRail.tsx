@@ -33,7 +33,7 @@ const PRIVATE_NAV: { to: string; label: string }[] = [
 ]
 
 /** 「我的」卡（批1骨架）：登录态摘要 + 快捷入口；批2块一加入私域栏目（申诉端 /me/appeal 随块三） */
-function MeCard() {
+export function MeCard() {
   const { isAuthenticated, did } = useAuth()
   return (
     <section data-testid="me-card" className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
@@ -67,7 +67,7 @@ function MeCard() {
 }
 
 /** 站内 AI 助手会话框（批1骨架）：已接 /api/v1/intent（真 AI＋规则表兜底，fail-soft） */
-function AssistantPanel() {
+export function AssistantPanel() {
   const [input, setInput] = useState('')
   const [msgs, setMsgs] = useState<ChatMsg[]>([])
   const [busy, setBusy] = useState(false)
