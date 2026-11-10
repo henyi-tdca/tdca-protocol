@@ -112,8 +112,9 @@ export function LibraryPage() {
   const [err, setErr] = useState('')
 
   useEffect(() => {
-    void api.get<{ families: FamilyView[] }>('/api/v1/library/families').then((r) => {
-      if (r.ok) setFamilies(r.data.families)
+    void api.get<{ families?: FamilyView[]; items?: FamilyView[] }>('/api/v1/library/families').then((r) => {
+      // 匿名返 items／登录返 families（后端双口径），⛔ undefined 入态（crash 根因修复）
+      if (r.ok) setFamilies(r.data.families ?? r.data.items ?? [])
     })
   }, [])
 

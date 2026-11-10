@@ -24,16 +24,9 @@ interface QueueData {
   total: number
   note: string
 }
-interface HistoryItem {
-  index: number
-  nca_ref: string
-  agent: string
-  type: string
-  status: string
-  ts: string
-}
 interface HistoryData {
-  chain: HistoryItem[]
+  // ATTEST-SCRUB-001 公开视图口径（2026-11-06 起后端只出此形；旧 chain/nca_ref/agent 形已废）
+  events: { time: string; event_type: string; status: string; summary: string }[]
   total: number
   note: string
 }
@@ -326,24 +319,22 @@ export function AttestationHistoryPage() {
             <thead>
               <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
                 <th className="py-1.5">#</th>
-                <th className="py-1.5">NCA 引用</th>
-                <th className="py-1.5">智能体</th>
-                <th className="py-1.5">类型</th>
+                <th className="py-1.5">事件类型</th>
                 <th className="py-1.5">状态</th>
+                <th className="py-1.5">公开摘要</th>
                 <th className="py-1.5">时间</th>
               </tr>
             </thead>
             <tbody>
-              {data.chain.map((c) => (
-                <tr key={c.index} data-nca={c.nca_ref} data-status={c.status} className={`border-b border-gray-100 ${c.status === 'REJECTED' ? 'bg-red-50' : ''}`}>
-                  <td className="py-1.5 text-xs text-gray-400">{c.index}</td>
-                  <td className="py-1.5 font-mono text-xs text-blue-700">{c.nca_ref}</td>
-                  <td className="py-1.5 text-xs text-gray-600">{c.agent}</td>
-                  <td className="py-1.5 text-xs text-gray-600">{c.type}</td>
-                  <td className={`py-1.5 text-xs font-medium ${c.status === 'REJECTED' ? 'text-red-600' : 'text-emerald-600'}`}>
-                    {c.status}
+              {data.events.map((ev, i) => (
+                <tr key={i} data-status={ev.status} className={`border-b border-gray-100 ${ev.status === 'REJECTED' ? 'bg-red-50' : ''}`}>
+                  <td className="py-1.5 text-xs text-gray-400">{i + 1}</td>
+                  <td className="py-1.5 text-xs text-gray-600">{ev.event_type}</td>
+                  <td className={`py-1.5 text-xs font-medium ${ev.status === 'REJECTED' ? 'text-red-600' : 'text-emerald-600'}`}>
+                    {ev.status}
                   </td>
-                  <td className="py-1.5 font-mono text-[10px] text-gray-400">{c.ts}</td>
+                  <td className="py-1.5 text-xs text-gray-600">{ev.summary}</td>
+                  <td className="py-1.5 font-mono text-[10px] text-gray-400">{ev.time}</td>
                 </tr>
               ))}
             </tbody>

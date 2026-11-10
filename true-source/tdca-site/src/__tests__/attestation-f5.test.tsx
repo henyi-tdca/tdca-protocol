@@ -21,13 +21,14 @@ const QUEUE_PAYLOAD = {
   note: '动态确权待审队列',
 }
 
+// ATTEST-SCRUB-001 公开视图口径（events：time/event_type/status/summary，⛔ nca_ref/agent 不出）
 const HISTORY_PAYLOAD = {
-  chain: [
-    { index: 1, nca_ref: 'Meta-Attestation-NCA-001', agent: 'AGENT-007', type: 'META', status: 'SIGNED', ts: '2026-08-01T00:00:00Z' },
-    { index: 3, nca_ref: 'Dynamic-Attestation-002', agent: 'AGENT-007', type: 'COGNITION_EVOLUTION', status: 'REJECTED', ts: '2026-08-08T00:00:00Z' },
+  events: [
+    { time: '2026-08-01T00:00:00Z', event_type: '元函数确权', status: 'SIGNED', summary: '已通过' },
+    { time: '2026-08-08T00:00:00Z', event_type: '认知演化确权', status: 'REJECTED', summary: '已拒绝（留痕公开）' },
   ],
   total: 2,
-  note: '确权历史 NCA 链跨代',
+  note: '确权历史公开视图（时间／事件类型／公开状态／公开摘要）',
 }
 
 function mockApiMulti(pathMap: Record<string, unknown>, failFor?: string) {
@@ -125,7 +126,7 @@ describe('F5 确权中心', () => {
     mockApiMulti({ '/api/v1/attestation/history': HISTORY_PAYLOAD })
     render(<AttestationHistoryPage />)
     await waitFor(() => expect(screen.getByTestId('history-chain')).toBeInTheDocument())
-    expect(screen.getByText('Meta-Attestation-NCA-001')).toBeInTheDocument()
+    expect(screen.getByText('元函数确权')).toBeInTheDocument()
     const rejected = screen.getByTestId('history-chain').querySelector('[data-status="REJECTED"]')
     expect(rejected).toHaveClass('bg-red-50')
     expect(rejected).toHaveTextContent('REJECTED')
