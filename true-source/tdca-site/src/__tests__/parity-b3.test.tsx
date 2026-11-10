@@ -102,7 +102,7 @@ describe('追平批B3：/ops/me 运维我的（六栏只读）', () => {
 
 describe('追平批B3：站点地图入册（34→35，私域/受护 ⛔ 入册）', () => {
   it('三问向导入册（净名）；受护/私域两面 ⛔ 入册', () => {
-    expect(PAGE_META).toHaveLength(36) /* 追平批B4：+1（/verify） */
+    expect(PAGE_META).toHaveLength(38) /* 追平批B4：+1（/verify） */ /* SMALL2-001：+2（/me/compile /me/privacy 入册） */
     expect(PAGE_META.find((m) => m.path === '/start/three-questions')?.title).toBe('三问向导 · 贡献前自述')
     expect(ROUTE_PATHS).toContain('/start/three-questions')
     expect(ROUTE_PATHS).not.toContain('/authorization/panel')

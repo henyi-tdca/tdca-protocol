@@ -47,6 +47,8 @@ export const PAGE_META: PageMeta[] = [
   { path: '/nodes', title: '节点网络', layer: 'L0', dataSource: '在册条例 V1.0 与节点现状（node-net-data 同源唯一源）', permission: '公开', description: '业务端节点接入公开面：可视图只画已披露真节点；接口九类空壳禁止。' },
   { path: '/me/node', title: '场景节点管理区（私域三空间）', layer: 'L0', dataSource: '纯前端样例态（页内状态）；载入门禁 GET /api/v1/auth/me', permission: '须登录（谁的数据谁可见）', description: '私域三空间：负空间／沙盒出盒／正空间；六项硬核只读锁定（API 401/403 把守）。' },
   { path: '/me/node/net', title: '我的节点 · 条例与契约', layer: 'L0', dataSource: '在册条例 V1.0 与本机节点配置；载入门禁 GET /api/v1/auth/me', permission: '登录 DID', description: '私域节点面：我的节点配置与在册条例契约（API 401/403 把守）。' },
+  { path: '/me/compile', title: '编译转化（区 2A）', layer: 'L0', dataSource: '会话内草稿（骨架期，⛔入账）', permission: '须登录', description: '六步流水线：意图→目标函数→函数化→负空间→合约与协议→创建与发布；产物经负空间检查→沙盒验证→正空间，⛔跳步。' },
+  { path: '/me/privacy', title: '数据开放档位（区 2）', layer: 'L0', dataSource: '本机申明（骨架期）＋在册口径', permission: '须登录', description: '开放程度由用户选择（默认最低档）；档位不足必告知三选项，不静默失败。' },
   { path: '/disclosure', title: '节点规则披露登记簿 · 公域可查', layer: 'L0', dataSource: '披露登记簿（仓内单源，只读渲染）', permission: '公开（匿名可读 · 只读）', description: '节点规则对外披露面：只登记不审批，三式查阅，形状不合 fail-closed。' },
   { path: '/lab', title: '模拟演练区', layer: 'L0', dataSource: '纯前端演练值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '五张模拟卡＋三段剧本＋一张流水表：八场景逐项走一遍，积分面额照既定设计口径（演练值不入账不留存）。' },
   { path: '/demo', title: '体验期与模拟演示', layer: 'L0', dataSource: '纯前端演示值（页内状态）；零接口调用、零后端写入', permission: '公开', description: '体验期有什么、演示区在演什么、什么是真什么是假，一页讲清（演示值非真实交易）。' },
@@ -84,7 +86,7 @@ export function PagesIndexPage() {
   return (
     <PageShell
       title="站点地图"
-      dataSource="静态元数据（PAGE_META 36 条）"
+      dataSource="静态元数据（PAGE_META 38 条）"
       permission="公开"
       description="本站各面索引：每面标注数据源与访问权限；未收录面不登记。"
     >

@@ -208,7 +208,7 @@ describe('用组批：站点地图入册＋检索索引豁免', () => {
   it('PAGE_META 26 条含两面（题名照页头原文）', () => {
     const up = PAGE_META.find((m) => m.path === '/use/upload')
     const ag = PAGE_META.find((m) => m.path === '/use/agent')
-    expect(PAGE_META).toHaveLength(36) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 追平批B4：+1（/verify） */
+    expect(PAGE_META).toHaveLength(38) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 追平批B4：+1（/verify） */ /* SMALL2-001：+2（/me/compile /me/privacy 入册） */
     expect(up?.title).toBe('交素材（上传一件）')
     expect(ag?.title).toBe('代办登记（机器人只跑腿）')
     expect(ROUTE_PATHS).toContain('/use/upload')
