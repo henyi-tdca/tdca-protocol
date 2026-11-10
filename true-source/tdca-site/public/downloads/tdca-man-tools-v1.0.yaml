@@ -1,0 +1,227 @@
+contract: tools-manual/2.0
+doc_id: TDCA-MAN-TOOLS-001
+version: V0.2-DRAFT
+title: TDCA 官方工具能力声明与使用手册（机读版）
+status: DRAFT
+effective: false
+dual_version_of: TDCA-MAN-TOOLS-001（人读版）
+machine_consumer: true
+channel: 智能体通道
+generated_at: '2026-11-05'
+positioning: >
+  本件不是人读版的翻译件，而是供智能体通道消费的能力声明：
+  智能体在下载/加载前即可程序化判断「这个工具做什么用、我该不该用、怎么调」。
+
+scope:
+  purpose: 官方工具九包之能力声明与使用说明
+  audiences: [human, agent]
+  not_scope:
+    - 制度条文本身（另在册）
+    - 内部运维规程（不入公域）
+
+decision_fields:
+  description: 智能体据以下字段判断「下载后做什么用」
+  required: [purpose, capabilities, when_to_use, when_not_to_use, entrypoints, safety]
+
+verify:
+  method: sha256 前 16 位与卡面比对
+  commands:
+    linux: "sha256sum <pkg> | cut -c1-16 | tr 'a-f' 'A-F'"
+    macos: "shasum -a 256 <pkg> | cut -c1-16"
+    windows: "(Get-FileHash <pkg> -Algorithm SHA256).Hash.Substring(0,16)"
+  on_mismatch: 停止使用并回报
+
+packages:
+  - id: A-2
+    name: tdca-microtax
+    one_line: 微交付税收计算（调度税／交易费／净额）
+    purpose: 按在册参数计算一次微交付的税负与净额
+    capabilities: [tax.schedule, tax.transaction_fee, tax.net_amount]
+    when_to_use: [需要按在册税率算单笔微交付税负, 需要核对税明细]
+    when_not_to_use: [法定税务申报, 真实资金划拨, 跨场景聚合计税]
+    entrypoints:
+      - {type: python, target: "microtax.compute_taxes", call: "compute_taxes(...) -> {schedule, fee, total, net}"}
+      - {type: cli, target: "python -m microtax --help"}
+    inputs: {amount: number, scene: string, tax_base: number}
+    outputs: {schedule: number, fee: number, total: number, net: number}
+    safety: [B-2, B-4]
+    deps: [stdlib, same_env_as:A-3]
+    online: true
+    bytes: 64278
+    sha256_16: F830375CC327BDBE
+
+  - id: A-3
+    name: tdca-nsfl-compiler
+    one_line: 负空间语言词法与编译
+    purpose: 把负空间声明编译为可机验的词法与结构
+    capabilities: [nsfl.lex, nsfl.compile]
+    when_to_use: [需要校验负空间表达是否合式, 需要把声明转机读结构]
+    when_not_to_use: [替代人工法律判断]
+    entrypoints:
+      - {type: cli, target: "python -m nsfl_compiler <源文件>"}
+    inputs: {source: text}
+    outputs: {tokens: list, ok: bool}
+    safety: [B-3, B-5]
+    deps: [stdlib]
+    online: true
+    bytes: 54989
+    sha256_16: 333C8BCB12C026CC
+
+  - id: A-4
+    name: tdca-cert-tool
+    one_line: 存证自检工具
+    purpose: 对本机存证做结构与哈希自检
+    capabilities: [attest.selfcheck, attest.endpoint_probe]
+    when_to_use: [需要确认存证件未被改写, 需要探端点可达]
+    when_not_to_use: [替代正式审计]
+    entrypoints:
+      - {type: cli, target: "python cert_l1.py --help"}
+    inputs: {path: string}
+    outputs: {ok: bool, detail: string}
+    safety: [B-3]
+    deps: [stdlib]
+    online: true
+    bytes: 8541
+    sha256_16: ABB847F4CECAB262
+
+  - id: A-5
+    name: tdca-call-rules
+    one_line: 商业调用规则引擎（判定／税明细）
+    purpose: 判定一次商业调用是否许可，并给出税明细
+    capabilities: [rules.evaluate, rules.tax_detail, rules.verdict]
+    when_to_use: [需要判定调用方在某场景的调用是否合规, 需要模拟态税明细]
+    when_not_to_use: [真实结算与划拨, 替代合同审查]
+    entrypoints:
+      - {type: cli, target: "python engine/call_rules_engine.py --caller u1 --scene s1 --value 1000 --tax 200"}
+    inputs: {caller: string, scene: string, value: number, tax: number}
+    outputs: {verdict: string, tax_detail: object, simulated: true}
+    safety: [B-2, B-3]
+    deps: [stdlib]
+    online: true
+    bytes: 12128
+    sha256_16: E8A80D05DC9D6456
+
+  - id: A-1
+    name: tdca-govtools
+    one_line: 治理工具七件（链验／纪律核／台账／日巡／周深核／运维日报／封签）
+    purpose: 对自建账本与信箱做七类治理核查
+    capabilities: [gov.chain_verify, gov.discipline_check, gov.mailbox_ledger, gov.daily_patrol, gov.weekly_deep_check, gov.ops_daily, gov.deliver_seal]
+    when_to_use: [需要核存证链完整性, 需要对账信箱, 需要出运维日报]
+    when_not_to_use: [缺少本体系格式的账本, 期望开箱即用他人数据]
+    entrypoints:
+      - {type: cli, target: "python _nca_chain_verify_v1.py --quiet"}
+      - {type: cli, target: "python _mailbox_ledger_v1.py --check"}
+      - {type: cli, target: "python _ops_daily_v1.py --mode morning"}
+    inputs: {nca_dir: path}
+    outputs: {verdict: string, exit_code: "0|1|2"}
+    safety: [B-5, B-6]
+    deps: [stdlib, PyYAML]
+    online: true
+    bytes: 35668
+    sha256_16: A1716BF9CD8A71C7
+
+  - id: A-6
+    name: tdca-legal-agent
+    one_line: 法务智能体（冲突检测／负空间过滤）
+    purpose: 对法律素材做冲突检测与负空间过滤
+    capabilities: [legal.conflict_detect, legal.nsfl_filter, legal.kb_query]
+    when_to_use: [需要检查条文冲突, 需要过滤负空间表达]
+    when_not_to_use: [出具法律意见, 替代律师]
+    entrypoints:
+      - {type: python, target: "legal_agent.interface.LegalAgentInterface"}
+    inputs: {text: string}
+    outputs: {conflicts: list, filtered: string}
+    safety: [B-3, B-5]
+    deps: [stdlib]
+    online: true
+    bytes: 29135
+    sha256_16: 5AFC6A786257ED71
+
+  - id: MB-SPEC
+    name: tdca-mailbox-spec
+    one_line: 信箱协作协议规范（纯文档）
+    purpose: 定义跨终端异构智能体的任务协作协议
+    capabilities: [mailbox.protocol_spec]
+    when_to_use: [需要实现或对接信箱协作协议]
+    when_not_to_use: [需要可执行程序（用 refimpl）]
+    entrypoints:
+      - {type: doc, target: "README.md"}
+    inputs: {}
+    outputs: {}
+    safety: [B-1]
+    deps: []
+    online: false
+    bytes: 25662
+    sha256_16: 3E7677933BDD75A5
+
+  - id: MB-REFIMPL
+    name: tdca-mailbox-refimpl
+    one_line: 信箱协作参考实现（五件）
+    purpose: 台账／扫描／投放／认领／归位五件参考实现
+    capabilities: [mailbox.ledger, mailbox.scan, mailbox.drop, mailbox.ack, mailbox.move]
+    when_to_use: [需要在本机或私有部署运行信箱协作]
+    when_not_to_use: [期望全自动托管（现为半自动）]
+    entrypoints:
+      - {type: cli, target: "python _mailbox_ledger_v1.py --check --mailbox-root ./mailbox"}
+      - {type: cli, target: "python _mailbox_drop_v1.py --file x.md --to TO-EXEC --mailbox-root ./mailbox"}
+    inputs: {mailbox_root: path}
+    outputs: {state: string, exit_code: "0|1|2"}
+    safety: [B-1, B-6]
+    deps: [stdlib]
+    online: false
+    bytes: 19630
+    sha256_16: B0FE22EB52FF2DBC
+
+  - id: MB-BUNDLE
+    name: tdca-mailbox-bundle
+    one_line: 信箱协作一键起盘
+    purpose: 一键建五夹、写样例、跑自测并打印态分布
+    capabilities: [mailbox.init, mailbox.selftest]
+    when_to_use: [首次部署需要快速验证协议可用]
+    when_not_to_use: [生产数据初建（须人工核）]
+    entrypoints:
+      - {type: cli, target: "python _mailbox_init_v1.py --root ./mailbox"}
+    inputs: {root: path}
+    outputs: {dirs: list, selftest: object}
+    safety: [B-1]
+    deps: [stdlib]
+    online: false
+    bytes: 7383
+    sha256_16: 834DA8BB322D6C50
+
+boundaries:
+  - {id: B-1, rule: 信箱协作为半自动档；投放由人决定，全自动未上线}
+  - {id: B-2, rule: 工具不承载真实资金流；分润为模拟态记账}
+  - {id: B-3, rule: 输出不得作司法裁决或单独处分依据}
+  - {id: B-4, rule: 税收计算不替代法定申报}
+  - {id: B-5, rule: 治理七件面向本体系数据格式，异构环境须自建数据}
+  - {id: B-6, rule: 全部本地运行，不上传任何数据到外部}
+
+exit_codes:
+  '0': 通过
+  '1': 有差
+  '2': 读数不可得
+
+troubleshooting:
+  - {symptom: "ModuleNotFoundError: yaml", cause: A-1 缺 PyYAML, fix: "pip install pyyaml 或使用信箱 JSON 后端"}
+  - {symptom: 退出码 2, cause: 读数不可得（数据面不在）, fix: 检查数据目录或先跑初始化}
+  - {symptom: A-2 导入失败, cause: 未与 A-3 同环境, fix: 两包同置同一 venv}
+  - {symptom: 信箱认领失败, cause: 使用了件头自报哈希, fix: 须用整件原始字节哈希}
+  - {symptom: 中文乱码, cause: 终端非 UTF-8, fix: 设 PYTHONUTF8=1 或改代码页}
+
+license:
+  spdx: Apache-2.0
+  disclaimer: 按现状提供，无明示或默示担保
+  profit_note: 分润模拟态记账，不承诺现金兑付
+  endorsement_note: 不声称与任何上游项目存在背书关系
+
+machine_assertions:
+  - {id: MA-1, claim: packages 项数九, expect: 9}
+  - {id: MA-2, claim: boundaries 条数六, expect: 6}
+  - {id: MA-3, claim: 每包载 deps 与 sha256_16, expect: true}
+  - {id: MA-4, claim: 人读版与机读版包名集合一致, expect: true}
+  - {id: MA-5, claim: 人读版六模式内部编号零命中, expect: 0}
+  - {id: MA-6, claim: 每包 capabilities 非空（智能体可判用途）, expect: true}
+  - {id: MA-7, claim: 每包 when_to_use 与 when_not_to_use 非空, expect: true}
+  - {id: MA-8, claim: 每包 entrypoints 非空（可调用面）, expect: true}
+  - {id: MA-9, claim: 每包 safety 所引边界皆在 boundaries 中存在, expect: true}

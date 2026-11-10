@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDCA 微交付税收试算（A-2 · 模拟态）</title>
+<style>
+  body { font-family: system-ui, "Segoe UI", "Microsoft YaHei", sans-serif;
+         max-width: 640px; margin: 2rem auto; padding: 0 1rem; color: #1a1a2e; }
+  h1 { font-size: 1.3rem; } h2 { font-size: 1.05rem; margin-top: 1.6rem; }
+  label { display: block; margin: .7rem 0 .25rem; font-size: .9rem; }
+  input, select { width: 100%; padding: .45rem; border: 1px solid #bbb; border-radius: 6px;
+                  box-sizing: border-box; font-size: 1rem; }
+  button { margin-top: 1rem; padding: .55rem 1.4rem; font-size: 1rem; border: 0;
+           border-radius: 6px; background: #2456a6; color: #fff; cursor: pointer; }
+  button:hover { background: #1a4384; }
+  table { border-collapse: collapse; width: 100%; margin-top: 1rem; font-size: .95rem; }
+  td, th { border: 1px solid #ddd; padding: .4rem .6rem; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  .tag { display: inline-block; padding: .15rem .6rem; border-radius: 999px; font-size: .8rem; }
+  .warn { background: #fff4e0; color: #8a5a00; }
+  .ok   { background: #e6f6ec; color: #146c34; }
+  .bad  { background: #fdeaea; color: #a11; }
+  .note { font-size: .82rem; color: #666; margin-top: .3rem; }
+  .banner { background: #fff4e0; border: 1px solid #e8c477; border-radius: 8px;
+            padding: .6rem .9rem; font-size: .88rem; margin-bottom: 1.2rem; }
+</style>
+</head>
+<body>
+<h1>TDCA 微交付税收试算 <span class="tag warn">模拟态 D-011</span> <span class="tag warn">只读演示</span></h1>
+
+<div class="banner">
+  本页为 A-2 货架包「微交付税收」的<b>纯前端只读试算</b>：输入参数即时在本地浏览器计算，
+  <b>不落库、不计费、不存凭据、不发起任何网络请求</b>。
+  计算口径复刻 <code>microtax/event_tax_calculator.py</code>（Decimal ROUND_HALF_UP，税率取自 CALL-001 签批默认值）。
+</div>
+
+<label>交付经济价值 gross（元，≥ 0）
+  <input id="value" type="number" min="0" step="0.01" value="1000.00">
+</label>
+
+<label>税收事件分档
+  <select id="event">
+    <option value="config_right_call">配置权调用 → 调度税</option>
+    <option value="nca_compound">NCA 化合 → 调度税 + 版税</option>
+    <option value="skill_invocation" selected>Skill 调用 → 调度税 + 交易费</option>
+    <option value="cross_domain_transfer">跨域转让 → 调度税 + 交易费</option>
+    <option value="escrow_release">托管释放 → 交易费</option>
+    <option value="negative_space_fuse">负空间熔断 → 税额归零</option>
+  </select>
+</label>
+
+<label>进项税贡献事实 tax_in（元，默认 0）
+  <input id="taxIn" type="number" min="0" step="0.01" value="0">
+</label>
+
+<label>出项税贡献事实 tax_out（元，默认 0）
+  <input id="taxOut" type="number" min="0" step="0.01" value="0">
+</label>
+
+<button onclick="calc()">试算</button>
+<p class="note">负价值输入将按 NSFL-TRIGGER 拒绝（与引擎行为一致）。</p>
+
+<h2>试算结果 T(y_t)</h2>
+<table id="out" hidden>
+  <tr><th>项目</th><th>金额（元）</th></tr>
+  <tr><td>调度税（2%）</td><td id="rDispatch"></td></tr>
+  <tr><td>版税（7.5%）</td><td id="rRoyalty"></td></tr>
+  <tr><td>交易费（0.75%）</td><td id="rTrade"></td></tr>
+  <tr><td><b>应税合计 T(y_t)</b></td><td id="rTotal"></td></tr>
+  <tr><td>税后净额</td><td id="rNet"></td></tr>
+  <tr><td>MOU（进项 + 出项）</td><td id="rMou"></td></tr>
+  <tr><td>MOU 硬验证</td><td id="rMouV"></td></tr>
+</table>
+<p id="msg"></p>
+
+<script>
+// 事件分档 → 税种组合（复刻 EVENT_TAX_COMPONENTS）
+const COMPONENTS = {
+  config_right_call:      ["dispatch_tax"],
+  nca_compound:           ["dispatch_tax", "royalty"],
+  skill_invocation:       ["dispatch_tax", "trade_fee"],
+  cross_domain_transfer:  ["dispatch_tax", "trade_fee"],
+  escrow_release:         ["trade_fee"],
+  negative_space_fuse:    [],
+};
+// CALL-001 签批默认值（模拟态 D-011）
+const RATES = { dispatch_tax: 0.02, royalty: 0.075, trade_fee: 0.0075 };
+
+// Decimal 两位 ROUND_HALF_UP 复刻
+function q2(x) {
+  const n = Math.round((x + Number.EPSILON) * 100) / 100;
+  return n.toFixed(2);
+}
+
+function calc() {
+  const msg = document.getElementById("msg");
+  const value = parseFloat(document.getElementById("value").value);
+  if (isNaN(value) || value < 0) {
+    msg.textContent = "[NSFL-TRIGGER] 交付价值为负或非法，拒绝计税";
+    document.getElementById("out").hidden = true;
+    return;
+  }
+  const event = document.getElementById("event").value;
+  const taxIn = parseFloat(document.getElementById("taxIn").value) || 0;
+  const taxOut = parseFloat(document.getElementById("taxOut").value) || 0;
+  const comps = COMPONENTS[event] || [];
+
+  let dispatch = comps.includes("dispatch_tax") ? value * RATES.dispatch_tax : 0;
+  let royalty  = comps.includes("royalty")       ? value * RATES.royalty       : 0;
+  let trade    = comps.includes("trade_fee")     ? value * RATES.trade_fee     : 0;
+  let total = dispatch + royalty + trade;
+  const mou = taxIn + taxOut;
+
+  let mouVerified;
+  if (event === "negative_space_fuse") {
+    total = 0; dispatch = 0; royalty = 0; trade = 0; mouVerified = false;
+  } else {
+    mouVerified = (total <= mou) && (mou > 0);
+  }
+  const net = value - total;
+
+  document.getElementById("rDispatch").textContent = q2(dispatch);
+  document.getElementById("rRoyalty").textContent = q2(royalty);
+  document.getElementById("rTrade").textContent = q2(trade);
+  document.getElementById("rTotal").textContent = q2(total);
+  document.getElementById("rNet").textContent = q2(net);
+  document.getElementById("rMou").textContent = q2(mou);
+  const vTag = mouVerified ? '<span class="tag ok">PASS</span>'
+                           : '<span class="tag bad">FAIL</span>';
+  document.getElementById("rMouV").innerHTML = vTag;
+  document.getElementById("out").hidden = false;
+  msg.textContent = "";
+}
+
+calc();
+</script>
+
+<p class="note">
+  税率与分档口径来源：CALL-001 签批默认值（调度税 2% / 版税 7.5% / 交易费 0.75%，模拟态）。
+  本页结果仅为模拟计算演示，不构成真实配置权执行路径或税务意见。
+  状态：<b>只读演示页</b>（模拟计算，不构成真实配置权执行路径）。
+</p>
+</body>
+</html>
