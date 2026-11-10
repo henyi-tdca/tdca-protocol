@@ -71,18 +71,15 @@ export default function DocsHome() {
         <strong>受邀进入：</strong>建设期站点凭邀请码进入。邀请码凭人工发放——按 TDCA 管理方 指令由系统生成，由 TDCA 管理方 转交受邀者；到期失效，不回收。
       </p>
       <div className="mt-6 rounded-md border px-4 py-3 text-sm">
-        <strong>五族说明</strong>
+        <strong>本库两族</strong>
         <ul className="mt-1 space-y-1 text-muted-foreground">
-          <li><strong>白皮书</strong>：制度与技术的总体主张与论证。</li>
-          <li><strong>论文</strong>：专题论文与研究稿。</li>
-          <li><strong>制度规范</strong>：生效中的条例、办法、协议与登记规则。</li>
-          <li><strong>素材库</strong>：思维协议与工程素材的公开集。</li>
-          <li><strong>周刊</strong>：按周发布的动态与观察。</li>
+          <li><strong>制度</strong>：生效中的条例、办法、协议与登记规则。</li>
+          <li><strong>帮助</strong>：说明与示例。</li>
         </ul>
+        <p className="mt-2 text-muted-foreground">
+          ⭐ 要照着办的进文档库；要读懂为什么的进知识库 ⭐ —— 白皮书／论文／素材库／周刊请走「知识库」（/library，路由不变）。
+        </p>
       </div>
-      <p className="mt-4 rounded-md border bg-muted/50 px-4 py-3 text-sm">
-        <strong>想了解「是什么」</strong>（概念、理论与术语），请到「知识库」；<strong>想查「怎么做」</strong>（制度、办法与操作规则），留在本页。
-      </p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {FAMILIES.map((f) => (
           <Link key={f.key} to={`/docs/${f.key}`} className="rounded-lg border p-5 hover:bg-muted">

@@ -76,7 +76,7 @@ export function AttestationOverviewPage() {
         {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
         {status === 'fail' && (
           <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="attest-overview-fail">
-            [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
+            [fail-closed] 后端不可用、NCA 水印缺失，或您尚未登录——本面须登录（DID + HUF）后使用；未登录时拒绝渲染属正常行为，非故障。
           </p>
         )}
         {status === 'ok' && data && (
@@ -225,7 +225,7 @@ export function AttestationDynamicPage() {
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="dynamic-fail">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
+          [fail-closed] 后端不可用、NCA 水印缺失，或您尚未登录——本面须登录（DID + HUF）后使用；未登录时拒绝渲染属正常行为，非故障。
         </p>
       )}
       {status === 'ok' && data && (
@@ -306,7 +306,7 @@ export function AttestationHistoryPage() {
       {status === 'loading' && <p className="text-sm text-gray-400">加载中（NCA 水印校验）…</p>}
       {status === 'fail' && (
         <p className="rounded bg-red-50 p-3 text-sm text-red-600" data-testid="history-fail">
-          [fail-closed] 后端不可用或 NCA 水印缺失，拒绝渲染
+          [fail-closed] 后端不可用、NCA 水印缺失，或您尚未登录——本面须登录（DID + HUF）后使用；未登录时拒绝渲染属正常行为，非故障。
         </p>
       )}
       {status === 'ok' && data && (
