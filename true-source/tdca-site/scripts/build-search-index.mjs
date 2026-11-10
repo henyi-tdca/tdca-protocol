@@ -14,7 +14,7 @@
 //   其余族照旧版 H1/display_name 解析——旧索引 20 条编号残留题名全在制度族，此改清零。
 // SPDX-License-Identifier: TDCA-Internal
 // =============================================================================
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -495,10 +495,29 @@ if (residual.length > 0) {
 const counts = {}
 for (const f of FAMILY_ORDER) counts[f] = entries.filter((e) => e.family === f).length
 
+// FRONTEND-PERF-001（L1SI207）：998KB 单件索引改「清单＋按族分段」按需装载。
+// search-index.json 退为清单（元数据＋分段目录，无 entries）；条目按族落 search-index.seg.*.json，
+// 素材族 290 条过大再对半两段；检索逻辑一字未改（装载侧合并后同源喂 searchEntries）。
+const SEG_FAMILY_KEY = { 制度: 'regulation', 白皮书: 'whitepaper', 论文: 'paper', 素材: 'material', 术语: 'term', 栏目: 'column' }
+const SEG_PARTS = { 素材: 2 } // 最大族对半分段，单段 ≤ 全量 1/4
+
+const segments = []
+for (const f of FAMILY_ORDER) {
+  const list = entries.filter((e) => e.family === f)
+  if (list.length === 0) continue
+  const parts = SEG_PARTS[f] ?? 1
+  for (let i = 0; i < parts; i++) {
+    const slice = parts === 1 ? list : list.slice(Math.round((list.length * i) / parts), Math.round((list.length * (i + 1)) / parts))
+    if (slice.length === 0) continue
+    const file = `search-index.seg.${SEG_FAMILY_KEY[f]}${parts > 1 ? `-${i + 1}` : ''}.json`
+    segments.push({ family: f, file, count: slice.length })
+  }
+}
+
 const doc = {
-  spec: 'TDCA-SEARCH-INDEX-V1',
+  spec: 'TDCA-SEARCH-INDEX-V2',
   generated_at: new Date().toISOString(),
-  generated_by: 'tdca-site scripts/build-search-index.mjs（构建时静态生成）',
+  generated_by: 'tdca-site scripts/build-search-index.mjs（构建时静态生成·清单＋分段）',
   sources: {
     public_docs: 'gateway/public_docs_ops.py 在册公开清单（唯一权威源，只读）',
     terms: `docs/terms 术语快照（151 条，exported_at ${termsExportedAt}）`,
@@ -507,12 +526,23 @@ const doc = {
   counts,
   total: entries.length,
   missing_exempt: exempted.map((s) => s.split(' :: ')[0]),
-  entries,
+  segments,
 }
 
 mkdirSync(OUT_DIR, { recursive: true })
+// 清旧分段，防族缩后残留死段
+for (const old of readdirSync(OUT_DIR).filter((n) => n.startsWith('search-index.seg.') && n.endsWith('.json'))) {
+  rmSync(join(OUT_DIR, old), { force: true })
+}
 writeFileSync(OUT, `${JSON.stringify(doc)}\n`, 'utf8')
-console.log(`✓ public/search-index.json 生成：共 ${entries.length} 条`)
+for (const seg of segments) {
+  const segEntries = entries.filter((e) => e.family === seg.family)
+  const parts = segments.filter((s) => s.family === seg.family)
+  const idx = parts.indexOf(seg)
+  const slice = parts.length === 1 ? segEntries : segEntries.slice(Math.round((segEntries.length * idx) / parts.length), Math.round((segEntries.length * (idx + 1)) / parts.length))
+  writeFileSync(join(OUT_DIR, seg.file), `${JSON.stringify({ spec: 'TDCA-SEARCH-INDEX-V2-SEG', family: seg.family, entries: slice })}\n`, 'utf8')
+}
+console.log(`✓ public/search-index.json 清单＋${segments.length} 分段生成：共 ${entries.length} 条`)
 for (const f of FAMILY_ORDER) console.log(`  ${f}: ${counts[f]}`)
 console.log(`  栏目页来源: ${columns.length} 项静态路由`)
 if (exempted.length > 0) {

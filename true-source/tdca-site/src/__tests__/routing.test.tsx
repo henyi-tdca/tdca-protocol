@@ -4,7 +4,7 @@
 // 约束矩阵: FRAMEWORK-001 §四 + REV-002（15 路由）
 // =============================================================================
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import App from '@/App'
 import { PAGE_META } from '@/pages/PagesIndex'
@@ -31,16 +31,18 @@ beforeEach(() => {
   localStorage.setItem('tdca_auth_token', 'TDCA-CRT-test')
 })
 
-function renderAt(path: string) {
-  return render(
+async function renderAt(path: string) {
+  const __r = render(
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
   )
+  await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
+  return __r
 }
 
 describe('F0-A2 路由骨架（15 路由 + 404）', () => {
-  it('在册 11 面全部可达且各面渲染标题（册题权威在站点地图逐字呈现）', () => {
+  it('在册 11 面全部可达且各面渲染标题（册题权威在站点地图逐字呈现）', async () => {
     // 对齐令 SITE-TESTFIX-001（甲组）：缩面为有意——PagesIndex 并轨注记自陈「本批四面＋新版既有四面」；
     // 缔约申请页已撤（ACCESS-FIX-001-AMEND-1 交付二：注册已含缔约同意）。旧期望 32 系滞后。
     // MIGRATE 批1（L1SI206）追加 /search 检索面：8→9。
@@ -49,35 +51,35 @@ describe('F0-A2 路由骨架（15 路由 + 404）', () => {
     // MIGRATE 批4（L1SI206）追加 /lab 与 /demo 演练实验两面：20→22。
     expect(PAGE_META).toHaveLength(36) /* 追平批B1：+4（/rules /help /negativespace /academy/outline） */ /* 用组批：+2（/use/upload /use/agent） */ /* 追平批B2：+4（/five-orders /official-assets /status /terms） */ /* 追平批B3：+1（/start/three-questions） */ /* 追平批B4：+1（/verify） */
     for (const meta of PAGE_META) {
-      const { unmount } = renderAt(meta.path)
+      const { unmount } = await renderAt(meta.path)
       // 逐面可达且渲染至少一枚标题（壳题以页面实读为准：册题与壳题注记差异存在——
       // 如 册题「审查」对页题「缔约审核」、册题「注册（缔约）」对页题「注册（人类账号）」，不判错）
       expect(screen.getAllByRole('heading').length).toBeGreaterThan(0)
       unmount()
     }
     // 册题权威：站点地图逐字呈现 8 条登记标题
-    renderAt('/pages')
+    await renderAt('/pages')
     for (const meta of PAGE_META) {
       expect(screen.getAllByText((_, el) => el?.textContent === meta.title).length).toBeGreaterThan(0)
     }
-  })
+  }, 60000)
 
-  it('未知路由 404 兜底', () => {
-    renderAt('/no-such-page-xyz')
+  it('未知路由 404 兜底', async () => {
+    await renderAt('/no-such-page-xyz')
     expect(screen.getByRole('heading', { name: /404 · 路由未找到/ })).toBeInTheDocument()
   })
 
-  it('确权子路由（/attestation/meta /dynamic /history）可达', () => {
+  it('确权子路由（/attestation/meta /dynamic /history）可达', async () => {
     for (const p of ['/attestation/meta', '/attestation/dynamic', '/attestation/history']) {
-      const { unmount } = renderAt(p)
+      const { unmount } = await renderAt(p)
       expect(screen.getByTestId('page-shell')).toBeInTheDocument()
       unmount()
     }
-  })
+  }, 30000)
 
-  it('应用壳常驻：导航在每个路由渲染（HUF Banner 与层级指示器已随 FRONTEND-MERGE 壳改撤出，见 PagesIndex 并轨注记「层级指示器未随迁」）', () => {
+  it('应用壳常驻：导航在每个路由渲染（HUF Banner 与层级指示器已随 FRONTEND-MERGE 壳改撤出，见 PagesIndex 并轨注记「层级指示器未随迁」）', async () => {
     for (const p of ['/tax', '/studio', '/overview']) {
-      const { unmount } = renderAt(p)
+      const { unmount } = await renderAt(p)
       expect(screen.getByTestId('app-nav')).toBeInTheDocument()
       unmount()
     }
@@ -91,11 +93,11 @@ describe('F0-A2 路由骨架（15 路由 + 404）', () => {
     expect(PAGE_META.every((m) => m.layer === 'L0')).toBe(true)
   })
 
-  it('/ownership 与 /studio 可达且渲染对应面（壳直挂，不设登录门槛——照 FRONTEND-MERGE 批3 核可口径）', () => {
-    const r1 = renderAt('/ownership')
+  it('/ownership 与 /studio 可达且渲染对应面（壳直挂，不设登录门槛——照 FRONTEND-MERGE 批3 核可口径）', async () => {
+    const r1 = await renderAt('/ownership')
     expect(screen.getByTestId('page-shell')).toBeInTheDocument()
     r1.unmount()
-    const r2 = renderAt('/studio')
+    const r2 = await renderAt('/studio')
     expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
     r2.unmount()
   })

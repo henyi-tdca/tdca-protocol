@@ -29,24 +29,26 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function renderAt(path: string) {
-  return render(
+async function renderAt(path: string) {
+  const __r = render(
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
   )
+  await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
+  return __r
 }
 
 describe('F-2 /auth 鉴权', () => {
-  it('/auth 登录页可达（DID 选择 + token 输入）', () => {
-    renderAt('/auth')
+  it('/auth 登录页可达（DID 选择 + token 输入）', async () => {
+    await renderAt('/auth')
     expect(screen.getByTestId('auth-form')).toBeInTheDocument()
     expect(screen.getByTestId('auth-role-H')).toHaveAttribute('data-active', 'true')
     expect(screen.getByTestId('auth-token')).toHaveValue('TDCA-CRT-demo-2026')
   })
 
-  it('忘记密码指引（件B0 零后端文案）：登录页可见「联系站点管理员人工重置」口径与管理员邮箱', () => {
-    renderAt('/auth')
+  it('忘记密码指引（件B0 零后端文案）：登录页可见「联系站点管理员人工重置」口径与管理员邮箱', async () => {
+    await renderAt('/auth')
     const hint = screen.getByTestId('auth-forgot-hint')
     expect(hint.textContent).toContain('无自助重置通道')
     expect(hint.textContent).toContain('联系站点管理员人工重置')
@@ -54,8 +56,8 @@ describe('F-2 /auth 鉴权', () => {
     expect(hint.querySelector('a[href="mailto:xuantan0703@agent.qq.com"]')).toBeTruthy()
   })
 
-  it('受保护路由（/studio）匿名态 → 不重定向，直渲页面内容＋权限说明（在册 L1SI188-SITE-NAV-001 口径）', () => {
-    renderAt('/studio')
+  it('受保护路由（/studio）匿名态 → 不重定向，直渲页面内容＋权限说明（在册 L1SI188-SITE-NAV-001 口径）', async () => {
+    await renderAt('/studio')
     // 在册规格（TDCA-ASSESS-L1SI188-SITE-NAV-001）：受保护主栏匿名态由「统一登录卡重定向」改为
     // 「不重定向、说明该栏是什么 ＋ 登录后…」——对齐令 SITE-TESTFIX-001（乙组）期望改为不重定向。
     expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
@@ -63,40 +65,40 @@ describe('F-2 /auth 鉴权', () => {
   })
 
   it('登录流程：选择身份 + token → 登录 → 受护面可入', async () => {
-    const r = renderAt('/auth')
+    const r = await renderAt('/auth')
     fireEvent.click(screen.getByTestId('auth-role-M'))
     expect(screen.getByTestId('auth-did-preview')).toHaveTextContent('TDID-M-0001')
     fireEvent.change(screen.getByTestId('auth-token'), { target: { value: 'TDCA-CRT-USER-1' } })
     fireEvent.click(screen.getByTestId('auth-submit'))
     await waitFor(() => expect(screen.getByTestId('auth-status')).toHaveTextContent('TDID-M-0001'))
     r.unmount()
-    const r2 = renderAt('/studio')
+    const r2 = await renderAt('/studio')
     expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
     r2.unmount()
   })
 
-  it('公开路由（/tax）未登录可直接访问', () => {
-    renderAt('/tax')
+  it('公开路由（/tax）未登录可直接访问', async () => {
+    await renderAt('/tax')
     expect(screen.getByText('税收仪表盘（L3 效用计量）')).toBeInTheDocument()
   })
 
   it('登出：清除登录态 → 匿名态仍直渲受护面（不重定向，L1SI188-SITE-NAV-001 口径）', async () => {
-    const r = renderAt('/auth')
+    const r = await renderAt('/auth')
     fireEvent.click(screen.getByTestId('auth-submit'))
     await waitFor(() => expect(screen.getByTestId('auth-status')).toBeInTheDocument())
     r.unmount()
     // 登录态下 /agents 直渲
-    const r1 = renderAt('/agents')
+    const r1 = await renderAt('/agents')
     expect(screen.getByTestId('agents-cluster')).toBeInTheDocument()
     r1.unmount()
     // 登出
-    const r2 = renderAt('/auth')
+    const r2 = await renderAt('/auth')
     await waitFor(() => expect(screen.getByTestId('auth-logout')).toBeInTheDocument())
     fireEvent.click(screen.getByTestId('auth-logout'))
     await waitFor(() => expect(screen.getByTestId('auth-login-link')).toBeInTheDocument())
     r2.unmount()
     // 重新访问受保护路由 → 匿名态不重定向、直渲内容＋权限说明
-    const r3 = renderAt('/agents')
+    const r3 = await renderAt('/agents')
     expect(screen.getByTestId('agents-cluster')).toBeInTheDocument()
     expect(screen.getByText(/权限：登录 DID(?! \+ HUF)/)).toBeInTheDocument()
     r3.unmount()

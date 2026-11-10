@@ -35,17 +35,19 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function renderRegister() {
-  return render(
+async function renderRegister() {
+  const __r = render(
     <MemoryRouter initialEntries={['/register']}>
       <App />
     </MemoryRouter>,
   )
+  await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
+  return __r
 }
 
 describe('M4 注册缔约门禁（REGISTER-002 缺口②）', () => {
-  it('未勾选协议 → 按钮禁用 + 就地提示 + 零网络请求', () => {
-    renderRegister()
+  it('未勾选协议 → 按钮禁用 + 就地提示 + 零网络请求', async () => {
+    await renderRegister()
     const btn = screen.getByTestId('register-submit')
     expect(btn).toBeDisabled()
     expect(screen.getByTestId('register-agree-hint')).toBeInTheDocument()
@@ -61,7 +63,7 @@ describe('M4 注册缔约门禁（REGISTER-002 缺口②）', () => {
         data: { token: 'TDCA-SES-test', role: 'viewer', nca_id: 'NCA-WEB-test' },
       }),
     )
-    renderRegister()
+    await renderRegister()
     fireEvent.click(screen.getByTestId('register-agree'))
     const btn = screen.getByTestId('register-submit')
     expect(btn).not.toBeDisabled()

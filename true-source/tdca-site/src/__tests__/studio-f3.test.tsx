@@ -4,7 +4,7 @@
 // 约束矩阵: FRAMEWORK-001 §七 + §8B.2 + ID91 + F-4/HUF
 // =============================================================================
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import App from '@/App'
 
@@ -32,49 +32,52 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function renderStudio() {
-  return render(
+async function renderStudio() {
+  const __r = render(
     <MemoryRouter initialEntries={['/studio']}>
       <App />
     </MemoryRouter>,
   )
+  await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
+  return __r
 }
 
 describe('F3 Agent Studio /studio', () => {
-  it('页面可达：生命周期看板 / 创建向导 / 化合衍生三区域渲染', () => {
-    renderStudio()
+  it('页面可达：生命周期看板 / 创建向导 / 化合衍生三区域渲染', async () => {
+    await renderStudio()
     expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
     expect(screen.getByTestId('studio-wizard')).toBeInTheDocument()
     expect(screen.getByTestId('studio-compound')).toBeInTheDocument()
     expect(screen.getByText('生命周期看板 · TDID-AGENT-007')).toBeInTheDocument()
   })
 
-  it('生命周期六阶段可导航（点击节点 → 详情更新）', () => {
-    renderStudio()
+  it('生命周期六阶段可导航（点击节点 → 详情更新）', async () => {
+    await renderStudio()
     fireEvent.click(screen.getByTestId('node-MARKET'))
     expect(screen.getByTestId('detail-panel')).toHaveTextContent('市场')
     expect(screen.getByTestId('detail-panel')).toHaveTextContent('mou:')
   })
 
-  it('创建向导五步推进 → 终点 HUF 签署（写操作模态）', () => {
-    renderStudio()
+  it('创建向导五步推进 → 终点 HUF 签署（写操作模态）', async () => {
+    await renderStudio()
     for (let i = 0; i < 4; i++) fireEvent.click(screen.getByTestId('wizard-next'))
     expect(screen.getByTestId('wizard-huf')).toBeInTheDocument()
     fireEvent.click(screen.getByTestId('wizard-huf'))
     expect(screen.getByTestId('huf-modal')).toBeInTheDocument()
   })
 
-  it('创建向导终点确认 → 跳转 /attestation/meta（出盒终裁）', () => {
-    renderStudio()
+  it('创建向导终点确认 → 跳转 /attestation/meta（出盒终裁）', async () => {
+    await renderStudio()
     for (let i = 0; i < 4; i++) fireEvent.click(screen.getByTestId('wizard-next'))
     fireEvent.click(screen.getByTestId('wizard-huf'))
     fireEvent.click(screen.getByTestId('huf-confirm'))
-    expect(screen.getByText('元函数初始确权（出盒终裁）')).toBeInTheDocument()
+    // FRONTEND-PERF-001：跳转为懒加载路由——findBy 等其落地
+    expect(await screen.findByText('元函数初始确权（出盒终裁）')).toBeInTheDocument()
   })
 
-  it('生命周期写操作（重塑/休眠/激活/注销）全部触发 HUF 模态', () => {
+  it('生命周期写操作（重塑/休眠/激活/注销）全部触发 HUF 模态', async () => {
     const LABELS: Record<string, string> = { remodel: '重塑', sleep: '休眠', activate: '激活', logout: '注销' }
-    renderStudio()
+    await renderStudio()
     for (const key of ['remodel', 'sleep', 'activate', 'logout']) {
       fireEvent.click(screen.getByTestId(`life-action-${key}`))
       expect(screen.getByTestId('huf-modal')).toHaveTextContent(LABELS[key])
@@ -82,8 +85,8 @@ describe('F3 Agent Studio /studio', () => {
     }
   })
 
-  it('化合衍生拓扑挂载（ID91 NCA 链继承可视化）', () => {
-    renderStudio()
+  it('化合衍生拓扑挂载（ID91 NCA 链继承可视化）', async () => {
+    await renderStudio()
     expect(screen.getByTestId('studio-compound')).toHaveTextContent('化合衍生')
   })
 })

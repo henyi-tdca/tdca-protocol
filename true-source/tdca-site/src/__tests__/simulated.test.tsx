@@ -4,7 +4,7 @@
 // 约束矩阵: ID92 + FRAMEWORK-001 §5.1
 // =============================================================================
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import App from '@/App'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
@@ -24,12 +24,14 @@ describe('F0-A5 模拟态标注（ID92）', () => {
     expect(screen.getByTestId('simulated-badge')).toBeInTheDocument()
   })
 
-  it('模拟态标注随件呈现：模拟面经 App 渲染带 SIMULATED 角标（旧「全站顶部横幅」已随壳改撤，ID92 标注下沉为 SimulatedBadge 逐件呈现）', () => {
+  it('模拟态标注随件呈现：模拟面经 App 渲染带 SIMULATED 角标（旧「全站顶部横幅」已随壳改撤，ID92 标注下沉为 SimulatedBadge 逐件呈现）', async () => {
     render(
       <MemoryRouter initialEntries={['/studio']}>
         <App />
       </MemoryRouter>,
     )
+    // FRONTEND-PERF-001：路由级分包后页面懒加载——冲刷 Suspense 兜底再断言
+    await waitFor(() => { expect(screen.queryByTestId('route-loading')).not.toBeInTheDocument() })
     // /studio 化合衍生与通道实况两节各带一枚角标——断言「至少一枚 SIMULATED」
     const badges = screen.getAllByTestId('simulated-badge')
     expect(badges.length).toBeGreaterThan(0)
