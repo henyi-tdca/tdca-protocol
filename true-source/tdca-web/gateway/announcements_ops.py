@@ -32,11 +32,16 @@ def announcements_list():
         rows = (s.query(M.Announcement)
                 .order_by(M.Announcement.published_at.desc()).all())
     nature = _nature_of([r.data_provenance for r in rows]) if rows else "simulated"
+    # API-SHAPE F-3 兼容期：新增 data.items/data.total 统一形态，旧键 count/announcements 保留 ≥1 版
     return _nca_watermark({
         "count": len(rows),
         "announcements": [{"announcement_id": r.announcement_id, "title": r.title,
                            "body": r.body, "published_at": r.published_at}
                           for r in rows],
+        "items": [{"announcement_id": r.announcement_id, "title": r.title,
+                   "body": r.body, "published_at": r.published_at}
+                  for r in rows],
+        "total": len(rows),
         "note": "公告栏（对外公告区）——公告内容须经创始人明示后由运营发布；"
                 "空栏为常态，不预置内容"},
         nature=nature)

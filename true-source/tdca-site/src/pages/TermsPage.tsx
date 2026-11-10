@@ -18,6 +18,7 @@ interface TermsData {
   terms: TermItem[]
   total: number
   note: string
+  items?: TermItem[]
 }
 
 /** 术语页：词表＋服务端检索（?q=）；⛔ 不渲染 id 列 */
@@ -36,7 +37,7 @@ export function TermsPage() {
       const r = await api.get<TermsData>(path)
       if (!alive) return
       if (r.ok) {
-        setRows(r.data.terms)
+        setRows(r.data.items ?? r.data.terms)
         setTotal(r.data.total)
         setNote(r.data.note)
         setStatus('ok')

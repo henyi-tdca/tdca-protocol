@@ -437,23 +437,31 @@ def config_right_call(req: ConfigCallRequest):
 
 @router.get("/assets/five-orders")
 def assets_five_orders():
-    """A-4: 五阶资产池（asset_orders 表实读；空表回退演示框架）。"""
+    """A-4: 五阶资产池（asset_orders 表实读；空表回退演示框架）。
+
+    API-SHAPE F-3 兼容期：新增 data.items/data.total 统一形态，旧键 assets 保留 ≥1 版。"""
     with get_session() as s:
         rows = s.query(M.AssetOrder).order_by(M.AssetOrder.order_no).all()
     if rows:
+        assets = [{"order": r.order_no, "name": r.name,
+                   "desc": r.description or "", "count": r.asset_count} for r in rows]
         return _nca_watermark({
-            "assets": [{"order": r.order_no, "name": r.name,
-                        "desc": r.description or "", "count": r.asset_count} for r in rows],
+            "assets": assets,
+            "items": assets,
+            "total": len(assets),
             "note": "五阶资产池（DB 实读；真实资产待生态接入）",
         }, nature=_nature_of([r.data_provenance for r in rows]))
-    return _nca_watermark({
-        "assets": [
+    assets = [
             {"order": 1, "name": "效用权", "desc": "场景效用函数调用权", "count": 0},
             {"order": 2, "name": "配置权", "desc": "L2 配置权市场层", "count": 0},
             {"order": 3, "name": "NCA 嵌套认知资产", "desc": "调用即存证", "count": 0},
             {"order": 4, "name": "MOU 税收锚定凭证", "desc": "进项+出项", "count": 0},
             {"order": 5, "name": "跨场景配置画像", "desc": "多场景偏态档案", "count": 0},
-        ],
+    ]
+    return _nca_watermark({
+        "assets": assets,
+        "items": assets,
+        "total": len(assets),
         "note": "五阶资产池为演示框架（模拟态），真实资产待生态接入" + _sim_note(),
     })
 
@@ -545,7 +553,9 @@ def knowledge_terms(q: Optional[str] = None, request: Request = None):
             note = "G-1 术语子集（匿名面：词名与释义已脱敏内部编号；登录可见全量）"
     if q:
         items = [t for t in items if q.lower() in t["term"].lower() or q.lower() in t["def"].lower()]
-    return _nca_watermark({"terms": items, "total": len(items), "note": note}, nature=nature)
+    # API-SHAPE F-3 兼容期：新增 data.items 统一形态，旧键 terms 保留 ≥1 版
+    return _nca_watermark({"terms": items, "items": items, "total": len(items), "note": note},
+                          nature=nature)
 
 
 def _encode_cursor(row) -> str:
@@ -598,7 +608,7 @@ def audit_ledger_public(limit: int = 100, cursor: str = "", since: str = "", unt
             next_cursor = _encode_cursor(rows[-1])
         events = [{"event_id": r.event_id, "type": r.type, "ts": r.ts,
                    "amount": f"{r.amount / 100:.2f}", "currency": ""} for r in rows]
-        return _nca_watermark({"events": events, "total": total,
+        return _nca_watermark({"events": events, "items": events, "total": total,
                                "next_cursor": next_cursor,
                                "note": "公共账本（只读，BV-3）"},
                               nature=_nature_of([r.data_provenance for r in rows]))

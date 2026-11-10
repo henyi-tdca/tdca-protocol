@@ -15,6 +15,7 @@ const SELFCHECK_DISCLAIMER =
 
 interface LedgerData {
   events: { event_id: string; type: string; ts: string; amount: string }[]
+  items?: { event_id: string; type: string; ts: string; amount: string }[]
   total: number
   note: string
 }
@@ -155,7 +156,7 @@ export function AuditPage() {
           <div className="flex items-center gap-2 text-xs text-gray-500">
             公共账本（只读，BV-3）：共 {data.total} 条 <SimulatedBadge nature={nature ?? 'simulated'} />
           </div>
-          {data.events.length === 0 && <p className="text-sm text-gray-400">暂无账本事件（模拟态）</p>}
+          {(data.items ?? data.events).length === 0 && <p className="text-sm text-gray-400">暂无账本事件（模拟态）</p>}
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
@@ -166,7 +167,7 @@ export function AuditPage() {
               </tr>
             </thead>
             <tbody>
-              {data.events.map((e) => (
+              {(data.items ?? data.events).map((e) => (
                 <tr key={e.event_id} data-event={e.event_id} className="border-b border-gray-100">
                   <td className="py-1.5 font-mono text-xs text-gray-700">{e.event_id}</td>
                   <td className="py-1.5 text-xs text-gray-600">{e.type}</td>

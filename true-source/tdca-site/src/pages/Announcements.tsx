@@ -24,6 +24,8 @@ interface AnnouncementView {
 interface BoardData {
   count: number
   announcements: AnnouncementView[]
+  items?: AnnouncementView[]
+  total?: number
   note: string
 }
 
@@ -46,7 +48,7 @@ export function AnnouncementsPage() {
   const load = async () => {
     const r = await api.get<BoardData>('/api/v1/announcements/list')
     if (r.ok) {
-      setRows(r.data.announcements)
+      setRows(r.data.items ?? r.data.announcements)
       setCount(r.data.count)
       setNote(r.data.note)
       setNature(r.nature)

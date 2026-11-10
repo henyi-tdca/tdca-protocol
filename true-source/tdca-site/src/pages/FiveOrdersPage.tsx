@@ -18,6 +18,8 @@ interface AssetItem {
 
 interface AssetsData {
   assets: AssetItem[]
+  items?: AssetItem[]
+  total?: number
   note: string
 }
 
@@ -33,7 +35,7 @@ export function FiveOrdersPage() {
       const r = await api.get<AssetsData>('/api/v1/assets/five-orders')
       if (!alive) return
       if (r.ok) {
-        setRows(r.data.assets)
+        setRows(r.data.items ?? r.data.assets)
         setStatus('ok')
       } else {
         setStatus('fail')
