@@ -141,6 +141,9 @@ _PUBLIC_DOCS = {
     # 《人机协作工作条例》净名版进站（题名净名、头块六行剥除、三处册位括注剔除、署名剔除，
     # 句意零改动；GSEQ-／TDCA-REG-／十六位hex 三扫描零命中）——regulation 49→50
     "人机协作工作条例.md",
+    "TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md",
+    "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md",
+    "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml",
     ),
     # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
     "whitepapers": (
