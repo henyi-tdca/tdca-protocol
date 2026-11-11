@@ -16,6 +16,8 @@
 
 **与现有协议栈的关系**：通信层（MCP/A2A）与支付层（AP2/x402/ACP）锚定的是私人信用；TDCA 的治理层（NSFL 负空间 / NCA 存证链 / CCP 契约）可挂载于 MCP/A2A 之上，但结算轨道不接受私人信用资产。三锚叠加，全球无对标。
 
+**仓库定位（如实，EXTERNAL-FIX-002-C 补）**：本仓库是 TDCA **制度设计与机制演示的参考实现**，同时是**可消费的开源工具集**；⛔**不是生产框架**——当前为制度演示态（simulated），接入真实生产环境前须自行完成安全评估与合规审查。
+
 ## 二、仓库镜像 / Mirrors
 
 本项目在下列开源平台保持同步镜像，三端同源同点，便于国内外访问：
@@ -48,7 +50,7 @@ https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
 
 ### 一、能用（跑得起来）
 - `tools/`　Python 工具链（守门、准入、对账等）——装 `PyYAML`+`pytest` 即可跑：
-  `cd tools && python -m pytest tests -q`
+  `python -m pytest tools/tests -q`（在仓根跑，2026-11-12 实测 268 passed；`cd tools` 内跑会因 `tools` 包不可导入而收集失败）
 - `dual/`　双协议化合引擎：`cd dual && python -m pytest tests/ -q`
 - `ecoscan/`　生态雷达：`cd ecoscan && python -m pytest tests/ -q`
 - `core-go/`　Go 核心引擎：⚠️ 先构建 `go build -o tdcad ./cmd/tdcad`，再 `go test -race ./...`
@@ -79,8 +81,8 @@ https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
 | 套件 | 能力 | 快速开始 |
 |---|---|---|
 | [`tools/enforce_entry.py`](tools/enforce_entry.py) | OPC S0 准入自检（R1~R10 + NSFL 熔断） | `python tools/enforce_entry.py --check <NCA文件>` |
-| [`tools/cts_l1/`](tools/cts_l1/) | CTS-L1 一致性自测套件（C-1~C-6 + 声明生成） | `cd tools && python -m pytest cts_l1 -q` |
-| [`tools/mcp_bridge/`](tools/mcp_bridge/) | TDCA ↔ MCP 协议桥（NCA 水印 / NSFL 熔断 / 挂载 / 存证查询） | `cd tools && python -m pytest mcp_bridge -q` |
+| [`tools/cts_l1/`](tools/cts_l1/) | CTS-L1 一致性自测套件（C-1~C-6 + 声明生成） | `python -m pytest tools/tests/test_cts_l1.py tools/tests/test_cts_l1_adversarial.py -q`（在仓根跑，实测 37 passed） |
+| [`tools/mcp_bridge/`](tools/mcp_bridge/) | TDCA ↔ MCP 协议桥（NCA 水印 / NSFL 熔断 / 挂载 / 存证查询） | `python -m pytest tools/tests/test_mcp_bridge.py -q`（在仓根跑，实测 17 passed） |
 | [`tools/cog_align/`](tools/cog_align/) | 认知对齐评测：思想病毒防御 / 认知漂移 / 对齐度分档（M2 场景包） | `cd tools && python -m cog_align.cli --help` |
 | [`tools/util_value/`](tools/util_value/) | 效用价值评估：会计口径入表 / 版权链存证 / 完整报告（M2 入表服务） | `cd tools && python -m util_value.cli --help` |
 | [`tools/value_services/`](tools/value_services/) | 增值服务统一入口（双服务编排） | `cd tools && python -m pytest value_services -q` |
@@ -119,11 +121,30 @@ https://atomgit.com/siweihanshuzhineng/siweihanshuzhineng-TDCA
 
 ## 五、快速开始（3 步）
 
+想先跑起来（以下命令 2026-11-12 全部实测，在仓根执行）：
+
+```bash
+python -m pytest tools/tests -q      # tools 工具链：268 passed
+cd dual && python -m pytest tests/ -q   # 双协议化合引擎：18 passed
+cd ecoscan && python -m pytest tests/ -q  # 生态雷达：88 passed
+```
+
+制度接入三步：
+
 1. **读取** `pack/docs/01-启动清单.md` —— 制度基线 7 项检查 + 工作空间初始化 + 会话 6/6 校验
 2. **复制** `pack/templates/fc-six-elements.md` —— 为当前任务填写六要素声明，人类签批后开工
 3. **开发全程** 遵循 `pack/docs/04-编码规范.md`（水印 + docstring + NSFL 熔断），产出即按 `pack/docs/06-NCA与审查链.md` 存证
 
-运行引擎测试：`cd dual && python -m pytest tests/ -q`
+准入自检实测样例：`python tools/enforce_entry.py --check nca-archives/TDCA-ADMIT-20260822-001.yaml` → PASS（R1~R10 全过）。
+
+### 测试通过率（两口径并列 · 2026-11-12 实测）
+
+| 口径 | 范围与判据 | 现状 |
+|---|---|---|
+| **公开面通过率** | GitHub Actions 常驻 workflow，main 分支最新一次运行 | 25 个已触发 workflow 中 **22 绿 / 3 红**：红件为 gate-frontend（`site-find3.test.tsx`「公开索引件数与在册清单一一对应」断言，2026-11-11）、gate-samesource（2026-11-09）、gate-utility-genie（2026-11-07），三件均挂账待办；encounter-assert-gate 尚未在 main 触发过。[Actions 总览 →](https://github.com/henyi-tdca/tdca-protocol/actions?query=branch%3Amain) |
+| **内部门禁通过率** | CI 机全量复跑（`ci_full_test_run_v2.py`，全仓套件逐件计数） | **3514 passed / 1 failed**（2026-11-11 实测，基线 commit 3f92a97；唯一红件 `tools/tests::test_official_invoke`，范围外挂账） |
+
+> 两口径口径不同、互不替代：公开面看「合并闸是否全绿」，内部门禁看「全仓真实测试计数」。
 
 ## 六、社区与参与
 
