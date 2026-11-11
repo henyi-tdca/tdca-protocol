@@ -73,16 +73,18 @@ criteria:
       tdca_site_tests_failed: 0
       gate_site_present: true
       gate_site_green: true
+      build_passes: true
 
   g6_regression_compare:
     seq: 6
     name: 回归对比
     source: "MIGRATE-B0-001 本侧已定第 3 项"
-    desc: "换版前后 66 面逐面 HTTP＋渲染关键词抽检全过"
+    desc: "换版前后 66 面逐面 HTTP＋渲染关键词抽检全过；并捕获 console 之 error 级消息须为 0（warning 不入判）"
     checks:
       pages_spot_checked: 66
       http_all_200: true
       render_keyword_all_hit: true
+      console_errors_zero: true
 
   g7_observation_window:
     seq: 7
@@ -119,6 +121,8 @@ criteria:
     desc: "取线上实况（包裹键／容器键／条目必填字段集）与正本 TDCA-SPEC-API-CONTRACT-001 逐项比对；任一不一致即 pass=false；未登记端点报「未覆盖」，不判通过也不判失败"
     runner: "tools/ci_g9_contract_gate.py（gate-site 工作流 g9 步调用；只读、只取键名与类型）"
     pass_rule: "已登记端点全 EQUAL 且零 DIFF"
+    uncovered_list: "每次运行输出《未契约化端点清单》（可匿名取得而未登记之端点）；单列，不计入 VERDICT"
+    uncovered_clearance: "清单挂技术债台账；每批须清 ≥3 个或书面说明不清理由；⛔ 无限期增长"
     note: "批 1（2026-11-11 实测补登）：library/whitepaper·paper·terms·cop-library 条目字段=(has_content, slug, synced_at, title)；knowledge/terms 条目字段=(def, term)；/api/v1/library/kg 匿名 401 未覆盖，不登记不判"
 
 shrink:
