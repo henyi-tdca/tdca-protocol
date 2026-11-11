@@ -23,8 +23,12 @@ jobs:
           python-version: "3.12"
       - name: 测试门（rc 0 或 5 为门过；5=tests/ 套件依赖不在公开树之声明形态）
         run: |
-          python -m pytest tdca-eios -q -rs -p no:cacheprovider
-          rc=$?
+          # 注①：GitHub Actions run: 缺省 shell 为 bash -eo pipefail（带 -e），命令返回非零即行失败退出，
+          # 故凡「先跑命令、再读 $?」之写法皆形同虚设——必须以 || 捕获退出码。
+          # 注②：rc=5 仅在整目录零收集时为合法声明形态；本目录含 simulator 用例时正常应为 0。
+          # 两者皆门过，但读数须照录。
+          rc=0
+          python -m pytest tdca-eios -q -rs -p no:cacheprovider || rc=$?
           if [ "$rc" -ne 0 ] && [ "$rc" -ne 5 ]; then
             echo "门败：rc=$rc（0=公开面全过；5=tests/ 依赖不在公开树）"
             exit "$rc"
