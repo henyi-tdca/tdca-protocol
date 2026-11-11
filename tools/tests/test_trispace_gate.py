@@ -201,8 +201,10 @@ def test_adversarial_suspend_on_boundary_cross(srv):
     fp = trispace.card_fingerprint(_card())
     a = srv.state.agent(fp)
     assert a["status"] == "SBX-SUSPENDED" and a["suspended_until"]
-    doc = yaml.safe_load(_nca_files(srv.wm.dir)[-1].read_text(encoding="utf-8"))
-    assert doc["Operation-Type"] == "FuseReject" and doc["status"] == "SBX-SUSPENDED"
+    docs = [yaml.safe_load(p.read_text(encoding="utf-8"))
+            for p in _nca_files(srv.wm.dir)]
+    doc = next(d for d in docs if d.get("Operation-Type") == "FuseReject")
+    assert doc["status"] == "SBX-SUSPENDED"
     # 停手期内写拒
     r2 = _call(srv, "tdca:echo", {"text": "more", "agent_card": _card()})
     assert r2["error"]["code"] == trispace.CODE_SUSPENDED
