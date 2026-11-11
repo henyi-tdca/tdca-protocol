@@ -21,6 +21,9 @@ interface NcaRow {
   artifact_path: string | null
   sha256_8: string | null
   ts: string
+  subject_ref: string | null
+  authz_ref: string | null
+  compare_result: 'match' | 'mismatch' | 'not_compared' | null
 }
 
 interface NcaPage {
@@ -170,13 +173,13 @@ export function MeNcaPage() {
                   {rows.map((r) => (
                     <tr key={r.nca_id} data-testid={`nca-proof-${r.nca_id}`} className="border-b border-gray-100 align-top">
                       <td className="py-1.5 pr-3 font-mono text-emerald-700">{r.nca_id}</td>
-                      <td className="py-1.5 pr-3 text-gray-400">本期无（端点未载主体字段）</td>
-                      <td className="py-1.5 pr-3 text-gray-400">本期无（端点未载授权件号／档位／期限）</td>
+                      <td className="py-1.5 pr-3 font-mono text-gray-700">{r.subject_ref ?? '—'}</td>
+                      <td className="py-1.5 pr-3 text-gray-700">{r.authz_ref ?? '本期无'}</td>
                       <td className="py-1.5 pr-3 text-gray-700">{r.action || '—'}</td>
                       <td className="py-1.5 pr-3 text-gray-700">
                         对象：{r.artifact_path ?? '—'} · 时间窗：{r.ts?.slice(0, 19).replace('T', ' ') ?? '—'}（类数本期无）
                       </td>
-                      <td className="py-1.5 pr-3 text-gray-400">本期无（端点未载比对结论）</td>
+                      <td className="py-1.5 pr-3 text-gray-700">{r.compare_result ?? '本期无'}</td>
                       <td className="py-1.5 pr-3 font-mono text-gray-700">{r.sha256_8 ?? '—'}</td>
                     </tr>
                   ))}
