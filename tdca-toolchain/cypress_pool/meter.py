@@ -13,7 +13,7 @@ M1a 功能:
 NSFL-Declaration:
   - 不修改 Cypress 核心（reporter 插件叠加——物理叠加层，BIDIR-001 形态 ①）
   - 计量为模拟口径（SIMULATED），真实计费需接入 L2 市场结算
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 
