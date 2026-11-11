@@ -23,6 +23,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from error_codes import with_code
+from api_v1 import _nca_watermark  # ID91 响应水印——前端统一客户端缺印拒绝渲染（real＝包内实读真值）
 
 router = APIRouter(tags=["kg-public"])
 
@@ -150,12 +151,12 @@ def kg_manifest(request: Request):
     if got is None:
         return _unavailable("知识图谱包暂不可读（文档源异常，已按 fail-closed 暂停列出）")
     raw, sha = got
-    return JSONResponse({
+    return JSONResponse(_nca_watermark({
         "package": "TDCA Knowledge Graph V1 · Public",
         "sha256_16": sha.upper()[:16],
         "files": {n: (_read_file(n)[1].upper()[:16] if _read_file(n) else None)
                   for n in ("nodes.yaml", "edges.yaml", "README.md")},
-    })
+    }, nature="real"))
 
 
 # ---------------------------------------------------------------------
@@ -176,7 +177,8 @@ def kg_nodes(layer: str = "", type: str = "", q: str = "", limit: int = 200,
         items = [n for n in items if q.lower() in n.get("label", "").lower()]
     total = len(items)
     items = items[: max(1, min(limit, 1000))]
-    return JSONResponse({"count": total, "returned": len(items), "nodes": items})
+    return JSONResponse(_nca_watermark(
+        {"count": total, "returned": len(items), "nodes": items}, nature="real"))
 
 
 # ---------------------------------------------------------------------
@@ -196,7 +198,7 @@ def kg_node(node_id: str, request: Request):
     rel_out = [e for e in out if e.get("source") == node_id]
     rel_in = [e for e in out if e.get("target") == node_id]
     by_id = g["by_id"]
-    return JSONResponse({
+    return JSONResponse(_nca_watermark({
         "node": n,
         "out_edges": [{"id": e["id"], "type": e["type"],
                        "target": by_id.get(e["target"], {}).get("label", e["target"])}
@@ -204,7 +206,7 @@ def kg_node(node_id: str, request: Request):
         "in_edges": [{"id": e["id"], "type": e["type"],
                       "source": by_id.get(e["source"], {}).get("label", e["source"])}
                      for e in rel_in],
-    })
+    }, nature="real"))
 
 
 # ---------------------------------------------------------------------
@@ -235,12 +237,12 @@ def kg_subgraph(root: str, depth: int = 1, request: Request = None):
                 sub_edges.append(e)
         frontier = nxt
     by_id = g["by_id"]
-    return JSONResponse({
+    return JSONResponse(_nca_watermark({
         "root": root,
         "depth": depth,
         "nodes": [by_id[i] for i in sorted(seen)],
         "edges": sub_edges,
-    })
+    }, nature="real"))
 
 
 # ---------------------------------------------------------------------
@@ -256,4 +258,5 @@ def kg_edges(type: str = "", limit: int = 500, request: Request = None):
         items = [e for e in items if e.get("type") == type]
     total = len(items)
     items = items[: max(1, min(limit, 3000))]
-    return JSONResponse({"count": total, "returned": len(items), "edges": items})
+    return JSONResponse(_nca_watermark(
+        {"count": total, "returned": len(items), "edges": items}, nature="real"))
