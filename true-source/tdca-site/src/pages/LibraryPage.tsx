@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { api } from '@/lib/client'
 import { PageShell } from '@/components/PageShell'
+import KgGraphView from '@/components/KgGraphView'
 
 interface FamilyView { family: string; name: string; count: number }
 interface ItemView { slug: string; title: string; synced_at: string; has_content?: boolean }
@@ -120,6 +121,7 @@ export function LibraryPage() {
 
   useEffect(() => {
     setDetail(null); setErr('')
+    if (family === 'kg') { setItems([]); return }  // 图谱视图走 /api/v1/kg/*（L1SI211-KG-SITE-001）
     void api.get<{ items: ItemView[] }>(`/api/v1/library/${family}`).then((r) => {
       if (r.ok) setItems(r.data.items)
       else setErr(`知识库加载失败：${r.reason}`)
@@ -164,6 +166,9 @@ export function LibraryPage() {
 
         {err && <p className="rounded bg-red-50 p-3 text-sm text-red-600" role="alert">{err}</p>}
 
+        {family === 'kg' ? (
+          <KgGraphView />
+        ) : (
         <div className="grid gap-3 md:grid-cols-3">
           <ul className="max-h-[70vh] space-y-1 overflow-auto md:col-span-1" data-testid="lib-list">
             {family === 'cop-library'
@@ -206,6 +211,7 @@ export function LibraryPage() {
             )}
           </div>
         </div>
+        )}
       </div>
     </PageShell>
   )
