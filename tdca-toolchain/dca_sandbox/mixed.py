@@ -13,7 +13,7 @@
 纪律: 全 SIMULATED（ID92）；0 真实资金；红线审计（违例→BLOCKED）；merchant_loop/dca_sandbox
 M1 文件零改动（本模块独立新增）。
 
-SPDX-License-Identifier: TDCA-Internal
+SPDX-License-Identifier: Apache-2.0
 """
 from __future__ import annotations
 
