@@ -70,16 +70,46 @@ DOMAINS = {
 }
 
 
+def is_selectable_cop(fn):
+    """选件规则（L1SI211 GATE24-B3 令 B）：族内非 -PUB 之 .yaml，排除 manifest。
+    -PUB＝对外脱敏变体（7b4e2f45 双轨），无 COP-ID，⛔ 入选。"""
+    return (fn.endswith(".yaml")
+            and not fn.endswith("-PUB.yaml")
+            and not fn.endswith("manifest.yaml")
+            and not fn.endswith("_manifest.yaml"))
+
+
+def load_cop_required(path):
+    """fail-closed 载入：选中件必须带 COP-ID，缺则报错并列件名（⛔ 补零/⛔ 静默跳过）。"""
+    with open(path, "r", encoding="utf-8") as f:
+        cop = yaml.safe_load(f)
+    if not isinstance(cop, dict) or not cop.get("COP-ID"):
+        raise ValueError(f"选中件缺 COP-ID（fail-closed）：{path}")
+    return cop
+
+
+def load_stratagem_required(name):
+    """按名取计件（选件规则：stratagems 根下非 -PUB .yaml，⛔ os.listdir 首匹配）。
+    同名多候选时优先非 -PUB；载入走 load_cop_required 缺键即报错列件名。"""
+    d = os.path.join(LIB, "stratagems")
+    hits = [fn for fn in sorted(os.listdir(d))
+            if name in fn and is_selectable_cop(fn)] if os.path.isdir(d) else []
+    if not hits:
+        raise FileNotFoundError(f"文库无可用全键计件：{name}（{d}）")
+    return load_cop_required(os.path.join(d, hits[0]))
+
+
 def list_domain_cops(domain):
-    """列出域下全部 COP yaml（只读，排除 manifest）"""
+    """列出域下全部 COP yaml（只读；选件规则：非 -PUB、排除 manifest 与 bindings/ 子目录）"""
     sub, _ = DOMAINS[domain]
     d = os.path.join(LIB, sub)
     out = []
     if not os.path.isdir(d):
         return out
-    for root, _, files in os.walk(d):
+    for root, dirs, files in os.walk(d):
+        dirs[:] = [dd for dd in dirs if dd != "bindings"]
         for fn in sorted(files):
-            if fn.endswith(".yaml") and not fn.endswith("manifest.yaml") and not fn.endswith("_manifest.yaml"):
+            if is_selectable_cop(fn):
                 out.append(os.path.join(root, fn))
     return out
 
@@ -195,10 +225,7 @@ def compile_domain(domain, apply_semantics=True, emit_nca_flag=True, scene_mode=
     for i, src in enumerate(files, 1):
         t0 = time.perf_counter()
         try:
-            with open(src, "r", encoding="utf-8") as f:
-                cop = yaml.safe_load(f)
-            if not isinstance(cop, dict):
-                raise ValueError("非 COP 结构")
+            cop = load_cop_required(src)
             if apply_semantics:
                 SL.s6_semantic(cop)
             # M3 任务①: U_CDE 接入（scene_mode 提供场景上下文）

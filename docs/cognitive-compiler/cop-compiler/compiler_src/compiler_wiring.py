@@ -95,20 +95,9 @@ def nsfl_breaker_wiring():
     返回: 验证结果 dict
     """
     result = {"wiring": "NSFL 熔断", "id86": "负空间不可越", "checks": {}}
-    # 1) 语义层负空间继承（走为上 ⟂ 围魏救赵）
-    import test_semantic_layer as TSL  # noqa: F401（复用其加载函数）
-    zou = None
-    for fn in os.listdir(os.path.join(BP.LIB, "stratagems")):
-        if "走为上" in fn:
-            with open(os.path.join(BP.LIB, "stratagems", fn), "r", encoding="utf-8") as f:
-                zou = yaml.safe_load(f)
-            break
-    wj = None
-    for fn in os.listdir(os.path.join(BP.LIB, "stratagems")):
-        if "围魏救赵" in fn:
-            with open(os.path.join(BP.LIB, "stratagems", fn), "r", encoding="utf-8") as f:
-                wj = yaml.safe_load(f)
-            break
+    # 1) 语义层负空间继承（走为上 ⟂ 围魏救赵）；选件规则同批产：非 -PUB、fail-closed
+    zou = BP.load_stratagem_required("走为上")
+    wj = BP.load_stratagem_required("围魏救赵")
     if zou and wj:
         comb, inherited, union = SL.inherit_negative_space(zou, [wj])
         result["checks"]["inheritance"] = {
