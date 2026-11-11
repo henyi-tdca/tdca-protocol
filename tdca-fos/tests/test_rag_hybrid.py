@@ -17,6 +17,14 @@ KB = os.environ.get("TDCA_KB_DIR") or os.path.join(_WS, "tdca-official-kb")
 AUTH = os.path.join(KB, "..", "_authority_text")
 PDF = os.path.join(KB, "..", "_pdf_text")
 
+# L1SI211-EXTERNAL-FIX-001 C：本文件用例依赖私有语料 tdca-official-kb（不在公开树）——
+# 无该目录时 skip 并注原因（如实标待触发 ⛔ 假绿）；内部全量环境（TDCA_KB_DIR 在架）跑全量。
+pytestmark = pytest.mark.skipif(
+    not os.path.isdir(KB),
+    reason="私有语料 tdca-official-kb 不在公开树——公开面跳过；"
+           "内部门禁（全量）环境语料在架即跑全量",
+)
+
 
 @pytest.fixture(scope="module")
 def engine():
