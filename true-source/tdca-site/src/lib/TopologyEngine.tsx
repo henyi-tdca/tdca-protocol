@@ -228,15 +228,19 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
               if (!p) return null
               const fused = n.status === 'fused'
               const isOfficial = n.type === 'official'
+              // SVG-FIX-001 案甲：transform 不受百分比（Chromium 报 Expected ')'），
+              // 弃 transform 改坐标属性——circle cx/cy 与 text x/y 受百分比，dy 走用户单位 px，
+              // 与同文件 L217 line x1/y1 之合法写法一致；渲染语义与意图完全一致
               return (
-                <g key={n.id} transform={`translate(${p.x}% ${p.y}%)`}>
+                <g key={n.id}>
                   <circle
-                    r={isOfficial ? 12 : 8} cx={0} cy={0}
+                    cx={`${p.x}%`} cy={`${p.y}%`}
+                    r={isOfficial ? 12 : 8}
                     fill={isOfficial ? '#0E2142' : '#12305E'}
                     stroke={fused ? '#f43f5e' : isOfficial ? '#C9A45C' : '#3B82F6'}
                     strokeWidth={fused ? 2 : 1.5}
                   />
-                  <text y={isOfficial ? -16 : -12} textAnchor="middle" className="fill-slate-700" style={{ fontSize: 9 }}>
+                  <text x={`${p.x}%`} y={`${p.y}%`} dy={isOfficial ? -16 : -12} textAnchor="middle" className="fill-slate-700" style={{ fontSize: 9 }}>
                     {n.label.length > 8 ? n.label.slice(0, 7) + '…' : n.label}
                   </text>
                   {/* RULING-ENTRY-CONTENT-DEPLOY-001 裁示1：副标签（哈希式样内部码）必删——公开首页渲染即对外，⛔候裁 */}
