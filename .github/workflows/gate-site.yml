@@ -27,6 +27,9 @@ jobs:
       - name: 全量 vitest（硬门：有红即败，存量已对齐 155 全绿）
         working-directory: true-source/tdca-site
         run: npx vitest run
+      - name: 构建（硬门：build-search-index fail-closed，产物须成）
+        working-directory: true-source/tdca-site
+        run: npm run build
   g9-contract-gate:
     name: G9 数据契约闸（正本比对，单列一行）
     runs-on: ubuntu-latest
