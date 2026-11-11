@@ -125,9 +125,12 @@ def conclusion_catalog(request: Request):
             continue                       # CLAIMFIX-001 A-3：正式结论无对外版即不列
         out.append({"claim_text": r.claim_text, "data_nature": r.data_nature,
                     "scope_summary": summary})
+    # API-SHAPE F-3 兼容期：新增 data.items/data.total 统一形态，旧键 count/conclusions 保留 ≥1 版
     return _nca_watermark({
         "count": len(out),
         "conclusions": out,
+        "items": out,
+        "total": len(out),
         "note": "形式化清单（匿名面；只列结论文字、数据性质与对外版适用范围，"
                 "不含内部编号、内部适用范围与存证指针；不构成对外发布）"})
 

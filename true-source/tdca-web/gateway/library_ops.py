@@ -241,12 +241,15 @@ def library_families(request: Request):
         items = [{"family": f, "name": _FAMILIES[f],
                   "count": counts.get(f, 0)} for f in _OPEN_FAMILIES]
         return _nca_watermark(
-            {"items": items, "note": "匿名只读面：cop-library＋terms＋laws＋law-notes＋whitepaper＋paper "
+            {"items": items, "total": len(items),
+             "note": "匿名只读面：cop-library＋terms＋laws＋law-notes＋whitepaper＋paper "
                                      "六族开放（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001／"
                                      "CONTENT-LIVE-ALL-001 案甲）"},
             nature="real")
     items = [{"family": k, "name": v, "count": counts.get(k, 0)} for k, v in _FAMILIES.items()]
-    return _nca_watermark({"families": items, "note": "内容区只读面；以在册仓库为唯一权威源"},
+    # API-SHAPE F-3 兼容期：新增 data.items/data.total 统一形态，旧键 families 保留 ≥1 版
+    return _nca_watermark({"families": items, "items": items, "total": len(items),
+                           "note": "内容区只读面；以在册仓库为唯一权威源"},
                           nature="real")
 
 

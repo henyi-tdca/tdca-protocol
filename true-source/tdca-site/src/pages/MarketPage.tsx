@@ -11,6 +11,8 @@ import { api } from '@/lib/client'
 
 interface FiveOrdersData {
   assets: { order: number; name: string; desc: string; count: number }[]
+  items?: { order: number; name: string; desc: string; count: number }[]
+  total?: number
   note: string
 }
 
@@ -187,7 +189,7 @@ export function MarketPage() {
             <SimulatedBadge nature={nature ?? 'simulated'} />
             <span>{data.note}</span>
           </div>
-          {data.assets.map((a) => (
+          {(data.items ?? data.assets).map((a) => (
             <div key={a.order} className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
               <div>
                 <div className="text-sm font-semibold text-gray-800">

@@ -13,6 +13,7 @@ interface TermsData {
   terms: { term: string; id: string; def: string }[]
   total: number
   note: string
+  items?: { term: string; id: string; def: string }[]
 }
 
 /** 知识学院：G-1 术语检索（注册表 V1.1 子集） */
@@ -22,8 +23,8 @@ export function AcademyPage() {
 
   const filtered = useMemo(() => {
     if (!data) return []
-    if (!q) return data.terms
-    return data.terms.filter((t) => t.term.includes(q) || t.def.includes(q))
+    if (!q) return data.items ?? data.terms
+    return (data.items ?? data.terms).filter((t) => t.term.includes(q) || t.def.includes(q))
   }, [data, q])
 
   return (
