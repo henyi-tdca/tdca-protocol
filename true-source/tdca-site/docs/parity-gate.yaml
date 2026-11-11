@@ -85,6 +85,38 @@ criteria:
       http_all_200: true
       render_keyword_all_hit: true
       console_errors_zero: true
+    # 匿名 401 七面白名单（L1SI209 SHAPE-F3-MERGE-001 任务三；2026-11-11 38 面 console 清扫实证，
+    # 实证存 .tmp/console-sweep.json）。边界：只认「匿名 → 私域面 → 401」；登录态 401 与
+    # 非 401 之 4xx/5xx ⛔ 入白名单（一律 pass=false 上报）。私域面增删须同步增删本条。
+    console_error_whitelist:
+      - face: /announcements
+        rule: "匿名→私域面→401"
+        reason: "匿名访问私域面由网关回 401，前端按规弹登录引导，console error 为预期噪声"
+        review_by: "2026-12-11"
+      - face: /channel/my
+        rule: "匿名→私域面→401"
+        reason: "同上：匿名 401 预期噪声"
+        review_by: "2026-12-11"
+      - face: /me/compile
+        rule: "匿名→私域面→401"
+        reason: "同上：匿名 401 预期噪声"
+        review_by: "2026-12-11"
+      - face: /me/node
+        rule: "匿名→私域面→401"
+        reason: "同上：匿名 401 预期噪声"
+        review_by: "2026-12-11"
+      - face: /me/node/net
+        rule: "匿名→私域面→401"
+        reason: "同上：匿名 401 预期噪声"
+        review_by: "2026-12-11"
+      - face: /me/privacy
+        rule: "匿名→私域面→401"
+        reason: "同上：匿名 401 预期噪声"
+        review_by: "2026-12-11"
+      - face: /use/agent
+        rule: "匿名→私域面→401"
+        reason: "同上：匿名 401 预期噪声"
+        review_by: "2026-12-11"
 
   g7_observation_window:
     seq: 7
