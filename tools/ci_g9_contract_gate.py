@@ -28,12 +28,19 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 BASE = "https://tdca.com.cn"
 
 # 正本：首批五端点（时点 2026-11-11T02:45+08）
-# container=None 表示条目在顶层键；否则为 data 下的容器键
-# 自描述三字段照 L1SI209-GATE-AND-SVG-001 L4：source_snapshot_sha256_16 为智库册
-# 正本快照前 16 位大写——正本在智库册、执行侧不可自算，暂标 PENDING，须智库补登真值
-_SOURCE_SPEC = "TDCA-SPEC-API-CONTRACT-001＋TDCA-AMEND-PARITY-GATE-001(GSEQ-7851)"
-_SNAPSHOT_SHA16 = "PENDING-ZHICHU-ANNEX"      # ⏳ 候智库册正本快照 sha16 补登（执行侧⛔杜撰）
-_SYNCED_AT = "2026-11-11T02:45+08"
+# container=None 表示非容器形态（data 或顶层为字典，核其键集）；否则为 data 下的容器键
+# 自描述三字段照 L1SI209 GATE-AND-SVG-001 L4：source_snapshot_sha256_16 为智库册正本快照前 16 位大写
+# v1.2（L1SI209 SHAPE-F3-MERGE-001 任务二）：
+#  · 智库册正本快照真值补登（GSEQ-7898 口径：正本四件 7850→7856→7863→7898 升序拼字节
+#    取 sha256 前 16 位大写；执行侧复算全值一致 129E0616F75CBEFD…）
+#  · 新增登记 13 端点＝令 §三 六端＋批2A 七端（2026-11-11 匿名实测观测，照表写）
+#  · expect_anon_401=True 条目只探匿名状态码，401→ANON401(预期) 不计 DIFF，非 401→DIFF
+#  · siblings 为 data 级同级键标注（annotation-only，比对逻辑不读）
+_SOURCE_SPEC = ("TDCA-SPEC-API-CONTRACT-001＋TDCA-AMEND-PARITY-GATE-001(GSEQ-7851)"
+                "＋TDCA-AMEND-3(GSEQ-7898)＋批2A(TDCA-AMEND-L1SI208-API-CONTRACT-002 §五)")
+_SNAPSHOT_SHA16 = "129E0616F75CBEFD"
+_SYNCED_AT = "2026-11-11T02:45+08"       # 批1 八条
+_SYNCED_AT_B2 = "2026-11-11+08"          # 批2 新增 13 条（2026-11-11 实测日）
 REGISTRY = [
     dict(ep="/api/site/docs", top=("count", "documents", "family", "principle", "source"),
          container="documents", nested=False,
@@ -68,6 +75,68 @@ REGISTRY = [
          fields=("def", "term"),
          source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT),
     # 未覆盖：/api/v1/library/kg 匿名 401（GSEQ 批1 读数，须登录，不登记不判）
+    # ── 令 §三 六端（2026-11-11 匿名实测，逐字相符；容器名四异逐端写，⛔抽象列表键）──
+    dict(ep="/api/v1/library/families", top=("data", "data_nature", "nca_watermark", "ts"),
+         container="items", nested=True,
+         fields=("count", "family", "name"), siblings=("note",),
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/library/laws", top=("data", "data_nature", "nca_watermark", "ts"),
+         container="items", nested=True,
+         fields=("has_content", "slug", "synced_at", "title"), siblings=("family", "name"),
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/library/law-notes", top=("data", "data_nature", "nca_watermark", "ts"),
+         container="items", nested=True,
+         fields=("has_content", "slug", "synced_at", "title"), siblings=("family", "name"),
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/assets/five-orders", top=("data", "data_nature", "nca_watermark", "ts"),
+         container="assets", nested=True,
+         fields=("count", "desc", "name", "order"), siblings=("note",),
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/audit/ledger-public", top=("data", "data_nature", "nca_watermark", "ts"),
+         container="events", nested=True,
+         fields=("amount", "currency", "event_id", "ts", "type"),
+         siblings=("total", "next_cursor", "note"),
+         note="线上匿名 total=3、next_cursor 为空串，一次取全；游标语义由仓内 gateway 分页测试证",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/formal/conclusion/catalog", top=("data", "data_nature", "nca_watermark", "ts"),
+         container="conclusions", nested=True,
+         fields=("claim_text", "data_nature", "scope_summary"), siblings=("count", "note"),
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    # ── 批2A 七端（缺口实测；参数化端点以实例值探测）──
+    dict(ep="/api/v1/intent", top=("data", "data_nature", "nca_watermark", "ts"),
+         container=None, nested=True,
+         fields=("action", "alternatives", "guide", "matched", "note", "route", "title"),
+         note="data 为字典七键（非容器）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/public/registrations",
+         top=("count", "face", "items", "labels", "proof_boundary"),
+         container="items", nested=False,
+         fields=("content_sha256_16", "family", "nca_ref", "record_id", "registered_at", "status", "title"),
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/library/paper/E1_cross_model_consistency",
+         top=("data", "data_nature", "nca_watermark", "ts"),
+         container=None, nested=True,
+         fields=("body_md", "family", "note", "slug", "source_path", "synced_at", "title"),
+         note="library/{family}/{slug} 实例：data 字典（非容器）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/site/docs/regulation/配置权市场规范（单一权威稿·中文人读版V1.0（现行））.md",
+         top=("bytes", "content", "display_name", "family", "filename", "sha256", "sha256_16", "slug", "version"),
+         container=None, nested=False,
+         fields=("bytes", "content", "display_name", "family", "filename", "sha256", "sha256_16", "slug", "version"),
+         note="site/docs/{family}/{slug} 实例：顶层单件九键（非容器；URL 含 CJK，fetch 须 quote）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/selfcheck/nca/NCA-SEED-001",
+         top=("data", "data_nature", "nca_watermark", "ts"),
+         container=None, nested=True,
+         fields=("artifact_filename_note", "note", "page_disclaimer", "rec_hash_spec", "record", "sha256_8_note"),
+         note="{nca_id} 实例（id 取仓内 PUBLIC-SELFCHECK-MANIFEST.yaml）：data 字典（非容器）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/me/nca", expect_anon_401=True,
+         note="匿名 401 实测确认（登录态私域面，只认匿名→私域→401）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    dict(ep="/api/v1/ops/logs", expect_anon_401=True,
+         note="匿名 401 实测确认（登录态私域面，只认匿名→私域→401）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
 ]
 
 # 未契约化清单候选宇宙：批 2A 十五端点登记（TDCA-AMEND-L1SI208-API-CONTRACT-002 §五，
@@ -102,8 +171,11 @@ CANDIDATES = [
 ]
 
 
+from urllib.parse import quote
+
 def fetch(path):
-    req = urllib.request.Request(BASE + path, headers={"User-Agent": "tdca-g9/1"})
+    # URL 含 CJK slug（site/docs 实例）须 quote，保留 query 与路径分隔符
+    req = urllib.request.Request(BASE + quote(path, safe="/?=&"), headers={"User-Agent": "tdca-g9/1"})
     with urllib.request.urlopen(req, timeout=30) as r:
         raw = r.read()
         if r.headers.get("Content-Encoding") == "gzip":
@@ -113,7 +185,7 @@ def fetch(path):
 
 def probe_status(path):
     """匿名 GET 只探状态码（取键名比对之外的清单探测用，⛔解析内容）。"""
-    req = urllib.request.Request(BASE + path, headers={"User-Agent": "tdca-g9/1"})
+    req = urllib.request.Request(BASE + quote(path, safe="/?=&"), headers={"User-Agent": "tdca-g9/1"})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.status
@@ -127,6 +199,11 @@ def observe(spec):
     d = fetch(spec["ep"])
     top = tuple(sorted(d.keys()))
     holder = d.get("data") if spec["nested"] else d
+    if spec["container"] is None:
+        # 非容器形态：data（或顶层）为字典，核其键集
+        if isinstance(holder, dict):
+            return top, holder, tuple(sorted(holder.keys()))
+        return top, None, None
     items = holder.get(spec["container"]) if isinstance(holder, dict) else None
     fields = None
     if isinstance(items, list) and items and isinstance(items[0], dict):
@@ -159,6 +236,17 @@ def main():
     as_json = "--json" in sys.argv
     rows, diffs = [], 0
     for spec in REGISTRY:
+        if spec.get("expect_anon_401"):
+            # 匿名 401 条目：只探状态码，401→预期（不计 DIFF），非 401→DIFF
+            code = probe_status(spec["ep"])
+            if code == 401:
+                rows.append(dict(ep=spec["ep"], state="ANON401(预期)",
+                                 note=spec.get("note", "匿名→私域面→401")))
+            else:
+                diffs += 1
+                rows.append(dict(ep=spec["ep"], state="DIFF",
+                                 note="匿名状态码=%s，预期 401" % code))
+            continue
         try:
             top, items, fields = observe(spec)
         except Exception as e:
@@ -166,7 +254,9 @@ def main():
             diffs += 1
             continue
         if items is None:
-            rows.append(dict(ep=spec["ep"], state="DIFF", note="容器键不存在：%s" % spec["container"]))
+            what = ("非容器字典形态不符" if spec["container"] is None
+                    else "容器键不存在：%s" % spec["container"])
+            rows.append(dict(ep=spec["ep"], state="DIFF", note=what))
             diffs += 1
             continue
         top_ok = set(spec["top"]) == set(top)
@@ -192,8 +282,8 @@ def main():
                               uncovered=[dict(ep=p, status=c) for p, c in uncovered],
                               rows=rows), ensure_ascii=False, indent=1))
     else:
-        print("=== G9 数据契约闸 v1.1（只读）===")
-        print("正本：TDCA-SPEC-API-CONTRACT-001（2026-11-11T02:45+08；批1字段 2026-11-11 实测补登）")
+        print("=== G9 数据契约闸 v1.2（只读）===")
+        print("正本：TDCA-SPEC-API-CONTRACT-001（批1 2026-11-11T02:45+08；批2 新增 13 端点 2026-11-11 实测）")
         for r in rows:
             line = "  %-46s %s" % (r["ep"], r["state"])
             if r.get("missing"):
