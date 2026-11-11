@@ -17,12 +17,12 @@ class TestValueServicesBundle:
     """双服务打包统一入口。"""
 
     def test_version(self):
-        """包版本 = M2。"""
-        assert value_services.VERSION == "2.0.0-M2"
+        """包版本 = M3（merchant_loop M1 并入后版本串 3.0.0-M1，DCD-MERCHANT-LOOP-001 §四）。"""
+        assert value_services.VERSION == "3.0.0-M1"
 
     def test_services_manifest(self):
-        """双服务清单。"""
-        assert set(value_services.SERVICES.keys()) == {"cog-align", "util-value"}
+        """三服务清单（cog-align + util-value + merchant-loop）。"""
+        assert set(value_services.SERVICES.keys()) == {"cog-align", "util-value", "merchant-loop"}
 
     def test_unified_cog_align_measure(self, capsys):
         """统一入口 → cog_align measure。"""
@@ -85,4 +85,4 @@ class TestModuleEntry:
             cwd=tools_dir, capture_output=True, text=True, timeout=60,
         )
         assert proc.returncode == 0
-        assert "value_services 2.0.0-M2" in proc.stdout
+        assert "value_services 3.0.0-M1" in proc.stdout

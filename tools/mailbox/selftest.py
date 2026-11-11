@@ -60,8 +60,9 @@ def run_selftest(verbose: bool = False) -> tuple[bool, list[str]]:
         # 缺陷2 零占位残留（MAIL 件未封签即入盒）
         _write(os.path.join(box2, "TDCA-SELFTEST-STATE2-DRAFT.md"),
                GOOD_MAIL.replace("{zero}", "0" * 16))
-        # 缺陷3 超名（>110）
-        long_name = "TDCA-SELFTEST-STATE2-" + "长" * 120 + ".md"
+        # 缺陷3 超名（>110）；ASCII 填充——Linux NAME_MAX 按字节计（长*120=386B 触发
+        # ENAMETOOLONG 使夹具创建即崩），字符数>110 判据意图不变，双平台可建
+        long_name = "TDCA-SELFTEST-STATE2-" + "x" * 120 + ".md"
         _write(os.path.join(box2, long_name), GOOD_MAIL.replace("{zero}", "0" * 16))
         # 缺陷4 终态字样
         _write(os.path.join(box2, "TDCA-SELFTEST-STATE2-FINAL.md"),
