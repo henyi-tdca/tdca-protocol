@@ -15,7 +15,7 @@ try:
     from edu_simulator import (
         StudentProfile, StudentTier, UnlockEngine, NSFLGuard, TrainingOrchestrator,
     )
-except ImportError as _e:
+except (ImportError, OSError) as _e:
     pytest.skip(
         "内部依赖 tdca-tima/src（经 src/cks_deployment）不在公开树（%s）——"
         "公开面跳过本套件；内部门禁（全量）环境依赖在架即跑全量" % _e,

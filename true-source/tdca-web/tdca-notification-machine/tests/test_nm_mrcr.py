@@ -19,8 +19,10 @@ import pytest
 _NM = Path(__file__).resolve().parent.parent          # tdca-notification-machine/
 _WS = _NM.parent
 _DUAL = _WS / "tdca-dual-protocol-package"
-for _p in (str(_NM), str(_DUAL / "engine")):
-    if _p not in sys.path:
+# L1SI211-EXTERNAL-FIX-001 A：_DUAL 为运行态符号链接（内部运行态件，非公开树内容），
+# dual/engine 为公开树在册正本——链接缺失时以正本兜底导入（零新代码）。
+for _p in (str(_NM), str(_DUAL / "engine"), str(_WS / "dual" / "engine")):
+    if _p not in sys.path and Path(_p).is_dir():
         sys.path.insert(0, _p)
 
 from engine.nm_mrcr import NmMrcrManager, HW_ACTION_MAP  # noqa: E402
@@ -44,6 +46,11 @@ def test_scene_files_present():
 # ---- 2. DUAL 编译器同构校验 + 最小化合三条件 ----
 
 def test_dual_isomorphism():
+    # L1SI211-EXTERNAL-FIX-001 A：tdca-dual-protocol-package 根符号链接为内部运行态件
+    # （非公开树跟踪内容），缺失时如实 skip ⛔ 假绿；内部全量环境在架即跑。
+    if not (_DUAL / "tdca-public").is_dir():
+        pytest.skip("运行态符号链接 tdca-dual-protocol-package/tdca-public 未建"
+                    "（内部运行态件，非公开树内容）——如实标待触发 ⛔ 假绿")
     from dual_protocol_compiler import DualProtocolCompiler
     comp = DualProtocolCompiler(
         tdca_path=str(_DUAL / "tdca-public"),
@@ -54,6 +61,10 @@ def test_dual_isomorphism():
 
 
 def test_dual_minimal_compound():
+    # 同上：运行态符号链接缺失时如实 skip（L1SI211-EXTERNAL-FIX-001 A）。
+    if not (_DUAL / "tdca-public").is_dir():
+        pytest.skip("运行态符号链接 tdca-dual-protocol-package/tdca-public 未建"
+                    "（内部运行态件，非公开树内容）——如实标待触发 ⛔ 假绿")
     from dual_protocol_compiler import DualProtocolCompiler
     comp = DualProtocolCompiler(
         tdca_path=str(_DUAL / "tdca-public"),
