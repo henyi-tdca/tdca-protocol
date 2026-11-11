@@ -86,7 +86,7 @@ class NcaChain(Base):
     anchor_ok: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # 入当日锚 leaf 集
     detached: Mapped[int] = mapped_column(Integer, default=0, nullable=False)   # 1=无法回溯至创世
     detach_reason: Mapped[str | None] = mapped_column(Text)   # missing_predecessor ／ 空
-    # SMALL2-001 块 B（迁移 0018_site_me_nca_attestation3）——举证六项之三有源；
+    # SMALL2-001 块 B（迁移 0024_site_me_nca_attestation3，RENUM-001 自 0018 换号）——举证六项之三有源；
     # 均 nullable，无源保持 null（页面标「本期无」，⛔ 造值）；compare_result 值域封闭三值。
     subject_ref: Mapped[str | None] = mapped_column(Text)     # 主体脱敏形（sha256(actor)[:12]，⛔ 返全值）
     authz_ref: Mapped[str | None] = mapped_column(Text)       # 授权件编号（⛔ 返授权正文）

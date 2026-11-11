@@ -1,4 +1,4 @@
-"""0018 site me nca attestation3（SMALL2-001 块 B：存证举证三字段）
+"""0024 site me nca attestation3（SMALL2-001 块 B：存证举证三字段；RENUM-001 换号自 0018，内容零改）
 
 - nca_chain 增三列（皆 Text nullable，⛔ 不改既有四字段）：
   subject_ref    主体（本钥标识之脱敏形 = sha256(actor)[:12]，不可逆、⛔ 返全值）
@@ -11,8 +11,8 @@ from alembic import op
 import sqlalchemy as sa
 
 
-revision = 'a0b1c2d3e4f5'
-down_revision = 'f9a0b1c2d3e4'
+revision = 'd0e1f2a3b4c5'
+down_revision = 'c9d0e1f2a3b4'
 branch_labels = None
 depends_on = None
 
