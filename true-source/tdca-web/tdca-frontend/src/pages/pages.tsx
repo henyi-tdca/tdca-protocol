@@ -109,6 +109,10 @@ export const PAGE_META: PageMeta[] = [
   { path: '/use/agent', title: '代办登记（机器人只跑腿）', layer: 'L0', dataSource: 'GET /api/v1/use/upload/{id} ＋ POST /api/v1/ownership/register（OR- 号沿用）', permission: '登录 DID（须本人确认，未确认不出号）', description: '上传成功后接着办登记：机器人只问缺项、出草稿（不落库不出号）；本人看过草稿、显式点确认才出登记号；机器人不代签、不代判、不对外承诺。' },
   // L1SI197-PUBLIC2-001 块 A：严选池专栏（一级栏目单页；只出三项＋逐项六字段；清单唯一源；⛔ 详情页 ⛔ sitemap 多层）
   { path: '/curation', title: '严选池 · 精选项目一栏', layer: 'L0', dataSource: '严选池清单（本侧供给，逐项照单渲染）', permission: '公开（匿名可读）', description: '严选池：经在册严选流程留池的项目清单，只出汇总数／项目名／用途一句，逐项六字段照单如实呈现，留白如实标注。' },
+  // L1SI195-B1-001 C-2 交付清单页（开单→补件→确认；公开只读单件；只施工不部署）
+  { path: '/delivery', title: '交付清单（C-2）', layer: 'L0', dataSource: 'POST /api/v1/delivery/manifest|items|confirm ＋ GET /api/v1/delivery/{delivery_id}（公开只读）', permission: '开单/补件/确认须登录 DID；单件公开只读', description: '交付方开一件清单：逐项登记交付物（哈希、单件大小阈值待运维核定）；逐项报齐后确认收货；单件视图公开只读，每步落链留痕（nca_seq＋rec_hash 副本）。' },
+  // L1SI195-B1-001 C-3 验收记录页（登记标准→判定→整改→复判；公开只读；只施工不部署）
+  { path: '/acceptance', title: '验收记录（C-3）', layer: 'L0', dataSource: 'POST /api/v1/acceptance/standard|verdict|rectify ＋ GET /api/v1/acceptance/{acceptance_id}（公开只读）', permission: '登记标准/判定/整改须登录 DID；单件公开只读', description: '验收方对一件交付先登记验收标准（事前登记才可判）；逐条目判定，不通过必填差距并走整改复判；判定通过公开视图只加「可结算」，单步不接结算；单件公开只读。' },
 ]
 
 export const ROUTE_PATHS = PAGE_META.map((m) => m.path)
@@ -198,6 +202,9 @@ import { NodeNetPage } from './node-net'
 // L1SI181-USE-U1-001 U-1c：朴素上传页（⛔ 拖拽/进度/多语言/批量）
 import { UseUploadPage } from './use-upload'
 import { UseAgentPage } from './use-agent'
+// L1SI195-B1-001：C-2 交付清单页＋C-3 验收记录页（只施工不部署）
+import { DeliveryPage } from './delivery'
+import { AcceptancePage } from './acceptance'
 // L1SI188-NAV-FIX-004 项2：智能体通道总入口页（六步照在册＋六子页入口）
 import { ChannelPortalPage } from './channel'
 // L1SI188-NAV-FIX-006 P2-2：匿名可见面清单一页三栏
@@ -269,6 +276,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/nodes': NodeNetPage,
   '/use/upload': UseUploadPage,
   '/use/agent': UseAgentPage,
+  '/delivery': DeliveryPage,
+  '/acceptance': AcceptancePage,
   '/channel': ChannelPortalPage,
   '/public-face': PublicFacePage,
   '/curation': CurationPoolPage,
