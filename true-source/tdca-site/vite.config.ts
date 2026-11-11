@@ -1,14 +1,15 @@
 import path from "path"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vitest/config"
-import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 // https://vite.dev/config/
 export default defineConfig({
   // FRONTEND-MERGE 批3：BrowserRouter 深链直开须绝对基路径（原 './' 致 /agents/:id 两级深链取不到产物白屏；
   // 站点挂域名根，绝对根基安全；旧版为 hash 路由故从未触发）
   base: '/',
-  plugins: [inspectAttr(), react()],
+  // SITE-SEC-001 B-5：关 kimi-plugin-inspect-react（code-path 注入插件，产物含 "code-path":"src\\components\\…"）
+  // 依赖保留在 package.json（可再启用），生产构建不再注入
+  plugins: [react()],
   server: {
     port: 3000,
   },

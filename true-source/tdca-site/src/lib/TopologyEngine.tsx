@@ -22,14 +22,8 @@
  *
  * 数据源：E-EDU-API-V1.0 concepts/relations（默认）或本地 netNodes/netEdges
  */
-import { useEffect, useMemo, useRef, useState } from 'react'
-import cytoscape, { type Core, type ElementDefinition } from 'cytoscape'
-
-// Cytoscape 实例引用（仅布局计算用，视觉层为 SVG）
-const cyRef: { current: Core | null } = { current: null }
-function setCyRef(instance: Core) {
-  cyRef.current = instance
-}
+import { useEffect, useMemo, useState } from 'react'
+import cytoscape, { type ElementDefinition } from 'cytoscape'
 
 export interface TopoNode {
   id: string
@@ -146,13 +140,13 @@ export function eduTopoAdapter(
  * Cytoscape 计算布局 → 映射到百分比坐标 → SVG 渲染（Kimi 视觉层样式）
  */
 export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?: number }) {
-  const containerRef = useRef<HTMLDivElement>(null)
   const [positions, setPositions] = useState<Record<string, { x: number; y: number }>>({})
   const [world, setWorld] = useState<'physical' | 'agent'>('agent')
 
-  // B1：Cytoscape 实例化 + 布局计算（图论坐标 → 百分比）
+  // B1：Cytoscape headless 布局计算（图论坐标 → 百分比）
+  // SITE-SEC-001 B-6：headless:true 不创建 canvas——原挂 display:none 隐藏容器致 3 个 0×0 canvas 残留
+  //（headless 模式不做任何渲染，布局/boundingBox/position 读数与非 headless 完全一致，视觉层仍为 SVG）
   useEffect(() => {
-    if (!containerRef.current) return
     const elements: ElementDefinition[] = [
       ...data.nodes.map((n) => ({
         data: { id: n.id, label: n.label },
@@ -162,16 +156,11 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
       })),
     ]
     const instance = cytoscape({
-      container: containerRef.current,
       elements,
-      style: [
-        { selector: 'node', style: { label: 'data(label)', 'font-size': '0px' } }, // 隐藏 cytoscape 自带标签（用 SVG 层渲染）
-        { selector: 'edge', style: { width: 0, 'line-color': '#0000' } },
-      ],
+      styleEnabled: false,
       layout: { name: 'cose', animate: false, padding: 20 },
-      headless: false,
+      headless: true,
     })
-    setCyRef(instance)
     // 布局完成后读取位置 → 百分比坐标
     instance.ready(() => {
       const bb = instance.elements().boundingBox()
@@ -275,8 +264,6 @@ export function TopologyEngine({ data, height = 420 }: { data: TopoData; height?
           </button>
         </div>
       </div>
-      {/* Cytoscape 隐藏容器（仅布局计算，视觉层用 SVG） */}
-      <div ref={containerRef} className="hidden" style={{ width: 800, height: 600 }} />
       <style>{`@keyframes dash { to { stroke-dashoffset: -20; } }`}</style>
     </div>
   )
