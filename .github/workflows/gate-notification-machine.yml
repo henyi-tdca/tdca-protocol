@@ -1,0 +1,23 @@
+# gate-notification-machine —— L1SI211-EXTERNAL-FIX-001 A：通知机测试门（原无门禁，补）
+# 公开面口径：42 条用例全跑；唯 dual 同构 2 条依赖运行态符号链接，缺失时 skip 并注原因（⛔ 假绿）。
+name: gate-notification-machine
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-notification-machine/**", ".github/workflows/gate-notification-machine.yml"]
+  pull_request:
+    paths: ["tdca-notification-machine/**", ".github/workflows/gate-notification-machine.yml"]
+permissions:
+  contents: read
+jobs:
+  pytest:
+    name: tdca-notification-machine 测试门
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 测试门（公开面口径，skip 须带原因）
+        run: python -m pytest tdca-notification-machine -q -rs -p no:cacheprovider

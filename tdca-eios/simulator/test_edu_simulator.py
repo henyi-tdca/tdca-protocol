@@ -4,10 +4,23 @@ import os
 import sys
 import unittest
 
+import pytest  # noqa: E402  L1SI211-EXTERNAL-FIX-001 A②：模块级 skip 需要
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from edu_simulator import (
-    StudentProfile, StudentTier, UnlockEngine, NSFLGuard, TrainingOrchestrator,
-)
+
+# L1SI211-EXTERNAL-FIX-001 A②：edu_simulator 经 src/cks_deployment 依赖 TIMA 内部件
+# （tdca-tima/src 不在公开树）——依赖缺失时 skip 并注原因（如实标待触发 ⛔ 假绿）；
+# 内部全量环境（依赖在架）跑全量。
+try:
+    from edu_simulator import (
+        StudentProfile, StudentTier, UnlockEngine, NSFLGuard, TrainingOrchestrator,
+    )
+except ImportError as _e:
+    pytest.skip(
+        "内部依赖 tdca-tima/src（经 src/cks_deployment）不在公开树（%s）——"
+        "公开面跳过本套件；内部门禁（全量）环境依赖在架即跑全量" % _e,
+        allow_module_level=True,
+    )
 
 
 class TestUnlockEngine(unittest.TestCase):
@@ -84,6 +97,14 @@ class TestTrainingOrchestrator(unittest.TestCase):
     """四个实训流程"""
 
     def setUp(self):
+        # L1SI211-EXTERNAL-FIX-001 A②：实训场景经 src/cks_deployment 依赖 TIMA 内部件
+        # （tdca-tima/src 不在公开树）——依赖缺失时 skip 并注原因（如实标待触发 ⛔ 假绿）；
+        # 内部全量环境（依赖在架）跑全量。
+        try:
+            from cks_deployment import CKSSyncAdapter  # noqa: F401
+        except ImportError as _e:
+            self.skipTest("内部依赖 tdca-tima/src（经 src/cks_deployment）不在公开树"
+                          "（%s）——公开面跳过；内部门禁（全量）环境依赖在架即跑全量" % _e)
         self.eng = UnlockEngine()
         self.orch = TrainingOrchestrator()
         self.stu = StudentProfile('S-TEST')

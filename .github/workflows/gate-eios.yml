@@ -1,0 +1,32 @@
+# gate-eios —— L1SI211-EXTERNAL-FIX-001 A②：EIOS 测试门（原无门禁，补）
+# 公开面口径：无内部依赖用例全跑；tests/ 冒烟套件与实训场景 08-14 依赖 TIMA 内部件
+# （不在公开树）——缺失时 tests/ 返回 no-tests（rc=5，原因见日志告警）、场景 skip 注原因（⛔ 假绿）。
+# 故本门接受 rc 0 或 5，且 5 时只可能是「依赖不在公开树」之声明形态。
+name: gate-eios
+on:
+  workflow_dispatch:
+  push:
+    paths: ["tdca-eios/**", ".github/workflows/gate-eios.yml"]
+  pull_request:
+    paths: ["tdca-eios/**", ".github/workflows/gate-eios.yml"]
+permissions:
+  contents: read
+jobs:
+  pytest:
+    name: tdca-eios 测试门（公开面口径）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 测试门（rc 0 或 5 为门过；5=tests/ 套件依赖不在公开树之声明形态）
+        run: |
+          python -m pytest tdca-eios -q -rs -p no:cacheprovider
+          rc=$?
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 5 ]; then
+            echo "门败：rc=$rc（0=公开面全过；5=tests/ 依赖不在公开树）"
+            exit "$rc"
+          fi
+          echo "门过：rc=$rc"
