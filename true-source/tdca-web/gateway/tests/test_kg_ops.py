@@ -70,24 +70,33 @@ def test_static_unknown_404(client):
     assert client.get("/kg/v1/../nodes.yaml").status_code == 404
 
 
+def _d(r):
+    """解 ID91 信封并核验水印三字段（前端统一客户端缺印拒绝渲染的回归判据）。"""
+    body = r.json()
+    assert body["nca_watermark"].startswith("sha256:")
+    assert body["data_nature"] == "real"
+    assert body["ts"]
+    return body["data"]
+
+
 def test_manifest_sha(client):
     r = client.get("/api/v1/kg/manifest")
     assert r.status_code == 200
-    assert r.json()["sha256_16"]
+    assert _d(r)["sha256_16"]
 
 
 def test_nodes_filter(client):
     r = client.get("/api/v1/kg/nodes", params={"layer": "L0"})
-    assert r.json()["count"] == 2
+    assert _d(r)["count"] == 2
     r = client.get("/api/v1/kg/nodes", params={"q": "配置权"})
-    assert r.json()["count"] == 1
+    assert _d(r)["count"] == 1
     r = client.get("/api/v1/kg/nodes", params={"type": "Principle"})
-    assert r.json()["count"] == 1
+    assert _d(r)["count"] == 1
 
 
 def test_node_detail_with_relations(client):
     r = client.get("/api/v1/kg/node/n0001")
-    body = r.json()
+    body = _d(r)
     assert body["node"]["label"] == "场景边界"
     assert [e["type"] for e in body["out_edges"]] == ["DERIVES_FROM"]
     assert [e["type"] for e in body["in_edges"]] == ["IMPLEMENTS"]
@@ -100,7 +109,7 @@ def test_node_unknown_404(client):
 
 def test_subgraph_depth(client):
     r = client.get("/api/v1/kg/subgraph", params={"root": "n0001", "depth": 1})
-    body = r.json()
+    body = _d(r)
     assert {n["id"] for n in body["nodes"]} == {"n0001", "n0002", "n0003"}
     r = client.get("/api/v1/kg/subgraph", params={"root": "n0001", "depth": 2})
     assert r.status_code == 200
@@ -108,7 +117,7 @@ def test_subgraph_depth(client):
 
 def test_edges_filter(client):
     r = client.get("/api/v1/kg/edges", params={"type": "IMPLEMENTS"})
-    assert r.json()["count"] == 1
+    assert _d(r)["count"] == 1
 
 
 def test_write_methods_405(client):
