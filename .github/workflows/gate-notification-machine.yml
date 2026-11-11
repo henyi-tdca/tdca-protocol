@@ -19,5 +19,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: 安装测试依赖（最小面）
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
       - name: 测试门（公开面口径，skip 须带原因）
         run: python -m pytest tdca-notification-machine -q -rs -p no:cacheprovider
