@@ -30,6 +30,9 @@ BASE = "https://tdca.com.cn"
 # 正本：首批五端点（时点 2026-11-11T02:45+08）
 # container=None 表示非容器形态（data 或顶层为字典，核其键集）；否则为 data 下的容器键
 # 自描述三字段照 L1SI209 GATE-AND-SVG-001 L4：source_snapshot_sha256_16 为智库册正本快照前 16 位大写
+# v1.3（L1SI209 AMEND-4 批2C，2026-11-11）：
+#  · 新增登记 4 端点＝AMEND-4 四端（21→25）：agent-channel/gate（匿名 200，data 字典八键）、
+#    cluster/lineage/{agent_id}、authorization/rules、authorization/query（三者匿名 401，实测日实测）
 # v1.2（L1SI209 SHAPE-F3-MERGE-001 任务二）：
 #  · 智库册正本快照真值补登（GSEQ-7898 口径：正本四件 7850→7856→7863→7898 升序拼字节
 #    取 sha256 前 16 位大写；执行侧复算全值一致 129E0616F75CBEFD…）
@@ -37,10 +40,12 @@ BASE = "https://tdca.com.cn"
 #  · expect_anon_401=True 条目只探匿名状态码，401→ANON401(预期) 不计 DIFF，非 401→DIFF
 #  · siblings 为 data 级同级键标注（annotation-only，比对逻辑不读）
 _SOURCE_SPEC = ("TDCA-SPEC-API-CONTRACT-001＋TDCA-AMEND-PARITY-GATE-001(GSEQ-7851)"
-                "＋TDCA-AMEND-3(GSEQ-7898)＋批2A(TDCA-AMEND-L1SI208-API-CONTRACT-002 §五)")
+                "＋TDCA-AMEND-3(GSEQ-7898)＋批2A(TDCA-AMEND-L1SI208-API-CONTRACT-002 §五)"
+                "＋TDCA-AMEND-4(批2C)")
 _SNAPSHOT_SHA16 = "129E0616F75CBEFD"
 _SYNCED_AT = "2026-11-11T02:45+08"       # 批1 八条
 _SYNCED_AT_B2 = "2026-11-11+08"          # 批2 新增 13 条（2026-11-11 实测日）
+_SYNCED_AT_B2C = "2026-11-11+08"         # 批2C AMEND-4 四条（2026-11-11 实测日）
 REGISTRY = [
     dict(ep="/api/site/docs", top=("count", "documents", "family", "principle", "source"),
          container="documents", nested=False,
@@ -137,6 +142,22 @@ REGISTRY = [
     dict(ep="/api/v1/ops/logs", expect_anon_401=True,
          note="匿名 401 实测确认（登录态私域面，只认匿名→私域→401）",
          source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    # ── AMEND-4 批2C 四端（2026-11-11 匿名实测；21→25）──
+    dict(ep="/api/v1/agent-channel/gate", top=("data", "data_nature", "nca_watermark", "ts"),
+         container=None, nested=True,
+         fields=("ghost", "note", "reg_no", "registered", "授权信息", "授权状态", "权属信息", "获取方式"),
+         note="data 为字典八键（非容器，键含中文四键）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2C),
+    dict(ep="/api/v1/cluster/lineage/agent-cl-001", expect_anon_401=True,
+         note="参数化 /lineage/{agent_id} 以测试 fixture 实例值探测（agent-cl-001，"
+              "test_cluster_ops.py）；匿名 401 实测确认；裸 /lineage 为 404 不登记",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2C),
+    dict(ep="/api/v1/authorization/rules", expect_anon_401=True,
+         note="匿名 401 实测确认（登录态私域面，只认匿名→私域→401）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2C),
+    dict(ep="/api/v1/authorization/query", expect_anon_401=True,
+         note="匿名 401 实测确认（登录态私域面，只认匿名→私域→401）",
+         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2C),
 ]
 
 # 未契约化清单候选宇宙：批 2A 十五端点登记（TDCA-AMEND-L1SI208-API-CONTRACT-002 §五，
