@@ -42,7 +42,8 @@ def _kg_dir() -> Path | None:
         if cand.is_dir():
             return cand
     here = Path(__file__).resolve()
-    for parent in (here.parents[3], here.parents[2], here.parents[1]):
+    # parents[0]＝包目录自身（站机部署：kg/v1 随代码目录同挂载）；其余为本地仓回退
+    for parent in (here.parents[0], here.parents[3], here.parents[2], here.parents[1]):
         cand = parent / "kg" / "v1"
         if cand.is_dir():
             return cand
