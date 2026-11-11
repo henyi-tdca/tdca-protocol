@@ -217,6 +217,12 @@ app.include_router(public_docs_router)
 from public_docs_ops import alias_router as public_docs_alias_router  # noqa: E402
 app.include_router(public_docs_alias_router)
 
+# A-?: 知识图谱公开只读面（L1SI211-KG-SITE-001——/kg/v1/* 静态包四件直取＋
+# /api/v1/kg/* nodes/node/subgraph/edges 四条只读接口；匿名可读⛔登录墙；
+# 件即容器只读文件单一事实源；容器无 PyYAML 故依赖-free 解析；⛔改包内内容）
+from kg_ops import router as kg_ops_router  # noqa: E402
+app.include_router(kg_ops_router)
+
 # A-29: 批3「门与闸」A块·缔约审核（L1SI176-B3-GATE-001——/api/site/join/list 评审只读队列；
 # 审核身份双通道 fail-closed；⛔ 不返回凭据值；前端契约冻结照 /review 页现状）
 from join_ops import router as join_ops_router  # noqa: E402
