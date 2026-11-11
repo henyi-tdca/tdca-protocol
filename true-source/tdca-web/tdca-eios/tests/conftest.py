@@ -9,20 +9,30 @@
 import importlib.util
 import os
 import sys
+import warnings
 
 WS = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # global-workspace
 
 # ---- TIMA: 保持 src 包名（EIOS 模块兼容） ----
 TIMA_SRC = os.path.join(WS, 'tdca-tima')
 sys.path.insert(0, TIMA_SRC)
-import src.models          # noqa: E402
-import src.cks_protocol    # noqa: E402
-import src.l0_legal_memory  # noqa: E402
-import src.l1_ownership_memory  # noqa: E402
-import src.l2_config_memory  # noqa: E402
-import src.l3_utility_memory  # noqa: E402
-import src.basis_transformer  # noqa: E402
-import src.mindmos_bridge  # noqa: E402
+
+
+# L1SI211-EXTERNAL-FIX-001 A②：TIMA（tdca-tima/src）为内部件、不在公开树。
+# 依赖缺失时不造假绿也不打断他套件——整目录不收集（rc=5 NO_TESTS），
+# 原因入告警日志；内部全量环境（依赖在架）照常跑全量。
+_DEPS_MISSING = None
+try:
+    import src.models          # noqa: E402
+    import src.cks_protocol    # noqa: E402
+    import src.l0_legal_memory  # noqa: E402
+    import src.l1_ownership_memory  # noqa: E402
+    import src.l2_config_memory  # noqa: E402
+    import src.l3_utility_memory  # noqa: E402
+    import src.basis_transformer  # noqa: E402
+    import src.mindmos_bridge  # noqa: E402
+except ImportError as _e:
+    _DEPS_MISSING = "tdca-tima/src 不在公开树（%s）" % _e
 
 # ---- FC-012: 注册为别名包 fc012（避免 src 冲突） ----
 FO_SRC = os.path.join(WS, 'tdca-flow-orchestrator', 'src')
@@ -38,13 +48,22 @@ def _register_package(alias: str, src_dir: str):
     return pkg
 
 
-_register_package('fc012', FO_SRC)
-import fc012.models  # noqa: E402
-import fc012.flow_engine  # noqa: E402
-import fc012.phase_machine  # noqa: E402
-import fc012.mou_closer  # noqa: E402
-import fc012.nca_reporter  # noqa: E402
-import fc012.fuse_adapter  # noqa: E402
+if _DEPS_MISSING is None:
+    try:
+        _register_package('fc012', FO_SRC)
+        import fc012.models  # noqa: E402
+        import fc012.flow_engine  # noqa: E402
+        import fc012.phase_machine  # noqa: E402
+        import fc012.mou_closer  # noqa: E402
+        import fc012.nca_reporter  # noqa: E402
+        import fc012.fuse_adapter  # noqa: E402
+    except ImportError as _e:
+        _DEPS_MISSING = "tdca-flow-orchestrator/src 不在公开树（%s）" % _e
+
+if _DEPS_MISSING is not None:
+    # 公开面：整套件不收集（⛔ 假绿、⛔ 打断他套件）；原因照实入日志。
+    collect_ignore_glob = ["*"]
+    warnings.warn("EIOS 测试套件不收集：内部依赖 %s——公开面口径见 README 两口径声明" % _DEPS_MISSING)
 
 # ---- FC-001 / FC-004 / FC-005 / EIOS src: 目录入 path ----
 for p in [
