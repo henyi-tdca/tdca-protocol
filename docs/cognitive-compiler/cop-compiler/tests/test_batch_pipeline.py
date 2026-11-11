@@ -337,3 +337,20 @@ class TestReport:
             data = json.load(f)
         assert "batch" in data and "acceptance" in data
         assert data["acceptance"]["correct_rate"] > 95
+
+
+class TestDualTrackSelection:
+    """GATE24-B3 令 B 新增断言：双轨目录（全键件 + -PUB 脱敏件 + bindings/）选件必得全键件。"""
+
+    def test_选件必得全键件(self):
+        files = BP.list_domain_cops("stratagems")
+        assert files, "stratagems 域选件为空"
+        for p in files:
+            fn = os.path.basename(p)
+            assert not fn.endswith("-PUB.yaml"), f"-PUB 件入选：{fn}"
+            assert os.sep + "bindings" + os.sep not in p, f"bindings/ 件入选：{p}"
+            cop = BP.load_cop_required(p)  # 缺 COP-ID 即 fail-closed 抛错
+            assert cop["COP-ID"].startswith("STRATAGEM-COP-")
+        # 走为上/围魏救赵按名取件同样命中全键件
+        assert BP.load_stratagem_required("走为上")["COP-ID"].startswith("STRATAGEM-COP-")
+        assert BP.load_stratagem_required("围魏救赵")["COP-ID"].startswith("STRATAGEM-COP-")

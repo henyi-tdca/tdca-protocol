@@ -49,8 +49,9 @@ def _load(rel):
 
 
 def _load_stratagem(name):
-    for fn in os.listdir(STRATAGEMS):
-        if name in fn:
+    # 选件规则同批产（GATE24-B3）：非 -PUB 全键件优先，⛔ listdir 首匹配（-PUB 无 COP-ID）
+    for fn in sorted(os.listdir(STRATAGEMS)):
+        if name in fn and not fn.endswith("-PUB.yaml"):
             with open(os.path.join(STRATAGEMS, fn), "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
     raise FileNotFoundError(name)
@@ -179,10 +180,10 @@ class TestComputeU0:
         assert 0 <= u0 <= 1
 
     def test_全部三十六计U0(self):
-        # 批产口径：36 计全部可计算 U0 ∈ [0,1] 且无异常
+        # 批产口径：36 计全部可计算 U0 ∈ [0,1] 且无异常（选件规则：非 -PUB 全键件）
         cnt = 0
         for fn in sorted(os.listdir(STRATAGEMS)):
-            if fn.endswith(".yaml"):
+            if fn.endswith(".yaml") and not fn.endswith("-PUB.yaml"):
                 with open(os.path.join(STRATAGEMS, fn), "r", encoding="utf-8") as f:
                     cop = yaml.safe_load(f)
                 u0, _ = SL.compute_u0(cop)
