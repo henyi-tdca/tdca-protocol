@@ -32,6 +32,20 @@ from nsfl_union.api import app as d2_app
 from cscp_gateway.gateway import app as cscp_app
 from workbuddy.api import app as wb_app
 from translator_market.api import app as tm_app
+
+# L1SI211-CI-SHADOW-001：四子应用导入链会在 sys.path 头部累计插入数十条路径，
+# CI 全量 PYTHONPATH（set 序，父级含 tools/cross-scene 同名包）把本五目录推到
+# 遮蔽位之后，致 cross_scene 命中无 p3_api 的同名包（收集期 49 模块全红，实证）。
+# 用前重置顶：移除后插 0，确保自用包先于 PYTHONPATH 命中。不改导入语义与端点契约。
+for _sub in ("tdca-d2-union", "tdca-cscp", "tdca-workbuddy",
+             "tdca-translator-market", "tdca-cross-scene"):
+    _p = _ROOT / _sub
+    if _p.is_dir():
+        _s = str(_p)
+        if _s in sys.path:
+            sys.path.remove(_s)
+        sys.path.insert(0, _s)
+
 from cross_scene.p3_api import app as p3_app
 
 # B-3: 统一后端体系——纳入 tdca-bridge（原 :8080）端点，前端统一走 gateway :8100
