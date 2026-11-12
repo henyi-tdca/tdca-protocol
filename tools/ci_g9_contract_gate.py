@@ -108,11 +108,12 @@ REGISTRY = [
          fields=("claim_text", "data_nature", "scope_summary"), siblings=("count", "note"),
          source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
     # ── 批2A 七端（缺口实测；参数化端点以实例值探测）──
-    dict(ep="/api/v1/intent", top=("data", "data_nature", "nca_watermark", "ts"),
-         container=None, nested=True,
-         fields=("action", "alternatives", "guide", "matched", "note", "route", "title"),
-         note="data 为字典七键（非容器）",
-         source_spec=_SOURCE_SPEC, source_snapshot_sha256_16=_SNAPSHOT_SHA16, synced_at=_SYNCED_AT_B2),
+    # /api/v1/intent：SITE-SEC-001 A 段加锁（2026-11-12 生效，已授权 P0 修复）后匿名须 401，
+    # 数据形契约（七键字典）须会话方能探测，超出本门匿名口径 ⟹ 登记为 ANON-401(预期) 类。
+    # 形契约读数见 -299 §二（持真令牌 200 实测）；匿名判据 401 TDCA-E-NL-AUTH-001。
+    dict(ep="/api/v1/intent", expect_anon_401=True,
+         note="加锁为已授权 P0 修复（SITE-SEC-001 A 段），2026-11-12 生效；"
+              "匿名 401 TDCA-E-NL-AUTH-001；形契约七键见 -299（须会话，匿名口径不探）",),
     dict(ep="/api/public/registrations",
          top=("count", "face", "items", "labels", "proof_boundary"),
          container="items", nested=False,
