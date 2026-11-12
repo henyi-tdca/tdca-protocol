@@ -333,8 +333,11 @@ def format_check(base: str | None, files: list[str] | None,
 # 档三 observe（观察门·只报不挡，永远 exit 0）
 # ---------------------------------------------------------------------------
 
-def count_placeholder(root: Path = REPO_ROOT) -> int:
+def count_placeholder(root: Path = REPO_ROOT) -> tuple[int, int]:
+    # 须修#50（6/8）读失败文件须在门内计数上报——原 except pass 使占位计数偏乐观
+    # （不可读文件被当 0 占位），现返回 (占位计数, 不可读文件数)（BACKLOG-001 §二）
     total = 0
+    unreadable = 0
     for base in (root / "tdca-adapters", root / "tools"):
         if not base.is_dir():
             continue
@@ -344,8 +347,8 @@ def count_placeholder(root: Path = REPO_ROOT) -> int:
             try:
                 total += f.read_text(encoding="utf-8", errors="replace").count(PLACEHOLDER_MARK)
             except OSError:
-                pass
-    return total
+                unreadable += 1
+    return total, unreadable
 
 
 def note_age_days(root: Path = REPO_ROOT,
@@ -389,7 +392,7 @@ def observe(build_log: str | None, root: Path = REPO_ROOT) -> int:
         log_note = f"日志 {build_log} 不存在，记 0"
 
     # 指标② 占位声明计数
-    placeholder_n = count_placeholder(root)
+    placeholder_n, placeholder_unreadable_n = count_placeholder(root)
 
     # 指标③ 注记时效
     age, undated = note_age_days(root)
@@ -408,6 +411,7 @@ def observe(build_log: str | None, root: Path = REPO_ROOT) -> int:
         ("warnings", warnings_n, log_note),
         ("deprecations", deprecations_n, log_note),
         ("placeholders", placeholder_n, "tdca-adapters/ 与 tools/ 下 *.py 字面计数"),
+        ("placeholder_unreadable_files", placeholder_unreadable_n, "须修#50（6/8）：占位计数时不可读 *.py 文件数（原静默 pass，计数偏乐观）"),
         ("max_note_age_days", age_val, "lean-tdca 件头机验日期距今最长天数"),
     ]
     lines_out = ["## 观察门·只报不挡（GSEQ-2902 档三）", "",
