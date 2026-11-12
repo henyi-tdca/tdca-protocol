@@ -185,7 +185,10 @@ class PhaseMachine:
             elapsed = (datetime.now(timezone.utc) - start_dt).total_seconds()
             return elapsed <= max_duration
         except (ValueError, TypeError):
-            return True
+            # 须修#75（7/8）时间戳解析失败不得静默视为通过：原 return True 使
+            # 非法 start_time 绕过衰减保护（fail-open）；改 fail-closed 返 False
+            # （契约不变：仍返 bool，缺失约束之原型兼容路径不受影响）（BACKLOG-001 §二）
+            return False
 
     def get_conditions(self, from_phase: str, to_phase: str) -> list:
         """查询穿越条件（供前端 UI-007 调用）"""
