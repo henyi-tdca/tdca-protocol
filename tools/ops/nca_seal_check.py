@@ -65,7 +65,10 @@ def load_records(nca):
 
 
 def load_signreg(nca):
+    # 须修#80（8/8）签名登记读失败须计数上报——原 except pass 使坏登记文件被当
+    # 「该批未签名」之外的沉默缺口，校验面漏报；现返 (签名集, 读失败数)（BACKLOG-001 §二）
     signed = set()
+    read_fail = 0
     for p in glob.glob(os.path.join(nca, "reports", "_NCA-BLOCK-SIGNREG-*.json")):
         try:
             with open(p, encoding="utf-8") as f:
@@ -73,8 +76,8 @@ def load_signreg(nca):
             for b in j.get("blocks") or []:
                 signed.add(b.get("block_id"))
         except Exception:
-            pass
-    return signed
+            read_fail += 1
+    return signed, read_fail
 
 
 def main():
@@ -124,7 +127,8 @@ def main():
     res["DUP"] = dup
 
     # ③ 签名滞后
-    signed = load_signreg(nca)
+    signed, signreg_read_fail = load_signreg(nca)
+    res["SIGNREG_READ_FAIL"] = signreg_read_fail
     uns = [b["block_id"] for b in blocks if b["block_id"] not in signed]
     res["UNSIGNED"] = uns
 
@@ -172,6 +176,8 @@ def main():
               len(res["DUP"]), len(res["DUP_NEW"]), len(res["DUP_KNOWN"]),
               res["DUP_NEW"] if res["DUP_NEW"] else ""))
         print("[%s] UNSIGNED=%d" % ("OK" if not res["UNSIGNED"] else "UNSIGNED", len(res["UNSIGNED"])))
+        print("[%s] SIGNREG_READ_FAIL=%d" % ("OK" if signreg_read_fail == 0 else "WARN",
+              signreg_read_fail))
         print("[%s] MISSING_DAY=%d %s" % ("OK" if not res["MISSING_DAY"] else "MISSING_DAY",
               len(res["MISSING_DAY"]), res["MISSING_DAY"]))
         print("VERDICT=%s" % ("OK" if ok else "DIFF"))

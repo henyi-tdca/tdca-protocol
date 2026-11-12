@@ -1,0 +1,13 @@
+FROM nginx:1.31.7-alpine AS build
+RUN apk add --no-cache git wget gcc make musl-dev pcre-dev zlib-dev openssl-dev brotli-dev cmake
+WORKDIR /src
+RUN wget -q https://nginx.org/download/nginx-1.31.7.tar.gz && tar xzf nginx-1.31.7.tar.gz
+RUN git clone -q --depth=1 --recurse-submodules https://github.com/google/ngx_brotli.git
+WORKDIR /src/nginx-1.31.7
+RUN ./configure --with-compat --add-dynamic-module=../ngx_brotli > /tmp/configure.log 2>&1 && make -j2 modules > /tmp/make.log 2>&1
+
+FROM nginx:1.31.7-alpine
+RUN apk add --no-cache brotli
+COPY --from=build /src/nginx-1.31.7/objs/ngx_http_brotli_filter_module.so /usr/lib/nginx/modules/
+COPY --from=build /src/nginx-1.31.7/objs/ngx_http_brotli_static_module.so /usr/lib/nginx/modules/
+RUN sed -i '1i load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;\nload_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;' /etc/nginx/nginx.conf

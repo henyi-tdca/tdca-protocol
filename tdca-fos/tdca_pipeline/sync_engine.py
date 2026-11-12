@@ -213,6 +213,14 @@ class SevenRepoSyncEngine:
                 priority=priority,
                 human_signed=priority == 5,  # 宪法级需预先签名（ID71）
             )
-        except Exception:
-            # 版本递增失败不阻断联动（记录在 NCA 中即可）
+        except Exception as e:
+            # 须修#17（-298 §3.1）：原注释称「记录在 NCA 中即可」但实无记录（裸 return 吞噬）。
+            # OTA 内部失败路径只抛异常不落 NCA（ota_control.py 实读），故此处补记管道 NCA（ID91），
+            # 版本递增失败仍不阻断联动（BACKLOG-001 §二）。
+            self._record_pipeline_nca({
+                "event": "ota_version_increment_failed",
+                "node_id": node_id,
+                "priority": priority,
+                "error": f"{type(e).__name__}: {e}",
+            })
             return

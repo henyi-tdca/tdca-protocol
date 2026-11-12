@@ -60,12 +60,15 @@ class InterfaceEntropyChecker:
     # ---- Python 检查 ----
 
     def _check_python(self, path: str, report: InterfaceEntropyReport) -> None:
-        report.checked_files.append(path)
         try:
             with open(path, "r", encoding="utf-8") as f:
                 src = f.read()
-        except (OSError, UnicodeDecodeError):
+        except (OSError, UnicodeDecodeError) as e:
+            # 须修#12（-298 §3.1）：读失败原仅静默 return，文件却被计入 checked_files（被当已查）；
+            # 现记违规，读失败可见（BACKLOG-001 §二）。
+            report.add_violation(path, f"文件读取失败: {e}", "ERROR")
             return
+        report.checked_files.append(path)
         try:
             tree = ast.parse(src)
         except SyntaxError as e:
@@ -96,12 +99,15 @@ class InterfaceEntropyChecker:
     # ---- proto 检查 ----
 
     def _check_proto(self, path: str, report: InterfaceEntropyReport) -> None:
-        report.checked_files.append(path)
         try:
             with open(path, "r", encoding="utf-8") as f:
                 src = f.read()
-        except OSError:
+        except (OSError, UnicodeDecodeError) as e:
+            # 须修#13（-298 §3.1）：proto 读失败原静默 return，文件却被计入 checked_files（被当已查）；
+            # 现记违规，读失败可见（BACKLOG-001 §二）。
+            report.add_violation(path, f"proto 文件读取失败: {e}", "ERROR")
             return
+        report.checked_files.append(path)
         if "制度锚定" not in src:
             report.add_violation(path, "proto 缺少制度锚定注释", "ERROR")
         # 检查重复字段号（歧义源）——按 message 作用域统计，跨 message 从 1 开始合法

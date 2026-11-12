@@ -7,11 +7,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
 from .inviter import InviteLetter, WEEKLY_INVITE_LIMIT
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -138,6 +141,9 @@ class EcoLedger:
                     rec = self._read(fh.read())
                     out.append(rec.get("Payload", {}))
             except Exception:
+                # EXT-FIX 须修#2（-298 §3.1）：读取失败的账本记录此前静默丢失、out 照常返回；
+                # 现落审计日志，丢条可观测（BACKLOG-001 §二：读失败须可见）。
+                logger.warning("ecoscan ledger: 账本记录读取失败已跳过（丢条可观测）: %s", f)
                 continue
         return out
 
