@@ -4,7 +4,7 @@
 // 约束矩阵: 站点入站令·甲/乙——只读面；以在册仓库为唯一权威源；A-22 /api/v1/library/*
 // 复用: PageShell / api（会话令牌自动注入）
 // =============================================================================
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { api } from '@/lib/client'
 import { PageShell } from '@/components/PageShell'
@@ -111,6 +111,40 @@ export function LibraryPage() {
   const [items, setItems] = useState<ItemView[]>([])
   const [detail, setDetail] = useState<DetailView | null>(null)
   const [err, setErr] = useState('')
+  // LIB-MOBILE-001 甲案：移动端（<md）两态——默认列表态（列表随页滚，单层滚动）；
+  // 点条目进正文态（全屏覆盖 fixed inset-0＋顶部「← 返回列表」，打开期间锁 body 滚动，
+  // 保证仅正文区一层滚动）；返回回列表态并恢复位置。桌面（md+）三列同屏，覆盖层 md:hidden 不渲染可见。
+  const [mobileDetail, setMobileDetail] = useState(false)
+  const listRef = useRef<HTMLUListElement>(null)
+  const savedListTop = useRef(0)
+  const savedWinTop = useRef(0)
+  const wasDetail = useRef(false)
+
+  // 移动端正文态锁 body 滚动（桌面与列表态不锁）；横竖屏跨界（跨 md 断点）随 matchMedia 即时切换；
+  // 卸载/返回时还原原值。matchMedia 兜底防 jsdom 无实现。
+  useEffect(() => {
+    if (!mobileDetail) return
+    if (typeof window.matchMedia !== 'function') return
+    const mq = window.matchMedia('(max-width: 767px)')
+    const prev = document.body.style.overflow
+    const apply = () => { document.body.style.overflow = mq.matches ? 'hidden' : prev }
+    apply()
+    mq.addEventListener('change', apply)
+    return () => {
+      mq.removeEventListener('change', apply)
+      document.body.style.overflow = prev
+    }
+  }, [mobileDetail])
+
+  // 回列表态后恢复位置：桌面＝列表 pane scrollTop；移动端＝窗口 scrollY（列表随页滚）。
+  // 记忆即可，⛔ 重排列表；选中态由 detail 保留自然不灭。
+  useEffect(() => {
+    if (!mobileDetail && wasDetail.current) {
+      if (listRef.current) listRef.current.scrollTop = savedListTop.current
+      if (savedWinTop.current > 0) window.scrollTo(0, savedWinTop.current)
+    }
+    wasDetail.current = mobileDetail
+  }, [mobileDetail])
 
   useEffect(() => {
     void api.get<{ families?: FamilyView[]; items?: FamilyView[] }>('/api/v1/library/families').then((r) => {
@@ -120,7 +154,7 @@ export function LibraryPage() {
   }, [])
 
   useEffect(() => {
-    setDetail(null); setErr('')
+    setDetail(null); setErr(''); setMobileDetail(false); savedListTop.current = 0; savedWinTop.current = 0
     if (family === 'kg') { setItems([]); return }  // 图谱视图走 /api/v1/kg/*（L1SI211-KG-SITE-001）
     void api.get<{ items: ItemView[] }>(`/api/v1/library/${family}`).then((r) => {
       if (r.ok) setItems(r.data.items)
@@ -129,11 +163,15 @@ export function LibraryPage() {
   }, [family])
 
   const onPick = (slug: string) => {
+    savedListTop.current = listRef.current?.scrollTop ?? 0
+    savedWinTop.current = window.scrollY
     void api.get<DetailView>(`/api/v1/library/${family}/${encodeURIComponent(slug)}`).then((r) => {
-      if (r.ok) setDetail(r.data)
+      if (r.ok) { setDetail(r.data); setMobileDetail(true) }
       else setErr(`正文加载失败：${r.reason}`)
     })
   }
+
+  const onBack = () => setMobileDetail(false)
 
   const famName = families.find((f) => f.family === family)?.name ?? family
 
@@ -170,7 +208,7 @@ export function LibraryPage() {
           <KgGraphView />
         ) : (
         <div className="grid gap-3 md:grid-cols-3">
-          <ul className="max-h-[70vh] space-y-1 overflow-auto md:col-span-1" data-testid="lib-list">
+          <ul className="space-y-1 overflow-auto md:col-span-1 md:max-h-[70vh]" ref={listRef} data-testid="lib-list">
             {family === 'cop-library'
               ? groupCopItems(items).map((g) => (
                   <li key={g.key} className="pt-2 first:pt-0">
@@ -191,7 +229,7 @@ export function LibraryPage() {
             )}
           </ul>
 
-          <div className="md:col-span-2">
+          <div className="hidden md:col-span-2 md:block">
             {detail ? (
               <article data-testid="lib-detail" className="rounded-lg border border-gray-200">
                 <header className="border-b border-gray-100 px-4 py-2">
@@ -211,6 +249,30 @@ export function LibraryPage() {
             )}
           </div>
         </div>
+        )}
+
+        {/* LIB-MOBILE-001 移动端正文态：全屏覆盖（桌面 md:hidden 不可见），锁 body 滚动后仅正文区一层滚动 */}
+        {detail && mobileDetail && (
+          <div data-testid="lib-detail-m" className="fixed inset-0 z-40 flex flex-col bg-white p-3 md:hidden">
+            <button
+              type="button"
+              data-testid="lib-back"
+              className="mb-2 self-start rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700"
+              onClick={onBack}>
+              ← 返回列表
+            </button>
+            <article className="flex min-h-0 flex-1 flex-col rounded-lg border border-gray-200">
+              <header className="border-b border-gray-100 px-4 py-2">
+                <h2 className="text-base font-semibold text-gray-800">{detail.title}</h2>
+                <p className="text-xs text-gray-500">
+                  {detail.slug} ｜ 源：{detail.source_path} ｜ 入站：{detail.synced_at}
+                </p>
+              </header>
+              <pre className="min-h-0 flex-1 overflow-auto whitespace-pre-wrap px-4 py-3 text-sm leading-6 text-gray-800">
+                {detail.body_md}
+              </pre>
+            </article>
+          </div>
         )}
       </div>
     </PageShell>
