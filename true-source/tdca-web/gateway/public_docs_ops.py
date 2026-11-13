@@ -144,6 +144,10 @@ _PUBLIC_DOCS = {
     "TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md",
     "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md",
     "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml",
+    # TDCA-HANDOFF-EXEC-L1SI213-REG-COMPLETE-001（创始人逐字「按建议办，继续下一步」；乙案补白名单）：
+    # 制度规范区索引页 README 与 NSFL 协作级约束公示摘编入册（二者皆应可读，缺点仅为未列入）——regulation 53→55
+    "README.md",
+    "TDCA-NSFL-COLLAB-NOTICE-V0.3.md",
     ),
     # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
     "whitepapers": (
