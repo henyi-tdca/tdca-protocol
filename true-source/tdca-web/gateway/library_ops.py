@@ -137,6 +137,10 @@ _FAMILIES: dict[str, str] = {
     # ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——
     # 「对外公开制度不需要注册可见」取甲）：制度族入闭集，匿名只读面见下
     "regulation": "制度（regulation）",
+    # SITE2-LIBOPEN-001（L1SI213，依 TDCA-WITNESS-L1SI213-SITE2-G2-001 §四取「改」）：
+    # help/ops-guides 两族入资料库闭集（名与索引族名一致：帮助／操作指引）
+    "help": "帮助",
+    "ops-guides": "操作指引",
 }
 
 _SEL_LIST = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
@@ -201,7 +205,10 @@ def paper_catalog(request: Request):
 #           ＋在册 L1SI189「论文与白皮书须可见」＋GSEQ-3694/3695 四族入站放行口径）：
 #           追加 whitepaper/paper 两族匿名只读（目录＋正文同 cop-library 口径：只读、
 #           ⛔ 下载原件若在册另有约束则照旧）；weekly 无此族端点（不存在悬空 401 待处置项）
-_OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "paper")
+# SITE2-LIBOPEN-001（L1SI213）：追加 help/ops-guides 两族匿名只读（与既有六族同列；
+# docs 表 help 5／ops-guides 17 行已在位，公开面经 /api/public/docs 同族同件）
+_OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "paper",
+                  "help", "ops-guides")
 
 
 def _session_or_open(request: Request, family: str = "") -> None:
