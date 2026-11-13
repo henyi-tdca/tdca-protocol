@@ -25,7 +25,7 @@ client = TestClient(app)
 _DOCS = list(public_docs_ops._PUBLIC_DOCS["regulation"])  # 本面既有用例锁定 regulation 族
 _HELP_DOCS = list(public_docs_ops._PUBLIC_DOCS["help"])  # L1SI188-NAV-FIX-003 项3：帮助族
 
-_EXTRA = "README.md"
+_EXTRA = "TDCA-UNLISTED-PROBE-SECRET.md"  # L1SI213-REG-FAMMAP-001：README.md 已随 REG-COMPLETE-001 入 regulation 白名单（令验收①要求其 200），负向探针改用真·未入站件
 _YILEI = "TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md"
 
 
@@ -182,12 +182,13 @@ def test_ingest002_list_42_no_droop():
     """L1SI155-INGEST-002 防掉条用例：regulation 族 53 条（L1SI180-TERMS-004/005 三件上站后 44→47；
     L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件入册后 47→49；
     L1SI204-REG-PUBLISH-001《人机协作工作条例》净名进站后 49→50；
-    L1SI207-MOBILE-ENTRY-AND-REF-001-AMEND-1 相遇公开说明三件纳入后 50→53——断言随令更正照报）；
+    L1SI207-MOBILE-ENTRY-AND-REF-001-AMEND-1 相遇公开说明三件纳入后 50→53；
+    L1SI213-REG-COMPLETE-001 乙案 README/NSFL 两件补入后 53→55——断言随令更正照报）；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 53, f"清单条数漂移: {data['count']}"
+    assert data["count"] == 55, f"清单条数漂移: {data['count']}"
     返回集 = {e["filename"] for e in data["documents"]}
     在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
     assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
@@ -226,3 +227,29 @@ def test_ingest002_list_42_no_droop():
     }
     missing = must - names
     assert not missing, f"掉条: {missing}"
+
+
+def test_cross_family_same_name_readme_both_readable(tmp_path, monkeypatch):
+    """L1SI213-REG-FAMMAP-001：族判定键改二元组（族+件名）后，跨族同名件各自读到自己那份。
+    验收：regulation/README.md 与 cop-library/README.md 皆 200 且 bytes 不同；
+    fail-closed 语义不变：他族在册件经本族取仍 404。"""
+    reg = tmp_path / "regulations"
+    cop = tmp_path / "cop-library"
+    reg.mkdir()
+    cop.mkdir()
+    (reg / "README.md").write_bytes("制度区索引页 README（FAMMAP 测试正文 A）".encode("utf-8"))
+    (cop / "README.md").write_bytes("素材库 README（FAMMAP 测试正文 B）".encode("utf-8"))
+    dirs = {"regulation": reg, "cop-library": cop}
+    monkeypatch.setattr(public_docs_ops, "_docs_dir",
+                        lambda family=public_docs_ops._FAMILY: dirs.get(family))
+    r1 = client.get("/api/public/docs/regulation/README.md")
+    r2 = client.get("/api/public/docs/cop-library/README.md")
+    assert r1.status_code == 200, r1.text[:200]
+    assert r2.status_code == 200, r2.text[:200]
+    d1, d2 = r1.json(), r2.json()
+    assert d1["bytes"] != d2["bytes"]
+    assert "制度区索引页" in d1["content"]
+    assert "素材库" in d2["content"]
+    assert d1["family"] == "regulation" and d2["family"] == "cop-library"
+    r3 = client.get(f"/api/public/docs/cop-library/{_DOCS[0]}")  # 制度族件经素材族取：fail-closed 404
+    assert r3.status_code == 404
