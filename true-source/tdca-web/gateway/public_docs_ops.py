@@ -664,13 +664,20 @@ def _docs_dir(family: str = _FAMILY) -> Path | None:
     return None
 
 
-def _read_doc(filename: str) -> tuple[bytes, str] | None:
-    """读在册公开件（⛔ 绝不越出清单）；返回 (bytes, sha256) 或 None。"""
+def _read_doc(filename: str, family: str | None = None) -> tuple[bytes, str] | None:
+    """读在册公开件（⛔ 绝不越出清单）；返回 (bytes, sha256) 或 None。
+    L1SI213-REG-FAMMAP-001：族判定键改二元组——family 给定时按「件名 in _PUBLIC_DOCS[族]」判定、
+    取件目录由传入族决定（跨族同名件各自可读）；family 未给保留旧行为（_PUBLIC_FAMILY 单值回退）。"""
     if filename in _DENY_SET:  # L1SI170-COPLIB-007：显式排除前置，硬 404
         return None
-    if filename not in _PUBLIC_SET:
-        return None
-    d = _docs_dir(_PUBLIC_FAMILY.get(filename, _FAMILY))
+    if family is not None:
+        if filename not in _PUBLIC_DOCS.get(family, ()):
+            return None
+        d = _docs_dir(family)
+    else:
+        if filename not in _PUBLIC_SET:
+            return None
+        d = _docs_dir(_PUBLIC_FAMILY.get(filename, _FAMILY))
     if d is None:
         return None
     fpath = d / filename
@@ -719,7 +726,7 @@ def _entry(filename: str, raw: bytes, sha: str, family: str) -> dict:
 def _list_docs(family: str = _FAMILY) -> JSONResponse:
     entries = []
     for name in _PUBLIC_DOCS.get(family, ()):  # 未知族：空清单（路由层已 404，纵深防御）
-        got = _read_doc(name)
+        got = _read_doc(name, family)
         if got is None:
             # 已入站件缺失＝容器件异常：不静默减项，明示 fail-closed
             # L1SI153 段三②：error 机器字段设过渡期（两存：error＋detail＋code）——
@@ -740,16 +747,21 @@ def _list_docs(family: str = _FAMILY) -> JSONResponse:
 
 
 def _get_doc(slug: str, family: str | None = None) -> JSONResponse:
-    # L1SI170-COPLIB-007：slug 须属所请求之族（新族含 README.md 等通用名，防跨族串读）
-    if family is not None and _PUBLIC_FAMILY.get(slug) != family:
-        return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
-    got = _read_doc(slug)
+    # L1SI213-REG-FAMMAP-001：族校验改二元组判定——该件不在所请求族之白名单集即 404
+    # （fail-closed 语义不变）；family 未给保留旧行为（_PUBLIC_FAMILY 单值回退）。
+    if family is not None:
+        if slug not in _PUBLIC_DOCS.get(family, ()):
+            return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
+        doc_family = family
+    else:
+        doc_family = _PUBLIC_FAMILY.get(slug, _FAMILY)
+    got = _read_doc(slug, family)
     if got is None:
         # 统一 404：未入站件／乙类件／不存在件，对外不可分辨（fail-closed）
         # L1SI153 段二②：裸英文退役 → 中文短句＋码
         return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
     raw, sha = got
-    entry = _entry(slug, raw, sha, _PUBLIC_FAMILY.get(slug, _FAMILY))
+    entry = _entry(slug, raw, sha, doc_family)  # family 取传入族，⛔ 不再反查 _PUBLIC_FAMILY
     entry["content"] = raw.decode("utf-8", "replace")
     return JSONResponse(entry)
 
