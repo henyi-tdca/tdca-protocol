@@ -26,9 +26,12 @@ const APP_TSX = join(ROOT, 'true-source', 'tdca-site', 'src', 'App.tsx')
 const OUT_DIR = join(ROOT, 'true-source', 'tdca-site', 'public')
 const OUT = join(OUT_DIR, 'search-index.json')
 
-const FAMILY_DIRS = { regulation: 'regulations', whitepapers: 'whitepapers', papers: 'papers', 'cop-library': 'cop-library' }
-const FAMILY_LABEL = { regulation: '制度', whitepapers: '白皮书', papers: '论文', 'cop-library': '素材' }
-const FAMILY_ORDER = ['制度', '白皮书', '论文', '素材', '术语', '栏目']
+// G2-INGEST-001（L1SI213）：检索新增两族——帮助（help 1 件）／操作指引（ops-guides 17 件）。
+// ⛔ 仅映射与清单追加；既有六族产出一字不改（同生成器同参数，S-1 以既有段 sha256_16 核）。
+// 键序须与白名单文件内族块顺序一致（解析器顺序向后找），故 help/ops-guides 在前。
+const FAMILY_DIRS = { help: 'help', 'ops-guides': 'ops-guides', regulation: 'regulations', whitepapers: 'whitepapers', papers: 'papers', 'cop-library': 'cop-library' }
+const FAMILY_LABEL = { help: '帮助', 'ops-guides': '操作指引', regulation: '制度', whitepapers: '白皮书', papers: '论文', 'cop-library': '素材' }
+const FAMILY_ORDER = ['帮助', '操作指引', '制度', '白皮书', '论文', '素材', '术语', '栏目']
 
 // ---------------------------------------------------------------- 净名⟶盘名映射（制度族）
 // 来源逐字：NETNAME-001（A 档 41 ＋ 已净名）／NETNAME-002（B 档四件终名）；
@@ -502,7 +505,7 @@ for (const f of FAMILY_ORDER) counts[f] = entries.filter((e) => e.family === f).
 // FRONTEND-PERF-001（L1SI207）：998KB 单件索引改「清单＋按族分段」按需装载。
 // search-index.json 退为清单（元数据＋分段目录，无 entries）；条目按族落 search-index.seg.*.json，
 // 素材族 290 条过大再对半两段；检索逻辑一字未改（装载侧合并后同源喂 searchEntries）。
-const SEG_FAMILY_KEY = { 制度: 'regulation', 白皮书: 'whitepaper', 论文: 'paper', 素材: 'material', 术语: 'term', 栏目: 'column' }
+const SEG_FAMILY_KEY = { 帮助: 'help', 操作指引: 'ops-guides', 制度: 'regulation', 白皮书: 'whitepaper', 论文: 'paper', 素材: 'material', 术语: 'term', 栏目: 'column' }
 const SEG_PARTS = { 素材: 2 } // 最大族对半分段，单段 ≤ 全量 1/4
 
 const segments = []

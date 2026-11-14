@@ -67,6 +67,15 @@ export function SearchPage() {
 
   const results = useMemo(() => (doc && q ? searchEntries(doc.entries, q) : []), [doc, q])
 
+  // G2-INGEST-001（L1SI213）：族筛选补两族（帮助／操作指引）。仅对 searchEntries 已排序结果
+  // 做展示层过滤，⛔ 不触检索算法与排序逻辑（S-3）；选项与统计行同八族口径。
+  const FAMILY_OPTIONS = ['帮助', '操作指引', '制度', '白皮书', '论文', '素材', '术语', '栏目'] as const
+  const [familyFilter, setFamilyFilter] = useState<string>('全部')
+  const filtered = useMemo(
+    () => (familyFilter === '全部' ? results : results.filter((r) => r.entry.family === familyFilter)),
+    [results, familyFilter],
+  )
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     const v = input.trim()
@@ -78,7 +87,7 @@ export function SearchPage() {
       title="全站检索"
       dataSource="静态索引 search-index.json（构建时生成）＋浏览器本地检索"
       permission="公开（匿名可用）"
-      description="四族公开件＋术语＋栏目页的一框检索；排序 标题＞摘要＞正文，同权重制度族优先；结果带数据性质。"
+      description="帮助／操作指引／制度／白皮书／论文／素材／术语／栏目页的一框检索；排序 标题＞摘要＞正文，同权重制度族优先；结果带数据性质。"
     >
       <div className="space-y-3">
         {/* 搜索框：一行，窄屏不折行（AMEND-1 移动通则：flex-nowrap／min-w-0 flex-1／按钮 shrink-0） */}
@@ -109,18 +118,38 @@ export function SearchPage() {
 
         {indexStatus === 'ok' && !q && (
           <p data-testid="search-hint" className="text-sm text-muted-foreground">
-            索引 {doc?.total} 条：制度 {doc?.counts['制度']} · 白皮书 {doc?.counts['白皮书']} · 论文{' '}
-            {doc?.counts['论文']} · 素材 {doc?.counts['素材']} · 术语 {doc?.counts['术语']} · 栏目{' '}
-            {doc?.counts['栏目']}。输入关键词开始检索。
+            索引 {doc?.total} 条：帮助 {doc?.counts['帮助']} · 操作指引 {doc?.counts['操作指引']} · 制度{' '}
+            {doc?.counts['制度']} · 白皮书 {doc?.counts['白皮书']} · 论文 {doc?.counts['论文']} · 素材{' '}
+            {doc?.counts['素材']} · 术语 {doc?.counts['术语']} · 栏目 {doc?.counts['栏目']}
+            （分族和＝
+            {Object.values(doc?.counts ?? {}).reduce((a, b) => a + b, 0)}）。输入关键词开始检索。
           </p>
         )}
 
         {indexStatus === 'ok' && q && results.length > 0 && (
           <section data-testid="search-results" aria-label="检索结果">
-            <p className="mb-1 text-xs text-muted-foreground">
-              「{q}」命中 {results.length} 条（排序：标题＞摘要＞正文；同权重制度族优先）
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs text-muted-foreground">族筛选：</span>
+              {['全部', ...FAMILY_OPTIONS].map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  data-testid={`search-family-${f}`}
+                  onClick={() => setFamilyFilter(f)}
+                  className={`rounded border px-2 py-px text-[11px] ${
+                    familyFilter === f
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border text-muted-foreground hover:bg-muted'
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+            <p className="mb-1 mt-1 text-xs text-muted-foreground">
+              「{q}」命中 {filtered.length} 条（排序：标题＞摘要＞正文；同权重制度族优先）
             </p>
-            {results.map((r) => (
+            {filtered.map((r) => (
               <div
                 key={`${r.entry.family}:${r.entry.url}:${r.entry.title}`}
                 data-testid="search-result"
