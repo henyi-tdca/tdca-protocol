@@ -290,6 +290,75 @@ def system_overview():
         raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
 
 
+# =====================================================================
+# A-1b 系统健康第四区块「运维异常」（真实巡检产物 · data_nature=real）
+# 依 TDCA-HANDOFF-EXEC-L1SI214-SITE-HEALTH-001 ＋ AMEND-1（GSEQ-8167）：
+#   独立成路，⛔ 不并入 overview／badge／cluster-status 任一路（语义字段一概不动）；
+#   只读展示、原文 verbatim、时序诚实（报告生成时点＋页面展示时点并示）；
+#   疑似凭据／密钥模式 fail-closed 拒发（停手上报纪律之运行时闸）。
+# 源件：走查侧每日巡检 _OPS-ALERT-<YYYYMMDD>.md，由执行侧同步至部署机本目录。
+# =====================================================================
+_OPS_ALERT_DIR = os.environ.get("TDCA_OPS_ALERT_DIR", "/data/ops-alert")
+_OPS_ALERT_PATTERNS = ("password", "passwd", "secret", "api_key", "apikey",
+                       "private_key", "aws_access", "BEGIN RSA PRIVATE KEY",
+                       "BEGIN OPENSSH PRIVATE KEY", "BEGIN PRIVATE KEY")
+
+
+@router.get("/system/ops-alert")
+def system_ops_alert():
+    """A-1b: 运维异常报告（real）。无件→「当日运维无异常」；有件→原文不改一字。"""
+    try:
+        d = _OPS_ALERT_DIR
+        today = datetime.now(timezone(timedelta(hours=8))).strftime("%Y%m%d")
+        cands: List[str] = []
+        pref = os.path.join(d, f"_OPS-ALERT-{today}.md")
+        if os.path.isfile(pref):
+            cands.append(pref)
+        if os.path.isdir(d):
+            for fn in sorted(os.listdir(d), reverse=True):
+                if fn.startswith("_OPS-ALERT-") and fn.endswith(".md"):
+                    p = os.path.join(d, fn)
+                    if p not in cands:
+                        cands.append(p)
+        for path in cands:
+            try:
+                with open(path, encoding="utf-8", errors="replace") as f:
+                    raw = f.read()
+            except OSError:
+                continue
+            low = raw.lower()
+            if any(k in low for k in _OPS_ALERT_PATTERNS):
+                _ERR_LOG.error("ops-alert 疑似凭据/密钥模式，fail-closed 拒发：%s",
+                               os.path.basename(path))
+                raise HTTPException(500, "报告件暂不可展示（内容安检未过），请联系运维。")
+            st = os.stat(path)
+            generated_at = datetime.fromtimestamp(
+                st.st_mtime, tz=timezone(timedelta(hours=8))).isoformat()
+            return _nca_watermark({
+                "has_alert": True,
+                "report_date": os.path.basename(path)
+                                 .replace("_OPS-ALERT-", "").replace(".md", ""),
+                "generated_at": generated_at,
+                "source_file": os.path.basename(path),
+                "message": "",
+                "raw_md": raw,
+            }, nature="real")
+        # fail-closed 友好态：无报告件 ≠ 异常，明示一句 + 空值字段
+        return _nca_watermark({
+            "has_alert": False,
+            "report_date": today,
+            "generated_at": None,
+            "source_file": None,
+            "message": "当日运维无异常",
+            "raw_md": None,
+        }, nature="real")
+    except HTTPException:
+        raise
+    except Exception as e:
+        _ERR_LOG.exception("A-1b ops-alert 失败: %s", e)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
+
+
 @router.get("/tax/mou/{agent_id}")
 def tax_mou(agent_id: str):
     """A-2: MOU 锚定（mou_records 最新账期；无记录=零值明示，不可降）。"""

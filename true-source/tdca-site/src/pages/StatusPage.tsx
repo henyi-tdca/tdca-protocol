@@ -5,6 +5,9 @@
 //   三源合一（overview＋ci/badge＋cluster-status）；system 字段改写「16 个模块 · 已冻结」
 //   （⛔ S-1~S-16 与测试数上页面）；税率标「在册税率（演示态）」⛔ 价格字样；
 //   集群只显能力名+endpoint+status，⛔ 显 id（EIOS-xx）；⛔ 新建 /api/health
+// L1SI214（SITE-HEALTH-001 ＋ AMEND-1）：第四区块「运维异常」——
+//   真实巡检产物（data_nature=real），独立第四路 /api/v1/system/ops-alert；
+//   ⛔ 不动既有三块与三路数据源；块头显式声明与模拟态不同源不同性质。
 // 口径: 只前端呈现层；⛔ 改后端；页面零内部编号（七类＋EIOS-＋S-/A-）
 // =============================================================================
 import { useEffect, useState } from 'react'
@@ -37,12 +40,25 @@ interface ClusterData {
   cluster: ClusterItem[]
 }
 
-/** 系统健康：指标（overview 原样数值）＋徽章（ci/badge 一行）＋集群（⛔ id） */
+/** L1SI214 第四区块：运维异常报告（real；无件=「当日运维无异常」） */
+interface OpsAlertData {
+  has_alert: boolean
+  report_date: string
+  generated_at: string | null
+  source_file: string | null
+  message: string
+  raw_md: string | null
+}
+
+/** 系统健康：指标（overview 原样数值）＋徽章（ci/badge 一行）＋集群（⛔ id）＋运维异常（real） */
 export function StatusPage() {
   const [ov, setOv] = useState<OverviewData | null>(null)
   const [badge, setBadge] = useState<BadgeData | null>(null)
   const [cluster, setCluster] = useState<ClusterItem[] | null>(null)
   const [fail, setFail] = useState('')
+  const [ops, setOps] = useState<OpsAlertData | null>(null)
+  const [opsFail, setOpsFail] = useState(false)
+  const [opsShownAt, setOpsShownAt] = useState('')
 
   useEffect(() => {
     let alive = true
@@ -65,6 +81,24 @@ export function StatusPage() {
     return () => { alive = false }
   }, [])
 
+  // L1SI214：第四路独立取数，⛔ 不与上方三路共用 fail 逻辑（互不牵连）
+  useEffect(() => {
+    let alive = true
+    ;(async () => {
+      const r4 = await api.get<OpsAlertData>('/api/v1/system/ops-alert')
+      if (!alive) return
+      if (r4.ok) {
+        setOps(r4.data)
+        setOpsShownAt(new Date().toLocaleString('zh-CN', {
+          timeZone: 'Asia/Shanghai', hour12: false,
+        }))
+      } else {
+        setOpsFail(true)
+      }
+    })()
+    return () => { alive = false }
+  }, [])
+
   const metrics: { label: string; value: string }[] = ov
     ? [
         { label: '交付数', value: String(ov.total_deliveries) },
@@ -78,7 +112,7 @@ export function StatusPage() {
   return (
     <PageShell
       title="系统健康"
-      dataSource="GET /api/v1/system/overview ＋ /api/v1/ci/badge ＋ /api/v1/eios/cluster-status"
+      dataSource="GET /api/v1/system/overview ＋ /api/v1/ci/badge ＋ /api/v1/eios/cluster-status ＋ /api/v1/system/ops-alert（运维异常·真实巡检产物）"
       permission="公开"
       description="运行指标、机验徽章与集群状态三合一健康面；模块状态以「已冻结」呈现，税率仅为在册演示值，不含任何收费信息。"
     >
@@ -180,6 +214,32 @@ export function StatusPage() {
                 </li>
               ))}
             </ul>
+          )}
+        </section>
+        {/* L1SI214 第四区块「运维异常」：真实巡检产物（data_nature=real），独立第四路取数；
+            块头显式声明与上方模拟态三块不同源、不同性质（AMEND-1 硬约束第 6 条） */}
+        <section data-testid="status-ops-alert">
+          <h3 className="mb-2 text-sm font-bold text-gray-700">运维异常（真实巡检产物）</h3>
+          <p className="mb-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-700">
+            本块为真实巡检产物（data_nature=real），与上方模拟态区块不同源、不同性质。
+          </p>
+          {opsFail ? (
+            <p data-testid="ops-alert-fail" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-500">
+              运维异常报告暂不可得（fail-closed）
+            </p>
+          ) : !ops ? (
+            <p className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-500">加载中…</p>
+          ) : ops.has_alert && ops.raw_md ? (
+            <div data-testid="ops-alert-body" className="rounded-lg border border-gray-200">
+              <p className="border-b border-gray-100 px-4 py-2 text-xs text-gray-500">
+                报告生成时点：{ops.generated_at} ｜ 报告日：{ops.report_date} ｜ 源件：{ops.source_file} ｜ 本页展示时点：{opsShownAt}（非实时）
+              </p>
+              <pre className="whitespace-pre-wrap px-4 py-3 text-sm leading-6 text-gray-800">{ops.raw_md}</pre>
+            </div>
+          ) : (
+            <p data-testid="ops-alert-none" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-500">
+              {ops.message}（本页展示时点 {opsShownAt}）
+            </p>
           )}
         </section>
       </div>
