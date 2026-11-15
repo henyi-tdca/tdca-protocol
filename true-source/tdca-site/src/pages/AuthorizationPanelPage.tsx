@@ -76,6 +76,7 @@ export function AuthorizationPanelPage() {
   const [credRef, setCredRef] = useState('')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
+  const [keySourceHint, setKeySourceHint] = useState(false)
   const [result, setResult] = useState<DraftResult | null>(null)
   const [mine, setMine] = useState<PublicView[]>([])
 
@@ -115,8 +116,11 @@ export function AuthorizationPanelPage() {
 
   const onSign = async (authId: string) => {
     setMsg('')
+    setKeySourceHint(false)
     const r = await api.post<DraftResult>('/api/v1/authorization/sign', { auth_id: authId })
+    const detail = (!r.ok) ? String(r.detail ?? r.reason ?? '') : ''
     setMsg(r.ok ? `已签署：${authId}（生效 active）` : `签署未受理：${r.detail ?? r.reason}`)
+    setKeySourceHint(!r.ok && detail.includes('NO_CONFIG_RIGHT'))
     void loadMine()
   }
 
@@ -190,6 +194,8 @@ export function AuthorizationPanelPage() {
 
         <section className="space-y-3 rounded border p-4">
           <h2 className="text-base font-semibold">第三步·起草与签署（本人）</h2>
+          <p className="text-sm text-amber-700" data-testid="e1-sign-notice">
+            此操作将生成一份授权件（法律性文件），须本人签名（⛔ 智能体代签代填；⛔ 默认勾选）</p>
           <div className="flex gap-2">
             <button type="button" disabled={busy} onClick={() => void onDraft(false)}
               className="rounded border px-3 py-1 text-sm disabled:opacity-50">存草稿（draft）</button>
@@ -206,6 +212,10 @@ export function AuthorizationPanelPage() {
             撤回路径：对 active / pending_sign 件点「撤回」——撤回后已发生使用另记一笔，既往记录保留不抹。
           </p>
           {msg && <p className="text-sm text-amber-700" data-testid="panel-msg">{msg}</p>}
+          {keySourceHint && (
+            <p className="text-sm text-amber-700" data-testid="e2-key-source">
+              这项配置权应由该资产的所有者授予——钥匙来源：资产所有者（请向该资产所有者申请授权）</p>
+          )}
         </section>
 
         <section className="space-y-2 rounded border p-4">
