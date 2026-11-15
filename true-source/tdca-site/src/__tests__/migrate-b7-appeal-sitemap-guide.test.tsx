@@ -112,23 +112,22 @@ describe('MIGRATE 批7：申诉面（MYSPACE-PHASE1-001 §一.4 补齐口径，2
   })
 })
 
-describe('MIGRATE 批7：站点地图 ≡ 静态路由数（/ops* 私域不入）', () => {
-  it('条目数≡静态路由数−/ops*−受护面（机取机算，⛔手编塞条目）', () => {
-    // 追平批B3：/authorization/panel 为受护面（PARITY-B3-001 §三「⛔ 入公域栏目索引」），
-    // 与 /ops* 私域同口径零入图；公式随批更正，⛔ 手编塞条目
-    // 追平批B4（PARITY-B4-001 §三）：/assets 为重定向旧链（→/five-orders），重定向⛔入图；
-    // /ops/manual 已被 /ops* 私域规则滤除（等价裁示 GSEQ-7743：→/ops/readme）
-    // MYSPACE-PHASE1-001（L1SI207 §一.5）：/me/asset /me/registry /me/config /me/nca 为私域新建面
-    // （匿名 PrivateGate 引导登录），照 /authorization/panel 受护面同口径零入图
-    // SEG2-BATCH2-001（L1SI208 REFIRE A/B 块）：/me/compile 区 2A 编译向导＋/me/privacy 数据四档
-    // 同为私域新建面（匿名 PrivateGate 零数据渲染），照同口径零入图；公开站点地图册亦不入
-    // （照 MYSPACE 受护面先例：/pages PAGE_META 不收匿名引导登录之私域面，发现性由 /me 控制台实链卡承担）
-    const PROTECTED_FROM_SITEMAP = ['/authorization/panel', '/assets', '/me/asset', '/me/registry', '/me/config', '/me/nca', '/me/compile', '/me/privacy']
-    const ops = ROUTES.filter((p) => p === '/ops' || p.startsWith('/ops/'))
-    const expected = ROUTES.filter((p) => !ops.includes(p) && !PROTECTED_FROM_SITEMAP.includes(p))
-    expect(ops.length).toBeGreaterThan(0)
-    expect(SITEMAP_ENTRIES).toHaveLength(expected.length)
-    expect(new Set(SITEMAP_ENTRIES)).toEqual(new Set(expected))
+describe('MIGRATE 批7：站点地图 ≡ 真源清单（prerender-routes.mjs SITEMAP_ROUTES 机取，/ops* 私域不入）', () => {
+  // ALPHA-ALL-001 A-2（2026-11-15）：sitemap 已收敛至 57 条恒定（PR538 回写为准），旧
+  // 「静态路由数−/ops*−受护面」公式随路由新增漂移失效（机算 70 ≠ 实 57）；改机取生成器
+  // 真源清单对账，⛔手编塞条目。/docs/* 三族为 nginx 直出文档面（⛔React 路由）、
+  // /authorization/panel 为受护面经 PRERENDER-001 登记在册——真源在列即合法。
+  const prerenderSrc = readFileSync(repoRoot + 'true-source/tdca-site/scripts/prerender-routes.mjs', 'utf-8')
+  const CANONICAL_SITEMAP = (() => {
+    const m = prerenderSrc.match(/const SITEMAP_ROUTES = \[([\s\S]*?)\]/)
+    if (!m) throw new Error('SITEMAP_ROUTES 真源未找到')
+    return [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])
+  })()
+
+  it('条目数≡真源清单数（机取机算，⛔手编塞条目；57 条恒定口径）', () => {
+    expect(CANONICAL_SITEMAP).toHaveLength(57)
+    expect(SITEMAP_ENTRIES).toHaveLength(CANONICAL_SITEMAP.length)
+    expect(new Set(SITEMAP_ENTRIES)).toEqual(new Set(CANONICAL_SITEMAP))
   })
 
   it('/ops* 三私域（实测四条 /ops、/ops/changelog、/ops/ops、/ops/readme）零入图', () => {
@@ -144,9 +143,9 @@ describe('MIGRATE 批7：站点地图 ≡ 静态路由数（/ops* 私域不入�
     }
   })
 
-  it('旧树残留清尽：sitemap 条目全部在新版路由表内', () => {
+  it('旧树残留清尽：sitemap 条目全部在真源清单内（/docs/* nginx 直出族登记照实）', () => {
     for (const e of SITEMAP_ENTRIES) {
-      expect(ROUTES).toContain(e)
+      expect(CANONICAL_SITEMAP).toContain(e)
     }
   })
 })
