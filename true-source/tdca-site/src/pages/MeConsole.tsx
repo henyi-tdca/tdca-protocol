@@ -180,6 +180,123 @@ function permWho(row: PermRow): string {
   return '需治理侧'
 }
 
+/** 我的令牌（L1SI214 ACCOUNT-CONSOLE A 块）：GET /me/tokens 八字段清单＋DELETE /me/tokens/{id} 吊销。
+ *  编号只显服务端脱敏形（⛔令牌原值永不回显）；吊销二次确认，成功后就地置 revoked。 */
+interface TokenRow { id: string; kind: string; issued_at: string | null; expires_at: string | null
+  last_used_at: string | null; status: string; bound_agents: string[]; note: string | null }
+interface TokensData { tokens: TokenRow[]; count: number; scope: string }
+const TOKEN_STATUS_LABEL: Record<string, string> = { active: '生效中', expired: '已过期', revoked: '已吊销' }
+
+function fmtTs(v: string | null): string {
+  if (!v) return '—'
+  const d = new Date(v)
+  return Number.isNaN(d.getTime()) ? v : d.toLocaleString('zh-CN', { hour12: false })
+}
+
+function TokensCard() {
+  const [data, setData] = useState<TokensData | null>(null)
+  const [err, setErr] = useState('')
+  const [confirmId, setConfirmId] = useState<string | null>(null)
+  const [busyId, setBusyId] = useState<string | null>(null)
+  const [hint, setHint] = useState('')
+  const load = async () => {
+    const r = await api.get<TokensData>('/api/v1/me/tokens')
+    if (r.ok) setData(r.data)
+    else setErr(r.detail ?? r.reason ?? '读取失败')
+  }
+  useEffect(() => { void load() }, [])
+  const revoke = async (t: TokenRow) => {
+    setBusyId(t.id)
+    setHint('')
+    const r = await api.del<{ id: string; result: string }>(`/api/v1/me/tokens/${t.id}`)
+    setBusyId(null)
+    setConfirmId(null)
+    if (r.ok) {
+      // 就地刷新该行（幂等：already_revoked 同样视为已吊销）
+      setData((prev) => prev && ({
+        ...prev,
+        tokens: prev.tokens.map((x) => x.id === t.id ? { ...x, status: 'revoked' } : x),
+      }))
+      setHint(r.data.result === 'already_revoked' ? '该令牌已吊销' : '已吊销，该令牌立即失效')
+    } else {
+      setHint('吊销失败，请稍后再试')
+    }
+  }
+  return (
+    <section data-testid="me-tokens" className="rounded-lg border border-gray-200 bg-white p-4">
+      <h3 className="mb-2 text-sm font-semibold text-gray-800">我的令牌（仅本人可见·编号已脱敏）</h3>
+      {err && <p className="text-xs text-amber-700" data-testid="me-tokens-err">{err}</p>}
+      {!data && !err && <p className="text-sm text-gray-400">读取中……</p>}
+      {data && data.tokens.length === 0 && (
+        <p className="text-sm text-gray-500" data-testid="me-tokens-empty">当前无令牌</p>
+      )}
+      {data && data.tokens.length > 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm" data-testid="me-tokens-table">
+            <thead>
+              <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
+                <th className="py-1 pr-2">编号</th>
+                <th className="py-1 pr-2">类型</th>
+                <th className="py-1 pr-2">签发时间</th>
+                <th className="py-1 pr-2">到期时间</th>
+                <th className="py-1 pr-2">最近使用</th>
+                <th className="py-1 pr-2">状态</th>
+                <th className="py-1 pr-2">绑定智能体</th>
+                <th className="py-1 pr-2">备注</th>
+                <th className="py-1 pr-2">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.tokens.map((t) => (
+                <tr key={t.id} data-status={t.status} className={`border-b border-gray-100 ${t.status === 'revoked' ? 'opacity-60' : ''}`}>
+                  <td className={`py-1.5 pr-2 font-mono text-xs ${t.status === 'revoked' ? 'line-through' : ''}`}>{t.id}</td>
+                  <td className="py-1.5 pr-2 text-xs text-gray-500">{t.kind}</td>
+                  <td className="py-1.5 pr-2 text-xs text-gray-500">{fmtTs(t.issued_at)}</td>
+                  <td className="py-1.5 pr-2 text-xs text-gray-500">{fmtTs(t.expires_at)}</td>
+                  <td className="py-1.5 pr-2 text-xs text-gray-500">{fmtTs(t.last_used_at)}</td>
+                  <td className="py-1.5 pr-2">
+                    <span className={`rounded px-1.5 py-0.5 text-[11px] ${
+                      t.status === 'active' ? 'bg-emerald-100 text-emerald-700'
+                      : t.status === 'expired' ? 'bg-gray-100 text-gray-500'
+                      : 'bg-red-100 text-red-700 line-through'}`}>{TOKEN_STATUS_LABEL[t.status] ?? t.status}</span>
+                  </td>
+                  <td className="py-1.5 pr-2 text-xs text-gray-500">{(t.bound_agents ?? []).length > 0 ? t.bound_agents.join('、') : '—'}</td>
+                  <td className="py-1.5 pr-2 text-xs text-gray-500">{t.note ?? '—'}</td>
+                  <td className="py-1.5 pr-2 text-xs">
+                    {confirmId === t.id ? (
+                      <span className="inline-flex items-center gap-2">
+                        <span className="text-amber-700">吊销后立即失效，不可恢复</span>
+                        <button type="button" data-testid={`me-token-confirm-${t.id}`}
+                          disabled={busyId === t.id}
+                          onClick={() => void revoke(t)}
+                          className="rounded bg-red-600 px-2 py-0.5 text-white disabled:opacity-50">
+                          {busyId === t.id ? '吊销中…' : '确认吊销'}
+                        </button>
+                        <button type="button" onClick={() => setConfirmId(null)}
+                          className="text-gray-500 underline">取消</button>
+                      </span>
+                    ) : t.status === 'active' ? (
+                      <button type="button" data-testid={`me-token-revoke-${t.id}`}
+                        onClick={() => { setConfirmId(t.id); setHint('') }}
+                        className="rounded border border-red-300 px-2 py-0.5 text-red-700">
+                        吊销
+                      </button>
+                    ) : (
+                      <span className="text-gray-400">{t.status === 'revoked' ? '已吊销' : '不可吊销'}</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {hint && <p className="mt-2 text-xs text-emerald-700" data-testid="me-tokens-hint">{hint}</p>}
+      <p className="mt-2 text-[11px] text-gray-500">· 列表只显示脱敏编号，令牌本身永不显示；吊销立即生效且不可恢复。</p>
+    </section>
+  )
+}
+
 function PermissionsCard() {
   const [data, setData] = useState<PermData | null>(null)
   const [err, setErr] = useState('')
@@ -749,6 +866,11 @@ export function MePage() {  const { status, data } = useApiGet<MeData>('/api/v1/
           {/* 我的权限（L1SI214 E-3：权限点矩阵＋钥匙来源列＋四值图例；ACCOUNT-CONSOLE B 规格——只接在役已有页） */}
           <div className="mt-3">
             <PermissionsCard />
+          </div>
+
+          {/* 我的令牌（ACCOUNT-CONSOLE A 块：脱敏清单＋吊销；接口批1/批2已在役） */}
+          <div className="mt-3">
+            <TokensCard />
           </div>
 
           {/* 红签待办（独立成卡，紧随账户管理；红签口径不变） */}
