@@ -32,6 +32,11 @@ interface RecordView {
   data_provenance: string
 }
 
+const STATUS_LABEL: Record<string, string> = {
+  registered: '在册',
+  cancelled: '已注销',
+}
+
 const BRANCH_LABEL: Record<string, string> = {
   copyright: '表达形式→著作权',
   patent: '发明→专利法',
@@ -162,7 +167,7 @@ export function OwnershipRegistryPage() {
         <section data-testid="or-query">
           <h2>权属查询</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm" data-testid="or-records-table">
+            <table className="w-full min-w-[64rem] text-sm" data-testid="or-records-table">
               <thead>
                 <tr className="text-left text-gray-500">
                   <th className="py-1 pr-2">登记号</th>
@@ -179,18 +184,18 @@ export function OwnershipRegistryPage() {
               <tbody>
                 {records.map((r) => (
                   <tr key={r.record_id} className="border-t border-gray-100 align-top">
-                    <td className="py-1 pr-2 font-mono text-xs">{r.record_id}</td>
-                    <td className="py-1 pr-2">
+                    <td className="py-1 pr-2 font-mono text-xs whitespace-nowrap">{r.record_id}</td>
+                    <td className="py-1 pr-2 whitespace-nowrap">
                       {r.status === 'registered'
-                        ? <span className="rounded bg-green-50 px-1.5 py-0.5 text-[10px] text-green-700">在册</span>
-                        : <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">{r.status}</span>}
+                        ? <span className="rounded bg-green-50 px-1.5 py-0.5 text-[10px] text-green-700">{STATUS_LABEL.registered}</span>
+                        : <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">{STATUS_LABEL[r.status] ?? r.status}</span>}
                     </td>
                     <td className="py-1 pr-2">{r.work_title}</td>
                     <td className="py-1 pr-2">{r.owner_ref}</td>
-                    <td className="py-1 pr-2">{BRANCH_LABEL[r.jurisdiction_branch] ?? r.jurisdiction_branch}</td>
+                    <td className="py-1 pr-2 whitespace-nowrap">{BRANCH_LABEL[r.jurisdiction_branch] ?? r.jurisdiction_branch}</td>
                     <td className="py-1 pr-2">{r.source_lineage}</td>
                     <td className="py-1 pr-2">{r.scene ?? '—'}</td>
-                    <td className="py-1 pr-2 font-mono text-xs">{r.nca_ref}</td>
+                    <td className="py-1 pr-2 font-mono text-xs whitespace-nowrap">{r.nca_ref}</td>
                     <td className="py-1 pr-2 text-xs text-gray-500">{r.data_provenance}</td>
                   </tr>
                 ))}
