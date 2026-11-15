@@ -4,7 +4,8 @@
 验收映射：① 会话鉴权 fail-closed（无登录 401）
           ② 授权件四要件逐条机验（缺一即 400；形态越界 400；代签短签 403 熔断）
           ③ 首授登记 → 落库 + 谱系落账（DB 实读）
-          ④ 多层转授链（subgrant 挂 parent；revoked 上级 → 转授 403 fail-closed）
+          ④ 多层转授链（GSEQ-8225：subgrant 挂 parent；revoked 上级 → 转授 404 同码；
+            超范围（asset_order 越上级）→ 400；链深技术上限 64 层；注销级联下游全失效）
           ⑤ 准入闸门：config 无授权件 403（仅握手不成立）；有授权件 ADMITTED + 链可追溯
           ⑥ general 调用只给 HANDSHAKE_ONLY（可信联通 ≠ 可信协作）
           ⑦ 注销幂等 + 谱系 revoke 留痕
@@ -90,26 +91,103 @@ def test_register_persisted_201():
         assert le.kind == "grant" and le.nca_ref is not None
 
 
-def test_subgrant_chain_and_revoked_parent_403():
+def test_subgrant_chain_and_revoked_parent_404_same_code():
+    """D-1（GSEQ-8225）：同范围转授可建（挂 parent 留痕）；已注销上级之转授 404 同码。"""
     h = _auth()
     gid = client.post("/api/v1/cluster/grant/register",
                       json=_grant_payload(), headers=h).json()["data"]["grant_id"]
     sub = {"parent_grant_id": gid, "subject_agent": "agent-cl-002",
-           "scene_constraint": "场景：转授测试", "asset_order": 3,
+           "scene_constraint": "场景：转授测试", "asset_order": 2,
            "full_composition": True, "legal_signer": "法律主体-测试",
            "signature": _SIGN}
     r = client.post("/api/v1/cluster/grant/subgrant", json=sub, headers=h)
     assert r.status_code == 201, r.text
     sub_id = r.json()["data"]["grant_id"]
+    assert r.json()["data"]["chain_depth"] == 2
     with get_sessionmaker().begin() as s:
         g = s.get(M.AuthGrant, sub_id)
         assert g.parent_grant_id == gid
         le = s.query(M.LineageEntry).filter_by(grant_id=sub_id).one()
         assert le.kind == "subgrant" and le.parent_grant_id == gid
-    # 注销上级 → 转授 403
+    # 注销上级 → 新转授 404 同码（⛔ 区分不存在与已注销）
     client.post("/api/v1/cluster/grant/revoke", json={"grant_id": gid}, headers=h)
     r2 = client.post("/api/v1/cluster/grant/subgrant", json=sub, headers=h)
-    assert r2.status_code == 403 and "revoked" in r2.text
+    assert r2.status_code == 404 and "parent_grant_id 不存在" in r2.text
+
+
+def test_subgrant_out_of_parent_scope_400():
+    """D-1c：超范围转授被拒（asset_order 越出上级授权件）。"""
+    h = _auth()
+    gid = client.post("/api/v1/cluster/grant/register",
+                      json=_grant_payload(asset_order=2),
+                      headers=h).json()["data"]["grant_id"]
+    sub = {"parent_grant_id": gid, "subject_agent": "agent-cl-005",
+           "scene_constraint": "场景：越范围转授", "asset_order": 3,
+           "full_composition": True, "legal_signer": "法律主体-测试",
+           "signature": _SIGN}
+    r = client.post("/api/v1/cluster/grant/subgrant", json=sub, headers=h)
+    assert r.status_code == 400 and "SUPERSEDE_SCOPE" in r.text
+
+
+def test_revoke_cascades_downstream_all_invalid():
+    """D-1b：撤销 A ⟹ B、C 同时失效（级联注销 + 逐件谱系留痕 + 404 同码）。"""
+    h = _auth()
+    a = client.post("/api/v1/cluster/grant/register",
+                    json=_grant_payload(subject_agent="agent-cd-a"),
+                    headers=h).json()["data"]["grant_id"]
+    b = client.post("/api/v1/cluster/grant/subgrant",
+                    json={"parent_grant_id": a, "subject_agent": "agent-cd-b",
+                          "scene_constraint": "场景：二层", "asset_order": 2,
+                          "full_composition": True, "legal_signer": "法律主体-测试",
+                          "signature": _SIGN}, headers=h).json()["data"]["grant_id"]
+    c = client.post("/api/v1/cluster/grant/subgrant",
+                    json={"parent_grant_id": b, "subject_agent": "agent-cd-c",
+                          "scene_constraint": "场景：三层", "asset_order": 2,
+                          "full_composition": True, "legal_signer": "法律主体-测试",
+                          "signature": _SIGN}, headers=h).json()["data"]["grant_id"]
+    r = client.post("/api/v1/cluster/grant/revoke", json={"grant_id": a}, headers=h)
+    assert r.status_code == 200
+    body = r.json()["data"]
+    assert body["status"] == "revoked"
+    assert set(body["cascade_revoked"]) == {b, c}
+    with get_sessionmaker().begin() as s:
+        for gid in (a, b, c):
+            g = s.get(M.AuthGrant, gid)
+            assert g.status == "revoked"
+            # 逐件谱系留痕：每件恰一条 revoke 账
+            assert s.query(M.LineageEntry).filter_by(
+                kind="revoke", grant_id=gid).count() == 1
+    # 已注销上级（C）之再转授 404 同码
+    r2 = client.post("/api/v1/cluster/grant/subgrant",
+                     json={"parent_grant_id": c, "subject_agent": "agent-cd-d",
+                           "scene_constraint": "场景：四层", "asset_order": 2,
+                           "full_composition": True, "legal_signer": "法律主体-测试",
+                           "signature": _SIGN}, headers=h)
+    assert r2.status_code == 404
+
+
+def test_subgrant_chain_depth_64_technical_limit():
+    """D-1c：parent_grant_id 逐级上溯，64 层技术上限——第 65 层转授被拒。"""
+    h = _auth()
+    gid = client.post("/api/v1/cluster/grant/register",
+                      json=_grant_payload(subject_agent="agent-dp-001"),
+                      headers=h).json()["data"]["grant_id"]
+    for i in range(2, 65):  # 建成 64 层链（1 首授 + 63 转授）
+        r = client.post("/api/v1/cluster/grant/subgrant",
+                        json={"parent_grant_id": gid,
+                              "subject_agent": f"agent-dp-{i:03d}",
+                              "scene_constraint": f"场景：第{i}层", "asset_order": 2,
+                              "full_composition": True,
+                              "legal_signer": "法律主体-测试", "signature": _SIGN},
+                        headers=h)
+        assert r.status_code == 201, r.text[:200]
+        gid = r.json()["data"]["grant_id"]
+    r = client.post("/api/v1/cluster/grant/subgrant",
+                    json={"parent_grant_id": gid, "subject_agent": "agent-dp-065",
+                          "scene_constraint": "场景：第65层", "asset_order": 2,
+                          "full_composition": True, "legal_signer": "法律主体-测试",
+                          "signature": _SIGN}, headers=h)
+    assert r.status_code == 400 and "CHAIN_DEPTH_LIMIT" in r.text
 
 
 def test_admission_config_denied_then_admitted():

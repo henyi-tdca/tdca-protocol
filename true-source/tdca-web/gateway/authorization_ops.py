@@ -16,11 +16,14 @@ P8b 授权登记管理（一期段）：/api/v1/authorization/* —— 登记／
     仅回此四字段＋记录键与状态）；不公开四条负空间（内部编号／凭据密钥／自然人敏感信息／
     负空间词面）写入时 fail-closed 拦截（400），读取时兜底脱敏（⛔ 不回显命中内容）；
   - 授权件仅内部存证，⛔ 不入主仓；
+  - D-2（ALPHA-D，GSEQ-8225 随令）：特别条款（以智能合约约定）栏位落地——只存约定文本与
+    其 sha256，⛔ 真部署合约、⛔ 涉币词面 fail-closed 拦截；与模板八字段零冲突（不入 template_fields）；
   - 全程 SIMULATED 硬标注；改动走 PR；⛔ 不重写制度正文、⛔ 不复制另存。
 SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import uuid
@@ -101,6 +104,8 @@ def _record_view(r: M.AuthorizationRecord) -> dict:
     redacted = _redact({
         "asset_ref": r.asset_ref, "grantee_ref": r.grantee_ref,
         "scene": r.scene, "scope_note": r.scope_note, "term_note": r.term_note,
+        "special_terms": r.special_terms,
+        "special_terms_sha256": r.special_terms_sha256,
         "template_fields": r.template_fields, "note": r.note,
     })
     return {
@@ -179,6 +184,31 @@ def authorization_rules(request: Request):
         "note": "期一内部真跑：「全网可查」仅为内部呈现；对外另须创始人明示"})
 
 
+# D-2：特别条款只存约定文本与其哈希——⛔ 真部署合约、⛔ 涉币（GSEQ-8225 随令 ALPHA-D）
+_SPECIAL_TERMS_MAX = 2000
+_SPECIAL_TERMS_BANNED = [
+    re.compile(r"(?i)(代币|虚拟货币|加密货币|币圈|挖矿|空投|质押生息|"
+               r"ICO|IEO|IDO|ETH|BTC|USDT|ERC-?20|token[\s_-]?sale|mint)"),
+    re.compile(r"(?i)(deploy\s*\(|合约部署|部署上链|上链发行|publish[\s_-]?contract)"),
+]
+
+
+def _special_terms_guard(text: str) -> str:
+    """校验特别条款文本，返回规范化文本（空＝未提供）；命中涉币/真部署合约词面即 400。"""
+    norm = (text or "").strip()
+    if not norm:
+        return ""
+    if len(norm) > _SPECIAL_TERMS_MAX:
+        raise HTTPException(400, f"SPECIAL_TERMS_REJECTED: 特别条款超长"
+                                 f"（≤{_SPECIAL_TERMS_MAX} 字）")
+    for pat in _SPECIAL_TERMS_BANNED:
+        if pat.search(norm):
+            raise HTTPException(400, "SPECIAL_TERMS_REJECTED: 特别条款命中涉币或"
+                                     "真部署合约词面——本端只存约定文本与其哈希"
+                                     "（⛔ 真部署合约 ⛔ 涉币）")
+    return norm
+
+
 class RegisterIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     asset_ref: str                    # 授权对象引用（如五族资产）
@@ -192,6 +222,7 @@ class RegisterIn(BaseModel):
     term_note: str = ""               # 期限说明（⛔ 不代定取值）
     template_fields: dict = {}        # 授权件模板八字段（JSON；本端不代填未裁项）
     note: str = ""
+    special_terms: str = ""           # D-2 特别条款（以智能合约约定之文本；只存文本+哈希）
 
 
 @router.post("/register", status_code=201)
@@ -214,9 +245,13 @@ def authorization_register(req: RegisterIn, request: Request):
     except ValueError as e:
         raise HTTPException(400, str(e))
     tpl = json.dumps(req.template_fields, ensure_ascii=False)
+    st_norm = _special_terms_guard(req.special_terms)
+    st_sha = (hashlib.sha256(st_norm.encode("utf-8")).hexdigest()
+              if st_norm else None)
     fields = {"asset_ref": req.asset_ref, "grantee_ref": req.grantee_ref,
               "scene": req.scene, "scope_note": req.scope_note,
-              "term_note": req.term_note, "template_fields": tpl, "note": note_norm}
+              "term_note": req.term_note, "template_fields": tpl, "note": note_norm,
+              "special_terms": st_norm}
     hits = _public_space_hits(fields)
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
@@ -233,6 +268,7 @@ def authorization_register(req: RegisterIn, request: Request):
             req_legal_signature=req.req_legal_signature,
             scope_note=req.scope_note.strip() or None,
             term_note=req.term_note.strip() or None,
+            special_terms=st_norm or None, special_terms_sha256=st_sha,
             template_fields=tpl, note=note_norm.strip() or None,
             status="active", nca_ref=nca_ref,
             created_at=_utc(), updated_at=_utc()))
@@ -242,7 +278,8 @@ def authorization_register(req: RegisterIn, request: Request):
         "asset_ref_aligned": aligned,
         "simulated": True,
         "note": "合约备案已入册（NCA 存证；四要件自证齐全；"
-                "授权件仅内部存证，⛔ 不入主仓）"}
+                "授权件仅内部存证，⛔ 不入主仓）",
+        "special_terms_sha256": st_sha}
     if rb_anomaly:
         payload["rb_anomaly"] = rb_anomaly
     if not aligned:
@@ -259,6 +296,7 @@ class AmendIn(BaseModel):
     term_note: str = ""
     template_fields: dict | None = None
     note: str = ""
+    special_terms: str = ""           # D-2 变更特别条款（非空即更新文本与哈希）
 
 
 @router.post("/amend")
@@ -266,18 +304,23 @@ def authorization_amend(req: AmendIn, request: Request):
     """授权变更（已注销者 409；变更须载明事项；⛔ 不代定未裁取值）。"""
     user = _require_session_user(request)
     if not any([req.scene.strip(), req.scope_note.strip(), req.term_note.strip(),
-                req.template_fields is not None, req.note.strip()]):
+                req.template_fields is not None, req.note.strip(),
+                req.special_terms.strip()]):
         raise HTTPException(400, "变更须至少载明一项（scene／scope_note／"
-                                 "term_note／template_fields／note）")
+                                 "term_note／template_fields／note／special_terms）")
     try:
         note_norm, _rb, rb_anomaly = rb_parse(req.note)
     except ValueError as e:
         raise HTTPException(400, str(e))
     tpl = (json.dumps(req.template_fields, ensure_ascii=False)
            if req.template_fields is not None else "")
+    st_norm = _special_terms_guard(req.special_terms)
+    st_sha = (hashlib.sha256(st_norm.encode("utf-8")).hexdigest()
+              if st_norm else None)
     hits = _public_space_hits({"scene": req.scene, "scope_note": req.scope_note,
                                "term_note": req.term_note,
-                               "template_fields": tpl, "note": note_norm})
+                               "template_fields": tpl, "note": note_norm,
+                               "special_terms": st_norm})
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
                                  f"{'／'.join(hits)}——已 fail-closed 拦截（⛔ 内容不回显）")
@@ -299,6 +342,9 @@ def authorization_amend(req: AmendIn, request: Request):
             r.term_note = req.term_note.strip()
         if req.template_fields is not None:
             r.template_fields = tpl
+        if st_norm:
+            r.special_terms = st_norm
+            r.special_terms_sha256 = st_sha
         if note_norm.strip():
             r.note = note_norm.strip()
         r.status = "amended"
@@ -306,6 +352,7 @@ def authorization_amend(req: AmendIn, request: Request):
         r.updated_at = _utc()
     payload = {"record_id": row.record_id, "status": "amended",
                "nca_ref": nca_ref, "simulated": True,
+               "special_terms_sha256": st_sha,
                "note": "授权变更已登记（NCA 存证）"}
     if rb_anomaly:
         payload["rb_anomaly"] = rb_anomaly

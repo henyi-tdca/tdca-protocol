@@ -14,7 +14,11 @@
           ⑦ 公开查：免会话仅回四字段（权属信息／授权信息／授权状态／获取方式），
             ⛔ 不含内部编号／凭据值／NCA 引用
           ⑧ 输出 SIMULATED 硬标注
+          ⑨ 特别条款（ALPHA-D D-2）：可填、入件（文本+sha256）、留痕；涉币／真部署合约
+            词面 400 fail-closed；公开面仍仅四字段（与八字段零冲突）
 """
+import hashlib
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -292,3 +296,71 @@ def test_p3_asset_ref_soft_warn_and_readback_flag():
     assert recs[d2["record_id"]]["asset_ref_aligned"] is False
     # 存量不被改写：asset_ref 原值留存
     assert recs[d2["record_id"]]["asset_ref"] == "OR-deadbeef00"
+
+
+def test_special_terms_register_stored_with_hash():
+    """D-2a：特别条款可填、入件（文本+sha256 双存）、留痕（NCA 存证照常）。"""
+    h = _auth()
+    terms = ("特别条款：阶梯分成示例——月结后按双方书面确认的比例结算；"
+             "不涉任何链上发行。")
+    r = client.post("/api/v1/authorization/register",
+                    json=_full_req(special_terms=terms), headers=h)
+    assert r.status_code == 201, r.text
+    body = r.json()["data"]
+    rid = body["record_id"]
+    expect = hashlib.sha256(terms.encode("utf-8")).hexdigest()
+    assert body["special_terms_sha256"] == expect
+    with get_sessionmaker().begin() as s:
+        row = s.get(M.AuthorizationRecord, rid)
+        assert row.special_terms == terms
+        assert row.special_terms_sha256 == expect
+        assert row.nca_ref is not None
+    q = client.get(f"/api/v1/authorization/query/{rid}", headers=h)
+    assert q.status_code == 200
+    assert q.json()["data"]["record"]["special_terms_sha256"] == expect
+
+
+def test_special_terms_amend_updates_hash():
+    """D-2a：amend 更新特别条款（文本与哈希同换，留痕）。"""
+    h = _auth()
+    rid = client.post("/api/v1/authorization/register",
+                      json=_full_req(), headers=h).json()["data"]["record_id"]
+    terms2 = "特别条款：条件性撤销——被授权方违约时授权自动终止。"
+    r2 = client.post("/api/v1/authorization/amend",
+                     json={"record_id": rid, "special_terms": terms2}, headers=h)
+    assert r2.status_code == 200, r2.text
+    expect = hashlib.sha256(terms2.encode("utf-8")).hexdigest()
+    assert r2.json()["data"]["special_terms_sha256"] == expect
+    with get_sessionmaker().begin() as s:
+        row = s.get(M.AuthorizationRecord, rid)
+        assert row.special_terms == terms2
+        assert row.special_terms_sha256 == expect
+
+
+def test_special_terms_coin_or_deploy_banned_400():
+    """D-2：涉币／真部署合约词面 fail-closed（⛔ 真部署合约 ⛔ 涉币）。"""
+    h = _auth()
+    r = client.post("/api/v1/authorization/register",
+                    json=_full_req(special_terms="以 USDT 代币结算并部署上链发行"),
+                    headers=h)
+    assert r.status_code == 400 and "SPECIAL_TERMS_REJECTED" in r.text
+
+
+def test_special_terms_too_long_400():
+    h = _auth()
+    r = client.post("/api/v1/authorization/register",
+                    json=_full_req(special_terms="条" * 2001), headers=h)
+    assert r.status_code == 400 and "超长" in r.text
+
+
+def test_special_terms_public_view_four_fields_only():
+    """D-2b：公开面仍仅四字段——特别条款文本/哈希 ⛔ 出公开面（与八字段零冲突）。"""
+    h = _auth()
+    terms = "特别条款：示例约定文本（公开面不得出现）。"
+    rid = client.post("/api/v1/authorization/register",
+                      json=_full_req(special_terms=terms),
+                      headers=h).json()["data"]["record_id"]
+    pub = client.get(f"/api/v1/authorization/public/{rid}")
+    assert pub.status_code == 200
+    assert terms not in pub.text
+    assert "special_terms" not in pub.text
