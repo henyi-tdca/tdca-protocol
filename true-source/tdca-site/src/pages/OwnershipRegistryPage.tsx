@@ -161,15 +161,43 @@ export function OwnershipRegistryPage() {
 
         <section data-testid="or-query">
           <h2>权属查询</h2>
-          <ul>
-            {records.map((r) => (
-              <li key={r.record_id}>
-                [{r.status}] {r.work_title} —— {r.owner_ref}
-                （{BRANCH_LABEL[r.jurisdiction_branch] ?? r.jurisdiction_branch}；
-                谱系：{r.source_lineage}；NCA：{r.nca_ref}）
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="or-records-table">
+              <thead>
+                <tr className="text-left text-gray-500">
+                  <th className="py-1 pr-2">登记号</th>
+                  <th className="py-1 pr-2">状态</th>
+                  <th className="py-1 pr-2">登记对象</th>
+                  <th className="py-1 pr-2">权利人</th>
+                  <th className="py-1 pr-2">法域分支</th>
+                  <th className="py-1 pr-2">谱系</th>
+                  <th className="py-1 pr-2">场景</th>
+                  <th className="py-1 pr-2">NCA</th>
+                  <th className="py-1 pr-2">来源</th>
+                </tr>
+              </thead>
+              <tbody>
+                {records.map((r) => (
+                  <tr key={r.record_id} className="border-t border-gray-100 align-top">
+                    <td className="py-1 pr-2 font-mono text-xs">{r.record_id}</td>
+                    <td className="py-1 pr-2">
+                      {r.status === 'registered'
+                        ? <span className="rounded bg-green-50 px-1.5 py-0.5 text-[10px] text-green-700">在册</span>
+                        : <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">{r.status}</span>}
+                    </td>
+                    <td className="py-1 pr-2">{r.work_title}</td>
+                    <td className="py-1 pr-2">{r.owner_ref}</td>
+                    <td className="py-1 pr-2">{BRANCH_LABEL[r.jurisdiction_branch] ?? r.jurisdiction_branch}</td>
+                    <td className="py-1 pr-2">{r.source_lineage}</td>
+                    <td className="py-1 pr-2">{r.scene ?? '—'}</td>
+                    <td className="py-1 pr-2 font-mono text-xs">{r.nca_ref}</td>
+                    <td className="py-1 pr-2 text-xs text-gray-500">{r.data_provenance}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {records.length === 0 && <p className="text-sm text-gray-500">暂无登记记录。</p>}
         </section>
       </div>
     </PageShell>
