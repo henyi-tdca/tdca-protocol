@@ -107,6 +107,15 @@ _REG_WHITELIST = {
     'TDCA-TEMPLATE-AUTH-001-生效注记.md': '16C538A9E1853FC2',
     '业务端节点接入与同构契约条例（对外公开版·V1.0）.md': '1E6469606C475EE0',
     '业务端节点接入与同构契约条例（机读版·对外公开版·V1.0）.yaml': 'BF2BC5C35B986E05',
+    # REGFACE-001（L1SI213，依 TDCA-HANDOFF-EXEC-L1SI213-SITE2-REGFACE-001）：
+    # 读取面 49→55 补齐六件；固化值照令面实算表逐位核过（以容器在役目录
+    # /docs/regulations 实算为准，六件全符）；⛔ 改既有 49 项、⛔ 动 _reg_read 逻辑
+    'README.md': 'C58DADCF9778CF99',
+    'TDCA-NSFL-COLLAB-NOTICE-V0.3.md': '926B1A1EFA2A776F',
+    'TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md': '97D7F39F4560B0EF',
+    'TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md': '530ECAC210AB45CA',
+    'TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml': '8825B7253D954174',
+    '人机协作工作条例.md': '69D9F6D44E139BC9',
 }
 
 
