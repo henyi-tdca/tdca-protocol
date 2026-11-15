@@ -10,6 +10,10 @@ P2 集群编排 + 准入闸门（A-13）：/api/v1/cluster/* —— 配置类调
   - 授权件四要件（照 P0 模板）：场景约束 / 五阶资产形态 / 全构成已授权 / 法律主体签名；
     智能体不得代签、不得代持代填（签名须法律主体本人，模拟硬件签 ≥8 字符）。
 机验：要件缺一即 400 fail-closed；准入无有效授权件即 403 fail-closed。
+  - CHAIN-ASSERT-SUP-001（N-1/A-2/A-3 逐层核验）：准入就持件全链上溯——链上
+    每一环皆须 active 且四要件成立，任一环节失效/缺件/未签该件即不成立（存量
+    旧语义链「上级已撤而下级仍 active」不得放行）；转授登记面全链上溯，任一
+    级祖先已失效 ⟹ 404 同码；层级由链位机推（chain_depth），调用方无注入面。
 SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
@@ -112,6 +116,18 @@ def grant_subgrant(req: SubGrant, request: Request):
     # GSEQ-8225：parent_grant_id 逐级上溯，64 层为技术上限（层级上限在册未裁）
     if len(_trace_chain(req.parent_grant_id)) >= 64:
         raise HTTPException(400, "CHAIN_DEPTH_LIMIT: 转授链已达技术上限 64 层")
+    # CHAIN-ASSERT-SUP-001（N-1）：转授登记面全链上溯——任一级祖先已失效
+    # （含 GSEQ-8225 前旧码不级联年代留存的「上级已撤而下级仍 active」存量行）
+    # ⟹ 404 同码（照 GSEQ-8225 已注销上级之转授同码语义；⛔ 继续向下转授）
+    _anc = parent.parent_grant_id
+    for _ in range(63):  # 上级本身已验；至多再上溯 63 级（连本级 ≤64 防御上限）
+        if _anc is None:
+            break
+        with get_session() as s:
+            _row = s.get(M.AuthGrant, _anc)
+        if _row is None or _row.status != "active":
+            raise HTTPException(404, "parent_grant_id 不存在")
+        _anc = _row.parent_grant_id
     gid = f"AG-{uuid.uuid4().hex[:10]}"
     nca_ref = _nca_append("CLUSTER_SUBGRANT", user["username"],
                           artifact_path=f"grant:{gid}")
@@ -281,14 +297,23 @@ def admission_check(req: AdmissionCheck, request: Request):
         _g3_g4_g5_authorization(s, username, req.agent_id, req.authorization_record_id)
         grants = s.query(M.AuthGrant).filter_by(
             subject_agent=req.agent_id, status="active").all()
-    if not grants:
-        _deny(req.agent_id, username, "GRANT", "配置类调用无有效授权件"
-              "（仅握手不成立——须先完成授权件登记）")
-    chain = _trace_chain(grants[0].grant_id)
+    # CHAIN-ASSERT-SUP-001（N-1/A-2/A-3 逐层核验）：本级 active 不足以准入——
+    # 须至少持一件「全链皆 active 且逐层四要件成立」之授权件。上游已撤（含存量
+    # 旧语义链）或链上任一层要件缺损，该件即不成立；逐判定实查库（无准入缓存），
+    # 旧会话不得冒充放行。同主体另持全链有效件者仍准（逐件独立核验）。
+    intact = [g for g in grants if _chain_intact(g.grant_id)[0]]
+    if not intact:
+        if not grants:
+            _deny(req.agent_id, username, "GRANT", "配置类调用无有效授权件"
+                  "（仅握手不成立——须先完成授权件登记）")
+        _deny(req.agent_id, username, "GRANT",
+              "持件之上游已撤或链上某层要件缺损（N-1/A-2/A-3 逐层核验，fail-closed："
+              "任一环失效/缺件/未签 ⟹ 该件及其下游不成立）")
+    chain = _trace_chain(intact[0].grant_id)
     nca_ref = _nca_append("CLUSTER_ADMIT", username,
                           artifact_path=f"admission:{req.agent_id}", prov="real")
     return _nca_watermark({"agent_id": req.agent_id, "verdict": "ADMITTED",
-                           "admitted": True, "grant_id": grants[0].grant_id,
+                           "admitted": True, "grant_id": intact[0].grant_id,
                            "chain": chain, "chain_depth": len(chain),
                            "gates": ["G-1 缔约", "G-2 权属成件", "G-3 授权成件",
                                      "G-4 四要件齐", "G-5 合规前置", "谱系授权件"],
@@ -312,6 +337,31 @@ def _trace_chain(grant_id: str) -> list:
         if gid is None:
             break
     return chain
+
+
+def _chain_intact(grant_id: str) -> tuple:
+    """转授链全链机验（N-1/A-2/A-3 逐层核验）：链上每一环皆须 active 且四要件成立。
+
+    返回 (ok, bad_link_id, reason)。层级由链位机推（调用方无层级注入面）；
+    任一环失效或要件缺损 ⟹ 整链不成立（《授权件模板》§五-1：失效/要件缺损 ⟹ 拒绝；
+    §五-4：任一环失效 ⟹ 其下游全部失效）。64 层防御上限与 _trace_chain 同。
+    """
+    gid: Optional[str] = grant_id
+    for _ in range(64):
+        if gid is None:
+            return True, None, ""
+        with get_session() as s:
+            row = s.get(M.AuthGrant, gid)
+        if row is None:
+            return False, gid, "链上授权件不存在（谱系断裂）"
+        if row.status != "active":
+            return False, gid, "链上授权件已注销（上游已撤——N-1：下游不得冒充放行）"
+        if (not row.scene_constraint.strip() or row.asset_order not in (1, 2, 3, 4, 5)
+                or row.full_composition != 1 or not row.legal_signer.strip()
+                or not row.signature or len(row.signature) < 8):
+            return False, gid, "链上授权件四要件缺损（A-2/A-3：逐层须件须签）"
+        gid = row.parent_grant_id
+    return False, grant_id, "转授链异常（疑似成环，超防御上限 64 层）"
 
 
 @router.get("/lineage/{agent_id}")
