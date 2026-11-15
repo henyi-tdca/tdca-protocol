@@ -40,6 +40,39 @@ def _auth(uname="p8atester01"):
     return {"Authorization": r.json()["data"]["token"]}
 
 
+def test_history_readonly_timeline_and_four_requirements():
+    """ALPHA-ALL-001 B 组：确权历史只读——登记→变更→注销时间轴＋四要件齐备度。"""
+    h = _auth("p8ahist01")
+    r = client.post("/api/v1/ownership/register", json={
+        "work_title": "历史轴样例《渡口》", "owner_ref": "did:tdca:p8ahist01",
+        "source_lineage": "agent-001 × 场景写生 × 2026-11",
+        "jurisdiction_branch": "unspecified", "scene": ""}, headers=h)
+    assert r.status_code == 201, r.text[:200]
+    rid = r.json()["data"]["record_id"]
+    client.post("/api/v1/ownership/amend", json={"record_id": rid,
+                "note": "附言补充"}, headers=h)
+    client.post("/api/v1/ownership/cancel", json={"record_id": rid,
+                "note": "协作终结"}, headers=h)
+    r = client.get(f"/api/v1/ownership/history/{rid}", headers=h)
+    assert r.status_code == 200, r.text[:200]
+    d = r.json()["data"]
+    assert d["record_id"] == rid and d["status"] == "cancelled"
+    events = [e["event"] for e in d["timeline"]]
+    assert events == ["登记", "变更", "注销"], events
+    assert all(e["nca_ref"].startswith("NCA-") for e in d["timeline"])
+    four = {f["key"]: f for f in d["four_requirements"]}
+    assert set(four) == {"人", "时", "物", "意"}
+    assert all(f["ready"] for f in four.values())
+    assert all(f["note"].startswith("已载明") for f in four.values())
+
+
+def test_history_404_and_no_session_401():
+    h = _auth("p8ahist02")
+    assert client.get("/api/v1/ownership/history/OR-none99999",
+                      headers=h).status_code == 404
+    assert client.get("/api/v1/ownership/history/OR-none99999").status_code == 401
+
+
 def test_no_session_401():
     r = client.get("/api/v1/ownership/rules")
     assert r.status_code == 401

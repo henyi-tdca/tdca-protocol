@@ -5,7 +5,7 @@
 //           法域四支仅索引·四条不公开负空间·转让许可归 8b）
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { api } from '@/lib/client'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
@@ -30,6 +30,26 @@ interface RecordView {
   scene: string | null
   nca_ref: string
   data_provenance: string
+}
+
+interface TimelineEvent {
+  event: string
+  actor: string
+  ts: string
+  nca_ref: string
+}
+
+interface FourReq {
+  key: string
+  ready: boolean
+  note: string
+}
+
+interface HistoryView {
+  record_id: string
+  status: string
+  timeline: TimelineEvent[]
+  four_requirements: FourReq[]
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -57,6 +77,8 @@ export function OwnershipRegistryPage() {
   const [amendId, setAmendId] = useState('')
   const [amendNote, setAmendNote] = useState('')
   const [cancelId, setCancelId] = useState('')
+  const [expandedId, setExpandedId] = useState('')
+  const [histories, setHistories] = useState<Record<string, HistoryView>>({})
 
   const loadRules = async () => {
     const r = await api.get<RuleView>('/api/v1/ownership/rules')
@@ -65,6 +87,11 @@ export function OwnershipRegistryPage() {
   const loadRecords = async () => {
     const r = await api.get<{ records: RecordView[] }>('/api/v1/ownership/query')
     if (r.ok) setRecords(r.data.records)
+  }
+  const loadHistory = async (recordId: string) => {
+    if (histories[recordId]) return
+    const r = await api.get<HistoryView>(`/api/v1/ownership/history/${recordId}`)
+    if (r.ok) setHistories((h) => ({ ...h, [recordId]: r.data }))
   }
   useEffect(() => {
     void loadRules()
@@ -179,25 +206,79 @@ export function OwnershipRegistryPage() {
                   <th className="py-1 pr-2">场景</th>
                   <th className="py-1 pr-2">NCA</th>
                   <th className="py-1 pr-2">来源</th>
+                  <th className="py-1 pr-2">历程</th>
                 </tr>
               </thead>
               <tbody>
                 {records.map((r) => (
-                  <tr key={r.record_id} className="border-t border-gray-100 align-top">
-                    <td className="py-1 pr-2 font-mono text-xs whitespace-nowrap">{r.record_id}</td>
-                    <td className="py-1 pr-2 whitespace-nowrap">
-                      {r.status === 'registered'
-                        ? <span className="rounded bg-green-50 px-1.5 py-0.5 text-[10px] text-green-700">{STATUS_LABEL.registered}</span>
-                        : <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">{STATUS_LABEL[r.status] ?? r.status}</span>}
-                    </td>
-                    <td className="py-1 pr-2">{r.work_title}</td>
-                    <td className="py-1 pr-2">{r.owner_ref}</td>
-                    <td className="py-1 pr-2 whitespace-nowrap">{BRANCH_LABEL[r.jurisdiction_branch] ?? r.jurisdiction_branch}</td>
-                    <td className="py-1 pr-2">{r.source_lineage}</td>
-                    <td className="py-1 pr-2">{r.scene ?? '—'}</td>
-                    <td className="py-1 pr-2 font-mono text-xs whitespace-nowrap">{r.nca_ref}</td>
-                    <td className="py-1 pr-2 text-xs text-gray-500">{r.data_provenance}</td>
-                  </tr>
+                  <Fragment key={r.record_id}>
+                    <tr className="border-t border-gray-100 align-top">
+                      <td className="py-1 pr-2 font-mono text-xs whitespace-nowrap">{r.record_id}</td>
+                      <td className="py-1 pr-2 whitespace-nowrap">
+                        {r.status === 'registered'
+                          ? <span className="rounded bg-green-50 px-1.5 py-0.5 text-[10px] text-green-700">{STATUS_LABEL.registered}</span>
+                          : <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-400">{STATUS_LABEL[r.status] ?? r.status}</span>}
+                      </td>
+                      <td className="py-1 pr-2">{r.work_title}</td>
+                      <td className="py-1 pr-2">{r.owner_ref}</td>
+                      <td className="py-1 pr-2 whitespace-nowrap">{BRANCH_LABEL[r.jurisdiction_branch] ?? r.jurisdiction_branch}</td>
+                      <td className="py-1 pr-2">{r.source_lineage}</td>
+                      <td className="py-1 pr-2">{r.scene ?? '—'}</td>
+                      <td className="py-1 pr-2 font-mono text-xs whitespace-nowrap">{r.nca_ref}</td>
+                      <td className="py-1 pr-2 text-xs text-gray-500">{r.data_provenance}</td>
+                      <td className="py-1 pr-2 whitespace-nowrap">
+                        <button
+                          type="button"
+                          data-testid={`or-expand-${r.record_id}`}
+                          className="text-xs text-blue-600 underline"
+                          onClick={() => {
+                            setExpandedId((cur) => (cur === r.record_id ? '' : r.record_id))
+                            void loadHistory(r.record_id)
+                          }}>
+                          {expandedId === r.record_id ? '收起' : '历程'}
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedId === r.record_id && (
+                      <tr className="border-t border-gray-100 bg-gray-50/60" data-testid={`or-timeline-row-${r.record_id}`}>
+                        <td colSpan={10} className="px-3 py-2">
+                          {!histories[r.record_id] && <p className="text-xs text-gray-500">载入中…</p>}
+                          {histories[r.record_id] && (
+                            <div className="flex flex-wrap gap-6">
+                              <div>
+                                <h4 className="mb-1 text-xs font-semibold text-gray-700">确权历程（登记／变更／注销）</h4>
+                                {histories[r.record_id].timeline.length === 0 && (
+                                  <p className="text-xs text-gray-500">暂无历程记录。</p>
+                                )}
+                                <ol className="space-y-1 border-l-2 border-blue-200 pl-3 text-xs">
+                                  {histories[r.record_id].timeline.map((e) => (
+                                    <li key={e.nca_ref} data-testid="or-timeline-event">
+                                      <span className="font-semibold">{e.event}</span>
+                                      <span className="text-gray-500"> ｜ {e.actor} ｜ {e.ts}</span>
+                                      <span className="block font-mono text-[10px] text-gray-400">{e.nca_ref}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                              <div>
+                                <h4 className="mb-1 text-xs font-semibold text-gray-700">四要件齐备度（仅标齐备与否，⛔ 法律判定）</h4>
+                                <ul className="space-y-1 text-xs">
+                                  {histories[r.record_id].four_requirements.map((f) => (
+                                    <li key={f.key} data-testid="or-four-req">
+                                      {f.ready
+                                        ? <span className="rounded bg-green-50 px-1.5 py-0.5 text-[10px] text-green-700">齐备·{f.key}</span>
+                                        : <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] text-amber-600">未齐·{f.key}</span>}
+                                      <span className="text-gray-600"> {f.note}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>

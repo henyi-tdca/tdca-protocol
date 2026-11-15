@@ -286,6 +286,55 @@ def ownership_query(request: Request, status: str = "",
                 "输出已按四条不公开负空间兜底脱敏）"})
 
 
+# ALPHA-ALL-001 B 组（2026-11-15）：权属确权历史只读呈现数据源。
+# ⛔ 不改登记数据、⛔ 不新增字段：事件序列机取既有 nca_chain 留痕
+# （登记／变更／注销三动作 artifact_path 恒为 ownership:{record_id}）。
+_EVENT_LABEL = {"OWNERSHIP_REGISTER": "登记", "OWNERSHIP_AMEND": "变更",
+                "OWNERSHIP_CANCEL": "注销"}
+
+
+@router.get("/history/{record_id}")
+def ownership_history(record_id: str, request: Request):
+    """权属确权历史（只读）：单件 登记／变更／注销 事件时间轴＋四要件齐备度标记。
+
+    数据源＝ownership_records 现状＋既有 nca_chain 机取；四要件（人／时／物／意）
+    仅呈现齐备与否并附一句通俗说明，⛔ 不代法律判定。"""
+    _require_session_user(request)
+    with get_session() as s:
+        row = s.get(M.OwnershipRecord, record_id)
+    if row is None:
+        raise HTTPException(404, "record_id 不存在")
+    with get_session() as s:
+        events = (s.query(M.NcaChain)
+                  .filter(M.NcaChain.artifact_path == f"ownership:{record_id}")
+                  .order_by(M.NcaChain.ts).all())
+    timeline = [{"event": _EVENT_LABEL.get(e.action, e.action),
+                 "actor": e.actor, "ts": e.ts, "nca_ref": e.nca_id}
+                for e in events]
+    four = [
+        {"key": "人", "ready": bool((row.owner_ref or "").strip()),
+         "note": ("已载明权利人" if (row.owner_ref or "").strip()
+                  else "未载明权利人")},
+        {"key": "时", "ready": bool((row.created_at or "").strip()),
+         "note": ("已载明登记时间" if (row.created_at or "").strip()
+                  else "未载明登记时间")},
+        {"key": "物",
+         "ready": bool((row.work_title or "").strip()
+                       or (row.expression_form or "").strip()),
+         "note": ("已载明登记对象" if ((row.work_title or "").strip()
+                  or (row.expression_form or "").strip())
+                  else "未载明登记对象")},
+        {"key": "意", "ready": bool((row.source_lineage or "").strip()),
+         "note": ("已载明生成来源谱系" if (row.source_lineage or "").strip()
+                  else "未载明生成来源谱系")},
+    ]
+    return _nca_watermark({
+        "simulated": True, "record_id": record_id, "status": row.status,
+        "timeline": timeline, "four_requirements": four,
+        "note": ("确权历史只读呈现（事件序列机取既有存证链；"
+                 "四要件仅标齐备与否，⛔ 法律判定）")})
+
+
 @router.get("/query/{record_id}")
 def ownership_query_one(record_id: str, request: Request):
     """权属单条查询（内部呈现；输出兜底脱敏）。"""
