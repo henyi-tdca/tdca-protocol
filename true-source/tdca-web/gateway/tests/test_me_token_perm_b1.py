@@ -164,4 +164,4 @@ class TestShape:
         ons = {i["on"] for i in d["matrix"]}
         assert ons == {"制度层", "我的面"}   # 表B/表C 无治理侧列 → 按表生成不补行
         for i in d["matrix"]:
-            assert set(i) == {"action", "on", "allow", "basis"}
+            assert set(i) == {"action", "on", "allow", "basis", "key_source"}  # B3 E-3 增「钥匙来源」列（令面 mandated，形态随批演进）
