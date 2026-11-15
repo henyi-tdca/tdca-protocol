@@ -5,6 +5,8 @@ P2 集群编排 + 准入闸门（A-13）：/api/v1/cluster/* —— 配置类调
 口径（期一开工令 5）：
   - 准入闸门 = 配置类调用须授权件；仅握手不成立（可信联通 ≠ 可信协作）；
   - 谱系账本增授权谱系：授权件 + 多层转授链（parent_grant_id 逐级上溯，只增不改）；
+  - GSEQ-8225（ALPHA-D D-1）：已注销上级之转授 404 同码；超范围转授（asset_order 越上级）拒；
+    链深技术上限 64 层；注销级联——任一环失效 ⟹ 下游全部失效；
   - 授权件四要件（照 P0 模板）：场景约束 / 五阶资产形态 / 全构成已授权 / 法律主体签名；
     智能体不得代签、不得代持代填（签名须法律主体本人，模拟硬件签 ≥8 字符）。
 机验：要件缺一即 400 fail-closed；准入无有效授权件即 403 fail-closed。
@@ -100,10 +102,16 @@ def grant_subgrant(req: SubGrant, request: Request):
                              req.full_composition, req.legal_signer, req.signature)
     with get_session() as s:
         parent = s.get(M.AuthGrant, req.parent_grant_id)
-    if parent is None:
+    # GSEQ-8225：已注销上级之转授 ⟹ 404 同码（⛔ 区分「不存在」与「已注销」）
+    if parent is None or parent.status != "active":
         raise HTTPException(404, "parent_grant_id 不存在")
-    if parent.status != "active":
-        raise HTTPException(403, "上级授权件已注销（revoked）——转授链失效，fail-closed")
+    # GSEQ-8225：超范围转授被拒（子件权限范围不得超出上级授权件）
+    if req.asset_order != parent.asset_order:
+        raise HTTPException(400, f"SUPERSEDE_SCOPE: 转授权限范围不得超出上级授权件"
+                                 f"（上级五阶形态={parent.asset_order}，本件={req.asset_order}）")
+    # GSEQ-8225：parent_grant_id 逐级上溯，64 层为技术上限（层级上限在册未裁）
+    if len(_trace_chain(req.parent_grant_id)) >= 64:
+        raise HTTPException(400, "CHAIN_DEPTH_LIMIT: 转授链已达技术上限 64 层")
     gid = f"AG-{uuid.uuid4().hex[:10]}"
     nca_ref = _nca_append("CLUSTER_SUBGRANT", user["username"],
                           artifact_path=f"grant:{gid}")
@@ -120,8 +128,10 @@ def grant_subgrant(req: SubGrant, request: Request):
             kind="subgrant", grant_id=gid, parent_grant_id=req.parent_grant_id,
             nca_ref=nca_ref, ts=_utc()))
     return _nca_watermark({"grant_id": gid, "subject_agent": req.subject_agent,
-                           "parent_grant_id": req.parent_grant_id, "nca_ref": nca_ref,
-                           "note": "转授已登记（多层转授链入谱系账本）"})
+                           "parent_grant_id": req.parent_grant_id,
+                           "chain_depth": len(_trace_chain(gid)), "nca_ref": nca_ref,
+                           "note": "转授已登记（多层转授链入谱系账本；"
+                                   "任一环失效 ⟹ 下游全失效——注销级联）"})
 
 
 class GrantRevoke(BaseModel):
@@ -142,16 +152,43 @@ def grant_revoke(req: GrantRevoke, request: Request):
                                "note": "已注销（幂等返回）"})
     nca_ref = _nca_append("CLUSTER_REVOKE", user["username"],
                           artifact_path=f"grant:{req.grant_id}")
+    # GSEQ-8225：任一环失效 ⟹ 下游全失效——级联注销全部后代转授件（逐件落谱系留痕）
+    with get_session() as s:
+        all_grants = s.query(M.AuthGrant).all()
+    children: dict[str, list[str]] = {}
+    for g in all_grants:
+        if g.parent_grant_id:
+            children.setdefault(g.parent_grant_id, []).append(g.grant_id)
+    cascaded: list[str] = []
+    queue = list(children.get(req.grant_id, []))
+    while queue:
+        gid_down = queue.pop(0)
+        if gid_down not in cascaded:
+            cascaded.append(gid_down)
+            queue.extend(children.get(gid_down, []))
+    now = _utc()
     with get_sessionmaker().begin() as s:
         r = s.get(M.AuthGrant, req.grant_id)
         r.status = "revoked"
         s.add(M.LineageEntry(
             entry_id=f"LE-{uuid.uuid4().hex[:10]}", agent_id=r.subject_agent,
             kind="revoke", grant_id=req.grant_id, parent_grant_id=r.parent_grant_id,
-            nca_ref=nca_ref, ts=_utc()))
+            nca_ref=nca_ref, ts=now))
+        for gid_down in cascaded:
+            sub = s.get(M.AuthGrant, gid_down)
+            if sub is None or sub.status == "revoked":
+                continue
+            sub.status = "revoked"
+            s.add(M.LineageEntry(
+                entry_id=f"LE-{uuid.uuid4().hex[:10]}", agent_id=sub.subject_agent,
+                kind="revoke", grant_id=gid_down, parent_grant_id=sub.parent_grant_id,
+                nca_ref=nca_ref, ts=now))
+    note = "授权件已注销（GSEQ-8225：任一环失效 ⟹ 下游全失效）"
+    if cascaded:
+        note += f"；级联注销下游转授件 {len(cascaded)} 件：{'、'.join(cascaded)}"
     return _nca_watermark({"grant_id": req.grant_id, "status": "revoked",
-                           "nca_ref": nca_ref,
-                           "note": "授权件已注销；其后代转授链不再具备准入效力"})
+                           "cascade_revoked": cascaded, "nca_ref": nca_ref,
+                           "note": note})
 
 
 # =====================================================================

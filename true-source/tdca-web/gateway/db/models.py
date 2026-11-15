@@ -583,6 +583,8 @@ class AuthorizationRecord(Base):
     req_legal_signature: Mapped[bool] = mapped_column(nullable=False, default=False)  # ④ 法律主体签名
     scope_note: Mapped[str | None] = mapped_column(Text)            # 权限范围说明（⛔ 不代定取值）
     term_note: Mapped[str | None] = mapped_column(Text)             # 期限说明（⛔ 不代定取值）
+    special_terms: Mapped[str | None] = mapped_column(Text)         # D-2 特别条款约定文本（以智能合约约定）
+    special_terms_sha256: Mapped[str | None] = mapped_column(Text)  # D-2 约定文本 sha256（机验锚）
     template_fields: Mapped[str] = mapped_column(Text, nullable=False, default="{}")  # 模板八字段 JSON
     status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
     note: Mapped[str | None] = mapped_column(Text)
