@@ -189,7 +189,7 @@ export interface PostOptions extends GetOptions {
 }
 
 async function request<T>(
-  method: 'GET' | 'POST',
+  method: 'GET' | 'POST' | 'DELETE',
   path: string,
   body: unknown,
   opts: PostOptions = {},
@@ -293,6 +293,7 @@ export const api = {
   // ---- F0-3 三级接口（水印/fail-closed/WS/HUF）----
   get: <T>(path: string, opts: GetOptions = {}) => request<T>('GET', path, null, opts),
   post: <T>(path: string, body: unknown, opts: PostOptions = {}) => request<T>('POST', path, body, opts),
+  del: <T>(path: string, opts: GetOptions = {}) => request<T>('DELETE', path, null, opts),
   ws: wsSubscribe,
   verifyWatermark,
   hufToken,
