@@ -101,6 +101,8 @@ app.include_router(ws_router)
 # A 类: API 面包装层（/api/v1/*，纯 Python FROZEN 库薄包装——首页/税收/市场/沙盒/学院/审计/治理/通知机/集群）
 from api_v1 import router as api_v1_router  # noqa: E402
 app.include_router(api_v1_router)
+from me_ops import router as me_ops_router  # noqa: E402
+app.include_router(me_ops_router)
 
 # A-12: P1 WorkBuddy 上站（/api/v1/workbuddy/*——会话鉴权 + DB 持久化 + NCA 落链；不改 FROZEN 子应用）
 from workbuddy_ops import router as workbuddy_ops_router  # noqa: E402

@@ -1806,13 +1806,19 @@ def me_password(req: PasswordChangeRequest, request: Request):
     with get_session() as s:
         user = s.get(M.User, me)
         if user is None:
+            from me_audit import audit_password_change  # 批2 B 项：失败也留痕（⛔ 任何密码形态）
+            audit_password_change(me, False)
             raise HTTPException(401, "用户不存在")  # fail-closed
         if not verify_password(req.old_password, user.salt, user.iterations,
                                user.password_hash):
+            from me_audit import audit_password_change  # 批2 B 项：失败也留痕（⛔ 任何密码形态）
+            audit_password_change(me, False)
             raise HTTPException(400, "旧密码错误")   # 返码口径：应用层凭据错→400（401 保留给会话面）
     new_pw = req.new_password
     if (len(new_pw) < 8 or not any(c.isalpha() for c in new_pw)
             or not any(c.isdigit() for c in new_pw)):
+        from me_audit import audit_password_change  # 批2 B 项：失败也留痕（⛔ 任何密码形态）
+        audit_password_change(me, False)
         raise HTTPException(400, "密码强度不足：至少 8 位且同时包含字母与数字")
     ph, salt, iters = hash_password(new_pw)
     current_hash = hashlib.sha256(
@@ -1829,8 +1835,10 @@ def me_password(req: PasswordChangeRequest, request: Request):
             if sess.token_hash != current_hash:
                 sess.revoked = 1
                 revoked_n += 1
+    from me_audit import _masked_subject  # 批2 B 项：成功亦带结果末段与主体脱敏形
     nca_ref = _nca_append("user_password_change", me,
-                          artifact_path=f"auth://me/password-change/{me}", prov="real")
+                          artifact_path=f"auth://me/password-change/{me}/ok", prov="real",
+                          subject_ref=_masked_subject(me))
     return _nca_watermark({
         "changed": True, "username": me, "other_sessions_revoked": revoked_n,
         "nca_ref": nca_ref,
