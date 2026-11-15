@@ -146,6 +146,123 @@ function AssistantBox() {
 
 /** 账户安全 · 修改密码（2026-10-09 最小实现令）：页内改密，调在册 POST /api/v1/me/password。
  *  旧密核验/新密强度/吊销本人其它会话/NCA 落链皆在服务端；前端只做入口与提示，不新增依赖。 */
+/** 我的权限（L1SI214 E-3 / ACCOUNT-CONSOLE B 块）：GET /me/permissions 权限点矩阵——动作／域／允许／依据／钥匙来源＋四值图例 */
+const ALLOW_LABEL: Record<string, string> = {
+  yes: '允许', no: '拒绝', 'yes-require-signature': '须签名', na: '不适用' }
+const ALLOW_LEGEND: { v: string; text: string }[] = [
+  { v: 'yes', text: '允许：账号有此许可，可直接操作（涉他人资产仍须所有者之钥）' },
+  { v: 'no', text: '拒绝：账号无此许可——该行写明该找谁' },
+  { v: 'yes-require-signature', text: '须签名：须本人签署授权件后方可操作' },
+  { v: 'na', text: '不适用：该动作在此域对本角色不适用' },
+]
+
+interface PermRow { action: string; on: string; allow: string; basis: string; key_source?: string | null }
+interface PermData { role: string; scopes: string[]; matrix: PermRow[]
+  key_source_legend?: { '第1把'?: string; '第2把'?: string } | null }
+
+/** yes 行入口映射（⛔新建功能，只接在役已有页；无页可接者如实写「暂未开放界面」） */
+function permEntry(row: PermRow): { to?: string; scroll?: string; fallback?: string } {
+  const a = row.action
+  if (a === '授权') return { to: '/authorization/panel' }
+  if (a === '改密') return { scroll: 'me-pwd' }
+  if (a.startsWith('任命')) return { to: '/private' }
+  if (a === '上架') return { to: '/market' }
+  if (a === '发布') return { to: '/announcements' }
+  if (a === '可见范围设定') return { to: '/library' }
+  return { fallback: '该动作暂未开放界面' }
+}
+
+/** no 行「该找谁」口径 */
+function permWho(row: PermRow): string {
+  if (row.action === '授权') return '须由该资产的所有者授予'
+  if (row.on === '制度层') return '需治理侧（制度层变更通道）'
+  if (row.on === '私域(本人)') return '私域仅本人——你对他人私域无此权'
+  return '需治理侧'
+}
+
+function PermissionsCard() {
+  const [data, setData] = useState<PermData | null>(null)
+  const [err, setErr] = useState('')
+  useEffect(() => {
+    void (async () => {
+      const r = await api.get<PermData>('/api/v1/me/permissions')
+      if (r.ok) setData(r.data)
+      else setErr(r.detail ?? r.reason ?? '读取失败')
+    })()
+  }, [])
+  return (
+    <section data-testid="me-permissions" className="rounded-lg border border-gray-200 bg-white p-4">
+      <h3 className="mb-2 text-sm font-semibold text-gray-800">我的权限（权限点矩阵·本人可见）</h3>
+      {err && <p className="text-xs text-amber-700" data-testid="me-perm-err">{err}</p>}
+      {!data && !err && <p className="text-sm text-gray-400">读取中……</p>}
+      {data && (
+        <>
+          <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-gray-500">
+            <span>角色：{ROLE_LABEL[data.role] ?? data.role}</span>
+            <span>域：{data.scopes.join('／')}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="me-perm-matrix">
+              <thead>
+                <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
+                  <th className="py-1 pr-2">动作</th>
+                  <th className="py-1 pr-2">域</th>
+                  <th className="py-1 pr-2">允许</th>
+                  <th className="py-1 pr-2">依据</th>
+                  <th className="py-1 pr-2">钥匙来源</th>
+                  <th className="py-1 pr-2">入口</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.matrix.map((r, i) => {
+                  const entry = permEntry(r)
+                  return (
+                    <tr key={i} data-allow={r.allow} className={`border-b border-gray-100 ${r.allow === 'na' ? 'opacity-50' : ''}`}>
+                      <td className="py-1.5 pr-2">{r.action}</td>
+                      <td className="py-1.5 pr-2 text-xs text-gray-500">{r.on}</td>
+                      <td className="py-1.5 pr-2">
+                        <span className={`rounded px-1.5 py-0.5 text-[11px] ${
+                          r.allow === 'yes' ? 'bg-emerald-100 text-emerald-700'
+                          : r.allow === 'no' ? 'bg-red-100 text-red-700'
+                          : r.allow === 'yes-require-signature' ? 'bg-amber-100 text-amber-700'
+                          : 'bg-gray-100 text-gray-500'}`}>{ALLOW_LABEL[r.allow] ?? r.allow}</span>
+                      </td>
+                      <td className="py-1.5 pr-2 text-xs text-gray-600">{r.basis}</td>
+                      <td className="py-1.5 pr-2 text-xs">
+                        {r.key_source ? <span className="text-amber-700">{r.key_source}</span> : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="py-1.5 pr-2 text-xs">
+                        {r.allow === 'yes' || r.allow === 'yes-require-signature' ? (
+                          entry.to ? <Link to={entry.to} className="text-emerald-700 underline">前往 →</Link>
+                          : entry.scroll ? (
+                            <button type="button" className="text-emerald-700 underline"
+                              onClick={() => document.querySelector(`[data-testid="${entry.scroll}"]`)?.scrollIntoView({ behavior: 'smooth' })}>
+                              页内前往 →</button>
+                          ) : <span className="text-gray-400">{entry.fallback}</span>
+                        ) : r.allow === 'no' ? (
+                          <span className="text-gray-500">{permWho(r)}</span>
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-2 space-y-0.5 text-[11px] text-gray-500" data-testid="me-perm-legend">
+            {ALLOW_LEGEND.map((l) => <p key={l.v}>· {l.text}</p>)}
+            {data.key_source_legend && (
+              <p className="text-amber-700">· 两把钥匙：第 1 把＝{data.key_source_legend['第1把'] ?? '—'}；第 2 把＝{data.key_source_legend['第2把'] ?? '—'}（两类授权不互相顶替）</p>
+            )}
+          </div>
+        </>
+      )}
+    </section>
+  )
+}
+
 function PasswordChangeCard() {
   const [oldPw, setOldPw] = useState('')
   const [newPw, setNewPw] = useState('')
@@ -628,6 +745,11 @@ export function MePage() {  const { status, data } = useApiGet<MeData>('/api/v1/
               <UsageCard />
             </div>
           </section>
+
+          {/* 我的权限（L1SI214 E-3：权限点矩阵＋钥匙来源列＋四值图例；ACCOUNT-CONSOLE B 规格——只接在役已有页） */}
+          <div className="mt-3">
+            <PermissionsCard />
+          </div>
 
           {/* 红签待办（独立成卡，紧随账户管理；红签口径不变） */}
           <section data-testid="me-pending-card" className={`rounded-lg border p-4 ${data.pending_count > 0 ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-white'}`}>
