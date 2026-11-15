@@ -87,7 +87,7 @@ export function PrivateDomainPage() {
             ），最后取本地部署包在你那一侧把节点跑起来。
           </p>
           <p data-testid="private-pkg-pending" className="rounded bg-gray-50 p-2 text-xs text-amber-700">
-            本地部署包：<span className="font-semibold">建设中</span>。真因：「私域可带走」段待后端就绪（预计后批）——两权登记与通道登记现在可以先走。
+            本地部署包：<span className="font-semibold">暂未提供公开下载</span>。说明：部署包属内部运行配置，当前不外发——两权登记与通道登记现在可以先走。
           </p>
         </section>
 

@@ -96,7 +96,9 @@ describe('追平批B3：/ops/me 运维我的（六栏只读）', () => {
     renderAt('/ops/me')
     await waitFor(() => expect(screen.getByTestId('ops-me-page')).toBeTruthy())
     const page = screen.getByTestId('ops-me-page')
-    expect(page.textContent).toContain('建设中')
+    expect(page.textContent).toContain('站务')
+    expect(page.textContent).toContain('账户')
+    expect(page.textContent).not.toContain('建设中')
   })
 })
 
