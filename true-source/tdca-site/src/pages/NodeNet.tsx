@@ -3,7 +3,7 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI206-MIGRATE-B3 /nodes 节点网络公开面
 // 约束矩阵: TDCA-HANDOFF-EXEC-L1SI206-MIGRATE-B3-001 §一 G-2——权限照 route-parity.md 公开
 //   可视图只画已披露真节点·空位固定句；状态栏「数据截至 HH:MM」⛔「实时」；
-//   接口九类空壳禁止一律「建设中 · 未开放」（唯文档/协议包分发可用）；⛔ 假地址/示例响应
+//   接口九类空壳禁止一律「未开放（未实现，照条例第 14 条）」（唯文档/协议包分发可用）；⛔ 假地址/示例响应
 // 并轨注记: MIGRATE 批3 自旧树 pages/node-net.tsx 同栈直拷适配——
 //   ① 引路三换（PageShell→@/components、⛔ dataNature 新壳无此 prop、数据源 node-net-data 同目录）；
 //   ② 移动适配（AMEND-1 四字段）：状态栏／接口信息两表各加 overflow-x-auto
@@ -117,7 +117,7 @@ export function NodeNetPage() {
                   <td className="py-2">
                     {a.usable
                       ? <span className="text-green-700">可用（条例人读／机读本页可下载）</span>
-                      : <span className="text-gray-500">建设中 · 未开放</span>}
+                      : <span className="text-gray-500">未开放（未实现，照条例第 14 条）</span>}
                   </td>
                 </tr>
               ))}

@@ -3,7 +3,7 @@
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI175-B2 S2-3 · 三问向导（批2前三包）
 // 约束矩阵: TDCA-HANDOFF-EXEC-L1SI175-B2-001 S2-3——三问（原创／AI 参与／场景）人答；
 //   系统只汇总、⛔ 代判（无「是否原创」判定、无通过／不通过结论）；
-//   提交后端未通：不出提交按钮，标「暂存本页，提交功能在建」＋真因
+//   不出提交按钮：标「暂不可提交」＋指路「交素材」上传通道（/use/upload，须登录态）
 // 红线: 必写「你的回答会作为登记自述，真实性由你本人负责」；页面零内部编号零价格字样
 // =============================================================================
 import { useState } from 'react'
@@ -99,7 +99,7 @@ export function ThreeQuestionsPage() {
   return (
     <PageShell
       title="三问向导 · 贡献前自述"
-      dataSource="纯前端表单（本页零接口调用）；提交功能待后端就绪"
+      dataSource="纯前端表单（本页零接口调用）；出草稿与复制，登记提交走「交素材」上传通道"
       permission="公开"
       description="交素材前的三问：原创吗？用过 AI 吗？用在什么场景？系统只替你汇成一段自述文字，不作任何判定。"
     >
@@ -190,9 +190,9 @@ export function ThreeQuestionsPage() {
         </section>
 
         <section data-testid="threeq-pending" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
-          <h3 className="mb-1 text-sm font-semibold text-gray-900">提交功能：<span className="text-amber-600">建设中</span></h3>
+          <h3 className="mb-1 text-sm font-semibold text-gray-900">提交功能：<span className="text-amber-600">暂不可提交</span></h3>
           <p className="text-xs leading-relaxed text-gray-600">
-            暂存本页，提交功能在建。真因：上传与登记提交接口待建（批 2 后段，待后端就绪）——本页只出草稿与复制，不替你提交、也不替你判定。
+            本页只出草稿与复制，不替你提交、也不替你判定。登记提交请走「交素材」上传通道（/use/upload，须登录态）；权属登记与合约备案分别在权属登记页、合约备案页办理。
           </p>
         </section>
       </div>

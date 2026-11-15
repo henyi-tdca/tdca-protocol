@@ -2,7 +2,7 @@
 // TDCA 制度水印
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI206-MIGRATE-B3 节点网络公域四块＋私域两卡自测
 // 约束矩阵: NODE-NET-A-001 十条硬约束——真节点恰 1 个（⛔ 演示点）、零「实时」字样、九类接口齐、
-//   未实现一律「建设中 · 未开放」唯文档/协议包分发可用、状态栏「数据截至 HH:MM」在、
+//   未实现一律「未开放」唯文档/协议包分发可用（ALPHA-C：去「建设中」禁语）、状态栏「数据截至 HH:MM」在、
 //   私域七字段无真值如实「未设置／待复算」、卡底固定句原文、三处同源（唯一数据模块）
 //   ＋ MIGRATE-B3-001 §四-3：私域卡未登录由接口 401/403 把守（前端隐藏 ⛔ 作据）
 // 并轨注记: MIGRATE 批3 自旧树 __tests__/node-net-a.test.tsx 迁移适配——
@@ -53,7 +53,7 @@ describe('公域四块：可视图 / 状态栏 / 接口信息 / 条例入口', (
     expect(NODES).toHaveLength(1)
     expect(screen.getAllByTestId('nn-viz-empty').length).toBeGreaterThan(0)
     const emptyTexts = screen.getAllByTestId('nn-viz-empty').map((e) => e.textContent ?? '')
-    for (const t of emptyTexts) expect(t).toContain('建设中 · 尚无其他节点接入')
+    for (const t of emptyTexts) expect(t).toContain('尚无其他节点接入')
   })
 
   it('图例含四态与两种连线', () => {
@@ -77,7 +77,7 @@ describe('公域四块：可视图 / 状态栏 / 接口信息 / 条例入口', (
     expect(screen.getByTestId('node-net-page').textContent).not.toContain('实时')
   })
 
-  it('接口九类逐行：唯「文档／协议包分发」可用，余皆「建设中 · 未开放」', () => {
+  it('接口九类逐行：唯「文档／协议包分发」可用，余皆「未开放」', () => {
     render(<MemoryRouter><NodeNetPage /></MemoryRouter>)
     const rows = screen.getAllByTestId('nn-api-row')
     expect(rows).toHaveLength(9)
@@ -85,7 +85,7 @@ describe('公域四块：可视图 / 状态栏 / 接口信息 / 条例入口', (
     for (const r of rows) {
       const t = r.textContent ?? ''
       if (t.includes('文档／协议包分发')) expect(t).toContain('可用')
-      else expect(t).toContain('建设中 · 未开放')
+      else expect(t).toContain('未开放')
     }
   })
 

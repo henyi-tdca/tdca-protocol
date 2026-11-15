@@ -31,7 +31,7 @@ export const NODES: NodeView[] = [
 ]
 
 /** 可视图空位固定句（⛔ 占位名：其余位置一律此句） */
-export const NODE_EMPTY_TEXT = '建设中 · 尚无其他节点接入'
+export const NODE_EMPTY_TEXT = '尚无其他节点接入'
 
 /** 制度适配四态（图例同源） */
 export const ADAPT_STATES = ['已适配', '待适配', '冲突·不可启用', '父级直承'] as const
