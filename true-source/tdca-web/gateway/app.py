@@ -104,6 +104,12 @@ app.include_router(api_v1_router)
 from me_ops import router as me_ops_router  # noqa: E402
 app.include_router(me_ops_router)
 
+# L1SI214-CONSOLE-A2-001: 任免私域管理员（/api/v1/me/privilege-admin/appoint|revoke——
+# 两把锁：本人真身＋权属 owner_ref；越他域一律 404 同码；域内授权关系落在册面板件，
+# 留痕调既有 audit_privilege_admin_change 落既有 nca_chain；⛔ 第二套私域体系、⛔ 角色枚举）
+from me_privilege_admin_ops import router as me_privilege_admin_router  # noqa: E402
+app.include_router(me_privilege_admin_router)
+
 # A-12: P1 WorkBuddy 上站（/api/v1/workbuddy/*——会话鉴权 + DB 持久化 + NCA 落链；不改 FROZEN 子应用）
 from workbuddy_ops import router as workbuddy_ops_router  # noqa: E402
 app.include_router(workbuddy_ops_router)
