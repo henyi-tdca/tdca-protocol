@@ -238,9 +238,13 @@ def test_p1_me_accountinfo_readonly_and_no_write_endpoint():
     assert cols_before == cols_after         # 未加列
     # 未新增写端点：/api/v1/me 系 POST 路径集合与上批一致——
     # L1SI145-ANCHOR-B2-001 起＋一件：/me/anchor/verify（人工核验受理，founder/operator 闸）
+    # L1SI214-CONSOLE-A2-001 起＋两件：/me/privilege-admin/appoint|revoke
+    #   （任免私域管理员·两把锁＝本人真身＋权属 owner_ref，越他域 404 同码）
     spec = app.openapi()
     me_posts = sorted(p for p, ops in spec["paths"].items() if "post" in ops and "/me/" in p)
     assert me_posts == ["/api/v1/me/anchor/verify", "/api/v1/me/password",
+                        "/api/v1/me/privilege-admin/appoint",
+                        "/api/v1/me/privilege-admin/revoke",
                         "/api/v1/me/sessions/revoke", "/api/v1/me/sessions/revoke-all"]
 
 
