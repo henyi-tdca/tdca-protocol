@@ -272,6 +272,9 @@ def build_permissions(role: str) -> dict:
         for act, marks_row in g["rows"].items():
             marks = marks_row[g["columns"].index(col)]
             matrix.append({"action": act, "on": dom, "allow": _allow_of(marks),
-                           "basis": _basis(dom, act, col)})
+                           "basis": _basis(dom, act, col),
+                           "key_source": ("资产所有者" if act == "授权"
+                                          else "注册用户（本人）")})
     return {"role": role, "scopes": list(_SCOPES[role]), "matrix": matrix,
-            "note": _NOTE[role], "scope": "self"}
+            "note": _NOTE[role], "scope": "self",
+            "key_source_legend": {"第1把": "注册用户（本人）", "第2把": "资产所有者"}}

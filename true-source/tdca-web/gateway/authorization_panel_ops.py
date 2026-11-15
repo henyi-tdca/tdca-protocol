@@ -37,6 +37,7 @@ from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _require_session_user,  # noqa: E402
                     _utc, rec_hash_of)
 from authorization_ops import _public_space_hits  # noqa: E402
+from dual_lock import dual_lock_gate, extract_asset_ref  # noqa: E402  (L1SI214-B3 两把锁④)
 
 router = APIRouter(prefix="/api/v1/authorization", tags=["authorization-panel"])
 
@@ -375,6 +376,12 @@ def panel_sign(req: SignIn, request: Request):
     # 非本人 ⛔ 签署
     if user["username"] != doc.drafter:
         raise HTTPException(403, "非本人 ⛔ 签署——签署人须与起草人为同一登录主体")
+    # L1SI214-TOKEN-B3-001 令 A 项第④步：签真＋人真之后、存证生效之前过两把锁
+    # （标的含权属资产引用 OR-… 的资产绑定委托件；自由文本旧件不触发本门——
+    #  C-1 在册 compat 面，范围不悄悄扩大）
+    _asset_ref = extract_asset_ref(doc.subject)
+    if _asset_ref is not None:
+        dual_lock_gate(user, "授权", _asset_ref, authz_ref=aid)
     # 熔断①：观察窗内重复签署异常
     with get_session() as s:
         last_sign = (s.query(M.AuthorizationPanelEvent)

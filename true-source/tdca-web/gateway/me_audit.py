@@ -10,6 +10,9 @@ L1SI214-TOKEN-B2-001 批 2 两类留痕（审计面，⛔ 权限面、⛔ /me/pe
   脱敏/时点/结果=revoked 或 already_revoked）。
 - user_privilege_admin_change：私域管理员任免（谁=actor、对谁=subject_ref 脱敏形
   sha256[:12]、哪个私域=artifact_path 域段、结果=末段；op=appoint/revoke）。
+- dual_lock_decision（L1SI214-TOKEN-B3-001 追加，令 D 项）：两把锁判定留痕——
+  放行与拒绝皆落一条；谁/何动作/何对象/两把锁各自结论/拒绝码（若拒）；
+  落点同此链，⛔ 新表、⛔ 凭据值。
 SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
@@ -52,3 +55,27 @@ def audit_privilege_admin_change(actor: str, appointee: str, op: str,
     return _nca_append("user_privilege_admin_change", actor,
                        artifact_path=f"auth://me/privilege-admin/{actor}/{op}/{tail}",
                        prov="real", subject_ref=_masked_subject(appointee))
+
+
+def _seg(text: str, limit: int = 80) -> str:
+    """记痕段清洗：⛔ 路径分隔符（防段溢出）、限长。"""
+    return (text or "").replace("/", "·")[:limit]
+
+
+def audit_dual_lock(actor: str, action: str, asset_id: str,
+                    ok1: bool, why1: str, ok2: bool, why2: str,
+                    allowed: bool, refuse_code: str,
+                    authz_ref: str | None = None) -> str:
+    """两把锁判定一条（B3 令 D 项：放行/拒绝皆落；拒绝码入末段；⛔ 凭据值）。
+
+    字段映射：谁=actor、何动作=action 段、何对象=资产段、两把锁各自结论=L1/L2 段、
+    时点=链 ts 字段、拒绝码=末段（allow／deny-NO_OPERATION_PERM／deny-NO_CONFIG_RIGHT／deny-404）。
+    """
+    l1 = ("L1-pass" if ok1 else "L1-deny") + ":" + _seg(why1)
+    l2 = ("L2-pass" if ok2 else "L2-deny") + ":" + _seg(why2)
+    tail = "allow" if allowed else f"deny-{refuse_code or 'unknown'}"
+    return _nca_append("dual_lock_decision", actor,
+                       artifact_path=(f"auth://dual-lock/{_seg(asset_id, 40)}/"
+                                      f"{_seg(action, 20)}/{l1}/{l2}/{tail}"),
+                       prov="real", subject_ref=_masked_subject(actor),
+                       authz_ref=authz_ref)
