@@ -251,4 +251,3 @@ class TestPipelineVersioned:
             nca_generator=nca_placeholder, ota_controller=None,
         )
         engine.run_pipeline("kb_update", ku_unit.id)  # 不应抛异常
-

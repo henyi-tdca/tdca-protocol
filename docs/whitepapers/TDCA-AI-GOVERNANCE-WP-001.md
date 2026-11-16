@@ -274,4 +274,3 @@ TDCA (Trusted Digital Collaboration Architecture) is an **institutional protocol
 - Neutrality: this document cites public license facts for analysis and makes no value judgments about any vendor.
 
 ---
-

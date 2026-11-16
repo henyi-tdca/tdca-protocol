@@ -73,4 +73,3 @@
 - **沙盒闸门已生效**: 沙盒通过→已真实生产落盘(发联盟NCA+生产NCA+回填COP)
 - **机制全真实**: MCP握手/NLP调用/enforce_entry/form_coalition/shapley/NCA发射 均为平台真实代码实跑。
 - 与旧版(run_sunzi_real.py)区别: 旧版生产落盘在沙盒判定之前(错误); 本版沙盒不过不落盘。
-
