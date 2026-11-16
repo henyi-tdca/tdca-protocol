@@ -42,4 +42,7 @@ export async function sitePost<T>(path: string, body: unknown, extraHeaders?: Re
 export const FAMILIES: { key: string; label: string; desc: string }[] = [
   { key: 'regulation', label: '制度', desc: '制度／条例／规则／办法／章程／指引' },
   { key: 'help', label: '帮助', desc: '说明／示例／帮助' },
+  // DOCS-INDEX-001：操作指引族入文档列表（在册后端 /api/site/docs/ops-guides 已列 17 件；
+  // 标签与描述对齐 tdca-frontend DOCS-FAMILY-001 口径，⛔ 另造列表数据）
+  { key: 'ops-guides', label: '操作指引', desc: '步骤／做法／操作指引' },
 ]
