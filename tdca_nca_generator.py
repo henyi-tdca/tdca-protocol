@@ -21,7 +21,7 @@ except ImportError:
 class TDCANCAGenerator:
     """
     TDCA Nested Cognitive Asset Generator
-    
+
     输入: 操作类型、文件路径、前后状态哈希
     输出: YAML 格式 NCA 文件，符合 MEMO-006 附录 C 规范
     """

@@ -182,4 +182,3 @@ def test_engine_dual_scene_compound():
     assert rec.metering["verdict"] == "APPROVED"
     assert rec.metering["call_type"] == "compound"
     assert rec.compound_ref is not None and rec.compound_ref.startswith("dual-")
-

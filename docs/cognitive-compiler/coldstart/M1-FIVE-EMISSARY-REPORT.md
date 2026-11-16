@@ -70,4 +70,3 @@
 - DeepSeek key 未注入(凭证零落盘, 方案B 延续但未激活) → 本跑零外部 LLM 调用, 预算 ¥0 / 0 token。
 - 产物不推送(待签批走 PR)。
 - **编号事故与修复(诚实披露)**: 本跑 `nca_generator.generate_nca` 自动编号未扫盘, 复用 155 覆盖上一轮手动创建的 M2 编译 NCA-155(写入 M1 准入 EcosystemAdmit), 致 M2 原 provenance 文件内容丢失。已修复: **M1 链保留 155/156/157**(现场自洽), **M2 编译 NCA 顺延至空闲号 158** 恢复 provenance(见 `emissary/谈判者-特使-001.yaml` provenance 行; M2 报告因被其他进程锁定本次未能同步, 其 line 21 仍暂显 155, 释锁后可一键改为 158)。根因=手动预分配编号与自动编号机制冲突; 后续应禁止手动创建 NCA 与 generate_nca 同号。
-

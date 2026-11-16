@@ -404,7 +404,3 @@ dU(t) = μ(t)dt + σ(t)dW(t)
 
 ---
 <!-- APPENDIX-E-ANCHOR -->
-
-
-
-
