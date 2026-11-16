@@ -201,6 +201,14 @@
       "一句话用途": "授权件登记（四要件机验，缺一不成立；人类会话内，⛔ 智能体不代签代持）"
     },
     {
+      "path": "/api/v1/agent-channel/{reg_no}/grants/{grant_no}/revoke",
+      "methods": [
+        "POST"
+      ],
+      "鉴权要求": "会话 TDCA-SES",
+      "一句话用途": "授权件注销＋BFS 全后代级联 revoked（新建端点；响应回 cascade_revoked 全名单）"
+    },
+    {
       "path": "/api/v1/agent-channel/{reg_no}/insurance-policies",
       "methods": [
         "POST"

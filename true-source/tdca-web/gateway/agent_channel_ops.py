@@ -14,6 +14,10 @@ A-26 智能体通道 批1 身份与登记（L1SI147-CHANNEL-B1-001）＋ 批2 �
   - 轮换口径（默认）：签发即轮换——新签自动置同智能体旧 active 为 revoked；
   - 草案五表（agents/auth_grants/api_calls/agent_cards/members）只读不动、不承接；
   - 登记事实／凭据生命周期／六步状态机／fail-closed 判定＝接真（data_provenance=real）。
+  - CHANNEL-CHAIN-001（GSEQ-8225/CHAIN-ASSERT-SUP 改域）：转授链逐层上溯、execute 准入
+    全链核验（N-1/A-2/A-3）、授权件撤销端点＋BFS 级联、已注销上级 404 同码、
+    链深 64 层防御上限、转授不超出原授权（SUPERSEDE_SCOPE）；层级由链位机推，调用方
+    无层级注入面。层级上限在册未裁，64 为技术防御上限。
 SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
@@ -807,6 +811,72 @@ def _grant_no() -> str:
 # R2 五阶资产形态闭集（《授权件模板》R2：未列明之阶不得据本件主张）
 _GRANT_TIERS = ("一阶", "二阶", "三阶", "四阶", "五阶")
 
+# 转授链深防御上限（CHANNEL-CHAIN-001⑤：层级上限在册未裁，64 为技术防御上限）
+_CHAIN_DEPTH_LIMIT = 64
+
+
+def _trace_grant_chain(grant_no: str) -> list:
+    """从授权件逐级上溯 parent_grant_no 至首授，返回链（末项为首授）。"""
+    chain = []
+    gid = grant_no
+    for _ in range(_CHAIN_DEPTH_LIMIT):   # 防御性上限：链异常成环即停止
+        with get_session() as s:
+            row = s.get(M.SiteAgentGrant, gid) if gid else None
+        if row is None:
+            break
+        chain.append(row.grant_no)
+        gid = row.parent_grant_no
+        if gid is None:
+            break
+    return chain
+
+
+def _grant_requirement_intact(row) -> tuple:
+    """单件四要件机验（A-2/A-3 改域）：R1 场景/R4 签名者与签名引用载列；
+    R2 五阶清单/R3 全构成声明载 detail（本域列面无此两要件——照本域模型核 detail）。
+
+    返回 (ok, tiers)。"""
+    detail = {}
+    try:
+        detail = json.loads(row.detail or "{}")
+    except Exception:
+        detail = {}
+    tiers = detail.get("R2 五阶资产形态") or []
+    ok = (bool(row.scene_constraint.strip()) and bool(row.legal_signer.strip())
+          and bool(row.signature_ref.strip()) and bool(tiers)
+          and detail.get("R3 全构成已授权") is True)
+    return ok, tiers
+
+
+def _chain_intact(grant_no: str) -> tuple:
+    """转授链全链机验（N-1/A-2/A-3 改域）：链上每一环皆须 active 且四要件成立。
+
+    返回 (ok, bad_link_no, reason)。层级由链位机推（调用方无层级注入面）；
+    任一环失效或要件缺损 ⟹ 整链不成立（《授权件模板》§五-1：失效/要件缺损 ⟹
+    拒绝；§五-4：任一环失效 ⟹ 其下游全部失效）。64 层防御上限与 _trace_grant_chain 同。
+    """
+    gid = grant_no
+    for _ in range(_CHAIN_DEPTH_LIMIT):
+        if gid is None:
+            return True, None, ""
+        with get_session() as s:
+            row = s.get(M.SiteAgentGrant, gid)
+        if row is None:
+            return False, gid, "链上授权件不存在（谱系断裂）"
+        if row.status != "active":
+            return False, gid, "链上授权件已注销（上游已撤——N-1：下游不得冒充放行）"
+        ok, _ = _grant_requirement_intact(row)
+        if not ok:
+            return False, gid, "链上授权件四要件缺损（A-2/A-3：逐层须件须签）"
+        gid = row.parent_grant_no
+    return False, grant_no, "转授链异常（疑似成环，超防御上限 64 层）"
+
+
+def _scenes_of(scene_constraint: str) -> list:
+    """R1 场景集解析（分号/逗号两级分隔，全角逗号兼容——同 _active_grant 命中口径）。"""
+    return [x.strip() for seg in scene_constraint.replace("，", ",").split(";")
+            for x in seg.split(",") if x.strip()]
+
 # 计量聚合窗口（方案 V2 §九 只要求设窗未定值：施工取 60 秒；窗口起点按 ISO 分钟截断）
 _LEDGER_WINDOW_MINUTES = 1
 _LEDGER_ENDPOINT_EXECUTE = "execute"
@@ -854,10 +924,46 @@ def issue_grant(reg_no: str, req: GrantReq, request: Request):
         if not req.signature_ref.strip():
             missing.append("R4 签名事件引用缺失（signature_ref 必填，签名事件须落 NCA）")
         if req.parent_grant_no.strip():
-            parent = s.get(M.SiteAgentGrant, req.parent_grant_no.strip())
+            parent_no = req.parent_grant_no.strip()
+            with get_session() as _s:
+                parent = _s.get(M.SiteAgentGrant, parent_no)
+            # ④ CHANNEL-CHAIN-001（GSEQ-8225 改域）：已注销／不存在上级之转授
+            # ⟹ 404 同码同文案（⛔ 区分两情形；旧 403 GRANT_PARENT_INVALID 与
+            # 自述「不存在或非 active」自相矛盾，照裁改 404）
             if parent is None or parent.status != "active":
-                raise HTTPException(403, "GRANT_PARENT_INVALID: 转授上层件不存在或非 active"
-                                         "（多层转授逐层皆须件，任一环失效下游全失效）")
+                raise HTTPException(404, "parent_grant_no 不存在")
+            # ⑥ 转授不超出原授权：子件 R1 场景／R2 五阶须 ⊆ 上级，越项点名
+            _p_ok, _p_tiers = _grant_requirement_intact(parent)
+            if not _p_ok:
+                raise HTTPException(400, "SUPERSEDE_SCOPE: 上级授权件要件明细不可核"
+                                         "（fail-closed：⛔ 据不可核之上级转授）")
+            _over_scene = [x for x in _scenes_of(req.scene_constraint)
+                           if x not in _scenes_of(parent.scene_constraint)]
+            # 五阶越界只核闭集内之阶——闭集外之阶留给下方 R2 闭集校验点名
+            # （保持要件校验先于范围校验之既有错误优先序）
+            _over_tier = [t for t in tiers if t in _GRANT_TIERS and t not in _p_tiers]
+            if _over_scene or _over_tier:
+                raise HTTPException(400, "SUPERSEDE_SCOPE: 转授不得超出上级授权范围——"
+                                         + "；".join(
+                                             ([f"场景越界：{','.join(_over_scene)}"]
+                                              if _over_scene else [])
+                                             + ([f"五阶越界：{','.join(_over_tier)}"]
+                                                if _over_tier else [])))
+            # ⑤ 链深 64 层防御上限（层级上限在册未裁，64 为技术防御上限；超限明确报错）
+            if len(_trace_grant_chain(parent_no)) >= _CHAIN_DEPTH_LIMIT:
+                raise HTTPException(400, "CHAIN_DEPTH_LIMIT: 转授链已达技术上限 64 层"
+                                         "（层级上限在册未裁，64 为技术防御上限）")
+            # ① 全链上溯（N-1 登记面）：任一级祖先非 active（含旧码不级联年代留存
+            # 「上级已撤而下级仍 active」存量行）⟹ 404 同码（⛔ 继续向下转授）
+            _anc = parent.parent_grant_no
+            for _ in range(_CHAIN_DEPTH_LIMIT - 1):   # 上级本身已验；至多再上溯 63 级
+                if _anc is None:
+                    break
+                with get_session() as _s:
+                    _row = _s.get(M.SiteAgentGrant, _anc)
+                if _row is None or _row.status != "active":
+                    raise HTTPException(404, "parent_grant_no 不存在")
+                _anc = _row.parent_grant_no
         if missing:
             raise HTTPException(400, "GRANT_REJECTED: 授权件四要件缺一不成立——"
                                      + "；".join(missing) + "（fail-closed：无件不得配置）")
@@ -897,13 +1003,74 @@ def issue_grant(reg_no: str, req: GrantReq, request: Request):
 
 
 def _active_grant(s, reg_no: str, scene: str) -> "M.SiteAgentGrant | None":
-    """有效授权件机验（execute 前置）：active 且在册＋场景命中（R1：未列明场景不在授权范围）。"""
+    """有效授权件机验（execute 前置）：active＋场景命中（R1）＋全链有效
+    （CHANNEL-CHAIN-001②：N-1/A-2/A-3 改域——本级 active 不足以放行，须链上
+    每环 active 且四要件成立；上游已撤／任一层缺件未签该件即不成立）。"""
     for g in s.query(M.SiteAgentGrant).filter_by(reg_no=reg_no, status="active"):
         scenes = [x.strip() for seg in g.scene_constraint.replace("，", ",").split(";")
                   for x in seg.split(",") if x.strip()]
-        if scene in scenes:
+        if scene in scenes and _chain_intact(g.grant_no)[0]:
             return g
     return None
+
+
+# =====================================================================
+# CHANNEL-CHAIN-001③：授权件撤销端点（GSEQ-8225 改域——任一环失效 ⟹ 下游全失效）
+# =====================================================================
+
+@router.post("/{reg_no}/grants/{grant_no}/revoke")
+def revoke_grant(reg_no: str, grant_no: str, request: Request):
+    """授权件注销＋BFS 全后代级联 revoked（新建端点；响应回 cascade_revoked 全名单）。
+
+    fail-closed 序：人类会话 → 总闸 → 登记主体本人 → 件在册且属本通道（⛔ 跨通道）→
+    幂等（重复撤不报错）→ 先存证后落表（存证失败⟹操作不生效）→ 级联全后代置
+    revoked（下游转授件逐件失效，任一环失效 ⟹ 下游全失效）。留痕：注销落 NCA 链。
+    """
+    actor, s = _subject_gate(reg_no, request)
+    try:
+        row = s.get(M.SiteAgentGrant, grant_no)
+        if row is None or row.reg_no != reg_no:
+            raise HTTPException(404, "grant_no 不存在")
+        if row.status == "revoked":
+            return _nca_watermark({"grant_no": grant_no, "status": "revoked",
+                                   "cascade_revoked": [],
+                                   "note": "授权件已注销（幂等返回）"})
+        nca_ref = _nca_append("AGENT_CHANNEL_GRANT_REVOKE", actor,
+                              artifact_path=(f"agent-channel:{reg_no}"
+                                             f"/grant:{grant_no}:revoke"),
+                              prov="real")   # 先存证：写入失败⟹操作不生效（⛔ 不落半条）
+        with get_session() as _s:
+            all_grants = _s.query(M.SiteAgentGrant).all()
+        children: dict[str, list[str]] = {}
+        for g in all_grants:
+            if g.parent_grant_no:
+                children.setdefault(g.parent_grant_no, []).append(g.grant_no)
+        cascaded: list[str] = []
+        queue = list(children.get(grant_no, []))
+        while queue:   # BFS 全后代级联（不限层数——全谱系下游皆失效）
+            down = queue.pop(0)
+            if down not in cascaded:
+                cascaded.append(down)
+                queue.extend(children.get(down, []))
+        now = _utc()
+        with get_sessionmaker().begin() as s2:
+            r = s2.get(M.SiteAgentGrant, grant_no)
+            r.status = "revoked"
+            r.updated_at = now
+            for down in cascaded:
+                sub = s2.get(M.SiteAgentGrant, down)
+                if sub is None or sub.status == "revoked":
+                    continue
+                sub.status = "revoked"
+                sub.updated_at = now
+    finally:
+        s.close()
+    note = "授权件已注销（任一环失效 ⟹ 下游全失效——级联注销）"
+    if cascaded:
+        note += f"；级联注销下游转授件 {len(cascaded)} 件：{'、'.join(cascaded)}"
+    return _nca_watermark({"grant_no": grant_no, "status": "revoked",
+                           "cascade_revoked": cascaded, "nca_ref": nca_ref,
+                           "note": note}, nature="real")
 
 
 class ExecuteReq(BaseModel):
@@ -937,6 +1104,13 @@ def execute(req: ExecuteReq, request: Request):
                                      "（R1 场景约束：未列明场景不在授权范围）")
         grant = _active_grant(s, req.reg_no, req.scene.strip())
         if grant is None:
+            _own = [g for g in s.query(M.SiteAgentGrant).filter_by(
+                        reg_no=req.reg_no, status="active")
+                    if req.scene.strip() in _scenes_of(g.scene_constraint)]
+            if _own:
+                raise HTTPException(403, "GRANT_CHAIN_BROKEN: 持件之上游已撤或链上某层"
+                                         "要件缺损（N-1/A-2/A-3 逐层核验，fail-closed："
+                                         "任一环失效/缺件/未签 ⟹ 该件及其下游不成立）")
             raise HTTPException(403, "GRANT_REQUIRED: 无有效授权件（或无覆盖本场景的授权件）"
                                      "——配置即侵权，无授权不得执行（fail-closed）")
         申报来源 = "人类会话内发起（登记主体本人）"
