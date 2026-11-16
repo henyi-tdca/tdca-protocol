@@ -23,7 +23,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from error_codes import with_code
-from api_v1 import _nca_watermark  # ID91 响应水印——前端统一客户端缺印拒绝渲染（real＝包内实读真值）
+from api_v1 import _consumer_face_m1, _nca_watermark  # ID91 响应水印——前端统一客户端缺印拒绝渲染（real＝包内实读真值）；FACE-FIX-001 M-1 三键
 
 router = APIRouter(tags=["kg-public"])
 
@@ -156,7 +156,7 @@ def kg_manifest(request: Request):
         "sha256_16": sha.upper()[:16],
         "files": {n: (_read_file(n)[1].upper()[:16] if _read_file(n) else None)
                   for n in ("nodes.yaml", "edges.yaml", "README.md")},
-    }, nature="real"))
+    }, nature="real") | _consumer_face_m1())  # FACE-FIX-001 F-3
 
 
 # ---------------------------------------------------------------------

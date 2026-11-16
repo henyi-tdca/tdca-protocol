@@ -23,7 +23,7 @@ from pathlib import Path, PurePosixPath
 
 from fastapi import APIRouter, HTTPException, Request
 
-from api_v1 import _nca_watermark, rec_hash_of  # noqa: E402  （公开口径，单一事实源）
+from api_v1 import _consumer_face_m1, _nca_watermark, rec_hash_of  # noqa: E402  （公开口径，单一事实源；FACE-FIX-001 M-1 三键）
 from db import get_session  # noqa: E402
 from db import models as M  # noqa: E402
 
@@ -180,7 +180,7 @@ def selfcheck_spec():
         "page_disclaimer": _PAGE_DISCLAIMER,
         "note": ("本规格只列检查项与公开结论（ATTEST-SCRUB-001）；"
                  "内部重算构成含永不出字段，公开亦不可复算，故不公开"),
-    })
+    }) | _consumer_face_m1()  # FACE-FIX-001 F-3
 
 
 @router.get("/nca/{nca_id}")

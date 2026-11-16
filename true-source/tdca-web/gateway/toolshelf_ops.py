@@ -16,7 +16,8 @@ from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
-from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from api_v1 import (_consumer_face_m1, _nca_append, _nca_watermark,  # noqa: E402
+                    _require_session_user, _utc)  # noqa: E402
 # TWO-001 B-1：脱敏单一真源——一处定义、多处调用（toolshelf 与 library 两处公开面同扫）
 from public_sanitize import CATALOG_SENSITIVE as _CATALOG_SENSITIVE  # noqa: E402
 
@@ -53,7 +54,7 @@ def tool_catalog(request: Request):
         "count": len(out),
         "tools": out,
         "note": "工具货架公开目录（只列名称、类目与一句用途；"
-                "不含内部编号、版本与调用凭据信息）"})
+                "不含内部编号、版本与调用凭据信息）"}) | _consumer_face_m1()  # FACE-FIX-001 F-3
 
 
 @router.get("/list")

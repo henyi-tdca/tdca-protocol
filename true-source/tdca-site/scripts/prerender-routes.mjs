@@ -96,6 +96,11 @@ for (const route of SITEMAP_ROUTES) {
   const canonical = `https://tdca.com.cn${route}`
   let html = shell
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`)
+  // FACE-FIX-001 F-1/F-2：壳模板 site 级 canonical 与 og:url/og:title/og:description
+  // 系全站默认（指首页），页面级注入前必须剥除——否则每页双份（57/57 实测缺陷）。
+  // og:type/og:site_name 为站点身份键，非缺陷面，保留。
+  html = html.replace(/\s*<link rel="canonical"[^>]*>/g, '')
+  html = html.replace(/\s*<meta property="og:(title|description|url)"[^>]*>/g, '')
   const inject = [
     `<meta name="description" content="${esc(description)}" />`,
     `<link rel="canonical" href="${canonical}" />`,
@@ -111,8 +116,16 @@ for (const route of SITEMAP_ROUTES) {
   const out = route === '/' ? shellPath : join(dist, route, 'index.html')
   if (route !== '/') { mkdirSync(dirname(out), { recursive: true }); writeFileSync(out, html) }
   else writeFileSync(out, html) // 首页壳同替换，title 与首条一致
+  // FACE-FIX-001 J-1/J-2 fail-closed：每页 canonical 恰 1、og:title/og:url/og:description 各恰 1
+  const cnt = (re) => (html.match(re) || []).length
+  if (cnt(/<link rel="canonical"/g) !== 1) errors.push(`${route} canonical 数 ${cnt(/<link rel="canonical"/g)} ≠ 1`)
+  for (const k of ['og:title', 'og:description', 'og:url']) {
+    const c = cnt(new RegExp(`<meta property="${k}"`, 'g'))
+    if (c !== 1) errors.push(`${route} ${k} 数 ${c} ≠ 1`)
+  }
   manifest.push({ route, title, bytes: html.length })
 }
+if (errors.length) { console.error('预渲染 head 唯一性对账失败：\n' + errors.join('\n')); process.exit(1) }
 
 writeFileSync(join(dist, 'prerender-routes-manifest.json'), JSON.stringify({ generated_at: new Date().toISOString(), count: manifest.length, routes: manifest }, null, 2))
 const uniq = new Set(manifest.map((m) => m.title))

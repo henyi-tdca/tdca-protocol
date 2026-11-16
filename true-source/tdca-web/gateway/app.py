@@ -269,7 +269,9 @@ def health() -> dict:
     if bridge_app is not None:
         routes.append("/api（bridge：search/edu/agents/health）")
     return {"status": "OK", "gateway": "TDCA-Unified-API-V1.0",
-            "routes": routes}
+            "routes": routes,
+            # FACE-FIX-001 F-4：本端点为存活探针、未达 M-1 标准信封，自陈过渡态
+            "conformance": "pending-migration"}
 
 
 # =====================================================================
