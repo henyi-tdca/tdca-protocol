@@ -80,6 +80,20 @@ def _nature_of(provenances) -> str:
     return "simulated"
 
 
+# FACE-FIX-001 M-1 机面三键（附加键，⛔ 不改 shape-standard 四键本体）：
+# 依据 TDCA-STD-L1SI212-CONSUMER-FACE-001（V1.0-FROZEN）；信封形态依 TDCA-API-SHAPE-STANDARD-001 V1.0
+_CONSUMER_FACE_M1 = {
+    "permission": "公开（匿名可用）",
+    "data_source": "TDCA-STD-L1SI212-CONSUMER-FACE-001",
+    "schema_version": "TDCA-API-SHAPE-STANDARD-001/V1.0",
+}
+
+
+def _consumer_face_m1() -> dict:
+    """M-1 机面三键副本（调用点展开进信封顶层；数值集中此处置）。"""
+    return dict(_CONSUMER_FACE_M1)
+
+
 def _nca_watermark(payload: dict, nature: str = "simulated") -> dict:
     """NCA 水印（ID91 自反化合——响应哈希关联，审计可验证）。"""
     h = hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()

@@ -20,7 +20,8 @@ from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
-from api_v1 import _nca_append, _nca_watermark, _nature_of, _require_session_user, _utc  # noqa: E402
+from api_v1 import (_consumer_face_m1, _nca_append, _nca_watermark,  # noqa: E402
+                    _nature_of, _require_session_user, _utc)  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/announcements", tags=["announcements"])
 
@@ -44,7 +45,7 @@ def announcements_list():
         "total": len(rows),
         "note": "公告栏（对外公告区）——公告内容须经创始人明示后由运营发布；"
                 "空栏为常态，不预置内容"},
-        nature=nature)
+        nature=nature) | _consumer_face_m1()  # FACE-FIX-001 F-3：M-1 三键附加（公告内容未动）
 
 
 class AnnouncementPublish(BaseModel):
