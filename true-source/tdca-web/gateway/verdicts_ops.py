@@ -29,7 +29,7 @@ from db import models as M  # noqa: E402
 _REG_KEY_ENV = "TDCA_VERDICT_REG_KEY"
 _REG_HEADER = "x-tdca-verdict-reg-key"
 
-_PUBLIC_COLS = ("verdict", "decided_at", "subject_ref", "evidence_nca_id")
+_PUBLIC_COLS = ("subject_type", "subject_ref", "verdict", "decided_at", "evidence_nca_id")
 
 SUBJECT_TYPES = ("institution_effective", "doc_ingest", "site_function",
                  "batch_construction", "agent_network")
@@ -53,7 +53,7 @@ def verdicts_public():
         ).order_by(M.AcceptanceVerdict.decided_at.desc())).all()
     return {"count": len(rows),
             "verdicts": [dict(zip(_PUBLIC_COLS, r)) for r in rows],
-            "note": "验收结论公示面（四字段）；作业/处置/留痕在私域面 /ops/acceptance-records（登录或O-1）"}
+            "note": "验收结论公示面（五字段·含存证号可回溯核证件）；作业/处置/留痕在私域面 /ops/acceptance-records（登录或O-1）"}
 
 
 # ── 登记口（只给智库侧/受权智能体·fail-closed key guard） ──────────────────

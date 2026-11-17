@@ -2,7 +2,9 @@
 
 - 新表 acceptance_verdicts：两栏合表（公示 4 字段＋私域 5 字段），CHECK 闭集 fail-closed；
 - 两个视图分隔两栏（硬规：⛔前端隐藏代隔离）：
-    acceptance_verdicts_public  ── 只含公示四字段（verdict/decided_at/subject_ref/evidence_nca_id）
+    acceptance_verdicts_public  ── 只含公示五字段（subject_type/subject_ref/verdict/
+                                    decided_at/evidence_nca_id——VERDICTFIX-001 补
+                                    evidence_nca_id 一列，公示之要在可回溯核证件）
     acceptance_verdicts_ops     ── 全列（仅运维面用）
 - 只加不删：upgrade 建表＋建视图（inspect 幂等）；downgrade 逆序删视图＋删表；
 - evidence_nca_id 为 nca_chain 外链（⛔复制台账内容⛔双写），首批数据空表为常态
@@ -22,7 +24,7 @@ TABLE = 'acceptance_verdicts'
 PUBLIC_VIEW = 'acceptance_verdicts_public'
 OPS_VIEW = 'acceptance_verdicts_ops'
 
-PUBLIC_COLS = ('verdict', 'decided_at', 'subject_ref', 'evidence_nca_id')
+PUBLIC_COLS = ('subject_type', 'subject_ref', 'verdict', 'decided_at', 'evidence_nca_id')
 
 CREATE_TABLE = sa.Table(
     TABLE, sa.MetaData(),

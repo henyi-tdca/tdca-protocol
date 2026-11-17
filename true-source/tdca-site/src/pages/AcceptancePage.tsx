@@ -250,9 +250,9 @@ export function AcceptancePage() {
           </p>
         )}
 
-        {/* ── 验收结论公示面（L1SI218-ACCTABLE-001：四字段·匿名可读·核证件谁判谁登）── */}
+        {/* ── 验收结论公示面（L1SI218-ACCTABLE-001＋VERDICTFIX-001：五字段含存证号·匿名可读·谁判谁登）── */}
         <section className="space-y-2 rounded-lg border p-4">
-          <h2 className="text-base font-semibold">⑤ 验收结论公示（四字段·公开）</h2>
+          <h2 className="text-base font-semibold">⑤ 验收结论公示（五字段·含存证号可回溯·公开）</h2>
           <p className="text-xs text-muted-foreground">
             结论／时点／对象／存证号四项——由核证件登记（谁判谁登）；作业与留痕在私域面。
           </p>
@@ -263,7 +263,15 @@ export function AcceptancePage() {
   )
 }
 
-interface VerdictRow { verdict: string; decided_at: string; subject_ref: string; evidence_nca_id: string }
+interface VerdictRow { subject_type: string; subject_ref: string; verdict: string; decided_at: string; evidence_nca_id: string }
+
+const VERDICT_SUBJECT_LABEL: Record<string, string> = {
+  institution_effective: '制度生效',
+  doc_ingest: '文献入库',
+  site_function: '站点功能',
+  batch_construction: '批施工（含C-3交付验收）',
+  agent_network: '智能体组网',
+}
 
 function VerdictsBoard() {
   const [rows, setRows] = useState<VerdictRow[] | null>(null)
@@ -280,20 +288,22 @@ function VerdictsBoard() {
     <table data-testid="acceptance-verdicts-public" className="w-full text-sm">
       <thead>
         <tr className="border-b text-left">
+          <th className="py-1 pr-2">类别</th>
+          <th className="py-1 pr-2">被验收对象</th>
           <th className="py-1 pr-2">结论</th>
           <th className="py-1 pr-2">验收时点</th>
-          <th className="py-1 pr-2">被验收对象</th>
           <th className="py-1 pr-2">存证号</th>
         </tr>
       </thead>
       <tbody>
         {rows.map((v) => (
           <tr key={v.evidence_nca_id + v.subject_ref} className="border-b">
+            <td className="py-1 pr-2 text-xs">{VERDICT_SUBJECT_LABEL[v.subject_type] ?? v.subject_type}</td>
+            <td className="py-1 pr-2 font-mono text-xs">{v.subject_ref}</td>
             <td className="py-1 pr-2">
               {v.verdict === 'passed' ? '✅ 通过' : v.verdict === 'conditional' ? '⚠️ 附条件' : '❌ 不通过'}
             </td>
             <td className="py-1 pr-2 text-xs">{v.decided_at}</td>
-            <td className="py-1 pr-2 font-mono text-xs">{v.subject_ref}</td>
             <td className="py-1 pr-2 font-mono text-xs">{v.evidence_nca_id}</td>
           </tr>
         ))}
