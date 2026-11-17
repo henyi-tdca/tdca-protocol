@@ -158,8 +158,12 @@ async def _verify_session(token: str) -> dict:
                             headers={"Authorization": token})
         ok = r.status_code == 200
         body = r.json() if ok else {}
-        result = {"ok": ok, "username": body.get("username", ""),
-                  "role": body.get("role", "")}
+        # 信封解包：/auth/me 走 _nca_watermark（身份在 body["data"]）；扁平形兼容
+        data = body.get("data") if isinstance(body, dict) else None
+        if not isinstance(data, dict):
+            data = body if isinstance(body, dict) else {}
+        result = {"ok": ok, "username": data.get("username", ""),
+                  "role": data.get("role", "")}
     except Exception:
         result = {"ok": False, "username": "", "role": "", "unreachable": True}
     _verify_cache[token] = (now, result)
