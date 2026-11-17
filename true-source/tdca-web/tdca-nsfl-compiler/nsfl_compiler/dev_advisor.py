@@ -11,7 +11,7 @@ SPDX-License-Identifier: TDCA-Internal
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List, Optional
 
 from .delta_analysis import SelfModificationAnalyzer

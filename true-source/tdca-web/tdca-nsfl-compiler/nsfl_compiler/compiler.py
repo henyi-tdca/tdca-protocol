@@ -27,8 +27,8 @@ from typing import List, Optional
 
 from .ir import CompileStatus, NSFLIR, emit_bytecode
 from .operators import NSFLOperatorSemantics
-from .parser import NSFLDeclaration, NSFLParser
-from .schema import NSFLRule, SchemaValidator, SchemaValidationError
+from .parser import NSFLParser
+from .schema import SchemaValidator, SchemaValidationError
 from .semantic import SemanticAnalyzer
 from .dev_watermark import DEV_NSFL_TAG
 
@@ -106,7 +106,6 @@ class NSFLCompiler:
             warnings=warnings,
         )
         if dev_mode:
-            from .dev_watermark import inject_dev_watermark
             return NSFLCompileResult(
                 ok=True,
                 status=status,
@@ -197,7 +196,7 @@ class NSFLCompiler:
             "institutional": "LEGAL",
         }
         ns_type = ns_type_map.get(layer.lower(), "ETHICAL")
-        src = f"NSFL: ⊗ {action[:24]} (certainty={certainty})"
+        src = f"NSFL: ⊗ {action[:24]} (certainty={certainty})"  # noqa: F841 具名理由：NSFL 源串留痕（包裹面同源读数），删赋值属第四类改动
         note = action
         # 用 NSFL 语法包裹（⊗ 绝对禁止 + 语义注释）
         safe_action = self._action_token(action)
