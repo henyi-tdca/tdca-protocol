@@ -16,7 +16,6 @@ SPDX-License-Identifier: TDCA-Internal
 
 import enum
 import os
-import re
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 

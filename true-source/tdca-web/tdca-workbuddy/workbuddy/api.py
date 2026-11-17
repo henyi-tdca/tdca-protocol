@@ -8,10 +8,10 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import uuid
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from .engine import CrossSceneWorkflowEngine, WorkflowDSL
 

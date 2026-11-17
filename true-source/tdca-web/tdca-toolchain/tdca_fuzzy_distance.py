@@ -53,7 +53,7 @@ _NEARNESS_MEDIUM = 0.55
 @dataclass(frozen=True)
 class TriangularFuzzyNumber:
     """三角模糊数 (l, m, u)：认知状态维度带不确定性区间。"""
-    l: float
+    l: float  # noqa: E741 具名理由：l/m/u 为三角模糊数三元组接口字段名（下界/中值/上界），改名即破 dataclass 契约
     m: float
     u: float
 

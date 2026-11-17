@@ -15,7 +15,6 @@ SPDX-License-Identifier: TDCA-Internal
 """
 
 import math
-import re
 from typing import Optional
 
 
