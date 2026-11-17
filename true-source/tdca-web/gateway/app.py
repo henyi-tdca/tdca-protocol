@@ -150,6 +150,11 @@ app.include_router(ops_ops_router)
 from ops_logs_ops import router as ops_logs_ops_router  # noqa: E402
 app.include_router(ops_logs_ops_router)
 
+# L1SI218-OPSACCEPT-001-001 验收记录私域面（运维栏目机面：全量列表；登录或机面 O-1 授权）[在役热修件·仓未收·DEPLOY-001保留]
+from ops_acceptance_records_ops import router as ops_acceptance_records_router  # noqa: E402
+app.include_router(ops_acceptance_records_router)
+
+
 # 手册接口化（INACCOUNT-DEPLOY 块 2）: /api/v1/ops/files/*——在册七件按角色出件；
 # 撤 /ops/files/ 静态门后唯一取件口（白名单防穿越；md→text/markdown；容器内只读挂载）
 from ops_files_ops import router as ops_files_ops_router  # noqa: E402
@@ -201,15 +206,17 @@ app.include_router(delivery_ops_router)
 # L1SI195-B1-001: C3 验收记录（/api/v1/acceptance/standard|verdict|rectify＋GET /{acceptance_id} 公开读；
 # 标准事前登记·逐条结论须对应事前标准·整改复判·passed 只显「可结算」（⛔ 接结算 S-4）；
 # 存储＝/data/acceptance JSON 仓；⛔ 不含部署）
-from acceptance_ops import router as acceptance_ops_router  # noqa: E402
-app.include_router(acceptance_ops_router)
-
 # L1SI218-ACCTABLE-001（乙路·账不动）：验收结论三支端点——公示四字段（匿名）／
 # 私域全列（会话或O-1）／登记口（谁判谁登·key guard fail-closed）
+# ROUTEORDER-001：必须先于 acceptance_ops 注册——其 /{acceptance_id} 动态段会吞 /verdicts
 from verdicts_ops import public_router as verdicts_public_router  # noqa: E402
 from verdicts_ops import ops_router as verdicts_ops_router  # noqa: E402
 app.include_router(verdicts_public_router)
 app.include_router(verdicts_ops_router)
+
+from acceptance_ops import router as acceptance_ops_router  # noqa: E402
+app.include_router(acceptance_ops_router)
+
 
 # A-25: 配置权市场「管理」面（/api/v1/market-admin/*——挂出／查询／状态变更／下架；
 # 先有成件＋四要件合取闸门（例外仅沙盒演练）；限权属登记人本人；下架不溯及授权件；
