@@ -190,7 +190,9 @@ const COLUMN_EXCLUDE = new Set(['/auth', '/register', '/search', '/ops/readme', 
   // SEG2-B2-REFIRE-001（L1SI208）：区 2A 编译向导＋数据四档两面照同区受护面先例豁免（不入检索栏目索引）
   '/me/compile', '/me/privacy',
   // L1SI218-SITEDEP-RETRY 裁令甲步二：两条别名跳转（/node-net、/ops-manual）照 /ops/manual 先例⛔入栏目索引
-  '/node-net', '/ops-manual'])
+  '/node-net', '/ops-manual',
+  // L1SI218-OPSACCEPT-001-001：验收记录私域面 noindex·⛔sitemap，照运维私域面先例⛔入栏目索引
+  '/ops/acceptance-records'])
 
 // 编号形态禁则（旧版施工令 §三.2；TAIL-CLEAN-001 块A：title/summary/body 共用本表）
 // B1 追加（硬约束第8条「索引内容零内部编号」，旧表未覆盖 registry 件号形态，旧索引曾残留 20 条）：

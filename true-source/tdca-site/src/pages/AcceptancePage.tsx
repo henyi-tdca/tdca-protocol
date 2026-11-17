@@ -109,6 +109,11 @@ export function AcceptancePage() {
       permission="登记/判定/整改须登录 DID；查询公开"
       description="先登记验收标准（事前），再逐条判定：通过/不通过＋依据＋差距；不通过须登记整改（条目／期限）后复判；通过只显示「可结算」。">
       <div data-testid="acceptance" className="max-w-3xl space-y-6">
+        {/* L1SI218-OPSACCEPT-001-001 两分互链：私域全量面（须登录）↔ 公示结论面（本页） */}
+        <p className="text-sm">
+          <a href="/ops/acceptance-records" className="text-blue-600 underline hover:text-blue-800"
+            data-testid="acceptance-private-link">运维全量记录（私域·须登录或 O-1）→</a>
+        </p>
 
         {/* ── 登记标准 ── */}
         <section className="space-y-2 rounded-lg border p-4">

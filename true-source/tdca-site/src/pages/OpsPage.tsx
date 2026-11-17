@@ -81,6 +81,9 @@ export function OpsPage() {
         </p>
         <Link to="/acceptance" className="text-blue-600 underline hover:text-blue-800"
           data-testid="ops-acceptance-link">进入验收记录 →</Link>
+        {' ｜ '}
+        <Link to="/ops/acceptance-records" className="text-blue-600 underline hover:text-blue-800"
+          data-testid="ops-acceptance-records-link">全量记录（私域·须登录）→</Link>
       </section>
       {!isAdmin ? (
         <section data-testid="ops-admin-only" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">

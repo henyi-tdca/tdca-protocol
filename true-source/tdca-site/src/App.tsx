@@ -49,6 +49,8 @@ const MarketPage = lazy(() => import('./pages/MarketPage').then((m) => ({ defaul
 const MarketSimPage = lazy(() => import('./pages/MarketSimPage').then((m) => ({ default: m.MarketSimPage })))
 // L1SI218-SITEDEP-RETRY 裁令甲步二：C-3 验收记录页移植（tdca-site 现行壳；令面真缺唯一页）
 const AcceptancePage = lazy(() => import('./pages/AcceptancePage').then((m) => ({ default: m.AcceptancePage })))
+// L1SI218-OPSACCEPT-001-001 验收记录私域面（运维栏目：noindex·⛔sitemap·须登录或O-1）
+const OpsAcceptanceRecordsPage = lazy(() => import('./pages/OpsAcceptanceRecordsPage').then((m) => ({ default: m.OpsAcceptanceRecordsPage })))
 // 三别名（令面路径 → 现行路由，React 路由跳转，nginx/机面不动）
 const AgentDashboardAlias = () => {
   const { id } = useParams()
@@ -225,6 +227,7 @@ export default function App() {
         <Route path="/ops/manual" element={<Navigate to="/ops/readme" replace />} />
         {/* L1SI218-SITEDEP-RETRY 裁令甲步二：/acceptance 公开路由（保住公开查询面，页内未登录给登录提示） */}
         <Route path="/acceptance" element={<AcceptancePage />} />
+        <Route path="/ops/acceptance-records" element={<RequireAuth><OpsAcceptanceRecordsPage /></RequireAuth>} />
         {/* 三别名（令面路径 → 现行路由跳转；制度件不改、导航不动、机面不动） */}
         <Route path="/node-net" element={<Navigate to="/nodes" replace />} />
         <Route path="/agent-dashboard/:id" element={<AgentDashboardAlias />} />
