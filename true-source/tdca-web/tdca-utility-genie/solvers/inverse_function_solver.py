@@ -182,17 +182,24 @@ class InverseFunctionSolver:
             # 支持 "key <= value" 格式
             try:
                 parts = c.split()
-                if len(parts) == 3:
-                    key, op, val = parts
-                    if key in config:
-                        if op == '<=' and not (config[key] <= float(val)):
-                            return False
-                        if op == '>=' and not (config[key] >= float(val)):
-                            return False
-                        if op == '<' and not (config[key] < float(val)):
-                            return False
-                        if op == '>' and not (config[key] > float(val)):
-                            return False
+                if len(parts) != 3:
+                    # 须修#48 补修（1/3）参数个数不识别（两参/四参）原静默跳过（fail-open）
+                    return False
+                key, op, val = parts
+                if key not in config:
+                    # 须修#48 补修（2/3）约束键在配置中缺失原静默跳过（fail-open）
+                    return False
+                if op == '<=' and not (config[key] <= float(val)):
+                    return False
+                if op == '>=' and not (config[key] >= float(val)):
+                    return False
+                if op == '<' and not (config[key] < float(val)):
+                    return False
+                if op == '>' and not (config[key] > float(val)):
+                    return False
+                if op not in ('<=', '>=', '<', '>'):
+                    # 须修#48 补修（3/3）op 不识别（如 ==/!=）原静默跳过（fail-open）
+                    return False
             except (ValueError, IndexError):
                 # 须修#48（5/8）硬约束解析失败不得跳过：原 continue 静默吞错、
                 # 整体仍 True（fail-open），现改 fail-closed 返 False（BACKLOG-001 §二）
