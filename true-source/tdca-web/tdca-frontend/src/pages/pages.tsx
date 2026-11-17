@@ -39,6 +39,12 @@ export const PAGE_META: PageMeta[] = [
   { path: '/register', title: '注册（人类账号）', layer: 'L0', dataSource: 'M4 POST /api/v1/auth/register', permission: '公开', description: '注册即 viewer 只读账号（人机面）；注册存证落 NCA 链，成功自动登录进个人后台。' },
   { path: '/me', title: '个人后台（我的）', layer: 'L0', dataSource: 'M5 GET /api/v1/me/dashboard', permission: '须登录（谁的数据谁可见）', description: '我的智能体 / 签批待办 / 我批过的 / 沙盒申请 / 治理操作，一屏聚合。' },
   { path: '/agents/:id', title: '智能体后台', layer: 'L0', dataSource: 'M5 GET /api/v1/agents/{id}/dashboard', permission: '公开读（归属人脱敏）', description: '每一只智能体的画像 / MOU 计量 / 税单 / 签章记录 / NCA 存证，一页看全。' },
+  // L1SI218-SITEDEP-001 批1四硬缺页之一（乙型·仅机主）：机面＝智能体自状态接口（凭其自身令牌）
+  { path: '/agent-dashboard/:id', title: '智能体后台', layer: 'L0', dataSource: 'M5 GET /api/v1/agents/{id}/dashboard（仅机主）', permission: '须登录（仅机主）', description: '机主视角的智能体自状态一屏：画像／计量／税单／存证；人机双通道各有，机面凭自身令牌、各留痕。' },
+  // L1SI218-SITEDEP-001 批1四硬缺页之一（丙型·仅人）：运维手册人读面，⛔机读镜像（DUALCH-001 §五）
+  { path: '/ops-manual', title: '运维手册与制度（点击直接阅读）', layer: 'L0', dataSource: '/api/v1/ops/files（GET 清单＋按名出件）·仅人机面', permission: 'operator/founder（仅人）', description: '运维手册与制度站内直读（丙型仅人）：左清单右正文；⛔造机读镜像、⛔造空壳。' },
+  // L1SI218-SITEDEP-001 批1四硬缺页之一（甲型·全共享）：与 /nodes 同组件同源的节点网络公开面
+  { path: '/node-net', title: '节点网络', layer: 'L0', dataSource: '在册条例 V1.0 与节点现状（node-net-data.ts 仓内单源）；机面＝/api/v1/kg/nodes', permission: '公开（甲型人机共享）', description: '节点接入公开面（与 /nodes 同源自渲染）：只画已披露真节点；机面节点清单接口匿名只读。' },
   { path: '/workbuddy', title: '人机协作工作台', layer: 'L0', dataSource: 'A-12 /api/v1/workbuddy/*（P5 引擎 + DB 持久化 + NCA 落链）', permission: '登录 DID（执行须人类签名）', description: '跨场景工作流：创建 → 签名门禁执行 → 状态/NCA 全链可查；智能体不得代签。' },
   { path: '/cluster', title: '集群编排与准入闸门（P2）', layer: 'L0', dataSource: 'A-13 /api/v1/cluster/*（授权件四要件机验 + 谱系账本）', permission: '登录 DID（登记须法律主体签名）', description: '授权件登记与多层转授链；配置类调用须凭有效授权件——可信联通 ≠ 可信协作，仅握手不成立。' },
   { path: '/formal', title: '形式化与实验线结论入站（P3）', layer: 'L0', dataSource: 'A-14 /api/v1/formal/*（只做结论面）', permission: '登录 DID', description: '只收结论面：不转公式、不引数值、不带内部编号；数据性质显式标注；入站 ≠ 入主仓 ≠ 对外。' },
@@ -234,6 +240,8 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/register': RegisterPage,
   '/me': MePage,
   '/agents/:id': AgentDashboardPage,
+  '/agent-dashboard/:id': AgentDashboardPage,
+  '/ops-manual': OpsManualPage,
   '/workbuddy': WorkbuddyPage,
   '/cluster': ClusterPage,
   '/formal': FormalPage,
@@ -274,6 +282,7 @@ export const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/disclosure': NodeDisclosurePage,
   '/me/node/net': MeNodeNetPage,
   '/nodes': NodeNetPage,
+  '/node-net': NodeNetPage,
   '/use/upload': UseUploadPage,
   '/use/agent': UseAgentPage,
   '/delivery': DeliveryPage,

@@ -35,6 +35,10 @@ const PROTECTED = new Set([
   '/authorization/panel',
   // NODE-NET-A-001：/me/node/net 受护——本机节点数据只本人可见（卡一规则：根指纹只显本人前 8 位）
   '/me/node/net',
+  // L1SI218-SITEDEP-001：/agent-dashboard/:id 受护——乙型仅机主（机面凭自身令牌，人面须登录）
+  '/agent-dashboard/:id',
+  // L1SI218-SITEDEP-001：/ops-manual 受护——丙型仅人（operator/founder 面，⛔机读镜像）
+  '/ops-manual',
   '/review',
   // L1SI181-P0-FIX-002 F-4：/terms 移出受护集——匿名可读（在册：条款对外通用入公域）；
   // A-6 接口匿名实测 200（2026-10-30），仅只读展示、无个人数据；此前 L1SI175-A1-2「本批未授权」由本令解除

@@ -19,7 +19,8 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request, Response
 
-from api_v1 import _nca_watermark, _require_session_user  # noqa: E402
+from api_v1 import _nca_watermark  # noqa: E402
+from ops_auth_gate import ops_guard, require_ops_caller as _require_ops_caller  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/ops/files", tags=["ops-files"])
 
@@ -45,9 +46,8 @@ def _files_dir() -> Path:
 
 def _require_ops_admin(request: Request) -> dict:
     """运维门内：会话（401 fail-closed）＋ operator/founder（403）——照 /api/v1/ops/* 既有惯例。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可取运维件")
+    user = _require_ops_caller(request)
+    ops_guard(user, request, "取运维件")
     return user
 
 

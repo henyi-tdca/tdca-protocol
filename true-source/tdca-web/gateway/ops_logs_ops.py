@@ -24,7 +24,8 @@ from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
-from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from api_v1 import _nca_append, _nca_watermark, _utc  # noqa: E402
+from ops_auth_gate import ops_guard, require_ops_caller as _require_ops_caller  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/ops/logs", tags=["ops-logs"])
 
@@ -155,10 +156,9 @@ def _validate_log(log_date: date, sections: dict, now08: datetime) -> None:
 
 
 def _require_ops_admin(request: Request) -> dict:
-    """运维门内：会话（401 fail-closed）＋ operator/founder（403）——照 /api/v1/ops/* 既有惯例。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可访问运维日志")
+    """运维门（L1SI218-SITEDEP-001 闸化）：人类会话 operator/founder 照原；机面 O-1 只读放行。"""
+    user = _require_ops_caller(request)
+    ops_guard(user, request, "访问运维日志")
     return user
 
 

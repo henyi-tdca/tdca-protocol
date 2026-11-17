@@ -1235,3 +1235,16 @@ class AuthorizationPanelFreeze(Base):
     __table_args__ = (
         Index("idx_authz_panel_freeze_auth", "auth_id"),
     )
+
+
+class OpsAuthDenial(Base):
+    """L1SI218-DUALCH-001-001：/api/v1/ops/* 机面授权前置闸拒绝留痕（fail-closed 每次拒绝一行）。"""
+
+    __tablename__ = "ops_auth_denials"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    ts: Mapped[str] = mapped_column(Text, nullable=False)
+    path: Mapped[str] = mapped_column(Text, nullable=False)
+    method: Mapped[str] = mapped_column(Text, nullable=False)
+    caller: Mapped[str] = mapped_column(Text, nullable=False)  # 具名智能体标识 / machine-anonymous
+    auth_id_presented: Mapped[str | None] = mapped_column(Text)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
