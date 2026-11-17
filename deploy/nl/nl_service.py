@@ -4,6 +4,11 @@
 #   A-1 会话令牌（经 gateway /auth/me 核验，单一事实源）＋ IP 限流 ＋ 单日个人配额
 #   A-2 成本明细一律入内日志（calls.log）与 /health（内网），响应体零成本字段
 #   A-3 供应商名中性化：响应体只写「真实外部模型调用」，⛔品牌名
+# RTGATE-001（2026-11-18，权限网关一期·nl 样板，令只定判据）：
+#   D 组：五元留痕（动作/输入摘要/结果/时间戳/身份）——成功/降级/拒件同账 CALLS_LOG，
+#         拒件留痕失败不反转拒绝裁决（fail-closed 优先）
+#   C 组：成本熔断现状只降级不上报 → 补 FUSE_LOG 熔断行（上报）；阈值沿用现网 2.0/8.0（S-RG6 ⛔定阈值）
+#   B 组：闸序标明——全局闸(会话+限流) → 端内闸(角色·nl 公开端点落空) → 内容闸(NSFL) → 预算三维
 # 不动 gateway FROZEN 封板包：nginx 精确路由 /api/v1/intent → 本服务，降级时回源 gateway。
 from __future__ import annotations
 
@@ -20,7 +25,7 @@ from fastapi.responses import JSONResponse
 
 from enforce_entry import scan_nsfl_text  # NSFL 单一事实源（与 mcp 桥同一文件）
 
-APP_VER = "0.2.0"
+APP_VER = "0.3.0"
 DS_URL = "https://api.deepseek.com/chat/completions"
 DS_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 DS_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
@@ -82,6 +87,18 @@ def _watermark(payload: dict, nature: str) -> dict:
 # A-2 成本账（内）：响应体一律不含成本字段，明细只落 COST_FILE / CALLS_LOG / FUSE_LOG
 # ---------------------------------------------------------------------
 
+def _ledger(evt: str, action: str, identity: str, q: str, result: str,
+            extra: dict | None = None) -> None:
+    """RTGATE-001 D组：五元留痕（动作/输入摘要/结果/时间戳/身份），成功与拒同账（CALLS_LOG JSONL）。
+    调用方对「拒件」须自包 try/except——留痕失败不反转拒绝裁决（fail-closed 优先）。"""
+    row = {"ts": _utc(), "evt": evt, "action": action, "identity": identity,
+           "q": (q or "")[:80], "result": result}
+    if extra:
+        row.update(extra)
+    with CALLS_LOG.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
 def _load_cost() -> dict:
     day = _utc()[:10]
     month = _utc()[:7]
@@ -105,12 +122,13 @@ def _save_cost(d: dict) -> None:
 
 def _log_call(user: str, ip: str, q: str, pin: int, pout: int, spend: float, cost: dict) -> None:
     """A-2：成本明细入内日志（含累计，监控从本文件与 /health 读，⛔响应体）。"""
+    row = {"ts": _utc(), "evt": "llm", "action": "intent", "result": "ok",  # RTGATE-001 D组：五元之首三
+           "identity": f"{user}@{ip}", "q": q[:80],
+           "in": pin, "out": pout, "spend": round(spend, 6),
+           "day_spend": round(cost["day_spend"], 4),
+           "month_spend": round(cost["month_spend"], 4)}
     with CALLS_LOG.open("a", encoding="utf-8") as f:
-        f.write(json.dumps({"ts": _utc(), "user": user, "ip": ip, "q": q[:80],
-                            "in": pin, "out": pout, "spend": round(spend, 6),
-                            "day_spend": round(cost["day_spend"], 4),
-                            "month_spend": round(cost["month_spend"], 4)},
-                           ensure_ascii=False) + "\n")
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
 def _fuse_tripped(cost: dict) -> str | None:
@@ -190,14 +208,27 @@ def _quota_hit(user: str) -> tuple[bool, dict]:
     return False, q
 
 
-def _reject(status: int, detail: str, code: str) -> JSONResponse:
+def _reject(status: int, detail: str, code: str, *, action: str = "",
+            identity: str = "", q: str = "") -> JSONResponse:
+    # RTGATE-001 D组：拒件亦记五元；留痕失败不反转拒绝裁决（fail-closed 优先）
+    try:
+        _ledger("deny", action or "reject", identity or "anonymous", q,
+                f"{status}:{code}")
+    except Exception:
+        pass
     return JSONResponse({"detail": detail, "code": code}, status_code=status)
 
 
-def _nsfl_reject(q: str, hits: list) -> JSONResponse:
+def _nsfl_reject(q: str, hits: list, identity: str = "anonymous") -> JSONResponse:
     FUSE_LOG.parent.mkdir(parents=True, exist_ok=True)
     with FUSE_LOG.open("a", encoding="utf-8") as f:
-        f.write(f"[SIMULATED] {_utc()} | nl-llm 熔断 | 命中 {hits} | 输入摘要 {q[:80]}\n")
+        f.write(f"[SIMULATED] {_utc()} | nl-llm 熔断 | 命中 {hits} | 身份 {identity} | 输入摘要 {q[:80]}\n")
+    # RTGATE-001 D组：内容闸拒件五元入同账（留痕失败不反转拒绝裁决）
+    try:
+        _ledger("deny", "gate:nsfl", identity, q, "403:TDCA-E-NSFL-001",
+                {"hits": [str(h) for h in hits]})
+    except Exception:
+        pass
     payload = {"matched": False, "route": "/", "title": "首页 KPI 总览", "action": "查询",
                "guide": ["该表述触线（NSFL 负空间），已拒绝并存证", "请换用业务相关表述再试"],
                "alternatives": [],
@@ -220,8 +251,14 @@ def _coerce_llm(obj: dict) -> dict:
             "guide": guide, "alternatives": [], "reply": str(obj.get("reply", ""))[:200]}
 
 
-async def _fallback(q: str, reason: str) -> JSONResponse:
-    """fail 降级：回源 gateway 规则表（封板包原样接口）。reason ⛔含成本数字（A-2）。"""
+async def _fallback(q: str, reason: str, identity: str = "anonymous") -> JSONResponse:
+    """fail 降级：回源 gateway 规则表（封板包原样接口）。reason ⛔含成本数字（A-2）。
+    RTGATE-001 D组：降级（200）亦记五元（留痕失败不反转降级语义）。"""
+    try:
+        _ledger("fallback", "intent-fallback", identity, q, "200:degraded",
+                {"reason": reason[:80]})
+    except Exception:
+        pass
     try:
         async with httpx.AsyncClient(timeout=10) as c:
             r = await c.get(f"{GATEWAY}/api/v1/intent", params={"q": q})
@@ -252,39 +289,57 @@ def health():
 
 @app.get("/api/v1/intent")
 async def intent(request: Request, q: str = ""):
-    # ── A-1 加锁（先于一切：未持有效令牌 ⛔返回任何结果）──────────────────
+    # ── RTGATE-001 B组闸序（一序贯穿，⛔各端点自写）──────────────────────
+    #   ① 全局闸（在册「全局中间件凭证闸」口径）：会话核验 ＋ IP 限流
+    #   ② 端内闸（角色）：nl 为公开意图端点无角色层——本层落空属正常（令 §二，R-RG2 标明）
+    #   ③ 内容闸（在册负空间）：NSFL 预检
+    #   ④ 预算三维（C组）：次数（单用户日配额）／成本（日/月熔断）／时间（IP 滑动窗限流）
     ip = request.headers.get("x-real-ip") or (request.client.host if request.client else "unknown")
     token = request.headers.get("authorization", "").strip()
+    qs = (q or "").strip()
     if not token.startswith(SESSION_PREFIX):
-        return _reject(401, "意图接口须登录会话（TDCA-SES），未持令牌不返回结果", "TDCA-E-NL-AUTH-001")
+        return _reject(401, "意图接口须登录会话（TDCA-SES），未持令牌不返回结果",
+                       "TDCA-E-NL-AUTH-001", action="gate:session", identity=f"anon@{ip}", q=qs)
     v = await _verify_session(token)
     if not v["ok"]:
         status = 503 if v.get("unreachable") else 401
         detail = ("会话核验服务暂不可达，fail-closed 拒绝（请稍后重试）"
                   if v.get("unreachable") else "会话无效、已过期或已吊销，请重新登录")
-        return _reject(status, detail, "TDCA-E-NL-AUTH-002")
+        return _reject(status, detail, "TDCA-E-NL-AUTH-002",
+                       action="gate:session-verify", identity=f"tok:{token[:12]}…@{ip}", q=qs)
     user = v["username"]
-    if _rate_limited(ip):
+    ident = f"{user}@{ip}"
+    if _rate_limited(ip):  # 时间维（预算三维之一）
         return _reject(429, f"该 IP 请求过快（限流 {RATE_PER_MIN} 次/分钟），请稍后再试",
-                       "TDCA-E-NL-RATE-001")
-    # ── 原语义（NSFL → 熔断 → key → 配额 → LLM → 记账）──────────────────
-    q = (q or "").strip()
+                       "TDCA-E-NL-RATE-001", action="budget:time", identity=ident, q=qs)
+    # ── ③ 内容闸（NSFL，fail-closed，命中即拒并存证）─────────────────────
+    q = qs
     if not q:
-        return await _fallback(q, "空查询")
+        return await _fallback(q, "空查询", ident)
     hits = scan_nsfl_text(q)
     if hits:
-        return _nsfl_reject(q, hits)
+        return _nsfl_reject(q, hits, ident)
+    # ── ④ 预算三维：成本（日/月熔断，阈值沿用现网 2.0/8.0，S-RG6 ⛔定阈值）──
     cost = _load_cost()
     tripped = _fuse_tripped(cost)
     if tripped:
+        # C组「熔断并上报」：落 FUSE_LOG 熔断行（上报）；动作语义零改动（仍降级规则表）
+        FUSE_LOG.parent.mkdir(parents=True, exist_ok=True)
+        with FUSE_LOG.open("a", encoding="utf-8") as f:
+            f.write(f"[REAL-FUSE] {_utc()} | nl-llm 算力熔断({tripped}) | 身份 {ident} | 输入摘要 {q[:80]}\n")
+        try:
+            _ledger("deny", "budget:cost", ident, q, f"fuse:{tripped}")
+        except Exception:
+            pass
         # A-2：金额只在内部（FUSE_LOG/COST_FILE/health），响应体只给口径不给数
-        return await _fallback(q, "算力配额已达当日/当月上限，已降级规则表")
+        return await _fallback(q, "算力配额已达当日/当月上限，已降级规则表", ident)
     if not DS_KEY:
-        return await _fallback(q, "模型服务未注入密钥，走规则表")
+        return await _fallback(q, "模型服务未注入密钥，走规则表", ident)
+    # ── ④ 预算三维：次数（单用户日配额）────────────────────────────────
     over, _ = _quota_hit(user)
     if over:
         return _reject(429, "已达单日个人调用配额，请明日再试（规则表导航不受影响）",
-                       "TDCA-E-NL-QUOTA-001")
+                       "TDCA-E-NL-QUOTA-001", action="budget:count", identity=ident, q=qs)
     try:
         async with httpx.AsyncClient(timeout=20) as c:
             r = await c.post(DS_URL,
@@ -298,7 +353,7 @@ async def intent(request: Request, q: str = ""):
         text = body["choices"][0]["message"]["content"]
         obj = json.loads(text)
     except Exception as e:
-        return await _fallback(q, f"模型调用失败（{type(e).__name__}），已降级规则表")
+        return await _fallback(q, f"模型调用失败（{type(e).__name__}），已降级规则表", ident)
     usage = body.get("usage") or {}
     pin = int(usage.get("prompt_tokens", 0))
     pout = int(usage.get("completion_tokens", 0))
