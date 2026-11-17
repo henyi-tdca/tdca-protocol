@@ -15,7 +15,7 @@ import hashlib
 import hmac
 import secrets
 import time
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
 # 模拟态密钥（红队 N3: 生产经 KMS/HSM；测试共享同一密钥以签发有效签名）
 DEFAULT_SECRET = b"tdca-cscp-humangate-sim-secret-v1"

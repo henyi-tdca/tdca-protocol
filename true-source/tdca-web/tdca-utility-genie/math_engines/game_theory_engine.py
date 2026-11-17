@@ -9,7 +9,7 @@ NSFL-Declaration:
 SPDX-License-Identifier: TDCA-Internal
 """
 
-from typing import List, Optional, Callable
+from typing import List, Callable
 
 
 class GameTheoryEngine:

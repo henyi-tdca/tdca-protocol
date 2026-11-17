@@ -11,7 +11,7 @@ SPDX-License-Identifier: TDCA-Internal
 """
 
 from dataclasses import dataclass, field, asdict
-from typing import List, Optional
+from typing import List
 
 
 @dataclass

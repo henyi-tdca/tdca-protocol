@@ -7,7 +7,7 @@ SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, List, Optional
 
 # 回滚动作注册表（跨模块引用，供 state_machine._rollback 审计）

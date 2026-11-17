@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional
 
-from .human_gate import ACTION_DISPATCH, ACTION_MATCH, HumanGate
+from .human_gate import ACTION_DISPATCH, ACTION_MATCH
 from .saga import Saga
 
 

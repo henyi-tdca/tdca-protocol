@@ -17,11 +17,10 @@ from __future__ import annotations
 
 import time
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from .aggregation import AggregatedTaxPayer, BatchTaxReport
-from .delivery_settlement import (ContractForm, DeliverySettlementStateMachine,
-                                  DeliveryState)
+from .delivery_settlement import (ContractForm, DeliverySettlementStateMachine)
 from .dispute_chain import ArbitrationVerdict, DisputeResolutionChain
 from .event_tax_calculator import EventTaxBreakdown, EventTaxCalculator
 from .models import DeliveryForm, MicroDelivery, TaxEventType
@@ -33,7 +32,7 @@ from .v2_prepay_adapter import V2PrepayRecord, V2TaxPrepayAdapter
 # fail-closed（ID85）: 法规基座缺失 → 拒绝税务决策（禁止静默降级为空）
 try:
     from nsfl_compiler.tax_regulations import (TAX_REGULATIONS,
-                                               load_tax_regulations,
+                                               load_tax_regulations,  # noqa: F401 具名理由：try/except ImportError 运行自举面，删名将改 fallback 触发语义（无此符环境整组转 except）
                                                resolve_violation_law)
 except ImportError:  # pragma: no cover - 运行时自举
     import sys as _sys
@@ -45,7 +44,6 @@ except ImportError:  # pragma: no cover - 运行时自举
             "税务决策须 fail-closed（TAXLAW-001）")
     _sys.path.insert(0, str(_compiler_dir))
     from nsfl_compiler.tax_regulations import (TAX_REGULATIONS,  # noqa: E402
-                                               load_tax_regulations,
                                                resolve_violation_law)
 
 # 自动检测阈值: 大额且 MOU=0 → 疑似场外规避税收锚定（TDCA-ART-12）
@@ -214,7 +212,7 @@ class TaxOfficerAgent:
         """
         self._enforce_regulatory(delivery)          # 防御性二次检查（法规约束）
         sm = DeliverySettlementStateMachine(contract_form, delivery.delivery_form)
-        agree = sm.agree(delivery)
+        agree = sm.agree(delivery)  # noqa: F841 具名理由：合意读数留痕（对位 complete_offline 分支判定），删赋值属第四类改动
         if delivery.delivery_form == DeliveryForm.ONLINE:
             sm.complete_offline(delivery)     # 幂等（线上无线下环节）
         else:

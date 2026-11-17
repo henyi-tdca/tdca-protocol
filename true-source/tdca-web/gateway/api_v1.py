@@ -1503,7 +1503,7 @@ def me_anchor_verify(req: AnchorVerifyRequest, request: Request):
             raise HTTPException(404, f"用户不存在: {username}")
         row = s.get(M.UserAnchor, username)
         if row is None:
-            raise HTTPException(404, f"该用户无锚记录（注册时未建锚行，异常态——请上报）")
+            raise HTTPException(404, f"该用户无锚记录（注册时未建锚行，异常态——请上报）")  # noqa: F541 具名理由：f前缀系批量改写留痕，去f属第四类改动
         prev_state = row.tier_state
         nca_id = _nca_append(
             "user_anchor_verify", v["username"],

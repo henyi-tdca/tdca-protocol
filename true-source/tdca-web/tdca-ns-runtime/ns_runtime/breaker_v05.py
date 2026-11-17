@@ -20,9 +20,9 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 class BreakerState(Enum):

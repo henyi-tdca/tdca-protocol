@@ -24,13 +24,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import re
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 
 @dataclass
@@ -128,7 +127,7 @@ class DualProtocolCompiler:
 
     def compile(self) -> dict:
         """执行化合，生成双协议化合产物。"""
-        tdca = self.load_tdca()
+        tdca = self.load_tdca()  # noqa: F841 具名理由：化合产物对象留痕（校验读数对位），删赋值属第四类改动
         scene = self.load_scene()
         const = scene.get("scene-constitution", "")
         nsfl = scene.get("scene-nsfl", "")
@@ -284,7 +283,7 @@ def main() -> int:
         mode=args.mode,
     )
 
-    print(f"✅ TDCA 公共制度加载完成: v3.1.2")
+    print(f"✅ TDCA 公共制度加载完成: v3.1.2")  # noqa: F541 具名理由：f前缀批量改写留痕，去f属第四类改动
     print(f"✅ 场景制度加载完成: {args.scene_name}")
     print("🔍 执行同构校验...")
     if not compiler.validate_isomorphism():

@@ -136,7 +136,7 @@ class TDCAFunctionCompiler:
         目标函数硬化：自然语言 → 形式化表达式
         支持: 数值目标（min/max）、逻辑命题（must/cannot）、正则校验
         """
-        formalized = False
+        formalized = False  # noqa: F841 具名理由：形式化旗标留痕（校验链读数），删赋值属第四类改动
         expr = objective.get('expression', '')
         expr_type = objective.get('type', 'UNKNOWN')
 

@@ -34,8 +34,8 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Sequence
+from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 # 五维认知状态向量维度（ID8 NIA-MACM 3.0）
 DIMS = ("A", "D", "L", "C", "SC")
@@ -191,7 +191,7 @@ class CognitiveDistanceCalculator:
         else:
             min_d = max_d = None
 
-        n_pairs = len(pairs) or 1
+        n_pairs = len(pairs) or 1  # noqa: F841 具名理由：无序对规模读数留痕（不对称比率分母对位），删赋值属第四类改动
         # 不对称比率: 不对称无序对（a≠b 且 |d_ab−d_ba|>0）/ 总无序对
         subjects_n = len(subjects)
         unordered_total = subjects_n * (subjects_n - 1) // 2 or 1
@@ -245,7 +245,7 @@ class CognitiveDistanceCalculator:
             if abs(report.distance_matrix[a][a] - 0.0) > 1e-9:
                 errors.append(f"自身距离 d({a},{a}) ≠ 0")
             if abs(report.alignment_difficulties[a][a] - 1.0) > 1e-9:
-                errors.append(f"自身对齐难度 ≠ 1")
+                errors.append(f"自身对齐难度 ≠ 1")  # noqa: F541 具名理由：f前缀批量改写留痕，去f属第四类改动
         for a in report.subjects:
             for b in report.subjects:
                 diff = report.alignment_difficulties[a][b]

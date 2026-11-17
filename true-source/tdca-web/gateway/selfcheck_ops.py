@@ -23,7 +23,7 @@ from pathlib import Path, PurePosixPath
 
 from fastapi import APIRouter, HTTPException, Request
 
-from api_v1 import _consumer_face_m1, _nca_watermark, rec_hash_of  # noqa: E402  （公开口径，单一事实源；FACE-FIX-001 M-1 三键）
+from api_v1 import _consumer_face_m1, _nca_watermark  # noqa: E402  （公开口径，单一事实源；FACE-FIX-001 M-1 三键）
 from db import get_session  # noqa: E402
 from db import models as M  # noqa: E402
 

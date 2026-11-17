@@ -21,9 +21,9 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from .operators import FuseLevel, NS_Operator
 from .parser import NSFLDeclaration

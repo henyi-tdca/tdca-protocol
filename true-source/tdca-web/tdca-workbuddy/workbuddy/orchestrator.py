@@ -9,7 +9,6 @@ SPDX-License-Identifier: TDCA-Internal
 """
 from __future__ import annotations
 
-import uuid
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -48,7 +47,7 @@ class CrossSceneWorkflowOrchestrator:
         hs_id = handshake_result["handshake_id"]
         scene_a = handshake_result.get("scene_a", "SCN-A")
         scene_b = handshake_result.get("scene_b", "SCN-B")
-        risk_premium = handshake_result.get("risk_premium", 0.2)
+        risk_premium = handshake_result.get("risk_premium", 0.2)  # noqa: F841 具名理由：握手结果键提取留痕（与 scene_a/translator 同列读数），删赋值属第四类改动
         translator = handshake_result.get("translator_id", "translator_cross")
         mou_split = handshake_result.get("mou_split")
         escrow_id = handshake_result.get("escrow_id")

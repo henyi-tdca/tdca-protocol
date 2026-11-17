@@ -13,7 +13,6 @@ NSFL-Declaration:
 SPDX-License-Identifier: TDCA-Internal
 """
 
-import os
 import sys
 from typing import Optional
 

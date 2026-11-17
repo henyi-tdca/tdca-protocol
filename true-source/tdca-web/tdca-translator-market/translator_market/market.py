@@ -11,7 +11,7 @@ from __future__ import annotations
 import time
 import uuid
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 # 阶段 1 最小注册集（S-CSCP-001: ≥10 对）——文旅/农产品/教育/健康/供应链 双向组合
 DEFAULT_REGISTRY: List[Dict[str, Any]] = [

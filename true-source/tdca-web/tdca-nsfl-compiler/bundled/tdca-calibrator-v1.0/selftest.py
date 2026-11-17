@@ -7,6 +7,7 @@
 import hashlib
 import io
 import json
+import random
 import sys
 from contextlib import redirect_stdout
 
@@ -30,7 +31,6 @@ def run_silent(fn, *a, **kw):
 
 
 # ── 合成真值：y = 2.0 + 3.0*x + 噪声(固定种子) ──
-import random
 _rng = random.Random(7)
 OBS = [{"x": round(0.2 * i, 3), "y": 2.0 + 3.0 * (0.2 * i) + _rng.uniform(-0.05, 0.05)}
        for i in range(21)]

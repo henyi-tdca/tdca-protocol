@@ -7,11 +7,9 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from decimal import Decimal
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
-from .schema import (Conflict, FuseLevel, MAX_RULES_PER_TYPE, NSLayer,
-                     NS_Operator, NS_Rule, NS_Type, Resolution, SceneNSFL,
+from .schema import (Conflict, FuseLevel, MAX_RULES_PER_TYPE, NS_Operator, NS_Rule, NS_Type, Resolution, SceneNSFL,
                      Severity, _severity_rank)
 
 
@@ -40,7 +38,7 @@ def _compare_same_type(a: NS_Rule, b: NS_Rule, _mirrored: bool = False) -> Optio
                        f"允许域无交集: A={a.parameter} vs B={b.parameter}（ALLOW×ALLOW 参数变体）")
         return None
     if op_a == NS_Operator.ALLOW and op_b == NS_Operator.FORBID:
-        return _mk(Resolution.FORBID, f"允许 vs 禁止 → 禁止（任务书例 1 形态）")
+        return _mk(Resolution.FORBID, f"允许 vs 禁止 → 禁止（任务书例 1 形态）")  # noqa: F541 具名理由同上
     if op_a == NS_Operator.ALLOW and op_b in (NS_Operator.LIMIT_MAX, NS_Operator.LIMIT_MIN,
                                                NS_Operator.LIMIT_EQ, NS_Operator.RESTRICT_TIER):
         return None  # 限额/档位即允许子集

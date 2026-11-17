@@ -19,17 +19,18 @@ for _sub in _SIBLINGS:
     if _p.is_dir() and str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from typing import Any, Dict, Optional
+# noqa 理由（E402×7）：sys.path 前置手术后导入（本文件被多入口以包/脚本方式加载，序即解析语义，上移将破）
+from typing import Any, Dict, Optional  # noqa: E402
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException  # noqa: E402
+from pydantic import BaseModel, Field  # noqa: E402
 
-from .adapters import (MockCBDCContractAdapter, MockNSFLUnionAdapter,
+from .adapters import (MockCBDCContractAdapter, MockNSFLUnionAdapter,  # noqa: E402
                        MockSandboxAdapter, MockTranslatorAdapter,
                        MockWorkbuddyAdapter, RealWorkbuddyAdapter)
-from .human_gate import HumanGate
-from .saga import Saga
-from .state_machine import HandshakeStateMachine, HandshakeStatus
+from .human_gate import HumanGate  # noqa: E402
+from .saga import Saga  # noqa: E402
+from .state_machine import HandshakeStateMachine, HandshakeStatus  # noqa: E402
 
 app = FastAPI(title="CSCP Handshake Gateway", version="T-CSCP-001")
 

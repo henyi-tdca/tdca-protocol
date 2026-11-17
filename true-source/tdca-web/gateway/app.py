@@ -26,12 +26,13 @@ for _sub in ("tdca-d2-union", "tdca-cscp", "tdca-workbuddy",
     if _p.is_dir() and str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from fastapi import FastAPI
+# noqa 理由（E402×6）：sys.path 前置手术完成后方可导入（L1SI211-CI-SHADOW-001 遮蔽规避，导入序即语义，上移将破）
+from fastapi import FastAPI  # noqa: E402
 
-from nsfl_union.api import app as d2_app
-from cscp_gateway.gateway import app as cscp_app
-from workbuddy.api import app as wb_app
-from translator_market.api import app as tm_app
+from nsfl_union.api import app as d2_app  # noqa: E402
+from cscp_gateway.gateway import app as cscp_app  # noqa: E402
+from workbuddy.api import app as wb_app  # noqa: E402
+from translator_market.api import app as tm_app  # noqa: E402
 
 # L1SI211-CI-SHADOW-001：四子应用导入链会在 sys.path 头部累计插入数十条路径，
 # CI 全量 PYTHONPATH（set 序，父级含 tools/cross-scene 同名包）把本五目录推到
@@ -46,7 +47,7 @@ for _sub in ("tdca-d2-union", "tdca-cscp", "tdca-workbuddy",
             sys.path.remove(_s)
         sys.path.insert(0, _s)
 
-from cross_scene.p3_api import app as p3_app
+from cross_scene.p3_api import app as p3_app  # noqa: E402
 
 # B-3: 统一后端体系——纳入 tdca-bridge（原 :8080）端点，前端统一走 gateway :8100
 # bridge 端点带 /api 前缀（/api/search /api/edu/* /api/agents /api/health 等），include_router 保留原路径

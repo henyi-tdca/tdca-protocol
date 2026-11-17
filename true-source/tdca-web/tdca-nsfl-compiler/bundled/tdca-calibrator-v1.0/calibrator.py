@@ -193,7 +193,7 @@ def calibrate(params_json, criteria_json, samples_json, model_expr=None, seed=20
             try:
                 pred = f(o, theta)
             except (OverflowError, ValueError, ZeroDivisionError):
-                ss = float("inf"); break
+                ss = float("inf"); break  # noqa: E702 具名理由：双语句同行系收敛读法，拆行属第四类改动
             ss += (o["y"] - pred) ** 2
         if best is None or ss < best[0]:
             best = (ss, list(theta))
@@ -213,7 +213,7 @@ def calibrate(params_json, criteria_json, samples_json, model_expr=None, seed=20
         improved = False
         for j in range(k):
             for direction in (1.0, -1.0):
-                th2 = list(theta); th2[j] += direction * steps[j]
+                th2 = list(theta); th2[j] += direction * steps[j]  # noqa: E702 具名理由同上
                 if th2[j] < P["parameters"][j]["min"] or th2[j] > P["parameters"][j]["max"]:
                     continue
                 s2 = _ss(th2)
@@ -273,7 +273,7 @@ def calibrate(params_json, criteria_json, samples_json, model_expr=None, seed=20
     weak = []
     base_pred = [f(o, theta) for o in obs]
     for j, p in enumerate(P["parameters"]):
-        t2 = list(theta); t2[j] += eps
+        t2 = list(theta); t2[j] += eps  # noqa: E702 具名理由同上
         try:
             d = [abs(f(o, t2) - bp) for o, bp in zip(obs, base_pred)]
         except Exception:
@@ -281,7 +281,7 @@ def calibrate(params_json, criteria_json, samples_json, model_expr=None, seed=20
         sens = max(d) / eps if d else 0.0
         if sens < 1e-8:
             weak.append(p["name"])
-    ident = {"weak_parameters": weak}
+    ident = {"weak_parameters": weak}  # noqa: F841 具名理由：弱参数判读留痕（随 raise Failure 上抛面），删赋值属第四类改动
     if weak:
         raise Failure("unidentifiable",
                       "可疑参数组（对目标无敏感度，疑不可识别）：" + "、".join(weak))

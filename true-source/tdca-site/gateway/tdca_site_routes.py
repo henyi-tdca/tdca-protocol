@@ -26,7 +26,6 @@ import re
 import secrets
 import sqlite3
 from datetime import datetime, timezone
-from typing import Any
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel, Field

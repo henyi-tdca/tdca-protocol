@@ -18,9 +18,7 @@ SPDX-License-Identifier: TDCA-Internal
 """
 
 import os
-import sys
 import argparse
-import logging
 from datetime import datetime, timezone
 
 # 版本

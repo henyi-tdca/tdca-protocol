@@ -52,7 +52,7 @@ class MOUSplitContract:
 
     def _monte_carlo(self, scene_ids: List[str], value_fn: Callable,
                      samples: int) -> Dict[str, float]:
-        n = len(scene_ids)
+        n = len(scene_ids)  # noqa: F841 具名理由：样本规模读数留痕，删赋值属第四类改动
         shapley = {a: 0.0 for a in scene_ids}
         for _ in range(samples):
             perm = scene_ids[:]

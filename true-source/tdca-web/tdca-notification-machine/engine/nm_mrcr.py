@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 # ---- 基座复用路径（相对 workspace 根）----
 _ENGINE_DIR = Path(__file__).resolve().parent

@@ -237,9 +237,9 @@ def main() -> int:
         trail_path.write_text(table, encoding="utf-8")
         print(f"[trail] 七栏留痕表已写 {trail_path}（批次 {batch}）")
 
-    print(f"\n═══ 复扫结果 ═══")
+    print(f"\n═══ 复扫结果 ═══")  # noqa: F541 具名理由：f前缀系批量改写留痕，去f属第四类改动
     print(f"入站候选 {len(manifest.files)} 件；脱敏命中 {len(manifest.hits)} 处")
-    print(f"人名检测：不设名单（依裁 ⓑ）——改由发布前人工核 + 对外件零人名纪律")
+    print(f"人名检测：不设名单（依裁 ⓑ）——改由发布前人工核 + 对外件零人名纪律")  # noqa: F541 具名理由同上
     for h in manifest.hits:
         print(f"  [{h.kind}] {h.path}:{h.line_no}  {h.snippet}")
     if not manifest.ok:

@@ -14,8 +14,8 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 from .alt_path import AltPathPlanner
 from .conflict import ConflictDetector
-from .schema import (FuseLevel, NegativeSpaceUnion, NS_Rule, NS_Type,
-                     SceneNSFL, Severity)
+from .schema import (FuseLevel, NegativeSpaceUnion, NS_Type,
+                     SceneNSFL)
 from .weights import RiskPremiumCalculator
 
 NcaGenerator = Callable[..., str]
@@ -100,7 +100,8 @@ class NSFLUnionEngine:
 
     def _cache_key(self, a: SceneNSFL, b: SceneNSFL,
                    ta: Optional[FuseLevel], tb: Optional[FuseLevel]) -> Tuple:
-        fp = lambda s: (s.scene_id, tuple(sorted((r.rule_id, r.operator.value,
+        # noqa 理由（E731）：lambda 改 def 属第四类改动，具名保留候批4另议
+        fp = lambda s: (s.scene_id, tuple(sorted((r.rule_id, r.operator.value,  # noqa: E731
                                                   str(r.parameter), r.unit,
                                                   r.severity.value, r.enabled)
                                                  for r in s.rules)))

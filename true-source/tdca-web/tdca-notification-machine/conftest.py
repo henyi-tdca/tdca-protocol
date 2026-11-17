@@ -14,14 +14,13 @@
 import importlib.util
 import os
 import sys
+from importlib.machinery import ModuleSpec as _ModuleSpec
 
 _NM = os.path.dirname(os.path.abspath(__file__))            # tdca-notification-machine/
 _WS = os.path.dirname(_NM)                                   # 工作区根
 
 # ---- 1) engine 包钉载（⛔ 被 tools/*/engine.py 常规模块遮蔽之确定性解法） ----
 # engine/ 无 __init__.py（命名空间包），手工构造 ModuleSpec 钉入 sys.modules。
-from importlib.machinery import ModuleSpec as _ModuleSpec
-
 _ENGINE_DIR = os.path.join(_NM, 'engine')
 if os.path.isdir(_ENGINE_DIR) and 'engine' not in sys.modules:
     _spec = _ModuleSpec('engine', loader=None, is_package=True)
