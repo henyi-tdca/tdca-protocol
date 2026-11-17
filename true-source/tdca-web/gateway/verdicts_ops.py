@@ -94,8 +94,9 @@ def verdict_register(body: VerdictRegisterIn, request: Request):
             internal_ref=body.internal_ref,
             data_provenance="real", created_at=_utcnow())
         s.add(row)
+        decided_at = row.decided_at  # ACCTABLE-FIX-001：commit 会过期属性致读取触发重载（DetachedInstance→500），先取值
         s.commit()
-    return {"status": "registered", "decided_at": row.decided_at}
+    return {"status": "registered", "decided_at": decided_at}
 
 
 # ── 私域端点（会话或机面 O-1·运维视图全列） ─────────────────────────────────
