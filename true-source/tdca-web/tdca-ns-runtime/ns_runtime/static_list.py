@@ -23,7 +23,7 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, List, Optional, Tuple
+from typing import FrozenSet, List, Optional, Tuple
 
 
 @dataclass(frozen=True)
