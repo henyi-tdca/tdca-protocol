@@ -25,6 +25,7 @@ from pydantic import BaseModel, ConfigDict
 
 from db import get_session  # noqa: E402
 from db import models as M  # noqa: E402
+from api_v1 import _nca_watermark  # noqa: E402  # WATERMARK-FIX-001：前端取件闸要求 NCA 水印信封
 
 _REG_KEY_ENV = "TDCA_VERDICT_REG_KEY"
 _REG_HEADER = "x-tdca-verdict-reg-key"
@@ -51,9 +52,10 @@ def verdicts_public():
         rows = s.execute(M.AcceptanceVerdict.__table__.select().with_only_columns(
             *(getattr(M.AcceptanceVerdict, c) for c in _PUBLIC_COLS)
         ).order_by(M.AcceptanceVerdict.decided_at.desc())).all()
-    return {"count": len(rows),
-            "verdicts": [dict(zip(_PUBLIC_COLS, r)) for r in rows],
-            "note": "验收结论公示面（五字段·含存证号可回溯核证件）；作业/处置/留痕在私域面 /ops/acceptance-records（登录或O-1）"}
+    return _nca_watermark(
+        {"count": len(rows),
+         "verdicts": [dict(zip(_PUBLIC_COLS, r)) for r in rows],
+         "note": "验收结论公示面（五字段·含存证号可回溯核证件）；作业/处置/留痕在私域面 /ops/acceptance-records（登录或O-1）"})
 
 
 # ── 登记口（只给智库侧/受权智能体·fail-closed key guard） ──────────────────
@@ -122,6 +124,7 @@ def verdicts_ops(request: Request):
         rows = s.execute(M.AcceptanceVerdict.__table__.select().order_by(
             M.AcceptanceVerdict.decided_at.desc())).all()
         cols = M.AcceptanceVerdict.__table__.columns.keys()
-    return {"count": len(rows),
-            "verdicts": [dict(zip(cols, r)) for r in rows],
-            "note": "私域运维面（含作业/处置/留痕）；公示结论面 /api/v1/acceptance/verdicts（匿名四字段）"}
+    return _nca_watermark(
+        {"count": len(rows),
+         "verdicts": [dict(zip(cols, r)) for r in rows],
+         "note": "私域运维面（含作业/处置/留痕）；公示结论面 /api/v1/acceptance/verdicts（匿名四字段）"})
