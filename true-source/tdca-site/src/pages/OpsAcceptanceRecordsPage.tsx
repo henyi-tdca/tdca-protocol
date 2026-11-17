@@ -59,6 +59,16 @@ export function OpsAcceptanceRecordsPage() {
           <Link to="/acceptance" className="text-blue-600 underline hover:text-blue-800"
             data-testid="ops-acceptance-records-public-link">← 公示结论面（/acceptance · 公开查询）</Link>
         </p>
+
+        {/* ── 验收结论全量（L1SI218-ACCTABLE-001：私域栏五字段·会话或O-1·C-3 归入 batch_construction）── */}
+        <section className="space-y-2 rounded-lg border p-4">
+          <h2 className="text-base font-semibold">验收结论全量（含作业五字段·私域）</h2>
+          <p className="text-xs text-muted-foreground">
+            acceptance_verdicts 全列：公示四字段＋作业过程／处置动作／留痕细节／凭据引用／内部编号。
+            C-3 交付验收单链归入 batch_construction 类（⛔另建套），单链视图在下方。
+          </p>
+          <VerdictsOpsTable />
+        </section>
         {err && (
           <p data-testid="ops-acceptance-records-error" role="alert"
             className="rounded bg-amber-50 p-3 text-sm text-amber-800">{err}</p>
@@ -133,5 +143,62 @@ export function OpsAcceptanceRecordsPage() {
         )}
       </div>
     </PageShell>
+  )
+}
+
+interface VerdictFull {
+  id: number; verdict: string; decided_at: string; subject_type: string
+  subject_ref: string; evidence_nca_id: string
+  ops_process?: string; ops_actions?: string; ops_trace?: string
+  credential_ref?: string; internal_ref?: string
+}
+
+const SUBJECT_LABEL: Record<string, string> = {
+  institution_effective: '制度件生效', doc_ingest: '件入站',
+  site_function: '站点功能', batch_construction: '施工批（含C-3）',
+  agent_network: '智能体入网',
+}
+
+function VerdictsOpsTable() {
+  const [rows, setRows] = useState<VerdictFull[] | null>(null)
+  const [vErr, setVErr] = useState('')
+  useEffect(() => {
+    void (async () => {
+      const r = await api.get<{ verdicts: VerdictFull[] }>('/api/v1/ops/acceptance-verdicts')
+      if (!r.ok) { setVErr(`取件失败：${r.reason ?? ''}`); return }
+      setRows(r.data.verdicts)
+    })()
+  }, [])
+  if (vErr) return <p role="alert" className="rounded bg-amber-50 p-3 text-sm text-amber-800">{vErr}</p>
+  if (rows === null) return <p className="text-sm text-muted-foreground">取件中…</p>
+  if (rows.length === 0) return <p className="rounded border p-3 text-sm">空表为常态（台账无可派生验收结论，-414 S-AC1；谁判谁登后此栏渐填）。</p>
+  return (
+    <table data-testid="ops-acceptance-verdicts" className="w-full text-sm">
+      <thead>
+        <tr className="border-b text-left">
+          <th className="py-1 pr-2">结论</th>
+          <th className="py-1 pr-2">时点</th>
+          <th className="py-1 pr-2">类型</th>
+          <th className="py-1 pr-2">对象</th>
+          <th className="py-1 pr-2">存证号</th>
+          <th className="py-1 pr-2">作业/处置/留痕/凭据/编号</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((v) => (
+          <tr key={v.id} className="border-b align-top">
+            <td className="py-1 pr-2">{v.verdict}</td>
+            <td className="py-1 pr-2 text-xs">{v.decided_at}</td>
+            <td className="py-1 pr-2 text-xs">{SUBJECT_LABEL[v.subject_type] ?? v.subject_type}</td>
+            <td className="py-1 pr-2 font-mono text-xs">{v.subject_ref}</td>
+            <td className="py-1 pr-2 font-mono text-xs">{v.evidence_nca_id}</td>
+            <td className="py-1 pr-2 text-xs">
+              {v.ops_process ?? '—'}／{v.ops_actions ?? '—'}／{v.ops_trace ?? '—'}／
+              {v.credential_ref ?? '—'}／{v.internal_ref ?? '—'}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }

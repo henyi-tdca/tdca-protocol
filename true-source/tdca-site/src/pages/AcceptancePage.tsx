@@ -8,7 +8,7 @@
 //   ＋ GET /api/v1/acceptance/{acceptance_id}（公开读免会话，裸 fetch 保住公开查询面）
 // 部署: L1SI218-SITEDEP-RETRY 裁令甲步二移植（tdca-site 现行壳；令面路径 /acceptance）
 // =============================================================================
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PageShell } from '@/components/PageShell'
 import { api } from '@/lib/client'
 
@@ -249,7 +249,55 @@ export function AcceptancePage() {
               : err}
           </p>
         )}
+
+        {/* ── 验收结论公示面（L1SI218-ACCTABLE-001：四字段·匿名可读·核证件谁判谁登）── */}
+        <section className="space-y-2 rounded-lg border p-4">
+          <h2 className="text-base font-semibold">⑤ 验收结论公示（四字段·公开）</h2>
+          <p className="text-xs text-muted-foreground">
+            结论／时点／对象／存证号四项——由核证件登记（谁判谁登）；作业与留痕在私域面。
+          </p>
+          <VerdictsBoard />
+        </section>
       </div>
     </PageShell>
+  )
+}
+
+interface VerdictRow { verdict: string; decided_at: string; subject_ref: string; evidence_nca_id: string }
+
+function VerdictsBoard() {
+  const [rows, setRows] = useState<VerdictRow[] | null>(null)
+  useEffect(() => {
+    void (async () => {
+      const res = await fetch('/api/v1/acceptance/verdicts')
+      const raw = await res.json().catch(() => ({}))
+      if (res.ok) setRows((raw as { verdicts: VerdictRow[] }).verdicts)
+    })()
+  }, [])
+  if (rows === null) return <p className="text-sm text-muted-foreground">取件中…</p>
+  if (rows.length === 0) return <p className="rounded border p-3 text-sm">暂无登记之验收结论（空表为常态，如实标）。</p>
+  return (
+    <table data-testid="acceptance-verdicts-public" className="w-full text-sm">
+      <thead>
+        <tr className="border-b text-left">
+          <th className="py-1 pr-2">结论</th>
+          <th className="py-1 pr-2">验收时点</th>
+          <th className="py-1 pr-2">被验收对象</th>
+          <th className="py-1 pr-2">存证号</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((v) => (
+          <tr key={v.evidence_nca_id + v.subject_ref} className="border-b">
+            <td className="py-1 pr-2">
+              {v.verdict === 'passed' ? '✅ 通过' : v.verdict === 'conditional' ? '⚠️ 附条件' : '❌ 不通过'}
+            </td>
+            <td className="py-1 pr-2 text-xs">{v.decided_at}</td>
+            <td className="py-1 pr-2 font-mono text-xs">{v.subject_ref}</td>
+            <td className="py-1 pr-2 font-mono text-xs">{v.evidence_nca_id}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }

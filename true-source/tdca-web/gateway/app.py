@@ -204,6 +204,13 @@ app.include_router(delivery_ops_router)
 from acceptance_ops import router as acceptance_ops_router  # noqa: E402
 app.include_router(acceptance_ops_router)
 
+# L1SI218-ACCTABLE-001（乙路·账不动）：验收结论三支端点——公示四字段（匿名）／
+# 私域全列（会话或O-1）／登记口（谁判谁登·key guard fail-closed）
+from verdicts_ops import public_router as verdicts_public_router  # noqa: E402
+from verdicts_ops import ops_router as verdicts_ops_router  # noqa: E402
+app.include_router(verdicts_public_router)
+app.include_router(verdicts_ops_router)
+
 # A-25: 配置权市场「管理」面（/api/v1/market-admin/*——挂出／查询／状态变更／下架；
 # 先有成件＋四要件合取闸门（例外仅沙盒演练）；限权属登记人本人；下架不溯及授权件；
 # 公开面四字段；每操作落 NCA＋事件双留痕）
