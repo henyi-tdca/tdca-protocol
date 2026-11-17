@@ -62,10 +62,36 @@ for _sub in ("tdca-microtax", "tdca-ns-runtime", "tdca-notification-machine",
 # ---- M2：DB 访问（惰性工厂；测试经 DATABASE_URL 隔离）----
 from db import get_engine, get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
+from ops_auth_gate import require_ops_caller as _gov_caller  # noqa: E402  # GOVGATE-001：治理写端点端内授权闸（仅 founder）
 
 
 def _utc() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+
+# ---------------------------------------------------------------------
+# GOVGATE-001 治理写端点端内授权闸（TDCA-HANDOFF-EXEC-L1SI218-GOVGATE-001 §七）
+# ---------------------------------------------------------------------
+def _gov_gate(request: Request, action: str, summary: str) -> dict:
+    """治理写端点端内授权闸：huf-sign / emergency-fuse 仅 founder。
+    未登录 401（由 require_ops_caller 既有语义保证）；已登录但无权 403（⛔把 403 显示成 401）；
+    成功与拒皆落 NCA 五元留痕（动作/输入摘要/结果/时间戳/身份），拒件另记 403 原因与调用者。
+    沿 ops_auth_gate.require_ops_caller（⛔自造第三套闸）；熔断动作语义零改动（本令⛔涉）。"""
+    user = _gov_caller(request)
+    caller = user.get("username") or user.get("agent_id") or "machine-anonymous"
+    if user.get("role") != "founder":
+        reason = f"非 founder（现为 {user.get('role', '未知')}）"
+        try:  # 留痕失败不反转拒绝裁决（fail-closed 优先，同 ops_auth_gate._deny 口径）
+            _nca_append("Change", f"GOVGATE:deny:{action}",
+                        artifact_path=f"403|{caller}|{reason}|{summary}"[:400],
+                        prov="real")
+        except Exception:
+            _ERR_LOG.exception("GOVGATE-001 拒件留痕失败: %s", action)
+        raise HTTPException(403, f"该治理操作仅创始人可执行：{reason}")
+    _nca_append("HumanApproval", f"GOVGATE:allow:{action}",
+                artifact_path=f"allow|{caller}|{summary}"[:400], prov="real")
+    return user
 
 
 def _nature_of(provenances) -> str:
@@ -870,8 +896,10 @@ class HufSignRequest(BaseModel):
 
 
 @router.post("/governance/huf-sign")
-def governance_huf_sign(req: HufSignRequest):
-    """A-8: HUF 人类签批登记（落库 governance_events + nca_chain；AI 无权代行，ID71）。"""
+def governance_huf_sign(req: HufSignRequest, request: Request):
+    """A-8: HUF 人类签批登记（落库 governance_events + nca_chain；AI 无权代行，ID71）。
+    GOVGATE-001：端内授权闸，仅 founder（未登录 401／无权 403）。"""
+    _gov_gate(request, "huf-sign", f"action={req.action};target={req.target}")
     nca_ref = _nca_append("HumanApproval", f"HUF:{req.signed_by}",
                           artifact_path=f"governance:{req.action}:{req.target}", prov="real")
     with get_sessionmaker().begin() as s:
@@ -894,8 +922,10 @@ class EmergencyFuseRequest(BaseModel):
 
 
 @router.post("/governance/emergency-fuse")
-def governance_emergency_fuse(req: EmergencyFuseRequest):
-    """A-8: 紧急熔断（Layer1Runtime NSFL fail-closed，人类触发），事件落库。"""
+def governance_emergency_fuse(req: EmergencyFuseRequest, request: Request):
+    """A-8: 紧急熔断（Layer1Runtime NSFL fail-closed，人类触发），事件落库。
+    GOVGATE-001：端内授权闸，仅 founder（未登录 401／无权 403；熔断动作语义零改动）。"""
+    _gov_gate(request, "emergency-fuse", f"scene={req.scene};operation={req.operation}")
     try:
         from ns_runtime.runtime import Layer1Runtime
         runtime = Layer1Runtime()
