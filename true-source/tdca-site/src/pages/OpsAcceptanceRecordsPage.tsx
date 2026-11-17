@@ -37,9 +37,12 @@ export function OpsAcceptanceRecordsPage() {
       const r = await api.get<{ count: number; records: AccDoc[] }>(
         '/api/v1/ops/acceptance-records')
       if (!r.ok) {
-        setErr(r.reason === 'unauthorized' || r.reason === 'forbidden'
-          ? '须登录（operator/founder）或持 O-1 授权件访问。'
-          : `取件失败：${r.reason ?? ''}`)
+        // EXECACCT-001：401（匿名）与 403（已登录角色不足）提示分流，⛔混同
+        setErr(r.reason === 'unauthorized'
+          ? '请登录以访问（点右上角「我的 → 登录」。'
+          : r.reason === 'forbidden'
+            ? '当前角色（viewer）无权访问此运维面（须 operator / founder）。'
+            : `取件失败：${r.reason ?? ''}`)
         setRows(null)
         return
       }
@@ -165,7 +168,15 @@ function VerdictsOpsTable() {
   useEffect(() => {
     void (async () => {
       const r = await api.get<{ verdicts: VerdictFull[] }>('/api/v1/ops/acceptance-verdicts')
-      if (!r.ok) { setVErr(`取件失败：${r.reason ?? ''}`); return }
+      if (!r.ok) {
+        // EXECACCT-001：401/403 提示分流（同上方记录面板口径）
+        setVErr(r.reason === 'unauthorized'
+          ? '请登录以访问（点右上角「我的 → 登录」）。'
+          : r.reason === 'forbidden'
+            ? '当前角色（viewer）无权访问此运维面（须 operator / founder）。'
+            : `取件失败：${r.reason ?? ''}`)
+        return
+      }
       setRows(r.data.verdicts)
     })()
   }, [])
