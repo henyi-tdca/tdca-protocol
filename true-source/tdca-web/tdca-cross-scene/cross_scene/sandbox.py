@@ -10,7 +10,6 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 import hashlib
-import json
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum

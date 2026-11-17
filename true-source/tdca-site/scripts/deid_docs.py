@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """脱敏批改点脚本（-017 改点法：语义保留、仅去编号）。逐条规则，应用后复扫归零。"""
-import io, re, sys, json, collections
+import io
+import re
+import json
 
 RULES = [
     # ── governance-id ──
@@ -135,7 +137,7 @@ def main():
             text = re.sub(pat, rep, text)
         if text != orig:
             io.open(p, 'w', encoding='utf-8', newline='\n').write(text)
-            n = sum(1 for a, b in zip(orig, text) if a != b)  # 粗估
+            n = sum(1 for a, b in zip(orig, text) if a != b)  # 粗估  # noqa: F841 具名理由：差异计数副产物，删赋值属第四类改动
             total += 1
             print(f"patched {p}")
     print("files patched:", total)

@@ -1454,7 +1454,7 @@ def rule_classification(event_id: str, req: RuleReq, request: Request):
         "AGENT_CHANNEL_RULE_" + ("ADOPT" if req.decision == "adopt" else "DISMISS"),
         actor, artifact_path=f"agent-channel:{ev_reg_no}/rule:{event_id}:{req.decision}",
         prov="real")   # 先存证后落表
-    now = _utc()
+    now = _utc()  # noqa: F841 具名理由：时间戳取值留痕（先存证后落表之对位读数），删赋值属第四类改动
     with get_sessionmaker().begin() as s2:
         ev2 = s2.get(M.SiteAgentClassification, event_id)
         if ev2 is None or ev2.ruling_state != "pending":

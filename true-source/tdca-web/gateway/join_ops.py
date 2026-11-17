@@ -13,6 +13,7 @@ SPDX-License-Identifier: TDCA-Internal
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Request
+from pydantic import BaseModel
 
 import auth
 from db import get_session
@@ -68,8 +69,6 @@ def join_list(request: Request):
 
 
 # ── A-2 审核写 ─────────────────────────────────────────────────────────────
-from pydantic import BaseModel
-
 from api_v1 import _nca_append, _utc  # noqa: E402
 
 
