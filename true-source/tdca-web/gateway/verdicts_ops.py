@@ -103,6 +103,7 @@ def verdict_register(body: VerdictRegisterIn, request: Request):
 # 人类会话照原路（_require_session_user），并后 O-1 自动生效。
 try:
     from ops_auth_gate import require_ops_caller as _require_ops_caller  # noqa: E402
+    from ops_auth_gate import ops_guard as _ops_guard  # noqa: E402  # EXECACCT-001：角色不足须 403
 except ImportError:  # pragma: no cover - 闸未合并前的 fail-closed 兜底
     from api_v1 import _require_session_user as _session_user  # noqa: E402
 
@@ -112,6 +113,15 @@ except ImportError:  # pragma: no cover - 闸未合并前的 fail-closed 兜底
             raise HTTPException(403, "机面 O-1 授权闸（丙案）仓内未合并前，机面一律拒（fail-closed）")
         return _session_user(request)
 
+    def _ops_guard(user: dict, request: Request, action: str) -> None:
+        if user.get("role") in ("operator", "founder"):
+            return
+        if user.get("machine"):
+            if request.method in ("GET", "HEAD"):
+                return
+            raise HTTPException(403, "机面 O-1 只读授权：写操作须人类在场或可即时叫停（O-2）／逐次明示（O-3）")
+        raise HTTPException(403, f"仅 operator / founder 可{action}")
+
 ops_router = APIRouter(prefix="/api/v1/ops/acceptance-verdicts",
                        tags=["ops-acceptance-verdicts"])
 
@@ -119,7 +129,8 @@ ops_router = APIRouter(prefix="/api/v1/ops/acceptance-verdicts",
 @ops_router.get("")
 def verdicts_ops(request: Request):
     """私域全量（含作业五字段）：人类会话照原路；机面 O-1 只读放行（闸内校验）。"""
-    _require_ops_caller(request)
+    user = _require_ops_caller(request)
+    _ops_guard(user, request, "查验收结论私域面")  # EXECACCT-001：viewer 已登录⟹403（匿名仍 401）
     with get_session() as s:
         rows = s.execute(M.AcceptanceVerdict.__table__.select().order_by(
             M.AcceptanceVerdict.decided_at.desc())).all()

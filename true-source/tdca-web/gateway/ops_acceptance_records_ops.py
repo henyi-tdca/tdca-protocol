@@ -18,6 +18,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 
 from ops_auth_gate import require_ops_caller as _require_ops_caller  # noqa: E402
+from ops_auth_gate import ops_guard as _ops_guard  # noqa: E402  # EXECACCT-001：已登录角色不足须 403（⛔混同 401）
 from api_v1 import _nca_watermark  # noqa: E402  # WATERMARK-FIX-002：前端取件闸要求 NCA 水印信封
 
 router = APIRouter(prefix="/api/v1/ops/acceptance-records",
@@ -31,7 +32,8 @@ _ACC_FILE_RE = re.compile(r"^ACC-[0-9a-f]{10}\.json$")
 @router.get("")
 def acceptance_records_list(request: Request):
     """私域全量列表（登录或 O-1 授权）；坏件跳过不反转（写入侧 fail-closed）。"""
-    _require_ops_caller(request)  # 人类会话照原路；机面 O-1 只读放行（闸内校验授权件）
+    user = _require_ops_caller(request)  # 人类会话照原路；机面 O-1 只读放行（闸内校验授权件）
+    _ops_guard(user, request, "查验收记录私域面")  # EXECACCT-001：viewer 已登录⟹403（匿名仍 401，提示分流）
     d = Path(os.environ.get(_STORE_ENV, _DEFAULT_STORE))
     docs = []
     if d.is_dir():
