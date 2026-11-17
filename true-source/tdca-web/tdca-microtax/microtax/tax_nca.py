@@ -13,7 +13,7 @@ import hashlib
 import time
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from .v2_prepay_adapter import V2PrepayRecord
 

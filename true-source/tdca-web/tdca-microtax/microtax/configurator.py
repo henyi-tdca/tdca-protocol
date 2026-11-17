@@ -13,7 +13,7 @@ TDCA-TASK-ECOCOG-001（V1.0-FROZEN，DCD-ECOCOG-001，人类最终审定后开�
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 from .economic_cognition import EconomicCognitionEngine, EconomicCognitionReport

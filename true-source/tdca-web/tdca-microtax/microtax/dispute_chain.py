@@ -13,9 +13,9 @@
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Optional
 
 from .models import DisputeStatus, MicroDelivery
 
@@ -72,7 +72,7 @@ class DisputeResolutionChain:
             delivery.dispute_status = DisputeStatus.ARBITRATING
 
         # 三级路径推进（模拟——stage 参数指定入口，实际链路逐级）
-        stages_used = [ArbitrationStage.UTILITY_GENIE, stage]
+        stages_used = [ArbitrationStage.UTILITY_GENIE, stage]  # noqa: F841 具名理由：路径推进读数留痕（模拟链），删赋值属第四类改动
 
         # 裁决: 过错方判定（模拟；at_fault_agent 显式给出则采纳）
         fault = bool(at_fault_agent)

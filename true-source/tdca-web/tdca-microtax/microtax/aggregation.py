@@ -14,12 +14,11 @@ from __future__ import annotations
 
 import hashlib
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from decimal import Decimal, ROUND_HALF_UP
-from typing import Dict, List, Optional
+from typing import List, Optional
 
-from .event_tax_calculator import (EVENT_TAX_COMPONENTS, EventTaxCalculator,
-                                   EventTaxBreakdown)
+from .event_tax_calculator import (EVENT_TAX_COMPONENTS, EventTaxCalculator)
 from .models import MicroDelivery, TaxEventType
 
 
