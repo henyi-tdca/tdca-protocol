@@ -12,6 +12,7 @@
 # 不动 gateway FROZEN 封板包：nginx 精确路由 /api/v1/intent → 本服务，降级时回源 gateway。
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import os
@@ -25,7 +26,7 @@ from fastapi.responses import JSONResponse
 
 from enforce_entry import scan_nsfl_text  # NSFL 单一事实源（与 mcp 桥同一文件）
 
-APP_VER = "0.3.0"
+APP_VER = "0.3.1"
 DS_URL = "https://api.deepseek.com/chat/completions"
 DS_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 DS_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
@@ -144,6 +145,10 @@ def _fuse_tripped(cost: dict) -> str | None:
 # ---------------------------------------------------------------------
 
 _verify_cache: dict[str, tuple[float, dict]] = {}
+# RTGATE-001 R-RG6 并发修偏（0.3.1）：成本账与配额计数的「读-改-写」临界区加锁。
+# 32 并发实测曾现丢失更新（32 次调用 calls=1/day_spend≈单次），少计花费令「何时该熔」判据失准，必修。
+_COST_LOCK = asyncio.Lock()
+_QUOTA_LOCK = asyncio.Lock()
 
 
 async def _verify_session(token: str) -> dict:
@@ -339,8 +344,9 @@ async def intent(request: Request, q: str = ""):
         return await _fallback(q, "算力配额已达当日/当月上限，已降级规则表", ident)
     if not DS_KEY:
         return await _fallback(q, "模型服务未注入密钥，走规则表", ident)
-    # ── ④ 预算三维：次数（单用户日配额）────────────────────────────────
-    over, _ = _quota_hit(user)
+    # ── ④ 预算三维：次数（单用户日配额，临界区加锁防并发丢失更新）────────
+    async with _QUOTA_LOCK:
+        over, _ = _quota_hit(user)
     if over:
         return _reject(429, "已达单日个人调用配额，请明日再试（规则表导航不受影响）",
                        "TDCA-E-NL-QUOTA-001", action="budget:count", identity=ident, q=qs)
@@ -362,10 +368,13 @@ async def intent(request: Request, q: str = ""):
     pin = int(usage.get("prompt_tokens", 0))
     pout = int(usage.get("completion_tokens", 0))
     spend = pin * PRICE_IN / 1e6 + pout * PRICE_OUT / 1e6
-    cost["day_spend"] += spend
-    cost["month_spend"] += spend
-    cost["calls"] += 1
-    _save_cost(cost)
+    # R-RG6 修偏：锁内重读再累积（LLM 调用耗时不占锁，只锁读-改-写本身）
+    async with _COST_LOCK:
+        cost = _load_cost()
+        cost["day_spend"] += spend
+        cost["month_spend"] += spend
+        cost["calls"] += 1
+        _save_cost(cost)
     _log_call(user, ip, q, pin, pout, spend, cost)   # A-2：明细入日志，响应体零成本
     data = _coerce_llm(obj)
     # A-3：供应商中性化——响应体只写「真实外部模型调用」，⛔品牌名、⛔金额
