@@ -5,7 +5,7 @@
 口径（入站判据 P-1~P-5之前置 · TDCA-RULING-SITE-INGEST-DEFINITION-001）：
   - 入站＝公网可取得件：本面即「可发现（P-1）＋可取得（P-2）」之公开承载面；
   - 匿名只读：仅 GET；写方法一律不开放（未定义即 405 fail-closed）；
-  - 只列已入站公开件：以在册公开清单为准（regulation 53 · whitepapers 2 · papers 27 · L1SI154-010 扩面＋L1SI201-PAPER-WL-BACKFILL-001 回灌），
+  - 只列已入站公开件：以在册公开清单为准（regulation 53 · whitepapers 2 · papers 28 · L1SI154-010 扩面＋L1SI201-PAPER-WL-BACKFILL-001 回灌），
     ⛔ 未入站件不出现、⛔ 乙类存证件永不出现（fail-closed：越界取件 404，
     ⛔ 不借 404/200 之差泄露在仓与否之外的信息——统一 404）；
   - 单一事实源：件即容器内只读文件（docs/regulations/），sha256 由文件现算，
@@ -35,7 +35,7 @@ router = APIRouter(prefix="/api/public", tags=["public-docs"])
 alias_router = APIRouter(prefix="/api/site", tags=["public-docs-alias"])
 
 # ---------------------------------------------------------------------
-# 在册公开清单（regulation 53／whitepapers 2／papers 27 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件 + L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件 + L1SI193-PAPER-001 三件）
+# 在册公开清单（regulation 53／whitepapers 2／papers 28 · L1SI154-010 扩面 + L1SI154-028 九件 + L1SI155-INGEST-002 十六件 + L1SI164-NCA 三件 + L1SI180-TERMS-004/005 三件 + L1SI181-REG-NODE-ACCESS-PUB-001 节点条例两件 + L1SI193-PAPER-001 三件）
 # 原「乙类 2 件（签批记录／生效注记）不得列入」经 L1SI180-TERMS-001 入站批 2 改写零命中、TERMS-004 放行、TERMS-005 甲案（创始人逐字）解除；
 # 更新本清单须另有在册依据（入站批次放行件），⛔ 不得随代码静默扩面。
 # ---------------------------------------------------------------------
@@ -187,6 +187,8 @@ _PUBLIC_DOCS = {
     "TDCA-PROTOCOL-CCP-001-V1.0-13章补落版-PUBLISH.md",
     "TTRN-001-PUBLISH.md",
     "TDCA-RESEARCH-FULLCYCLE-EXPLICITERM-001-全周期管理×解释项替换研究件-PUBLISH.md",
+    # TDCA-HANDOFF-EXEC-L1SI218-PRACHAND-001（建设期实践文献入站·在册依据本件；净版入仓 01c97af0·站机 docs/papers/ 同置；27→28）：
+    "从盲推到逆推-一次校验器变更的完整工程闭环.md",
     ),
     # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
     # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）
