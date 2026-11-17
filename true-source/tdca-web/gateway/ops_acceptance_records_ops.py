@@ -18,6 +18,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 
 from ops_auth_gate import require_ops_caller as _require_ops_caller  # noqa: E402
+from api_v1 import _nca_watermark  # noqa: E402  # WATERMARK-FIX-002：前端取件闸要求 NCA 水印信封
 
 router = APIRouter(prefix="/api/v1/ops/acceptance-records",
                    tags=["ops-acceptance-records"])
@@ -43,5 +44,6 @@ def acceptance_records_list(request: Request):
                 continue
             if isinstance(doc, dict) and doc.get("acceptance_id"):
                 docs.append(doc)
-    return {"count": len(docs), "records": docs,
-            "note": "私域运维面：全量验收记录（含作业/处置/留痕）；公示结论面 /acceptance（公开读）"}
+    return _nca_watermark(
+        {"count": len(docs), "records": docs,
+         "note": "私域运维面：全量验收记录（含作业/处置/留痕）；公示结论面 /acceptance（公开读）"})
