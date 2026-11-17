@@ -279,7 +279,12 @@ function VerdictsBoard() {
     void (async () => {
       const res = await fetch('/api/v1/acceptance/verdicts')
       const raw = await res.json().catch(() => ({}))
-      if (res.ok) setRows((raw as { verdicts: VerdictRow[] }).verdicts)
+      // ENVELOPE-FIX-001：端点已入 NCA 信封（WATERMARK-FIX-001），verdicts 在 raw.data 内；
+      // 留 raw.verdicts 兼容兜档，⛔再裸读顶层键（undefined 会使 rows.length 抛错致整页白屏）
+      if (res.ok) {
+        const body = raw as { data?: { verdicts?: VerdictRow[] }; verdicts?: VerdictRow[] }
+        setRows(body?.data?.verdicts ?? body?.verdicts ?? [])
+      }
     })()
   }, [])
   if (rows === null) return <p className="text-sm text-muted-foreground">取件中…</p>
