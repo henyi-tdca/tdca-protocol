@@ -10,7 +10,7 @@ SPDX-License-Identifier: TDCA-Internal
 """
 
 import math
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 
 class BayesianEngine:
