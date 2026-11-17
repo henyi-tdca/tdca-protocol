@@ -27,8 +27,8 @@ import hashlib
 import os
 import sys
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 # 跨包注入: 模糊数学层（tdca-toolchain）——同既有 sys.path 惯例
 _TOOLCHAIN = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -36,7 +36,7 @@ _TOOLCHAIN = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 if _TOOLCHAIN not in sys.path:
     sys.path.insert(0, _TOOLCHAIN)
 
-from tdca_fuzzy_distance import FuzzyCognitiveDistance, FuzzyDirection  # noqa: E402 模糊层（跨包）
+from tdca_fuzzy_distance import FuzzyCognitiveDistance  # noqa: E402 模糊层（跨包）
 
 
 @dataclass(frozen=True)
