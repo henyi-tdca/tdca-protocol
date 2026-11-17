@@ -194,5 +194,7 @@ class InverseFunctionSolver:
                         if op == '>' and not (config[key] > float(val)):
                             return False
             except (ValueError, IndexError):
-                continue
+                # 须修#48（5/8）硬约束解析失败不得跳过：原 continue 静默吞错、
+                # 整体仍 True（fail-open），现改 fail-closed 返 False（BACKLOG-001 §二）
+                return False
         return True
