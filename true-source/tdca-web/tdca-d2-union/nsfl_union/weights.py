@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from .schema import Conflict, FuseLevel, NSLayer, NS_Type, Severity, _severity_rank
+from .schema import Conflict, FuseLevel, Severity, _severity_rank
 
 
 class RiskPremiumCalculator:

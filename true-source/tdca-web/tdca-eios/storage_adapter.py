@@ -138,6 +138,7 @@ class StorageRegistry:
 
 if __name__ == '__main__':
     import io
+    import sys  # F821 具名补：本演示块下一行即用 sys.stdout，原缺失（潜伏 NameError），补全非语义变更
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     reg = StorageRegistry(MemoryStore())
     # 仿真写入（与 E-INT-1 SQLite 语义一致）

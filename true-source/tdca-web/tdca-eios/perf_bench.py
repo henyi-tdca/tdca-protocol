@@ -12,7 +12,7 @@ import time
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from storage_adapter import MemoryStore, StorageRegistry
+from storage_adapter import MemoryStore, StorageRegistry  # noqa: E402 具名理由：sys.path.insert 前置后本地导入，序即解析语义，上移将破
 
 
 def bench(name: str, fn, n: int = 2000) -> dict:

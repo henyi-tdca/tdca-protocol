@@ -36,8 +36,6 @@ def _register_package(alias: str, src_dir: str):
 
 
 _register_package('fc012', _FO_SRC)
-import fc012.models  # noqa: E402
-import fc012.flow_engine  # noqa: E402
 
 
 class StudentTier(Enum):

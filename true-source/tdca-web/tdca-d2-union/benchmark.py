@@ -11,7 +11,7 @@ import time
 from decimal import Decimal
 
 from nsfl_union import (NS_Operator, NS_Rule, NS_Type, NSFLUnionEngine,
-                        SceneNSFL, Severity)
+                        SceneNSFL)
 
 random.seed(20260810)
 
