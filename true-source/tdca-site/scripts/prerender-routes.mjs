@@ -17,7 +17,7 @@ const siteRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(siteRoot, 'dist')
 const shellPath = join(dist, 'index.html')
 
-// ── 一、sitemap 57 条（2026-11-12 线上实测 41 条核证口径照录＋PRERENDER-001 首扩 16 项）──
+// ── 一、sitemap 58 条（57＋/acceptance·L1SI218-ALIAS301-001）（2026-11-12 线上实测 41 条核证口径照录＋PRERENDER-001 首扩 16 项）──
 const SITEMAP_ROUTES = [
   '/', '/about', '/academy', '/academy/outline', '/announcements',
   '/attestation/history', '/audit', '/authorization-registry', '/authorization/panel',
@@ -33,6 +33,8 @@ const SITEMAP_ROUTES = [
   '/channel/tools', '/agents', '/agent-shelf', '/toolshelf', '/terms',
   '/attestation', '/attestation/meta', '/attestation/dynamic', '/anchors',
   '/ownership-registry', '/overview', '/cluster',
+  // L1SI218-ALIAS301-001 项2（GSEQ-8493，照 R-2/H-4 既裁办）：/acceptance 公示结论面入预渲染 57→58
+  '/acceptance',
 ]
 
 // ── 二、PAGE_META 真源直读（src/pages/PagesIndex.tsx，单一事实源，⛔手抄）──
@@ -76,6 +78,8 @@ const SUPPLEMENT = {
   '/anchors': { title: '模拟外部锚与版权事件（P6）', description: '版权链（NCA 链）／结算（站内积分）／税务（金税四期功能）三锚全站内模拟；版权事件＝登记／变更／注销。' },
   '/ownership-registry': { title: '权属登记管理（P8a）', description: '登记二分之权属侧：凡具表达形式者皆可登记；须载生成来源谱系；场景非必须；法域四支仅索引不代法律判定。' },
   '/cluster': { title: '集群编排与准入闸门（P2）', description: '授权件登记与多层转授链；配置类调用须凭有效授权件过闸门——可信联通 ≠ 可信协作，仅握手不成立。' },
+  // L1SI218-ALIAS301-001 项2（GSEQ-8493）：/acceptance 公示结论面入预渲染（照页壳实读题名）
+  '/acceptance': { title: '验收记录（C-3）', description: '交付验收四段式：事前登记标准→逐条判定→整改复判→公开查询；结论可公示，作业入私域。' },
 }
 for (const [p, v] of Object.entries(SUPPLEMENT)) meta.set(p, v)
 
@@ -84,7 +88,7 @@ const errors = []
 for (const r of SITEMAP_ROUTES) if (!meta.has(r)) errors.push(`缺 meta：${r}`)
 for (const p of meta.keys()) if (!SITEMAP_ROUTES.includes(p)) { /* PAGE_META 私域面（/me/* 等）不入 sitemap、不预渲染，登记即可 */ }
 if (!existsSync(shellPath)) errors.push('dist/index.html 不存在（须在 vite build 之后运行）')
-if (SITEMAP_ROUTES.length !== 57) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 57（核证口径变动须人工复核）`)
+if (SITEMAP_ROUTES.length !== 58) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 58（57+1：L1SI218-ALIAS301-001 项2 核证口径，变动须人工复核）`)
 if (errors.length) { console.error('预渲染对账失败：\n' + errors.join('\n')); process.exit(1) }
 
 // ── 五、生成：每条路由独立 title/description/og ──

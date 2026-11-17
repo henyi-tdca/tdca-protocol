@@ -1235,3 +1235,38 @@ class AuthorizationPanelFreeze(Base):
     __table_args__ = (
         Index("idx_authz_panel_freeze_auth", "auth_id"),
     )
+
+
+class AcceptanceVerdict(Base):
+    """L1SI218-ACCTABLE-001（乙路·账不动）：验收结论另建表，两栏合表＋两视图分隔。
+
+    公示栏（4 字段，公开视图 acceptance_verdicts_public 只放这些）：
+      verdict／decided_at／subject_ref／evidence_nca_id
+    私域栏（5 字段，仅运维面视图 acceptance_verdicts_ops）：
+      ops_process／ops_actions／ops_trace／credential_ref（⛔值）／internal_ref
+    硬规：两栏由表结构＋视图分隔，⛔前端隐藏代隔离；evidence_nca_id 外链 nca_chain，
+    ⛔复制台账内容⛔双写；登记「谁判谁登」——智库出核证件时同批登记，⛔站点管理面手填。
+    subject_type 五类枚举（C-3 交付验收单链归入 batch_construction，⛔另建套）。
+    """
+
+    __tablename__ = "acceptance_verdicts"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    verdict: Mapped[str] = mapped_column(Text, nullable=False)         # passed/conditional/failed
+    decided_at: Mapped[str] = mapped_column(Text, nullable=False)      # 系统取（⛔手填）
+    subject_type: Mapped[str] = mapped_column(Text, nullable=False)    # 五类枚举
+    subject_ref: Mapped[str] = mapped_column(Text, nullable=False)     # 结构化标识（pr:557/doc:…/agent:…）
+    evidence_nca_id: Mapped[str] = mapped_column(Text, nullable=False) # 外链台账（判此结论之核证件号）
+    ops_process: Mapped[str | None] = mapped_column(Text)              # ── 私域栏起 ──
+    ops_actions: Mapped[str | None] = mapped_column(Text)
+    ops_trace: Mapped[str | None] = mapped_column(Text)
+    credential_ref: Mapped[str | None] = mapped_column(Text)           # 凭据引用（⛔值）
+    internal_ref: Mapped[str | None] = mapped_column(Text)             # 内部操作编号
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint("verdict IN ('passed','conditional','failed')"),
+        CheckConstraint("subject_type IN ('institution_effective','doc_ingest',"
+                        "'site_function','batch_construction','agent_network')"),
+        Index("idx_acceptance_verdicts_subject", "subject_type", "subject_ref"),
+        Index("idx_acceptance_verdicts_nca", "evidence_nca_id"),
+    )

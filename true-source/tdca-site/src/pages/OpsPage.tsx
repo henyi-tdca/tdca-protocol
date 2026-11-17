@@ -5,6 +5,7 @@
 // 复用: PageShell / SimulatedBadge / api（会话令牌自动注入）
 // =============================================================================
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { api } from '@/lib/client'
 import { PageShell } from '@/components/PageShell'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
@@ -71,6 +72,19 @@ export function OpsPage() {
       dataSource="A-18 /api/v1/ops/*（红线八项分类器；NCA 存证＋reconcile 对账）"
       permission="登录 DID（操作须 operator；管理面内容须管理员身份登录后可见）"
       description="应用测试期运维工作台：反馈→红线分类→提案→沙盒→上线；触碰根本制度即升 DCD，运维端无权处置。">
+      {/* L1SI218-SITEDEP-RETRY 创始人 2026-11-17 17:12 指令：验收入口挂运维端（导航红线解禁·仅此一处内链） */}
+      <section data-testid="ops-acceptance-entry" className="rounded-lg border p-3 text-sm">
+        <h2 className="text-base font-semibold">验收记录（C-3）</h2>
+        <p className="text-muted-foreground">
+          交付验收四段式：登记标准 → 逐条判定 → 整改复判 → 公开查询。
+          登记/判定/整改须登录；公开查询免登录。
+        </p>
+        <Link to="/acceptance" className="text-blue-600 underline hover:text-blue-800"
+          data-testid="ops-acceptance-link">进入验收记录 →</Link>
+        {' ｜ '}
+        <Link to="/ops/acceptance-records" className="text-blue-600 underline hover:text-blue-800"
+          data-testid="ops-acceptance-records-link">全量记录（私域·须登录）→</Link>
+      </section>
       {!isAdmin ? (
         <section data-testid="ops-admin-only" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           须管理员身份登录后可见。一般用户请从「我的」进入个人面；本入口对所有人保持可见。

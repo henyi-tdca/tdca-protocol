@@ -124,8 +124,9 @@ describe('MIGRATE 批7：站点地图 ≡ 真源清单（prerender-routes.mjs SI
     return [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])
   })()
 
-  it('条目数≡真源清单数（机取机算，⛔手编塞条目；57 条恒定口径）', () => {
-    expect(CANONICAL_SITEMAP).toHaveLength(57)
+  it('条目数≡真源清单数（机取机算，⛔手编塞条目；58 条恒定口径＝57+1）', () => {
+    // L1SI218-ALIAS301-001 项2（GSEQ-8493）：/acceptance 公示面入预渲染，57→58
+    expect(CANONICAL_SITEMAP).toHaveLength(58)
     expect(SITEMAP_ENTRIES).toHaveLength(CANONICAL_SITEMAP.length)
     expect(new Set(SITEMAP_ENTRIES)).toEqual(new Set(CANONICAL_SITEMAP))
   })

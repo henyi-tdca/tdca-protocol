@@ -1,7 +1,7 @@
 // FRONTEND-PERF-001（L1SI207）路由级分包：页面件全部 React.lazy 动态装载，
 // 首屏主包 ≤800KB；vendor-react 由 vite manualChunks 固化长缓存。路由表与路径一字未动。
 import { lazy, Suspense } from 'react'
-import { Routes, Route, Navigate } from 'react-router'
+import { Routes, Route, Navigate, useParams } from 'react-router'
 import { AuthProvider } from './lib/auth-context'
 import { RequireAuth } from './components/RequireAuth'
 import { SiteLayout } from './components/SiteLayout'
@@ -47,6 +47,15 @@ const FormalPage = lazy(() => import('./pages/FormalPage').then((m) => ({ defaul
 const ClusterPage = lazy(() => import('./pages/ClusterPage').then((m) => ({ default: m.ClusterPage })))
 const MarketPage = lazy(() => import('./pages/MarketPage').then((m) => ({ default: m.MarketPage })))
 const MarketSimPage = lazy(() => import('./pages/MarketSimPage').then((m) => ({ default: m.MarketSimPage })))
+// L1SI218-SITEDEP-RETRY 裁令甲步二：C-3 验收记录页移植（tdca-site 现行壳；令面真缺唯一页）
+const AcceptancePage = lazy(() => import('./pages/AcceptancePage').then((m) => ({ default: m.AcceptancePage })))
+// L1SI218-OPSACCEPT-001-001 验收记录私域面（运维栏目：noindex·⛔sitemap·须登录或O-1）
+const OpsAcceptanceRecordsPage = lazy(() => import('./pages/OpsAcceptanceRecordsPage').then((m) => ({ default: m.OpsAcceptanceRecordsPage })))
+// 三别名（令面路径 → 现行路由，React 路由跳转，nginx/机面不动）
+const AgentDashboardAlias = () => {
+  const { id } = useParams()
+  return <Navigate to={`/agents/${id ?? ''}`} replace />
+}
 const TaxPage = lazy(() => import('./pages/TaxPage').then((m) => ({ default: m.TaxPage })))
 const LibraryPage = lazy(() => import('./pages/LibraryPage').then((m) => ({ default: m.LibraryPage })))
 const AcademyPage = lazy(() => import('./pages/AcademyPage').then((m) => ({ default: m.AcademyPage })))
@@ -216,8 +225,14 @@ export default function App() {
         <Route path="/verify" element={<VerifyPage />} />
         <Route path="/assets" element={<Navigate to="/five-orders" replace />} />
         <Route path="/ops/manual" element={<Navigate to="/ops/readme" replace />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+        {/* L1SI218-SITEDEP-RETRY 裁令甲步二：/acceptance 公开路由（保住公开查询面，页内未登录给登录提示） */}
+        <Route path="/acceptance" element={<AcceptancePage />} />
+        <Route path="/ops/acceptance-records" element={<RequireAuth><OpsAcceptanceRecordsPage /></RequireAuth>} />
+        {/* 三别名（令面路径 → 现行路由跳转；制度件不改、导航不动、机面不动） */}
+        <Route path="/node-net" element={<Navigate to="/nodes" replace />} />
+        <Route path="/agent-dashboard/:id" element={<AgentDashboardAlias />} />
+        <Route path="/ops-manual" element={<Navigate to="/ops/readme" replace />} />
+        <Route path="*" element={<NotFoundPage />} />      </Routes>
       </Suspense>
       </SiteLayout>
     </AuthProvider>
