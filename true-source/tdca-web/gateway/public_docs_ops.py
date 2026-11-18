@@ -148,6 +148,12 @@ _PUBLIC_DOCS = {
     # 制度规范区索引页 README 与 NSFL 协作级约束公示摘编入册（二者皆应可读，缺点仅为未列入）——regulation 53→55
     "README.md",
     "TDCA-NSFL-COLLAB-NOTICE-V0.3.md",
+    # TDCA-HANDOFF-EXEC-L1SI220-WHITELIST-BACKFILL-001（制度6＋论文证据7；甲6 RELEASE-ENCOUNTER 机读 yaml 经预检已含⟹净增5）：
+    "TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md",
+    "TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml",
+    "TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml",
+    "TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml",
+    "TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md",
     ),
     # L1SI154-010：白皮书 2 件全量（已全量扫六类内部编号零命中）
     "whitepapers": (
@@ -189,6 +195,14 @@ _PUBLIC_DOCS = {
     "TDCA-RESEARCH-FULLCYCLE-EXPLICITERM-001-全周期管理×解释项替换研究件-PUBLISH.md",
     # TDCA-HANDOFF-EXEC-L1SI218-PRACHAND-001（建设期实践文献入站·在册依据本件；净版入仓 01c97af0·站机 docs/papers/ 同置；27→28）：
     "从盲推到逆推-一次校验器变更的完整工程闭环.md",
+    # 乙组·论文证据7件（docs/papers/evidence/·站上已呈现白名单未列＝名单滞后）：
+    "evidence/E1_cross_model_consistency.md",
+    "evidence/E2_meter_verifiability.md",
+    "evidence/E3_tax_anchor.md",
+    "evidence/E4_dual_layer_interception.md",
+    "evidence/E5_external_anchor_vb.md",
+    "evidence/E6_model_independence.md",
+    "evidence/EVIDENCE-INDEX.md",
     ),
     # L1SI170-COPLIB-001/002/005：cop-library 族 56 件（只 md·白名单制·⛔整目录）
     # 首批 31 件（COPLIB-001，01/02/03 系 A2 新版）＋ 批 2 之 25 件（COPLIB-005 判定表未标「不放」者）
