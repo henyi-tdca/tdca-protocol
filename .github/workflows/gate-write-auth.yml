@@ -1,0 +1,37 @@
+# gate-write-auth —— AUTHFOUR-001（UNIFYAUTH-001 步三）写端点统一鉴权硬闸
+#
+# 闸规（fail-closed）：gateway/*_ops.py 全部写端点须挂 require_write_privilege
+# 四档依赖，或逐条命中 write_auth_whitelist.py（⛔禁整族通配；死条目亦红）。
+# 闸门号：留智库定档（G10 系被外部占用），workflow 先无名号落地。
+# 触发面：网关写端点／鉴权基座／白名单件／本闸脚本与 workflow 自身。
+
+name: gate-write-auth
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "true-source/tdca-web/gateway/**"
+      - "tools/ci_write_auth_gate.py"
+      - ".github/workflows/gate-write-auth.yml"
+  pull_request:
+    paths:
+      - "true-source/tdca-web/gateway/**"
+      - "tools/ci_write_auth_gate.py"
+      - ".github/workflows/gate-write-auth.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  write-auth:
+    name: 写端点统一鉴权闸（硬闸·AUTHFOUR-001）
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 写鉴权硬闸
+        run: python3 tools/ci_write_auth_gate.py
