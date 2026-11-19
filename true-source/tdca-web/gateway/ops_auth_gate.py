@@ -117,3 +117,47 @@ def ops_guard(user: dict, request: Request, action: str) -> None:
             return  # O-1 只读观测放行
         raise HTTPException(403, "机面 O-1 只读授权：写操作须人类在场或可即时叫停（O-2）／逐次明示（O-3）")
     raise HTTPException(403, f"仅 operator / founder 可{action}")
+
+def require_write_privilege(role: str = "operator", action: str = "执行此操作", owner_getter=None):
+    """统一写鉴权依赖（四档）——UNIFYAUTH-001/AUTHFOUR-001。
+
+    档语义（等价既有端内行内检查，零行为变更）：
+    - operator：登录 且 role ∈ {operator, founder}
+    - founder：登录 且 role == founder
+    - login：仅要求登录
+    - owner_or_operator：登录 且（本人 或 role ∈ {operator, founder}）；
+      owner_getter(payload, user) -> 属主名——入参为已解析 JSON 体（依赖内 await
+      request.body() 读取，Starlette 缓存 _body，端点 body 参数解析不受影响）；
+      查无档须自行 raise 404 以复刻原「先 404 后 403」顺序。
+    403 文案沿用原端点行内检查口径（action 传原文）。
+    """
+    async def _dep(request: Request) -> dict:
+        from api_v1 import _require_session_user  # noqa: E402  延迟导入避环
+        user = _require_session_user(request)
+        r = user.get("role")
+        if role == "login":
+            return user
+        if role == "operator":
+            if r in ("operator", "founder"):
+                return user
+            raise HTTPException(403, f"仅 operator / founder 可{action}")
+        if role == "founder":
+            if r == "founder":
+                return user
+            raise HTTPException(403, f"仅 founder 可{action}")
+        if role == "owner_or_operator":
+            if r in ("operator", "founder"):
+                return user
+            try:
+                payload = await request.json()
+            except Exception:  # noqa: BLE001  无体/非法体：按无属主处理，端点解析随后兜底
+                payload = {}
+            if not isinstance(payload, dict):
+                payload = {}
+            owner = owner_getter(payload, user) if owner_getter else None
+            if owner and user.get("username") and owner == user["username"]:
+                return user
+            raise HTTPException(403, "非本人 ⛔ 判定——验收人须与登单人同一登录主体")
+        raise HTTPException(500, f"未知写鉴权档：{role}")
+    _dep.__name__ = f"require_write_{role}"
+    return _dep
