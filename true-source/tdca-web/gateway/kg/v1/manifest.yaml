@@ -1,0 +1,44 @@
+package: TDCA Knowledge Graph V1 · Public
+version: V1.0
+schema_version: SCHEMA-1.1
+generated_at: '2026-11-12T02:51:55+08:00'
+scope: TDCA 知识图谱第一版 · 对外面（结构图：层／类／标题／关系类型）
+counts:
+  nodes: 1007
+  edges: 2587
+  by_layer:
+    L0: 30
+    L1: 288
+    G: 616
+    L2: 73
+  by_type:
+    Constitution: 14
+    Principle: 16
+    FunctionSpec: 288
+    NCA: 568
+    AgentRole: 31
+    CodeModule: 17
+    Document: 73
+  by_edge_type:
+    DERIVES_FROM: 2227
+    ENFORCES: 45
+    IMPLEMENTS: 170
+    REFINES: 145
+files:
+  nodes.yaml:
+    sha256_16: A0BEBA4A0290CD78
+    bytes: 177302
+  edges.yaml:
+    sha256_16: FD281502D58B91B2
+    bytes: 169504
+excluded:
+- 内部编号（NCA 链号／会话框号／判据号／术语号／内部件号）
+- 册内路径与件哈希
+- 原文摘句（含编号，⛔ 改写原文故 ⛔ 带出）
+- dangling 清单（缺口账 ⛔ 对外）
+- 治理记录之身份与时间线明细
+self_sha256_16: E51001CB214B6892
+self_sha256_16_method: 复算口径（一句话可复现）：将本字段 self_sha256_16 之值整体替换为固定占位串 DEADBEEFDEADBEEF（16
+  位大写十六进制）后，对整份 manifest.yaml 之 UTF-8 字节（LF 行尾、无 BOM）取 sha256，取前 16 位大写十六进制 —— 即为本字段声明值。⛔
+  三口径不成立：取整文件实哈希、删本行后复算、以空串或全零占位复算，皆不等于本值。
+readme: README.md
