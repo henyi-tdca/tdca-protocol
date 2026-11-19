@@ -29,13 +29,14 @@ import json
 import re
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _require_session_user,  # noqa: E402
                     _utc, rec_hash_of)
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 from authorization_ops import _public_space_hits  # noqa: E402
 from dual_lock import dual_lock_gate, extract_asset_ref  # noqa: E402  (L1SI214-B3 两把锁④)
 
@@ -205,13 +206,13 @@ class DraftIn(BaseModel):
 
 
 @router.post("/draft", status_code=201)
-def panel_draft(req: DraftIn, request: Request):
+def panel_draft(req: DraftIn, request: Request,
+               user: dict = Depends(require_write_privilege("login"))):
     """起草（须登录；四要件缺一即 400 fail-closed，且提示缺哪一项）。
 
     原子序：业务行先落（nca_seq 空）→ NCA 落证 → 同 tx 回写指针＋事件；
     NCA 失败即清业务行——失败不给编号、不落存证、⛔ 半条记录。
     """
-    user = _require_session_user(request)
     # 标准对应（熔断③）：操作须属五操作
     if req.operation not in OPERATIONS_PANEL:
         raise HTTPException(400, "标准无法对应：operation 须为 pre_accept／activate／"
@@ -311,12 +312,12 @@ class SignIn(BaseModel):
 
 
 @router.post("/sign")
-def panel_sign(req: SignIn, request: Request):
+def panel_sign(req: SignIn, request: Request,
+              user: dict = Depends(require_write_privilege("login"))):
     """本人签署（签署人＝起草人；⛔ 智能体代签代填）；或 operator 复核解冻（resume）。
 
     熔断①：同一 auth_id 观察窗内重复签署 → 停链。
     """
-    user = _require_session_user(request)
     aid = req.auth_id.strip()
     if not _AUTH_ID_RE.match(aid):
         raise HTTPException(404, "auth_id 不存在")
@@ -454,9 +455,9 @@ class RevokeIn(BaseModel):
 
 
 @router.post("/revoke")
-def panel_revoke(req: RevokeIn, request: Request):
+def panel_revoke(req: RevokeIn, request: Request,
+                user: dict = Depends(require_write_privilege("login"))):
     """撤回（须起草人本人；撤回后已发生使用另记一笔——事件流水 append-only，⛔ 抹）。"""
-    user = _require_session_user(request)
     aid = req.auth_id.strip()
     if not _AUTH_ID_RE.match(aid):
         raise HTTPException(404, "auth_id 不存在")

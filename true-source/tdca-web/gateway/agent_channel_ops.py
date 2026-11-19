@@ -32,13 +32,14 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
                     _require_session_user, _client_ip, _utc)
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 from api_v1 import (CONTRACT_ID, CONTRACT_VERSION,  # noqa: E402
                     CONTRACT_ZH_SHA256, CONTRACT_EN_SHA256, CONTRACT_JSON_SHA256)
 
@@ -1226,7 +1227,8 @@ class PunishReq(BaseModel):
 
 
 @router.post("/{reg_no}/punishments")
-def punish(reg_no: str, req: PunishReq, request: Request):
+def punish(reg_no: str, req: PunishReq, request: Request,
+          v: dict = Depends(require_write_privilege("login"))):
     """人工裁决驱动之三态执行器（有权者于人类会话内施加；⛔ 无自动触发之径）。
 
     fail-closed 序：人类会话 → 有权者校验（founder＝人类裁决口径；照 NS-OPS 权限矩阵
@@ -1235,7 +1237,6 @@ def punish(reg_no: str, req: PunishReq, request: Request):
     （存证失败⟹操作不生效）→ status 落表即即时生效（总闸 gate_assert 与全链即时拒，批 1 已具）。
     留痕：每次变更落 NCA 链（action 含前后态与裁决者）。
     """
-    v = _require_session_user(request)
     actor = v["username"]
     with get_session() as s:
         actor_user = s.get(M.User, actor)
@@ -1423,7 +1424,8 @@ class RuleReq(BaseModel):
 
 
 @router.post("/classifications/{event_id}/rule")
-def rule_classification(event_id: str, req: RuleReq, request: Request):
+def rule_classification(event_id: str, req: RuleReq, request: Request,
+                       user: dict = Depends(require_write_privilege("login"))):
     """判级裁决（待裁闭环收口）：adopt 须回绑既有惩罚端点之存证（施加已发生之实证）；
     dismiss 落驳回存证。裁决本身⛔ 不落任何状态（不落 status——施加唯在惩罚端点）。
     """
@@ -1499,7 +1501,8 @@ def _latest_cycle(s, reg_no: str):
 
 
 @router.post("/{reg_no}/remediate")
-def remediate(reg_no: str, request: Request):
+def remediate(reg_no: str, request: Request,
+             user: dict = Depends(require_write_privilege("login"))):
     """回沙盒重塑（恢复径第一步；须人类裁决＋落存证）。
 
     周期律：无周期或最近周期已验证（passed/failed）→ 开新周期；否则同周期续重塑
@@ -1547,7 +1550,8 @@ class ReverifyReq(BaseModel):
 
 
 @router.post("/{reg_no}/reverify")
-def reverify(reg_no: str, req: ReverifyReq, request: Request):
+def reverify(reg_no: str, req: ReverifyReq, request: Request,
+            user: dict = Depends(require_write_privilege("login"))):
     """重新验证（恢复径第二步；独立记录，⛔ 不与重塑合并为一步——S-3/Q-6）。
 
     fail-closed：须存在「已重塑未验证」之周期，否则 409 指明缺口（⛔ 不受理跳步）。
@@ -1585,7 +1589,8 @@ def reverify(reg_no: str, req: ReverifyReq, request: Request):
 
 
 @router.post("/{reg_no}/restore")
-def restore(reg_no: str, request: Request):
+def restore(reg_no: str, request: Request,
+           user: dict = Depends(require_write_privilege("login"))):
     """返回常态（恢复径第三步）：只认「已重塑＋已验证(passed)」事实，跳步必拒（409）。
 
     前置（fail-closed 序）：人类裁决 → 登记在册 → ⛔ 永久终态 → ⛔ 法律级 →

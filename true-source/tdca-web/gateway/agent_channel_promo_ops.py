@@ -23,13 +23,14 @@ import secrets
 import time
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark,  # noqa: E402
                     _require_session_user, _client_ip, _utc)
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 from agent_channel_ops import gate_assert, _step_state  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/agent-channel", tags=["agent-channel-promo"])
@@ -145,9 +146,9 @@ class PromoTokenVerifyReq(BaseModel):
 
 
 @router.post("/promotion-token/verify")
-def verify_promo_token(req: PromoTokenVerifyReq, request: Request):
+def verify_promo_token(req: PromoTokenVerifyReq, request: Request,
+                      v: dict = Depends(require_write_privilege("login"))):
     """转正令牌验伪（fail-closed：不明即 invalid；active 方有效；每 IP 限流）。"""
-    v = _require_session_user(request)
     ip = _client_ip(request)
     if not _verify_rate_ok(ip):
         raise HTTPException(429, "验伪过于频繁（每 IP 每小时 ≤60 次），请稍后再试",

@@ -28,7 +28,7 @@ import json
 import re
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -37,6 +37,7 @@ from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # n
 from rights_bundle import rb_parse  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/authorization", tags=["authorization"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 # 公开面四字段（授权件模板 V1.0-FROZEN 公开投影；初始条件必公开）
 PUBLIC_FIELD_KEYS = ("权属信息", "授权信息", "授权状态", "获取方式")
@@ -226,9 +227,9 @@ class RegisterIn(BaseModel):
 
 
 @router.post("/register", status_code=201)
-def authorization_register(req: RegisterIn, request: Request):
+def authorization_register(req: RegisterIn, request: Request,
+                          user: dict = Depends(require_write_privilege("login"))):
     """授权登记（四要件缺一即 400 fail-closed——⛔ 不代填代证）。"""
-    user = _require_session_user(request)
     missing = [k for k in ("asset_ref", "grantee_ref", "scene")
                if not str(getattr(req, k)).strip()]
     if missing:
@@ -300,9 +301,9 @@ class AmendIn(BaseModel):
 
 
 @router.post("/amend")
-def authorization_amend(req: AmendIn, request: Request):
+def authorization_amend(req: AmendIn, request: Request,
+                       user: dict = Depends(require_write_privilege("login"))):
     """授权变更（已注销者 409；变更须载明事项；⛔ 不代定未裁取值）。"""
-    user = _require_session_user(request)
     if not any([req.scene.strip(), req.scope_note.strip(), req.term_note.strip(),
                 req.template_fields is not None, req.note.strip(),
                 req.special_terms.strip()]):
@@ -366,9 +367,9 @@ class CancelIn(BaseModel):
 
 
 @router.post("/cancel")
-def authorization_cancel(req: CancelIn, request: Request):
+def authorization_cancel(req: CancelIn, request: Request,
+                        user: dict = Depends(require_write_privilege("login"))):
     """授权注销（协作终结留痕口径；已注销者 409）。"""
-    user = _require_session_user(request)
     hits = _public_space_hits({"note": req.note})
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "
@@ -401,10 +402,10 @@ class OperateIn(BaseModel):
 
 
 @router.post("/operate")
-def authorization_operate(req: OperateIn, request: Request):
+def authorization_operate(req: OperateIn, request: Request,
+                         user: dict = Depends(require_write_privilege("login"))):
     """授权操作面板（五操作：预收权／实时授权／追加授权／许可变更／多层级授权；
     授权状态随操作实时同步；逐笔落 NCA 存证）。"""
-    user = _require_session_user(request)
     if req.op not in OPERATIONS:
         raise HTTPException(400, "op 须为 pre_accept／activate／append／"
                                  "amend_terms／sub_grant 之一")

@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -31,6 +31,7 @@ from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # n
 from authorization_ops import _public_space_hits  # noqa: E402  负空间词面复用（⛔ 不另造判据）
 
 router = APIRouter(prefix="/api/v1/market-admin", tags=["market-admin"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 # 状态机：active ↔ paused；delisted 终态（不溯及授权件）
 _STATUSES = ("active", "paused", "delisted")
@@ -148,9 +149,9 @@ class ListingIn(BaseModel):
 
 
 @router.post("/listings", status_code=201)
-def listing_publish(req: ListingIn, request: Request):
+def listing_publish(req: ListingIn, request: Request,
+                   user: dict = Depends(require_write_privilege("login"))):
     """挂出（A-1）：成件＋四要件合取闸门；沙盒例外显式标记；落 NCA＋事件留痕。"""
-    user = _require_session_user(request)
     username = user["username"]
 
     fields = {"asset_summary": req.asset_summary, "scene": req.scene,
@@ -267,9 +268,9 @@ class StatusIn(BaseModel):
 
 
 @router.post("/listings/{listing_id}/status")
-def listing_status(listing_id: str, req: StatusIn, request: Request):
+def listing_status(listing_id: str, req: StatusIn, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     """状态变更（A-3）：暂停／恢复；原态新态双留痕；限本人。"""
-    user = _require_session_user(request)
     if req.action not in _ACTIONS:
         raise HTTPException(400, "action 仅 pause／resume")
     frm_expected, to = _ACTIONS[req.action]
@@ -297,9 +298,9 @@ def listing_status(listing_id: str, req: StatusIn, request: Request):
 
 
 @router.post("/listings/{listing_id}/delist")
-def listing_delist(listing_id: str, request: Request):
+def listing_delist(listing_id: str, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     """下架（A-4）：不溯及已生成／已生效授权件——授权登记记录一字不动。"""
-    user = _require_session_user(request)
     with get_session() as s:
         r = s.get(M.MarketListing, listing_id)
         if r is None:

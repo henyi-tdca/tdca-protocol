@@ -17,7 +17,7 @@ from __future__ import annotations
 import re
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
@@ -26,6 +26,7 @@ from me_audit import audit_token_revoke  # noqa: E402
 from perm_table import build_permissions  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/me", tags=["me"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 
 def _reject_query_params(request: Request) -> None:
@@ -79,7 +80,8 @@ _MASKED_ID = re.compile(r"[0-9a-f]{4}\*{4}")
 
 
 @router.delete("/tokens/{tid}")
-def me_token_revoke(tid: str, request: Request):
+def me_token_revoke(tid: str, request: Request,
+                   v: dict = Depends(require_write_privilege("login"))):
     """批2 A 项：吊销本人令牌（软删 revoked=1，⛔ 物理删除；幂等；越权/不存在一律 404）。
 
     · 只能吊销本人：按会话身份过滤 username，⛔ 接受任何 user/owner 类参数（带参 404）。
@@ -89,7 +91,6 @@ def me_token_revoke(tid: str, request: Request):
     · 留痕：每次调用写 nca_chain 一条（操作者/被吊销令牌 id 脱敏/时点/结果，⛔ 记值）。
     """
     _reject_query_params(request)
-    v = _require_session_user(request)
     me = v["username"]
     if not _MASKED_ID.fullmatch(tid):
         raise HTTPException(404, "Not Found")

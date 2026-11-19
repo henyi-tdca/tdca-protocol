@@ -30,7 +30,7 @@ import json
 import re
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -39,6 +39,7 @@ from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # n
 from me_audit import audit_privilege_admin_change  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/me/privilege-admin", tags=["me-privilege-admin"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 # 权属资产引用形态（与 dual_lock._ASSET_RE 同口径）
 _ASSET_RE = re.compile(r"^OR-[A-Za-z0-9_-]+$")
@@ -201,10 +202,10 @@ class RevokeIn(BaseModel):
 
 
 @router.post("/appoint", status_code=201)
-def privilege_admin_appoint(req: AppointIn, request: Request):
+def privilege_admin_appoint(req: AppointIn, request: Request,
+                           user: dict = Depends(require_write_privilege("login"))):
     """任命自己私域的管理员（两把锁：本人真身＋权属；越他域一律 404 同码）。"""
     _reject_query_params(request)
-    user = _require_session_user(request)
     me = _assert_native_self(user, req.on_behalf)
     asset_ref = (req.asset_ref or "").strip()
     appointee = (req.appointee or "").strip()
@@ -226,10 +227,10 @@ def privilege_admin_appoint(req: AppointIn, request: Request):
 
 
 @router.post("/revoke")
-def privilege_admin_revoke(req: RevokeIn, request: Request):
+def privilege_admin_revoke(req: RevokeIn, request: Request,
+                          user: dict = Depends(require_write_privilege("login"))):
     """撤销自己私域的管理员（两把锁同任命；未任命过 ⟹ 404 同码）。"""
     _reject_query_params(request)
-    user = _require_session_user(request)
     me = _assert_native_self(user, req.on_behalf)
     asset_ref = (req.asset_ref or "").strip()
     appointee = (req.appointee or "").strip()

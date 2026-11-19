@@ -19,7 +19,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 _ROOT = Path(__file__).resolve().parent
@@ -33,6 +33,7 @@ from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
                     _require_session_user, _utc)
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 router = APIRouter(prefix="/api/v1/workbuddy", tags=["workbuddy"])
 logger = logging.getLogger(__name__)
@@ -197,8 +198,8 @@ class SigRequest(BaseModel):
 
 
 @router.post("/signature/request", status_code=201)
-def wb_sig_request(req: SigRequest, request: Request):
-    user = _require_session_user(request)
+def wb_sig_request(req: SigRequest, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     rid = f"SR-{uuid.uuid4().hex[:10]}"
     nca_ref = _nca_append("WORKBUDDY_SIG_REQUEST", user["username"],
                           artifact_path=f"sigreq:{rid}")
@@ -220,9 +221,9 @@ class SigConfirm(BaseModel):
 
 
 @router.post("/signature/confirm")
-def wb_sig_confirm(req: SigConfirm, request: Request):
+def wb_sig_confirm(req: SigConfirm, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     """硬件签名确认（模拟口径：非空且 ≥8 字符；自动化签名尝试 → 403 熔断）。"""
-    user = _require_session_user(request)
     with get_session() as s:
         row = s.get(M.SignatureRequest, req.request_id)
     if row is None:

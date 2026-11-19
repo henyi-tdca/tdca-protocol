@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -28,6 +28,7 @@ from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # n
 from rights_bundle import rb_parse  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/ownership", tags=["ownership"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 # 法域四支（索引分支，⛔ 不代作法律判定）
 JURISDICTION_BRANCHES = {
@@ -125,9 +126,9 @@ class RegisterIn(BaseModel):
 
 
 @router.post("/register", status_code=201)
-def ownership_register(req: RegisterIn, request: Request):
+def ownership_register(req: RegisterIn, request: Request,
+                      user: dict = Depends(require_write_privilege("login"))):
     """权属登记（入口＝凡具表达形式者皆可登记；场景非必须）。"""
-    user = _require_session_user(request)
     if req.jurisdiction_branch not in (*JURISDICTION_BRANCHES, "unspecified"):
         raise HTTPException(400, "jurisdiction_branch 须为 copyright/patent/data/"
                                  "trademark 之一；不预判法域可省略或取 unspecified")
@@ -178,9 +179,9 @@ class AmendIn(BaseModel):
 
 
 @router.post("/amend")
-def ownership_amend(req: AmendIn, request: Request):
+def ownership_amend(req: AmendIn, request: Request,
+                   user: dict = Depends(require_write_privilege("login"))):
     """权属变更（已注销者 409；变更须载明事项）。"""
-    user = _require_session_user(request)
     if req.jurisdiction_branch and req.jurisdiction_branch not in JURISDICTION_BRANCHES:
         raise HTTPException(400, "jurisdiction_branch 须为 copyright/patent/data/"
                                  "trademark 之一（变更不提供则保留原值）")
@@ -233,9 +234,9 @@ class CancelIn(BaseModel):
 
 
 @router.post("/cancel")
-def ownership_cancel(req: CancelIn, request: Request):
+def ownership_cancel(req: CancelIn, request: Request,
+                    user: dict = Depends(require_write_privilege("login"))):
     """权属注销（协作终结留痕口径；已注销者 409）。"""
-    user = _require_session_user(request)
     hits = _public_space_hits({"note": req.note})
     if hits:
         raise HTTPException(400, f"PUBLIC_SPACE_VIOLATION: 命中四条不公开负空间之 "

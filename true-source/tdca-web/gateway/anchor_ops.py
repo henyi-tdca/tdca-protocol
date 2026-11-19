@@ -17,7 +17,7 @@ from __future__ import annotations
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -25,6 +25,7 @@ from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/anchor", tags=["anchor"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _EVENT_TEMPLATE = "docs/contracts/copyright-event-templates-v1.0.yaml"
@@ -79,9 +80,9 @@ class CopyrightEvent(BaseModel):
 
 
 @router.post("/copyright-event", status_code=201)
-def copyright_event(req: CopyrightEvent, request: Request):
+def copyright_event(req: CopyrightEvent, request: Request,
+                   user: dict = Depends(require_write_privilege("login"))):
     """权属登记事件（登记／变更／注销）→ 落库＋NCA 链存证（版权链模拟锚载体）。"""
-    user = _require_session_user(request)
     if req.event_type in ("transfer", "license"):
         raise HTTPException(400, "OUT_OF_SCOPE: 转让／许可属权利处分，⛔ 本期不做（归 8b 后续）")
     if req.event_type not in _EVENT_TYPES:

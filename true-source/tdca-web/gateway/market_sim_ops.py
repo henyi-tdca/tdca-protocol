@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -25,6 +25,7 @@ from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/market-sim", tags=["market-sim"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 _SIM_NOTE = ("结算＝SIMULATED（站内积分模拟，⛔ 不冒充真实 e-CNY）；"
              "税务＝SIMULATED（金税四期功能模拟，⛔ 不冒充真实税务申报）")
@@ -39,9 +40,9 @@ class OfferIn(BaseModel):
 
 
 @router.post("/chain", status_code=201)
-def market_sim_chain(req: OfferIn, request: Request):
+def market_sim_chain(req: OfferIn, request: Request,
+                    user: dict = Depends(require_write_privilege("login"))):
     """沙盒最小链：发布→准入审查→撮合→结算（全程 SIMULATED，逐步 NCA 留痕）。"""
-    user = _require_session_user(request)
     if not req.seller_ref.strip() or not req.asset_summary.strip() or not req.scene.strip():
         raise HTTPException(400, "seller_ref／asset_summary／scene 为必填（最小链要约）")
     if req.price_points < 0:

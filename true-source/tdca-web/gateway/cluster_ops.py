@@ -21,7 +21,7 @@ from __future__ import annotations
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -29,6 +29,7 @@ from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/cluster", tags=["cluster"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 
 # =====================================================================
@@ -62,9 +63,9 @@ class GrantRegister(BaseModel):
 
 
 @router.post("/grant/register", status_code=201)
-def grant_register(req: GrantRegister, request: Request):
+def grant_register(req: GrantRegister, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     """首授登记（四要件机验 → 授权件落库 → 谱系落账 → NCA 存证）。"""
-    user = _require_session_user(request)
     _check_four_requirements(req.scene_constraint, req.asset_order,
                              req.full_composition, req.legal_signer, req.signature)
     gid = f"AG-{uuid.uuid4().hex[:10]}"
@@ -99,9 +100,9 @@ class SubGrant(BaseModel):
 
 
 @router.post("/grant/subgrant", status_code=201)
-def grant_subgrant(req: SubGrant, request: Request):
+def grant_subgrant(req: SubGrant, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     """转授（上级授权件须 active → 新授权件挂 parent_grant_id → 谱系链 +1）。"""
-    user = _require_session_user(request)
     _check_four_requirements(req.scene_constraint, req.asset_order,
                              req.full_composition, req.legal_signer, req.signature)
     with get_session() as s:
@@ -156,9 +157,9 @@ class GrantRevoke(BaseModel):
 
 
 @router.post("/grant/revoke")
-def grant_revoke(req: GrantRevoke, request: Request):
+def grant_revoke(req: GrantRevoke, request: Request,
+                user: dict = Depends(require_write_privilege("login"))):
     """注销授权件（active → revoked；谱系留 revoke 记录，历史不抹除）。"""
-    user = _require_session_user(request)
     with get_session() as s:
         row = s.get(M.AuthGrant, req.grant_id)
     if row is None:
@@ -265,13 +266,13 @@ class AdmissionCheck(BaseModel):
 
 
 @router.post("/admission/check")
-def admission_check(req: AdmissionCheck, request: Request):
+def admission_check(req: AdmissionCheck, request: Request,
+                   user: dict = Depends(require_write_privilege("login"))):
     """准入判定（G-1~G-5 合取；沙盒例外显式标记；每次判定落 NCA）。
 
     general 调用仅握手（可信联通 ≠ 可信协作）；config 调用须五条判据全过
     且该智能体持有 active 授权件（既有谱系闸照守，未松动）。
     """
-    user = _require_session_user(request)
     username = user["username"]
     if req.call_type not in ("config", "general"):
         raise HTTPException(400, "call_type 须为 config / general")

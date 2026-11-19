@@ -22,7 +22,7 @@ import re
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.exc import IntegrityError
 
 from db import get_sessionmaker  # noqa: E402
@@ -30,6 +30,7 @@ from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
 
 router = APIRouter(prefix="/api/v1/use", tags=["use-u1-upload"])
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 # 存储目录：容器内 /data 卷（tdca.db 同卷；宿主机 /var/lib/docker/volumes/deploy_tdca-db/_data/uploads）
 UPLOAD_DIR = Path("/data/uploads")
@@ -173,12 +174,12 @@ def _view(r: M.UploadRecord) -> dict:
 
 
 @router.post("/upload")
-async def use_upload(request: Request):
+async def use_upload(request: Request,
+              user: dict = Depends(require_write_privilege("login"))):
     """交素材（单文件直传：请求体＝文件字节；文件名走 X-Upload-Filename 头）。
 
     幂等：同哈希同归属 → 返回既有记录（duplicate=true，⛔ 不多落一条）。
     """
-    user = _require_session_user(request)  # 未登录 401（fail-closed）
     body = await request.body()
     filename, name_error = _check_and_clean_filename(request.headers.get("x-upload-filename", ""))
     if name_error:
