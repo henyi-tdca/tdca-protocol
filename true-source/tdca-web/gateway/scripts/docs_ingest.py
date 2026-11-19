@@ -77,6 +77,20 @@ def extract_title(text: str, stem: str) -> str:
     return stem
 
 
+def _coplib_whitelist() -> set[str]:
+    """名单闸（INGEST-RUN-001·甲案）：读同层 public_docs_ops.py 之 _PUBLIC_DOCS["cop-library"]。
+    件以「docs/cop-library/<名单条目>」判；名单文件缺失即 fail-closed 中止（⛔ 裸跑全量）。"""
+    import ast
+    wl_path = Path(__file__).resolve().parent.parent / "public_docs_ops.py"
+    tree = ast.parse(wl_path.read_text(encoding="utf-8"))
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Assign)
+                and getattr(node.targets[0], "id", "") == "_PUBLIC_DOCS"):
+            docs = ast.literal_eval(node.value)
+            return {"docs/cop-library/" + e for e in docs["cop-library"]}
+    raise SystemExit("WHITELIST_UNAVAILABLE: _PUBLIC_DOCS 未找到，fail-closed 中止")
+
+
 def iter_sources(repo: Path, only_family: str = ""):
     for rel, family in sorted(FAMILY_MAP.items()):
         if only_family and family != only_family:
@@ -104,12 +118,18 @@ def main() -> int:
     taken = {r[0] for r in cur.execute("SELECT slug FROM docs")}
     have_src = {r[0] for r in cur.execute("SELECT source_path FROM docs")}
 
-    plan, n_skip, n_add = [], 0, 0
+    # INGEST-RUN-001（甲案）：cop-library 走名单闸——名单外一律跳过（含 .py 25 件）
+    wl = _coplib_whitelist() if (not args.family or args.family == "cop-library") else None
+    plan, n_skip, n_skipwl, n_add = [], 0, 0, 0
     for family, rel, f in rows:
         src = _SRC_PREFIX + f.relative_to(repo).as_posix()
         if src in have_src:
             n_skip += 1
             plan.append(("SKIP", family, slug_base(f.stem), f.name))
+            continue
+        if wl is not None and f.relative_to(repo).as_posix() not in wl:
+            n_skipwl += 1
+            plan.append(("SKIP_WL", family, slug_base(f.stem), f.name))
             continue
         slug = make_slug(f.stem, taken)
         taken.add(slug)
@@ -129,7 +149,7 @@ def main() -> int:
     total = cur.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
     conn.close()
 
-    print(f"plan: add={n_add} skip={n_skip} total_after={total} dry_run={args.dry_run}")
+    print(f"plan: add={n_add} skip={n_skip} skip_wl={n_skipwl} total_after={total} dry_run={args.dry_run}")
     for act, family, slug, fname in plan:
         print(f"  {act:4} [{family}] {slug}  <- {fname}")
     return 0
