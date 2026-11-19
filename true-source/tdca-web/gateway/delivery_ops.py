@@ -28,13 +28,14 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _require_session_user,  # noqa: E402
                     _utc, rec_hash_of)
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 
 def _nca_row(nca_id: str) -> M.NcaChain | None:
@@ -251,12 +252,12 @@ class ManifestIn(BaseModel):
 
 
 @router.post("/manifest", status_code=201)
-def delivery_manifest(req: ManifestIn, request: Request):
+def delivery_manifest(req: ManifestIn, request: Request,
+                     user: dict = Depends(require_write_privilege("login"))):
     """开清单（须登录；auth_id 必填且在 C-1 登记；逐件哈希必填）。
     原子序：清单先落（nca_seq 空＝对外视未发生）→ NCA 落证 → 回写指针；
     NCA 失败即清清单——失败不给编号、不落存证、⛔ 半条记录。
     """
-    user = _require_session_user(request)
     aid = req.auth_id.strip()
     if not aid:
         raise HTTPException(400, "上一步未完成——无 auth_id 不许开清单："
@@ -321,9 +322,9 @@ class ItemsIn(BaseModel):
 
 
 @router.post("/items")
-def delivery_items(req: ItemsIn, request: Request):
+def delivery_items(req: ItemsIn, request: Request,
+                  user: dict = Depends(require_write_privilege("login"))):
     """补件（须登录；draft/uploading 可补；逐件哈希必填；大件拆件请填分卷注明）。"""
-    user = _require_session_user(request)
     did = req.delivery_id.strip()
     if not _DELIVERY_ID_RE.match(did):
         raise HTTPException(404, "delivery_id 不存在")
@@ -372,12 +373,12 @@ class ConfirmIn(BaseModel):
 
 
 @router.post("/confirm")
-def delivery_confirm(req: ConfirmIn, request: Request):
+def delivery_confirm(req: ConfirmIn, request: Request,
+                    user: dict = Depends(require_write_privilege("login"))):
     """交付确认（须登录）：uploading→delivered→received。
     received 须报齐全部件的哈希并与清单比对（符／不符）；无哈希视同未收。
     熔断①：同一 delivery_id 观察窗内重复确认 → 停链；熔断②：哈希连续不符 ≥3 → 停链。
     """
-    user = _require_session_user(request)
     did = req.delivery_id.strip()
     if not _DELIVERY_ID_RE.match(did):
         raise HTTPException(404, "delivery_id 不存在")

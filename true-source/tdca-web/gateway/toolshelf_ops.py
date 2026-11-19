@@ -11,13 +11,14 @@ from __future__ import annotations
 import re
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_consumer_face_m1, _nca_append, _nca_watermark,  # noqa: E402
                     _require_session_user, _utc)  # noqa: E402
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 # TWO-001 B-1：脱敏单一真源——一处定义、多处调用（toolshelf 与 library 两处公开面同扫）
 from public_sanitize import CATALOG_SENSITIVE as _CATALOG_SENSITIVE  # noqa: E402
 
@@ -88,11 +89,9 @@ class ToolRegister(BaseModel):
 
 
 @router.post("/register", status_code=201)
-def tool_register(req: ToolRegister, request: Request):
+def tool_register(req: ToolRegister, request: Request,
+                  user: dict = Depends(require_write_privilege("operator", action="上架工具"))):
     """工具上架（operator/founder；类目闭集机验；配置类如实标记）。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可上架工具")
     if not req.name or not req.name.strip():
         raise HTTPException(400, "name 不得为空")
     if req.category not in ("compiler", "adapter", "template", "other"):

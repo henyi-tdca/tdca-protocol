@@ -19,12 +19,13 @@ import json
 import re
 from datetime import date, datetime, timedelta, timezone
 
-from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 router = APIRouter(prefix="/api/v1/ops/logs", tags=["ops-logs"])
 
@@ -181,9 +182,9 @@ class LogIn(BaseModel):
 
 
 @router.post("", status_code=201)
-def create_log(req: LogIn, request: Request):
+def create_log(req: LogIn, request: Request,
+              user: dict = Depends(require_write_privilege("operator", action="访问运维日志"))):
     """提交当日/补记日志（V-1~V-8 服务端校验；同日同值日已存在 ⟹ 409）。"""
-    user = _require_ops_admin(request)
     now08 = datetime.now(_TZ08)
     try:
         log_date = date.fromisoformat(str(req.sections.get("A_基本信息", {}).get("date", "")))

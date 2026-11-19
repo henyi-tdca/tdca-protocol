@@ -19,12 +19,13 @@ import time
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_watermark, _require_session_user, _utc  # noqa: E402
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 router = APIRouter(prefix="/api/v1/ci", tags=["ci"])
 
@@ -59,11 +60,9 @@ class RunRequest(BaseModel):
 
 
 @router.post("/run", status_code=201)
-def ci_run(req: RunRequest, request: Request):
+def ci_run(req: RunRequest, request: Request,
+          user: dict = Depends(require_write_privilege("operator", action="触发机验"))):
     """手动触发机验（operator/founder；逐 suite 落 ci_runs，最后一笔状态入徽章）。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可触发机验")
     suites = _suites()
     names = req.suites or list(suites.keys())
     for n in names:

@@ -14,12 +14,13 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 # P9 同源一致：红线第八项（登记制度）索引入口与 /api/v1/regulations/index 同 helper
 from regulations_ops import regulation_index_entry  # noqa: E402
 
@@ -89,9 +90,9 @@ class FeedbackIn(BaseModel):
 
 
 @router.post("/feedback", status_code=201)
-def feedback(req: FeedbackIn, request: Request):
+def feedback(req: FeedbackIn, request: Request,
+            user: dict = Depends(require_write_privilege("login"))):
     """问题反馈入口（登录用户皆可；落库即入 INTAKE）。"""
-    user = _require_session_user(request)
     if not req.title.strip():
         raise HTTPException(400, "title 不得为空")
     tid = f"OPS-{uuid.uuid4().hex[:10]}"
@@ -113,11 +114,9 @@ class TicketRef(BaseModel):
 
 
 @router.post("/classify")
-def classify(req: TicketRef, request: Request):
+def classify(req: TicketRef, request: Request,
+            user: dict = Depends(require_write_privilege("operator", action="分类"))):
     """红线分类器（operator/founder）：命中红线 → 升 ESCALATED_DCD，运维端无权处置。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可分类")
     with get_session() as s:
         row = s.get(M.OpsTicket, req.ticket_id)
     if row is None:
@@ -152,11 +151,9 @@ class ProposalIn(TicketRef):
 
 
 @router.post("/propose")
-def propose(req: ProposalIn, request: Request):
+def propose(req: ProposalIn, request: Request,
+           user: dict = Depends(require_write_privilege("operator", action="提案"))):
     """变更提案（operator/founder；仅 CLASSIFIED 可提案）。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可提案")
     if not req.proposal.strip():
         raise HTTPException(400, "proposal 不得为空")
     with get_session() as s:
@@ -175,11 +172,9 @@ def propose(req: ProposalIn, request: Request):
 
 
 @router.post("/sandbox")
-def sandbox(req: TicketRef, request: Request):
+def sandbox(req: TicketRef, request: Request,
+           user: dict = Depends(require_write_privilege("operator", action="登记"))):
     """沙盒验证登记（simulated=True 先行；PROPOSED 方可进入）。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可登记")
     with get_session() as s:
         row = s.get(M.OpsTicket, req.ticket_id)
     if row is None:
@@ -197,11 +192,9 @@ def sandbox(req: TicketRef, request: Request):
 
 
 @router.post("/release")
-def release(req: TicketRef, request: Request):
+def release(req: TicketRef, request: Request,
+           user: dict = Depends(require_write_privilege("operator", action="登记上线"))):
     """上线登记（SANDBOXED 方可；NCA 存证＋对账留痕·可回滚）。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可登记上线")
     with get_session() as s:
         row = s.get(M.OpsTicket, req.ticket_id)
     if row is None:

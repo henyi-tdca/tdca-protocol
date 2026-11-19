@@ -26,13 +26,14 @@ import re
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark, _require_session_user, _utc,  # noqa: E402
                     rec_hash_of)
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 import delivery_ops as _dl
 
 
@@ -197,11 +198,11 @@ class StandardIn(BaseModel):
 
 
 @router.post("/standard", status_code=201)
-def acceptance_standard(req: StandardIn, request: Request):
+def acceptance_standard(req: StandardIn, request: Request,
+                       user: dict = Depends(require_write_privilege("login"))):
     """登记验收标准（须登录；delivery_id 必填且清单已落证；标准须事前、逐条带判据）。
     原子序同 C-2：验收单先落（nca_seq 空＝视未发生）→ NCA 落证 → 回写；失败清单。
     """
-    user = _require_session_user(request)
     did = req.delivery_id.strip()
     if not did:
         raise HTTPException(400, "⛔ 无 delivery_id 不许开验——请先完成交付清单（/delivery）。")
@@ -267,13 +268,22 @@ class VerdictIn(BaseModel):
     note: str = ""
 
 
+def _verdict_owner(payload: dict, user: dict) -> str:
+    """D-50 属主取具（AUTHFOUR-001/UNIFYAUTH-001）：查档复刻原「先 404 后 403」顺序。"""
+    aid = str(payload.get("acceptance_id", "")).strip()
+    doc = _load(aid) if _ACC_ID_RE.match(aid) else None
+    if doc is None:
+        raise HTTPException(404, "acceptance_id 不存在")
+    return doc["created_by"]
+
+
 @router.post("/verdict")
-def acceptance_verdict(req: VerdictIn, request: Request):
+def acceptance_verdict(req: VerdictIn, request: Request,
+                      user: dict = Depends(require_write_privilege("owner_or_operator", owner_getter=_verdict_owner))):
     """逐条判定（须登录；pending/re_judging 可判；结论须对应事前标准）。
     全过 → passed（只显「可结算」，⛔ 接结算）；有不通过 → rejected（必填差距）。
     熔断③：结论与事前标准无法对应 → 停链（fail-closed）。
     """
-    user = _require_session_user(request)
     aid = req.acceptance_id.strip()
     if not _ACC_ID_RE.match(aid):
         raise HTTPException(404, "acceptance_id 不存在")
@@ -283,8 +293,6 @@ def acceptance_verdict(req: VerdictIn, request: Request):
     _assert_not_frozen(aid)
     if doc["status"] not in ("pending", "re_judging"):
         raise HTTPException(409, f"该验收单状态为 {doc['status']}——⛔ 不可判定")
-    if user["username"] != doc["created_by"] and user["role"] not in ("founder", "operator"):
-        raise HTTPException(403, "非本人 ⛔ 判定——验收人须与登单人同一登录主体")
     _verify_or_trip(aid)
     if not isinstance(req.verdicts, list) or not req.verdicts:
         raise HTTPException(400, "请给出逐条结论——⛔ 空判。")
@@ -352,9 +360,9 @@ class RectifyIn(BaseModel):
 
 
 @router.post("/rectify")
-def acceptance_rectify(req: RectifyIn, request: Request):
+def acceptance_rectify(req: RectifyIn, request: Request,
+                      user: dict = Depends(require_write_privilege("login"))):
     """登记整改（须登录；rejected 方可登记；→ re_judging 待复判）；或 operator 解冻。"""
-    user = _require_session_user(request)
     aid = req.acceptance_id.strip()
     if not _ACC_ID_RE.match(aid):
         raise HTTPException(404, "acceptance_id 不存在")

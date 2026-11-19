@@ -15,13 +15,14 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import (_consumer_face_m1, _nca_append, _nca_watermark,  # noqa: E402
                     _nature_of, _require_session_user, _utc)  # noqa: E402
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 router = APIRouter(prefix="/api/v1/announcements", tags=["announcements"])
 
@@ -55,11 +56,9 @@ class AnnouncementPublish(BaseModel):
 
 
 @router.post("/publish", status_code=201)
-def announcement_publish(req: AnnouncementPublish, request: Request):
+def announcement_publish(req: AnnouncementPublish, request: Request,
+                         user: dict = Depends(require_write_privilege("operator", action="发布公告"))):
     """发布公告（operator／founder；落 NCA 存证链。⛔ 内容未经创始人明示不得发布）。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可发布公告")
     title = req.title.strip() if req.title else ""
     body = req.body.strip() if req.body else ""
     if not title or not body:

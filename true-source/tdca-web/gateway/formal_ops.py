@@ -16,12 +16,13 @@ from __future__ import annotations
 import re
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from api_v1 import _nca_append, _nca_watermark, _require_session_user, _utc  # noqa: E402
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 
 router = APIRouter(prefix="/api/v1/formal", tags=["formal"])
 
@@ -75,9 +76,9 @@ class ConclusionIn(BaseModel):
 
 
 @router.post("/conclusion", status_code=201)
-def conclusion_register(req: ConclusionIn, request: Request):
+def conclusion_register(req: ConclusionIn, request: Request,
+                       user: dict = Depends(require_write_privilege("login"))):
     """结论入站（结论面机验 → 性质闭集 → 落库 + NCA 存证）。"""
-    user = _require_session_user(request)
     _check_claim_surface(req.claim_text)
     if req.data_nature not in ("formal-proved", "simulated", "assessed"):
         raise HTTPException(400, "DATA_NATURE_INVALID: 须为 formal-proved / simulated / assessed")
@@ -142,16 +143,14 @@ class ConclusionPatch(BaseModel):
 
 
 @router.patch("/conclusion/{conclusion_id}")
-def conclusion_update(conclusion_id: str, req: ConclusionPatch, request: Request):
+def conclusion_update(conclusion_id: str, req: ConclusionPatch, request: Request,
+                     user: dict = Depends(require_write_privilege("operator", action="更新结论"))):
     """结论更新（SITE-CLAIMFIX-001 A-4）：去前缀/补对外版唯一通道。
 
     权限：仅 operator/founder（同注册）；机验：与入站同一套红线；
     存证：追加一条 NCA（操作类型＝结论更新，artifact_path 指向同 conclusion_id），
     ⛔ 覆盖原存证；conclusion_id 保留（不删旧增新）；
     幂等：值不变即不写库、不追加存证，返回同形态结果。"""
-    user = _require_session_user(request)
-    if user.get("role") not in ("operator", "founder"):
-        raise HTTPException(403, "仅 operator / founder 可更新结论")
     if req.claim_text is None and req.scope_summary is None:
         raise HTTPException(400, "PATCH_EMPTY: claim_text 与 scope_summary 至少提供一项")
     if req.claim_text is not None:
