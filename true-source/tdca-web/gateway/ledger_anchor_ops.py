@@ -265,6 +265,7 @@ def verify_chain(sess) -> list:
 
     返回违例清单（空＝链完整）。none 日不参与串联。
     """
+    from db import models as M
 
     latest = _latest_rows(sess)
     violations = []

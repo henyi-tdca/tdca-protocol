@@ -17,6 +17,7 @@ _tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
 _tmp.close()
 os.environ["DATABASE_URL"] = "sqlite:///" + _tmp.name.replace("\\", "/")
 
+from sqlalchemy import text  # noqa: E402
 from sqlalchemy.exc import IntegrityError  # noqa: E402
 
 from db import Base, get_engine, get_session, get_sessionmaker  # noqa: E402

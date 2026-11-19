@@ -1,7 +1,7 @@
 """0001 initial schema 10 tables M1
 
 Revision ID: 50d63a4b5da2
-Revises:
+Revises: 
 Create Date: 2026-08-17 11:38:05.207272
 """
 from alembic import op

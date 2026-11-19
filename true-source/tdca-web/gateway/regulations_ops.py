@@ -16,13 +16,14 @@ from __future__ import annotations
 
 import hashlib
 import re
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
 
 from api_v1 import _nca_watermark, _require_session_user  # noqa: E402
 # 与 P4 模板区同源一致：版本/生效读取复用 toolshelf_ops 之 helper（⛔ 不另起口径）
 from toolshelf_ops import (  # noqa: E402
-    _TEMPLATE_DIR, _TEMPLATE_FILES,
+    _EFFECTIVE_NOTE, _TEMPLATE_DIR, _TEMPLATE_FILES,
     _effective_from_note, _version_from_machine,
 )
 
