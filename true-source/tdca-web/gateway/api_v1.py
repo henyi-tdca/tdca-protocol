@@ -43,7 +43,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import and_, func, or_
 from sqlalchemy.exc import IntegrityError
@@ -63,6 +63,7 @@ for _sub in ("tdca-microtax", "tdca-ns-runtime", "tdca-notification-machine",
 from db import get_engine, get_session, get_sessionmaker  # noqa: E402
 from db import models as M  # noqa: E402
 from ops_auth_gate import require_ops_caller as _gov_caller  # noqa: E402  # GOVGATE-001：治理写端点端内授权闸（仅 founder）
+from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1＋GATEEXPAND-002：四档统一写鉴权依赖
 
 
 def _utc() -> str:
@@ -845,13 +846,16 @@ class GenieComputeRequest(BaseModel):
 
 
 @router.post("/genie/compute")
-def genie_compute(req: GenieComputeRequest, request: Request):
+def genie_compute(req: GenieComputeRequest, request: Request,
+                  user: dict = Depends(require_write_privilege(
+                      "login", action="使用 genie 治理计算"))):
     """A-12: 自然语言治理数学计算（须登录会话）。平台真实推理 + 本地确定性数学 → real 级。
 
     工具白名单：mou_compute（硬下限）/ shapley_allocate / bayes_update。
     Key 未配置 → 503 fail-closed（裁定④：不降级、不猜测）。
+    GATEEXPAND-002：挂统一依赖 login 档——依赖内部即 _require_session_user，
+    401 语义与「不接受 CRT 降级」口径零变化。
     """
-    user = _require_session_user(request)  # 写路径强制 M3 会话（不接受 CRT 降级通道）
     if not req.query.strip():
         raise HTTPException(400, "query 不可为空")
     from genie import run_genie
@@ -1447,15 +1451,15 @@ class IdentityAnnotationRequest(BaseModel):
 
 
 @router.post("/auth/identity-annotation")
-def identity_annotation(req: IdentityAnnotationRequest, request: Request):
+def identity_annotation(req: IdentityAnnotationRequest, request: Request,
+                        user: dict = Depends(require_write_privilege(
+                            "founder", action="执行身份补录（HUF 制度级操作）"))):
     """身份补录（founder 专用）：为存量账号补登记身份三要素 + 补录存证落链。
 
     用途：GSEQ-0700 修复前已完成缔约的账号（如 B1 wb-trainer-01）补录身份标注；
     正常路径下注册端点已自动持久化，本端点仅作特例补录。
     """
-    v = _require_session_user(request)
-    if v["role"] != "founder":
-        raise HTTPException(403, "身份补录仅 founder 可执行（HUF 制度级操作）")
+    # GATEEXPAND-002：统一依赖 founder 档已复刻「登录 401＋非 founder 403」语义
     if req.identity_type not in ("native", "external"):
         raise HTTPException(400, "identity_type 仅接受 native|external")
     if req.identity_type == "external":
@@ -1470,7 +1474,7 @@ def identity_annotation(req: IdentityAnnotationRequest, request: Request):
         if s.get(M.User, username) is None:
             raise HTTPException(404, f"用户不存在: {username}")
         nca_id = _nca_append(
-            "user_identity_annotation", v["username"],
+            "user_identity_annotation", user["username"],
             artifact_path=(f"identity://{username}/{req.identity_type}"
                            f"/owner_auth:{req.owner_auth.strip() or 'none'}"),
             prov="real")
@@ -1512,16 +1516,16 @@ class AnchorVerifyRequest(BaseModel):
 
 
 @router.post("/me/anchor/verify")
-def me_anchor_verify(req: AnchorVerifyRequest, request: Request):
+def me_anchor_verify(req: AnchorVerifyRequest, request: Request,
+                     user: dict = Depends(require_write_privilege(
+                         "operator", action="执行锚核验受理（人工受理制度级操作）"))):
     """锚核验人工受理：站点管理员线下核过实名/手机号后调用。
 
     追加制：每次受理追加一条 user_anchor_verify 存证（原态→新态如实），再更新锚行；
     明文最小化：只落 *_present 布尔＋evidence_ref 引用，⛔ 绝不收/不落明文取值；
     fail-closed：无锚记录/无证据引用/角色不符一律拒绝。
     """
-    v = _require_session_user(request)
-    if v["role"] not in ("founder", "operator"):
-        raise HTTPException(403, "锚核验受理仅 founder/operator 可执行（人工受理制度级操作）")
+    # GATEEXPAND-002：统一依赖 operator 档（role ∈ {operator, founder}）已复刻原行内检查
     username = req.username.strip()
     ref = req.evidence_ref.strip()
     if not ref:
@@ -1547,7 +1551,7 @@ def me_anchor_verify(req: AnchorVerifyRequest, request: Request):
         row.phone_present = 1 if req.phone_present else 0
         row.evidence_ref = ref
         row.verified_at = now_iso
-        row.verifier = v["username"]
+        row.verifier = user["username"]
         row.nca_ref = nca_id
         row.updated_at = now_iso
     return _nca_watermark({
@@ -1811,11 +1815,12 @@ def me_sessions(request: Request):
 
 
 @router.post("/me/sessions/revoke")
-def me_session_revoke(req: SessionRevokeRequest, request: Request):
+def me_session_revoke(req: SessionRevokeRequest, request: Request,
+                      user: dict = Depends(require_write_privilege(
+                          "login", action="管理本人会话"))):
     """会话管理·踢（指定会话）：sid 指纹命中本人未吊销会话 → revoked=1（既有语义）。
     他人会话或不存在 → 404（不可见处理，⛔ 不泄漏存在性）；⛔ 不删行、不动表。"""
-    v = _require_session_user(request)
-    me = v["username"]
+    me = user["username"]  # GATEEXPAND-002：login 档内部即 _require_session_user
     sid = req.sid.strip()
     if not sid:
         raise HTTPException(400, "sid 不可为空")
@@ -1838,12 +1843,13 @@ def me_session_revoke(req: SessionRevokeRequest, request: Request):
 
 
 @router.post("/me/sessions/revoke-all")
-def me_session_revoke_all(request: Request):
+def me_session_revoke_all(request: Request,
+                          user: dict = Depends(require_write_privilege(
+                              "login", action="管理本人会话"))):
     """会话管理·踢（全部）：吊销本人全部会话（含当前）＝强制退出登录。
     revoked=1 既有语义；⛔ 不删行、不动表；落 NCA（⛔ 不含 token 值）。
     当前会话自下一请求起 401（validate_session revoked 语义，S-3 实测口径）。"""
-    v = _require_session_user(request)
-    me = v["username"]
+    me = user["username"]  # GATEEXPAND-002：login 档内部即 _require_session_user
     revoked_n = 0
     with get_sessionmaker().begin() as s:
         for r in s.query(M.AuthSession).filter(
@@ -1908,14 +1914,15 @@ def me_usage(request: Request, days: int = _USAGE_DEFAULT_DAYS):
 
 
 @router.post("/me/password")
-def me_password(req: PasswordChangeRequest, request: Request):
+def me_password(req: PasswordChangeRequest, request: Request,
+                user: dict = Depends(require_write_privilege(
+                    "login", action="修改本人密码"))):
     """改密（仅本人；2026-10-09 最小实现令）：旧密核验 → 新密强度（沿用注册口径）→
     吊销本人其它会话（revoked=1 既有语义，当前会话保留）→ NCA 落链。
     ⛔ 不加字段、不动表结构；哈希/盐/迭代数不入件不入响应。
     返码口径（2026-10-09 评估件落地）：旧密错=400（401 会被前端客户端误作
     会话失效清退本地令牌）；「用户不存在」=401 与未登录=401 保持不动（真会话面）。"""
-    v = _require_session_user(request)
-    me = v["username"]
+    me = user["username"]  # GATEEXPAND-002：login 档内部即 _require_session_user
     with get_session() as s:
         user = s.get(M.User, me)
         if user is None:
