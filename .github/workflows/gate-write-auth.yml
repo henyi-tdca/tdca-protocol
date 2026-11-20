@@ -35,3 +35,5 @@ jobs:
           python-version: "3.12"
       - name: 写鉴权硬闸
         run: python3 tools/ci_write_auth_gate.py
+      - name: 四档五断言专测（CIGATE-001·命中依赖本体或挂载点时真跑）
+        run: python3 tools/ci_authwrite_gate_step.py
