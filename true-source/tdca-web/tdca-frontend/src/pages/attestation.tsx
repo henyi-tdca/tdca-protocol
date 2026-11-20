@@ -143,6 +143,10 @@ export function AttestationMetaPage() {
       description="沙盒验证后、进入配置权市场前的人类确权（先验证后背书，REV-002 修正）。"
     >
       <div className="space-y-4">
+        {/* ATTELLABEL-001 配套二：建设期提示条（与数据性质角标同区并列） */}
+        <div data-testid="stage-label-bar" className="rounded border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+          建设期：确权请求匿名可写，写入即落存证可追溯
+        </div>
         {/* 步骤 1：沙盒验证报告审阅 */}
         <section data-testid="meta-step1" className="rounded-lg border border-gray-200 p-4">
           <h3 className="mb-1 text-sm font-semibold text-gray-800">步骤 1 · 沙盒验证报告审阅（只读）</h3>
@@ -244,6 +248,10 @@ export function AttestationDynamicPage() {
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <SimulatedBadge nature={nature ?? 'simulated'} />
             <span>共 {data.total} 条 · {data.note}</span>
+          </div>
+          {/* ATTELLABEL-001 配套二：建设期提示条（与数据性质角标同区并列） */}
+          <div data-testid="stage-label-bar" className="rounded border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+            建设期：确权请求匿名可写，写入即落存证可追溯
           </div>
           {data.queue.map((q) => {
             const decided = decisions[q.request_id]
