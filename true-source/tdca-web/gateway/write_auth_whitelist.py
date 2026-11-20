@@ -104,11 +104,8 @@ WHITELIST = [
      "智能体自助登记（注册开关 TDCA_AGENT_REG_OPEN＋ANCHOR 须会话／GUEST 匿名分流）",
      "勘误：-441 #20 登记 W_LOGIN；现码条件会话，GUEST 匿名路挂 login 档即破行为"),
 
-    # ── GATEEXPAND-002 增补：api_v1.py 十件（四档无一可挂或挂即行为变更未授，维持手写）──
-    ("api_v1", "POST", "/api/v1/config-right/call",
-     "配置权调用（模拟态经济计算＋税收/MOU 落库）",
-     "GATEEXPAND-002：现码零鉴权（连登录都不查，函数体逐行实读）；挂任一档＝新增拦截"
-     "＝改鉴权语义未授（令边界⛔）；S-UA1 型独立缺陷随回报 -481 另报智库，不在本件顺带加鉴权"),
+    # ── GATEEXPAND-002 增补：api_v1.py 九件（config-right/call 已挂 operator 档
+    #     移出本清单，AUTHCLOSE-001-AMEND-1；余九件四档无一可挂或挂即行为变更未授，维持手写）──
     ("api_v1", "POST", "/api/v1/audit/nca-verify",
      "NCA 哈希校验＋在链核验",
      "GATEEXPAND-002：公开只读核验面（哈希比对＋链上查询，零状态写入），无鉴权属服务"

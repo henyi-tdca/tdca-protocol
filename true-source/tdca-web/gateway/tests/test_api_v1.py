@@ -75,10 +75,13 @@ def test_s_a_shapley_anonymous_401():
 
 
 # ---- A-3 配置权市场调用 ----
+# AUTHCLOSE-001-AMEND-1（复裁取甲）：端点已挂 operator 档统一写鉴权，
+# 既有用例伴改 _mkuser(role="operator") 会话范式（同文件 L21-30 既有范式，⛔另立机制）。
 def test_a3_config_right_call():
+    tok = _mkuser("op-a3-config-right", "operator")
     r = client.post("/api/v1/config-right/call", json={
         "delivery_id": "DEL-T1", "caller": "AGENT-A", "callee": "AGENT-B",
-        "call_value": 1000.0, "tax_receipt": 100.0})
+        "call_value": 1000.0, "tax_receipt": 100.0}, headers=_h(tok))
     assert r.status_code == 200, r.text[:200]
     body = r.json()["data"]
     assert "full_cognition" in body

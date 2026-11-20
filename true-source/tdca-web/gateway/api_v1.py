@@ -488,7 +488,8 @@ class ConfigCallRequest(BaseModel):
 
 
 @router.post("/config-right/call")
-def config_right_call(req: ConfigCallRequest):
+def config_right_call(req: ConfigCallRequest, user: dict = Depends(require_write_privilege(
+        "operator", action="调用配置权"))):
     """A-3: 配置权调用 → 计税/预缴 → 正和认知 → 多主体配置 一键闭环（S-15），结果落库。"""
     try:
         from microtax.models import MicroDelivery, TaxEventType, DeliveryCallType, DeliveryForm
