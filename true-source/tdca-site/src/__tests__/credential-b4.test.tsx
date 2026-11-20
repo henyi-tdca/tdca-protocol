@@ -28,6 +28,9 @@ beforeEach(() => {
   vi.stubGlobal('fetch', mockFetch)
   localStorage.clear()
   sessionStorage.clear()
+  // SITEA-FILL-001 档一：/me 已加 RequireAuth 门，预置登录态以渲染本位内容（同 shellgate-labelfix2 范式）
+  localStorage.setItem('tdca_auth_did', 'TDID-H-0001')
+  localStorage.setItem('tdca_auth_token', 'TDCA-CRT-test')
 })
 afterEach(() => {
   vi.unstubAllGlobals()

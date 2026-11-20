@@ -126,7 +126,7 @@ export default function App() {
         <Route path="/registrations" element={<RegistrationsPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/me" element={<MePage />} />
+        <Route path="/me" element={<RequireAuth><MePage /></RequireAuth>} />
         {/* MIGRATE 批7：申诉面（旧版权 me-appeal 直拷，受理通道随制度入站开通） */}
         {/* MYSPACE-PHASE1-001 §一.4 补齐：事由/对象/诉求/附件 最小必填登记＋三态展示（受理通道开通后接账） */}
         <Route path="/me/appeal" element={<MeAppealPage />} />
@@ -164,11 +164,11 @@ export default function App() {
         <Route path="/announcements" element={<AnnouncementsPage />} />
         {/* FRONTEND-MERGE 批3：智能体面五路（路由照存；不设登录门槛——照本批核可口径） */}
         <Route path="/agents" element={<><MainChainGuide /><AgentsPage /></>} />
-        <Route path="/agents/:id" element={<AgentDashboardPage />} />
+        <Route path="/agents/:id" element={<RequireAuth><AgentDashboardPage /></RequireAuth>} />
         <Route path="/agent-shelf" element={<AgentShelfPage />} />
         {/* LABelfIX-001 项二：/studio 受护——匿名直访不再落兜底壳内容，重定向 /auth 登录引导（fail-closed：守卫以 isAuthenticated 判定，异常/未登录一律按匿名挡） */}
         <Route path="/studio" element={<RequireAuth><StudioPage /></RequireAuth>} />
-        <Route path="/workbuddy" element={<WorkbuddyPage />} />
+        <Route path="/workbuddy" element={<RequireAuth><WorkbuddyPage /></RequireAuth>} />
         {/* FRONTEND-MERGE 批4：登记与存证面八路（attestation 一件四面 → 四路；照复核件更正补 /anchors） */}
         <Route path="/ownership" element={<OwnershipPage />} />
         <Route path="/ownership-registry" element={<OwnershipRegistryPage />} />
@@ -194,7 +194,7 @@ export default function App() {
         {/* LABelfIX-001 项二：/ops 受护——同口径；运维手册子路各自带 fail-closed 人话门槛（migrate-b5 既有），本令只加三处兜底壳之门 */}
         <Route path="/ops" element={<RequireAuth><OpsPage /></RequireAuth>} />
         {/* MIGRATE 批5（L1SI206）：运维手册三界面（同栈直拷 ops-manual 一路·内容=在册白名单源件直读·只进运维私域） */}
-        <Route path="/ops/readme" element={<OpsReadmePage />} />
+        <Route path="/ops/readme" element={<RequireAuth><OpsReadmePage /></RequireAuth>} />
         <Route path="/ops/ops" element={<OpsOpsPage />} />
         <Route path="/ops/changelog" element={<OpsChangelogPage />} />
         {/* MIGRATE 批4（L1SI206）：演练与实验两面（同栈直拷·场景数8不缩·仅人） */}
@@ -233,7 +233,7 @@ export default function App() {
         <Route path="/ops/acceptance-records" element={<RequireAuth><OpsAcceptanceRecordsPage /></RequireAuth>} />
         {/* 三别名（令面路径 → 现行路由跳转；制度件不改、导航不动、机面不动） */}
         <Route path="/node-net" element={<Navigate to="/nodes" replace />} />
-        <Route path="/agent-dashboard/:id" element={<AgentDashboardAlias />} />
+        <Route path="/agent-dashboard/:id" element={<RequireAuth><AgentDashboardAlias /></RequireAuth>} />
         <Route path="/ops-manual" element={<Navigate to="/ops/readme" replace />} />
         <Route path="*" element={<NotFoundPage />} />      </Routes>
       </Suspense>
