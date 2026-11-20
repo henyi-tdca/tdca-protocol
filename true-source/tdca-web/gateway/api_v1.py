@@ -1112,7 +1112,7 @@ def attestation_dynamic(req: DynamicAttestationRequest, request: Request):
         "status": status,
         "nca_ref": nca_ref,
         "huf_irreducible": True,
-        "note": "动态确权审批（决策落 HUF 口径）｜建设期·匿名可写·以存证追溯" + _sim_note(),
+        "note": "动态确权审批（人类 HUF 决策，AI 无权代行）｜建设期·匿名可写·以存证追溯" + _sim_note(),
         "stage_label": "建设期·匿名可写·以存证追溯",
     })
 
@@ -2070,7 +2070,7 @@ _INTENT_TABLE = [
     {"keys": ["签批", "审批", "确权申请", "动态确权", "批准", "驳回"],
      "route": "/attestation/dynamic", "title": "动态确权审批",
      "action": "签批",
-     "guide": ["查看待审队列（🔴 紧急优先）", "点开请求详情核对事由", "选择：批准 / 修改后批准 / 拒绝 / 延后", "建设期：确权请求匿名可写，写入即落存证可追溯"]},
+     "guide": ["查看待审队列（🔴 紧急优先）", "点开请求详情核对事由", "选择：批准 / 修改后批准 / 拒绝 / 延后", "HUF 弹窗确认签署（AI 无权代行）", "建设期：确权请求匿名可写，写入即落存证可追溯"]},
     {"keys": ["出盒", "初始确权", "meta", "终裁"],
      "route": "/attestation/meta", "title": "元函数初始确权（出盒终裁）",
      "action": "签批",

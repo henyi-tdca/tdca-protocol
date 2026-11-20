@@ -21,7 +21,8 @@ def test_intent_sign():
     assert d["route"] == "/attestation/dynamic"
     assert d["action"] == "签批"
     assert len(d["guide"]) >= 3                     # 操作指引在位
-    assert any("建设期" in s and "存证可追溯" in s for s in d["guide"])  # 建设期必含风险提示（ATTELLABEL-001）
+    assert any("HUF" in s for s in d["guide"])  # 签批必含人类终裁警示（甲案恢复·LABelfIX-001）
+    assert any("建设期" in s and "存证可追溯" in s for s in d["guide"])  # 建设期提示并列不丢（ATTELLABEL-001）
 
 
 def test_intent_query_tax():
