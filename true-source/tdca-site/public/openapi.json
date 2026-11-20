@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TDCA 站点公域只读接口",
+    "version": "1.0.0",
+    "description": "对外公开的匿名只读端点清单。读取匿名、无需注册；写入端点不在本描述范围（写入须登记缔约并持凭据）。"
+  },
+  "servers": [
+    { "url": "https://tdca.com.cn" }
+  ],
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "健康检查（最小可观察面）",
+        "responses": { "200": { "description": "status/time/version/deps" } }
+      }
+    },
+    "/api/v1/announcements/list": {
+      "get": { "summary": "公告列表（公开）", "responses": { "200": { "description": "公告清单" } } }
+    },
+    "/api/v1/attestation/queue": {
+      "get": { "summary": "动态确权待审队列（匿名公开视图）", "responses": { "200": { "description": "公开类型名与紧急度；登录可见全字段" } } }
+    },
+    "/api/v1/attestation/history": {
+      "get": { "summary": "确权历史（公开面）", "responses": { "200": { "description": "确权历史记录" } } }
+    },
+    "/api/v1/knowledge/terms": {
+      "get": { "summary": "术语（公开检索）", "responses": { "200": { "description": "术语条目" } } }
+    },
+    "/api/v1/audit/ledger-public": {
+      "get": { "summary": "公开审计账本", "responses": { "200": { "description": "可复算公开账本面" } } }
+    },
+    "/api/v1/sandbox/sea-status": {
+      "get": { "summary": "沙盒海状态（公开观察）", "responses": { "200": { "description": "沙盒状态" } } }
+    },
+    "/api/v1/assets/five-orders": {
+      "get": { "summary": "五单资产面（公开）", "responses": { "200": { "description": "五单内容" } } }
+    },
+    "/api/v1/notifier/mrcr-status": {
+      "get": { "summary": "通告收发状态（公开）", "responses": { "200": { "description": "状态读数" } } }
+    },
+    "/api/v1/library/families": {
+      "get": { "summary": "资料库族清单（公开）", "responses": { "200": { "description": "族列表" } } }
+    },
+    "/api/v1/library/{family}": {
+      "get": { "summary": "族内件清单（公开）", "responses": { "200": { "description": "件列表" } } }
+    }
+  }
+}
