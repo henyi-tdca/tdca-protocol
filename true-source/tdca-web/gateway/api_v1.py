@@ -45,7 +45,7 @@ from typing import Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func, or_, text as _sql_text
 from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix="/api/v1")
@@ -2128,6 +2128,30 @@ _INTENT_TABLE = [
      "action": "查询",
      "guide": ["四卡：交付 / 税收 / 时延 / 熔断", "税率与 θ/ϕ 系数在下方"]},
 ]
+
+
+# ---------------------------------------------------------------------
+# PUBLIC-DISCOVER-001 项一：匿名健康端点（最小可观察面）
+# 约束：只给 status/time/version/deps 状态词；⛔ 内网地址/容器名/凭据/内部编号/
+# 自然人信息/堆栈或错误细节；只读探活，⛔ 任何写操作或副作用。
+# ---------------------------------------------------------------------
+@router.get("/health")
+def api_v1_health():
+    """匿名健康检查：依赖探活（SELECT 1），异常只回概括状态，不回细节。"""
+    deps = {"db": "ok"}
+    status = "ok"
+    try:
+        with get_sessionmaker().begin() as s:
+            s.execute(_sql_text("SELECT 1"))
+    except Exception:
+        deps["db"] = "degraded"
+        status = "degraded"
+    return {
+        "status": status,
+        "time": _utc(),
+        "version": "TDCA-Unified-API-V1.0",
+        "deps": deps,
+    }
 
 
 @router.get("/intent")

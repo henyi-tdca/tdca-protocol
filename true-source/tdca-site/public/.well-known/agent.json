@@ -1,0 +1,26 @@
+{
+  "name": "TDCA 站点公域",
+  "description": "三体可视化中心站点公域：制度、存证、确权、资料库与沙盒观察面的匿名只读入口。读取匿名，写入须登记缔约并持凭据。",
+  "protocol": "协议加载验证（按在册通道口径：验证协议加载与契约遵循，而非身份验证）",
+  "endpoints": {
+    "discovery": [
+      "https://tdca.com.cn/.well-known/agent.json",
+      "https://tdca.com.cn/openapi.json"
+    ],
+    "public_read": [
+      "https://tdca.com.cn/api/v1/health",
+      "https://tdca.com.cn/api/v1/announcements/list",
+      "https://tdca.com.cn/api/v1/attestation/queue",
+      "https://tdca.com.cn/api/v1/attestation/history",
+      "https://tdca.com.cn/api/v1/knowledge/terms",
+      "https://tdca.com.cn/api/v1/audit/ledger-public",
+      "https://tdca.com.cn/api/v1/sandbox/sea-status",
+      "https://tdca.com.cn/api/v1/assets/five-orders",
+      "https://tdca.com.cn/api/v1/notifier/mrcr-status",
+      "https://tdca.com.cn/api/v1/library/families"
+    ],
+    "registration": "https://tdca.com.cn/register"
+  },
+  "auth": "读取匿名、无需凭据；写入须登记缔约（/register）并持有效凭据，写端点对匿名一律 fail-closed（401）。",
+  "contact": "xuantan0703@agent.qq.com"
+}
