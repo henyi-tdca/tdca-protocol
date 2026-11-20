@@ -1,10 +1,19 @@
 #!/bin/bash
 # TDCA 测试云一键部署（GSEQ-0642）
-# 用法：git clone 仓库后，在仓库根目录执行  bash deploy/install.sh
+# 用法：git clone 仓库后，在仓库根目录执行  bash deploy/install.sh <待发dist包路径>
+#       （dist 包须先过 CI 门禁产出 deploy-receipt.json 凭证，详见 deploy/deploy_gate.py）
 # 纪律：DeepSeek/Moonshot key 只在运行前以环境变量注入（不落盘、不写文件）；
 #       未备案测试实例，不对外正式宣称。
 set -euo pipefail
 cd "$(dirname "$0")/.."
+
+echo "== [0/4] 部署门禁（CI-GATE-001 站点机校验）=="
+TDCA_DIST_TGZ="${1:-}"
+if [ -z "$TDCA_DIST_TGZ" ]; then
+  echo "usage: bash deploy/install.sh <待发dist包路径>（须先过 CI 门禁产出 deploy-receipt.json 凭证）"
+  exit 2
+fi
+python3 deploy/deploy_gate.py "$TDCA_DIST_TGZ" || { echo "部署门禁拒：deploy_gate.py exit=$?，中止部署"; exit 1; }
 
 echo "== [1/4] 环境自检 =="
 docker --version
