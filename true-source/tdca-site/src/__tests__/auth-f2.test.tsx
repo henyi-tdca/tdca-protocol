@@ -56,12 +56,12 @@ describe('F-2 /auth 鉴权', () => {
     expect(hint.querySelector('a[href="mailto:xuantan0703@agent.qq.com"]')).toBeTruthy()
   })
 
-  it('受保护路由（/studio）匿名态 → 不重定向，直渲页面内容＋权限说明（在册 L1SI188-SITE-NAV-001 口径）', async () => {
+  it('受保护路由（/studio）匿名态 → 重定向 /auth 登录引导（LABelfIX-001 项二新口径·覆盖 L1SI188-SITE-NAV-001 旧「直渲」口径）', async () => {
     await renderAt('/studio')
-    // 在册规格（TDCA-ASSESS-L1SI188-SITE-NAV-001）：受保护主栏匿名态由「统一登录卡重定向」改为
-    // 「不重定向、说明该栏是什么 ＋ 登录后…」——对齐令 SITE-TESTFIX-001（乙组）期望改为不重定向。
-    expect(screen.getByTestId('studio-lifecycle')).toBeInTheDocument()
-    expect(screen.getByText(/权限：登录 DID \+ HUF 签批/)).toBeInTheDocument()
+    // 口径更替：TDCA-HANDOFF-EXEC-L1SI223-LABELFIX-001（创始人「三处兜底壳加门」）——/studio 匿名
+    // 不再直渲兜底内容，由 RequireAuth 重定向 /auth 登录引导；旧「不重定向、直渲＋权限说明」口径（L1SI188
+    // 评估件/SITE-TESTFIX-001 乙组）由本令废止，守卫 fail-closed（未登录/异常一律按匿名挡）。
+    expect(screen.getByTestId('auth-form')).toBeInTheDocument()
   })
 
   it('登录流程：选择身份 + token → 登录 → 受护面可入', async () => {

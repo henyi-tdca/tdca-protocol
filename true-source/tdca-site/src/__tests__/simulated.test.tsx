@@ -25,6 +25,9 @@ describe('F0-A5 模拟态标注（ID92）', () => {
   })
 
   it('模拟态标注随件呈现：模拟面经 App 渲染带 SIMULATED 角标（旧「全站顶部横幅」已随壳改撤，ID92 标注下沉为 SimulatedBadge 逐件呈现）', async () => {
+    // LABelfIX-001 项二：/studio 已加门——预置登录态以达页内（本件验角标呈现，与匿名/登录口径无关）
+    localStorage.setItem('tdca_auth_did', 'did:test-sim')
+    localStorage.setItem('tdca_auth_token', 'tk-sim')
     render(
       <MemoryRouter initialEntries={['/studio']}>
         <App />
