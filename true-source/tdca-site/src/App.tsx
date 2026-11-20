@@ -166,7 +166,8 @@ export default function App() {
         <Route path="/agents" element={<><MainChainGuide /><AgentsPage /></>} />
         <Route path="/agents/:id" element={<AgentDashboardPage />} />
         <Route path="/agent-shelf" element={<AgentShelfPage />} />
-        <Route path="/studio" element={<StudioPage />} />
+        {/* LABelfIX-001 项二：/studio 受护——匿名直访不再落兜底壳内容，重定向 /auth 登录引导（fail-closed：守卫以 isAuthenticated 判定，异常/未登录一律按匿名挡） */}
+        <Route path="/studio" element={<RequireAuth><StudioPage /></RequireAuth>} />
         <Route path="/workbuddy" element={<WorkbuddyPage />} />
         {/* FRONTEND-MERGE 批4：登记与存证面八路（attestation 一件四面 → 四路；照复核件更正补 /anchors） */}
         <Route path="/ownership" element={<OwnershipPage />} />
@@ -178,7 +179,8 @@ export default function App() {
         <Route path="/attestation/history" element={<AttestationHistoryPage />} />
         <Route path="/anchors" element={<AnchorsPage />} />
         <Route path="/audit" element={<><MainChainGuide /><AuditPage /></>} />
-        <Route path="/governance" element={<GovernancePage />} />
+        {/* LABelfIX-001 项二：/governance 受护——同 /studio 口径（匿名 → /auth 登录引导） */}
+        <Route path="/governance" element={<RequireAuth><GovernancePage /></RequireAuth>} />
         <Route path="/formal" element={<FormalPage />} />
         <Route path="/cluster" element={<ClusterPage />} />
         <Route path="/market" element={<><MainChainGuide /><MarketPage /></>} />
@@ -189,7 +191,8 @@ export default function App() {
         <Route path="/toolshelf" element={<ToolshelfPage />} />
         <Route path="/notifier" element={<NotifierPage />} />
         <Route path="/sandbox" element={<SandboxPage />} />
-        <Route path="/ops" element={<OpsPage />} />
+        {/* LABelfIX-001 项二：/ops 受护——同口径；运维手册子路各自带 fail-closed 人话门槛（migrate-b5 既有），本令只加三处兜底壳之门 */}
+        <Route path="/ops" element={<RequireAuth><OpsPage /></RequireAuth>} />
         {/* MIGRATE 批5（L1SI206）：运维手册三界面（同栈直拷 ops-manual 一路·内容=在册白名单源件直读·只进运维私域） */}
         <Route path="/ops/readme" element={<OpsReadmePage />} />
         <Route path="/ops/ops" element={<OpsOpsPage />} />
