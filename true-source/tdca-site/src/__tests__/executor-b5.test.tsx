@@ -83,6 +83,9 @@ describe('批 5：官方执行体目录面', () => {
   })
 
   it('批 4 措辞更正＋名称纪律：事务执行面标「静态兜底（随浏览器存留）」与「写操作钥匙（待建执行令牌之临时替代）」', async () => {
+    // SITEA-FILL-001 档一：/me 已加 RequireAuth 门，预置登录态（同 shellgate-labelfix2 范式）
+    localStorage.setItem('tdca_auth_did', 'TDID-H-0001')
+    localStorage.setItem('tdca_auth_token', 'TDCA-CRT-test')
     await renderAt('/me')
     const quad = screen.getByTestId('quad-execution').textContent ?? ''
     expect(quad).toContain('静态兜底')

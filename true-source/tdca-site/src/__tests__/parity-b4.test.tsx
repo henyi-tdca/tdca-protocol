@@ -50,6 +50,9 @@ describe('追平批B4：两旧链重定向（重定向实测·⛔ 只看代码�
   })
 
   it('/ops/manual → 落在运维 readme（等价裁示 GSEQ-7743）', async () => {
+    // SITEA-FILL-001 档一：运维手册（/ops/readme）已加 RequireAuth 门，预置登录态验重定向（同 shellgate-labelfix2 范式）
+    localStorage.setItem('tdca_auth_did', 'TDID-H-0001')
+    localStorage.setItem('tdca_auth_token', 'TDCA-CRT-test')
     renderAt('/ops/manual')
     await waitFor(() => expect(screen.getByTestId('ops-readme')).toBeTruthy())
   })
