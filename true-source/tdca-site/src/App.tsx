@@ -195,8 +195,9 @@ export default function App() {
         <Route path="/ops" element={<RequireAuth><OpsPage /></RequireAuth>} />
         {/* MIGRATE 批5（L1SI206）：运维手册三界面（同栈直拷 ops-manual 一路·内容=在册白名单源件直读·只进运维私域） */}
         <Route path="/ops/readme" element={<RequireAuth><OpsReadmePage /></RequireAuth>} />
-        <Route path="/ops/ops" element={<OpsOpsPage />} />
-        <Route path="/ops/changelog" element={<OpsChangelogPage />} />
+        {/* OPSGATE-001：手册族五路同法补门（/ops/readme 先例·RequireAuth fail-closed）；页内自有门槛保留不动 */}
+        <Route path="/ops/ops" element={<RequireAuth><OpsOpsPage /></RequireAuth>} />
+        <Route path="/ops/changelog" element={<RequireAuth><OpsChangelogPage /></RequireAuth>} />
         {/* MIGRATE 批4（L1SI206）：演练与实验两面（同栈直拷·场景数8不缩·仅人） */}
         <Route path="/lab" element={<LabPage />} />
         <Route path="/demo" element={<DemoPage />} />
@@ -218,12 +219,12 @@ export default function App() {
         <Route path="/status" element={<StatusPage />} />
         <Route path="/terms" element={<TermsPage />} />
         {/* 追平批B2：运维日志两件（填写＋列表导出）——运维私域内路由（须鉴权取件）；⛔ 不入公开导航／⛔ 不入检索索引 */}
-        <Route path="/ops/logs" element={<OpsLogsPage />} />
-        <Route path="/ops/logs/list" element={<OpsLogsListPage />} />
+        <Route path="/ops/logs" element={<RequireAuth><OpsLogsPage /></RequireAuth>} />
+        <Route path="/ops/logs/list" element={<RequireAuth><OpsLogsListPage /></RequireAuth>} />
         {/* 追平批B3（L1SI206-PARITY-B3）：授权配置面板（受护·RequireAuth 未登录重定向 /auth）＋三问向导（公开·同批接通悬空链接）＋运维我的（私域） */}
         <Route path="/authorization/panel" element={<RequireAuth><AuthorizationPanelPage /></RequireAuth>} />
         <Route path="/start/three-questions" element={<ThreeQuestionsPage />} />
-        <Route path="/ops/me" element={<OpsMePage />} />
+        <Route path="/ops/me" element={<RequireAuth><OpsMePage /></RequireAuth>} />
         {/* 追平批B4（L1SI206-PARITY-B4-001）：/verify 怎么验证·5分钟三件自查（公开面·匿名可达·直拷接缝适配）＋两旧链重定向（旧版逐字同形·不破旧链） */}
         <Route path="/verify" element={<VerifyPage />} />
         <Route path="/assets" element={<Navigate to="/five-orders" replace />} />

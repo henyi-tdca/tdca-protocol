@@ -93,6 +93,9 @@ describe('追平批B3：右栏「我的＋AI 助手」（可收展·testid 照�
 
 describe('追平批B3：/ops/me 运维我的（六栏只读）', () => {
   it('六栏只读占位渲染（⛔ 凭据）', async () => {
+    // OPSGATE-001：/ops/me 已加 RequireAuth 门，预置登录态再渲染（沿 /authorization/panel 先例）
+    localStorage.setItem('tdca_auth_did', 'did:tdca:test')
+    localStorage.setItem('tdca_auth_token', 'tk')
     renderAt('/ops/me')
     await waitFor(() => expect(screen.getByTestId('ops-me-page')).toBeTruthy())
     const page = screen.getByTestId('ops-me-page')
