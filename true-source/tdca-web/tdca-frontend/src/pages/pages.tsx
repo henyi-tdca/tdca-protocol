@@ -21,7 +21,7 @@ export const PAGE_META: PageMeta[] = [
   { path: '/about', title: '关于 · 一页看懂 TDCA', layer: 'L0', dataSource: '静态文案（TDCA-PLAIN-001）', permission: '公开', description: '智能体世界的规则、账本与信任——面向普通读者的一页通俗说明。' },
   { path: '/', title: 'TDCA 三体可视化中心', layer: 'L0', dataSource: 'A-1 GET /api/v1/system/overview + /health', permission: '公开', description: '正版门户首页：三体／合规前置三阶／双通道缔约／机器可读通道＋四层架构制度总览区并入。' },
   { path: '/ownership', title: '所有权市场（L1 法定确权层）', layer: 'L1', dataSource: '法定交易中心接口（外部）+ 登记簿只读', permission: '公开读 / 确权操作须 HUF', description: '所有权不得在协议网络内流转：确权路径向导 / 转让 / 登记簿公开查询。' },
-  { path: '/market', title: '配置权市场（L2）', layer: 'L2', dataSource: 'A-3 POST /api/v1/config-right/call + A-4 GET /api/v1/assets/five-orders', permission: '公开读 / 调用须 DID', description: '配置权协议化流转市场——使用权/配置权可流转，所有权不流转（防混淆）。' },
+  { path: '/market', title: '配置权市场（L2）', layer: 'L2', dataSource: 'A-3 POST /api/v1/config-right/call + A-4 GET /api/v1/assets/five-orders', permission: '公开读 / 调用须 operator／founder 会话', description: '配置权协议化流转市场——使用权/配置权可流转，所有权不流转（防混淆）。' },
   { path: '/sandbox', title: '沙盒准入（L2 前置反应釜）', layer: 'SANDBOX', dataSource: 'A-5 GET /api/v1/sandbox/sea-status + /cross-scene/*', permission: '公开读 / 入盒须 HUF', description: '沙盒 = 制度化学反应釜（CHEM-001~004）：SEA 五要件 + 激活系数 &gt;1.2 验证。' },
   { path: '/tax', title: '税收仪表盘（L3 效用计量）', layer: 'L3', dataSource: 'A-2 GET /api/v1/tax/mou/{agent_id} + WS tax_mou', permission: '公开（只读）', description: '每次调用产生 MOU 税收锚定：计税/预缴/MOU 归零只读看板。' },
   { path: '/academy', title: 'TDCA 商学院', layer: 'L0', dataSource: '静态文案（照贴）', permission: '公开', description: 'TDCA 商学院介绍：学院定位、培养对象、教学方式与课程体系。' },
