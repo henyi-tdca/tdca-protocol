@@ -20,7 +20,7 @@ const shellPath = join(dist, 'index.html')
 // ── 一、sitemap 61 条（57＋/acceptance·L1SI218-ALIAS301-001＋/register /formal /market-sim·SITEA-RESIDUAL-001）（2026-11-12 线上实测 41 条核证口径照录＋PRERENDER-001 首扩 16 项）──
 const SITEMAP_ROUTES = [
   '/', '/about', '/academy', '/academy/outline', '/announcements',
-  '/attestation/history', '/audit', '/authorization-registry', '/authorization/panel',
+  '/attestation/history', '/audit', '/authorization-registry',
   '/channel', '/contribute', '/curation', '/demo', '/disclosure', '/docs',
   '/docs/papers', '/docs/regulation', '/docs/whitepapers', '/five-orders', '/help',
   '/lab', '/library', '/market', '/nca-guide', '/negativespace', '/nodes',
@@ -52,7 +52,7 @@ const SUPPLEMENT = {
   '/attestation/history': { title: '确权历史 · NCA 链跨代留痕', description: '确权历史公开留痕：时间／事件类型／公开状态，拒绝高亮照实标。' },
   '/audit': { title: '审计透明', description: '审计透明面：账本可公开核证，记录哈希可核对不可复算。' },
   '/authorization-registry': { title: '授权登记管理（P8b）', description: '授权登记管理面：授权关系登记与查询，谁的数据谁可见。' },
-  '/authorization/panel': { title: '授权配置面板（C-1）', description: '授权配置面板：档位与边界由本人设定，默认最低档。' },
+  // SITEA-RESIDUAL-001 余项2：/authorization/panel 为 RequireAuth 受护面，移出 sitemap 与预渲染（登录门保留不动）
   '/docs/papers': { title: '论文族文档', description: '论文族站内索引：中英双版论文与实证材料入口。' },
   '/docs/regulation': { title: '条例族文档', description: '条例族站内索引：在册规则与判据件入口。' },
   '/docs/whitepapers': { title: '白皮书族文档', description: '白皮书族站内索引：公开白皮书入口。' },
@@ -93,7 +93,7 @@ const errors = []
 for (const r of SITEMAP_ROUTES) if (!meta.has(r)) errors.push(`缺 meta：${r}`)
 for (const p of meta.keys()) if (!SITEMAP_ROUTES.includes(p)) { /* PAGE_META 私域面（/me/* 等）不入 sitemap、不预渲染，登记即可 */ }
 if (!existsSync(shellPath)) errors.push('dist/index.html 不存在（须在 vite build 之后运行）')
-if (SITEMAP_ROUTES.length !== 61) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 61（57+1+3：L1SI218-ALIAS301-001 项2 与 SITEA-RESIDUAL-001 余项1 核证口径，变动须人工复核）`)
+if (SITEMAP_ROUTES.length !== 60) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 60（57+1+3−1：L1SI218-ALIAS301-001 项2、SITEA-RESIDUAL-001 余项1/2 核证口径，变动须人工复核）`)
 if (errors.length) { console.error('预渲染对账失败：\n' + errors.join('\n')); process.exit(1) }
 
 // ── 五、生成：每条路由独立 title/description/og ──
