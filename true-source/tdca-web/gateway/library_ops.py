@@ -116,6 +116,15 @@ _REG_WHITELIST = {
     'TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md': '530ECAC210AB45CA',
     'TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml': '8825B7253D954174',
     '人机协作工作条例.md': '69D9F6D44E139BC9',
+    # CONTENT-CLOSE-001（L1SI224，依 TDCA-HANDOFF-EXEC-L1SI224-CONTENT-CLOSE-001 甲块）：
+    # 五件入站（机读/英文对等在册对等版，同件多版本应齐）；固化值以容器在役目录
+    # /docs/regulations 实算为准、逐位核过（043 经两地三读对齐 453750FC41E03B2E）；
+    # ⛔ 改既有 55 项、⛔ 动 _reg_read 逻辑
+    'TDCA-PUB-CORPUS-043-Constitution-EN-可信协作宪法英文人读版（V0.1·十条与四支柱·逐条对应中文）.md': '453750FC41E03B2E',
+    'TDCA-PUB-CORPUS-044-Constitution-MACHINE-可信协作宪法机读版（V0.1·十条与四支柱·与中文英文互见）.yaml': 'D6704C36439CB154',
+    'TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml': 'F29F724A919BFC9F',
+    'TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml': 'F470E950E2C3E9EF',
+    'TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md': 'C2ACA45FB8A8B5F8',
 }
 
 
