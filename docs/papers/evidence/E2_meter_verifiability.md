@@ -1,6 +1,7 @@
 # E2 · 计量层可验证性（真实运行值）
 
 > 实证编号: E2 ｜ 对应批次：冷启动实证批 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E2
+> 版本: **V1.0**（与主论文 TDCA-paper-CN/EN 同版包 · GSEQ-0931 公开入库 2026-09-02）
 > 数据性质: **real**（ledger.py --verify 实跑输出，2026-09-01）
 > 纪律: 全部为真实 verify 结果；置信度分级如实标注
 

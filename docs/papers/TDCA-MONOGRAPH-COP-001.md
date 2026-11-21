@@ -4,6 +4,7 @@
 ## ——默会知识如何在制度与场景中显现（开源发表稿）
 
 > Document: TDCA-MONOGRAPH-COP-001 ｜ Published: 2026-08-26 ｜ Status: **Released**
+> 版本: **V1.0**（首版公开发布 2026-08-26 · 发布提交 496e4837；2026-10-01 deid 去内部编号 e5fecf5f）
 
 ---
 

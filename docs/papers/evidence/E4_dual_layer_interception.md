@@ -1,6 +1,7 @@
 # E4 · 双层核验机器化（假存证拦截案例）
 
 > 实证编号: E4 ｜ 对应批次：冷启动实证批 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E4 + TDCA-METER-NSFL-CORRECT-001
+> 版本: **V1.0**（与主论文 TDCA-paper-CN/EN 同版包 · GSEQ-0931 公开入库 2026-09-02）
 > 数据性质: **real**（registry 锚点实盘核验事件）
 > 论证: 「论迹不论心」工程化——行为（NCA 存证/registry 锚点）而非声称
 
