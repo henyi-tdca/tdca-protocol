@@ -185,9 +185,11 @@ _PUBLIC_DOCS = {
     "TDCA-MONOGRAPH-SANDBOX-001-沙盒正反化合机制.md",
     "TDCA-MONOGRAPH-DC-001-REV-1-数字人民币智能体协作-修订版.md",
     "TDCA-TREATISE-026-REV-002-复核修正版.md",
-    "tdca-paper-realtime-001/TDCA-PAPER-REALTIME-001-V1.3-PUBLISH-数模结合实时数据流下快慢系统的制度均衡.md",
+    # DOCNAME-001（L1SI225）：甲类 A3 超长整改——中文尾段精简，件号版本保留，内容字节未动
+    "tdca-paper-realtime-001/TDCA-PAPER-REALTIME-001-V1.3-PUBLISH-快慢系统制度均衡.md",
     # L1SI200-PAPER-ANCHOR-SITE-001 §二（ANCHOR-001 上站：仓内已在（sha256_16=CEA8F1D8D30D84C3·25,900B）站上未列直取404；带子路径前缀＝realtime 先例同款；22→23）：
-    "tdca-proposal-anchor-001/TDCA-PROPOSAL-ANCHOR-001-V1.4-PUBLISH-断言锚点与混合法系的判例层机制.md",
+    # DOCNAME-001（L1SI225）：甲类 A3 超长整改——中文尾段精简，件号版本保留，内容字节未动
+    "tdca-proposal-anchor-001/TDCA-PROPOSAL-ANCHOR-001-V1.4-PUBLISH-断言锚点与判例层机制.md",
     # L1SI201-PAPER-WL-BACKFILL-001 §三 #11~#14（论文次批四件以站为准回灌入册；逐件哈希已验：8092/68B1039C7FECD177·20059/22036CA28E610359·24174/130A67131538EE2C·6122/77F9A89714919EAF；23→27）：
     "TDCA-FUNCTION-WP-002-APPX-E-附录E-公理化基础-PUBLISH.md",
     "TDCA-PROTOCOL-CCP-001-V1.0-13章补落版-PUBLISH.md",
@@ -209,10 +211,12 @@ _PUBLIC_DOCS = {
     # ⛔ 放六件（内部编号，待改另批）：simulations/README、MCP-LIVE-TEST-REPORT、
     #    REAL-SUNZI-3PHASE×2、REAL-SUNZI-COLLAB、SUNZI-COLLAB-REPORT
     "cop-library": (
-    "README.md",
-    "OPENING.md",
+    # DOCNAME-001（L1SI225，GSEQ 在令；甲类 A1 真病整改，先下架→定名→重上架，内容字节未动）：
+    # README/OPENING/OPENING-LEDGER 三件裸通用名改可识别名（哪族·什么）
+    "cop-library-族索引说明.md",
+    "cop-library-开源说明-OPENING.md",
     # L1SI180-TERMS-004/005 甲案上站一件（入站批 2 · 未入册⟹幂等补入 · 磁盘已与 main 树逐字节符）
-    "OPENING-LEDGER.md",
+    "cop-library-开放台账-OPENING-LEDGER.md",
     "COP-MANIFEST-2026-09-13.md",
     "tdca_core/README.md",
     "simulations/multilateral_search_match/README.md",
@@ -579,7 +583,8 @@ _PUBLIC_DOCS = {
             "iching/第63卦-既济.yaml",
             "iching/第64卦-未济.yaml",
     # COPLIB-INGEST-001（L1SI220·2026-11-19）：素材库入站批 534 件（清单 sha256_16=F6AA2A90D50B6989·去重后 534·与既有 354 零重复）
-    "case-studies/TDCA-CASE-MULTIAGENT-ORCHESTRATION-001-多智能体协作编排对照案例（同一任务两种编排：协议显式编排与工具内嵌编排的三个可比面）.md",
+    # DOCNAME-001（L1SI225）：甲类 A3 超长整改——对照案例名精简，件号主体保留，内容字节未动
+    "case-studies/TDCA-CASE-MULTIAGENT-ORCHESTRATION-001-多智能体协作编排对照案例.md",
     "chengyu/2026-08-28/第100条-假痴不癫.yaml",
     "chengyu/2026-08-28/第101条-管中窥豹.yaml",
     "chengyu/2026-08-28/第102条-温故知新.yaml",
@@ -818,7 +823,8 @@ _PUBLIC_DOCS = {
     "games/第02博弈-猎鹿博弈.yaml",
     "games/第03博弈-斗鸡博弈.yaml",
     "games/第04博弈-最后通牒博弈.yaml",
-    "hundred_schools/2026-08-30/第13百家-周易 (五经首经·变易思维).yaml",
+    # DOCNAME-001（L1SI225）：甲类 A2 空格整改——半角括号改全角（空格随除），内容字节未动
+    "hundred_schools/2026-08-30/第13百家-周易（五经首经·变易思维）.yaml",
     "hundred_schools/COMPOSED-道德经_可审计决策.yaml",
     "hundred_schools/daodejing/COMPOSED-第36章_可审计顺势决策.yaml",
     "hundred_schools/daodejing/daodejing_manifest.yaml",
@@ -1033,7 +1039,8 @@ _PUBLIC_DOCS = {
     "hundred_schools/zhongyong/第11条-至诚如神.yaml",
     "hundred_schools/zhongyong/第12条-中庸不可能.yaml",
     "hundred_schools/zhongyong/第13条-三重.yaml",
-    "hundred_schools/第01百家-道德经 (道家根本经典).yaml",
+    # DOCNAME-001（L1SI225）：甲类 A2 空格整改——半角括号改全角（空格随除），内容字节未动
+    "hundred_schools/第01百家-道德经（道家根本经典）.yaml",
     "marxism/COMPOSED-毛泽东思想_实事求是两结合.yaml",
     "marxism/第01条-物质第一性.yaml",
     "marxism/第02条-对立统一规律.yaml",

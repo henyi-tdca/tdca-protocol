@@ -10,7 +10,8 @@ sys.path.insert(0, os.path.join(_THIS, "..", "compositions"))
 
 from compose_general import compose
 
-PARENT = os.path.join(_THIS, "第01百家-道德经 (道家根本经典).yaml")
+# DOCNAME-001（L1SI225）：文件名引用随甲类 A2 整改同步（半角括号改全角，内容零改动）
+PARENT = os.path.join(_THIS, "第01百家-道德经（道家根本经典）.yaml")
 INTERP = os.path.join(_THIS, "..", "tdca_core", "第02核心-可审计自主决策协议.yaml")
 
 if __name__ == "__main__":

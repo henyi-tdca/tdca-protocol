@@ -286,18 +286,21 @@ def test_ingest002_list_42_no_droop():
 def test_cross_family_same_name_readme_both_readable(tmp_path, monkeypatch):
     """L1SI213-REG-FAMMAP-001：族判定键改二元组（族+件名）后，跨族同名件各自读到自己那份。
     验收：regulation/README.md 与 cop-library/README.md 皆 200 且 bytes 不同；
-    fail-closed 语义不变：他族在册件经本族取仍 404。"""
+    fail-closed 语义不变：他族在册件经本族取仍 404。
+    DOCNAME-001（L1SI225）整改后注：cop-library 裸名 README.md 已改名
+    cop-library-族索引说明.md（甲类 A1），本用例 cop 侧随新在册名更新——
+    跨族同读判定意不变（regulation/README.md 为 S-5 停手豁免件，仍在册）。"""
     reg = tmp_path / "regulations"
     cop = tmp_path / "cop-library"
     reg.mkdir()
     cop.mkdir()
     (reg / "README.md").write_bytes("制度区索引页 README（FAMMAP 测试正文 A）".encode("utf-8"))
-    (cop / "README.md").write_bytes("素材库 README（FAMMAP 测试正文 B）".encode("utf-8"))
+    (cop / "cop-library-族索引说明.md").write_bytes("素材库族索引说明（FAMMAP 测试正文 B）".encode("utf-8"))
     dirs = {"regulation": reg, "cop-library": cop}
     monkeypatch.setattr(public_docs_ops, "_docs_dir",
                         lambda family=public_docs_ops._FAMILY: dirs.get(family))
     r1 = client.get("/api/public/docs/regulation/README.md")
-    r2 = client.get("/api/public/docs/cop-library/README.md")
+    r2 = client.get("/api/public/docs/cop-library/cop-library-族索引说明.md")
     assert r1.status_code == 200, r1.text[:200]
     assert r2.status_code == 200, r2.text[:200]
     d1, d2 = r1.json(), r2.json()

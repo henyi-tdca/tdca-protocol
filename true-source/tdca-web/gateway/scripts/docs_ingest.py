@@ -5,6 +5,7 @@
   FC-ID: TDCA-FC-OPS-INGEST-001 | 交办: TDCA-HANDOFF-SITE-CONTENT-INGEST-001-IMPL-001/002
   口径: 单一事实源=主仓；本脚本把仓内 docs/regulations 与 docs/cop-library 之未入站件
         幂等补入 docs 表；⛔ 不改 library_ops 只读语义；⛔ 不造内容；⛔ 不覆盖既有。
+  闸: DOCNAME-001（L1SI225）三步闸＋第⓿步族级入册（docname_gate.py），全族 fail-closed。
 
 用法:
   python docs_ingest.py --repo <仓路径> --db <sqlite 路径> [--family F] [--dry-run]
@@ -77,18 +78,11 @@ def extract_title(text: str, stem: str) -> str:
     return stem
 
 
-def _coplib_whitelist() -> set[str]:
-    """名单闸（INGEST-RUN-001·甲案）：读同层 public_docs_ops.py 之 _PUBLIC_DOCS["cop-library"]。
-    件以「docs/cop-library/<名单条目>」判；名单文件缺失即 fail-closed 中止（⛔ 裸跑全量）。"""
-    import ast
-    wl_path = Path(__file__).resolve().parent.parent / "public_docs_ops.py"
-    tree = ast.parse(wl_path.read_text(encoding="utf-8"))
-    for node in ast.walk(tree):
-        if (isinstance(node, ast.Assign)
-                and getattr(node.targets[0], "id", "") == "_PUBLIC_DOCS"):
-            docs = ast.literal_eval(node.value)
-            return {"docs/cop-library/" + e for e in docs["cop-library"]}
-    raise SystemExit("WHITELIST_UNAVAILABLE: _PUBLIC_DOCS 未找到，fail-closed 中止")
+def _gate_registry():
+    """DOCNAME-001（L1SI225）三步闸＋第⓿步族级入册：读同层 docname_gate 之 registry。
+    闸不可用（白名单缺失）即 fail-closed 中止（⛔裸放全量）。"""
+    from docname_gate import load_registry
+    return load_registry()
 
 
 def iter_sources(repo: Path, only_family: str = ""):
@@ -118,18 +112,23 @@ def main() -> int:
     taken = {r[0] for r in cur.execute("SELECT slug FROM docs")}
     have_src = {r[0] for r in cur.execute("SELECT source_path FROM docs")}
 
-    # INGEST-RUN-001（甲案）：cop-library 走名单闸——名单外一律跳过（含 .py 25 件）
-    wl = _coplib_whitelist() if (not args.family or args.family == "cop-library") else None
-    plan, n_skip, n_skipwl, n_add = [], 0, 0, 0
+    # DOCNAME-001（L1SI225）：三步闸＋第⓿步——全六族一律 fail-closed（原仅 cop-library
+    # 名单闸，令面扩为全族：⓿族级入册 → ①甲类机检 A1~A5 → ②白名单在册 → ③显示名映射；
+    # 任一不过即 REJECT 不入站，⛔先上后补、⛔人工放行；判定纯函数可重跑，同件同结论）。
+    from docname_gate import gate
+    docs_reg, display_reg = _gate_registry()
+    plan, n_skip, n_add, n_reject = [], 0, 0, 0
     for family, rel, f in rows:
         src = _SRC_PREFIX + f.relative_to(repo).as_posix()
         if src in have_src:
             n_skip += 1
             plan.append(("SKIP", family, slug_base(f.stem), f.name))
             continue
-        if wl is not None and f.relative_to(repo).as_posix() not in wl:
-            n_skipwl += 1
-            plan.append(("SKIP_WL", family, slug_base(f.stem), f.name))
+        fam_rel = f.relative_to(repo / rel).as_posix()  # 族内相对路径（闸判据口径）
+        verdict, reason = gate(family, fam_rel, docs_reg, display_reg)
+        if verdict != "PASS":
+            n_reject += 1
+            plan.append(("REJECT", family, fam_rel, reason))
             continue
         slug = make_slug(f.stem, taken)
         taken.add(slug)
@@ -149,7 +148,7 @@ def main() -> int:
     total = cur.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
     conn.close()
 
-    print(f"plan: add={n_add} skip={n_skip} skip_wl={n_skipwl} total_after={total} dry_run={args.dry_run}")
+    print(f"plan: add={n_add} skip={n_skip} reject={n_reject} total_after={total} dry_run={args.dry_run}")
     for act, family, slug, fname in plan:
         print(f"  {act:4} [{family}] {slug}  <- {fname}")
     return 0
