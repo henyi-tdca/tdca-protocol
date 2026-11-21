@@ -1,8 +1,10 @@
 // =============================================================================
 // TDCA 制度水印
-// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 内容区知识库（/library 白皮书·论文·产物库·制度规范）
+// FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: 内容区知识库（/library 全族索引·族名动态取自接口）
 // 约束矩阵: 站点入站令·甲/乙——只读面；以在册仓库为唯一权威源；A-22 /api/v1/library/*
 // 复用: PageShell / api（会话令牌自动注入）
+// KB-TABS-001（GSEQ-8840）：族 tab 唯一数据源＝GET /api/v1/library/families 动态返回
+//           （⛔ 前端再硬编码族名列表——旧 FAMILY_TABS 仅 5 族致制度 60 条不可见已修）；族名白名单同源派生。
 // =============================================================================
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
@@ -17,13 +19,9 @@ interface DetailView {
   source_path: string; synced_at: string; note?: string
 }
 
-const FAMILY_TABS: { key: string; label: string }[] = [
-  { key: 'whitepaper', label: '白皮书' },
-  { key: 'paper', label: '论文' },
-  { key: 'terms', label: '术语' },
-  { key: 'kg', label: '知识图谱' },
-  { key: 'cop-library', label: '素材库' },
-]
+// KB-TABS-001：族 tab 不再硬编码——渲染用 tabs 由接口 families 态派生（见组件内 docTabs）。
+// kg（知识图谱）不属文档族（图谱视图走 /api/v1/kg/*，L1SI211-KG-SITE-001），作单独追加项保留。
+const KG_TAB: { key: string; label: string } = { key: 'kg', label: '知识图谱' }
 
 // 产物库族内子库分组（slug 前缀 <子库>--；批一在册件无此前缀，归入说明件与代表件）
 const COP_SUB_NAMES: Record<string, string> = {
@@ -104,10 +102,9 @@ function CopItem({ it, detail, onPick }: {
 export function LibraryPage() {
   const [params] = useSearchParams()
   const [families, setFamilies] = useState<FamilyView[]>([])
-  const [family, setFamily] = useState(
-    ['whitepaper', 'paper', 'cop-library', 'regulation'].includes(params.get('family') ?? '')
-      ? (params.get('family') as string)
-      : 'whitepaper')
+  // KB-TABS-001：family 参数白名单同源——合法集＝接口返回族集合 ∪ {kg}；
+  // families 异步到达，故以 effect 在族清单载入后校验深链参数（⛔ 另写硬编码名单）。
+  const [family, setFamily] = useState('whitepaper')
   const [items, setItems] = useState<ItemView[]>([])
   const [detail, setDetail] = useState<DetailView | null>(null)
   const [err, setErr] = useState('')
@@ -153,6 +150,13 @@ export function LibraryPage() {
     })
   }, [])
 
+  // KB-TABS-001 深链校验：族清单（含 kg 追加位）载入后，?family= 合法则进、非法回落 whitepaper
+  useEffect(() => {
+    if (families.length === 0) return
+    const p = params.get('family')
+    setFamily(p === KG_TAB.key || families.some((f) => f.family === p) ? (p as string) : 'whitepaper')
+  }, [params, families])
+
   useEffect(() => {
     setDetail(null); setErr(''); setMobileDetail(false); savedListTop.current = 0; savedWinTop.current = 0
     if (family === 'kg') { setItems([]); return }  // 图谱视图走 /api/v1/kg/*（L1SI211-KG-SITE-001）
@@ -173,17 +177,21 @@ export function LibraryPage() {
 
   const onBack = () => setMobileDetail(false)
 
+  // KB-TABS-001：渲染 tab 唯一数据源＝接口族清单（families 态）动态派生；kg 为文档族外单独追加位
+  const docTabs = families.map((f) => ({ key: f.family, label: f.name }))
+  const tabs = [...docTabs, KG_TAB]
+
   const famName = families.find((f) => f.family === family)?.name ?? family
 
   return (
     <PageShell
-      title="知识库（白皮书 · 论文 · 术语 · 知识图谱 · 素材库）"
+      title="知识库（族索引动态取自接口）"
       dataSource="A-22 GET /api/v1/library/*（docs 表只读面）"
-      permission="公开（CONTENT-LIVE-ALL-001 案甲：六族匿名只读）"
-      description="协议本体文献库（SITE-THREE-FIXES-001：文库改名知识库，路由仍 /library 不动）：只读索引＋正文阅读；素材库（思维协议产物）按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。分工（LIB-DOCS-SCOPE-001）：本库收理论／白皮书／术语／知识图谱／思维协议／文献；制度类（制度／条例／指引／章程／规则／办法／说明／示例／帮助）请走「文档库」（/docs）。周刊：⭐ 未开放 ⭐。">
+      permission="公开（九族匿名只读·KB-TABS-001 族索引与接口同源）"
+      description="协议本体文献库（SITE-THREE-FIXES-001：文库改名知识库，路由仍 /library 不动）：只读索引＋正文阅读；素材库（思维协议产物）按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。分工（LIB-DOCS-SCOPE-001·KB-TABS-001 修订）：本库收理论／白皮书／术语／知识图谱／思维协议／文献；制度族（regulation）已并入本库族索引（TITLE-FAMILY-FIX-001／KB-TABS-001），全文同时在「文档库」（/docs）可读。周刊：⭐ 未开放 ⭐。">
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-gray-500">
-          {FAMILY_TABS.map((t) => (
+          {tabs.map((t) => (
             <button
               key={t.key}
               data-testid={`lib-tab-${t.key}`}

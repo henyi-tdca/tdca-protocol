@@ -15,6 +15,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import api_v1
+import library_ops
 
 from app import app
 from db import get_database_url
@@ -78,6 +79,16 @@ def test_closed_families_401_and_open_families_200(_docs_table):
     # CONTENT-LIVE-ALL-001 案甲（2026-11-10）：whitepaper/paper 两族并入匿名只读（六族）
     assert client.get("/api/v1/library/whitepaper").status_code == 200
     assert client.get("/api/v1/library/paper").status_code == 200
+
+
+def test_families_endpoint_matches_open_families(_docs_table):
+    """KB-TABS-001（GSEQ-8840）对账断言：匿名 /families 返回族集 == _OPEN_FAMILIES
+    （与前端 tab 集合对账成对，防「前端硬编码缺族」类漂移再发生）。"""
+    r = client.get("/api/v1/library/families")
+    assert r.status_code == 200, r.text[:200]
+    items = r.json()["data"]["items"]
+    assert {e["family"] for e in items} == set(library_ops._OPEN_FAMILIES)
+    assert len(items) == len(library_ops._OPEN_FAMILIES) == 9
 
 
 def test_family_closed_set(_docs_table):
