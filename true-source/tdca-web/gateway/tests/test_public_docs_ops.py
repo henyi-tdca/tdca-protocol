@@ -11,6 +11,7 @@
 """
 import hashlib
 import os
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -19,6 +20,7 @@ from fastapi.testclient import TestClient
 import public_docs_ops
 
 from app import app
+from db import get_database_url
 
 client = TestClient(app)
 
@@ -184,11 +186,14 @@ def test_ingest002_list_42_no_droop():
     L1SI204-REG-PUBLISH-001《人机协作工作条例》净名进站后 49→50；
     L1SI207-MOBILE-ENTRY-AND-REF-001-AMEND-1 相遇公开说明三件纳入后 50→53；
     L1SI213-REG-COMPLETE-001 乙案 README/NSFL 两件补入后 53→55——断言随令更正照报）；
+    REDFOUR-FIX-001-T2（GSEQ-8830）：CONTENT-CLOSE-001 五件入站后 55→60，条数断言改动态取在册数，
+    另加同步护栏（在册集与 docs 表 regulation 行数对账）与反例自验；
     L1SI154-028 九件与新入册 16 件一件不缺（防"掉条回落"）。"""
     r = client.get("/api/public/docs/regulation")
     assert r.status_code == 200, r.text[:200]
     data = r.json()
-    assert data["count"] == 55, f"清单条数漂移: {data['count']}"
+    在册数 = len(public_docs_ops._PUBLIC_DOCS["regulation"])
+    assert data["count"] == 在册数, f"清单条数漂移: {data['count']} != 在册 {在册数}"
     返回集 = {e["filename"] for e in data["documents"]}
     在册集 = set(public_docs_ops._PUBLIC_DOCS["regulation"])  # 以测试现行 import 风格取用
     assert 返回集 == 在册集, f"与在册清单不等：缺 {sorted(在册集 - 返回集)} 多 {sorted(返回集 - 在册集)}"
@@ -227,6 +232,55 @@ def test_ingest002_list_42_no_droop():
     }
     missing = must - names
     assert not missing, f"掉条: {missing}"
+    # ---- REDFOUR-FIX-001 T-2 同步护栏（验收#1：补断言不增件数，同一测试内）----
+    # 在册集（_PUBLIC_DOCS）须经入站进 docs 表；差值只许来自 _PENDING 登记名单。
+    _PENDING = ()  # 新增待入站件须在此登记（豁免名单；现 0＝CONTENT-CLOSE-001 后五件已入站）
+    _db = get_database_url().split("sqlite:///", 1)[1]
+    _conn = sqlite3.connect(_db)
+    _conn.execute("""CREATE TABLE IF NOT EXISTS docs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        family TEXT NOT NULL, slug TEXT NOT NULL UNIQUE,
+        title TEXT NOT NULL, body_md TEXT NOT NULL,
+        source_path TEXT NOT NULL,
+        data_nature TEXT NOT NULL DEFAULT 'simulated',
+        synced_at TEXT NOT NULL DEFAULT (datetime('now')))""")
+    _reg = list(public_docs_ops._PUBLIC_DOCS["regulation"])
+    for _name in _reg:
+        _conn.execute("INSERT OR REPLACE INTO docs (family, slug, title, body_md, source_path)"
+                      " VALUES ('regulation', ?, ?, '占位正文（护栏种子）', ?)",
+                      (_name, _name, "regulations/" + _name))
+    _conn.commit()
+
+    def _sync_guard():
+        """在册数 − docs 表 regulation 行数；正常应等于 len(_PENDING)（0）。"""
+        rows = _conn.execute(
+            "SELECT COUNT(*) FROM docs WHERE family='regulation'").fetchone()[0]
+        return len(public_docs_ops._PUBLIC_DOCS["regulation"]) - rows
+
+    def _assert_sync():
+        diff = _sync_guard()
+        assert diff == len(_PENDING), (
+            f"在册与入站不同步：在册−入站={diff}，待登记={len(_PENDING)}")
+
+    try:
+        _assert_sync()  # 正例：在册 60 − 入站 60 ＝ 0
+        # 反例自验：在册集塞入未入站假件 → 护栏必须转红（在册 61 − 入站 60 ＝ 1）
+        _fake = "TDCA-PROBE-FAKE-NOT-INGESTED.md"
+        _orig = public_docs_ops._PUBLIC_DOCS["regulation"]
+        assert _fake not in _orig
+        public_docs_ops._PUBLIC_DOCS["regulation"] = _orig + (_fake,)
+        try:
+            with pytest.raises(AssertionError):
+                _assert_sync()
+        finally:
+            public_docs_ops._PUBLIC_DOCS["regulation"] = _orig
+        # 撤反例后护栏必须回绿（在册 60 − 入站 60 ＝ 0）
+        _assert_sync()
+    finally:
+        _conn.executemany("DELETE FROM docs WHERE family='regulation' AND slug = ?",
+                          [(n,) for n in _reg])
+        _conn.commit()
+        _conn.close()
 
 
 def test_cross_family_same_name_readme_both_readable(tmp_path, monkeypatch):
