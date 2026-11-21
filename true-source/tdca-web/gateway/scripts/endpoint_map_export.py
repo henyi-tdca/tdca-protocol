@@ -30,11 +30,20 @@ GATEWAY_ROOT = Path(__file__).resolve().parents[1]
 SITE_ROOT = GATEWAY_ROOT.parents[1] / "tdca-site"
 MAP_PATH = SITE_ROOT / "docs" / "site" / "endpoint-map" / "端点对照表.json"
 
-AUTH_VOCAB = ("匿名", "会话 TDCA-SES", "证书 TDCA-CRT")
+AUTH_VOCAB = ("匿名", "会话 TDCA-SES", "证书 TDCA-CRT",
+              "运维私域（会话 TDCA-SES／机面 X-TDCA-Ops-Auth）",
+              "密钥口（智库侧登记密钥·谁判谁登）")
 
-# 端内会话门：命中任一即「会话 TDCA-SES」（均以 _require_session_user 为根，机读源码判定）
+# 端内会话门：命中任一即「会话 TDCA-SES」（均以 _require_session_user 为根，机读源码判定）。
+# require_write_privilege（UNIFYAUTH-001 统一写闸四档）本体延迟调用 _require_session_user，
+# 端点源码只见 Depends(require_write_privilege(...))——REDFOUR-FIX-001 T-1 补认（免误落证书档）。
 _SESSION_TOKENS = ("_require_session_user", "_subject_gate",
-                   "_require_ops_admin", "_require_founder", "validate_session")
+                   "_require_ops_admin", "_require_founder", "validate_session",
+                   "require_write_privilege")
+# 运维私域双通路（ops_auth_gate）：人类会话照原路＋机面 X-TDCA-Ops-Auth（O-1 只读放行）
+_OPS_TOKENS = ("_require_ops_caller", "require_ops_caller", "_ops_guard")
+# 智库侧登记密钥口（谁判谁登·fail-closed key guard）
+_REGKEY_TOKENS = ("登记密钥",)
 _SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 _FRAMEWORK_METHODS = {"HEAD", "OPTIONS"}
 
@@ -58,9 +67,13 @@ def sanitize_purpose(line: str) -> str:
 
 
 def derive_auth(path: str, methods: list, src: str, auth) -> str:
-    """鉴权要求机推（⛔ 猜填）：会话门 → 中间件凭据闸 → 匿名。"""
+    """鉴权要求机推（⛔ 猜填）：豁免→运维私域→密钥口→会话门→中间件凭据闸→匿名。"""
     if path in tuple(auth._AUTH_EXEMPT):
         return "匿名"
+    if any(t in src for t in _OPS_TOKENS):
+        return "运维私域（会话 TDCA-SES／机面 X-TDCA-Ops-Auth）"
+    if any(t in src for t in _REGKEY_TOKENS):
+        return "密钥口（智库侧登记密钥·谁判谁登）"
     if any(t in src for t in _SESSION_TOKENS):
         return "会话 TDCA-SES"
     sensitive = path.startswith(tuple(auth._SENSITIVE_PREFIXES))
