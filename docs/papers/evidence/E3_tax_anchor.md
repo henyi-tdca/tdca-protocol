@@ -1,7 +1,7 @@
 # E3 · 税收锚定落地（真实数值链）
 
 > 实证编号: E3 ｜ 对应批次：冷启动实证批 / 来源: TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001 §二.E3
-> 版本: **V1.0**（与主论文 TDCA-paper-CN/EN 同版包 · GSEQ-0931 公开入库 2026-09-02）
+> 版本: **V1.0**（与主论文 TDCA-paper-CN/EN 同版包 · 公开入库 2026-09-02）
 > 数据性质: **real**（ledger seq11 REAL 锚定 + phase3_reconciliation.json）；成本估算部分标 SIMULATED
 > 纪律: I-COST/tax/mou_anchor 为 REAL 账本值；cost_nature 区分标注
 
