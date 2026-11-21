@@ -102,7 +102,12 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, 
 const manifest = []
 for (const route of SITEMAP_ROUTES) {
   const { title, description } = meta.get(route)
-  const canonical = `https://tdca.com.cn${route}`
+  // CANON-SLASH-001-AMEND-1（丙案，GSEQ-8844）：canonical 取实际返 200 的终态地址。
+  // 派生依据=本脚本产物形态，⛔手写枚举：凡非根路由皆生 dist<route>/index.html
+  // 目录产物，经 nginx try_files $uri $uri/ 无尾斜杠必隐式 301、尾斜杠才是 200
+  // 终态（2026-11-21 线上 11 路由抽测实证）；根 / 直出 200，形态不动。
+  // nginx/sitemap/301 一跳本令一律不碰；og:url 维持原值（令文未含）。
+  const canonical = route === '/' ? `https://tdca.com.cn/` : `https://tdca.com.cn${route}/`
   let html = shell
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`)
   // FACE-FIX-001 F-1/F-2：壳模板 site 级 canonical 与 og:url/og:title/og:description
