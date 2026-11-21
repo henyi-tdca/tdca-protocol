@@ -127,15 +127,45 @@ def test_a7_nca_verify():
 
 
 # ---- A-8 治理 ----
+# GOVGATE-001：huf-sign / emergency-fuse 已挂 _gov_gate（require_ops_caller，
+# 仅 founder）。匿名 401（fail-closed）＋ founder 会话正向 200 两面同测。
+def _founder() -> str:
+    """founder 会话注入（照 test_agent_channel_b4_punish 既有范式）。"""
+    name = "founder-a8-governance"
+    ph, salt, iters = hash_password(f"pw-{name}")
+    with get_sessionmaker().begin() as s:
+        u = s.get(M.User, name)
+        if u is None:
+            s.add(M.User(username=name, password_hash=ph, salt=salt,
+                         iterations=iters, role="founder", created_at=_NOW))
+        else:
+            u.role = "founder"
+    r = client.post("/api/v1/auth/login", json={"username": name, "password": f"pw-{name}"})
+    assert r.status_code == 200, r.text[:300]
+    return r.json()["data"]["token"]
+
+
 def test_a8_huf_sign():
     r = client.post("/api/v1/governance/huf-sign", json={"action": "ota_upgrade"})
-    assert r.status_code == 200
+    assert r.status_code == 401          # GOVGATE-001：匿名拒（fail-closed）
+
+
+def test_a8_huf_sign_founder_ok():
+    r = client.post("/api/v1/governance/huf-sign", json={"action": "ota_upgrade"},
+                    headers=_h(_founder()))
+    assert r.status_code == 200, r.text[:200]
     assert r.json()["data"]["huf_irreducible"] is True
 
 
 def test_a8_emergency_fuse():
     r = client.post("/api/v1/governance/emergency-fuse", json={})
-    assert r.status_code == 200
+    assert r.status_code == 401          # GOVGATE-001：匿名拒（fail-closed）
+
+
+def test_a8_emergency_fuse_founder_ok():
+    r = client.post("/api/v1/governance/emergency-fuse", json={},
+                    headers=_h(_founder()))
+    assert r.status_code == 200, r.text[:200]
     assert "fused" in r.json()["data"]
 
 
