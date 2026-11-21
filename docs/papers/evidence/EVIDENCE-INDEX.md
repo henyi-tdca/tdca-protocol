@@ -3,6 +3,7 @@
 > 包路径: `docs/cognitive-compiler/coldstart/paper-evidence-20260901/`
 > 指令：冷启动实证批（智库存证件 Handoff, TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001）
 > 采集方: WorkBuddy ｜ 采集时间: 2026-09-01 ｜ 状态: ✅ 本地落盘，**不发布**（论文定稿用）
+> 版本: **V1.0**（与主论文 TDCA-paper-CN/EN 同版包 · GSEQ-0931 公开入库 2026-09-02）
 > 纪律: **真实值零容忍示意** —— 每值含来源（文件/GSEQ）+ 时间戳 + `real`/`SIMULATED` 标注；已有产物直接采集，未重跑 LLM 耗额度
 
 ## 一、六实证清单（E1–E6）

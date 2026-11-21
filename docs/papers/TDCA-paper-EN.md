@@ -4,6 +4,8 @@
 > **Data-integrity statement**: All numerical values in the empirical section are **real** (engineering runs / ledger / production台账 directly captured); no illustrative values are used. The placeholder hash `0x7F3A…` and any illustrative timestamps are **zero-residual**. Citation format: IEEE numbered references; each empirical claim cites the evidence package file + GSEQ band + `real` tag.
 > **Internal-口径 note**: Cost/run data (I-COST, MOU amount, chain tail hash) originate from an internal ledger and real台账; flagged as internal口径. At camera-ready, internal provenance IDs are to be replaced by a public repository DOI / archive, per the pre-submission checklist (§ VII).
 
+> Version: **V1.0** (FROZEN final · GSEQ-0931 public-repo release 2026-09-02 · SHA256 4323f5c4…)
+
 ---
 
 ## Abstract

@@ -1,6 +1,7 @@
 # E1 · 跨模型一致性（4 模型对比表 · 真实值）
 
 > 实证编号: E1 ｜ 对应批次：冷启动实证批 / 来源规范: TDCA-PAPER-REVIEW-001§二.2 + TDCA-HANDOFF-WORKBUDDY-PAPER-EVIDENCE-001§二.E1
+> 版本: **V1.0**（与主论文 TDCA-paper-CN/EN 同版包 · GSEQ-0931 公开入库 2026-09-02）
 > 数据性质: **real**（编译产物/台账/registry 直接采集，未重跑 LLM）；采集时间 2026-09-01
 > 纪律: 真实值零容忍示意；无示意值；KIMI 行编译单元格 N/A（角色=发布/联络线，非编译）
 
