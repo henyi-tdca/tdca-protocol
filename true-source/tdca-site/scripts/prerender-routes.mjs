@@ -56,7 +56,7 @@ const SUPPLEMENT = {
   '/docs/papers': { title: '论文族文档', description: '论文族站内索引：中英双版论文与实证材料入口。' },
   '/docs/regulation': { title: '条例族文档', description: '条例族站内索引：在册规则与判据件入口。' },
   '/docs/whitepapers': { title: '白皮书族文档', description: '白皮书族站内索引：公开白皮书入口。' },
-  '/library': { title: '知识库（白皮书 · 论文 · 术语 · 知识图谱 · 素材库）', description: '知识库总入口：四族文档、术语检索、知识图谱与素材库。' },
+  '/library': { title: '知识库（全族文档索引）', description: '知识库总入口：制度、白皮书、论文、术语、法律、帮助、操作指引、素材库与知识图谱（族索引动态取自接口，KB-TABS-001）。' },
   '/market': { title: '配置权市场（L2）', description: '配置权市场公开面：只读展示，不含任何交易入口。' },
   '/notifier': { title: '通知机状态页', description: '通知机状态公开面：只读状态展示。' },
   '/ownership': { title: '法定交易中心 · 提交入口', description: '所有权登记提交面：登记号公开可查，证据包可核。' },
