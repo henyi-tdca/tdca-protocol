@@ -58,4 +58,8 @@
   <url><loc>https://tdca.com.cn/overview</loc></url>
   <url><loc>https://tdca.com.cn/cluster</loc></url>
   <url><loc>https://tdca.com.cn/acceptance</loc></url>
+  <!-- SITEA-RESIDUAL-001 余项1：三公开页补登（与 SITEMAP_ROUTES 同源，58→61） -->
+  <url><loc>https://tdca.com.cn/register</loc></url>
+  <url><loc>https://tdca.com.cn/formal</loc></url>
+  <url><loc>https://tdca.com.cn/market-sim</loc></url>
 </urlset>
