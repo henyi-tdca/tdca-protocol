@@ -10,10 +10,10 @@
 ## 论文 / Papers
 
 **中文定稿**：TDCA：论迹不论心的可信多智能体协作协议——制度设计、工程实证与模型无关性
-→ [TDCA-paper-CN.md](TDCA-paper-CN.md)（FROZEN 定稿，SHA256 `12cbc770d7ef220a2a4e0d23d38b68c3114d94afea5ab8bf5939eb09eaf5dab2`）
+→ [TDCA-paper-CN.md](TDCA-paper-CN.md)（FROZEN 定稿，SHA256 `12cbc770d7ef220a2a4e0d23d38b68c3114d94afea5ab8bf5939eb09eaf5dab2`（系去标识化前锚；现态正文指纹另行处理））
 
 **English version**：TDCA: Governing Multi-Agent Collaboration by Protocol-Level Institutions Rather Than Model Capability — Engineering Empirics and Cross-Model Reproducibility
-→ [TDCA-paper-EN.md](TDCA-paper-EN.md)（FROZEN final, SHA256 `4323f5c492c36070b83d8b646269f461ffa731e283c43d5fa7b59e1e9ebb591d`）
+→ [TDCA-paper-EN.md](TDCA-paper-EN.md)（FROZEN final, SHA256 `4323f5c492c36070b83d8b646269f461ffa731e283c43d5fa7b59e1e9ebb591d`（系去标识化前锚；现态正文指纹另行处理））
 
 **函数大模型（FLM）**：函数大模型：参数大模型之外的第二范式（范畴论）
 → [TDCA-PAPER-FUNCTIONAL-LM-001.md](TDCA-PAPER-FUNCTIONAL-LM-001.md)（FROZEN 公开版，SHA256 `364537fdfbc720e1906c198c215cd66b50c87b02ba01bd5765cc7dd94776fac4`）——知识载体为显式函数工件、知识生产为编译而非训练的第二范式主张，含七项范畴判据与相邻系统谱系差分
