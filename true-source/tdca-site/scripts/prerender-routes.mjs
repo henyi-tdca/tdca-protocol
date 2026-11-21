@@ -17,7 +17,7 @@ const siteRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(siteRoot, 'dist')
 const shellPath = join(dist, 'index.html')
 
-// ── 一、sitemap 58 条（57＋/acceptance·L1SI218-ALIAS301-001）（2026-11-12 线上实测 41 条核证口径照录＋PRERENDER-001 首扩 16 项）──
+// ── 一、sitemap 61 条（57＋/acceptance·L1SI218-ALIAS301-001＋/register /formal /market-sim·SITEA-RESIDUAL-001）（2026-11-12 线上实测 41 条核证口径照录＋PRERENDER-001 首扩 16 项）──
 const SITEMAP_ROUTES = [
   '/', '/about', '/academy', '/academy/outline', '/announcements',
   '/attestation/history', '/audit', '/authorization-registry', '/authorization/panel',
@@ -35,6 +35,8 @@ const SITEMAP_ROUTES = [
   '/ownership-registry', '/overview', '/cluster',
   // L1SI218-ALIAS301-001 项2（GSEQ-8493，照 R-2/H-4 既裁办）：/acceptance 公示结论面入预渲染 57→58
   '/acceptance',
+  // SITEA-RESIDUAL-001 余项1（GSEQ-8809）：三公开页补 sitemap＋预渲染 58→61（三路匿名可达实证·题述照各页 PageShell 实读）
+  '/register', '/formal', '/market-sim',
 ]
 
 // ── 二、PAGE_META 真源直读（src/pages/PagesIndex.tsx，单一事实源，⛔手抄）──
@@ -80,6 +82,9 @@ const SUPPLEMENT = {
   '/cluster': { title: '集群编排与准入闸门（P2）', description: '授权件登记与多层转授链；配置类调用须凭有效授权件过闸门——可信联通 ≠ 可信协作，仅握手不成立。' },
   // L1SI218-ALIAS301-001 项2（GSEQ-8493）：/acceptance 公示结论面入预渲染（照页壳实读题名）
   '/acceptance': { title: '验收记录（C-3）', description: '交付验收四段式：事前登记标准→逐条判定→整改复判→公开查询；结论可公示，作业入私域。' },
+  // SITEA-RESIDUAL-001 余项1：/formal 与 /market-sim 题述照各页 PageShell 实读（/register 已见于 PAGE_META 真源，不重复登）
+  '/formal': { title: '形式化与实验线结论入站（P3）', description: '只收结论面：不转公式、不引数值、不带内部编号；数据性质随文显式标注。' },
+  '/market-sim': { title: '规范索引与沙盒最小链（P9）', description: '规范入册＋最小可用挂接（⛔ 不承诺 L2 市场全功能）：索引入口只列名目；最小链发布→准入→撮合→结算全 SIMULATED。' },
 }
 for (const [p, v] of Object.entries(SUPPLEMENT)) meta.set(p, v)
 
@@ -88,7 +93,7 @@ const errors = []
 for (const r of SITEMAP_ROUTES) if (!meta.has(r)) errors.push(`缺 meta：${r}`)
 for (const p of meta.keys()) if (!SITEMAP_ROUTES.includes(p)) { /* PAGE_META 私域面（/me/* 等）不入 sitemap、不预渲染，登记即可 */ }
 if (!existsSync(shellPath)) errors.push('dist/index.html 不存在（须在 vite build 之后运行）')
-if (SITEMAP_ROUTES.length !== 58) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 58（57+1：L1SI218-ALIAS301-001 项2 核证口径，变动须人工复核）`)
+if (SITEMAP_ROUTES.length !== 61) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 61（57+1+3：L1SI218-ALIAS301-001 项2 与 SITEA-RESIDUAL-001 余项1 核证口径，变动须人工复核）`)
 if (errors.length) { console.error('预渲染对账失败：\n' + errors.join('\n')); process.exit(1) }
 
 // ── 五、生成：每条路由独立 title/description/og ──
