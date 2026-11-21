@@ -41,6 +41,22 @@
       "一句话用途": "逐条判定（须登录；pending/re_judging 可判；结论须对应事前标准）"
     },
     {
+      "path": "/api/v1/acceptance/verdicts",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "公示结论面（甲型全共享：人面页面/机取接口同源同数，⛔只给壳）"
+    },
+    {
+      "path": "/api/v1/acceptance/verdicts/register",
+      "methods": [
+        "POST"
+      ],
+      "鉴权要求": "密钥口（智库侧登记密钥·谁判谁登）",
+      "一句话用途": "待补"
+    },
+    {
       "path": "/api/v1/acceptance/{acceptance_id}",
       "methods": [
         "GET"
@@ -565,7 +581,7 @@
       "methods": [
         "POST"
       ],
-      "鉴权要求": "证书 TDCA-CRT",
+      "鉴权要求": "会话 TDCA-SES",
       "一句话用途": "A-3: 配置权调用 → 计税/预缴 → 正和认知 → 多主体配置 一键闭环（S-15），结果落库"
     },
     {
@@ -673,6 +689,14 @@
       "一句话用途": "A-8: HUF 人类签批登记（落库 governance_events + nca_chain；AI 无权代行，ID71）"
     },
     {
+      "path": "/api/v1/health",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "匿名健康检查：依赖探活（SELECT 1），异常只回概括状态，不回细节"
+    },
+    {
       "path": "/api/v1/intent",
       "methods": [
         "GET"
@@ -734,7 +758,7 @@
         "GET"
       ],
       "鉴权要求": "会话 TDCA-SES",
-      "一句话用途": "文库族列表。匿名仅返 _OPEN_FAMILIES 四族（⛔ 泄他族名）"
+      "一句话用途": "文库族列表。匿名仅返 _OPEN_FAMILIES 九族（⛔ 泄他族名）"
     },
     {
       "path": "/api/v1/library/paper/catalog",
@@ -761,7 +785,7 @@
         "GET"
       ],
       "鉴权要求": "匿名",
-      "一句话用途": "族内件目（slug/title/synced_at；正文经 /{slug} 读取）。_OPEN_FAMILIES 四族匿名可读"
+      "一句话用途": "族内件目（slug/title/synced_at；正文经 /{slug} 读取）。_OPEN_FAMILIES 九族匿名可读"
     },
     {
       "path": "/api/v1/library/{family}/{slug}",
@@ -780,7 +804,7 @@
         "GET"
       ],
       "鉴权要求": "匿名",
-      "一句话用途": "单件正文（body_md 原文直出；不复制不改写；权威源在册）。_OPEN_FAMILIES 四族匿名可读"
+      "一句话用途": "单件正文（body_md 原文直出；不复制不改写；权威源在册）。_OPEN_FAMILIES 九族匿名可读"
     },
     {
       "path": "/api/v1/market-admin/listings",
@@ -989,6 +1013,22 @@
       ],
       "鉴权要求": "匿名",
       "一句话用途": "A-9: 通知机 MRCR 四角色状态（agents 表实读；空表回退 NmMrcrManager）"
+    },
+    {
+      "path": "/api/v1/ops/acceptance-records",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "运维私域（会话 TDCA-SES／机面 X-TDCA-Ops-Auth）",
+      "一句话用途": "私域全量列表（登录或 O-1 授权）；坏件跳过不反转（写入侧 fail-closed）"
+    },
+    {
+      "path": "/api/v1/ops/acceptance-verdicts",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "运维私域（会话 TDCA-SES／机面 X-TDCA-Ops-Auth）",
+      "一句话用途": "私域全量（含作业五字段）：人类会话照原路；机面 O-1 只读放行（闸内校验）"
     },
     {
       "path": "/api/v1/ops/classify",
