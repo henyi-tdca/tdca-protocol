@@ -60,12 +60,31 @@ const EVIDENCE = {
   栏四_链段: { 当条链号: 'NCA-WEB-000000000001', 前序衔接: 'NCA-WEB-000000000000', 链记录时间: '2026-11-08T17:10:22+08:00', 当条自哈希: 'AAAA0001BBBB0002', 前序哈希: 'BBBB0002CCCC0003' },
 }
 
+// CANON-SLASH-001 T-2：族下拉数据源（与 /library 同接口）；对账断言用例见文件末
+const FAMILIES = {
+  items: [
+    { family: 'cop-library', name: '素材库', count: 0 },
+    { family: 'terms', name: '术语', count: 0 },
+    { family: 'laws', name: '法律原文', count: 0 },
+    { family: 'law-notes', name: '适用说明', count: 0 },
+    { family: 'whitepaper', name: '白皮书', count: 0 },
+    { family: 'paper', name: '文献', count: 0 },
+    { family: 'help', name: '帮助', count: 0 },
+    { family: 'ops-guides', name: '操作指引', count: 0 },
+    { family: 'regulation', name: '制度', count: 0 },
+  ],
+  total: 9,
+}
+
 function mockFetch() {
   vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
     if (url.endsWith('/api/public/registrations')) return jsonResp(LIST)
     if (url.includes('/evidence')) return jsonResp(EVIDENCE)
     if (url.includes('/api/public/registrations/')) return jsonResp(DETAIL)
+    if (url.endsWith('/api/v1/library/families')) {
+      return jsonResp({ data: FAMILIES, nca_watermark: 'sha256:test', ts: '2026-08-12T00:00:00Z', data_nature: 'simulated' })
+    }
     return jsonResp({}, 404)
   }))
 }
@@ -137,5 +156,15 @@ describe('RegistrationsPage（REGISTRY-PAGE-001 验收）', () => {
     fireEvent.click(screen.getByTestId('reg-item-OR-G7-AAAA0001'))
     await waitFor(() => expect(screen.getByTestId('reg-detail')).toBeTruthy())
     expect(container.textContent).not.toMatch(/TDCA-[A-Z0-9-]*\d{3,}/)
+  })
+
+  // CANON-SLASH-001 T-2 对账断言：族下拉项 == 接口族集（⛔ 硬编码族名单再漂移）
+  it('族下拉 == 接口族集（9 族·同源对账）', async () => {
+    render(<RegistrationsPage />)
+    await waitFor(() => expect(screen.getByTestId('reg-list')).toBeTruthy())
+    const sel = screen.getByTestId('reg-family') as HTMLSelectElement
+    const opts = [...sel.options].map((o) => o.value).filter((v) => v !== 'all')
+    expect(opts).toEqual(FAMILIES.items.map((f) => f.family))
+    expect(opts).toHaveLength(9)
   })
 })

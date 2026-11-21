@@ -51,6 +51,26 @@
 - [ ] 权限变更（角色提升、直连库改权限）须先呈请创始人，⛔ 不做先斩后奏。
 - [ ] 回写仓内副本须**逐行对账**：线上实际配置与仓内副本逐行 diff，逐行标「一致」或「功能等价（注明差在何处）」；**「功能等价」不算通过**——须把差异点写进当次回报，并附差异清单件号。
 
+## 五、bind mount 换件三例（照在册 · 2026-11-21 CANON-SLASH-001 T-4）
+
+> 三例并列，今后同类⛔各案再摸索。总判据：**bind mount 在容器启动时解析目标 inode**——
+> 单文件按文件 inode 钉住；目录按目录 inode 钉住（目录内换内容可见，整目录替换不可见）。
+
+- [ ] **例一（-508）nginx 单文件挂载**（`default.conf` 等 `/etc/nginx/conf.d/*`：ro 单文件）：
+      判据——编辑器/重命名落新 inode，容器内仍见旧内容，改「成功」却不生效；
+      做法——**保 inode 原位写入**（`cat > 目标` 同路径覆写，⛔ mv 新件顶上），
+      随后 `docker exec deploy-nginx-1 nginx -t` 过再 reload/restart，抽核行为读数。
+- [ ] **例二（-513）gateway 代码目录挂载**（`/root/tdca-site/gateway-channel-cc0c5fd` ↔ 容器 `/app/tdca-web/gateway`）：
+      判据——目录挂载随宿主机文件即时可见，但 Python 已加载旧码内存；
+      做法——备份（`.bak-<令号>-predeploy-日期`）→ 换码 → `docker compose restart gateway`
+      → 端点抽验（连通＋版本读数）再报部署时刻。
+- [ ] **例三（-517）dist 目录整换**（`/root/tdca-site/dist` ↔ 容器 `/usr/share/tdca-site`：ro 目录）：
+      判据——`mv dist dist-old && mv distnew dist` 后挂载仍指 dist-old 的 inode：
+      表面换成功、实际在役旧件（本轮首包即中此坑，靠 chunk 404 抽核发现）；
+      做法——**一律 `rsync -a --delete 新件/ dist/` 原位灌入**（目录 inode 不变、即时生效、
+      ⛔ restart）；若已 mv 换目录，必须 `docker restart deploy-nginx-1` 重挂，
+      并以新 chunk 名抽核 200 才算发布成功。
+
 ## 挂账
 
 - 自动 CI 门禁待白名单（期一后半再补）；GitHub 端账号冻结已解除（2026-11 更正），镜像端＝AtomGit＋Gitee＋GitHub 三端，GitHub 同步照 align-tree 法（树同头不同属）。
