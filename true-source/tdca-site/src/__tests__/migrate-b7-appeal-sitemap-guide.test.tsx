@@ -115,8 +115,8 @@ describe('MIGRATE 批7：申诉面（MYSPACE-PHASE1-001 §一.4 补齐口径，2
 describe('MIGRATE 批7：站点地图 ≡ 真源清单（prerender-routes.mjs SITEMAP_ROUTES 机取，/ops* 私域不入）', () => {
   // ALPHA-ALL-001 A-2（2026-11-15）：sitemap 已收敛至 57 条恒定（PR538 回写为准），旧
   // 「静态路由数−/ops*−受护面」公式随路由新增漂移失效（机算 70 ≠ 实 57）；改机取生成器
-  // 真源清单对账，⛔手编塞条目。/docs/* 三族为 nginx 直出文档面（⛔React 路由）、
-  // /authorization/panel 为受护面经 PRERENDER-001 登记在册——真源在列即合法。
+  // 真源清单对账，⛔手编塞条目。/docs/* 三族为 nginx 直出文档面（⛔React 路由）。
+  // SITEA-RESIDUAL-001 余项2：/authorization/panel（RequireAuth 受护面）已移出 sitemap 与预渲染。
   const prerenderSrc = readFileSync(repoRoot + 'true-source/tdca-site/scripts/prerender-routes.mjs', 'utf-8')
   const CANONICAL_SITEMAP = (() => {
     const m = prerenderSrc.match(/const SITEMAP_ROUTES = \[([\s\S]*?)\]/)
@@ -124,10 +124,11 @@ describe('MIGRATE 批7：站点地图 ≡ 真源清单（prerender-routes.mjs SI
     return [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])
   })()
 
-  it('条目数≡真源清单数（机取机算，⛔手编塞条目；61 条口径＝57+1+3）', () => {
+  it('条目数≡真源清单数（机取机算，⛔手编塞条目；60 条口径＝57+1+3−1）', () => {
     // L1SI218-ALIAS301-001 项2（GSEQ-8493）：/acceptance 公示面入预渲染，57→58
     // SITEA-RESIDUAL-001 余项1（GSEQ-8809）：/register /formal /market-sim 三公开页补入，58→61
-    expect(CANONICAL_SITEMAP).toHaveLength(61)
+    // SITEA-RESIDUAL-001 余项2：/authorization/panel（受护面）移出，61→60
+    expect(CANONICAL_SITEMAP).toHaveLength(60)
     expect(SITEMAP_ENTRIES).toHaveLength(CANONICAL_SITEMAP.length)
     expect(new Set(SITEMAP_ENTRIES)).toEqual(new Set(CANONICAL_SITEMAP))
   })
