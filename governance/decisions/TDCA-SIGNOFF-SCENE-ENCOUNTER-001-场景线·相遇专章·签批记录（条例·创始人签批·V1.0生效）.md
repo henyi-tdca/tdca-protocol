@@ -6,6 +6,7 @@
 > 签批对象: ⭐ **`TDCA-STD-SCENE-ENCOUNTER-001`《场景线 · 相遇专章》**（⭐ 人读版 ＋ 机读版 · ⭐ 登记 `GSEQ-3965`）
 > 程序依据: ⭐ `TDCA-STD-INSTITUTION-PROMOTION-001`（⭐ 转正四步**走完**：⭐ ① 智库 `3958` ／ ② 治理包 `3962` ／ ③ 断言 `3963` ／ ④ 沙盒 `3964`）｜⭐ `TDCA-STD-INSTITUTION-GOVERNANCE-001 V1.3-COMPILED`（⭐ 双版本 · ⭐ 人读版为语义权威）
 > ⛔ 不对外；⛔ 不含凭据值与人名；**时区 +08**
+> 另有对外净版：`docs/regulations/TDCA-SIGNOFF-SCENE-ENCOUNTER-001-…`（站上公开，剥内部痕；本件为含完整签批链之原件 · BACKFILL-001 R-4 注 2026-11-22）
 
 ---
 

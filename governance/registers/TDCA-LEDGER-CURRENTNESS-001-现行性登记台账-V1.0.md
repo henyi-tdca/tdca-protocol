@@ -65,3 +65,12 @@
 
 - regulation／ops-guides／whitepapers 三族：站端已有 version 值（VERFILL-001 令面「可作起点」），逐件转录＋签批依据补登另批施工。
 - cop-library 族：不涉版本（令面 S-4），⛔ 纳入本台账。
+
+## 四、原件路径指针（BACKFILL-001 · R-1 栏初立 2026-11-22）
+
+> 用途：站上公开净版与仓内原件（含内部痕／签批链）互为指针，供核版溯源。**只加行不动正文**；
+> 本令 33 件停手（S-1），行随补证进度增登。
+
+| 站上净版（公开卷路径） | 仓内原件（内部路径） | 比对结论 | 依据 |
+|---|---|---|---|
+| docs/regulations/TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md | governance/decisions/TDCA-SIGNOFF-SCENE-ENCOUNTER-001-场景线·相遇专章·签批记录（条例·创始人签批·V1.0生效）.md | 站仓逐行全同（唯 CRLF 换行风格异）；原件含完整签批链（GSEQ-3965 等），净版已剥内部痕 | BACKFILL-001 S-2 核查 2026-11-22（回报 -524） |
