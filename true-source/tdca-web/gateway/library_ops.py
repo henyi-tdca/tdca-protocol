@@ -216,13 +216,16 @@ def paper_catalog(request: Request):
 #           ⛔ 下载原件若在册另有约束则照旧）；weekly 无此族端点（不存在悬空 401 待处置项）
 # SITE2-LIBOPEN-001（L1SI213）：追加 help/ops-guides 两族匿名只读（与既有六族同列；
 # docs 表 help 5／ops-guides 17 行已在位，公开面经 /api/public/docs 同族同件）
+# TITLE-FAMILY-FIX-001（L1SI224，GSEQ-8823）：追加 regulation 入匿名开放面（族索引可见
+#           = 本令目标；族内件目/正文仍走本文件 regulation 专属分支——件目白名单 49 件、
+#           正文 _reg_read 白名单＋sha256 固化 fail-closed——不随本追加改变）
 _OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "paper",
-                  "help", "ops-guides")
+                  "help", "ops-guides", "regulation")
 
 
 def _session_or_open(request: Request, family: str = "") -> None:
-    """会话要求分派：_OPEN_FAMILIES 六族（cop-library/terms/laws/law-notes/whitepaper/paper）
-    匿名放行；其余（含未点名）照旧会话鉴权。
+    """会话要求分派：_OPEN_FAMILIES 九族（cop-library/terms/laws/law-notes/whitepaper/paper
+    ／help/ops-guides／regulation）匿名放行；其余（含未点名）照旧会话鉴权。
     ⛔ 不改 _require_session_user 本体（不动其签名与行为），仅在本族分支不调用之。"""
     if family in _OPEN_FAMILIES:
         return
@@ -245,7 +248,7 @@ def _check_family(family: str) -> None:
 
 @router.get("/families")
 def library_families(request: Request):
-    """文库族列表。匿名仅返 _OPEN_FAMILIES 四族（⛔ 泄他族名）；
+    """文库族列表。匿名仅返 _OPEN_FAMILIES 九族（⛔ 泄他族名）；
     会话通过则返全闭集（回归照旧）。"""
     try:
         _require_session_user(request)
@@ -259,8 +262,8 @@ def library_families(request: Request):
         return _nca_watermark(
             {"items": items, "total": len(items),
              "note": "匿名只读面：cop-library＋terms＋laws＋law-notes＋whitepaper＋paper "
-                                     "六族开放（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001／"
-                                     "CONTENT-LIVE-ALL-001 案甲）"},
+                                     "＋help＋ops-guides＋regulation 九族开放（COP-LIB-OPEN-001／TERMS-OPEN-001／LAWINGEST-001／"
+                                     "CONTENT-LIVE-ALL-001 案甲／TITLE-FAMILY-FIX-001）"},
             nature="real")
     items = [{"family": k, "name": v, "count": counts.get(k, 0)} for k, v in _FAMILIES.items()]
     # API-SHAPE F-3 兼容期：新增 data.items/data.total 统一形态，旧键 families 保留 ≥1 版
@@ -271,7 +274,7 @@ def library_families(request: Request):
 
 @router.get("/{family}")
 def library_list(family: str, request: Request):
-    """族内件目（slug/title/synced_at；正文经 /{slug} 读取）。_OPEN_FAMILIES 四族匿名可读。
+    """族内件目（slug/title/synced_at；正文经 /{slug} 读取）。_OPEN_FAMILIES 九族匿名可读。
 
     ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——「对外公开
     制度不需要注册可见」取甲）：制度族匿名可读，件目即白名单 49 件（slug 固定；
@@ -300,7 +303,7 @@ def library_list(family: str, request: Request):
 
 @router.get("/{family}/{slug}")
 def library_detail(family: str, slug: str, request: Request):
-    """单件正文（body_md 原文直出；不复制不改写；权威源在册）。_OPEN_FAMILIES 四族匿名可读。
+    """单件正文（body_md 原文直出；不复制不改写；权威源在册）。_OPEN_FAMILIES 九族匿名可读。
 
     ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——「对外公开
     制度不需要注册可见」取甲）：制度族白名单 49 件匿名可读正文（fail-closed 见 _reg_read）。"""
