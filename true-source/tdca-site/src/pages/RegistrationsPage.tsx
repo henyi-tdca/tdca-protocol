@@ -55,7 +55,10 @@ interface EvidenceData {
   栏四_链段: Record<string, unknown>
 }
 
-const FAMILY_LABEL: Record<string, string> = {
+// CANON-SLASH-001 T-2（GSEQ-8842）：族下拉唯一数据源＝GET /api/v1/library/families（同 KB-TABS-001 之法）。
+// 本表仅作接口不可用时的显示名兜底（非下拉白名单来源）；接口族集与下拉对账断言见
+// src/__tests__/registrations-page.test.tsx「族下拉 == 接口族集」用例。
+const FAMILY_LABEL_FALLBACK: Record<string, string> = {
   regulation: '制度',
   'cop-library': '素材库',
   whitepaper: '白皮书',
@@ -94,6 +97,21 @@ export function RegistrationsPage() {
         else setErr(r.detail ?? r.reason)
       })
   }, [])
+
+  // CANON-SLASH-001 T-2：族下拉数据源（接口族集；匿名返 items／登录返 families 双口径，
+  // 与 /library 同一接口同源）。接口失败则留空（下拉仅「全部族」），⛔ 硬编码族名单。
+  const [families, setFamilies] = useState<{ family: string; name: string }[]>([])
+  useEffect(() => {
+    api
+      .get<{ families?: { family: string; name: string }[]; items?: { family: string; name: string }[] }>(
+        '/api/v1/library/families')
+      .then((r) => {
+        if (r.ok) setFamilies(r.data.families ?? r.data.items ?? [])
+      })
+  }, [])
+
+  const famLabel = (key: string) =>
+    families.find((f) => f.family === key)?.name ?? FAMILY_LABEL_FALLBACK[key] ?? key
 
   const shown = useMemo(() => {
     if (!list) return []
@@ -177,9 +195,9 @@ export function RegistrationsPage() {
           className="rounded border px-2 py-1.5 text-sm"
         >
           <option value="all">全部族</option>
-          <option value="regulation">制度</option>
-          <option value="cop-library">素材库</option>
-          <option value="whitepaper">白皮书</option>
+          {families.map((f) => (
+            <option key={f.family} value={f.family}>{f.name}</option>
+          ))}
         </select>
         <span data-testid="reg-count" className="text-xs text-muted-foreground">
           实拉 {list?.count ?? '—'} 条 · 实显 {shown.length} 条
@@ -203,7 +221,7 @@ export function RegistrationsPage() {
                 <div className="text-sm font-medium text-slate-900">{it.title}</div>
                 <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-muted-foreground">
                   <span>记录号 {it.record_id}</span>
-                  <span>族 {FAMILY_LABEL[it.family] ?? it.family}</span>
+                  <span>族 {famLabel(it.family)}</span>
                   <span>登记时间 {it.registered_at}</span>
                   <span>链上序号 {it.nca_ref}</span>
                 </div>

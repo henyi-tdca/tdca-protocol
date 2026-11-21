@@ -1,0 +1,21 @@
+{
+  "spec": "TDCA-EVIDENCE-PACK-V1",
+  "gseq": "GSEQ-8389",
+  "nca_id": "TDCA-REASONIX-20261116-095",
+  "file": "tdca-thinktank/governance/standards/TDCA-STD-L1SI216-DISPOSABLE-001-AMEND-2-最小制度包V1.2-FROZEN（四处用词对齐在册·接入与通道分清与四空即四要件与理由码范围与六要素改名·追加制）.md",
+  "bytes": 13073,
+  "sha256_16": "6C55739C45E855D4",
+  "sha256_full": "6c55739c45e855d4b608abc1ebef407452dfc466ea445f2785a8ceda97fc278b",
+  "self_sha256_16": "7DB8686A1140207C",
+  "prev_nca_id": "TDCA-REASONIX-20261116-094",
+  "chain_id": "GSEQ-8389",
+  "timestamp": "2026-11-16T21:26:32+08:00",
+  "operator": "Reasonix",
+  "how_to_verify": [
+    "sha256(原件) 取前 16 位大写 → 须等于 sha256_16",
+    "os.path.getsize(原件) → 须等于 bytes",
+    "本包 sha256_16(self) 须等于登记册该条 self_sha256_16",
+    "prev_nca_id 须等于登记册前一条记录之 nca_id（链位对得上）"
+  ],
+  "note": "⭐ 校验只用原件与公开算法，⛔ 需信任本侧 ⭐"
+}
