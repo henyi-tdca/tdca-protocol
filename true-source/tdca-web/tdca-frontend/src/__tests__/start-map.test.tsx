@@ -76,8 +76,8 @@ function applyCatalog(
 }
 
 describe('验①② 机读表哈希与解析（A-3 程序统计）', () => {
-  it('?raw 源 sha256_16 == 在册值 E9FFC4080C045CD2', async () => {
-    expect(await sha16(startMapYaml)).toBe('E9FFC4080C045CD2')
+  it('?raw 源 sha256_16 == 在册值 CEFD4DB88C37492A（ENCNAME-002 改净名后随改重钉，原 E9FFC4080C045CD2；LF 归一）', async () => {
+    expect(await sha16(startMapYaml)).toBe('CEFD4DB88C37492A')
   })
 
   it('三表规模：steps 6／docs 54／terms 147／组 12', () => {

@@ -707,9 +707,8 @@ docs:
   - 模板与表单
   - 生效
   - S3
-- filename: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md
-  display_name: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read
-    version·external·de-identified）.md
+- filename: regulation-相遇公开说明-en.md
+  display_name: regulation-相遇公开说明-en.md
   class: 条例
   state: 生效
   version: ''
@@ -720,12 +719,12 @@ docs:
   state_note: ''
   step_note: ''
   keys:
-  - TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md
+  - regulation-相遇公开说明-en.md
   - 条例
   - 生效
   - S2
-- filename: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
-  display_name: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
+- filename: regulation-相遇公开说明.yaml
+  display_name: regulation-相遇公开说明.yaml
   class: 条例
   state: 生效
   version: ''
@@ -736,7 +735,7 @@ docs:
   state_note: ''
   step_note: ''
   keys:
-  - TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
+  - regulation-相遇公开说明.yaml
   - 条例
   - 生效
   - S2

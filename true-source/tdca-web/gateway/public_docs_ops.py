@@ -142,8 +142,9 @@ _PUBLIC_DOCS = {
     # 句意零改动；GSEQ-／TDCA-REG-／十六位hex 三扫描零命中）——regulation 49→50
     "人机协作工作条例.md",
     "TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md",
-    "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md",
-    "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml",
+    # ENCNAME-002（L1SI226，创始人取甲）：EN/机读两件改净名上册，旧名退出扫描面（甲：不列索引不报闸门）
+    "regulation-相遇公开说明-en.md",
+    "regulation-相遇公开说明.yaml",
     # TDCA-HANDOFF-EXEC-L1SI213-REG-COMPLETE-001（创始人逐字「按建议办，继续下一步」；乙案补白名单）：
     # 制度规范区索引页 README 与 NSFL 协作级约束公示摘编入册（二者皆应可读，缺点仅为未列入）——regulation 53→55
     "README.md",

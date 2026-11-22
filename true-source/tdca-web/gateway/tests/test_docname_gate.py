@@ -20,12 +20,8 @@ from docname_gate import audit, classify_a, gate, load_registry
 # 本令 S-5 停手 3 件（整改候裁中，白名单暂留）：(family, rel, hits)
 EXPECTED_EXEMPTIONS = {
     ("regulation", "README.md", ("A1",)),
-    ("regulation",
-     "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md",
-     ("A2", "A3")),
-    ("regulation",
-     "TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml",
-     ("A2", "A3")),
+    # ENCNAME-002（L1SI226，创始人取甲）：EN/机读两件已改净名并退出扫描面，豁免随白名单同步收缩（3→1）；
+    # 新名 regulation-相遇公开说明-en.md/.yaml 经 classify_a 零命中（A1~A5 全过），不再属豁免件。
 }
 
 

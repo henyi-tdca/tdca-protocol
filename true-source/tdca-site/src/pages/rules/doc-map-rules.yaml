@@ -657,7 +657,7 @@ items:
   state_note: ''
   page_visible: true
   integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
-- filename: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md
+- filename: regulation-相遇公开说明-en.md
   class: 条例
   steps:
   - S2
@@ -671,12 +671,11 @@ items:
   state_basis: 件头 Version V1.0 ｜ Nature Public document（publication explicitly authorized）
   body_len: 3346
   reviewed: 本侧人工（件头实读）
-  display_name: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read
-    version·external·de-identified）.md
+  display_name: regulation-相遇公开说明-en.md
   state_note: ''
   page_visible: true
   integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
-- filename: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
+- filename: regulation-相遇公开说明.yaml
   class: 条例
   steps:
   - S2
@@ -690,7 +689,7 @@ items:
   state_basis: 件头 version V1.0 ｜ nature public-document
   body_len: 2114
   reviewed: 本侧人工（件头实读）
-  display_name: TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml
+  display_name: regulation-相遇公开说明.yaml
   state_note: ''
   page_visible: true
   integrity_basis: atomgit/main a961efbe 实测（bytes＋sha256_16）
