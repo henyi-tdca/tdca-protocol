@@ -58,6 +58,11 @@ def _parse_note(note: str) -> dict:
 # 仅面侧遮蔽来源路径中的 TDCA-编号段（⛔ 动库动件；题名经核 645 条全净）。
 _ID_PAT = re.compile(r"TDCA-[A-Z0-9-]*\d{3,}-?")
 
+# SITE-003 T-1 第一步脱敏（2026-11-23）：展示层遮蔽链上 NCA 号本体
+# （NCA-WEB-*）→「已存证」字样；⛔ 动库、⛔ 动 record_id（OR-G7-* 保留公开）、
+# ⛔ 动 content_sha256_16（指纹锚保留公开）；判据＝公域响应体零 NCA-WEB- 命中。
+_MASKED_NCA = "已存证"
+
 
 def _mask_lineage(lineage: str) -> str:
     return _ID_PAT.sub("〔内部编号已隐去〕", lineage or "")
@@ -84,7 +89,7 @@ def _four_fields(rec: sqlite3.Row, meta: dict) -> dict:
             "内容哈希短值": meta["short"],
             "字节数": meta["bytes"],
             "登记时间戳": rec["created_at"],
-            "链上序号": rec["nca_ref"],
+            "链上序号": _MASKED_NCA,
             "来源路径": _mask_lineage(rec["source_lineage"]),
         },
         "authorization_info": "本登记不含对外授权信息；授权凭据只记存在（备注位丙栏）。",
@@ -109,7 +114,7 @@ def registrations_list():
             "family": _fam_of(r["source_lineage"]),
             "content_sha256_16": meta["short"],
             "registered_at": r["created_at"],
-            "nca_ref": r["nca_ref"],
+            "nca_ref": _MASKED_NCA,
             "status": r["status"],
         })
     out = {"face": "内部权属登记（建设期）", "count": len(items), "items": items}
@@ -169,6 +174,9 @@ def registration_evidence(record_id: str):
     full = re.search(r"内容哈希（sha256）：([0-9A-F]{64})", note)
     short = re.search(r"短值 ([0-9A-F]{16})", note)
     size = re.search(r"字节 (\d+)", note)
+    # SITE-003 T-1 边界（2026-11-23）：本端点为证据包导出（自声明仅供法定机构
+    # 提交与内部留档、⛔ 公开发布），链段字段（当条链号／前序衔接）为其复算功能
+    # 正本，第一步遮蔽 ⛔ 覆盖此端点；是否升公域门或改自声明，另案候裁。
     return {
         "用途声明": "本导出仅供向法定机构提交与内部留档，⛔ 公开发布；不含签名值与姓名。",
         "栏一_件名与路径": {"件名（净名）": r["work_title"], "路径": _mask_lineage(r["source_lineage"])},
