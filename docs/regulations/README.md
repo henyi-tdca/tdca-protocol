@@ -64,8 +64,8 @@ This directory is the **index of TDCA institutional regulations** — it registe
 | 10 | 授权件模板 | [`TDCA-TEMPLATE-AUTH-001-生效注记`](<TDCA-TEMPLATE-AUTH-001-生效注记.md>) | （注记） | `f783b2155e7983c3145b73d4865ce2df99fbd5cbc70b8500a18ee409175b10fa` |
 | 11 | NSFL 协作告知 | [`TDCA-NSFL-COLLAB-NOTICE-V0.3`](<TDCA-NSFL-COLLAB-NOTICE-V0.3.md>) | V0.3 | `926b1a1efa2a776f9394515f4ba76416ae4d4309805fd1fafb52bfec2abee404` |
 | 12 | 相遇公开说明 | [`TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）`](<TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md>) | V1.0 | `97d7f39f4560b0efee2694b4ac43de9574bd01d3726b5272cc32dffefbde241c` |
-| 13 | 相遇公开说明 | [`TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version）`](<TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md>) | V1.0 | `530ecac210ab45ca5ea9a85faedac225e9ab7c9ee0dc120afb064141e7c0d078` |
-| 14 | 相遇公开说明 | [`TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable）`](<TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml>) | V1.0 | `8825b7253d954174fca1bfa5f8a0001e424591f2152f0e874f9cf08d8efdaaa8` |
+| 13 | 相遇公开说明 | [`regulation-相遇公开说明-en`](<regulation-相遇公开说明-en.md>) | V1.0 | `530ecac210ab45ca5ea9a85faedac225e9ab7c9ee0dc120afb064141e7c0d078` |
+| 14 | 相遇公开说明 | [`regulation-相遇公开说明`](<regulation-相遇公开说明.yaml>) | V1.0 | `8825b7253d954174fca1bfa5f8a0001e424591f2152f0e874f9cf08d8efdaaa8` |
 
 - 另存 `V0.1-DRAFT` 历史草稿 6 件（注册登记制度与配置权市场规范两族各 3 件），不在册、仅供追溯（TAIL-CLEAN-001 块B 处置：择注记行，⛔ 不移档、⛔ 不删件）。
 

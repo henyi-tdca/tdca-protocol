@@ -1,0 +1,50 @@
+doc_id: 'TDCA-RELEASE-ENCOUNTER-001'
+title: 'Encounter · Public Note (machine-readable, de-identified)'
+version: 'V1.0'
+date: '2026-10-06'
+nature: 'public-document'
+deidentified: true
+note: 'Public version. No internal IDs, credentials, or personal names. Machine-readable companion to the CN/EN human-read versions.'
+
+definitions:
+  encounter:
+    text: 'A match event that arises naturally when, under open information and open rules, two parties discover each other and converge voluntarily (two-way).'
+    fee: 'free'
+    position: 'first step inside a Scene'
+    domain: 'Scene'
+  matchmaking:
+    text: 'An active service provided by a third party.'
+    fee: 'charged'
+
+rules:
+  - id: rule-1
+    title: 'Keep apart'
+    text: 'Encounter and Matchmaking are different and do not substitute for each other. Matchmaking is charged; the Encounter itself is not. No encounter entry fee or traffic fee.'
+  - id: rule-2
+    title: 'Record only the fact'
+    text: 'An Encounter records only occurred / did not occur. No true/false (fake) encounter distinction.'
+  - id: rule-3
+    title: 'No skipping'
+    text: 'Flow is Discovery -> Encounter -> Handshake. No configuration right may be invoked before the handshake; enforced by the system.'
+
+encounter_status:
+  allowed: ['occurred', 'did_not_occur']
+  forbidden: ['true_encounter', 'fake_encounter']
+
+flow:
+  states: ['discovery', 'encounter', 'handshake', 'interaction', 'settlement', 'rejected']
+  legal_transitions:
+    - ['discovery', 'encounter']
+    - ['encounter', 'handshake']
+    - ['handshake', 'interaction']
+    - ['interaction', 'settlement']
+    - ['encounter', 'discovery']
+    - ['handshake', 'encounter']
+    - ['handshake', 'rejected']
+    - ['encounter', 'rejected']
+  configuration_right_requires_states: ['handshake', 'interaction', 'settlement']
+  admission_gates: 'per public admission rules (applied internally; not enumerated in the public version)'
+
+public_facing:
+  disclosure: 'Encounters occur only under open information and open rules.'
+  forbidden_basis: 'Exposure or citation scores may not be used as a basis for an Encounter.'

@@ -35,8 +35,8 @@ function renderPage() {
 }
 
 describe('验①② 机读表哈希与解析（R-2/R-3 程序统计）', () => {
-  it('?raw 源 sha256_16 == 在册值', async () => {
-    expect(await sha16(docMapYaml)).toBe('4BE2B6E63824DA4A')
+  it('?raw 源 sha256_16 == 在册值（ENCNAME-002 改净名后随改重钉，原 4BE2B6E63824DA4A）', async () => {
+    expect(await sha16(docMapYaml)).toBe('2F5EF11F3BEEF262')
   })
 
   it('57 项 integrity 自洽（bytes>0、sha256_16 16 位大写、in_repo 全真）', () => {

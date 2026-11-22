@@ -110,11 +110,13 @@ _REG_WHITELIST = {
     # REGFACE-001（L1SI213，依 TDCA-HANDOFF-EXEC-L1SI213-SITE2-REGFACE-001）：
     # 读取面 49→55 补齐六件；固化值照令面实算表逐位核过（以容器在役目录
     # /docs/regulations 实算为准，六件全符）；⛔ 改既有 49 项、⛔ 动 _reg_read 逻辑
-    'README.md': 'C58DADCF9778CF99',
+    # ENCNAME-002（L1SI226，创始人取甲）：EN/机读两件改净名（新件同内容同 sha），
+    # 旧名退出扫描面（白名单除名＝不再服务）；README 因 L67/L68 随改自身 sha 变，固化值重算同步。
+    'README.md': 'E4D68F6BE0922438',
     'TDCA-NSFL-COLLAB-NOTICE-V0.3.md': '926B1A1EFA2A776F',
     'TDCA-RELEASE-ENCOUNTER-001-相遇·公开说明（中文人读版·对外·脱敏）.md': '97D7F39F4560B0EF',
-    'TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（English human-read version·external·de-identified）.md': '530ECAC210AB45CA',
-    'TDCA-RELEASE-ENCOUNTER-001-Encounter·Public Note（machine-readable·external·de-identified）.yaml': '8825B7253D954174',
+    'regulation-相遇公开说明-en.md': '530ECAC210AB45CA',
+    'regulation-相遇公开说明.yaml': '8825B7253D954174',
     '人机协作工作条例.md': '69D9F6D44E139BC9',
     # CONTENT-CLOSE-001（L1SI224，依 TDCA-HANDOFF-EXEC-L1SI224-CONTENT-CLOSE-001 甲块）：
     # 五件入站（机读/英文对等在册对等版，同件多版本应齐）；固化值以容器在役目录

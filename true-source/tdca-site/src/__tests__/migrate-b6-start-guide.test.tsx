@@ -29,8 +29,8 @@ async function sha16(s: string) {
 const STEPS6 = ['了解 TDCA', '读懂基本制度', '看资产与授权', '参与协作', '结算与计税', '争议与退出'] as const
 
 describe('MIGRATE 批6：start-map.yaml 数据件原字节随批（沙盒④⛔手改）', () => {
-  it('yaml sha256_16 == 在册值 E9FFC4080C045CD2（_START-MAP-20261021-V1·R1-001-A 实测口径）', async () => {
-    expect(await sha16(startMapYaml)).toBe('E9FFC4080C045CD2')
+  it('yaml sha256_16 == 在册值 CEFD4DB88C37492A（ENCNAME-002 改净名后随改重钉，原 E9FFC4080C045CD2；LF 归一）', async () => {
+    expect(await sha16(startMapYaml)).toBe('CEFD4DB88C37492A')
   })
 
   it('解析计数与旧版权逐项对得上（沙盒②：steps 6／docs 54 page_visible／terms 147）', () => {
