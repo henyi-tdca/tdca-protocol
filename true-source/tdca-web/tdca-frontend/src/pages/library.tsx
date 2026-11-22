@@ -157,7 +157,8 @@ export function LibraryPage() {
       permission="登录 DID"
       description="站点入站令·甲/乙内容区＋规范全文面：只读索引＋正文阅读；产物库按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。">
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        {/* MOBILE-OVERFLOW-FIX-001：族 tab 行窄屏换行，⛔ 横向溢出裁切（同 tdca-site LibraryPage 孪修） */}
+        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
           {FAMILY_TABS.map((t) => (
             <button
               key={t.key}

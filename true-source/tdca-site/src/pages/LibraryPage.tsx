@@ -190,7 +190,8 @@ export function LibraryPage() {
       permission="公开（九族匿名只读·KB-TABS-001 族索引与接口同源）"
       description="协议本体文献库（SITE-THREE-FIXES-001：文库改名知识库，路由仍 /library 不动）：只读索引＋正文阅读；素材库（思维协议产物）按子库分组呈现；以在册仓库为唯一权威源，本站不复制不改写。分工（LIB-DOCS-SCOPE-001·KB-TABS-001 修订）：本库收理论／白皮书／术语／知识图谱／思维协议／文献；制度族（regulation）已并入本库族索引（TITLE-FAMILY-FIX-001／KB-TABS-001），全文同时在「文档库」（/docs）可读。周刊：⭐ 未开放 ⭐。">
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        {/* MOBILE-OVERFLOW-FIX-001：族 tab 行窄屏换行，⛔ 横向溢出裁切（九族+图谱位超屏宽） */}
+        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
           {tabs.map((t) => (
             <button
               key={t.key}
