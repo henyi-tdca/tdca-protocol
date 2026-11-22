@@ -53,22 +53,79 @@ interface Answer {
   note: string
 }
 
+// SITE-001（L1SI226）T-3：结果落页（可回看）——仅浏览器前端态（localStorage），
+// ⛔ 落库、⛔ 持久化写入服务端、⛔ 接真实模型调用；键名固定，清理即整键移除。
+const STORAGE_KEY = 'tdca-threeq-last'
+
+interface SavedSnapshot {
+  savedAt: string
+  draft: Answer[]
+}
+
+function loadSnapshot(): SavedSnapshot | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as SavedSnapshot
+    if (!Array.isArray(parsed.draft) || parsed.draft.length !== QUESTIONS.length) return null
+    return parsed
+  } catch {
+    return null
+  }
+}
+
 export function ThreeQuestionsPage() {
   const [step, setStep] = useState(0)
   const [draft, setDraft] = useState<Answer[]>(QUESTIONS.map(() => ({ choice: '', note: '' })))
   const [copied, setCopied] = useState(false)
+  const [snapshot, setSnapshot] = useState<SavedSnapshot | null>(() => loadSnapshot())
   const q = QUESTIONS[step]
   const a = draft[step]
   const answeredAll = draft.every((d) => d.choice !== '')
 
+  // 回看（前端态）：每次作答变化即快照入 localStorage，刷新／离开后可回来看
+  function persist(next: Answer[]) {
+    if (next.every((d) => d.choice === '')) {
+      localStorage.removeItem(STORAGE_KEY)
+      setSnapshot(null)
+      return
+    }
+    const snap: SavedSnapshot = { savedAt: new Date().toISOString(), draft: next }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snap))
+      setSnapshot(snap)
+    } catch {
+      // 存储不可用时静默：回看区如实不显示，不影响作答
+    }
+  }
+
+  function restoreSnapshot() {
+    if (!snapshot) return
+    setDraft(snapshot.draft)
+    setCopied(false)
+  }
+
+  function clearSnapshot() {
+    localStorage.removeItem(STORAGE_KEY)
+    setSnapshot(null)
+  }
+
   function pick(choice: string) {
     setCopied(false)
-    setDraft((prev) => prev.map((d, i) => (i === step ? { ...d, choice } : d)))
+    setDraft((prev) => {
+      const next = prev.map((d, i) => (i === step ? { ...d, choice } : d))
+      persist(next)
+      return next
+    })
   }
 
   function note(text: string) {
     setCopied(false)
-    setDraft((prev) => prev.map((d, i) => (i === step ? { ...d, note: text } : d)))
+    setDraft((prev) => {
+      const next = prev.map((d, i) => (i === step ? { ...d, note: text } : d))
+      persist(next)
+      return next
+    })
   }
 
   /** 只汇总、不判定：三问答案成文，⛔ 任何原创性结论 */
@@ -99,7 +156,7 @@ export function ThreeQuestionsPage() {
   return (
     <PageShell
       title="三问向导 · 贡献前自述"
-      dataSource="纯前端表单（本页零接口调用）；出草稿与复制，登记提交走「交素材」上传通道"
+      dataSource="纯前端表单（本页零接口调用）；作答留存仅本浏览器 localStorage（可回看／可清除）；出草稿与复制，登记提交走「交素材」上传通道"
       permission="公开"
       description="交素材前的三问：原创吗？用过 AI 吗？用在什么场景？系统只替你汇成一段自述文字，不作任何判定。"
     >
@@ -188,6 +245,43 @@ export function ThreeQuestionsPage() {
             <p className="text-xs text-gray-400">三问都作答后，这里会生成一段自述文字。</p>
           )}
         </section>
+
+        {/* SITE-001 T-3：结果落页·可回看——仅存本浏览器（localStorage），零接口调用 */}
+        {snapshot && (
+          <section data-testid="threeq-snapshot" className="rounded-lg border border-gray-200 p-4">
+            <h3 className="mb-1 text-sm font-semibold text-gray-900">上次作答（本浏览器留存，可回看）</h3>
+            <p className="mb-2 text-[11px] text-gray-400">
+              留存于 {new Date(snapshot.savedAt).toLocaleString('zh-CN')}；只存在你自己的浏览器里，本站服务器不留存、无法代取。
+            </p>
+            <pre data-testid="threeq-snapshot-text" className="mb-3 overflow-x-auto whitespace-pre-wrap rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-600">
+              {[
+                '【登记自述 · 上次草稿】',
+                ...QUESTIONS.map((qq, i) => {
+                  const d = snapshot.draft[i]
+                  const noteText = (d.note || '').trim()
+                  const spoken = qq.speak(d.choice || '（未答）', noteText)
+                  return qq.key === 'origin' && noteText ? `${spoken}；补充说明：${noteText}` : spoken
+                }),
+              ].join('\n')}
+            </pre>
+            <div className="flex gap-2">
+              <button
+                data-testid="threeq-restore"
+                onClick={restoreSnapshot}
+                className="rounded border border-gray-300 px-3 py-1.5 text-xs text-gray-600"
+              >
+                载回继续修改
+              </button>
+              <button
+                data-testid="threeq-clear"
+                onClick={clearSnapshot}
+                className="rounded border border-dashed border-gray-300 px-3 py-1.5 text-xs text-gray-400"
+              >
+                清除留存
+              </button>
+            </div>
+          </section>
+        )}
 
         <section data-testid="threeq-pending" className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4">
           <h3 className="mb-1 text-sm font-semibold text-gray-900">提交功能：<span className="text-amber-600">暂不可提交</span></h3>

@@ -34,6 +34,18 @@ const SECTIONS: OpsMeSection[] = [
     note: '私域服务维护面：申诉受理与用户申诉端同口径——受理通道在建，当前仅登记不处置，可处置深度候裁。',
   },
   {
+    key: 'ops-me-tickets',
+    title: '我的工单',
+    items: ['工单列表（只读）', '红线命中标记', '状态跟踪'],
+    note: '本人相关运维工单只读清单：照站点运维端工单簿实显，⛔ 本页任何处置／流转操作。',
+  },
+  {
+    key: 'ops-me-perms',
+    title: '我的授权状态',
+    items: ['本人权限清单（只读）', '角色与范围', '逐项依据'],
+    note: '本人权限矩阵只读呈现：由权限点表按角色直接生成，⛔ 本页任何授权／变更操作。',
+  },
+  {
     key: 'ops-me-governance',
     title: '治理操作',
     items: ['评审队列', '形式化入站', '工具上架', '集群准入'],
@@ -65,6 +77,10 @@ interface OpsMeData {
   governance: number | null
   audit: number | null
   account: { role: string; expiresInMin: number } | null
+  /** SITE-001 T-3：我的工单（GET /api/v1/ops/tickets，只读） */
+  tickets: { count: number; rows: { ticket_id: string; title: string; status: string; redline_hit: boolean | null }[] } | null
+  /** SITE-001 T-3：我的授权状态（GET /api/v1/me/permissions，只读） */
+  perms: { role: string; allowCount: number; total: number } | null
 }
 
 /** 每栏实显一行（照端点真值；取不到给暂无数据说明） */
@@ -72,6 +88,14 @@ const FACT_TEXT: Record<string, (d: OpsMeData) => string> = {
   'ops-me-site': (d) =>
     d.site === null ? '暂无数据（公告列表未取到，不猜测）' : `公告在架 ${d.site} 条（公告栏公开列表实显）`,
   'ops-me-service': () => '暂无数据（服务面无在册数据源，如实标注）',
+  'ops-me-tickets': (d) =>
+    d.tickets === null
+      ? '暂无数据（工单未取到，登录后可见）'
+      : `工单 ${d.tickets.count} 件（只读清单实显）`,
+  'ops-me-perms': (d) =>
+    d.perms === null
+      ? '暂无数据（授权状态未取到，登录后可见）'
+      : `角色 ${d.perms.role} · 可执行 ${d.perms.allowCount} ／ ${d.perms.total} 项（权限矩阵实显）`,
   'ops-me-governance': (d) =>
     d.governance === null ? '暂无数据（工具货架未取到，不猜测）' : `工具在架 ${d.governance} 件（工具货架实显）`,
   'ops-me-audit': (d) =>
@@ -86,6 +110,8 @@ const FACT_TEXT: Record<string, (d: OpsMeData) => string> = {
 const HAS_DATA: Record<string, (d: OpsMeData) => boolean> = {
   'ops-me-site': (d) => d.site !== null,
   'ops-me-service': () => false,
+  'ops-me-tickets': (d) => d.tickets !== null,
+  'ops-me-perms': (d) => d.perms !== null,
   'ops-me-governance': (d) => d.governance !== null,
   'ops-me-audit': (d) => d.audit !== null,
   'ops-me-emergency': () => false,
@@ -93,16 +119,19 @@ const HAS_DATA: Record<string, (d: OpsMeData) => boolean> = {
 }
 
 export function OpsMePage() {
-  const [data, setData] = useState<OpsMeData>({ site: null, governance: null, audit: null, account: null })
+  const [data, setData] = useState<OpsMeData>({ site: null, governance: null, audit: null, account: null, tickets: null, perms: null })
 
   useEffect(() => {
     let alive = true
     void (async () => {
-      const [ann, tools, nca, me] = await Promise.all([
+      const [ann, tools, nca, me, tickets, perms] = await Promise.all([
         api.get<{ count: number }>('/api/v1/announcements/list'),
         api.get<{ count: number }>('/api/v1/toolshelf/list'),
         api.get<{ total: number }>('/api/v1/me/nca?page=1&limit=1'),
         api.get<{ role: string; expires_in_s: number }>('/api/v1/auth/me'),
+        // SITE-001 T-3：我的工单／我的授权状态（两枚只读 GET；失败即 null，fail-closed）
+        api.get<{ count: number; tickets: { ticket_id: string; title: string; status: string; redline_hit: boolean | null }[] }>('/api/v1/ops/tickets'),
+        api.get<{ role: string; matrix: { allow: string | boolean }[] }>('/api/v1/me/permissions'),
       ])
       if (!alive) return
       setData({
@@ -111,6 +140,16 @@ export function OpsMePage() {
         audit: nca.ok ? (nca.data.total ?? null) : null,
         account: me.ok && me.data.role
           ? { role: me.data.role, expiresInMin: Math.max(0, Math.round((me.data.expires_in_s ?? 0) / 60)) }
+          : null,
+        tickets: tickets.ok && Array.isArray(tickets.data.tickets)
+          ? { count: tickets.data.count ?? tickets.data.tickets.length, rows: tickets.data.tickets.slice(0, 5) }
+          : null,
+        perms: perms.ok && perms.data.role && Array.isArray(perms.data.matrix)
+          ? {
+              role: perms.data.role,
+              allowCount: perms.data.matrix.filter((m) => m.allow === true || m.allow === 'allow' || m.allow === '可').length,
+              total: perms.data.matrix.length,
+            }
           : null,
       })
     })()
@@ -122,7 +161,7 @@ export function OpsMePage() {
   return (
     <PageShell
       title="运维我的（站与服务的）"
-      dataSource="实显四栏只读：/api/v1/auth/me（账户）·/api/v1/announcements/list（站务）·/api/v1/toolshelf/list（治理操作）·/api/v1/me/nca（审计与留痕）；服务／应急暂无数据"
+      dataSource="实显六栏只读：/api/v1/auth/me（账户）·/api/v1/announcements/list（站务）·/api/v1/toolshelf/list（治理操作）·/api/v1/me/nca（审计与留痕）·/api/v1/ops/tickets（我的工单）·/api/v1/me/permissions（我的授权状态）；服务／应急暂无数据"
       permission="登录 DID（运维身份；沿运维独立入口 tdca-ops 鉴权）"
       description="运维管理员的「我的」：管站与服务的事——站务／服务／治理操作／审计与留痕／应急／账户六栏。与用户「我的」（管自己的事）两套独立、内容不重叠。"
     >
@@ -160,6 +199,19 @@ export function OpsMePage() {
                   ))}
                 </ul>
                 <p className="mt-2 text-[11px] text-gray-400">{s.note}</p>
+                {/* SITE-001 T-3：工单只读明细（至多 5 件；纯呈现，⛔ 无操作钮） */}
+                {s.key === 'ops-me-tickets' && data.tickets && data.tickets.rows.length > 0 && (
+                  <ul data-testid="ops-me-ticket-rows" className="mt-2 space-y-1 border-t border-gray-100 pt-2">
+                    {data.tickets.rows.map((t) => (
+                      <li key={t.ticket_id} className="text-[11px] text-gray-600">
+                        · {t.title}（{t.status}{t.redline_hit ? ' · 红线命中' : ''}）
+                      </li>
+                    ))}
+                    {data.tickets.count > data.tickets.rows.length && (
+                      <li className="text-[10px] text-gray-400">… 共 {data.tickets.count} 件，余见站点运维端工单簿</li>
+                    )}
+                  </ul>
+                )}
               </section>
             )
           })}

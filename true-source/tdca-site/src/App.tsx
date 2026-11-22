@@ -1,10 +1,11 @@
 // FRONTEND-PERF-001（L1SI207）路由级分包：页面件全部 React.lazy 动态装载，
 // 首屏主包 ≤800KB；vendor-react 由 vite manualChunks 固化长缓存。路由表与路径一字未动。
-import { lazy, Suspense } from 'react'
-import { Routes, Route, Navigate, useParams } from 'react-router'
+import { lazy, Suspense, useEffect } from 'react'
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router'
 import { AuthProvider } from './lib/auth-context'
 import { RequireAuth } from './components/RequireAuth'
 import { SiteLayout } from './components/SiteLayout'
+import { DOCS_ROUTE_TITLES } from './lib/route-titles'
 
 const Home = lazy(() => import('./pages/Home'))
 const DocsHome = lazy(() => import('./pages/Docs'))
@@ -103,10 +104,23 @@ const LabPage = lazy(() => import('./pages/Lab').then((m) => ({ default: m.LabPa
 const DemoPage = lazy(() => import('./pages/Demo').then((m) => ({ default: m.DemoPage })))
 
 
+// SITE-001（L1SI226）T-2：/docs 四路客户端导航 title 同步（直载态预渲染 title 本就正确，
+// 缺的是 SPA 内跳转时 document.title 不跟随；此处补齐，⛔ 只此四路，⛔ 不动他路不动内容）
+function DocsTitleSync() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const key = pathname.replace(/\/+$/, '') || '/'
+    const title = DOCS_ROUTE_TITLES[key]
+    if (title) document.title = title
+  }, [pathname])
+  return null
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <SiteLayout>
+      <DocsTitleSync />
       {/* FRONTEND-PERF-001：路由级分包后的统一挂起兜底（首屏主包 ≤800KB） */}
       <Suspense fallback={<div data-testid="route-loading" className="p-8 text-center text-slate-500">加载中…</div>}>
       <Routes>
