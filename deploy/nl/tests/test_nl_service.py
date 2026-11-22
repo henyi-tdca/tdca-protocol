@@ -148,7 +148,9 @@ def test_billed_response_has_no_cost_no_brand(clean, monkeypatch):
     # A-2：明细入内日志
     log = (clean / "calls.log").read_text(encoding="utf-8")
     rec = json.loads(log.strip().splitlines()[-1])
-    assert rec["user"] == "tester" and rec["spend"] > 0 and "day_spend" in rec
+    # RTGATE-001 D组五元留痕：仓版 calls.log 行写 identity=f"{user}@{ip}"（schema 于 6771e054
+    # 定形），本断言随仓版单一事实源校准；强度不降——身份字段仍须确证为 tester 本人。
+    assert rec["identity"].startswith("tester@") and rec["spend"] > 0 and "day_spend" in rec
 
 
 def test_fuse_response_has_no_amount(clean, monkeypatch):
