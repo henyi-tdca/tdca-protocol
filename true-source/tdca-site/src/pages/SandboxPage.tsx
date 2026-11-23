@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { api } from '@/lib/client'
 import { useApiGet } from '@/lib/useApi'
 import { PageShell } from '@/components/PageShell'
+import { SandboxDomainPanel } from '@/components/three-state/ThreeStateSections'
 import { SimulatedBadge } from '@/lib/SimulatedBadge'
 
 interface SeaStatusData {
@@ -125,6 +126,11 @@ export function SandboxPage() {
                 </div>
               ))}
             </div>
+          </section>
+
+          {/* B1-001 沙盒可行域＋四维分项（匿名可读·与 /api/v1/three-state/sandbox 同源） */}
+          <section className="mt-4 rounded-lg border border-gray-200 p-4">
+            <SandboxDomainPanel />
           </section>
 
           {/* 入盒申请（A-5；带填写示例）＋我的申请全文 */}

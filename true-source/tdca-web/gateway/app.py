@@ -139,6 +139,11 @@ app.include_router(anchor_ops_router)
 from dual_channel_ops import router as dual_channel_ops_router  # noqa: E402
 app.include_router(dual_channel_ops_router)
 
+# B1-001：三态可读面（/api/v1/three-state/{negative-space|sandbox|positive-space}——匿名只读；
+# 单一数据源 three_state_data.py；负空间十五格/沙盒四维/正空间认读对存证；令 TDCA-HANDOFF-EXEC-L1SI228-B1-001）
+from three_state_ops import router as three_state_ops_router  # noqa: E402
+app.include_router(three_state_ops_router)
+
 # AUDIT-ANCHOR-001：账本锚点内部面（/api/v1/audit/anchors*——⛔ 对外暴露：仅当内部环境显式置旗才挂载；
 # 规格 TDCA-SPEC-AUDIT-ANCHOR-001 V1.0-FROZEN-INTERNAL；生产实例不置旗 ⟹ 路由不存在（404），非 401 泄露存在性）
 import os as _os  # noqa: E402

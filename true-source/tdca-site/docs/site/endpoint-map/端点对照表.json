@@ -625,6 +625,14 @@
       "一句话用途": "公开读（免会话）：交了几件、各件哈希与状态；⛔ 起草人账号。无存证视未发生（404）"
     },
     {
+      "path": "/api/v1/dual-channel",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "匿名只读对照清单（DUALCH-021）：单一数据源直出，JSON 数组，十二功能域"
+    },
+    {
       "path": "/api/v1/eios/cluster-status",
       "methods": [
         "GET"
@@ -1287,6 +1295,30 @@
       "一句话用途": "A-2: Shapley 分账观测（tax_events 按 call_id 聚合）"
     },
     {
+      "path": "/api/v1/three-state/negative-space",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "负空间清单式呈现（B1-1）：五类×三操作符十五格，逐格条款或理由＋依据，匿名只读"
+    },
+    {
+      "path": "/api/v1/three-state/positive-space",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "正空间认读文件（B1-3）：生效制度件选编，人可读＋复算路径＋仓端提交号＋件哈希"
+    },
+    {
+      "path": "/api/v1/three-state/sandbox",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "沙盒可行域＋四维分项（B1-2）：可行域两源＋功能/安全/性能/合规分项读数与证据件"
+    },
+    {
       "path": "/api/v1/toolshelf/catalog",
       "methods": [
         "GET"
@@ -1389,14 +1421,6 @@
       ],
       "鉴权要求": "会话 TDCA-SES",
       "一句话用途": "执行状态（DB 实读——重启后可查；P5 契约 execution_id 查询）"
-    },
-    {
-      "path": "/api/v1/dual-channel",
-      "methods": [
-        "GET"
-      ],
-      "鉴权要求": "匿名",
-      "一句话用途": "双通道等价对照同源清单：十二功能域五字段，页与接口同取一处（DUALCH-021）"
     }
   ]
 }
