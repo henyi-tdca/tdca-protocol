@@ -124,11 +124,12 @@ describe('MIGRATE 批7：站点地图 ≡ 真源清单（prerender-routes.mjs SI
     return [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1])
   })()
 
-  it('条目数≡真源清单数（机取机算，⛔手编塞条目；60 条口径＝57+1+3−1）', () => {
+  it('条目数≡真源清单数（机取机算，⛔手编塞条目；61 条口径＝57+1+3−1+1）', () => {
     // L1SI218-ALIAS301-001 项2（GSEQ-8493）：/acceptance 公示面入预渲染，57→58
     // SITEA-RESIDUAL-001 余项1（GSEQ-8809）：/register /formal /market-sim 三公开页补入，58→61
     // SITEA-RESIDUAL-001 余项2：/authorization/panel（受护面）移出，61→60
-    expect(CANONICAL_SITEMAP).toHaveLength(60)
+    // DUALCH-021 上批：/dual-channel 公示面入预渲染，60→61（存量口径未跟上批，B1-001 顺手修）
+    expect(CANONICAL_SITEMAP).toHaveLength(61)
     expect(SITEMAP_ENTRIES).toHaveLength(CANONICAL_SITEMAP.length)
     expect(new Set(SITEMAP_ENTRIES)).toEqual(new Set(CANONICAL_SITEMAP))
   })
