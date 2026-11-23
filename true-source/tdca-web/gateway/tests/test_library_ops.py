@@ -133,3 +133,31 @@ def test_list_and_detail(_docs_table):
 
     r = client.get("/api/v1/library/whitepaper/NO-SUCH", headers=h)
     assert r.status_code == 404
+
+
+def test_family_aliases_301(_docs_table):
+    """FAMNAME-011（窄令 #1~#5）：别名 301 落主名（匿名不经鉴权即跳，落点带子路径与 query）；
+    未放行两对（#6 papers／#7 whitepapers）不得出现 301；主名读数与 /families 九族不变。"""
+    pairs = [("regulations", "regulation"), ("helps", "help"), ("coplib", "cop-library"),
+             ("ops-guide", "ops-guides"), ("term", "terms")]
+    for alias, main in pairs:
+        r = client.get(f"/api/v1/library/{alias}", follow_redirects=False)
+        assert r.status_code == 301, (alias, r.status_code, r.text[:200])
+        assert r.headers["location"].endswith(f"/api/v1/library/{main}")
+        r2 = client.get(f"/api/v1/library/{alias}/some-slug.md", follow_redirects=False)
+        assert r2.status_code == 301, (alias, r2.status_code)
+        assert r2.headers["location"].endswith(f"/api/v1/library/{main}/some-slug.md")
+    # query 保留
+    r3 = client.get("/api/v1/library/coplib?x=1", follow_redirects=False)
+    assert r3.status_code == 301
+    assert r3.headers["location"].endswith("/api/v1/library/cop-library?x=1")
+    # #6/#7 未放行：papers/whitepapers 非主名族，不得 301（维持原匿名 401 语义）
+    for not_yet in ("papers", "whitepapers"):
+        r4 = client.get(f"/api/v1/library/{not_yet}", follow_redirects=False)
+        assert r4.status_code != 301, (not_yet, r4.status_code)
+    # 主名读数不变（200）；/families 仍九族且无别名键
+    assert client.get("/api/v1/library/cop-library").status_code == 200
+    r5 = client.get("/api/v1/library/families")
+    fams = {e["family"] for e in r5.json()["data"]["items"]}
+    assert fams == set(library_ops._OPEN_FAMILIES)
+    assert not (fams & set(library_ops._FAMILY_ALIASES))

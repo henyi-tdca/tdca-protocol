@@ -19,6 +19,10 @@
 # 匿名放行追加: CONTENT-LIVE-ALL-001（2026-11-10，TDCA-HANDOFF-EXEC-L1SI206-CONTENT-LIVE-ALL-001
 #           §二取甲＋L1SI189 在册裁定）——whitepaper/paper 两族并入匿名只读（六族）；两族源件
 #           已过在册净名批与 S-2 复扫（凭据／自然人 0；4 处 NCA/GSEQ 为论文正文概念引用非工作件号）
+# 族名两写追加: FAMNAME-011（2026-11-23，TDCA-HANDOFF-EXEC-L1SI227-FAMNAME-011 窄令放行）——
+#           别名 301 层仅 #1~#5 五对（regulations/helps/coplib/ops-guide/term → 主名）；
+#           #6/#7 未放行另案；⛔ 动存储 family 值、⛔ 动 _FAMILIES/_OPEN_FAMILIES 闭集、
+#           ⛔ 入 /families 响应（⛔ 留双入口）
 # =============================================================================
 from __future__ import annotations
 
@@ -27,6 +31,7 @@ import re
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from sqlalchemy import text
 
 from api_v1 import _nca_watermark, _require_session_user  # noqa: E402
@@ -233,6 +238,29 @@ def paper_catalog(request: Request):
 _OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "paper",
                   "help", "ops-guides", "regulation")
 
+# FAMNAME-011（L1SI227，2026-11-23，依 TDCA-HANDOFF-EXEC-L1SI227-FAMNAME-011 窄令放行）：
+# 族名两写·别名 301 层——仅 #1~#5 五对（#6 paper/papers、#7 whitepaper/whitepapers
+# 未放行，另呈创始人裁；⛔ 动存储 family 值、⛔ 动 _FAMILIES 闭集、⛔ 入 _OPEN_FAMILIES、
+# ⛔ 入 /families 响应——别名仅作路由面跳转落主名，⛔ 留双入口）。
+# 判位：别名判定须在 _session_or_open 与 regulation 专属分支之前——匿名别名 URL
+# 一律 301（不经鉴权：301 为路由面跳转非内容响应），落点保留子路径与 query。
+_FAMILY_ALIASES = {
+    "regulations": "regulation",
+    "helps": "help",
+    "coplib": "cop-library",
+    "ops-guide": "ops-guides",
+    "term": "terms",
+}
+
+
+def _alias_redirect(family: str, tail: str, query: str):
+    """别名→主名 301（FAMNAME-011）；非别名返 None。tail 为子路径（含前导 / 或空串）。"""
+    main = _FAMILY_ALIASES.get(family)
+    if main is None:
+        return None
+    qs = f"?{query}" if query else ""
+    return RedirectResponse(f"/api/v1/library/{main}{tail}{qs}", status_code=301)
+
 
 def _session_or_open(request: Request, family: str = "") -> None:
     """会话要求分派：_OPEN_FAMILIES 九族（cop-library/terms/laws/law-notes/whitepaper/paper
@@ -290,6 +318,9 @@ def library_list(family: str, request: Request):
     ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——「对外公开
     制度不需要注册可见」取甲）：制度族匿名可读，件目即白名单 49 件（slug 固定；
     2026-11-08 暂剔一件（WITNESS-ANONREAD-S2-001）后 NET-001 净面纳回，49→48→49）。"""
+    redir = _alias_redirect(family, "", request.url.query)
+    if redir is not None:
+        return redir
     if family == "regulation":
         items = [{"slug": slug, "title": slug, "synced_at": None, "has_content": True}
                  for slug in sorted(_REG_WHITELIST)]
@@ -318,6 +349,9 @@ def library_detail(family: str, slug: str, request: Request):
 
     ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——「对外公开
     制度不需要注册可见」取甲）：制度族白名单 49 件匿名可读正文（fail-closed 见 _reg_read）。"""
+    redir = _alias_redirect(family, f"/{slug}", request.url.query)
+    if redir is not None:
+        return redir
     if family == "regulation":
         body_md = _reg_read(slug)
         return _nca_watermark(
