@@ -63,6 +63,15 @@ _ID_PAT = re.compile(r"TDCA-[A-Z0-9-]*\d{3,}-?")
 # ⛔ 动 content_sha256_16（指纹锚保留公开）；判据＝公域响应体零 NCA-WEB- 命中。
 _MASKED_NCA = "已存证"
 
+# 备注节之链序遮蔽（T-1 补漏·站面直核实证）：库内备注原文含
+# 「链序：NCA-WEB-*（前序 NCA-WEB-*）」，详页 note_section 直出即漏——
+# 仅面侧换字，短值／字节等指纹锚原样保留。
+_NCA_PAT = re.compile(r"NCA-WEB-[0-9a-f]+")
+
+
+def _mask_note(note: str) -> str:
+    return _NCA_PAT.sub(_MASKED_NCA, note or "")
+
 
 def _mask_lineage(lineage: str) -> str:
     return _ID_PAT.sub("〔内部编号已隐去〕", lineage or "")
@@ -140,7 +149,7 @@ def registration_detail(record_id: str):
         "face": "内部权属登记（建设期）",
         "family": _fam_of(r["source_lineage"]),
         "fields": _four_fields(r, meta),
-        "note_section": r["note"],
+        "note_section": _mask_note(r["note"]),
         "record_meta": {
             "提交主体标识": r["owner_ref"],
             "表达形式": r["expression_form"],
