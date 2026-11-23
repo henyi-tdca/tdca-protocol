@@ -23,6 +23,9 @@
 #           别名 301 层仅 #1~#5 五对（regulations/helps/coplib/ops-guide/term → 主名）；
 #           #6/#7 未放行另案；⛔ 动存储 family 值、⛔ 动 _FAMILIES/_OPEN_FAMILIES 闭集、
 #           ⛔ 入 /families 响应（⛔ 留双入口）
+# 族名两写追加: FAMNAME-013（2026-11-23，创始人「同意」取乙案＋标准 V1.1 主名归单数）——
+#           #6 papers→paper、#7 whitepapers→whitepaper 复名别名 301 补入（站上主名未变，
+#           存储与前端 ⛔ 动，只补两条跳转）；本令取代 FAMNAME-011 之「#6/#7 不放行」结论
 # =============================================================================
 from __future__ import annotations
 
@@ -244,12 +247,17 @@ _OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "pa
 # ⛔ 入 /families 响应——别名仅作路由面跳转落主名，⛔ 留双入口）。
 # 判位：别名判定须在 _session_or_open 与 regulation 专属分支之前——匿名别名 URL
 # 一律 301（不经鉴权：301 为路由面跳转非内容响应），落点保留子路径与 query。
+# FAMNAME-013（L1SI227，2026-11-23，依 TDCA-HANDOFF-EXEC-L1SI227-FAMNAME-013）：
+# 复名别名跳转——#6 papers→paper、#7 whitepapers→whitepaper 补入（创始人「同意」取乙案；
+# 标准 V1.1 主名归单数，站上主名未变，存储与前端 ⛔ 动，只补两条别名 301）。
 _FAMILY_ALIASES = {
     "regulations": "regulation",
     "helps": "help",
     "coplib": "cop-library",
     "ops-guide": "ops-guides",
     "term": "terms",
+    "papers": "paper",
+    "whitepapers": "whitepaper",
 }
 
 
