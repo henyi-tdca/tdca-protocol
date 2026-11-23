@@ -18,6 +18,7 @@ const dist = join(siteRoot, 'dist')
 const shellPath = join(dist, 'index.html')
 
 // ── 一、sitemap 61 条（57＋/acceptance·L1SI218-ALIAS301-001＋/register /formal /market-sim·SITEA-RESIDUAL-001）（2026-11-12 线上实测 41 条核证口径照录＋PRERENDER-001 首扩 16 项）──
+// DUALCH-021（2026-11-23）：＋/dual-channel 双通道等价对照页（纯新增公域面）＝61 条
 const SITEMAP_ROUTES = [
   '/', '/about', '/academy', '/academy/outline', '/announcements',
   '/attestation/history', '/audit', '/authorization-registry',
@@ -26,6 +27,7 @@ const SITEMAP_ROUTES = [
   '/lab', '/library', '/market', '/nca-guide', '/negativespace', '/nodes',
   '/notifier', '/official-assets', '/ownership', '/private', '/process',
   '/public-face', '/registrations', '/rules', '/sandbox', '/search', '/start',
+  '/dual-channel',
   '/start/three-questions', '/status', '/tax', '/verify',
   // PRERENDER-001（L1SI213，依 TDCA-RULING-L1SI213-SITE2-SELFHANDLE-001 §三甲档 16 项）：
   // 已有实质内容未预渲染之公域栏目纳入；S-3 已逐面核非空壳，零撤出
@@ -62,6 +64,8 @@ const SUPPLEMENT = {
   '/ownership': { title: '法定交易中心 · 提交入口', description: '所有权登记提交面：登记号公开可查，证据包可核。' },
   '/process': { title: '流程总览', description: '站点流程总览：六步硬序与各面关系一页看懂。' },
   '/registrations': { title: '登记查询 · 公开留痕', description: '登记查询公开面：列表／详情／证据包三件匿名只读。' },
+  // DUALCH-021：双通道等价对照（题述照 PageShell 实读：页与接口同源，匿名可读）
+  '/dual-channel': { title: '双通道等价对照', description: '同一件事人与智能体各自怎么做：一页一表，人与机两条通道逐域对照。' },
   '/sandbox': { title: '沙盒准入（L2 前置反应釜）', description: '沙盒准入说明面：出盒前的一切验证都在沙盒完成。' },
   '/tax': { title: '税收仪表盘（L3 效用计量）', description: '税收仪表盘公开面：L3 效用计量只读展示。' },
   // PRERENDER-001 首扩 14 面（/terms／/overview 已见于 PAGE_META 真源，不重复登）；
@@ -93,7 +97,7 @@ const errors = []
 for (const r of SITEMAP_ROUTES) if (!meta.has(r)) errors.push(`缺 meta：${r}`)
 for (const p of meta.keys()) if (!SITEMAP_ROUTES.includes(p)) { /* PAGE_META 私域面（/me/* 等）不入 sitemap、不预渲染，登记即可 */ }
 if (!existsSync(shellPath)) errors.push('dist/index.html 不存在（须在 vite build 之后运行）')
-if (SITEMAP_ROUTES.length !== 60) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 60（57+1+3−1：L1SI218-ALIAS301-001 项2、SITEA-RESIDUAL-001 余项1/2 核证口径，变动须人工复核）`)
+if (SITEMAP_ROUTES.length !== 61) errors.push(`sitemap 清单实数 ${SITEMAP_ROUTES.length} ≠ 61（57+1+3−1＋DUALCH-021 /dual-channel 一条：L1SI218-ALIAS301-001 项2、SITEA-RESIDUAL-001 余项1/2 核证口径，变动须人工复核）`)
 if (errors.length) { console.error('预渲染对账失败：\n' + errors.join('\n')); process.exit(1) }
 
 // ── 五、生成：每条路由独立 title/description/og ──

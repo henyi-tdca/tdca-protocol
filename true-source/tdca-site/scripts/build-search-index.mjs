@@ -137,6 +137,7 @@ const COLUMN_TITLES = {
   '/ops': '站点运维端（P7）',
   '/process': '流程总览（协作流程 14 环）',
   '/registrations': '权属登记查询（公域）',
+  '/dual-channel': '双通道等价对照（人机逐域对照表）',
   '/channel/portal': '智能体通道 · 门户总览',
   '/channel/agents': '智能体通道 · 集群接入',
   '/channel/registry': '智能体通道 · 登记指引',

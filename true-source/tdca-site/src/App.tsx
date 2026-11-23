@@ -88,6 +88,8 @@ const NcaGuidePage = lazy(() => import('./pages/NcaGuidePage').then((m) => ({ de
 const ChannelHome = lazy(() => import('./pages/ChannelHome').then((m) => ({ default: m.ChannelHome })))
 const ProcessOverviewPage = lazy(() => import('./pages/ProcessOverview').then((m) => ({ default: m.ProcessOverviewPage })))
 const RegistrationsPage = lazy(() => import('./pages/RegistrationsPage').then((m) => ({ default: m.RegistrationsPage })))
+// DUALCH-021：双通道等价对照页（匿名可读；数据同源 GET /api/v1/dual-channel）
+const DualChannelPage = lazy(() => import('./pages/DualChannelPage').then((m) => ({ default: m.DualChannelPage })))
 const SearchPage = lazy(() => import('./pages/SearchPage').then((m) => ({ default: m.SearchPage })))
 const ChannelMyPage = lazy(() => import('./pages/ChannelMy').then((m) => ({ default: m.ChannelMyPage })))
 const AgentChannelRegisterPage = lazy(() => import('./pages/AgentChannelRegister').then((m) => ({ default: m.AgentChannelRegisterPage })))
@@ -138,6 +140,8 @@ export default function App() {
         <Route path="/process" element={<ProcessOverviewPage />} />
         {/* REGISTRY-PAGE-001：公域登记查询（匿名只读；零新后端，三端点全匿名 GET） */}
         <Route path="/registrations" element={<RegistrationsPage />} />
+        {/* DUALCH-021：双通道等价对照（纯新增路由；匿名可读；不动既有路由与权限模型） */}
+        <Route path="/dual-channel" element={<DualChannelPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/me" element={<RequireAuth><MePage /></RequireAuth>} />
