@@ -87,6 +87,7 @@ export function RegistrationsPage() {
   const [detailErr, setDetailErr] = useState('')
   const [evidence, setEvidence] = useState<EvidenceData | null>(null)
   const [evidenceErr, setEvidenceErr] = useState('')
+  const [evidenceNeedLogin, setEvidenceNeedLogin] = useState(false)
   const [detailId, setDetailId] = useState('')
 
   useEffect(() => {
@@ -128,6 +129,7 @@ export function RegistrationsPage() {
     setDetail(null)
     setEvidence(null)
     setEvidenceErr('')
+    setEvidenceNeedLogin(false)
     setDetailErr('')
     api
       .get<DetailData>(`/api/public/registrations/${rid}`, { tolerateMissingWatermark: true })
@@ -137,13 +139,18 @@ export function RegistrationsPage() {
       })
   }
 
+  // EVIDGATE-015（2026-11-23，S-1 同批改·取「提示须登录」方案，照 needLogin 范式）：
+  // 证据包端点已加门（匿名 401）——匿名点击不报错文，改显「须登录后查看」引导，
+  // 保留按钮可发现性；⛔ 改列表／详页／三组字／双向两行，⛔ 改路由。
   const openEvidence = (rid: string) => {
     setEvidence(null)
     setEvidenceErr('')
+    setEvidenceNeedLogin(false)
     api
       .get<EvidenceData>(`/api/public/registrations/${rid}/evidence`, { tolerateMissingWatermark: true })
       .then((r) => {
         if (r.ok) setEvidence(r.data)
+        else if (r.status === 401 || r.status === 403) setEvidenceNeedLogin(true)
         else setEvidenceErr(r.detail ?? r.reason)
       })
   }
@@ -278,6 +285,12 @@ export function RegistrationsPage() {
 
       {/* 证据包（用途声明⛔去除） */}
       {evidenceErr && <p className="text-sm text-red-600">证据包加载失败：{evidenceErr}</p>}
+      {/* EVIDGATE-015：匿名 401 → 须登录引导（needLogin 范式·amber 块），⛔ 报错文 */}
+      {evidenceNeedLogin && (
+        <p data-testid="reg-evidence-login" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          证据包仅供向法定机构提交与内部留档，须登录后查看（匿名不可读）；登录入口见右上「登录（DID）」。
+        </p>
+      )}
       {evidence && (
         <div data-testid="reg-evidence" className="rounded-xl border border-amber-300 bg-amber-50 p-4">
           <p data-testid="reg-evidence-purpose" className="mb-3 text-sm font-medium text-amber-900">

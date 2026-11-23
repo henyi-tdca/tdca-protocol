@@ -167,4 +167,29 @@ describe('RegistrationsPage（REGISTRY-PAGE-001 验收）', () => {
     expect(opts).toEqual(FAMILIES.items.map((f) => f.family))
     expect(opts).toHaveLength(9)
   })
+
+  // EVIDGATE-015（S-1 同批改·取「提示须登录」方案）：证据包端点匿名 401 →
+  // 渲染须登录引导（needLogin 范式），⛔ 报错文、⛔ 隐去按钮（保留可发现性）
+  it('证据包匿名 401 → 须登录提示（不报错文·按钮仍在）', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      if (url.endsWith('/api/public/registrations')) return jsonResp(LIST)
+      if (url.includes('/evidence')) return jsonResp({ detail: 'unauthorized' }, 401)
+      if (url.includes('/api/public/registrations/')) return jsonResp(DETAIL)
+      if (url.endsWith('/api/v1/library/families')) {
+        return jsonResp({ data: FAMILIES, nca_watermark: 'sha256:test', ts: '2026-08-12T00:00:00Z', data_nature: 'simulated' })
+      }
+      return jsonResp({}, 404)
+    }))
+    render(<RegistrationsPage />)
+    await waitFor(() => expect(screen.getByTestId('reg-list')).toBeTruthy())
+    fireEvent.click(screen.getByTestId('reg-item-OR-G7-AAAA0001'))
+    await waitFor(() => expect(screen.getByTestId('reg-detail')).toBeTruthy())
+    expect(screen.getByTestId('reg-evidence-btn')).toBeTruthy()   // 按钮保留可发现
+    fireEvent.click(screen.getByTestId('reg-evidence-btn'))
+    await waitFor(() => expect(screen.getByTestId('reg-evidence-login')).toBeTruthy())
+    expect(screen.getByTestId('reg-evidence-login').textContent).toContain('须登录后查看')
+    expect(screen.queryByTestId('reg-evidence')).toBeNull()       // 链段不渲染
+    expect(screen.queryByText(/证据包加载失败/)).toBeNull()       // ⛔ 报错文
+  })
 })

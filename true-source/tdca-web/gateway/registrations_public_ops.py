@@ -14,7 +14,9 @@ from __future__ import annotations
 
 import re
 import sqlite3
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
+
+from api_v1 import _require_session_user  # noqa: E402  EVIDGATE-015 加门（会话鉴权复用既有权限模型）
 
 router = APIRouter(prefix="/api/public/registrations", tags=["public-registrations"])
 
@@ -163,10 +165,15 @@ def registration_detail(record_id: str):
 
 
 @router.get("/{record_id}/evidence")
-def registration_evidence(record_id: str):
+def registration_evidence(record_id: str, request: Request):
     """证据包导出（四栏一式·只读；令 -004 §三）。
 
-    仅供向法定机构提交与内部留档；⛔ 公开发布。"""
+    仅供向法定机构提交与内部留档；⛔ 公开发布。
+    EVIDGATE-015（2026-11-23，创始人取甲续令）：步 2 加门——本会话鉴权
+    （复用既有权限模型，⛔ 新建门系）；匿名 401 fail-closed，授权后 8 项
+    复算必需字段全量可取、复算功能不废（⛔ 遮蔽链号·⛔ 改输出结构·S-2 停手线）。"""
+
+    _require_session_user(request)
     if not re.fullmatch(r"OR-G7-[0-9A-F]{8}", record_id):
         raise HTTPException(404, "RECORD_NOT_FOUND: 登记记录不存在")
     with _conn() as c:
