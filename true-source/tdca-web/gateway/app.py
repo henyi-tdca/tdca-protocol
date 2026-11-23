@@ -135,6 +135,10 @@ app.include_router(ci_ops_router)
 from anchor_ops import router as anchor_ops_router  # noqa: E402
 app.include_router(anchor_ops_router)
 
+# DUALCH-021：双通道等价对照同源清单（/api/v1/dual-channel——匿名只读 JSON 数组；单一数据源直出）
+from dual_channel_ops import router as dual_channel_ops_router  # noqa: E402
+app.include_router(dual_channel_ops_router)
+
 # AUDIT-ANCHOR-001：账本锚点内部面（/api/v1/audit/anchors*——⛔ 对外暴露：仅当内部环境显式置旗才挂载；
 # 规格 TDCA-SPEC-AUDIT-ANCHOR-001 V1.0-FROZEN-INTERNAL；生产实例不置旗 ⟹ 路由不存在（404），非 401 泄露存在性）
 import os as _os  # noqa: E402
