@@ -19,9 +19,17 @@ _DENY_LOG = Path(os.environ.get("AUTH_DENY_LOG",
 def denylog(tmp_path, monkeypatch):
     p = tmp_path / "auth_deny.log"
     monkeypatch.setenv("AUTH_DENY_LOG", str(p))
+    monkeypatch.setenv("AUTH_DENY_LOG_DROPPED", str(tmp_path / "dropped.json"))
     import auth_deny_log
     monkeypatch.setattr(auth_deny_log, "_DEFAULT_PATH", str(p))
     return p
+
+
+def _dropped(tmp_path, monkeypatch):
+    p = Path(os.environ["AUTH_DENY_LOG_DROPPED"])
+    if not p.exists():
+        return None
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
 def _read_lines(p: Path):
@@ -84,3 +92,47 @@ def test_fields_allowlist(denylog):
     assert set(lines[-1].keys()) == {
         "ts", "path", "method", "http_code", "subject", "code", "source",
     }
+
+
+def test_rotate_on_size_limit(denylog, monkeypatch, tmp_path):
+    """R-1/R-2/R-4：达限轮转——现档 → .1，新行只进轮转后现档；轮转件同 JSONL。"""
+    import auth_deny_log
+    monkeypatch.setattr(auth_deny_log, "_SIZE_LIMIT", 64)
+    old_lines = [{"ts": "t0", "path": "/x", "method": "GET", "http_code": 401,
+                  "subject": "anonymous", "code": "C", "source": "s"}]
+    denylog.write_text("".join(json.dumps(x) + "\n" for x in old_lines) + "p" * 80,
+                       encoding="utf-8")
+    auth_deny_log.log_deny(path="/api/v1/auth/me", method="GET", http_code=401,
+                           subject="", code="TDCA-E-IDENT-PERM-001",
+                           source="http_exception", ts="2026-11-24T00:00:00+00:00")
+    rot = denylog.with_name(denylog.name + ".1")
+    assert rot.exists(), "达限未轮转出 .1"
+    assert json.loads(rot.read_text(encoding="utf-8").splitlines()[0]) == old_lines[0]
+    cur = _read_lines(denylog)
+    assert len(cur) == 1 and cur[0]["path"] == "/api/v1/auth/me"
+    assert denylog.stat().st_size < 64 + 4096  # 轮转后现档只剩新行
+
+
+def test_write_failure_degrades_with_counter(denylog, monkeypatch, tmp_path, capsys):
+    """R-3/R-5：写失败不抛异常、不反转裁决；计数文件 +1 且 stderr 告警一行。"""
+    import auth_deny_log
+    # 指向父目录不存在的路径 → open() 必失败（跨平台 FileNotFoundError/NotADirectory）
+    monkeypatch.setenv("AUTH_DENY_LOG", str(tmp_path / "no_such_dir" / "x.log"))
+    auth_deny_log.log_deny(path="/p", method="GET", http_code=401, subject="",
+                           code="C", source="middleware")
+    d = _dropped(tmp_path, monkeypatch)
+    assert d is not None, "写失败未产出计数文件"
+    assert d["dropped"] >= 1 and "last_reason" in d and "last_ts" in d
+    assert "AUTH_DENY_LOG_DEGRADED" in capsys.readouterr().err
+
+
+def test_rotate_failure_alerts_not_raises(denylog, monkeypatch, tmp_path, capsys):
+    """R-1 补网：轮转失败（现档被置为目录占位）不阻断、不抛，降级告警。"""
+    import auth_deny_log
+    monkeypatch.setattr(auth_deny_log, "_SIZE_LIMIT", 8)
+    denylog.mkdir()  # 同名目录 → stat 成功但轮转 rename 必失败
+    auth_deny_log.log_deny(path="/p", method="GET", http_code=401, subject="",
+                           code="C", source="middleware")
+    d = _dropped(tmp_path, monkeypatch)
+    assert d is not None and d["dropped"] >= 1
+    assert "AUTH_DENY_LOG_DEGRADED" in capsys.readouterr().err
