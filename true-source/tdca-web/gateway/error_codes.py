@@ -101,6 +101,23 @@ async def tdca_http_exception_handler(request: Any, exc: Any) -> Any:
     """HTTPException（含 Starlette）→ 原 detail ＋ code。head=原样。"""
     from fastapi.responses import JSONResponse
     code = classify(getattr(exc, "status_code", None), getattr(exc, "detail", None))
+    # K-3 留证补强（CASENORM-K3-001 B-1/B-2）：端点层 401/403 拒绝入专档
+    # 主体口径：有效会话记注册主体 username，否则 anonymous；⛔ 凭据值/会话指纹/自然人姓名
+    if getattr(exc, "status_code", None) in (401, 403):
+        try:
+            from auth import SESSION_PREFIX, validate_session
+            from auth_deny_log import log_deny
+            _subj = "anonymous"
+            _raw = request.headers.get("authorization", "").strip()
+            if _raw.startswith(SESSION_PREFIX):
+                _v = validate_session(_raw)
+                if _v.get("ok"):
+                    _subj = _v.get("username") or "anonymous"
+            log_deny(path=request.url.path, method=request.method,
+                     http_code=exc.status_code, subject=_subj, code=code,
+                     source="http_exception")
+        except Exception:
+            pass  # 留证失败不反转拒绝裁决
     detail = getattr(exc, "detail", None)
     # P0 处置令（SITE-WALK-001 §二.3）：仅 404 框架默认文案加区分线索，
     # code 由上方 classify 按原文判定（保持不变），只加 detail 措辞。

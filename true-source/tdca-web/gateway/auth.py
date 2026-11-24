@@ -28,6 +28,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from error_codes import with_code  # L1SI153 段一：拒绝体仅增设 code 字段
+from auth_deny_log import log_deny  # K-3 留证补强（CASENORM-K3-001 B-1/B-2）
 
 SESSION_PREFIX = "TDCA-SES-"
 CRT_PREFIX = "TDCA-CRT-"
@@ -193,6 +194,12 @@ class TDCAGatewayAuthMiddleware(BaseHTTPMiddleware):
             if not ok:
                 _st = 401 if deny["error"] == "UNAUTHORIZED" else 403
                 # L1SI153 段一：拒绝体仅增设 code 字段（⛔ 不改状态码/文案）
-                return JSONResponse(with_code(deny, _st), status_code=_st)
+                _body = with_code(deny, _st)
+                # K-3 留证补强（CASENORM-K3-001 B-1/B-2）：中间件层拒绝入专档
+                # （此分支无有效会话，主体恒 anonymous；⛔ 凭据值/指纹）
+                log_deny(path=path, method=method, http_code=_st,
+                         subject="anonymous", code=_body.get("code", ""),
+                         source="middleware")
+                return JSONResponse(_body, status_code=_st)
 
         return await call_next(request)
