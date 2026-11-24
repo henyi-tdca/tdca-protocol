@@ -7,6 +7,7 @@
 // 追平批B1（L1SI206-PARITY-B1）：旧版权直拷（接缝仅 PageShell 别名），批A-B5 转 A 补建
 // =============================================================================
 import { PageShell } from '@/components/PageShell'
+import { NegativeSpaceListing } from '@/components/three-state/ThreeStateSections'
 
 /** 三空间（原则级说明，照在册 TruthSpace 口径；⛔ 不涉内部编号） */
 const THREE_SPACES = [
@@ -78,6 +79,8 @@ export function NegativeSpacePage() {
             本栏口径：只讲原则与类别。具体禁项的词面属不公开面——本栏不列、公开页面不转载；判定时以制度内的机器可读负空间为准。
           </p>
         </section>
+
+        <NegativeSpaceListing />
       </div>
     </PageShell>
   )

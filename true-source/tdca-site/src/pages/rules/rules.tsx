@@ -10,6 +10,7 @@
 // =============================================================================
 import { useMemo, useState } from 'react'
 import { PageShell } from '@/components/PageShell'
+import { PositiveSpaceReading } from '@/components/three-state/ThreeStateSections'
 import {
   parseDocMapItems,
   DOC_MAP_STATE_ORDER,
@@ -235,6 +236,11 @@ export function RulesMapPage() {
           )
         })}
       </div>
+
+      {/* B1-001 正空间认读（对存证可复算·与 /api/v1/three-state/positive-space 同源） */}
+      <section className="mt-6 rounded-lg border border-gray-200 p-4">
+        <PositiveSpaceReading />
+      </section>
 
       {/* 历史草案折叠区（§二-E：page_visible=false 者不列主表） */}
       <details data-testid="rules-archived" className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-3">
