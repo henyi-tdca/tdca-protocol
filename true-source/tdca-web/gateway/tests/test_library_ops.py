@@ -159,3 +159,36 @@ def test_family_aliases_301(_docs_table):
     fams = {e["family"] for e in r5.json()["data"]["items"]}
     assert fams == set(library_ops._OPEN_FAMILIES)
     assert not (fams & set(library_ops._FAMILY_ALIASES))
+
+
+def test_regulation_slug_sitetrio_s3(_docs_table):
+    """SITETRIO-001 S-3（GSEQ-9149）：对外 slug/title 去 .md 后缀（50 条）；
+    旧 slug（带 .md）→ 新 slug 301（旧 URL 保可用，query 保留）；
+    count 不变（60）；.yaml 后缀属令面未点名，保留原样；白名单键与固化哈希不动。"""
+    # 件目：无 .md 后缀 slug；count＝白名单在册数；同族零重复
+    r = client.get("/api/v1/library/regulation")
+    assert r.status_code == 200, r.text[:200]
+    d = r.json()["data"]
+    assert d["count"] == len(library_ops._REG_WHITELIST) == 60
+    slugs = [i["slug"] for i in d["items"]]
+    assert not [s for s in slugs if s.endswith(".md")]
+    assert len(slugs) == len(set(slugs))
+    assert all(i["title"] == i["slug"] for i in d["items"])
+    # .yaml 后缀保留（令面未点名，⛔ 不动）
+    assert sum(1 for s in slugs if s.endswith(".yaml")) == \
+        sum(1 for k in library_ops._REG_WHITELIST if k.endswith(".yaml"))
+    # 旧 slug（白名单键形）→ 301 且落点＝去 .md 新 slug
+    r2 = client.get("/api/v1/library/regulation/README.md", follow_redirects=False)
+    assert r2.status_code == 301, (r2.status_code, r2.text[:200])
+    assert r2.headers["location"].endswith("/api/v1/library/regulation/README")
+    r3 = client.get("/api/v1/library/regulation/README.md?x=1", follow_redirects=False)
+    assert r3.status_code == 301
+    assert r3.headers["location"].endswith("/api/v1/library/regulation/README?x=1")
+    # 新 slug 不再被 301（直读路径；本机无 /docs/regulations 文件体 → 404 而非 301）
+    r4 = client.get("/api/v1/library/regulation/README", follow_redirects=False)
+    assert r4.status_code != 301, r4.headers.get("location")
+    # 未知 slug 仍 404（fail-closed 不动）
+    assert client.get("/api/v1/library/regulation/NO-SUCH-REG.md",
+                      follow_redirects=False).status_code == 404
+    assert client.get("/api/v1/library/regulation/NO-SUCH-REG",
+                      follow_redirects=False).status_code == 404

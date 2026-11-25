@@ -138,6 +138,23 @@ _REG_WHITELIST = {
 }
 
 
+# ── SITETRIO-001 S-3（GSEQ-9149，2026-11-26）：族内 slug 形制——对外 slug 去 .md 后缀 ──
+# 白名单键（文件名＋固化哈希）不动：_reg_read 仍以文件名现算哈希 fail-closed 读原文；
+# 仅对外呈现之 slug/title 去 .md（令面点名 50 条；.yaml 10 条带后缀属令面未点名，保留原样）。
+# 旧 slug（带 .md）→ 新 slug 之 301 见 library_detail（照 _FAMILY_ALIASES 先例：路由面跳转非内容响应）。
+def _reg_display_slug(fname: str) -> str:
+    """文件名 → 对外 slug：仅去 .md 后缀（⛔ 动 .yaml；⛔ 动白名单键）。"""
+    return fname[:-3] if fname.endswith(".md") else fname
+
+
+_REG_DISPLAY: dict[str, str] = {}  # 对外 slug（去 .md）→ 白名单文件名
+for _fname in _REG_WHITELIST:
+    _dslug = _reg_display_slug(_fname)
+    if _dslug in _REG_DISPLAY:
+        raise RuntimeError(f"SITETRIO-001 S-3: 去 .md 后 slug 冲突 {_dslug!r}（fail-closed，⛔ 静默覆盖）")
+    _REG_DISPLAY[_dslug] = _fname
+
+
 def _reg_read(slug: str):
     """制度族白名单读路径：仅白名单 slug；文件现算哈希须与固化值一致（fail-closed）。"""
     if (not slug or "/" in slug or "\\" in slug or ".." in slug
@@ -330,7 +347,9 @@ def library_list(family: str, request: Request):
     if redir is not None:
         return redir
     if family == "regulation":
-        items = [{"slug": slug, "title": slug, "synced_at": None, "has_content": True}
+        # SITETRIO-001 S-3：slug/title 去 .md 后缀呈现（白名单键不动；count 仍＝在册 60）
+        items = [{"slug": _reg_display_slug(slug), "title": _reg_display_slug(slug),
+                  "synced_at": None, "has_content": True}
                  for slug in sorted(_REG_WHITELIST)]
         return _nca_watermark(
             {"family": "regulation", "name": _FAMILIES["regulation"], "count": len(items),
@@ -361,10 +380,16 @@ def library_detail(family: str, slug: str, request: Request):
     if redir is not None:
         return redir
     if family == "regulation":
-        body_md = _reg_read(slug)
+        # SITETRIO-001 S-3：旧 slug（带 .md，白名单键形）→ 新 slug 301（旧 URL 保可用；
+        # 照 _FAMILY_ALIASES 先例：301 为路由面跳转非内容响应，落点保留 query）。
+        if slug.endswith(".md") and slug in _REG_WHITELIST:
+            qs = f"?{request.url.query}" if request.url.query else ""
+            return RedirectResponse(f"/api/v1/library/regulation/{_reg_display_slug(slug)}{qs}",
+                                    status_code=301)
+        body_md = _reg_read(_REG_DISPLAY.get(slug, slug))
         return _nca_watermark(
             {"family": "regulation", "slug": slug, "title": slug, "body_md": body_md,
-             "source_path": f"docs/regulations/{slug}", "synced_at": None,
+             "source_path": f"docs/regulations/{_REG_DISPLAY.get(slug, slug)}", "synced_at": None,
              "note": "本站为内部阅读面；⛔ 不复制正文另存、⛔ 不改一字；权威源以在册仓库为准"},
             nature="real")
     _session_or_open(request, family)
