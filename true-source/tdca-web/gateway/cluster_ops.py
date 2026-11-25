@@ -33,6 +33,55 @@ from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-
 
 
 # =====================================================================
+# K1FIX-001（GSEQ-9125）归属公共闸：assert_subject_owns
+# 照 _subject_gate 同风格（agent_channel_ops.py:507）；三处同一闸三次调用。
+# 本批只认本人（AMEND-1：signer 行第二批；代表场景另案）：
+#   caller 须对目标主体锚有有效绑定（本人直认，或 registrant|grantee 有效行）；
+#   解析不到 ⟹ 403 fail-closed。
+# =====================================================================
+
+def _anchor_of(name: str) -> str:
+    """主体名 → 机器锚（AMEND-1 二之二）：SAR- 登记号式取 reg:，余取 tok:（⛔自由文本）。"""
+    n = (name or "").strip()
+    return f"reg:{n}" if n.upper().startswith("SAR-") else f"tok:{n}"
+
+
+def assert_subject_owns(user: dict, subject_ref: str) -> None:
+    """归属校验公共闸：caller（user.username）对 subject_ref 之主体锚须有有效绑定。"""
+    me = ((user or {}).get("username") or "").strip()
+    anchor = _anchor_of(subject_ref)
+    if me and anchor == _anchor_of(me):
+        return  # 本人直认（registrant 行之自举语义，AMEND-1 二之一）
+    with get_session() as s:
+        row = (s.query(M.SubjectBinding)
+               .filter(M.SubjectBinding.subject_username == me,
+                       M.SubjectBinding.ref_value == anchor,
+                       M.SubjectBinding.binding_state == "active",
+                       M.SubjectBinding.role.in_(("registrant", "grantee")))
+               .first())
+    if row is None:
+        raise HTTPException(
+            403, "归属校验不过：caller 与目标主体锚无有效绑定"
+                  "（本批仅认本人；代表场景第二批，fail-closed）")
+
+
+def _write_binding(caller: str, role: str, object_ref: str, ref_value: str,
+                   prov: str = "real") -> None:
+    """服务端建行路径（⛔被授权方自建自改——无对外端点；唯一索引防重，撞即跳）。"""
+    now = _utc()
+    with get_sessionmaker().begin() as s:
+        exists = (s.query(M.SubjectBinding)
+                  .filter_by(subject_username=caller, role=role,
+                             object_ref=object_ref, ref_value=ref_value)
+                  .first())
+        if exists is None:
+            s.add(M.SubjectBinding(
+                subject_username=caller, role=role, object_ref=object_ref,
+                ref_value=ref_value, binding_state="active",
+                data_provenance=prov, created_at=now, updated_at=now))
+
+
+# =====================================================================
 # 授权件四要件机验（逐条 fail-closed，缺一即拒）
 # =====================================================================
 
@@ -65,9 +114,10 @@ class GrantRegister(BaseModel):
 @router.post("/grant/register", status_code=201)
 def grant_register(req: GrantRegister, request: Request,
                   user: dict = Depends(require_write_privilege("login"))):
-    """首授登记（四要件机验 → 授权件落库 → 谱系落账 → NCA 存证）。"""
+    """首授登记（四要件机验 → 归属闸（G-2）→ 授权件落库 → 谱系落账 → NCA 存证 → registrant 行）。"""
     _check_four_requirements(req.scene_constraint, req.asset_order,
                              req.full_composition, req.legal_signer, req.signature)
+    assert_subject_owns(user, req.legal_signer)   # K1FIX-001 G-2：legal_signer 锚须 caller 归属
     gid = f"AG-{uuid.uuid4().hex[:10]}"
     nca_ref = _nca_append("CLUSTER_GRANT", user["username"],
                           artifact_path=f"grant:{gid}")
@@ -83,6 +133,7 @@ def grant_register(req: GrantRegister, request: Request,
             entry_id=f"LE-{uuid.uuid4().hex[:10]}", agent_id=req.subject_agent,
             kind="grant", grant_id=gid, parent_grant_id=None,
             nca_ref=nca_ref, ts=_utc()))
+    _write_binding(user["username"], "registrant", gid, _anchor_of(req.subject_agent))
     return _nca_watermark({"grant_id": gid, "subject_agent": req.subject_agent,
                            "chain_depth": 1, "nca_ref": nca_ref,
                            "note": "授权件已登记（首授；配置类调用可凭此过准入闸门）"})
@@ -102,7 +153,7 @@ class SubGrant(BaseModel):
 @router.post("/grant/subgrant", status_code=201)
 def grant_subgrant(req: SubGrant, request: Request,
                   user: dict = Depends(require_write_privilege("login"))):
-    """转授（上级授权件须 active → 新授权件挂 parent_grant_id → 谱系链 +1）。"""
+    """转授（上级授权件须 active → 归属闸（G-3）→ 新授权件挂 parent_grant_id → 谱系链 +1 → grantee 行）。"""
     _check_four_requirements(req.scene_constraint, req.asset_order,
                              req.full_composition, req.legal_signer, req.signature)
     with get_session() as s:
@@ -110,6 +161,7 @@ def grant_subgrant(req: SubGrant, request: Request,
     # GSEQ-8225：已注销上级之转授 ⟹ 404 同码（⛔ 区分「不存在」与「已注销」）
     if parent is None or parent.status != "active":
         raise HTTPException(404, "parent_grant_id 不存在")
+    assert_subject_owns(user, parent.subject_agent)   # K1FIX-001 G-3：上级件主体锚须 caller 归属
     # GSEQ-8225：超范围转授被拒（子件权限范围不得超出上级授权件）
     if req.asset_order != parent.asset_order:
         raise HTTPException(400, f"SUPERSEDE_SCOPE: 转授权限范围不得超出上级授权件"
@@ -144,6 +196,7 @@ def grant_subgrant(req: SubGrant, request: Request,
             entry_id=f"LE-{uuid.uuid4().hex[:10]}", agent_id=req.subject_agent,
             kind="subgrant", grant_id=gid, parent_grant_id=req.parent_grant_id,
             nca_ref=nca_ref, ts=_utc()))
+    _write_binding(user["username"], "grantee", gid, _anchor_of(req.subject_agent))
     return _nca_watermark({"grant_id": gid, "subject_agent": req.subject_agent,
                            "parent_grant_id": req.parent_grant_id,
                            "chain_depth": len(_trace_chain(gid)), "nca_ref": nca_ref,
@@ -159,11 +212,12 @@ class GrantRevoke(BaseModel):
 @router.post("/grant/revoke")
 def grant_revoke(req: GrantRevoke, request: Request,
                 user: dict = Depends(require_write_privilege("login"))):
-    """注销授权件（active → revoked；谱系留 revoke 记录，历史不抹除）。"""
+    """注销授权件（归属闸（G-4）→ active → revoked；谱系留 revoke 记录，历史不抹除）。"""
     with get_session() as s:
         row = s.get(M.AuthGrant, req.grant_id)
     if row is None:
         raise HTTPException(404, "grant_id 不存在")
+    assert_subject_owns(user, row.subject_agent)   # K1FIX-001 G-4：件之主体锚须 caller 归属
     if row.status == "revoked":
         return _nca_watermark({"grant_id": req.grant_id, "status": "revoked",
                                "note": "已注销（幂等返回）"})

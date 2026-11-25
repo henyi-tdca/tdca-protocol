@@ -277,10 +277,15 @@ def _nca_append(action: str, actor: str, artifact_path: str = "", prov: str = "s
 
 
 def _agent_get_or_create(s, agent_id: str, name: str = "", owner: str | None = None) -> None:
-    """写路径辅助：外键完整性——主体不存在则补登记（simulated）。M5：新建时归属=登录用户。"""
-    if agent_id and s.get(M.Agent, agent_id) is None:
-        s.add(M.Agent(agent_id=agent_id, name=name or agent_id, created_at=_utc(),
-                      owner_username=owner))
+    """写路径辅助：外键完整性——主体不存在则补登记（simulated）。M5：新建时归属=登录用户。
+    K1FIX-R1 裁定三：upsert（INSERT OR IGNORE）——原 check-then-act 在并发首触下同刻
+    get 皆 miss、双写撞 UNIQUE(agent_id) 500（-591 5xx 根因 TOCTOU）；撞即跳，幂等可重入。"""
+    if not agent_id:
+        return
+    s.execute(
+        M.Agent.__table__.insert().prefix_with("OR IGNORE").values(
+            agent_id=agent_id, name=name or agent_id, created_at=_utc(),
+            owner_username=owner))
 
 
 # =====================================================================
@@ -549,6 +554,12 @@ def config_right_call(req: ConfigCallRequest, user: dict = Depends(require_write
             "nca_ref": nca_ref,
             "note": _sim_note(),
         })
+    except IntegrityError:
+        # K1FIX-R1 裁定三附带：完整性冲突 ⛔ 混同「系统繁忙」——单独分级记日志，
+        # 带请求标识（delivery_id/caller/callee）便于直核；响应码语义不改（仍 500）。
+        _ERR_LOG.exception("A-3 config-right/call 完整性冲突: delivery_id=%s caller=%s callee=%s",
+                           req.delivery_id, req.caller, req.callee)
+        raise HTTPException(500, "系统繁忙，请稍后重试；反复失败请联系运维。")
     except Exception as e:
         # L1SI153 段三①：异常原文只进日志，⛔ 不返回用户；状态码不改
         _ERR_LOG.exception("A-3 config-right/call 失败: %s", e)

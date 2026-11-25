@@ -1299,3 +1299,33 @@ class IdempotencyKey(Base):
         Index("uq_idempotency_key_scope", "subject", "endpoint", "key", unique=True),
         CheckConstraint("status IN ('pending','done','failed')"),
     )
+
+
+class SubjectBinding(Base):
+    """40. 主体绑定表（K1FIX-001/GSEQ-9125：归属校验之锚）。
+
+    五列照 GSEQ-9102 §三之二；role 本批值域 registrant|grantee（signer 第二批）；
+    ref_value 机器锚 reg:<登记号>|tok:<主体标识>（AMEND-1 二之二，⛔自由文本）；
+    唯一索引防重复绑定；建行路径仅服务端（登记成功 registrant／授权件生效 grantee），
+    ⛔被授权方自建自改（无对外端点）。迁移 0029。
+    """
+
+    __tablename__ = "subject_bindings"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    subject_username: Mapped[str] = mapped_column(Text, nullable=False)
+    role: Mapped[str] = mapped_column(Text, nullable=False)
+    object_ref: Mapped[str] = mapped_column(Text, nullable=False)
+    ref_value: Mapped[str] = mapped_column(Text, nullable=False)
+    binding_state: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    data_provenance: Mapped[str] = mapped_column(Text, nullable=False, default="real")
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        UniqueConstraint("subject_username", "role", "object_ref", "ref_value",
+                         name="uq_subject_bindings"),
+        CheckConstraint("role IN ('registrant','grantee')", name="ck_sb_role"),
+        CheckConstraint("binding_state IN ('active','revoked')", name="ck_sb_state"),
+        CheckConstraint(_PROVENANCE_CHECK, name="ck_sb_prov"),
+        CheckConstraint("ref_value LIKE 'reg:%' OR ref_value LIKE 'tok:%'",
+                        name="ck_sb_anchor_format"),
+    )

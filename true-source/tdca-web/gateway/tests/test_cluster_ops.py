@@ -45,7 +45,8 @@ def _auth():
 def _grant_payload(**over):
     p = {"subject_agent": "agent-cl-001", "scene_constraint": "场景：内部编排测试",
          "asset_order": 2, "full_composition": True,
-         "legal_signer": "法律主体-测试", "signature": _SIGN}
+         "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+"signature": _SIGN}
     p.update(over)
     return p
 
@@ -98,7 +99,8 @@ def test_subgrant_chain_and_revoked_parent_404_same_code():
                       json=_grant_payload(), headers=h).json()["data"]["grant_id"]
     sub = {"parent_grant_id": gid, "subject_agent": "agent-cl-002",
            "scene_constraint": "场景：转授测试", "asset_order": 2,
-           "full_composition": True, "legal_signer": "法律主体-测试",
+           "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
            "signature": _SIGN}
     r = client.post("/api/v1/cluster/grant/subgrant", json=sub, headers=h)
     assert r.status_code == 201, r.text
@@ -123,7 +125,8 @@ def test_subgrant_out_of_parent_scope_400():
                       headers=h).json()["data"]["grant_id"]
     sub = {"parent_grant_id": gid, "subject_agent": "agent-cl-005",
            "scene_constraint": "场景：越范围转授", "asset_order": 3,
-           "full_composition": True, "legal_signer": "法律主体-测试",
+           "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
            "signature": _SIGN}
     r = client.post("/api/v1/cluster/grant/subgrant", json=sub, headers=h)
     assert r.status_code == 400 and "SUPERSEDE_SCOPE" in r.text
@@ -138,12 +141,14 @@ def test_revoke_cascades_downstream_all_invalid():
     b = client.post("/api/v1/cluster/grant/subgrant",
                     json={"parent_grant_id": a, "subject_agent": "agent-cd-b",
                           "scene_constraint": "场景：二层", "asset_order": 2,
-                          "full_composition": True, "legal_signer": "法律主体-测试",
+                          "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
                           "signature": _SIGN}, headers=h).json()["data"]["grant_id"]
     c = client.post("/api/v1/cluster/grant/subgrant",
                     json={"parent_grant_id": b, "subject_agent": "agent-cd-c",
                           "scene_constraint": "场景：三层", "asset_order": 2,
-                          "full_composition": True, "legal_signer": "法律主体-测试",
+                          "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
                           "signature": _SIGN}, headers=h).json()["data"]["grant_id"]
     r = client.post("/api/v1/cluster/grant/revoke", json={"grant_id": a}, headers=h)
     assert r.status_code == 200
@@ -161,7 +166,8 @@ def test_revoke_cascades_downstream_all_invalid():
     r2 = client.post("/api/v1/cluster/grant/subgrant",
                      json={"parent_grant_id": c, "subject_agent": "agent-cd-d",
                            "scene_constraint": "场景：四层", "asset_order": 2,
-                           "full_composition": True, "legal_signer": "法律主体-测试",
+                           "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
                            "signature": _SIGN}, headers=h)
     assert r2.status_code == 404
 
@@ -178,14 +184,16 @@ def test_subgrant_chain_depth_64_technical_limit():
                               "subject_agent": f"agent-dp-{i:03d}",
                               "scene_constraint": f"场景：第{i}层", "asset_order": 2,
                               "full_composition": True,
-                              "legal_signer": "法律主体-测试", "signature": _SIGN},
+                              "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+"signature": _SIGN},
                         headers=h)
         assert r.status_code == 201, r.text[:200]
         gid = r.json()["data"]["grant_id"]
     r = client.post("/api/v1/cluster/grant/subgrant",
                     json={"parent_grant_id": gid, "subject_agent": "agent-dp-065",
                           "scene_constraint": "场景：第65层", "asset_order": 2,
-                          "full_composition": True, "legal_signer": "法律主体-测试",
+                          "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
                           "signature": _SIGN}, headers=h)
     assert r.status_code == 400 and "CHAIN_DEPTH_LIMIT" in r.text
 
@@ -230,7 +238,8 @@ def test_lineage_trace_and_revoke_idempotent():
                       json=_grant_payload(), headers=h).json()["data"]["grant_id"]
     sub = {"parent_grant_id": gid, "subject_agent": "agent-cl-001",
            "scene_constraint": "场景：链追溯", "asset_order": 2,
-           "full_composition": True, "legal_signer": "法律主体-测试",
+           "full_composition": True, "legal_signer": "cltester01",  # K1FIX-R1裁定一：原"法律主体-测试"属待封之代签名（机构名≠caller），对齐本人语义
+
            "signature": _SIGN}
     sub_id = client.post("/api/v1/cluster/grant/subgrant", json=sub, headers=h)\
                    .json()["data"]["grant_id"]
