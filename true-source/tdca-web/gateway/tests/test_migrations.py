@@ -25,7 +25,7 @@ from alembic.config import Config  # noqa: E402
 
 _ROOT = Path(__file__).resolve().parents[1]            # gateway/
 _SCRIPT = _ROOT / "db" / "migrations"
-_EXPECTED_HEAD = "1a2b3c4d5e6f"   # 0027 idempotency_key（WIDEMPOT-REVID-001 改号后）
+_EXPECTED_HEAD = "f3a9c1e7b2d4"   # 0030 nca_chain M1″五列（K1FIX-R1 裁定二／K-9）
 _PREV_HEAD = "f0a1b2c3d4e5"      # 0026 acceptance_verdicts
 
 

@@ -178,7 +178,8 @@ def test_full_pass_admitted_and_deny_nca_trail():
     client.post("/api/v1/cluster/grant/register",
                 json={"subject_agent": agent, "scene_constraint": "场景：闸门全过测试",
                       "asset_order": 2, "full_composition": True,
-                      "legal_signer": "法律主体-测试", "signature": _SIGN}, headers=h)
+                      "legal_signer": "cg-full",   # K1FIX-R1裁定一：原夹具属待封之代签名，对齐本人语义(_seed_contracted("cg-full")之caller)
+                      "signature": _SIGN}, headers=h)
     r = client.post("/api/v1/cluster/admission/check",
                     json=_payload(agent, ow=ow, ar=ar), headers=h)
     assert r.status_code == 200
