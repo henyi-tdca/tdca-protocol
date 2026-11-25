@@ -166,3 +166,35 @@ describe('验③ 渲染（R-1/R-4/R-5/R-6/R-7）', () => {
     }
   })
 })
+
+describe('SITETRIO-001 S-2（GSEQ-9149）：在册条数绑族 count 实时口径', () => {
+  const realFetch = globalThis.fetch
+
+  it('fetch 返 count＝60 → 条数带显示 60 件（⛔ 硬写常量）', async () => {
+    globalThis.fetch = (async () =>
+      ({ ok: true, json: async () => ({ data: { count: 60 } }) }) as Response) as typeof fetch
+    renderPage()
+    const chip = await screen.findByTestId('reg-count-live')
+    expect(chip.textContent).toContain('60 件')
+    globalThis.fetch = realFetch
+  })
+
+  it('fetch 返 count＝61（模拟新增入站）→ 条数随动 61 件（自动同步）', async () => {
+    globalThis.fetch = (async () =>
+      ({ ok: true, json: async () => ({ data: { count: 61 } }) }) as Response) as typeof fetch
+    renderPage()
+    const chip = await screen.findByTestId('reg-count-live')
+    expect(chip.textContent).toContain('61 件')
+    globalThis.fetch = realFetch
+  })
+
+  it('fetch 失败 → 显示「—」兜底（⛔ 白屏、⛔ 假数）', async () => {
+    globalThis.fetch = (async () => {
+      throw new Error('network down')
+    }) as typeof fetch
+    renderPage()
+    const chip = await screen.findByTestId('reg-count-live')
+    expect(chip.textContent).toContain('—')
+    globalThis.fetch = realFetch
+  })
+})

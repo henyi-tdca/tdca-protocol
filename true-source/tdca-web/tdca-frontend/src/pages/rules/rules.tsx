@@ -7,7 +7,7 @@
 //          ＋ §五（S5/S6 内容缺口：挂相邻件＋明标「待补」）
 // 数据源: 唯一＝同目录 doc-map-rules.yaml（V6.1·0C0FE95560264A8E）?raw 原字节进包
 // =============================================================================
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PageShell } from '../PageShell'
 import {
   parseDocMapItems,
@@ -107,6 +107,28 @@ export function RulesMapPage() {
   const items = parsed.items
   const [stepFilter, setStepFilter] = useState<string | null>(null)
 
+  // SITETRIO-001 S-2（GSEQ-9149）：页面在册条数绑 GET /api/v1/library/regulation 之 count（实时取，
+  // ⛔ 硬写常量）。失败兜底 null（显示「—」，⛔ 白屏、⛔ 假数）；新增入站后随 API 自动同步。
+  const [regCount, setRegCount] = useState<number | null>(null)
+  useEffect(() => {
+    let alive = true
+    const load = async () => {
+      try {
+        const r = await fetch('/api/v1/library/regulation')
+        if (!r.ok) throw new Error(String(r.status))
+        const d = await r.json()
+        const n = d?.data?.count ?? d?.count ?? null
+        if (alive) setRegCount(typeof n === 'number' ? n : null)
+      } catch {
+        if (alive) setRegCount(null)
+      }
+    }
+    if (typeof fetch === 'function') load()
+    return () => {
+      alive = false
+    }
+  }, [])
+
   const visible = useMemo(() => items.filter((i) => i.page_visible), [items])
   const archived = useMemo(() => items.filter((i) => !i.page_visible), [items])
 
@@ -153,7 +175,11 @@ export function RulesMapPage() {
       title="制度地图"
       dataSource="机读表 _DOC-MAP-RULES-20261021-V6.1-FINAL（页面与检索同一源·仓内单源 ?raw 进包）"
       permission="公开"
-      description="56 件制度件按五类分组、五态如实标、S1~S6 六步导航；五态与版本以在册机读表为唯一口径。"
+      description={
+        regCount !== null
+          ? `在册制度件 ${regCount} 件按五类分组、五态如实标、S1~S6 六步导航；件数取族 count 实时口径，五态与版本以在册机读表为唯一口径。`
+          : '在册制度件按五类分组、五态如实标、S1~S6 六步导航；件数取族 count 实时口径，五态与版本以在册机读表为唯一口径。'
+      }
     >
       {/* S1~S6 六步导航（§二-D：点步筛同一份表） */}
       <div data-testid="step-nav" className="mb-4 flex flex-wrap gap-2">
@@ -202,6 +228,9 @@ export function RulesMapPage() {
 
       {/* 计数带（程序统计） */}
       <div data-testid="count-band" className="mb-4 flex flex-wrap gap-2 text-[11px] text-gray-600">
+        <span data-testid="reg-count-live" className="rounded bg-emerald-50 px-2 py-0.5 text-emerald-700">
+          在册制度件 {regCount !== null ? `${regCount} 件` : '—'}（族 count 实时口径）
+        </span>
         <span className="rounded bg-gray-100 px-2 py-0.5">主表 {visible.length} 件 ＋ 历史草案 {archived.length} 件</span>
         {DOC_MAP_STATE_ORDER.map((s) => (
           <span key={s} className="rounded bg-gray-100 px-2 py-0.5">
