@@ -171,17 +171,19 @@ def guard_begin(*, subject: str, endpoint: str, reg_no: str,
 
 def guard_done(*, subject: str, endpoint: str, key: str,
                http_code: int, body: dict, nca_seq: str) -> None:
-    """首成落锚：status→done＋响应摘要＋nca_seq（⛔ 重复请求再落链节）。"""
+    """首成落锚：status→done＋响应摘要＋nca_seq（⛔ 重复请求再落链节）。
+
+    resp_digest 保持 pending 期所存之**请求体摘要**（重放判同体之据），
+    此处⛔覆写——响应体摘要走 resp_body_ref 全文自证。
+    """
     if not key or not enforce_on():
         return
-    canon = canonical(body)
     with get_session() as s:
         row = _get_row(s, subject, endpoint, key)
         if row is None:
             return
         row.status = "done"
         row.http_code = http_code
-        row.resp_digest = body_digest(canon)
         row.resp_body_ref = json.dumps(body, ensure_ascii=False)
         row.nca_seq = nca_seq
         s.commit()
