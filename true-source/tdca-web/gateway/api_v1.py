@@ -1543,7 +1543,7 @@ def me_anchor_verify(req: AnchorVerifyRequest, request: Request,
             raise HTTPException(404, f"该用户无锚记录（注册时未建锚行，异常态——请上报）")  # noqa: F541 具名理由：f前缀系批量改写留痕，去f属第四类改动
         prev_state = row.tier_state
         nca_id = _nca_append(
-            "user_anchor_verify", v["username"],
+            "user_anchor_verify", user["username"],
             artifact_path=(f"anchor://{username}/state:{prev_state}->已补"
                            f"/ref:{ref}"
                            f"/rn:{int(req.real_name_present)}/ph:{int(req.phone_present)}"),
@@ -1561,7 +1561,7 @@ def me_anchor_verify(req: AnchorVerifyRequest, request: Request,
         "username": username, "tier_state": "已补",
         "real_name_present": bool(req.real_name_present),
         "phone_present": bool(req.phone_present),
-        "evidence_ref": ref, "verifier": v["username"], "nca_id": nca_id,
+        "evidence_ref": ref, "verifier": user["username"], "nca_id": nca_id,
         "note": "锚核验受理完成（追加制存证已落链：原态如实→已补；明文最小化：只落有无布尔＋引用）",
     }, nature="real")
 
