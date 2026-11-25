@@ -3,7 +3,7 @@
 - docs 表（8 列，镜像在役生产库 sqlite_master 之现物定义）判存在则跳——
   生产库已有且有 60 件数据，照 0012/0022/0025 同法「缺者补」；
 - fresh 路径由此补全（此前带外建表，换机即崩——0012 判表存在防护之同源缺口）；
-- 含 downgrade（drop_table，照重建表模式先例）。
+- 含 downgrade（K-10 条件化：仅空表方 drop——docs 可能系带外已存，非空即 no-op 保全）。
 承 TDCA-HANDOFF-EXEC-L1SI229-K1FIX-001 §四 附条件三条。
 """
 from alembic import op
@@ -39,5 +39,12 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     bind = op.get_bind()
-    if sa.inspect(bind).has_table(TABLE):
-        op.drop_table(TABLE)
+    if not sa.inspect(bind).has_table(TABLE):
+        return
+    # K-10（K1FIX-DEPLOY-R1-001 §五）：本迁移 upgrade 走「判存在则跳」——docs 可能系
+    # 带外已存（生产 1,021 行，本迁移未建之）；无条件 drop 即按回滚卡毁数。
+    # 条件化：仅当表为空（⟹ 必系本迁移所建之 fresh 实例）方删；非空即 no-op 保全。
+    n = bind.execute(sa.text(f'SELECT count(*) FROM "{TABLE}"')).scalar()
+    if n:
+        return
+    op.drop_table(TABLE)

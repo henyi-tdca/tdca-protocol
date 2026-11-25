@@ -6,7 +6,7 @@
 - 唯一索引 (subject_username, role, object_ref, ref_value) 防重复绑定；
 - 建行路径仅服务端（登记成功建 registrant 行／授权件生效建 grantee 行），
   ⛔被授权方自建自改（无对外端点）；
-- 含 downgrade。
+- 含 downgrade（K-10 条件化：空表方删）。
 """
 from alembic import op
 import sqlalchemy as sa
@@ -47,5 +47,10 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     bind = op.get_bind()
-    if sa.inspect(bind).has_table(TABLE):
-        op.drop_table(TABLE)
+    if not sa.inspect(bind).has_table(TABLE):
+        return
+    # K-10 同类加固：唯一索引防重行，空表方删（与 0028 同口径，防带外同名表被毁）。
+    n = bind.execute(sa.text(f'SELECT count(*) FROM "{TABLE}"')).scalar()
+    if n:
+        return
+    op.drop_table(TABLE)
