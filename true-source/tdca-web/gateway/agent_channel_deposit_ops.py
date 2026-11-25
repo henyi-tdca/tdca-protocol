@@ -20,7 +20,7 @@ from __future__ import annotations
 import os
 import uuid
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import func
 
@@ -29,6 +29,9 @@ from db import models as M  # noqa: E402
 from api_v1 import (_nca_append, _nca_watermark,  # noqa: E402
                     _require_session_user, _utc)
 from agent_channel_ops import gate_assert, _require_founder  # noqa: E402
+from idempotency_ops import guard_begin, guard_done, guard_failed  # noqa: E402
+
+_IDEM_EP_DEPOSIT = "POST /api/v1/agent-channel/{reg_no}/deposits"
 
 router = APIRouter(prefix="/api/v1/agent-channel", tags=["agent-channel-deposit"])
 
@@ -95,10 +98,13 @@ class DepositPayReq(BaseModel):
 
 
 @router.post("/{reg_no}/deposits", status_code=201)
-def pay_deposit(reg_no: str, req: DepositPayReq, request: Request):
+def pay_deposit(reg_no: str, req: DepositPayReq, request: Request,
+                response: Response):
     """效用保金押付（人类会话内；仅登记主体本人；⛔ 智能体不得代付代持）。
 
     记账口径（收口附页 §三）：无收款通道 ⟹ 押付记 simulated 账，⛔ 称已收押金。
+    WIDEMPOT-BUILD-001：幂等闸（Idempotency-Key 头／无键 60s 指纹窗）——重复
+    提交同码同体重放（Idempotent-Replayed: true），⛔ 重复请求再落 NCA 链节。
     """
     v = _require_session_user(request)
     actor = v["username"]
@@ -106,19 +112,35 @@ def pay_deposit(reg_no: str, req: DepositPayReq, request: Request):
         row = gate_assert(s, reg_no)
         if row.owner_username != actor:
             raise HTTPException(403, "人类签名权不可绕：仅登记主体本人可押付其效用保金")
-        if req.amount_mou <= 0:
-            raise HTTPException(400, "押付金额须为正整数（MOU 计量，fail-closed）")
-    with get_sessionmaker().begin() as s:
-        ev = _add_event(s, reg_no, "paid", req.amount_mou, actor,
-                        req.mou_ref.strip(), "", "", "AGENT_CHANNEL_DEPOSIT_PAID")
-    with get_session() as s:
-        bal = effective_deposit(s, reg_no)
-    return _nca_watermark({
+    g = guard_begin(subject=actor, endpoint=_IDEM_EP_DEPOSIT, reg_no=reg_no,
+                    idem_key=(request.headers.get("Idempotency-Key") or "").strip()
+                    or None,
+                    body=req.model_dump())
+    if g.replayed:
+        response.status_code = g.replay_status
+        response.headers["Idempotent-Replayed"] = "true"
+        return g.replay_body
+    try:
+        with get_session() as s:
+            if req.amount_mou <= 0:
+                raise HTTPException(400, "押付金额须为正整数（MOU 计量，fail-closed）")
+        with get_sessionmaker().begin() as s:
+            ev = _add_event(s, reg_no, "paid", req.amount_mou, actor,
+                            req.mou_ref.strip(), "", "", "AGENT_CHANNEL_DEPOSIT_PAID")
+        with get_session() as s:
+            bal = effective_deposit(s, reg_no)
+    except HTTPException:
+        guard_failed(subject=actor, endpoint=_IDEM_EP_DEPOSIT, key=g.used_key)
+        raise
+    result = _nca_watermark({
         "paid": True, "reg_no": reg_no, "amount_mou": req.amount_mou,
         "effective_mou": bal, **ev,
         "note": "押付记账（SIMULATED 水印：无收款通道，押付为记账 ⛔ 称已收押金）："
                 "有效保金＝Σ押付−Σ没收−Σ退还；沙盒准入判据读配置"
                 f"（{_MIN_MOU_ENV}）"}, nature="simulated")
+    guard_done(subject=actor, endpoint=_IDEM_EP_DEPOSIT, key=g.used_key,
+               http_code=201, body=result, nca_seq=ev["nca_ref"])
+    return result
 
 
 class DepositActionReq(BaseModel):
