@@ -10,7 +10,7 @@
 # =============================================================================
 """M1 ORM 模型：10 表。字段命名与设计包 DDL 严格一致。"""
 from sqlalchemy import (REAL, CheckConstraint, ForeignKey, Index, Integer, Text,
-                        Computed, UniqueConstraint)
+                        Computed, PrimaryKeyConstraint, UniqueConstraint)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from . import Base
@@ -1269,4 +1269,33 @@ class AcceptanceVerdict(Base):
                         "'site_function','batch_construction','agent_network')"),
         Index("idx_acceptance_verdicts_subject", "subject_type", "subject_ref"),
         Index("idx_acceptance_verdicts_nca", "evidence_nca_id"),
+    )
+
+
+class IdempotencyKey(Base):
+    """WIDEMPOT-BUILD-001（照准 GSEQ-9091/9093）幂等键表：押付／发授权两写端点之
+    重复提交闸（甲路 Idempotency-Key 头＋丙路无键指纹 60s 窗）。
+
+    九字段照令：subject／endpoint／key／status／http_code／resp_digest／
+    resp_body_ref／nca_seq／created_at；唯一索引 (subject, endpoint, key)。
+    口径：键表只存 nca_seq 锚——⭐重复请求⛔再落链节⭐；status 三态
+    pending（首次成功前）／done（成功＋响应摘要）／failed（业务失败、同键可重试）；
+    丙路无键同体 60s 窗内视为重试即拒（设计件 §六 取舍），隔窗 upsert 重置旧行。
+    resp_body_ref 体内联存储成功响应 JSON 全文（重放同码同体之据）。
+    """
+
+    __tablename__ = "idempotency_key"
+    subject: Mapped[str] = mapped_column(Text, nullable=False)      # 会话主体（写操作归属）
+    endpoint: Mapped[str] = mapped_column(Text, nullable=False)     # 端点路由模板全路径
+    key: Mapped[str] = mapped_column(Text, nullable=False)          # 甲路=客户端键；丙路=指纹
+    status: Mapped[str] = mapped_column(Text, nullable=False)       # pending|done|failed
+    http_code: Mapped[int | None] = mapped_column(Integer)          # done 时之首成码
+    resp_digest: Mapped[str | None] = mapped_column(Text)           # 请求体规范化摘要（防同键异体）
+    resp_body_ref: Mapped[str | None] = mapped_column(Text)         # 成功响应体 JSON 全文（内联）
+    nca_seq: Mapped[str | None] = mapped_column(Text)               # 首成之 NCA 序号（锚，⛔重放不新增）
+    created_at: Mapped[str] = mapped_column(Text, nullable=False)   # 行创建/重置时点（丙路窗判据）
+    __table_args__ = (
+        PrimaryKeyConstraint("subject", "endpoint", "key"),
+        Index("uq_idempotency_key_scope", "subject", "endpoint", "key", unique=True),
+        CheckConstraint("status IN ('pending','done','failed')"),
     )

@@ -32,7 +32,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict
 
 from db import get_session, get_sessionmaker  # noqa: E402
@@ -42,6 +42,9 @@ from api_v1 import (_nca_append, _nca_watermark, _owner_display,  # noqa: E402
 from ops_auth_gate import require_write_privilege  # noqa: E402  AUTHFOUR-001/D-1
 from api_v1 import (CONTRACT_ID, CONTRACT_VERSION,  # noqa: E402
                     CONTRACT_ZH_SHA256, CONTRACT_EN_SHA256, CONTRACT_JSON_SHA256)
+from idempotency_ops import guard_begin, guard_done, guard_failed  # noqa: E402
+
+_IDEM_EP_GRANT = "POST /api/v1/agent-channel/{reg_no}/grants"
 
 router = APIRouter(prefix="/api/v1/agent-channel", tags=["agent-channel"])
 
@@ -899,14 +902,25 @@ class GrantReq(BaseModel):
 
 
 @router.post("/{reg_no}/grants", status_code=201)
-def issue_grant(reg_no: str, req: GrantReq, request: Request):
+def issue_grant(reg_no: str, req: GrantReq, request: Request,
+                response: Response):
     """授权件登记（四要件机验，缺一不成立；人类会话内，⛔ 智能体不代签代持）。
 
-    fail-closed 序：人类会话 → 总闸 → 主体本人 → 四要件逐条机验（缺件逐条拒）
-    → 存证（先存证后落表：存证失败⟹操作不生效）→ 落表 active＋机验明细 detail。
+    fail-closed 序：人类会话 → 总闸 → 主体本人 → 幂等闸（WIDEMPOT-BUILD-001：
+    Idempotency-Key 头／无键 60s 指纹窗；重复⛔再落链节）→ 四要件逐条机验
+    （缺件逐条拒）→ 存证（先存证后落表：存证失败⟹操作不生效）→ 落表 active。
     场景闭集口径：未列明场景不在授权范围（R1）；五阶未列明之阶不得据本件主张（R2）。
     """
     actor, s = _subject_gate(reg_no, request)
+    g = guard_begin(subject=actor, endpoint=_IDEM_EP_GRANT, reg_no=reg_no,
+                    idem_key=(request.headers.get("Idempotency-Key") or "").strip()
+                    or None,
+                    body=req.model_dump())
+    if g.replayed:
+        s.close()
+        response.status_code = g.replay_status
+        response.headers["Idempotent-Replayed"] = "true"
+        return g.replay_body
     try:
         missing = []
         if not req.scene_constraint.strip():
@@ -991,9 +1005,12 @@ def issue_grant(reg_no: str, req: GrantReq, request: Request):
                 parent_grant_no=req.parent_grant_no.strip() or None,
                 status="active", detail=detail, nca_ref=nca_ref, actor=actor,
                 data_provenance="real", created_at=now, updated_at=now))
+    except HTTPException:
+        guard_failed(subject=actor, endpoint=_IDEM_EP_GRANT, key=g.used_key)
+        raise
     finally:
         s.close()
-    return _nca_watermark({
+    result = _nca_watermark({
         "granted": True, "grant_no": grant_no, "reg_no": reg_no, "status": "active",
         "four_requirements": {"R1 场景约束": True, "R2 五阶资产形态": True,
                               "R3 全构成已授权": True, "R4 法律主体签名": True},
@@ -1001,6 +1018,9 @@ def issue_grant(reg_no: str, req: GrantReq, request: Request):
         "note": "授权件四要件机验通过（照在册《授权件模板》，缺一不成立）；"
                 "人类会话内登记（⛔ 智能体不代签代持）；生效≠部署≠上线≠对外；"
                 "无有效授权件即不得执行（配置即侵权口径）"}, nature="real")
+    guard_done(subject=actor, endpoint=_IDEM_EP_GRANT, key=g.used_key,
+               http_code=201, body=result, nca_seq=nca_ref)
+    return result
 
 
 def _active_grant(s, reg_no: str, scene: str) -> "M.SiteAgentGrant | None":
