@@ -76,3 +76,30 @@ def announcement_publish(req: AnnouncementPublish, request: Request,
                            "note": "公告已发布并入存证链；对外纪律：零内部编号、"
                                    "零凭据值、零人名、零自然人敏感信息"},
                           nature="real")
+class AnnouncementWithdraw(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    announcement_id: str
+
+
+@router.post("/withdraw", status_code=200)
+def announcement_withdraw(req: AnnouncementWithdraw, request: Request,
+                          user: dict = Depends(require_write_privilege("operator", action="撤回公告"))):
+    """撤回公告（operator／founder；须创始人明示；落 NCA 存证链。
+    物理删行——发布与撤回双事件均入存证链可溯，列表即刻不再展示）。"""
+    aid = (req.announcement_id or "").strip()
+    if not aid:
+        raise HTTPException(400, "announcement_id 不得为空")
+    with get_session() as s:
+        row = s.get(M.Announcement, aid)
+        if row is None:
+            raise HTTPException(404, "公告不存在或已撤回")
+        title = row.title
+    nca_ref = _nca_append("SiteAnnounce",
+                          f"gateway:announcements/withdraw:{aid}",
+                          artifact_path=f"announcements:{aid}", prov="real")
+    with get_sessionmaker().begin() as s:
+        s.query(M.Announcement).filter(M.Announcement.announcement_id == aid).delete()
+    return _nca_watermark({"announcement_id": aid, "withdrawn_title": title,
+                           "nca_ref": nca_ref,
+                           "note": "公告已撤回；发布与撤回双事件均入 NCA 存证链可溯"},
+                          nature="real")
