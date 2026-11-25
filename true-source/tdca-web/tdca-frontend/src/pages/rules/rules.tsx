@@ -5,7 +5,7 @@
 //          ＋ §三（⛔ 标错态／⛔ 改 display_name／⛔ 改件／⛔ 直推 main）
 //          ＋ §四（三族 9 件甲案标法·V1.0-FROZEN ＋ 必载注明）
 //          ＋ §五（S5/S6 内容缺口：挂相邻件＋明标「待补」）
-// 数据源: 唯一＝同目录 doc-map-rules.yaml（V6.1·0C0FE95560264A8E）?raw 原字节进包
+// 数据源: 唯一＝同目录 doc-map-rules.yaml（V6.5·57C3DE4D0A4E962F）?raw 原字节进包
 // =============================================================================
 import { useEffect, useMemo, useState } from 'react'
 import { PageShell } from '../PageShell'
@@ -27,6 +27,14 @@ const STATE_STYLES: Record<string, string> = {
   指引性: 'bg-cyan-100 text-cyan-800 border-cyan-300',
   非制度件: 'bg-gray-50 text-gray-500 border-gray-200',
   待辨: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+}
+
+/** VERSION-002 段A：制度面状态标签色阶（词面照交办令逐字，词面⛔自拟） */
+const EXT_LABEL_STYLES: Record<string, string> = {
+  现行: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+  '现行（凭证）': 'bg-emerald-50 text-emerald-800 border-emerald-300',
+  '草案试行 · 非正式制度（草案）': 'bg-amber-50 text-amber-800 border-amber-300',
+  '草案试行 · 非正式制度（对外候选）': 'bg-amber-50 text-amber-800 border-amber-300',
 }
 
 /** §四 三族甲案必载注明（创始人 2026-10-21 取甲·逐字） */
@@ -66,6 +74,14 @@ function DocRow({ item }: { item: DocMapItem }) {
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-medium text-gray-900">{item.display_name}</span>
         <StateBadge state={item.state} />
+        {item.ext_label !== '' && (
+          <span
+            data-testid="ext-label"
+            className={`inline-block rounded border px-1.5 py-0.5 text-[11px] font-medium ${EXT_LABEL_STYLES[item.ext_label] ?? 'bg-gray-100 text-gray-600 border-gray-300'}`}
+          >
+            {item.ext_label}
+          </span>
+        )}
         <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[11px] text-gray-600">{item.version || '—'}</span>
         {item.steps.map((s) => (
           <span key={s} className="rounded bg-purple-50 px-1.5 py-0.5 text-[11px] text-purple-700">

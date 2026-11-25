@@ -1,5 +1,5 @@
 generated_at: '2026-10-22'
-version: V6.4-创世完整证据入图（V6.3 全项不动）
+version: V6.5-对外面状态标签（V6.4 全项不动·仅增 ext_label 呈现字段）
 states_def:
   生效: 件头版本行明载生效／effective／已签批
   对外候选: 自载「对外候选件」——版本号已有但未生效
@@ -61,6 +61,7 @@ items:
   - S2
   - S4
   state: 草案
+  ext_label: '草案试行 · 非正式制度（草案）'
   version: V0.1
   bytes: 4685
   sha256_16: 7C737861AEDF1CB3
@@ -78,6 +79,7 @@ items:
   - S2
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 6861
   sha256_16: 910B19E1C3D05329
@@ -95,6 +97,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 6926
   sha256_16: 27BDA4C41F0EE091
@@ -113,6 +116,7 @@ items:
   - S2
   - S4
   state: 草案
+  ext_label: '草案试行 · 非正式制度（草案）'
   version: V0.1
   bytes: 6648
   sha256_16: 453750FC41E03B2E
@@ -133,6 +137,7 @@ items:
   - S2
   - S4
   state: 草案
+  ext_label: '草案试行 · 非正式制度（草案）'
   version: V0.1
   bytes: 7962
   sha256_16: D6704C36439CB154
@@ -152,6 +157,7 @@ items:
   - S2
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 8722
   sha256_16: C0AF241A2A344ED8
@@ -171,6 +177,7 @@ items:
   - S2
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 5353
   sha256_16: 8C5FEBC47C183F86
@@ -189,6 +196,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 8705
   sha256_16: D00FFC7A868E2B6D
@@ -207,6 +215,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 5405
   sha256_16: 4A669DBEB2C1124D
@@ -242,6 +251,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 6131
   sha256_16: 27199AD0194ABA04
@@ -258,6 +268,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 4391
   sha256_16: ED87D66CEA4A8977
@@ -275,6 +286,7 @@ items:
   - S2
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 10002
   sha256_16: 6477D5E812E07200
@@ -412,6 +424,7 @@ items:
   - S1
   - S6
   state: 对外候选
+  ext_label: '草案试行 · 非正式制度（对外候选）'
   version: V1.0
   bytes: 4671
   sha256_16: B6977778146109A3
@@ -431,6 +444,7 @@ items:
   steps:
   - S2
   state: 对外候选
+  ext_label: '草案试行 · 非正式制度（对外候选）'
   version: V1.0
   bytes: 3707
   sha256_16: 7003762F641EA50A
@@ -449,6 +463,7 @@ items:
   steps:
   - S2
   state: 对外候选
+  ext_label: '草案试行 · 非正式制度（对外候选）'
   version: V1.0
   bytes: 3741
   sha256_16: CE6358F17BD3BFC3
@@ -646,6 +661,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 4980
   sha256_16: 746C808BAF7BA3E4
@@ -662,6 +678,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: ''
   bytes: 3378
   sha256_16: 530ECAC210AB45CA
@@ -680,6 +697,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: ''
   bytes: 2115
   sha256_16: 8825B7253D954174
@@ -698,6 +716,7 @@ items:
   steps:
   - S4
   state: 生效
+  ext_label: '现行'
   version: ''
   bytes: 2884
   sha256_16: 97D7F39F4560B0EF
@@ -767,6 +786,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 15131
   sha256_16: DF66753E43E2EC93
@@ -784,6 +804,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 12159
   sha256_16: F88AF49BD346E1EE
@@ -801,6 +822,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 20278
   sha256_16: 043587FA0F0048EA
@@ -818,6 +840,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 9730
   sha256_16: EE3BAFD2D83E2849
@@ -835,6 +858,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 8344
   sha256_16: E3FBED7B8B7B32EF
@@ -852,6 +876,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 14429
   sha256_16: 3F7EC338FF88B324
@@ -870,6 +895,7 @@ items:
   - S2
   - S4
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 6862
   sha256_16: 79AE34F72E107243
@@ -887,6 +913,7 @@ items:
   - S2
   - S4
   state: 生效
+  ext_label: '现行'
   version: V1.0
   bytes: 4200
   sha256_16: F29F724A919BFC9F
@@ -903,6 +930,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 10545
   sha256_16: 7184C3F1029BD93F
@@ -920,6 +948,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 3906
   sha256_16: 9D9921FE775DBC9F
@@ -937,6 +966,7 @@ items:
   steps:
   - S3
   state: 生效
+  ext_label: '现行'
   version: V1.0-FROZEN
   bytes: 13167
   sha256_16: F73069E66CAE0FE0
@@ -970,6 +1000,7 @@ items:
   steps:
   - S2
   state: 生效
+  ext_label: '现行'
   version: V1.1
   bytes: 6892
   sha256_16: 05F316A0915631EC
@@ -987,6 +1018,7 @@ items:
   - S1
   - S2
   state: 生效
+  ext_label: '现行（凭证）'
   version: V1.0
   bytes: 3781
   sha256_16: FDAC3FCC24336316
@@ -1004,6 +1036,7 @@ items:
   - S1
   - S2
   state: 生效
+  ext_label: '现行（凭证）'
   version: V1.1
   bytes: 5259
   sha256_16: CCF73FCCA298C37A

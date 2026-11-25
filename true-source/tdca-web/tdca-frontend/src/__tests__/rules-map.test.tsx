@@ -1,7 +1,7 @@
 // =============================================================================
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI162-RULES-MAP-001 /rules 制度地图自检
 // 约束矩阵: 交办令 §六 R-1~R-7（计数以程序统计为准，⛔ 目测）
-//  验①哈希：?raw 机读表 sha256_16 == 在册值 4BE2B6E63824DA4A（V6.4-GENESIS-EVID·R1-001-A 实测刷新）
+//  验①哈希：?raw 机读表 sha256_16 == 在册值 57C3DE4D0A4E962F（V6.5-VERSION-002-段A·R1-001-A 实测刷新）
 //  验②解析：57 项；五态 30/17/3/4/3/0；五类 19/17/9/5/7；六步 7/27/17/26/2/3；
 //           page_visible=false 恰 0（相遇 V0.9 已归 archive）；V1.0-FROZEN 恰 10（三族 9＋CORPUS-103 更正面貌）；in_public 45
 //  验③渲染：R-1 主表 57＋折叠 0；R-4 对外候选 4 件逐条未标生效；R-5 三族注明在位；
@@ -35,8 +35,34 @@ function renderPage() {
 }
 
 describe('验①② 机读表哈希与解析（R-2/R-3 程序统计）', () => {
-  it('?raw 源 sha256_16 == 在册值（ENCNAME-002 改净名后随改重钉，原 4BE2B6E63824DA4A）', async () => {
-    expect(await sha16(docMapYaml)).toBe('2F5EF11F3BEEF262')
+  it('?raw 源 sha256_16 == 在册值（VERSION-002 段A 增 ext_label 后随改重钉，原 2F5EF11F3BEEF262）', async () => {
+    expect(await sha16(docMapYaml)).toBe('57C3DE4D0A4E962F')
+  })
+
+  it('VERSION-002 段A：ext_label 恰 33 行；词面四种逐字；表外/不加标签类全无标', () => {
+    const labeled = ITEMS.filter((i) => i.ext_label !== '')
+    expect(labeled).toHaveLength(33)
+    const words = new Set(labeled.map((i) => i.ext_label))
+    expect([...words].sort()).toEqual(
+      [
+        '现行',
+        '现行（凭证）',
+        '草案试行 · 非正式制度（草案）',
+        '草案试行 · 非正式制度（对外候选）',
+      ].sort(),
+    )
+    // 负向域：令面明确不加标签者必须无标
+    const mustNot = ITEMS.filter(
+      (i) =>
+        i.filename === 'README.md' ||
+        i.filename.includes('NSFL') ||
+        i.filename.includes('SIGNOFF') ||
+        i.filename.includes('生效注记') ||
+        i.filename.includes('流程环节卡') ||
+        i.filename.includes('CORPUS-074'), // 制度治理规范：现行标签随段B同步（令 A-1-7 ⚠️），本批 HELD
+    )
+    expect(mustNot.length).toBeGreaterThan(20) // 17 卡＋README＋NSFL＋签批×3＋注记＋074
+    for (const i of mustNot) expect(i.ext_label, i.filename).toBe('')
   })
 
   it('57 项 integrity 自洽（bytes>0、sha256_16 16 位大写、in_repo 全真）', () => {

@@ -1,18 +1,19 @@
 // =============================================================================
 // TDCA 制度水印
 // FC-ID: TDCA-FC-FRONTEND-001 | 目标函数: L1SI162-RULES-MAP-001 · /rules 制度地图机读表解析器
-// 约束矩阵: 交办令 §一（唯一数据源＝随件机读表 V6.1·0C0FE95560264A8E，⛔ 不另写一套）
+// 约束矩阵: 交办令 §一（唯一数据源＝随件机读表 V6.5·57C3DE4D0A4E962F，⛔ 不另写一套）
 //          ＋ §三-2（⛔ 改 display_name／版本字样——本解析器纯机械映射，零改写）
 // 范围: 仅解析本表 items 区块之既定 schema（块式映射／标量序列／单引号标量含折行），
 //       ⛔ 不是通用 YAML 解析器；换版重出时以 __tests__/rules-map.test.tsx 兜住
 // =============================================================================
 
-/** 机读表 items 项（字段照表，一字不改） */
+/** 机读表 items 项（字段照表，一字不改；V6.5 增呈现字段 ext_label——制度面状态标签，非制度字段） */
 export interface DocMapItem {
   filename: string
   class: string
   steps: string[]
   state: string
+  ext_label: string
   version: string
   bytes: number
   sha256_16: string
@@ -32,6 +33,7 @@ const ITEM_KEYS: (keyof DocMapItem)[] = [
   'class',
   'steps',
   'state',
+  'ext_label',
   'version',
   'bytes',
   'sha256_16',
