@@ -70,12 +70,15 @@ def canonical(body: dict) -> str:
 
 @dataclass
 class Guard:
-    """闸结果：replayed 时端点早返回（同码同体＋回执头）；否则 used_key 供落账锚定。"""
+    """闸结果：replayed 时端点早返回（同码同体＋回执头）；否则 used_key 供落账锚定。
+    fp＝丙路指纹（甲路首投时带出，guard_done 同步落指纹行——K5FIX-001 D3x：
+    防甲路带键首投成后丢键同体重放绕闸实产生第二笔）。"""
     active: bool = False
     replayed: bool = False
     replay_status: int = 0
     replay_body: dict | None = None
     used_key: str = ""
+    fp: str = ""
 
 
 def _get_row(s, subject: str, endpoint: str, key: str):
@@ -128,6 +131,7 @@ def guard_begin(*, subject: str, endpoint: str, reg_no: str,
         return Guard(active=False)
     canon = canonical(body)
     digest = body_digest(canon)
+    fp = fingerprint(subject, endpoint, reg_no, canon)
     if idem_key:                                   # ── 甲路：键 ──
         with get_session() as s:
             row = _get_row(s, subject, endpoint, idem_key)
@@ -146,12 +150,11 @@ def guard_begin(*, subject: str, endpoint: str, reg_no: str,
                 # failed → 下方重试放行（重置）
                 _reset_row(row, digest)
                 s.commit()
-                g = Guard(active=True, used_key=idem_key)
+                g = Guard(active=True, used_key=idem_key, fp=fp)
                 return g
         _insert_pending(subject, endpoint, idem_key, digest)
-        return Guard(active=True, used_key=idem_key)
+        return Guard(active=True, used_key=idem_key, fp=fp)
     # ── 丙路：无键指纹窗 ──
-    fp = fingerprint(subject, endpoint, reg_no, canon)
     with get_session() as s:
         row = _get_row(s, subject, endpoint, fp)
         if row is not None and row.status == "done" and _within_window(row.created_at):
@@ -169,12 +172,14 @@ def guard_begin(*, subject: str, endpoint: str, reg_no: str,
     return Guard(active=True, used_key=fp)
 
 
-def guard_done(*, subject: str, endpoint: str, key: str,
+def guard_done(*, subject: str, endpoint: str, key: str, fp: str = "",
                http_code: int, body: dict, nca_seq: str) -> None:
     """首成落锚：status→done＋响应摘要＋nca_seq（⛔ 重复请求再落链节）。
 
     resp_digest 保持 pending 期所存之**请求体摘要**（重放判同体之据），
     此处⛔覆写——响应体摘要走 resp_body_ref 全文自证。
+    K5FIX-001（甲案）：甲路首投成 ⟹ 同步落丙路指纹行（同 subject/endpoint/fp），
+    封堵丢键同体重放绕闸；行已存在（丙路在役/pending 并发）不动，保其窗起点。
     """
     if not key or not enforce_on():
         return
@@ -187,6 +192,21 @@ def guard_done(*, subject: str, endpoint: str, key: str,
         row.resp_body_ref = json.dumps(body, ensure_ascii=False)
         row.nca_seq = nca_seq
         s.commit()
+    if fp and fp != key:
+        with get_session() as s:
+            fp_row = _get_row(s, subject, endpoint, fp)
+            if fp_row is None:
+                try:
+                    with get_session() as s2:
+                        s2.add(M.IdempotencyKey(
+                            subject=subject, endpoint=endpoint, key=fp,
+                            status="done", http_code=http_code,
+                            resp_digest=body_digest(canonical(body)),
+                            resp_body_ref=json.dumps(body, ensure_ascii=False),
+                            nca_seq=nca_seq, created_at=_now()))
+                        s2.commit()
+                except IntegrityError:
+                    pass  # 并发已占位/在役：不打扰（其自身 guard_done 会落锚）
 
 
 def guard_failed(*, subject: str, endpoint: str, key: str) -> None:
