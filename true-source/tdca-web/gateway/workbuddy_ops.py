@@ -228,6 +228,8 @@ def wb_sig_confirm(req: SigConfirm, request: Request,
         row = s.get(M.SignatureRequest, req.request_id)
     if row is None:
         raise HTTPException(404, "request_id 不存在")
+    if row.applicant != user["username"]:
+        raise HTTPException(403, "非本人⛔签署（SIG_CONFIRM_NOT_APPLICANT）")
     if row.status == "signed":
         return _nca_watermark({"verified": True, "tx_hash": row.tx_hash,
                                "gate_id": row.gate_id, "note": "已签署（幂等返回）"})
