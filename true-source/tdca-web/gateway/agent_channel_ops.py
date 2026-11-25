@@ -1018,7 +1018,7 @@ def issue_grant(reg_no: str, req: GrantReq, request: Request,
         "note": "授权件四要件机验通过（照在册《授权件模板》，缺一不成立）；"
                 "人类会话内登记（⛔ 智能体不代签代持）；生效≠部署≠上线≠对外；"
                 "无有效授权件即不得执行（配置即侵权口径）"}, nature="real")
-    guard_done(subject=actor, endpoint=_IDEM_EP_GRANT, key=g.used_key,
+    guard_done(subject=actor, endpoint=_IDEM_EP_GRANT, key=g.used_key, fp=g.fp,
                http_code=201, body=result, nca_seq=nca_ref)
     return result
 

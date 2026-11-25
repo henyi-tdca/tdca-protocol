@@ -138,7 +138,7 @@ def pay_deposit(reg_no: str, req: DepositPayReq, request: Request,
         "note": "押付记账（SIMULATED 水印：无收款通道，押付为记账 ⛔ 称已收押金）："
                 "有效保金＝Σ押付−Σ没收−Σ退还；沙盒准入判据读配置"
                 f"（{_MIN_MOU_ENV}）"}, nature="simulated")
-    guard_done(subject=actor, endpoint=_IDEM_EP_DEPOSIT, key=g.used_key,
+    guard_done(subject=actor, endpoint=_IDEM_EP_DEPOSIT, key=g.used_key, fp=g.fp,
                http_code=201, body=result, nca_seq=ev["nca_ref"])
     return result
 
