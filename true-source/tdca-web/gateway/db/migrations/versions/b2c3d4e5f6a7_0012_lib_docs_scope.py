@@ -26,14 +26,27 @@ _REHOME = (
 )
 
 
+def _announcement_columns(bind) -> set:
+    insp = sa.inspect(bind)
+    return {c['name'] for c in insp.get_columns('announcements')}
+
+
 def upgrade() -> None:
     # E：category 列（NOT NULL＋常量缺省「通知」；SQLite ADD COLUMN 之唯一合法形式，
-    # 存量行随缺省回填＝裁定之「存量 1 行赋通知」）
-    op.add_column('announcements',
-                  sa.Column('category', sa.Text(), nullable=False, server_default='通知'))
-    # 归族：4 件 regulation→help（逐件点名，幂等）
-    for slug in _REHOME:
-        op.execute(f"UPDATE docs SET family='help' WHERE slug='{slug}' AND family='regulation'")
+    # 存量行随缺省回填＝裁定之「存量 1 行赋通知」）。
+    # 缺者补条件防护（照 0022／0025 现成模式，承 GSEQ-9109 附条件1·2）：
+    # fresh 路径 0005 已按当前 models 建出含 category 之 announcements，存者跳。
+    bind = op.get_bind()
+    if 'category' not in _announcement_columns(bind):
+        op.add_column('announcements',
+                      sa.Column('category', sa.Text(), nullable=False, server_default='通知'))
+    # 归族：4 件 regulation→help（逐件点名，幂等）。
+    # 表存在才执行（docs 表无任何迁移创建——生产库系带外建表；fresh 路径无该表，
+    # 判表缺则跳＝对存量库零行为变化，同「缺者补」防护精神，随 -589 报智库侧记档）。
+    insp = sa.inspect(bind)
+    if insp.has_table('docs'):
+        for slug in _REHOME:
+            op.execute(f"UPDATE docs SET family='help' WHERE slug='{slug}' AND family='regulation'")
 
 
 def downgrade() -> None:
