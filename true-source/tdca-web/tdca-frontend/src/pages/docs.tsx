@@ -64,6 +64,16 @@ function useDoc<T>(path: string, emptyOn404 = false): { data: T | null; error: s
   return { data, error }
 }
 
+/** 表外三件状态标签（SITEGO-002 段B·L1SI231，依 TDCA-RULING-L1SI231-MAILBOX-001）：
+ *  词面逐字照裁定（⛔自拟、⛔加减字）；落点＝文档详情页标题行内徽标（呈现层静态映射）。
+ *  ⛔新增地图行、⛔改机读表制表字段、⛔改件面（docs/regulations 三件正文）、⛔接口零改。
+ *  键＝slug 去扩展名——带 .md 之索引链与裸 slug 直访两种地址形态同命中。 */
+const DOC_EXT_LABEL: Record<string, string> = {
+  '人机协作工作条例': '现行',
+  '业务端节点接入与同构契约条例（对外公开版·V1.0）': '现行',
+  '配置权市场授权追认附记': '现行（凭证）',
+}
+
 function DocLoading({ error }: { error: string }) {
   if (error)
     return (
@@ -199,7 +209,18 @@ export function DocDetailPage() {
         {error && <DocLoading error={error} />}
         {data && (
           <>
-            <h2 className="text-lg font-bold text-gray-900">{docTitle(data.filename)}</h2>
+            <h2 className="text-lg font-bold text-gray-900">
+              {docTitle(data.filename)}
+              {/* SITEGO-002 段B：表外三件状态徽标（词面逐字照裁定；样式与 /rules 制度地图 ext_label 同表同阶） */}
+              {DOC_EXT_LABEL[(slug ?? '').replace(/\.(md|yaml|yml)$/, '')] && (
+                <span
+                  data-testid="doc-ext-label"
+                  className="ml-2 inline-block rounded border border-emerald-300 bg-emerald-50 px-1.5 py-0.5 align-middle text-[11px] font-medium text-emerald-800"
+                >
+                  {DOC_EXT_LABEL[(slug ?? '').replace(/\.(md|yaml|yml)$/, '')]}
+                </span>
+              )}
+            </h2>
             <article data-testid="doc-body" className="mt-4 whitespace-pre-wrap text-sm leading-6 text-gray-700">
               {data.content}
             </article>
