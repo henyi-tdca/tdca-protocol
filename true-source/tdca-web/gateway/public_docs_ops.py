@@ -26,7 +26,7 @@ import time
 from pathlib import Path
 
 from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from error_codes import with_code  # L1SI153 段一：拒绝体仅增设 code 字段
 
@@ -776,7 +776,7 @@ _PUBLIC_DOCS = {
     "compositions/COMPOSED-防微杜渐_其安易持.yaml",
     "compositions/COMPOSED-鹬蚌相争_囚徒困境.yaml",
     "emissary/谈判者-特使-001-COP.yaml",
-    "engineering-three/TDCA-REVIEW-REQUEST-20260830-REASONIX.md",
+    "engineering-three/TDCA-REVIEW-REQUEST-20260830.md",
     "engineering-three/TDCA-RR-20260830-002-二次送审函.md",
     "engineering-three/dependability/C1-设计预防公理.yaml",
     "engineering-three/dependability/C2-系统效能权衡.yaml",
@@ -1305,11 +1305,27 @@ def _list_docs(family: str = _FAMILY) -> JSONResponse:
     })
 
 
-def _get_doc(slug: str, family: str | None = None) -> JSONResponse:
+# ROLEMASK-001 段A（2026-11-26，依 TDCA-HANDOFF-EXEC-L1SI231-ROLEMASK-001）：
+# 素材族审查请求函文件名去角色名——旧 slug（含角色名）→ 新 slug 之 301（路由面跳转非内容响应，
+# 照 SITETRIO-001 先例；落点保留 query；两挂载 /api/public 与 /api/site 同行为）。
+_LEGACY_DOC_ALIASES = {
+    ("cop-library", "engineering-three/TDCA-REVIEW-REQUEST-20260830-REASONIX.md"):
+        "engineering-three/TDCA-REVIEW-REQUEST-20260830.md",
+}
+
+
+def _get_doc(slug: str, family: str | None = None, request: Request | None = None) -> JSONResponse:
     # L1SI213-REG-FAMMAP-001：族校验改二元组判定——该件不在所请求族之白名单集即 404
     # （fail-closed 语义不变）；family 未给保留旧行为（_PUBLIC_FAMILY 单值回退）。
     if family is not None:
         if slug not in _PUBLIC_DOCS.get(family, ()):
+            # ROLEMASK-001 段A：旧 slug（含角色名）→ 新 slug 301（旧 URL 保可用；
+            # 白名单外旧名仅此一路径可达，aliases 之外仍 fail-closed 404）。
+            new_slug = _LEGACY_DOC_ALIASES.get((family, slug))
+            if new_slug is not None and request is not None:
+                qs = f"?{request.url.query}" if request.url.query else ""
+                return RedirectResponse(
+                    f"{request.url.path.replace(slug, new_slug)}{qs}", status_code=301)
             return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
         doc_family = family
     else:
@@ -1364,7 +1380,7 @@ def public_docs_get(family: str, slug: str, request: Request):
         # L1SI154-010：族按公开清单判定（⛔ 非清单族一律 fail-closed 404）
         # L1SI153 段二②：裸英文退役 → 中文短句＋码
         return JSONResponse(with_code({"detail": "该文档不存在或未公开"}, 404), status_code=404)
-    return _get_doc(slug, family)
+    return _get_doc(slug, family, request)
 
 
 # ---------------------------------------------------------------------

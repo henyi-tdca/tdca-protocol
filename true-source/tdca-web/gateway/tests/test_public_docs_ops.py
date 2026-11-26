@@ -310,3 +310,29 @@ def test_cross_family_same_name_readme_both_readable(tmp_path, monkeypatch):
     assert d1["family"] == "regulation" and d2["family"] == "cop-library"
     r3 = client.get(f"/api/public/docs/cop-library/{_DOCS[0]}")  # 制度族件经素材族取：fail-closed 404
     assert r3.status_code == 404
+
+
+def test_rolemask001_legacy_slug_301(tmp_path, monkeypatch):
+    """ROLEMASK-001 段A（2026-11-26）：素材族审查请求函文件名去角色名——
+    旧 slug（含角色名）→ 新 slug 301（路由面跳转非内容响应，落点保留 query）；
+    新 slug 200；两挂载（/api/public 与 /api/site）同行为；未改名之他件不受影响（404）。"""
+    d = tmp_path / "docs" / "engineering-three"  # env 覆盖时该目录即族目录（⛔不再含族名层）
+    d.mkdir(parents=True)
+    new_slug = "engineering-three/TDCA-REVIEW-REQUEST-20260830.md"
+    old_slug = "engineering-three/TDCA-REVIEW-REQUEST-20260830-REASONIX.md"
+    (d / "TDCA-REVIEW-REQUEST-20260830.md").write_text("审查请求函（脱敏测试件）", encoding="utf-8")
+    monkeypatch.setenv("TDCA_PUBLIC_DOCS_DIR", str(tmp_path / "docs"))
+    public_docs_ops._hits.clear()
+    for mount in ("/api/public", "/api/site"):
+        r1 = client.get(f"{mount}/docs/cop-library/{old_slug}", follow_redirects=False)
+        assert r1.status_code == 301, (mount, r1.status_code, r1.text[:200])
+        assert r1.headers["location"].endswith(f"/docs/cop-library/{new_slug}"), r1.headers.get("location")
+        r2 = client.get(f"{mount}/docs/cop-library/{new_slug}", follow_redirects=False)
+        assert r2.status_code == 200, (mount, r2.status_code, r2.text[:200])
+        assert "审查请求函" in r2.json()["content"]
+    r3 = client.get(f"/api/public/docs/cop-library/{old_slug}?x=1", follow_redirects=False)
+    assert r3.status_code == 301 and "x=1" in r3.headers["location"]
+    r4 = client.get("/api/public/docs/cop-library/engineering-three/not-a-doc.md",
+                    follow_redirects=False)
+    assert r4.status_code == 404  # aliases 之外仍 fail-closed
+    public_docs_ops._hits.clear()
