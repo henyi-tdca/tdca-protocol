@@ -21,13 +21,21 @@ const TERMS_YAML = join(ROOT, 'docs', 'terms', 'TDCA-TERMINOLOGY-REGISTRY-V1.0-E
 const PAGES_TSX = join(ROOT, 'true-source', 'tdca-web', 'tdca-frontend', 'src', 'pages', 'pages.tsx')
 const OUT = join(ROOT, 'true-source', 'tdca-web', 'tdca-frontend', 'public', 'search-index.json')
 
-const FAMILY_DIRS = { regulation: 'regulations', whitepapers: 'whitepapers', papers: 'papers', 'cop-library': 'cop-library' }
-const FAMILY_LABEL = { regulation: '制度', whitepapers: '白皮书', papers: '论文', 'cop-library': '素材' }
-const FAMILY_ORDER = ['制度', '白皮书', '论文', '素材', '术语', '栏目']
+// 追加约束: SITEGO-001 段C（2026-11-26）——检索覆盖面两族补入：帮助（help 1 件）／操作指引
+//   （ops-guides 17 件），映射与摄取逐字照 tdca-site 链 G2-INGEST-001（L1SI213）同源；
+//   既有六族产出一字不改（同生成器同参数）。键序须与白名单文件内族块顺序一致
+//   （解析器顺序向后找），故 help/ops-guides 在前。
+const FAMILY_DIRS = { help: 'help', 'ops-guides': 'ops-guides', regulation: 'regulations', whitepapers: 'whitepapers', papers: 'papers', 'cop-library': 'cop-library' }
+const FAMILY_LABEL = { help: '帮助', 'ops-guides': '操作指引', regulation: '制度', whitepapers: '白皮书', papers: '论文', 'cop-library': '素材' }
+const FAMILY_ORDER = ['帮助', '操作指引', '制度', '白皮书', '论文', '素材', '术语', '栏目']
 
 // 编号形态禁则（施工令 §三.2；TAIL-CLEAN-001 块A：title/summary/body 共用本表，⛔ 不另写一套）
 // /g：同字段多次命中全部剥除（验收＝逐条扫描零命中，⛔ 只剥首个漏残余）
-const FORBIDDEN = [/\bCOP-\d+\b/gi, /\bGSEQ-\d+\b/g, /(^|[^A-Z0-9])A-\d+(?![0-9])/g, /\bT-\d{3}\b/g, /base_protocol/gi]
+// 追加约束: SITEGO-001 段C（2026-11-26）——禁则表对齐旧链同源表（tdca-site 版逐字）：
+//   补 \bTDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{3}\b 与 \bPUB-CORPUS-\d+\b 两条漂移缺失项，
+//   消除索引 title/summary/body 内部编号残留（旧链 fail-closed 零残留同判据）。
+const FORBIDDEN = [/\bCOP-\d+\b/gi, /\bGSEQ-\d+\b/g, /(^|[^A-Z0-9])A-\d+(?![0-9])/g, /\bT-\d{3}\b/g, /base_protocol/gi,
+  /\bTDCA-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{3}\b/g, /\bPUB-CORPUS-\d+\b/g]
 const stripForbidden = (s) => {
   let out = s
   for (const re of FORBIDDEN) out = out.replace(re, '')

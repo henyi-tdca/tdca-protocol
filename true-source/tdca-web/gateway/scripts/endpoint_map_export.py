@@ -105,9 +105,11 @@ def collect_routes(app) -> list:
         methods = getattr(route, "methods", None)
         if not path or not methods or not path.startswith("/api/v1"):
             continue
-        # 内部置旗面（AUDIT-ANCHOR-001）：仅 TDCA_AUDIT_ANCHOR_INTERNAL=1 挂载，生产
-        # 实例路由不存在（404 非 401，不泄露存在性）——不入公开对照表（E-5 口径）
-        if path.startswith("/api/v1/audit/"):
+        # 内部置旗面（AUDIT-ANCHOR-001）：/api/v1/audit/anchors* 仅 TDCA_AUDIT_ANCHOR_INTERNAL=1
+        # 挂载，生产实例路由不存在（404 非 401，不泄露存在性）——不入公开对照表（E-5 口径）。
+        # SITEGO-001 段D修正（2026-11-26）：原按 /api/v1/audit/ 全前缀排除过宽，误排
+        # api_v1 常挂载公开面 /audit/ledger-public 与 /audit/nca-verify——收窄为 anchors 前缀。
+        if path.startswith("/api/v1/audit/anchors"):
             continue
         methods = sorted(m for m in methods if m not in _FRAMEWORK_METHODS)
         if not methods:
@@ -140,8 +142,10 @@ def render(endpoints: list) -> str:
             "generated_by": "tdca-web/gateway/scripts/endpoint_map_export.py"
                             "（路由反射·自动对账·⛔人工手抄）",
             "coverage": "/api/v1/*（框架自动 HEAD/OPTIONS 不入表；内部置旗面 "
-                        "/api/v1/audit/* 仅 TDCA_AUDIT_ANCHOR_INTERNAL=1 挂载、生产路由"
-                        "不存在，不入公开表——列入即泄露存在性）",
+                        "/api/v1/audit/anchors* 仅 TDCA_AUDIT_ANCHOR_INTERNAL=1 挂载、生产路由"
+                        "不存在，不入公开表——列入即泄露存在性；其余 /api/v1/audit/*"
+                        "（ledger-public/nca-verify 公开面）常挂载，入表"
+                        "（SITEGO-001 段D收窄 2026-11-26））",
             "auth_derivation": "端内会话门(_require_session_user/_subject_gate/"
                                "_require_ops_admin/_require_founder/validate_session)"
                                "→会话 TDCA-SES；否则中间件凭据闸"

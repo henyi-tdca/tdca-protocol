@@ -171,7 +171,7 @@ describe('批3 A块 · 静态索引文件（committed）', () => {
     const start = py.indexOf('_PUBLIC_DOCS = {')
     const out: Record<string, string[]> = {}
     let i = start
-    for (const fam of ['regulation', 'whitepapers', 'papers', 'cop-library']) {
+    for (const fam of ['help', 'ops-guides', 'regulation', 'whitepapers', 'papers', 'cop-library']) {
       const key = `"${fam}": (`
       const k = py.indexOf(key, i)
       let depth = 1
@@ -222,7 +222,7 @@ describe('批3 A块 · 静态索引文件（committed）', () => {
 
   it('每条带族／数据性质／时间（generated_at）／url', () => {
     expect(idx.generated_at).toMatch(/^\d{4}-\d{2}-\d{2}T/)
-    const families = new Set(['制度', '白皮书', '论文', '素材', '术语', '栏目'])
+    const families = new Set(['帮助', '操作指引', '制度', '白皮书', '论文', '素材', '术语', '栏目'])
     for (const e of idx.entries) {
       expect(families.has(e.family), e.title).toBe(true)
       expect(['real', 'simulated', 'synthetic']).toContain(e.nature)

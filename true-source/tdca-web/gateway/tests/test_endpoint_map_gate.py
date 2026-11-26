@@ -78,8 +78,10 @@ def test_e4_map_is_single_source():
 
 
 def test_internal_flagged_surface_not_leaked():
-    """内部置旗面（/api/v1/audit/*）不入公开对照表（AUDIT-ANCHOR-001：不泄露存在性）。"""
+    """内部置旗面（/api/v1/audit/anchors*）不入公开对照表（AUDIT-ANCHOR-001：不泄露存在性）。
+    SITEGO-001 段D（2026-11-26）收窄：api_v1 常挂载公开面 ledger-public/nca-verify 入表，
+    仅 flag-gated anchors 面须零泄露。"""
     m = em.load_map()
     leaked = [e["path"] for e in m["endpoints"]
-              if e["path"].startswith("/api/v1/audit/")]
+              if e["path"].startswith("/api/v1/audit/anchors")]
     assert not leaked, f"内部置旗面泄露: {leaked}"

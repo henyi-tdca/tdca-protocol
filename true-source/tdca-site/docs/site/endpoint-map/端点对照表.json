@@ -2,7 +2,7 @@
   "meta": {
     "task": "endpoint-map-001",
     "generated_by": "tdca-web/gateway/scripts/endpoint_map_export.py（路由反射·自动对账·⛔人工手抄）",
-    "coverage": "/api/v1/*（框架自动 HEAD/OPTIONS 不入表；内部置旗面 /api/v1/audit/* 仅 TDCA_AUDIT_ANCHOR_INTERNAL=1 挂载、生产路由不存在，不入公开表——列入即泄露存在性）",
+    "coverage": "/api/v1/*（框架自动 HEAD/OPTIONS 不入表；内部置旗面 /api/v1/audit/anchors* 仅 TDCA_AUDIT_ANCHOR_INTERNAL=1 挂载、生产路由不存在，不入公开表——列入即泄露存在性；其余 /api/v1/audit/*（ledger-public/nca-verify 公开面）常挂载，入表（SITEGO-001 段D收窄 2026-11-26））",
     "auth_derivation": "端内会话门(_require_session_user/_subject_gate/_require_ops_admin/_require_founder/validate_session)→会话 TDCA-SES；否则中间件凭据闸(/api/v1/governance 前缀或写方法，TDCA-SES 会话或 TDCA-CRT 静态令牌均可)→证书 TDCA-CRT；其余(含 _AUTH_EXEMPT 登录/登记豁免面)→匿名",
     "purpose_source": "端点 docstring 首行机洗（内部编号 GSEQ/L1SI/TDCA-E/批 N 机洗剔除；洗空标 待补，⛔ 猜填）",
     "note": "零时间戳：连跑两次逐字节一致（E-4）；CI 门禁断言「路由声明端点集 == 本表端点集」（tests/test_endpoint_map_gate.py）"
@@ -337,6 +337,14 @@
       "一句话用途": "发布公告（operator／founder；落 NCA 存证链。⛔ 内容未经创始人明示不得发布）"
     },
     {
+      "path": "/api/v1/announcements/withdraw",
+      "methods": [
+        "POST"
+      ],
+      "鉴权要求": "会话 TDCA-SES",
+      "一句话用途": "撤回公告（operator／founder；须创始人明示；落 NCA 存证链"
+    },
+    {
       "path": "/api/v1/assets/five-orders",
       "methods": [
         "GET"
@@ -375,6 +383,22 @@
       ],
       "鉴权要求": "会话 TDCA-SES",
       "一句话用途": "A-11: 动态确权待审队列（attestation_requests pending，紧急度排序）"
+    },
+    {
+      "path": "/api/v1/audit/ledger-public",
+      "methods": [
+        "GET"
+      ],
+      "鉴权要求": "匿名",
+      "一句话用途": "A-7: 公共账本查询（tax_events 最近 100 条；制度即公开，O(n) 可审计）"
+    },
+    {
+      "path": "/api/v1/audit/nca-verify",
+      "methods": [
+        "POST"
+      ],
+      "鉴权要求": "证书 TDCA-CRT",
+      "一句话用途": "A-7: NCA 哈希校验 + nca_chain 在链核验"
     },
     {
       "path": "/api/v1/auth/identity-annotation",
@@ -550,7 +574,7 @@
         "POST"
       ],
       "鉴权要求": "会话 TDCA-SES",
-      "一句话用途": "首授登记（四要件机验 → 授权件落库 → 谱系落账 → NCA 存证）"
+      "一句话用途": "首授登记（四要件机验 → 归属闸（G-2）→ 授权件落库 → 谱系落账 → NCA 存证 → registrant 行）"
     },
     {
       "path": "/api/v1/cluster/grant/revoke",
@@ -558,7 +582,7 @@
         "POST"
       ],
       "鉴权要求": "会话 TDCA-SES",
-      "一句话用途": "注销授权件（active → revoked；谱系留 revoke 记录，历史不抹除）"
+      "一句话用途": "注销授权件（归属闸（G-4）→ active → revoked；谱系留 revoke 记录，历史不抹除）"
     },
     {
       "path": "/api/v1/cluster/grant/subgrant",
@@ -566,7 +590,7 @@
         "POST"
       ],
       "鉴权要求": "会话 TDCA-SES",
-      "一句话用途": "转授（上级授权件须 active → 新授权件挂 parent_grant_id → 谱系链 +1）"
+      "一句话用途": "转授（上级授权件须 active → 归属闸（G-3）→ 新授权件挂 parent_grant_id → 谱系链 +1 → grantee 行）"
     },
     {
       "path": "/api/v1/cluster/lineage/{agent_id}",
