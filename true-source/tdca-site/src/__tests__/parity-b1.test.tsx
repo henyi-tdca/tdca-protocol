@@ -66,6 +66,40 @@ describe('追平批B1：/rules 制度地图（机读表唯一源）', () => {
   })
 })
 
+describe('EXECQ-003：/rules 在册条数绑族 count 实时口径（移植自 SITETRIO-001 S-2·GSEQ-9149）', () => {
+  // 路由感知桩：regulation 返族 count；three-state/positive-space 返空 items（该件同页在架，⛔ 喂坏数据致崩）
+  const stubFetch = (regCount: number) =>
+    vi.stubGlobal('fetch', (async (url: unknown) => {
+      const u = String(url)
+      if (u.includes('library/regulation')) return okJson({ data: { count: regCount } })
+      if (u.includes('three-state/positive-space')) return okJson({ data: { items: [] } })
+      return { ok: false, status: 404, json: async () => ({ detail: 'not found' }) } as Response
+    }) as typeof fetch)
+
+  it('fetch 返 count＝60 → 条数带显示 60 件（⛔ 硬写常量）', async () => {
+    stubFetch(60)
+    render(<MemoryRouter><RulesMapPage /></MemoryRouter>)
+    const chip = screen.getByTestId('reg-count-live')
+    await waitFor(() => expect(chip.textContent).toContain('60 件'))
+  })
+
+  it('fetch 返 count＝61（模拟新增入站）→ 条数随动 61 件（自动同步）', async () => {
+    stubFetch(61)
+    render(<MemoryRouter><RulesMapPage /></MemoryRouter>)
+    const chip = screen.getByTestId('reg-count-live')
+    await waitFor(() => expect(chip.textContent).toContain('61 件'))
+  })
+
+  it('fetch 失败 → 显示「—」兜底（⛔ 白屏、⛔ 假数）', async () => {
+    vi.stubGlobal('fetch', (async () => {
+      throw new Error('network down')
+    }) as typeof fetch)
+    render(<MemoryRouter><RulesMapPage /></MemoryRouter>)
+    const chip = screen.getByTestId('reg-count-live')
+    await waitFor(() => expect(chip.textContent).toContain('—'))
+  })
+})
+
 describe('追平批B1：/help 帮助与联系（动态读＋空栏为常态）', () => {
   it('帮助族 404＝如实空栏（⛔ 不当作故障）', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404, json: async () => ({}) }) as Response))
