@@ -33,6 +33,13 @@ _WHITELIST: dict[str, str] = {
     "TDCA-STD-SITE-INGEST-TRAIL-001-内容入站脱敏复扫与拒绝清单每批留痕制度（V1.0-FROZEN·已签批生效·人读版）.md": "入站留痕制度（人读 V1.0-FROZEN）",
     "TDCA-STD-SITE-INGEST-TRAIL-001-内容入站每批留痕制度（V1.0-FROZEN·机读版）.yaml": "入站留痕制度（机读 yaml）",
     "TDCA-SIGNOFF-STD-SITE-INGEST-TRAIL-001-签批落地件（内容入站每批留痕制度V1.0-FROZEN生效·双版本齐·即刻起适用）.md": "入站留痕制度（签批落地件）",
+    # OPS-003 B-1（2026-11-27，依 TDCA-HANDOFF-EXEC-L1SI232-OPS-003）：
+    # 1C 三件由 INGEST-004 运维停转落运维私域（「让用户照办→公域；让运维方照办→私域」
+    # 判定为运维方照办）；件与固化哈希照仓 docs/regulations 源件（sha256_16：
+    # 5F7CCCEAC9396F37／F2097A284B8306D3／FE5269C3A968A4BA）；⛔ 入公域文库、⛔ 入站库。
+    "TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-签批落地件（配置权市场规范与授权件模板生效·V1.0-FROZEN）.md": "配置权市场规范签批落地件（运维私域）",
+    "TDCA-SIGNOFF-CONFIGMARKET-AUTH-001-追认附记.md": "配置权市场授权追认附记（运维私域）",
+    "TDCA-SIGNOFF-REGISTER-OF-RIGHTS-001-签批落地件（注册登记制度生效V1.0-FROZEN·范围期一内部运行）.md": "注册登记制度签批落地件（运维私域）",
 }
 
 _MIME = {".md": "text/markdown", ".yaml": "application/yaml", ".yml": "application/yaml"}

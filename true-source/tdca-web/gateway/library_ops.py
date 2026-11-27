@@ -139,6 +139,36 @@ _REG_WHITELIST = {
     'TDCA-STD-SCENE-ENCOUNTER-001-场景线·相遇专章（机读版·V1.0已生效）.yaml': 'F29F724A919BFC9F',
     'TDCA-TEMPLATE-AUTH-001-授权件模板（机读版V1.0-FROZEN）.yaml': 'F470E950E2C3E9EF',
     'TDCA-TEMPLATE-AUTH-001-授权件模板（英文人读版V1.0-FROZEN）.md': 'C2ACA45FB8A8B5F8',
+    # OPS-003 B-3（2026-11-27，依 TDCA-HANDOFF-EXEC-L1SI232-OPS-003）＋INGEST-004 放行：
+    # 26 件 corpus 全名 stem 入册（60→86）；固化 sha256_16 以 payload 正体重算逐件核过
+    # （复证重跑四类正则：24 件零命中；090/103 两件命中「负空间」概念词面，与在役旧版
+    # 逐字相同、非新泄露，照实报）；⛔ 改既有 60 项、⛔ 动 _reg_read 逻辑。
+    'TDCA-PUB-CORPUS-046-IdentityTier-MACHINE-身份可信等级认定条例机读版（四档与判定次序与三态·V1.0·互见）.yaml': '8C5FEBC47C183F86',
+    'TDCA-PUB-CORPUS-058-流程环节卡注册缔约（五问·七类失败·三句固定·第三张卡）.md': '52F78D3AE7887EED',
+    'TDCA-PUB-CORPUS-059-场景线相遇专章对外版单独件（V1.0已生效·十七条·供站上替换旧草案版）.md': '07EA8F1BE795F61E',
+    'TDCA-PUB-CORPUS-083-流程环节卡发现（五问·六类失败·第4张卡）.md': '8208D46048CBA8C9',
+    'TDCA-PUB-CORPUS-084-流程环节卡相遇（五问·六类失败·第5张卡）.md': '82BC3F456A559641',
+    'TDCA-PUB-CORPUS-085-流程环节卡握手（五问·七类失败·第6张卡）.md': '9B09C5713C4C94DA',
+    'TDCA-PUB-CORPUS-086-流程环节卡签约（五问·七类失败·第7张卡）.md': 'EFBBC41CBF861676',
+    'TDCA-PUB-CORPUS-087-流程环节卡交付（五问·七类失败·第8张卡）.md': 'B22005F90CFDF125',
+    'TDCA-PUB-CORPUS-088-流程环节卡验收（五问·七类失败·第9张卡）.md': '96DAEEA3BC4FAFB5',
+    'TDCA-PUB-CORPUS-090-卷四治理卷对外版（谁定规则与怎么改与怎么监督与争议边界·首件）.md': 'BFB0DDF4A66892E4',
+    'TDCA-PUB-CORPUS-091-卷五同构卷对外版（制度与技术同构与本体同构与场景嵌套·移植四步·边界四条）.md': '7523B0CC76A12F2A',
+    'TDCA-PUB-CORPUS-092-卷六助手与入口对外版（三类入口与助手四步接入与代签红线）.md': '54DBCFC99862507B',
+    'TDCA-PUB-CORPUS-093-流程环节卡履约（五问·七类失败·第14张卡）.md': 'E4D31BEB057E5D7F',
+    'TDCA-PUB-CORPUS-094-流程环节卡结算分配（五问·七类失败·第15张卡）.md': '6AA4F1690BB4FCA7',
+    'TDCA-PUB-CORPUS-095-流程环节卡信用及遗产管理（五问·七类失败·第16张卡）.md': '8202F81F0842316F',
+    'TDCA-PUB-CORPUS-096-流程环节卡争议裁决（五问·七类失败·第17张卡）.md': 'F29300179C12E119',
+    'TDCA-PUB-CORPUS-097-流程环节卡谈判（五问·七类失败·第10张卡）.md': '368657756A07FD3D',
+    'TDCA-PUB-CORPUS-098-流程环节卡试错（五问·七类失败·第11张卡）.md': '76363831DFD6CE21',
+    'TDCA-PUB-CORPUS-099-流程环节卡验证（五问·七类失败·第12张卡）.md': '2AF7B067712C48FE',
+    'TDCA-PUB-CORPUS-100-流程环节卡履约准备（五问·七类失败·第13张卡）.md': 'DC0952944179AD1F',
+    'TDCA-PUB-CORPUS-101-流程环节卡授权配置（五问·七类失败·第1张卡补五问版）.md': '2A14868FD255F995',
+    'TDCA-PUB-CORPUS-102-流程环节卡结算计税（五问·七类失败·第2张卡补五问版）.md': 'C0E26B94F3F248DA',
+    'TDCA-PUB-CORPUS-103-授权件模板对外版（中文人读·V1.0-FROZEN按签批更正版本面貌·八字段与四要件）.md': '746C808BAF7BA3E4',
+    'TDCA-PUB-CORPUS-104-人机协作工作条例（V1.0已生效）.md': '5D4B34593D6423D1',
+    'TDCA-REG-NODE-ACCESS-001-COMPILED（对外公开版·V1.0）.yaml': '226ADB1E229FA465',
+    'TDCA-REG-NODE-ACCESS-001（对外公开版·V1.0）.md': 'ADDAAC70C2C2F299',
 }
 
 
@@ -194,11 +224,26 @@ _FAMILIES: dict[str, str] = {
 
 _SEL_LIST = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
                  " FROM docs WHERE family = :family ORDER BY slug")
+_SEL_LIST_ACT = text("SELECT slug, title, synced_at, LENGTH(body_md) AS body_chars"
+                     " FROM docs WHERE family = :family AND status = 'active' ORDER BY slug")
 _SEL_DETAIL = text("SELECT slug, title, body_md, source_path, data_nature, synced_at"
                    " FROM docs WHERE family = :family AND slug = :slug")
+_SEL_DETAIL_ACT = text("SELECT slug, title, body_md, source_path, data_nature, synced_at, status"
+                       " FROM docs WHERE family = :family AND slug = :slug AND status = 'active'")
+_SEL_DETAIL_ANY = text("SELECT slug, title, body_md, source_path, data_nature, synced_at, status"
+                       " FROM docs WHERE family = :family AND slug = :slug")
 _SEL_COUNTS = text("SELECT family, COUNT(*) AS n FROM docs GROUP BY family")
+_SEL_COUNTS_ACT = text("SELECT family, COUNT(*) AS n FROM docs WHERE status = 'active'"
+                       " GROUP BY family")
 _SEL_PAPER_CATALOG = text("SELECT slug, title, body_md, synced_at FROM docs"
                           " WHERE family = 'paper' ORDER BY slug")
+_SEL_PAPER_CATALOG_ACT = text("SELECT slug, title, body_md, synced_at FROM docs"
+                              " WHERE family = 'paper' AND status = 'active' ORDER BY slug")
+
+# OPS-003 A-2（2026-11-28，依 TDCA-HANDOFF-EXEC-L1SI232-OPS-003）：status 列读面过滤——
+# 默认仅 status='active'；显式 ?include_retired=1 方返退役行（⛔ 默认开退役面）。
+def _want_retired(request: Request) -> bool:
+    return request.query_params.get("include_retired") == "1"
 
 # L1SI175-B1 S1-4：匿名摘要面脱敏——正则本体已并入单一真源 public_sanitize
 # （TWO-001 B-1/B-2：凭据八形态＋内部编号族两族同扫），此处仅保留别名与长度口径
@@ -229,7 +274,8 @@ def paper_catalog(request: Request):
     摘要或标题命中脱敏正则者 fail-closed（摘要置 null 标「待核定」，标题命中整件不列）。"""
     try:
         with get_session() as s:
-            rows = s.execute(_SEL_PAPER_CATALOG).all()
+            rows = s.execute(_SEL_PAPER_CATALOG_ACT if not _want_retired(request)
+                             else _SEL_PAPER_CATALOG).all()
     except Exception:
         raise HTTPException(503, "LIBRARY_FAIL_CLOSED: 内容库不可用（docs 表缺失或损坏）")
     items = []
@@ -257,7 +303,7 @@ def paper_catalog(request: Request):
 # SITE2-LIBOPEN-001（L1SI213）：追加 help/ops-guides 两族匿名只读（与既有六族同列；
 # docs 表 help 5／ops-guides 17 行已在位，公开面经 /api/public/docs 同族同件）
 # TITLE-FAMILY-FIX-001（L1SI224，GSEQ-8823）：追加 regulation 入匿名开放面（族索引可见
-#           = 本令目标；族内件目/正文仍走本文件 regulation 专属分支——件目白名单 49 件、
+#           = 本令目标；族内件目/正文仍走本文件 regulation 专属分支——件目白名单 86 件（OPS-003 B-3 后；此前 49 件）、
 #           正文 _reg_read 白名单＋sha256 固化 fail-closed——不随本追加改变）
 _OPEN_FAMILIES = ("cop-library", "terms", "laws", "law-notes", "whitepaper", "paper",
                   "help", "ops-guides", "regulation")
@@ -300,10 +346,10 @@ def _session_or_open(request: Request, family: str = "") -> None:
     _require_session_user(request)
 
 
-def _counts() -> dict[str, int]:
+def _counts(include_retired: bool = False) -> dict[str, int]:
     try:
         with get_session() as s:
-            rows = s.execute(_SEL_COUNTS).all()
+            rows = s.execute(_SEL_COUNTS if include_retired else _SEL_COUNTS_ACT).all()
     except Exception:
         raise HTTPException(503, "LIBRARY_FAIL_CLOSED: 内容库不可用（docs 表缺失或损坏）")
     return {r.family: r.n for r in rows}
@@ -323,7 +369,7 @@ def library_families(request: Request):
         authed = True
     except HTTPException:
         authed = False
-    counts = _counts()
+    counts = _counts(include_retired=_want_retired(request))
     if not authed:
         items = [{"family": f, "name": _FAMILIES[f],
                   "count": counts.get(f, 0)} for f in _OPEN_FAMILIES]
@@ -345,7 +391,7 @@ def library_list(family: str, request: Request):
     """族内件目（slug/title/synced_at；正文经 /{slug} 读取）。_OPEN_FAMILIES 九族匿名可读。
 
     ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——「对外公开
-    制度不需要注册可见」取甲）：制度族匿名可读，件目即白名单 49 件（slug 固定；
+    制度不需要注册可见」取甲）：制度族匿名可读，件目即白名单 86 件（slug 固定；
     2026-11-08 暂剔一件（WITNESS-ANONREAD-S2-001）后 NET-001 净面纳回，49→48→49）。"""
     redir = _alias_redirect(family, "", request.url.query)
     if redir is not None:
@@ -358,19 +404,21 @@ def library_list(family: str, request: Request):
         return _nca_watermark(
             {"family": "regulation", "name": _FAMILIES["regulation"], "count": len(items),
              "items": items,
-             "note": "制度族匿名只读面（ANON-READ-001）：白名单 49 件，正文经 /regulation/{slug} 读取"},
+             "note": "制度族匿名只读面（ANON-READ-001）：白名单 86 件，正文经 /regulation/{slug} 读取"},
             nature="real")
     _session_or_open(request, family)
     _check_family(family)
     try:
         with get_session() as s:
-            rows = s.execute(_SEL_LIST, {"family": family}).all()
+            rows = s.execute(_SEL_LIST_ACT if not _want_retired(request)
+                             else _SEL_LIST, {"family": family}).all()
     except Exception:
         raise HTTPException(503, "LIBRARY_FAIL_CLOSED: 内容库不可用（docs 表缺失或损坏）")
     return _nca_watermark(
         {"family": family, "name": _FAMILIES[family],
          "items": [{"slug": r.slug, "title": r.title, "synced_at": r.synced_at,
-                    "has_content": bool(r.body_chars and r.body_chars > 0)} for r in rows]},
+                    "has_content": bool(r.body_chars and r.body_chars > 0)} for r in rows],
+         "note": "status 过滤（OPS-003 A-2）：默认仅 active；?include_retired=1 方含退役行"},
         nature="real")
 
 
@@ -379,7 +427,7 @@ def library_detail(family: str, slug: str, request: Request):
     """单件正文（body_md 原文直出；不复制不改写；权威源在册）。_OPEN_FAMILIES 九族匿名可读。
 
     ANON-READ-001（依 TDCA-RULING-PUBLIC-CORPUS-055·治理件库·decisions——「对外公开
-    制度不需要注册可见」取甲）：制度族白名单 49 件匿名可读正文（fail-closed 见 _reg_read）。"""
+    制度不需要注册可见」取甲）：制度族白名单 86 件匿名可读正文（fail-closed 见 _reg_read；OPS-003 B-3 扩自 49）。"""
     redir = _alias_redirect(family, f"/{slug}", request.url.query)
     if redir is not None:
         return redir
@@ -400,15 +448,27 @@ def library_detail(family: str, slug: str, request: Request):
     _check_family(family)
     try:
         with get_session() as s:
-            row = s.execute(_SEL_DETAIL, {"family": family, "slug": slug}).first()
+            row = s.execute(_SEL_DETAIL_ACT if not _want_retired(request)
+                            else _SEL_DETAIL_ANY,
+                            {"family": family, "slug": slug}).first()
+            if row is None and not _want_retired(request):
+                # OPS-003 A-3-4：旧 slug 保留可读并加注（⛔ 死链）——退役行默认仍可直读，
+                # 响应明标 status=retired 与替代说明；默认列表仍不列（过滤在列表层）。
+                row = s.execute(_SEL_DETAIL_ANY,
+                                {"family": family, "slug": slug}).first()
+                _retired_fallback = row is not None and getattr(row, "status", "active") == "retired"
     except Exception:
         raise HTTPException(503, "LIBRARY_FAIL_CLOSED: 内容库不可用（docs 表缺失或损坏）")
     if row is None:
         raise HTTPException(404, "DOC_NOT_FOUND: 件不存在或未入站")
+    note = "本站为内部阅读面；⛔ 不复制正文另存、⛔ 不改一字；权威源以在册仓库为准"
+    if getattr(row, "status", "active") == "retired":
+        note = ("本件 status=retired（已由新名版替代，默认列表不列）；"
+                "等效入口见 status=active 之新名版。" + note)
     return _nca_watermark(
         {"family": family, "slug": row.slug, "title": row.title, "body_md": row.body_md,
          "source_path": row.source_path, "synced_at": row.synced_at,
-         "note": "本站为内部阅读面；⛔ 不复制正文另存、⛔ 不改一字；权威源以在册仓库为准"},
+         "status": getattr(row, "status", "active"), "note": note},
         nature=row.data_nature if row.data_nature in ("real", "simulated") else "real")
 
 
