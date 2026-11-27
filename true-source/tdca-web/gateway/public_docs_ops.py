@@ -44,7 +44,11 @@ _FAMILY = "regulation"  # 默认族：裸 /api/public/docs 兼容行为（仍列
 _FAMILY_DIRS = {"regulation": "regulations", "whitepapers": "whitepapers", "papers": "papers", "cop-library": "cop-library", "help": "help",
     # L1SI192-OPSGUIDE-003 步3①（依据链：SPEC-L1SI192-OPSGUIDE-001 §三「族名与源目录一对一」→ HANDOFF-EXEC-L1SI192-OPSGUIDE-003 §二 步3；非静默扩面）：
     # 「操作指引」族立族——源目录 docs/ops-guides/；放行令明示仅此一族
-    "ops-guides": "ops-guides"}
+    "ops-guides": "ops-guides",
+    # TDCA-HANDOFF-EXEC-L1SI234-ADAPTPUB-001 §一（依据链：TDCA-RULING-L1SI234-FOURITEM-001 第2项按丙
+    # ＋创始人本框逐字「挂到站上供人自助下载——放在所有权市场栏目，作为入口接入只读文件」；非静默扩面）：
+    # 「接入适配包」族立族——源目录 docs/adapt/（18 件对外净名版，人读 6＋机读 12）
+    "adapt": "adapt"}
 _PUBLIC_DOCS = {
     # L1SI188-NAV-FIX-003 项3（依据链：RULING-L1SI188-SITE-NAV-001「整组按推荐」→ NAV-FIX-001 → -003；非静默扩面）：
     # 「帮助」族立族一件——文字逐字搬自前端 /help 页（三条路＋联系块空栏口径），⛔ 未新写内容；件在 docs/help/
@@ -1149,6 +1153,29 @@ _PUBLIC_DOCS = {
     "tdca_core/第02核心-可审计自主决策协议.yaml",
     "tdca_core/第03核心-正和协作涌现协议.yaml",
     "麦肯锡思维协议.yaml",
+    ),
+    # TDCA-HANDOFF-EXEC-L1SI234-ADAPTPUB-001 §一/§二（依据位注释同前例；件名逐字取该令 §二 两表，
+    # 人读六件取净名已去 D-x 前缀，机读十二件保留原名；件体逐字不动、逐件哈希以取件夹 _MANIFEST.md 为对账表；
+    # 源目录 docs/adapt/ 待挂载——compose 加挂载与网关重建依该令 S-5 停手候放行，⛔ 自行改挂载/重启）
+    "adapt": (
+    "版权确权规则一致性清单.md",
+    "登记规则对照表.md",
+    "登记信息模板包.md",
+    "接入方制度最小集清单.md",
+    "字段级schema包.md",
+    "交易信息公开范围与回传数据字典.md",
+    "d1-consistency.json",
+    "d2-rules.json",
+    "d3-fields.json",
+    "d3-example-ok.json",
+    "d3-example-reject.json",
+    "d5-aggregate.schema.json",
+    "d5-detail.schema.json",
+    "d5-registration.schema.json",
+    "d5-relay.schema.json",
+    "d5-trade-info.schema.json",
+    "d6-public-fields.json",
+    "d6-relay-dict.json",
     ),
 }
 # L1SI170-COPLIB-008：六件已去编号改写并自查零命中，显式排除整组撤除；

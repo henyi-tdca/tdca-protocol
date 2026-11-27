@@ -54,6 +54,60 @@ export function OwnershipPage() {
           </ol>
         </section>
 
+        {/* 接入适配包（只读 · 自助下载）——TDCA-HANDOFF-EXEC-L1SI234-ADAPTPUB-001 §三 文案逐字；⛔改确权向导 ⛔改登记簿 */}
+        <section data-testid="ownership-adapt-pack" className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-4">
+          <h3 className="mb-2 text-sm font-semibold text-emerald-800">接入适配包（只读 · 自助下载）</h3>
+          <p className="mb-2 text-sm text-gray-700">
+            拟与本网络对接的平台，可在此下载六份适配材料并按之自查改造；机读字段规格随附。不能完成适配者不得接入。
+          </p>
+          <div className="space-y-2 text-sm">
+            <div>
+              <div className="mb-1 text-xs font-semibold text-gray-500">人读材料 6 件</div>
+              <ul className="space-y-0.5">
+                {[
+                  '版权确权规则一致性清单.md',
+                  '登记规则对照表.md',
+                  '登记信息模板包.md',
+                  '接入方制度最小集清单.md',
+                  '字段级schema包.md',
+                  '交易信息公开范围与回传数据字典.md',
+                ].map((name) => (
+                  <li key={name}>
+                    <a className="text-blue-700 underline" href={`/api/public/docs/adapt/${encodeURIComponent(name)}`}>
+                      {name.replace(/\.md$/, '')}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <div className="mb-1 text-xs font-semibold text-gray-500">机器可校验规格与样例 12 件</div>
+              <ul className="space-y-0.5">
+                {[
+                  'd1-consistency.json',
+                  'd2-rules.json',
+                  'd3-fields.json',
+                  'd3-example-ok.json',
+                  'd3-example-reject.json',
+                  'd5-aggregate.schema.json',
+                  'd5-detail.schema.json',
+                  'd5-registration.schema.json',
+                  'd5-relay.schema.json',
+                  'd5-trade-info.schema.json',
+                  'd6-public-fields.json',
+                  'd6-relay-dict.json',
+                ].map((name) => (
+                  <li key={name}>
+                    <a className="text-blue-700 underline" href={`/api/public/docs/adapt/${encodeURIComponent(name)}`}>
+                      {name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
         {/* 所有权登记簿（公开只读，BV-3） */}
         <ReadOnlyStream
           title="所有权登记簿（公开查询）"
