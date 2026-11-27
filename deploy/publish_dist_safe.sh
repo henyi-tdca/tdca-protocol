@@ -59,5 +59,29 @@ echo "   直链抽核: $ok 件 200 / 失败 $bad 件"
 [ "$bad" -eq 0 ] || { echo "❌ 存在非 200 直链——停手核对"; exit 65; }
 
 BUNDLE="$(grep -o 'index-[^"]*\.js' "$DIST/index.html" | head -1)"
-echo "== PASS：$NAME 发布完成（bundle $BUNDLE，downloads $AFTER_COUNT 件全通） =="
+
+echo "== [防线三 2/2] sitemap 同步（C-2 OPS-003：以仓为准·不随 dist 漂移）=="
+SITEMAP_DIR="$SITE/ops-files/public-static"
+SITEMAP_SRC="${TDCA_SITEMAP_SRC:-$SITE/sitemap-canonical.xml}"
+if [ -f "$SITEMAP_SRC" ]; then
+    if ! cmp -s "$SITEMAP_SRC" "$SITEMAP_DIR/sitemap.xml"; then
+        cp "$SITEMAP_DIR/sitemap.xml" "$SITEMAP_DIR/sitemap.xml.bak-publish-$TZ_DATE"
+        cp "$SITEMAP_SRC" "$SITEMAP_DIR/sitemap.xml"
+        chmod 644 "$SITEMAP_DIR/sitemap.xml"
+        echo "   sitemap 已同步为仓件（旧件备份 sitemap.xml.bak-publish-$TZ_DATE）"
+    else
+        echo "   sitemap 已与仓件逐字节一致（跳过）"
+    fi
+else
+    echo "   ⚠️ 未供仓件 sitemap 源（TDCA_SITEMAP_SRC=$SITEMAP_SRC）——仅核对在役件，不同步"
+fi
+sm_code="$(curl -sk -o /dev/null -w '%{http_code}' "$PUBLIC_BASE/sitemap.xml")"
+sm_sha="$(sha256sum "$SITEMAP_DIR/sitemap.xml" | cut -c1-16)"
+sm_n="$(grep -c '<url>' "$SITEMAP_DIR/sitemap.xml")"
+echo "   sitemap 在役: HTTP=$sm_code sha256_16=$sm_sha urls=$sm_n"
+[ "$sm_code" = "200" ] || { echo "❌ sitemap 非 200——停手核对"; exit 65; }
+em_code="$(curl -sk -o /dev/null -w '%{http_code}' "$PUBLIC_BASE/endpoint-map.json")"
+echo "   endpoint-map 在役: HTTP=$em_code（C-3 OPS-003 同目录持久件，仅核不阻断）"
+
+echo "== PASS：$NAME 发布完成（bundle $BUNDLE，downloads $AFTER_COUNT 件全通，sitemap urls=$sm_n） =="
 exit 0
