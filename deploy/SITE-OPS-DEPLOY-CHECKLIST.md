@@ -51,6 +51,13 @@
 - [ ] 嵌套 heredoc 经 ssh 会吞输出/错乱——一律 **scp 脚本文件 + `docker cp` + `docker exec python`**。
 - [ ] 单文件挂载（app.py.mounted / default.conf / .htpasswd）改动一律保 inode；目录挂载可原位换内容。
 - [ ] 站前置 basic auth 口令**永不复述、永不改动**；回报只报「维持不动／位置／权限」。
+- [ ] **定时任务脚本禁写死本机工具绝对路径**（2026-11-27 两任务连 failed 5 日教训，-653 补例）：
+      搬家／重装后安装目录位移，脚本内写死的 ssh 等工具路径即整任务哑火
+      （实证：CI 机水位日报、站点机每日备份因 ssh 写死 `C:/Users/22850/AppData/Roaming/
+      kimi-desktop/daimon-bundle/...` 旧路径，FileNotFoundError 连续失败）；
+      做法——Automation Python 入口内 ssh 等外部工具一律**运行时探测**
+      （`shutil.which` ＋候选路径回退），密钥路径用 `os.path.expanduser("~/.ssh/…")`
+      展开，⛔写死 Roaming／Program Files 下安装路径。
 
 ## 四、纪律（照在册）
 
