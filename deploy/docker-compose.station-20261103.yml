@@ -24,6 +24,7 @@ services:
       - /root/tdca/docs/cop-library:/docs/cop-library:ro
       - /root/tdca/docs/help:/docs/help:ro  # L1SI188-NAV-FIX-003B 项3：帮助族只读卷（创始人明示仅此一卷）
       - /root/tdca/docs/ops-guides:/docs/ops-guides:ro  # L1SI192-OPSGUIDE-003 步2：操作指引族只读卷（放行令明示仅此一条）
+      - /root/tdca/docs/adapt:/docs/adapt:ro  # L1SI234-ADAPTPUB-002 接入适配包族只读卷
       - /root/tdca-site/gateway-channel-cc0c5fd:/app/tdca-web/gateway:ro
       - /root/tdca-site/ops-files:/var/lib/tdca-ops-files:ro
       - /root/tdca-site/gateway:/app/tdca-site/gateway:ro
