@@ -82,6 +82,15 @@ echo "   sitemap 在役: HTTP=$sm_code sha256_16=$sm_sha urls=$sm_n"
 [ "$sm_code" = "200" ] || { echo "❌ sitemap 非 200——停手核对"; exit 65; }
 em_code="$(curl -sk -o /dev/null -w '%{http_code}' "$PUBLIC_BASE/endpoint-map.json")"
 echo "   endpoint-map 在役: HTTP=$em_code（C-3 OPS-003 同目录持久件，仅核不阻断）"
+echo "== [防线二 3/3] 件面清单逐件核对（SITEFIX-007 块C：四件 200 阻断式）=="
+surface_ok=0; surface_bad=0
+for p in /404.html /curation.json /openapi.json /.well-known/agent.json; do
+    scode="$(curl -sk -o /dev/null -w '%{http_code}' "$PUBLIC_BASE$p")"
+    if [ "$scode" = "200" ]; then surface_ok=$((surface_ok+1)); else surface_bad=$((surface_bad+1)); echo "   ❌ $p → $scode"; fi
+done
+echo "   件面清单: $surface_ok/4 件 200，失败 $surface_bad"
+[ "$surface_bad" -eq 0 ] || { echo "❌ 件面清单存在非 200——阻断（public-static 面须先恢复）"; exit 65; }
+
 
 echo "== PASS：$NAME 发布完成（bundle $BUNDLE，downloads $AFTER_COUNT 件全通，sitemap urls=$sm_n） =="
 exit 0
