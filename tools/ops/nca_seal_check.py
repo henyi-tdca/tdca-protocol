@@ -4,13 +4,19 @@
 
 判四项（照手册 AMEND-3 之定期条目）：
   ① 链尾对齐：末块 coverage.gseq_to  对  台账 max(gseq)          → GAP(n)
+     ①b 拆两值（OPS-002 题A，2026-11-28）：GAP 按记录日拆为
+        GAP_CLOSED  跨已闭日漏封（= 时间戳日期早于今日之未封记录；真缺陷，非零告警）
+        GAP_TODAY   当日待封（= 今日之未封记录；正常态，仅可见⛔告警）
+     「已闭日」界定未改①之判据：仅对未封记录按时间戳日期分类，日历日以本机当地日为准。
   ② 重复块  ：同 prev + 同 root + 同区间 出现 ≥2 次                → DUP
   ③ 签名滞后：块未见于签名登记册                                  → UNSIGNED(n)
   ④ 缺日    ：台账有记录之日，无块覆盖该日之记录（且未标当日无锚）  → MISSING_DAY(n)
 
 退出码三分（⛔ 混）：
-  0 = 全 OK
-  1 = 有差（GAP / DUP / UNSIGNED / MISSING_DAY 任一）
+  0 = 全 OK（含仅有当日待封之正常态）
+  1 = 有差（GAP_CLOSED_NEW / DUP_NEW / UNSIGNED / MISSING_DAY 任一；
+      GAP_CLOSED_NEW 系跨已闭日漏封扣除宽限余额后之余量；
+      当日待封 GAP_TODAY 不计入——旧版之「GAP 任一大于零即 1」由此收敛为真缺陷告警）
   2 = 读数不可得（目录或台账或块文件缺失/不可解析）
 
 用法：
@@ -23,6 +29,7 @@ import glob
 import json
 import os
 import sys
+from datetime import datetime
 
 
 def load_blocks(nca):
@@ -114,6 +121,29 @@ def main():
     res["ledger_max"] = "GSEQ-%04d" % maxt
     res["GAP"] = max(gap, 0)
 
+    # ①b GAP 按记录日拆两值（OPS-002 题A）
+    covered = set()
+    for b in sealed:
+        for r in recs:
+            g = int(r["gseq"][5:])
+            if int(b["f"][5:]) <= g <= int(b["t"][5:]):
+                covered.add(r["gseq"])
+    today = datetime.now().strftime("%Y-%m-%d")
+    tail_n = int(tail_to[5:]) if tail_to else 0
+    gap_today, gap_closed, gap_closed_days = 0, 0, {}
+    for r in recs:
+        if int(r["gseq"][5:]) <= tail_n:
+            continue  # 已被链尾块覆盖，非 GAP
+        d = (r.get("ts") or "????-??-??")[:10]
+        if d == today:
+            gap_today += 1
+        else:
+            gap_closed += 1
+            gap_closed_days[d] = gap_closed_days.get(d, 0) + 1
+    res["GAP_CLOSED"] = gap_closed
+    res["GAP_CLOSED_DAYS"] = gap_closed_days
+    res["GAP_TODAY"] = gap_today
+
     # ② 重复块
     seen, dup = {}, []
     for b in blocks:
@@ -133,12 +163,7 @@ def main():
     res["UNSIGNED"] = uns
 
     # ④ 缺日（台账有记录之日，须有块覆盖该日内任一记录）
-    covered = set()
-    for b in sealed:
-        for r in recs:
-            g = int(r["gseq"][5:])
-            if int(b["f"][5:]) <= g <= int(b["t"][5:]):
-                covered.add(r["gseq"])
+    #    covered 复用 ①b 已算之覆盖集
     days = {}
     for r in recs:
         if r.get("ts"):
@@ -163,15 +188,19 @@ def main():
     res["DUP_NEW"] = [d for d in res["DUP"] if tuple(sorted(d)) not in k_dup]
     res["GAP_KNOWN_MAX"] = int(known.get("gap_allow", 0) or 0)
     res["GAP_NEW"] = max(res["GAP"] - res["GAP_KNOWN_MAX"], 0)
+    # 宽限先抵当日待封（正常态），余额抵跨已闭日漏封——真漏封必浮出
+    allow_for_closed = max(res["GAP_KNOWN_MAX"] - res["GAP_TODAY"], 0)
+    res["GAP_CLOSED_NEW"] = max(res["GAP_CLOSED"] - allow_for_closed, 0)
 
-    ok = (res["GAP_NEW"] == 0 and not res["DUP_NEW"] and not res["UNSIGNED"]
+    ok = (res["GAP_CLOSED_NEW"] == 0 and not res["DUP_NEW"] and not res["UNSIGNED"]
           and not res["MISSING_DAY"])
     if a.json:
         print(json.dumps(res, ensure_ascii=False, indent=2))
     else:
         print("tail_block=%s  ledger_max=%s" % (res["tail_block"], res["ledger_max"]))
-        print("[%s] GAP=%d (新增超差 %d)" % ("OK" if res["GAP_NEW"] == 0 else "GAP",
-              res["GAP"], res["GAP_NEW"]))
+        print("[%s] GAP=%d = 跨已闭日漏封 %d -> 告警 %d | 当日待封 %d 正常态" % (
+              "OK" if res["GAP_CLOSED_NEW"] == 0 else "GAP",
+              res["GAP"], res["GAP_CLOSED"], res["GAP_CLOSED_NEW"], res["GAP_TODAY"]))
         print("[%s] DUP=%d (新 %d / 已知 %d) %s" % ("OK" if not res["DUP_NEW"] else "DUP",
               len(res["DUP"]), len(res["DUP_NEW"]), len(res["DUP_KNOWN"]),
               res["DUP_NEW"] if res["DUP_NEW"] else ""))
